@@ -2,9 +2,7 @@
 
 **Date:** October 5, 2025  
 **Status:** Production Ready  
-**Branch:** preview
-
----
+**Branch:** main
 
 ## 🎉 Summary
 
@@ -15,6 +13,7 @@ Successfully implemented comprehensive rate limiting for the contact form API en
 - ✅ Automated test suite
 - ✅ All builds passing
 - ✅ Lint checks passing
+- ✅ Promoted from preview to main on October 8, 2025
 
 ## 📦 What Was Delivered
 
@@ -312,3 +311,5 @@ The modular design makes it easy to:
 ---
 
 *Implementation completed by GitHub Copilot on October 5, 2025*
+
+**Promotion:** Preview deployment promoted to `main` on October 8, 2025
