@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { posts } from "@/data/posts";
 import { readdirSync, statSync } from "fs";
 import { join } from "path";
+import { SITE_URL } from "@/lib/site-config";
 
 // Define static page configurations
 const pageConfig = {
@@ -60,7 +61,7 @@ function getStaticPages(): string[] {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://cyberdrew.dev";
+  const base = SITE_URL;
   const now = new Date();
   
   // Get all static pages dynamically

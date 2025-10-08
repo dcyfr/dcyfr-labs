@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { posts } from "@/data/posts";
 import { resume } from "@/data/resume";
+import { SITE_URL, SITE_TITLE, AUTHOR_NAME } from "@/lib/site-config";
 
 export default function Home() {
   // JSON-LD structured data for home page
@@ -12,21 +13,21 @@ export default function Home() {
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": "https://cyberdrew.dev/#website",
-        url: "https://cyberdrew.dev",
-        name: "Drew's Lab",
+        "@id": `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: SITE_TITLE,
         description: resume.shortSummary,
         publisher: {
-          "@id": "https://cyberdrew.dev/#person",
+          "@id": `${SITE_URL}/#person`,
         },
         inLanguage: "en-US",
       },
       {
         "@type": "Person",
-        "@id": "https://cyberdrew.dev/#person",
-        name: "Drew",
-        url: "https://cyberdrew.dev",
-        image: "https://cyberdrew.dev/og.svg",
+        "@id": `${SITE_URL}/#person`,
+        name: AUTHOR_NAME,
+        url: SITE_URL,
+        image: `${SITE_URL}/og.svg`,
         description: resume.shortSummary,
         jobTitle: "Cybersecurity Professional",
         sameAs: [

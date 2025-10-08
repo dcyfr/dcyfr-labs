@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { posts } from "@/data/posts";
+import { SITE_URL, SITE_TITLE, AUTHOR_NAME } from "@/lib/site-config";
 import { MDX } from "@/components/mdx";
 import { Badge } from "@/components/ui/badge";
 
@@ -19,8 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: post.title,
       description: post.summary,
       type: "article",
-      url: `https://cyberdrew.dev/blog/${post.slug}`,
-      siteName: "Drew's Lab",
+      url: `${SITE_URL}/blog/${post.slug}`,
+      siteName: SITE_TITLE,
     },
   };
 }
@@ -40,18 +41,18 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     ...(post.updatedAt && { dateModified: post.updatedAt }),
     author: {
       "@type": "Person",
-      name: "Drew",
-      url: "https://cyberdrew.dev",
+      name: AUTHOR_NAME,
+      url: SITE_URL,
     },
     publisher: {
       "@type": "Person",
-      name: "Drew",
-      url: "https://cyberdrew.dev",
+      name: AUTHOR_NAME,
+      url: SITE_URL,
     },
-    url: `https://cyberdrew.dev/blog/${post.slug}`,
+    url: `${SITE_URL}/blog/${post.slug}`,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://cyberdrew.dev/blog/${post.slug}`,
+      "@id": `${SITE_URL}/blog/${post.slug}`,
     },
     keywords: post.tags.join(", "),
     wordCount: post.readingTime.words,

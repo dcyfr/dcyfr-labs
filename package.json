@@ -11,6 +11,7 @@
     "test:rate-limit": "node ./scripts/test-rate-limit.mjs",
     "predev": "npm run sync:agents",
     "prebuild": "npm run sync:agents"
+    ,"test:siteurl": "node scripts/check-siteurl.js"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",

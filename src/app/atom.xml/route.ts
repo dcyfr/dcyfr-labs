@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { posts } from "@/data/posts";
+import { SITE_URL } from "@/lib/site-config";
 
 export const revalidate = 3600; // 1 hour
 
 export async function GET() {
-  const site = "https://cyberdrew.dev";
+  const site = SITE_URL;
   const items = [...posts].sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
   const updated = items[0]?.updatedAt ?? items[0]?.publishedAt ?? new Date().toISOString();
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

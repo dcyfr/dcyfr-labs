@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./print.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SITE_URL, SITE_TITLE, SITE_DOMAIN } from "@/lib/site-config";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -20,10 +21,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cyberdrew.dev"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Drew's Lab",
-    template: "%s — Drew's Lab",
+    default: SITE_TITLE,
+    template: "%s — " + SITE_TITLE,
   },
   description:
     "Security architect and engineer sharing insights on cybersecurity, enterprise security operations, and technology. Building secure systems, leading teams, and writing about security best practices.",
@@ -31,8 +32,8 @@ export const metadata: Metadata = {
     title: "Drew's Lab",
     description:
       "Security architect and engineer sharing insights on cybersecurity, enterprise security operations, and technology. Building secure systems, leading teams, and writing about security best practices.",
-    url: "https://cyberdrew.dev",
-    siteName: "Drew's Lab",
+  url: SITE_URL,
+  siteName: SITE_TITLE,
     locale: "en_US",
     type: "website",
     images: [
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
         url: "/og.svg",
         width: 1200,
         height: 630,
-        alt: "cyberdrew.dev — Developer Portfolio",
+        alt: `${SITE_DOMAIN} — Developer Portfolio`,
       },
     ],
   },
@@ -49,8 +50,8 @@ export const metadata: Metadata = {
   },
   alternates: {
     types: {
-      "application/rss+xml": "https://cyberdrew.dev/rss.xml",
-      "application/atom+xml": "https://cyberdrew.dev/atom.xml",
+      "application/rss+xml": `${SITE_URL}/rss.xml`,
+      "application/atom+xml": `${SITE_URL}/atom.xml`,
     },
   },
 };

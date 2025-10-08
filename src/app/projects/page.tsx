@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { visibleProjects } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
 import { GitHubHeatmap } from "@/components/github-heatmap";
+import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -15,11 +16,11 @@ export default function ProjectsPage() {
     "@type": "CollectionPage",
     name: "Projects",
     description: "A collection of my active, in-progress, and archived projects in cybersecurity and software development.",
-    url: "https://cyberdrew.dev/projects",
+    url: `${SITE_URL}/projects`,
     author: {
       "@type": "Person",
-      name: "Drew",
-      url: "https://cyberdrew.dev",
+      name: AUTHOR_NAME,
+      url: SITE_URL,
     },
     mainEntity: {
       "@type": "ItemList",
@@ -30,7 +31,7 @@ export default function ProjectsPage() {
           "@type": "SoftwareSourceCode",
           name: project.title,
           description: project.description,
-          url: `https://cyberdrew.dev/projects#${project.slug}`,
+          url: `${SITE_URL}/projects#${project.slug}`,
           ...(project.links.find(l => l.type === "github") && {
             codeRepository: project.links.find(l => l.type === "github")?.href,
           }),

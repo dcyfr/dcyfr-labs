@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
+import { AUTHOR_EMAIL, FROM_EMAIL } from "@/lib/site-config";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -91,8 +92,8 @@ export async function POST(request: Request) {
     // Send email via Resend
     try {
       await resend.emails.send({
-        from: "contact@cyberdrew.dev",
-        to: "drew@cyberdrew.dev",
+        from: FROM_EMAIL,
+        to: AUTHOR_EMAIL,
         subject: `Contact form: ${sanitizedData.name}`,
         replyTo: sanitizedData.email,
         text: `From: ${sanitizedData.name} <${sanitizedData.email}>\n\n${sanitizedData.message}`,

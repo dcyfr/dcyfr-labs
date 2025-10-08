@@ -1,6 +1,6 @@
 # Documentation
 
-This directory contains project documentation for the cyberdrew.dev portfolio.
+This directory contains project documentation for the developer portfolio.
 
 ## Files
 

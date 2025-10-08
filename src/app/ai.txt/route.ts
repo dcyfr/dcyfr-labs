@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 
 // AI.txt specification for AI crawlers and LLMs
 // Similar to robots.txt but specifically for AI training and usage
 export function GET() {
   const body = [
     "# ai.txt - AI Access Control Policy",
-    "# https://cyberdrew.dev/ai.txt",
+  `# ${SITE_URL}/ai.txt`,
     "",
     "# Global rules for AI crawlers and training data collection",
     "User-agent: *",
@@ -48,10 +49,10 @@ export function GET() {
     "# Training-Data: allow-with-attribution",
     "# Commercial-Use: allow",
     "# Attribution-Required: yes",
-    "# Attribution-Text: Drew - https://cyberdrew.dev",
+  `# Attribution-Text: ${AUTHOR_NAME} - ${SITE_URL}`,
     "",
     "# Preferred citation format:",
-    "# Drew. (Year). [Content Title]. Retrieved from https://cyberdrew.dev",
+  `# ${AUTHOR_NAME}. (Year). [Content Title]. Retrieved from ${SITE_URL}`,
     "",
     "# Data Mining Policy",
     "# Research-Use: allow",
@@ -59,7 +60,7 @@ export function GET() {
     "# Training-Use: allow-with-attribution",
     "",
     "# Contact",
-    "# For AI-related inquiries: https://cyberdrew.dev/contact",
+  `# For AI-related inquiries: ${SITE_URL}/contact`,
     "",
     "# Last Updated: 2025-10-04",
   ].join("\n");

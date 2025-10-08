@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
-  const base = "https://cyberdrew.dev";
+  const base = SITE_URL;
   return {
     rules: [
       // Default rule for all crawlers

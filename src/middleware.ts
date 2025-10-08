@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { SITE_DOMAIN } from "@/lib/site-config";
 import type { NextRequest } from "next/server";
 
 /**
@@ -29,7 +30,7 @@ export function middleware(request: NextRequest) {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live",
     
     // Images: self, data URIs, production domain, Vercel domains, and Vercel Live
-    "img-src 'self' data: https://cyberdrew.dev https://*.vercel.com https://vercel.com https://vercel.live",
+  `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://vercel.live`,
     
     // Fonts: self, Google Fonts CDN, and Vercel Live
     "font-src 'self' https://fonts.gstatic.com https://vercel.live",

@@ -20,6 +20,8 @@ export type Project = {
   highlights?: string[];
 };
 
+import { SITE_DOMAIN } from "@/lib/site-config";
+
 const projectDrafts: Project[] = [
   {
     slug: "global-security-operations",
@@ -75,14 +77,15 @@ const projectDrafts: Project[] = [
   
   {
     slug: "my-portfolio",
-    title: "cyberdrew.dev",
+    title: SITE_DOMAIN,
     description: "Personal developer portfolio built with Next.js, showcasing projects, blog posts, and professional experience in cybersecurity.",
     timeline: "2025 → Present",
     status: "active",
     tech: ["Next.js", "React", "TypeScript", "Tailwind", "shadcn/ui"],
     tags: ["Portfolio", "Web Development", "Personal"],
     links: [
-      { label: "Read more", href: "/blog/shipping-a-nextjs-tiny-portfolio", type: "article" }
+      { label: "Read more", href: "/blog/shipping-tiny-portfolio", type: "article" },
+      { label: "GitHub", href: "https://github.com/dcyfr/cyberdrew-dev", type: "github" },
     ],
     highlights: [
       "Server-first rendering with App Router",

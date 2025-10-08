@@ -1,6 +1,6 @@
 # Project TODO & Issue Tracker
 
-This document tracks bugs, feature requests, improvements, and technical debt for the cyberdrew.dev portfolio site.
+This document tracks bugs, feature requests, improvements, and technical debt.
 
 **Last Updated:** October 5, 2025
 

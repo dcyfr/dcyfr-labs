@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SITE_DOMAIN } from '@/lib/site-config';
 
 interface ContributionDay {
   date: string;
@@ -164,7 +165,7 @@ export async function GET(request: NextRequest) {
         'Authorization': process.env.GITHUB_TOKEN 
           ? `Bearer ${process.env.GITHUB_TOKEN}` 
           : '',
-        'User-Agent': 'cyberdrew-dev-portfolio',
+  'User-Agent': `${SITE_DOMAIN}-portfolio`,
       },
       body: JSON.stringify({
         query: `
