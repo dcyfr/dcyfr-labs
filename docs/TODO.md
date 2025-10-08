@@ -57,6 +57,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [ ] **Accessibility audit** - Run full a11y audit with axe or Lighthouse
 - [ ] **Meta descriptions** - Ensure all pages have unique, optimized meta descriptions
 - [ ] **Alt text review** - Audit all images for proper alt text
+ - [ ] **Vercel OG image generation** - Add server-side OG image support using Vercel's OG image generation feature (https://vercel.com/docs/og-image-generation) to produce dynamic social preview images for blog posts and projects
 
 ### Documentation
 - [ ] **API documentation** - Document API routes and their expected payloads
@@ -145,6 +146,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [ ] **MDX components library** - Build custom MDX components for richer content
 - [ ] **WebAssembly integration** - Experiment with WASM for performance-critical features
 - [ ] **Edge functions** - Explore edge runtime for certain API routes
+ - [ ] **OG image experiments** - Prototype automated OG image templates (Vercel OG + static fallbacks) for blog posts and projects
 
 ### Long-term
 - [ ] Multi-language support (i18n)
