@@ -3,7 +3,13 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./print.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SITE_URL, SITE_TITLE, SITE_DOMAIN } from "@/lib/site-config";
+import {
+  SITE_URL,
+  SITE_TITLE,
+  SITE_DOMAIN,
+  getOgImageUrl,
+  getTwitterImageUrl,
+} from "@/lib/site-config";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -20,35 +26,44 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteDescription =
+  "Security architect and engineer sharing insights on cybersecurity, enterprise security operations, and technology. Building secure systems, leading teams, and writing about security best practices.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_TITLE,
     template: "%s — " + SITE_TITLE,
   },
-  description:
-    "Security architect and engineer sharing insights on cybersecurity, enterprise security operations, and technology. Building secure systems, leading teams, and writing about security best practices.",
+  description: siteDescription,
   openGraph: {
-    title: "Drew's Lab",
-    description:
-      "Security architect and engineer sharing insights on cybersecurity, enterprise security operations, and technology. Building secure systems, leading teams, and writing about security best practices.",
-  url: SITE_URL,
-  siteName: SITE_TITLE,
+    title: SITE_TITLE,
+    description: siteDescription,
+    url: SITE_URL,
+    siteName: SITE_TITLE,
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "/og.svg",
+        url: getOgImageUrl(),
         width: 1200,
         height: 630,
+        type: "image/png",
         alt: `${SITE_DOMAIN} — Developer Portfolio`,
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: siteDescription,
+    images: [getTwitterImageUrl()],
   },
   icons: {
     icon: "/favicon.ico",
   },
   alternates: {
+    canonical: SITE_URL,
     types: {
       "application/rss+xml": `${SITE_URL}/rss.xml`,
       "application/atom+xml": `${SITE_URL}/atom.xml`,

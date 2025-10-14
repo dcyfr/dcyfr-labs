@@ -140,6 +140,17 @@
       transition: text-decoration-color 0.15s ease;
     }
   }
+
+  /* Star bullets for unordered lists */
+  :where(ul) {
+    list-style-type: disc;
+  }
+
+  :where(ul li)::marker {
+    content: "\2726\2000";
+    font-size: 0.9em;
+    color: currentColor;
+  }
 }
 
 /* GitHub Heatmap Styles */

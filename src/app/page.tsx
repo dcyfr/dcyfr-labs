@@ -4,9 +4,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { posts } from "@/data/posts";
 import { resume } from "@/data/resume";
-import { SITE_URL, SITE_TITLE, AUTHOR_NAME } from "@/lib/site-config";
+import {
+  SITE_URL,
+  SITE_TITLE,
+  AUTHOR_NAME,
+  getOgImageUrl,
+} from "@/lib/site-config";
 
 export default function Home() {
+  const socialImage = getOgImageUrl();
   // JSON-LD structured data for home page
   const jsonLd = {
     "@context": "https://schema.org",
@@ -27,7 +33,7 @@ export default function Home() {
         "@id": `${SITE_URL}/#person`,
         name: AUTHOR_NAME,
         url: SITE_URL,
-        image: `${SITE_URL}/og.svg`,
+        image: socialImage,
         description: resume.shortSummary,
         jobTitle: "Cybersecurity Professional",
         sameAs: [
@@ -56,6 +62,7 @@ export default function Home() {
         },
         description: resume.shortSummary,
         inLanguage: "en-US",
+        image: socialImage,
       },
     ],
   };

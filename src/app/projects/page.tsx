@@ -2,11 +2,43 @@ import type { Metadata } from "next";
 import { visibleProjects } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
 import { GitHubHeatmap } from "@/components/github-heatmap";
-import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
+import {
+  SITE_URL,
+  AUTHOR_NAME,
+  SITE_TITLE,
+  getOgImageUrl,
+  getTwitterImageUrl,
+} from "@/lib/site-config";
+
+const pageTitle = "Projects";
+const pageDescription =
+  "A collection of my active, in-progress, and archived projects in cybersecurity and software development.";
 
 export const metadata: Metadata = {
-  title: "Projects",
-  description: "A collection of my active, in-progress, and archived projects in cybersecurity and software development.",
+  title: pageTitle,
+  description: pageDescription,
+  openGraph: {
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    url: `${SITE_URL}/projects`,
+    siteName: SITE_TITLE,
+    type: "website",
+    images: [
+      {
+        url: getOgImageUrl(pageTitle, pageDescription),
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: `${pageTitle} — ${SITE_TITLE}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    images: [getTwitterImageUrl(pageTitle, pageDescription)],
+  },
 };
 
 export default function ProjectsPage() {

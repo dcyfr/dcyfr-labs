@@ -178,6 +178,10 @@
     margin-bottom: 0.2cm;
   }
 
+  ul li::marker {
+    content: "\2726\2000"; 
+  }
+
   /* Blockquotes */
   blockquote {
     border-left: 3pt solid #000;

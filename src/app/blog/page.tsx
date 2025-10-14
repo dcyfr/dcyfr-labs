@@ -2,10 +2,41 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { posts, postTagCounts } from "@/data/posts";
 import { Badge } from "@/components/ui/badge";
+import {
+  SITE_TITLE,
+  SITE_URL,
+  getOgImageUrl,
+  getTwitterImageUrl,
+} from "@/lib/site-config";
+
+const pageTitle = "Blog";
+const pageDescription = "Articles and notes on web development, DX, and TypeScript.";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Articles and notes on web development, DX, and TypeScript.",
+  title: pageTitle,
+  description: pageDescription,
+  openGraph: {
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    url: `${SITE_URL}/blog`,
+    siteName: SITE_TITLE,
+    type: "website",
+    images: [
+      {
+        url: getOgImageUrl(pageTitle, pageDescription),
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: `${pageTitle} — ${SITE_TITLE}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    images: [getTwitterImageUrl(pageTitle, pageDescription)],
+  },
 };
 
 export default async function BlogPage({ searchParams }: { searchParams?: Promise<{ tag?: string }> }) {
