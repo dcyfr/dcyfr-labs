@@ -32,8 +32,8 @@ export type Resume = {
 };
 
 export const resume: Resume = {
-  shortSummary: "Cybersecurity professional with over 5 years of experience in information security engineering, risk management, and incident response.",
-  summary: "I am a cybersecurity professional with over five years of experience in information security, risk management, and incident response. My expertise covers various areas, including cloud security, vulnerability management, and security operations. I have successfully led security initiatives, conducted technical audits, and implemented robust security frameworks to safeguard organizational assets. With a strong foundation in both technical and leadership skills, I am dedicated to promoting a culture of security awareness and continuous improvement within teams and organizations.",
+  shortSummary: "Security architect and tinkerer with over five years of experience in information security, risk management, and incident response.",
+  summary: "Cybersecurity professional with over five years of experience in information security, risk management, and incident response. My expertise covers various areas, including cloud security, vulnerability management, and security operations. I have successfully led security initiatives, conducted technical audits, and implemented robust security frameworks to safeguard organizational assets. With a strong foundation in both technical and leadership skills, I am dedicated to promoting a culture of security awareness and continuous improvement within teams and organizations.",
   experience: [
     {
       title: "Principal Security Engineer",
@@ -68,7 +68,7 @@ export const resume: Resume = {
     },
     {
       title: "Co-founder & Vice President",
-      company: "Information Security Network, Inc.",
+      company: "Information Security Network, Inc",
       duration: "Sep 2019 → Sep 2021",
       responsibilities: [
         "Led virtual seminars, training, and events such as BSides and Hack Pensacola",
@@ -79,7 +79,7 @@ export const resume: Resume = {
     },
     {
       title: "Security Operations Analyst II",
-      company: "Creative Breakthroughs, Inc.",
+      company: "Creative Breakthroughs, Inc",
       duration: "Dec 2020 → Jul 2021",
       responsibilities: [
         "Triaged and validated level one escalations, leading incident response for the SOC",

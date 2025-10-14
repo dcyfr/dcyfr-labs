@@ -10,7 +10,7 @@ import {
 } from "@/lib/site-config";
 
 const pageTitle = "Blog";
-const pageDescription = "Articles and notes on web development, DX, and TypeScript.";
+const pageDescription = "Thoughts, tutorials, and updates on web development, programming, and technology.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -49,9 +49,23 @@ export default async function BlogPage({ searchParams }: { searchParams?: Promis
   const filtered = tag ? all.filter((p) => p.tags.includes(tag)) : all;
   return (
     <div className="mx-auto max-w-5xl py-14 md:py-20">
-      <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">Blog</h1>
-      <p className="text-muted-foreground mt-2 max-w-2xl"></p>
+      <div className="space-y-4">
+        <h1 className="text-3xl md:text-4xl font-bold">Blog</h1>
+        <p className="text-lg md:text-xl text-muted-foreground">
+          {pageDescription}
+        </p>
+        {tag && (
+          <p className="text-sm text-muted-foreground">
+            Showing posts tagged with <strong>{tag}</strong>.{" "}
+            <Link href="/blog" className="underline underline-offset-4">
+              Clear filter
+            </Link>
+            .
+          </p>
+        )}
+      </div>
 
+      {/* Tag Filter */}
       <div className="mt-6 flex flex-wrap gap-2">
         <Badge asChild variant={tag ? "outline" : "secondary"}>
           <Link href="/blog">All</Link>
@@ -63,6 +77,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: Promis
         ))}
       </div>
 
+      {/* Posts List */}
       <div className="mt-8 space-y-6">
         {filtered.map((p) => (
           <article key={p.slug} className="group rounded-lg border p-4 transition-colors hover:bg-muted/50">

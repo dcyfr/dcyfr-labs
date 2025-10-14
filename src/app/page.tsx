@@ -35,25 +35,29 @@ export default function Home() {
         url: SITE_URL,
         image: socialImage,
         description: resume.shortSummary,
-        jobTitle: "Cybersecurity Professional",
+        jobTitle: "Cybersecurity Architect & Developer",
         sameAs: [
-          // Add social media profiles here if available
+          "https://linkedin.com/in/dcyfr",
+          "https://github.com/dcyfr"
         ],
         knowsAbout: [
           "Cybersecurity",
-          "Information Security",
-          "Security Operations",
-          "Vulnerability Management",
-          "Incident Response",
-          "Cloud Security",
           "Software Development",
+          "Web Development",
+          "Cloud Computing",
+          "DevOps",
+          "Programming",
+          "Technology",
+          "Open Source",
+          "Networking",
+          "System Administration"
         ],
       },
       {
         "@type": "WebPage",
         "@id": "https://cyberdrew.dev/#webpage",
         url: "https://cyberdrew.dev",
-        name: "Drew's Lab - Cybersecurity & Software Development",
+        name: "Drew's Lab - Cybersecurity Architect & Developer",
         isPartOf: {
           "@id": "https://cyberdrew.dev/#website",
         },

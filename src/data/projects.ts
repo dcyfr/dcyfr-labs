@@ -20,43 +20,45 @@ export type Project = {
   highlights?: string[];
 };
 
-import { SITE_DOMAIN } from "@/lib/site-config";
-
 const projectDrafts: Project[] = [
   {
+    status: "in-progress",
+    featured: true,
+    hidden: true,
+    title: "Project Template",
+    description: "A brief description of the project goes here.",
+    slug: "project-template",
+    timeline: "2024",
+    tech: ["Tech1", "Tech2", "Tech3"],
+    tags: ["Tag1", "Tag2"],
+    highlights: [
+      "Highlight 1 about the project.",
+      "Highlight 2 about the project."
+    ],
+    links: [
+      { label: "GitHub", href: `#`, type: "github" },
+      { label: "Demo", href: `#`, type: "demo" },
+    ],
+  },
+  {
+    status: "active",
+    featured: true,
+    hidden: false,
+    title: "cyberdrew.dev",
+    description: "My personal website and portfolio, showcasing my projects, blog posts, and resume.",
     slug: "cyberdrew-dev",
-    title: SITE_DOMAIN,
-    description: "Personal developer portfolio built with Next.js, showcasing projects, blog posts, and professional experience in cybersecurity.",
     timeline: "2025 → Present",
     tech: ["Next.js", "React", "TypeScript", "Tailwind", "shadcn/ui"],
     tags: ["Portfolio", "Web Development", "Personal"],
+    highlights: [
+      "Developed a modern, responsive personal website to showcase my projects, blog posts, and resume.",
+      "Implemented SEO best practices and integrated Open Graph and Twitter Card metadata for enhanced social sharing.",
+      "Utilized Next.js and Tailwind CSS to create a fast, accessible, and visually appealing user experience."
+    ],
     links: [
-      { label: "Read more", href: "/blog/shipping-tiny-portfolio", type: "article" },
-      { label: "GitHub", href: "https://github.com/dcyfr/cyberdrew-dev", type: "github" },
+      { label: "Website", href: `/`, type: "demo" },
+      { label: "GitHub", href: `https://github.com/dcyfr/cyberdrew-dev`, type: "github" },
     ],
-    highlights: [
-      "Server-first rendering with App Router",
-      "Responsive design with Tailwind CSS",
-      "Dynamic resume and project data",
-    ],
-    status: "active",
-    featured: true,
-  },
-  {
-    slug: "information-security-network-inc",
-    title: "Information Security Network, Inc.",
-    description: "Co-founded nonprofit organization focused on security education and awareness, leading virtual seminars and collaborating with industry groups like DC850.",
-    timeline: "2019 → 2021",
-    tech: ["Education", "Community Building", "Event Management"],
-    tags: ["Nonprofit", "Education", "Community"],
-    links: [],
-    highlights: [
-      "Led virtual seminars, training, and events such as BSides and Hack Pensacola.",
-      "Promoted security awareness/education in collaboration with DC850.",
-      "Aligned IT and security objectives with nonprofit strategies.",
-    ],
-    status: "archived",
-    featured: true,
   }
 ];
 
