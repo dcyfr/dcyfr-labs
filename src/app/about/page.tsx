@@ -1,35 +1,51 @@
+import type { Metadata } from "next";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { resume } from "@/data/resume";
+import {
+  SITE_TITLE,
+  SITE_URL,
+  getOgImageUrl,
+  getTwitterImageUrl,
+} from "@/lib/site-config";
 
-export const metadata = {
-  title: "About",
+const pageTitle = "About";
+const pageDescription = resume.summary;
+
+export const metadata: Metadata = {
+  title: pageTitle,
+  description: pageDescription,
+  openGraph: {
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    url: `${SITE_URL}/about`,
+    siteName: SITE_TITLE,
+    type: "profile",
+    images: [
+      {
+        url: getOgImageUrl(pageTitle, pageDescription),
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: `${pageTitle} — ${SITE_TITLE}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    images: [getTwitterImageUrl(pageTitle, pageDescription)],
+  },
 };
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-4xl py-12 md:py-16 space-y-8">
       <div className="space-y-4">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">About</h1>
-        <p className="text-muted-foreground leading-7 text-base md:text-lg">
+        <h1 className="text-3xl md:text-4xl font-bold">About Me</h1>
+        <p className="text-lg md:text-xl text-muted-foreground">
           {resume.summary}
-        </p>
-        <p className="text-muted-foreground leading-7">
-          If you&apos;d like to get in touch, feel free to reach out on{" "}
-          <a
-            href="https://www.linkedin.com/in/dcyfr"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:text-primary transition"
-          >
-            LinkedIn
-          </a>
-          {" "}or{" "}
-          <a
-            href="/contact"
-            className="underline hover:text-primary transition"
-          >send me a message
-          </a>.
         </p>
       </div>
 
@@ -37,46 +53,17 @@ export default function AboutPage() {
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Experience</h2>
         <div className="space-y-4">
-          {resume.experience.slice(0, 4).map((exp, index) => (
+          {resume.experience.map((exp, index) => (
             <Card key={index} className="p-6">
-              <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <h3 className="font-medium text-lg">{exp.title}</h3>
-                  <Badge variant="secondary">{exp.duration}</Badge>
-                </div>
-                <ul className="space-y-1 text-sm text-muted-foreground">
-                  {exp.responsibilities.map((resp, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="text-primary mt-1.5 h-1 w-1 rounded-full bg-current flex-shrink-0" />
-                      {resp}
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
+                <h3 className="font-medium text-lg">{exp.title}</h3>
+                <p className="text-sm text-muted-foreground mt-1 md:mt-0">{exp.company} • {exp.duration}</p>
               </div>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Skills & Expertise</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {resume.skills.slice(0, 2).map((skillCategory, index) => (
-            <Card key={index} className="p-6">
-              <h3 className="font-medium mb-3">{skillCategory.category}</h3>
-              <div className="flex flex-wrap gap-2">
-                {skillCategory.skills.slice(0, 8).map((skill, idx) => (
-                  <Badge key={idx} variant="outline" className="text-xs">
-                    {skill}
-                  </Badge>
+              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                {exp.responsibilities.map((resp, idx) => (
+                  <li key={idx}>{resp}</li>
                 ))}
-                {skillCategory.skills.length > 8 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{skillCategory.skills.length - 8} more
-                  </Badge>
-                )}
-              </div>
+              </ul>
             </Card>
           ))}
         </div>
@@ -91,10 +78,17 @@ export default function AboutPage() {
             <div className="space-y-3">
               {resume.education.map((edu, index) => (
                 <div key={index} className="space-y-1">
-                  <p className="font-medium text-sm">{edu.degree}</p>
-                  <p className="text-muted-foreground text-sm">{edu.institution}</p>
-                  {edu.duration && (
-                    <Badge variant="outline" className="text-xs">{edu.duration}</Badge>
+                  <p className="font-medium">{edu.degree}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {edu.institution}
+                    {edu.duration ? ` • ${edu.duration}` : ""}
+                  </p>
+                  {edu.highlights && (
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                      {edu.highlights.map((highlight, idx) => (
+                        <li key={idx}>{highlight}</li>
+                      ))}
+                    </ul>
                   )}
                 </div>
               ))}
@@ -106,18 +100,42 @@ export default function AboutPage() {
             <div className="space-y-3">
               {resume.certifications.map((certCategory, index) => (
                 <div key={index} className="space-y-1">
-                  <p className="font-medium text-sm">{certCategory.provider}</p>
+                  <p className="text-muted-foreground font-medium text-sm">{certCategory.provider}</p>
                   <div className="flex flex-wrap gap-1">
                     {certCategory.certifications.map((cert, idx) => (
                       <Badge key={idx} variant="outline" className="text-xs">
                         {cert}
                       </Badge>
                     ))}
+                    {certCategory.certifications.length > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{certCategory.certifications.length - 3} more
+                      </Badge>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           </Card>
+        </div>
+      </section>
+
+      {/* Skills Section */}
+      <section className="space-y-4">
+        <h2 className="text-xl md:text-2xl font-medium">Skills</h2>
+        <div className="space-y-3">
+          {resume.skills.map((skillCategory, index) => (
+            <div key={index} className="space-y-1">
+              <p className="text-muted-foreground font-medium text-sm">{skillCategory.category}</p>
+              <div className="flex flex-wrap gap-1">
+                {skillCategory.skills.map((skill, idx) => (
+                  <Badge key={idx} variant="outline" className="text-xs">
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </div>

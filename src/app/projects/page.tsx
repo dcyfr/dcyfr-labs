@@ -2,11 +2,42 @@ import type { Metadata } from "next";
 import { visibleProjects } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
 import { GitHubHeatmap } from "@/components/github-heatmap";
-import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
+import {
+  SITE_URL,
+  AUTHOR_NAME,
+  SITE_TITLE,
+  getOgImageUrl,
+  getTwitterImageUrl,
+} from "@/lib/site-config";
+
+const pageTitle = "Projects";
+const pageDescription = "A collection of my projects in cybersecurity and software development.";
 
 export const metadata: Metadata = {
-  title: "Projects",
-  description: "A collection of my active, in-progress, and archived projects in cybersecurity and software development.",
+  title: pageTitle,
+  description: pageDescription,
+  openGraph: {
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    url: `${SITE_URL}/projects`,
+    siteName: SITE_TITLE,
+    type: "website",
+    images: [
+      {
+        url: getOgImageUrl(pageTitle, pageDescription),
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: `${pageTitle} — ${SITE_TITLE}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${pageTitle} — ${SITE_TITLE}`,
+    description: pageDescription,
+    images: [getTwitterImageUrl(pageTitle, pageDescription)],
+  },
 };
 
 export default function ProjectsPage() {
@@ -15,7 +46,7 @@ export default function ProjectsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Projects",
-    description: "A collection of my active, in-progress, and archived projects in cybersecurity and software development.",
+    description: "A collection of my projects in cybersecurity and software development.",
     url: `${SITE_URL}/projects`,
     author: {
       "@type": "Person",
@@ -50,22 +81,26 @@ export default function ProjectsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="mx-auto max-w-5xl py-12 md:py-16">
-      {/* GitHub activity heatmap */}
-      <section className="mb-8">
-        <GitHubHeatmap />
-      </section>
-
-      {/* Projects Section */}
-      <section className="space-y-4">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Projects</h1>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div className="mx-auto max-w-5xl py-14 md:py-20">
+        <div className="space-y-4">
+          <h1 className="text-3xl md:text-4xl font-bold">Projects</h1>
+          <p className="text-lg md:text-xl text-muted-foreground">
+            {pageDescription}
+          </p>
+        </div>
+        
+        {/* GitHub Contribution Heatmap */}
+        <div className="mt-10">
+          <GitHubHeatmap username="dcyfr" />
+        </div>
+        
+        {/* Projects Grid */}
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {visibleProjects.map((project) => (
             <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
-      </section>
-    </div>
+      </div>
     </>
   );
 }

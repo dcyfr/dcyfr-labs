@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { posts } from "@/data/posts";
-import { SITE_URL, SITE_TITLE, AUTHOR_NAME } from "@/lib/site-config";
+import {
+  SITE_URL,
+  SITE_TITLE,
+  AUTHOR_NAME,
+  getOgImageUrl,
+  getTwitterImageUrl,
+} from "@/lib/site-config";
 import { MDX } from "@/components/mdx";
 import { Badge } from "@/components/ui/badge";
 
@@ -13,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = posts.find((p) => p.slug === slug);
   if (!post) return {};
+  const imageUrl = getOgImageUrl(post.title, post.summary);
   return {
     title: post.title,
     description: post.summary,
@@ -22,6 +29,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: "article",
       url: `${SITE_URL}/blog/${post.slug}`,
       siteName: SITE_TITLE,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          type: "image/png",
+          alt: `${post.title} — ${SITE_TITLE}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary,
+      images: [getTwitterImageUrl(post.title, post.summary)],
     },
   };
 }
@@ -32,6 +54,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!post) notFound();
 
   // JSON-LD structured data for SEO and AI assistants
+  const socialImage = getOgImageUrl(post.title, post.summary);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -50,6 +73,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       url: SITE_URL,
     },
     url: `${SITE_URL}/blog/${post.slug}`,
+    image: socialImage,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${SITE_URL}/blog/${post.slug}`,

@@ -59,11 +59,16 @@ export default function ContactPage() {
 
   return (
     <div className="mx-auto max-w-2xl py-14 md:py-20">
-      <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">Contact</h1>
-      <p className="text-muted-foreground mt-2">
-        Have a question or want to work together? Send me a message.
-      </p>
+      <div className="space-y-4">
+        <h1 className="text-3xl md:text-4xl font-bold">Contact Me</h1>
+        <p className="text-lg md:text-xl text-muted-foreground">
+          I&apos;d love to hear from you! Whether you have a question, want to
+          collaborate, or just want to say hello, feel free to reach out using
+          the form below.
+        </p>
+      </div>
 
+      {/* Contact Form */}
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
@@ -77,7 +82,6 @@ export default function ContactPage() {
             disabled={isSubmitting}
           />
         </div>
-
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -90,7 +94,6 @@ export default function ContactPage() {
             disabled={isSubmitting}
           />
         </div>
-
         <div className="space-y-2">
           <Label htmlFor="message">Message</Label>
           <Textarea
@@ -102,7 +105,6 @@ export default function ContactPage() {
             rows={6}
           />
         </div>
-
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Sending..." : "Send Message"}
         </Button>
