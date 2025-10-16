@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { resume } from "@/data/resume";
 import {
   SITE_TITLE,
@@ -10,7 +11,7 @@ import {
 } from "@/lib/site-config";
 
 const pageTitle = "About";
-const pageDescription = resume.summary;
+const pageDescription = resume.shortSummary;
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -40,103 +41,64 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const currentRole = resume.experience[0];
+
   return (
-    <div className="mx-auto max-w-4xl py-12 md:py-16 space-y-8">
-      <div className="space-y-4">
-        <h1 className="text-3xl md:text-4xl font-bold">About Me</h1>
+    <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
+      <div className="space-y-6">
+        <h1 className="text-3xl md:text-4xl font-bold">Hi, I&apos;m Drew.</h1>
         <p className="text-lg md:text-xl text-muted-foreground">
-          {resume.summary}
+          {resume.shortSummary}
         </p>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild>
+            <Link href="/resume">View my resume</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/contact">Get in touch</Link>
+          </Button>
+        </div>
       </div>
 
-      {/* Experience Section */}
       <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Experience</h2>
-        <div className="space-y-4">
-          {resume.experience.map((exp, index) => (
-            <Card key={index} className="p-6">
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
-                <h3 className="font-medium text-lg">{exp.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1 md:mt-0">{exp.company} • {exp.duration}</p>
-              </div>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                {exp.responsibilities.map((resp, idx) => (
-                  <li key={idx}>{resp}</li>
-                ))}
-              </ul>
-            </Card>
-          ))}
+        <h2 className="text-xl md:text-2xl font-medium">What drives me</h2>
+        <div className="space-y-3 text-muted-foreground">
+          <p>
+            I build approachable security programs that help teams ship quickly
+            without sacrificing resilience. I enjoy pairing technical work like
+            threat hunting and vulnerability management with coaching that
+            brings the whole organization along for the journey.
+          </p>
+          <p>
+            Over the past few years I&apos;ve led audits, run incident response
+            teams, and shipped the policies that keep global engineering orgs
+            aligned. The goal is always the same: make security feel like a
+            multiplier instead of a blocker.
+          </p>
+          <p>
+            Outside the office you&apos;ll find me mentoring, hosting community
+            events, and tinkering with the tools that keep defenders a step
+            ahead. I like turning that curiosity into clear guidance for the
+            teams I support.
+          </p>
         </div>
       </section>
 
-      {/* Education & Certifications */}
       <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Education & Certifications</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card className="p-6">
-            <h3 className="font-medium mb-3">Education</h3>
-            <div className="space-y-3">
-              {resume.education.map((edu, index) => (
-                <div key={index} className="space-y-1">
-                  <p className="font-medium">{edu.degree}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {edu.institution}
-                    {edu.duration ? ` • ${edu.duration}` : ""}
-                  </p>
-                  {edu.highlights && (
-                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                      {edu.highlights.map((highlight, idx) => (
-                        <li key={idx}>{highlight}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-          </Card>
-          
-          <Card className="p-6">
-            <h3 className="font-medium mb-3">Certifications</h3>
-            <div className="space-y-3">
-              {resume.certifications.map((certCategory, index) => (
-                <div key={index} className="space-y-1">
-                  <p className="text-muted-foreground font-medium text-sm">{certCategory.provider}</p>
-                  <div className="flex flex-wrap gap-1">
-                    {certCategory.certifications.map((cert, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs">
-                        {cert}
-                      </Badge>
-                    ))}
-                    {certCategory.certifications.length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{certCategory.certifications.length - 3} more
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Skills</h2>
-        <div className="space-y-3">
-          {resume.skills.map((skillCategory, index) => (
-            <div key={index} className="space-y-1">
-              <p className="text-muted-foreground font-medium text-sm">{skillCategory.category}</p>
-              <div className="flex flex-wrap gap-1">
-                {skillCategory.skills.map((skill, idx) => (
-                  <Badge key={idx} variant="outline" className="text-xs">
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <h2 className="text-xl md:text-2xl font-medium">Currently</h2>
+        <Card className="p-6 space-y-3">
+          <div className="space-y-1">
+            <p className="font-medium text-lg">{currentRole.title}</p>
+            <p className="text-sm text-muted-foreground">
+              {currentRole.company} • {currentRole.duration}
+            </p>
+          </div>
+          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+            {currentRole.responsibilities.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </Card>
       </section>
     </div>
   );

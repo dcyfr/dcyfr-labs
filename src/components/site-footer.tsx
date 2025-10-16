@@ -7,6 +7,9 @@ export function SiteFooter() {
           <a href="/contact" className="hover:underline underline-offset-4 will-change-auto">
             Contact
           </a>
+          <a href="/resume" className="hover:underline underline-offset-4 will-change-auto">
+            Resume
+          </a>
           <a href="/rss.xml" className="hover:underline underline-offset-4 will-change-auto">
             Feed
           </a>

@@ -10,7 +10,7 @@ import {
 } from "@/lib/site-config";
 
 const pageTitle = "Blog";
-const pageDescription = "Thoughts, tutorials, and updates on web development, programming, and technology.";
+const pageDescription = "Insights on cybersecurity, software development, and more.";
 
 export const metadata: Metadata = {
   title: pageTitle,

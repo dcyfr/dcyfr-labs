@@ -32,8 +32,8 @@ export type Resume = {
 };
 
 export const resume: Resume = {
-  shortSummary: "Security architect and tinkerer with over five years of experience in information security, risk management, and incident response.",
-  summary: "Cybersecurity professional with over five years of experience in information security, risk management, and incident response. My expertise covers various areas, including cloud security, vulnerability management, and security operations. I have successfully led security initiatives, conducted technical audits, and implemented robust security frameworks to safeguard organizational assets. With a strong foundation in both technical and leadership skills, I am dedicated to promoting a culture of security awareness and continuous improvement within teams and organizations.",
+  shortSummary: "I'm a security architect and tinkerer with over five years of experience in information security, risk management, and incident response.",
+  summary: "I'm a cybersecurity professional with over five years of experience in information security, risk management, and incident response. My expertise covers various areas, including cloud security, vulnerability management, and security operations. I have successfully led security initiatives, conducted technical audits, and implemented robust security frameworks to safeguard organizational assets. With a strong foundation in both technical and leadership skills, I am dedicated to promoting a culture of security awareness and continuous improvement within teams and organizations.",
   experience: [
     {
       title: "Principal Security Engineer",

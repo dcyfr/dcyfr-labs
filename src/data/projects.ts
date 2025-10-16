@@ -52,8 +52,7 @@ const projectDrafts: Project[] = [
     tags: ["Portfolio", "Web Development", "Personal"],
     highlights: [
       "Developed a modern, responsive personal website to showcase my projects, blog posts, and resume.",
-      "Implemented SEO best practices and integrated Open Graph and Twitter Card metadata for enhanced social sharing.",
-      "Utilized Next.js and Tailwind CSS to create a fast, accessible, and visually appealing user experience."
+      "Utilized Next.js and Tailwind CSS to create a fast, accessible, and visually appealing user experience.",
     ],
     links: [
       { label: "Website", href: `/`, type: "demo" },
