@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 5, 2025
+**Last Updated:** October 15, 2025
 
 ---
 
@@ -19,8 +19,8 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🚀 Feature Requests
 
 ### High Priority
-- [ ] **Blog search functionality** - Add search across blog posts by title, content, and tags
-- [ ] **Tag filtering** - Allow filtering blog posts by tags on `/blog` page
+- [x] **Blog search functionality** - Add search across blog posts by title, content, and tags (shipped 2025-10-15)
+- [x] **Tag filtering** - Allow filtering blog posts by tags on `/blog` page (shipped 2025-10-15)
 - [ ] **View counts** - Track and display view counts for blog posts
 
 ### Medium Priority

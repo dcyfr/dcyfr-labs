@@ -104,8 +104,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </span>
           )}
         </div>
-        <h1 className="mt-2 text-3xl md:text-5xl font-semibold tracking-tight">{post.title}</h1>
-        <p className="mt-2 text-muted-foreground">{post.summary}</p>
+  <h1 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
+  <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {post.tags.map((t) => (
             <Badge key={t} variant="secondary">{t}</Badge>

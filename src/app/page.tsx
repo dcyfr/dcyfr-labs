@@ -80,10 +80,10 @@ export default function Home() {
       <div className="mx-auto max-w-5xl py-14 md:py-20">
       {/* Introduction Section */}
       <section className="space-y-4">
-        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight italic font-serif">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight italic font-serif">
           Hi, I&apos;m Drew <span className="ml-1 font-sans not-italic">&#10022;</span>
         </h1>
-        <p className="text-muted-foreground text-base md:text-lg max-w-2xl">
+        <p className="text-muted-foreground text-lg md:text-xl max-w-2xl">
           {resume.shortSummary}
         </p>
         <div className="flex gap-3 pt-2">
