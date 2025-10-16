@@ -51,15 +51,34 @@ const projectDrafts: Project[] = [
     tech: ["Next.js", "React", "TypeScript", "Tailwind", "shadcn/ui"],
     tags: ["Portfolio", "Web Development", "Personal"],
     highlights: [
-      "Developed a modern, responsive personal website to showcase my projects, blog posts, and resume.",
-      "Implemented SEO best practices and integrated Open Graph and Twitter Card metadata for enhanced social sharing.",
-      "Utilized Next.js and Tailwind CSS to create a fast, accessible, and visually appealing user experience."
+      "Utilized Next.js and Tailwind CSS to create a fast, accessible, and visually appealing user experience.",
+      "Leveraged shadcn/ui components to ensure a consistent and modern design system.",
+      "Set up automated deployment and hosting using Vercel for seamless updates and scalability.",
     ],
     links: [
       { label: "Website", href: `/`, type: "demo" },
       { label: "GitHub", href: `https://github.com/dcyfr/cyberdrew-dev`, type: "github" },
     ],
-  }
+  },
+  {
+    status: "active",
+    featured: true,
+    hidden: false,
+    title: "X64: The Indie Cyber Publication",
+    description: "A digital publication focused on cybersecurity, technology trends, and industry insights.",
+    slug: "x64",
+    timeline: "2024 → Present",
+    tech: ["Ghost", "JavaScript", "CSS"],
+    tags: ["Publication", "Cybersecurity", "Writing"],
+    highlights: [
+      "Founded and manage X64, an indie cyber publication delivering high-quality articles on cybersecurity and technology trends.",
+      "Write and edit articles, curate content, and engage with a growing community of readers and contributors.",
+      "Collaborate with writers and industry experts to deliver diverse perspectives and insights.",
+    ],
+    links: [
+      { label: "Website", href: `https://x64.onl`, type: "demo" }
+    ],
+  },
 ];
 
 export const projects = Object.freeze(projectDrafts);

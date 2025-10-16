@@ -11,7 +11,7 @@ import {
 } from "@/lib/site-config";
 
 const pageTitle = "Projects";
-const pageDescription = "A collection of my projects in cybersecurity and software development.";
+const pageDescription = "A collection of projects in cybersecurity and software development.";
 
 export const metadata: Metadata = {
   title: pageTitle,

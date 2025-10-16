@@ -2,7 +2,7 @@
 title: "Hardening a Tiny Portfolio: Security, Performance & Production Readiness"
 summary: "A multi-part series on taking a weekend portfolio project to production: implementing CSP, rate limiting, INP optimization, and more."
 publishedAt: "2025-10-05"
-updatedAt: "2025-10-05"
+updatedAt: "2025-10-15"
 tags: ["Next.js", "Security", "Performance", "TypeScript", "Production"]
 featured: true
 ---
@@ -61,8 +61,6 @@ response.headers.set("Content-Security-Policy", csp);
 - ✅ Strict resource loading policies
 - ✅ All builds passing with middleware enabled
 
-**Documentation:** See `/docs/CSP_IMPLEMENTATION_COMPLETE.md` for full implementation details.
-
 ---
 
 **Rate Limiting Implementation**
@@ -117,8 +115,6 @@ export class RateLimiter {
 - ✅ Automated testing with `npm run test:rate-limit`
 - ✅ Graceful user feedback on rate limit
 
-**Documentation:** See `/docs/RATE_LIMITING_IMPLEMENTATION_COMPLETE.md` for full implementation details.
-
 ---
 
 ### Part 2: Performance Optimization
@@ -170,8 +166,6 @@ export function ThemeToggle() {
 - ✅ Smoother navigation and interactions
 - ✅ Theme toggle feels instant
 - ✅ No layout shifts or visual jank
-
-**Documentation:** See `/docs/INP_OPTIMIZATION.md` for full optimization details.
 
 ---
 
@@ -245,20 +239,6 @@ I created comprehensive instructions for AI coding assistants (GitHub Copilot, C
 - Include import alias patterns and file organization rules
 - MCP servers enable secure, local-first AI integrations
 
-**Documentation Structure:**
-```
-docs/
-├── API.md                              # API route documentation
-├── CSP_IMPLEMENTATION_COMPLETE.md      # CSP implementation guide
-├── CSP_QUICKREF.md                     # CSP quick reference
-├── RATE_LIMITING_IMPLEMENTATION_COMPLETE.md
-├── RATE_LIMITING_QUICKREF.md
-├── INP_OPTIMIZATION.md                 # Performance optimization
-├── DEPLOYMENT_CHECKLIST.md             # Pre-deploy checklist
-├── SECURITY_FINDINGS_RESOLUTION.md     # Security audit results
-└── TODO.md                             # Ongoing work
-```
-
 **Results:**
 - ✅ Consistent code quality across AI-assisted changes
 - ✅ Clear boundaries and conventions
@@ -284,14 +264,6 @@ Future improvements on my radar:
 - View counts and analytics
 - Upgrade rate limiter to Vercel KV for multi-region
 - Add E2E tests with Playwright
-
-## Resources
-
-All documentation lives in `/docs`:
-- CSP Implementation: `CSP_IMPLEMENTATION_COMPLETE.md`
-- Rate Limiting: `RATE_LIMITING_IMPLEMENTATION_COMPLETE.md`
-- Performance: `INP_OPTIMIZATION.md`
-- Security Audit: `SECURITY_FINDINGS_RESOLUTION.md`
 
 ## Conclusion
 

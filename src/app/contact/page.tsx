@@ -62,9 +62,7 @@ export default function ContactPage() {
       <div className="space-y-4">
         <h1 className="text-3xl md:text-4xl font-bold">Contact Me</h1>
         <p className="text-lg md:text-xl text-muted-foreground">
-          I&apos;d love to hear from you! Whether you have a question, want to
-          collaborate, or just want to say hello, feel free to reach out using
-          the form below.
+          Feel free to reach out for collaborations, inquiries, or just to say hello!
         </p>
       </div>
 
