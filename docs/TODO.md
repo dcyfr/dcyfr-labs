@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 15, 2025
+**Last Updated:** October 16, 2025
 
 ---
 
@@ -100,6 +100,10 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🔐 Security
 
 ### Active
+- [ ] **CSP hardening** - Replace `unsafe-inline` allowances with nonce/hash workflow and update middleware + vercel headers accordingly
+- [ ] **Shared rate limiting store** - Move in-memory rate limiters to Redis/Vercel KV and standardize trusted client IP detection
+- [ ] **Contact form PII logging** - Remove or anonymize contact submission logs before writing to console
+- [ ] **Security docs alignment** - Reconcile CSP implementation docs with current header behavior
 - [ ] **CAPTCHA consideration** - Evaluate need for spam prevention on contact form
 - [ ] **Environment variable audit** - Ensure all sensitive data uses env vars
 - [ ] **CSP violation monitoring** - Set up endpoint to log CSP violations

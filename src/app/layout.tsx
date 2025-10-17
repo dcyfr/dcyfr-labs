@@ -58,7 +58,14 @@ export const metadata: Metadata = {
     images: [getTwitterImageUrl()],
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      // default
+      { url: "/icons/icon-light.png" },
+      // dark mode
+      { url: "/icons/icon-dark.png", media: "(prefers-color-scheme: dark)" },
+      // light mode
+      { url: "/icons/icon-light.png", media: "(prefers-color-scheme: light)" },
+    ]
   },
   alternates: {
     canonical: SITE_URL,
