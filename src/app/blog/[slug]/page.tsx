@@ -10,10 +10,9 @@ import {
 } from "@/lib/site-config";
 import { MDX } from "@/components/mdx";
 import { Badge } from "@/components/ui/badge";
+import { getPostViews, incrementPostViews } from "@/lib/views";
 
-export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -53,6 +52,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = posts.find((p) => p.slug === slug);
   if (!post) notFound();
 
+  const incrementedViews = await incrementPostViews(slug);
+  const viewCount = incrementedViews ?? (await getPostViews(slug));
+
   // JSON-LD structured data for SEO and AI assistants
   const socialImage = getOgImageUrl(post.title, post.summary);
   const jsonLd = {
@@ -81,6 +83,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     keywords: post.tags.join(", "),
     wordCount: post.readingTime.words,
     ...(post.archived && { archivedAt: post.updatedAt || post.publishedAt }),
+    ...(typeof viewCount === "number" && viewCount > 0
+      ? {
+          interactionStatistic: {
+            "@type": "InteractionCounter",
+            interactionType: "https://schema.org/ReadAction",
+            userInteractionCount: viewCount,
+          },
+        }
+      : {}),
   };
 
   return (
@@ -111,6 +122,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <Badge key={t} variant="secondary">{t}</Badge>
           ))}
           <Badge variant="outline">{post.readingTime.text}</Badge>
+          {typeof viewCount === "number" && (
+            <Badge variant="outline">
+              {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
+            </Badge>
+          )}
           {post.archived && (
             <Badge variant="outline" className="border-amber-500/50 text-amber-600 dark:text-amber-400">Archived</Badge>
           )}

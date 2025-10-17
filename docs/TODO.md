@@ -21,7 +21,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ### High Priority
 - [x] **Blog search functionality** - Add search across blog posts by title, content, and tags (shipped 2025-10-15)
 - [x] **Tag filtering** - Allow filtering blog posts by tags on `/blog` page (shipped 2025-10-15)
-- [ ] **View counts** - Track and display view counts for blog posts
+- [x] **View counts** - Track and display view counts for blog posts (shipped 2025-10-16)
 
 ### Medium Priority
 - [ ] **RSS feed improvements** - Enhance RSS/Atom feeds with full content and better formatting
