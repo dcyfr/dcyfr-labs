@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { SITE_DOMAIN, SITE_TITLE } from "@/lib/site-config";
+import { SITE_DESCRIPTION, SITE_DOMAIN, SITE_TITLE } from "@/lib/site-config";
 
 export const runtime = "edge";
 export const size = {
@@ -7,9 +7,6 @@ export const size = {
   height: 630,
 };
 export const contentType = "image/png";
-
-const fallbackDescription =
-  "Security architect and engineer sharing insights on cybersecurity, enterprise security operations, and technology.";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -24,7 +21,7 @@ export default function OpenGraphImage({
   searchParams?: SearchParams;
 }) {
   const title = toStringParam(searchParams?.title) || SITE_TITLE;
-  const description = toStringParam(searchParams?.description) || fallbackDescription;
+  const description = toStringParam(searchParams?.description) || SITE_DESCRIPTION;
 
   return new ImageResponse(
     (

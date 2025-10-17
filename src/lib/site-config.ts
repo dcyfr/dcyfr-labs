@@ -10,6 +10,8 @@ export const AUTHOR_EMAIL = "drew@cyberdrew.dev";
 
 export const SITE_TITLE = "Drew's Lab";
 export const SITE_SHORT_TITLE = "Drew";
+export const SITE_DESCRIPTION =
+  "Principal security engineer shaping resilient programs, leading global audits, and coaching teams to ship securely. I write about incident response, threat hunting, and building trustworthy defenses.";
 
 // Choose the active domain/URL based on environment variables.
 // Priority for SITE_URL:
@@ -66,6 +68,7 @@ const siteConfig = {
   FROM_EMAIL,
   SITE_TITLE,
   SITE_SHORT_TITLE,
+  SITE_DESCRIPTION,
   getOgImageUrl,
   getTwitterImageUrl,
 };

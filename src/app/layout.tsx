@@ -7,6 +7,7 @@ import {
   SITE_URL,
   SITE_TITLE,
   SITE_DOMAIN,
+  SITE_DESCRIPTION,
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
@@ -26,19 +27,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteDescription =
-  "Security architect and engineer sharing insights on cybersecurity, enterprise security operations, and technology. Building secure systems, leading teams, and writing about security best practices.";
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_TITLE,
     template: "%s — " + SITE_TITLE,
   },
-  description: siteDescription,
+  description: SITE_DESCRIPTION,
   openGraph: {
     title: SITE_TITLE,
-    description: siteDescription,
+    description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_TITLE,
     locale: "en_US",
@@ -56,7 +54,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: SITE_TITLE,
-    description: siteDescription,
+    description: SITE_DESCRIPTION,
     images: [getTwitterImageUrl()],
   },
   icons: {

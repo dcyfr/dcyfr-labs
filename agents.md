@@ -56,7 +56,7 @@ If you’re running in VS Code with Model Context Protocol (MCP) servers configu
 - If integrating email/SaaS (Resend, Sendgrid), do it inside the server route using env vars; don’t leak secrets to the client.
 
 ## SEO and metadata
-- Global `metadata` is in `src/app/layout.tsx` (uses `metadataBase` and OG image `public/og.svg`).
+- Global `metadata` is in `src/app/layout.tsx` (uses `metadataBase` plus dynamic `/opengraph-image` and `/twitter-image` routes).
 - `sitemap.ts` and `robots.ts` are typed metadata routes. Update the base URL consistently when changing domains/environments.
 
 ## Adding pages or components (examples)
