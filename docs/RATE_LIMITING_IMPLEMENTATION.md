@@ -49,7 +49,7 @@ Created detailed documentation covering:
 - Technical architecture
 - Configuration options
 - Testing procedures
-- Upgrade paths to distributed solutions (Vercel KV, Upstash Redis)
+- Upgrade paths to distributed Redis solutions (Upstash, Redis Cloud, Vercel KV)
 - Monitoring recommendations
 
 **Location:** `docs/RATE_LIMITING.md`
@@ -89,11 +89,11 @@ Updated project documentation:
 
 ### Future Upgrade Path
 
-For high-traffic scenarios, the documentation includes complete upgrade instructions for:
-1. **Vercel KV** (recommended for Vercel deployments)
-2. **Upstash Redis** (serverless Redis alternative)
+For high-traffic scenarios, the documentation includes upgrade guidance for distributed Redis solutions:
+1. **Managed Redis via `REDIS_URL`** (Upstash, Redis Cloud, Vercel KV via Marketplace, etc.)
+2. **Upstash REST client** (`@upstash/redis`) for edge-friendly usage
 
-Both options provide distributed rate limiting across all serverless instances.
+Either approach provides shared counters across all serverless instances.
 
 ## Configuration
 

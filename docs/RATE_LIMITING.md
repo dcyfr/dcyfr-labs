@@ -75,23 +75,25 @@ The implementation correctly handles Vercel's proxy headers:
 
 For high-traffic sites or stricter rate limiting requirements, upgrade to a distributed solution:
 
-### Option 1: Vercel KV (Recommended)
+### Option 1: Managed Redis via `REDIS_URL`
 
-Vercel KV is a Redis-compatible database optimized for serverless:
+Use any hosted Redis provider (Upstash, Redis Cloud, Aiven, etc.) and connect with the official `redis` client:
 
 1. **Install dependency:**
    ```bash
-   npm install @vercel/kv
+   npm install redis
    ```
 
-2. **Set up Vercel KV:**
-   - Go to Vercel Dashboard → Storage → Create KV Database
-   - Link it to your project
+2. **Configure environment:**
+   - Provision a Redis database (e.g., Upstash → Redis database → copy connection string)
+   - Add `REDIS_URL` to your Vercel project and local `.env` file
 
 3. **Update `src/lib/rate-limit.ts`:**
    ```typescript
-   import { kv } from "@vercel/kv";
-   
+   import { createClient } from "redis";
+
+  const client = createClient({ url: process.env.REDIS_URL });
+
    export async function rateLimit(
      identifier: string,
      config: RateLimitConfig
@@ -99,25 +101,30 @@ Vercel KV is a Redis-compatible database optimized for serverless:
      const key = `rate_limit:${identifier}`;
      const now = Date.now();
      const windowMs = config.windowInSeconds * 1000;
-     
-     // Use Redis pipeline for atomic operations
-     const pipeline = kv.pipeline();
-     pipeline.incr(key);
-     pipeline.pexpire(key, windowMs);
-     
-     const [count] = await pipeline.exec();
-     
-     const remaining = Math.max(0, config.limit - (count as number));
-     const success = (count as number) <= config.limit;
-     
+
+     if (!client.isOpen) {
+       await client.connect();
+     }
+
+     const [count] = await client
+       .multi()
+       .incr(key)
+       .pexpire(key, windowMs)
+       .exec();
+
+     const total = Number(count ?? 0);
+     const remaining = Math.max(0, config.limit - total);
+
      return {
-       success,
+       success: total <= config.limit,
        limit: config.limit,
        remaining,
        reset: now + windowMs,
      };
    }
    ```
+
+> **Note:** Vercel KV is now available through the Vercel Marketplace. If you prefer it, install the integration and replace the `redis` client with the `@vercel/kv` helper—logic stays the same (increment and set expiry per request).
 
 ### Option 2: Upstash Redis
 
@@ -261,5 +268,5 @@ if (!rateLimitResult.success) {
 
 - [MDN: 429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429)
 - [IETF Draft: RateLimit Header Fields](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers)
-- [Vercel KV Documentation](https://vercel.com/docs/storage/vercel-kv)
+- [Redis Node.js Client](https://github.com/redis/node-redis)
 - [Upstash Documentation](https://docs.upstash.com/redis)

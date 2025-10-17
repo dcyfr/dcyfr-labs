@@ -325,7 +325,7 @@ if (!result.success) {
 | Rate limit not working | Check if `getClientIp()` returns valid IP |
 | Too strict | Increase `limit` or `windowInSeconds` |
 | Not strict enough | Decrease `limit` or increase `windowInSeconds` |
-| Memory concerns | Consider upgrading to Vercel KV or Upstash Redis |
+| Memory concerns | Consider upgrading to a managed Redis store (Upstash, Redis Cloud, Vercel KV) |
 | Testing issues | Use `npm run test:rate-limit` script |
 | Headers not showing | Ensure using `createRateLimitHeaders()` |
 

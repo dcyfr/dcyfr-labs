@@ -46,7 +46,7 @@ Successfully implemented comprehensive rate limiting for the contact form API en
 1. **RATE_LIMITING.md** (470+ lines)
    - Complete implementation guide
    - Configuration details
-   - Upgrade paths to Vercel KV/Upstash Redis
+   - Upgrade paths to managed Redis options (Upstash, Redis Cloud, Vercel KV)
    - Testing procedures
    - Monitoring recommendations
 
@@ -168,7 +168,7 @@ npm run build   # ✅ Passing
 1. Monitor rate limit violations in logs
 2. Adjust limits if needed based on real traffic
 3. Consider CAPTCHA if abuse continues
-4. Plan upgrade to Vercel KV if traffic grows significantly
+4. Plan upgrade to managed Redis if traffic grows significantly
 
 ## 📚 Documentation Structure
 
@@ -191,7 +191,7 @@ From TODO.md:
 - [ ] Set up monitoring/alerting for violations
 - [ ] Add rate limiting to other API routes (when added)
 - [ ] Implement allowlist for trusted IPs
-- [ ] Upgrade to Vercel KV for distributed limiting (if needed)
+- [ ] Upgrade to managed Redis for distributed limiting (if needed)
 
 ## 📝 Files Changed Summary
 
@@ -234,7 +234,7 @@ From TODO.md:
 1. **In-Memory Storage**
    - Chosen for: Simplicity, zero dependencies, perfect for Vercel
    - Trade-off: Not shared across instances (acceptable for current scale)
-   - Future: Can upgrade to Vercel KV if needed (docs provided)
+   - Future: Can upgrade to a shared Redis store if needed (docs provided)
 
 2. **Conservative Limits**
    - 3 requests per 60s balances security and UX
@@ -286,7 +286,7 @@ For team members, the documentation includes:
 
 3. **Long-term:**
    - Consider CAPTCHA for persistent abuse
-   - Upgrade to Vercel KV if traffic grows
+   - Upgrade to managed Redis if traffic grows
    - Add rate limiting to future API endpoints
 
 ---

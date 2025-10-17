@@ -45,7 +45,7 @@ Complete resolution summary for all security assessment findings:
 Comprehensive guide to the rate limiting implementation:
 - Current in-memory implementation details
 - Configuration and usage
-- Upgrade paths to distributed solutions (Vercel KV, Upstash Redis)
+- Upgrade paths to distributed Redis solutions (Upstash, Redis Cloud, Vercel KV)
 - Testing procedures and monitoring
 
 **Use when**: Understanding rate limiting, upgrading to distributed storage, or troubleshooting rate limit issues.
@@ -67,6 +67,14 @@ Visual diagrams and flow charts showing:
 - Example scenarios and edge cases
 
 **Use when**: Understanding the system architecture or explaining rate limiting to others.
+
+### `VIEW_COUNTS.md`
+Implementation guide for blog view tracking:
+- Redis-backed storage requirements
+- Environment variable configuration
+- Verification steps and future enhancements
+
+**Use when**: Setting up or maintaining blog view counts.
 
 ### `RATE_LIMITING_IMPLEMENTATION.md`
 Implementation summary and change log:
