@@ -17,7 +17,6 @@ Provided constants
 - AUTHOR_EMAIL — primary email address.
 - FROM_EMAIL — default from address for outgoing contact emails (derived as `contact@${SITE_DOMAIN}`).
 - SITE_TITLE — site title.
-- SITE_SHORT_TITLE — short title used in some UI contexts.
 
 How SITE_DOMAIN is chosen
 
