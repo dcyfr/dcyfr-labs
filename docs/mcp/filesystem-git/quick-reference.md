@@ -216,8 +216,8 @@ Latest commits typically include:
 ## 📚 Full Documentation
 
 For detailed guides, see:
-- **Complete Guide**: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
-- **Setup Guide**: `docs/MCP_SERVERS.md`
+- **Complete Guide**: `docs/mcp/filesystem-git/integration.md`
+- **Setup Guide**: `docs/mcp/servers.md`
 - **Project Guide**: `agents.md`
 
 ---

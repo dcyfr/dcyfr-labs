@@ -313,9 +313,9 @@ if (!result.success) {
 
 ## 📚 Further Reading
 
-- **Full Documentation:** `docs/RATE_LIMITING.md`
-- **Implementation Summary:** `docs/RATE_LIMITING_IMPLEMENTATION.md`
-- **Flow Diagrams:** `docs/RATE_LIMITING_FLOW.md`
+- **Full Documentation:** `docs/security/rate-limiting/guide.md`
+- **Implementation Summary:** `docs/security/rate-limiting/implementation-summary.md`
+- **Flow Diagrams:** `docs/security/rate-limiting/flow.md`
 - **Source Code:** `src/lib/rate-limit.ts`
 
 ## 🆘 Troubleshooting
@@ -332,7 +332,7 @@ if (!result.success) {
 ## 📞 Support
 
 For questions or issues:
-1. Check documentation in `docs/RATE_LIMITING*.md`
+1. Check documentation in `docs/security/rate-limiting/*.md`
 2. Review source code in `src/lib/rate-limit.ts`
 3. Run test script: `npm run test:rate-limit`
 4. Check GitHub issues/discussions

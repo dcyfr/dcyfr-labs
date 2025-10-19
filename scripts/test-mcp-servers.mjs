@@ -231,8 +231,8 @@ test(
 
 test(
   "Configuration documented",
-  fs.existsSync(path.join(rootDir, "docs", "MCP_SERVERS.md")),
-  "docs/MCP_SERVERS.md exists"
+  fs.existsSync(path.join(rootDir, "docs", "mcp", "servers.md")),
+  "docs/mcp/servers.md exists"
 );
 
 test(
@@ -245,7 +245,7 @@ test(
 section("6. Documentation Validation");
 
 const docFiles = [
-  { path: "docs/MCP_SERVERS.md", name: "MCP Servers Guide" },
+  { path: "docs/mcp/servers.md", name: "MCP Servers Guide" },
   { path: ".github/copilot-instructions.md", name: "Copilot Instructions" },
   { path: "agents.md", name: "Agents Configuration" },
 ];
@@ -301,7 +301,7 @@ if (!configExists) {
   log(`2. Configure mcp.json at one of these locations:`, "yellow");
   log(`   • Linux/Windows: ~/.config/Code/User/mcp.json`, "yellow");
   log(`   • macOS: ~/Library/Application Support/Code/User/mcp.json`, "yellow");
-  log("3. See docs/MCP_SERVERS.md for configuration details", "yellow");
+  log("3. See docs/mcp/servers.md for configuration details", "yellow");
   log("4. Restart VS Code after configuring MCP servers", "yellow");
 }
 
@@ -317,7 +317,7 @@ if (testResults.warnings > 0) {
   log("This may be normal if packages don't support --version.", "yellow");
 }
 
-log("\nFor more information, see docs/MCP_SERVERS.md", "cyan");
+log("\nFor more information, see docs/mcp/servers.md", "cyan");
 
 // Exit with appropriate code
 process.exit(testResults.failed > 0 ? 1 : 0);

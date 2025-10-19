@@ -33,7 +33,7 @@ For each MCP server (Context7, Sequential Thinking, Memory):
 
 ### 5. Project Dependencies
 - ✅ MCP servers declared as project dependency in `mcp.json`
-- ✅ Documentation exists (`docs/MCP_SERVERS.md`)
+- ✅ Documentation exists (`docs/mcp/servers.md`)
 - ✅ Agent instructions are updated
 - ✅ Configuration is referenced in project docs
 
@@ -118,7 +118,7 @@ Review the failed tests and follow the recommendations provided. Common issues:
 
 | Issue | Solution |
 |-------|----------|
-| `mcp.json not found` | Configure MCP servers in VS Code (see `docs/MCP_SERVERS.md`) |
+| `mcp.json not found` | Configure MCP servers in VS Code (see `docs/mcp/servers.md`) |
 | `npm/npx not available` | Ensure Node.js is installed and in your PATH |
 | `Package accessibility` | Check network connectivity or try `npm install` |
 | `Missing documentation` | Run `git pull` to ensure docs are up to date |
@@ -180,7 +180,7 @@ When adding new MCP servers:
 ls -la ~/.config/Code/User/mcp.json
 
 # If not found, create it with proper configuration
-# See docs/MCP_SERVERS.md for setup instructions
+# See docs/mcp/servers.md for setup instructions
 ```
 
 ### Test Fails with "npm/npx not available"
@@ -229,7 +229,7 @@ The test includes a 5-second timeout for package validation. If you're on a slow
 
 ## Related Documentation
 
-- [MCP Servers Guide](./MCP_SERVERS.md) — Comprehensive MCP setup and usage
+- [MCP Servers Guide](../servers.md) — Comprehensive MCP setup and usage
 - [Copilot Instructions](./../.github/copilot-instructions.md) — AI contributor guidelines
 - [Agents Configuration](./../agents.md) — Agent configuration reference
 
@@ -269,7 +269,7 @@ To improve the test suite:
 
 For issues or questions:
 
-1. Check [MCP Servers Guide](./MCP_SERVERS.md)
+1. Check [MCP Servers Guide](../servers.md)
 2. Review [Copilot Instructions](./../.github/copilot-instructions.md)
 3. See troubleshooting section above
 4. Create an issue with test output attached

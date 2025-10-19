@@ -385,8 +385,8 @@ Expected: Commit hash, author, date, message, files changed
 
 ## Documentation References
 
-- **Full MCP Documentation**: `docs/MCP_SERVERS.md`
-- **MCP Dependency Validation**: `docs/MCP_DEPENDENCY_VALIDATION.md`
+- **Full MCP Documentation**: [MCP Servers Guide](../servers.md)
+- **MCP Dependency Validation**: [Validation Reference](../tests/dependency-validation.md)
 - **Project Guide**: `agents.md` and `.github/copilot-instructions.md`
 
 ---
@@ -396,7 +396,7 @@ Expected: Commit hash, author, date, message, files changed
 - ✅ `mcp.json` - Added Filesystem and Git MCP configurations
 - ✅ `.github/copilot-instructions.md` - Updated MCP documentation
 - ✅ `agents.md` - Auto-synced from copilot-instructions
-- ✅ `docs/TODO.md` - Marked as completed
+- ✅ `docs/operations/todo.md` - Marked as completed
 
 ---
 

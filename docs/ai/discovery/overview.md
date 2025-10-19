@@ -225,7 +225,7 @@ Drew. (2025). Shipping a Next.js Tiny Portfolio. Retrieved from https://cyberdre
 
 ### Created:
 - `src/app/ai.txt/route.ts` - AI crawler policy file
-- `docs/AI_DISCOVERY.md` - This documentation
+- `docs/ai/discovery/overview.md` - This documentation
 
 ### Modified:
 - `src/app/robots.ts` - Enhanced with AI crawler rules

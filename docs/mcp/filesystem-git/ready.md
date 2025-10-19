@@ -1,4 +1,4 @@
-✅ Filesystem & Git MCP Integration Complete
+# Filesystem And Git MCP Integration Ready Checklist
 
 ## Summary
 
@@ -35,10 +35,10 @@ Successfully integrated Filesystem and Git MCPs into your development workflow.
 - `.github/copilot-instructions.md` - Updated with new MCPs
 - `agents.md` - Auto-synced from copilot-instructions
 - `mcp.json` - Project reference configuration
-- `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md` - Comprehensive integration guide
+- `docs/mcp/filesystem-git/integration.md` - Comprehensive integration guide
 
 ✅ **Project Tracking**
-- `docs/TODO.md` - Marked Filesystem and Git MCPs as completed
+- `docs/operations/todo.md` - Marked Filesystem and Git MCPs as completed
 
 ---
 
@@ -127,7 +127,7 @@ Successfully integrated Filesystem and Git MCPs into your development workflow.
 ## Documentation
 
 ### Primary Guide
-📖 **`docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`**
+📖 **`docs/mcp/filesystem-git/integration.md`**
 - Complete integration documentation
 - Usage examples and best practices
 - Troubleshooting guide
@@ -197,9 +197,9 @@ Expected output includes successful validation of all MCPs.
 ## Support
 
 For detailed information, see:
-- **Integration Guide**: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+- **Integration Guide**: `./integration.md`
 - **Project Instructions**: `.github/copilot-instructions.md`
-- **MCP Reference**: `docs/MCP_SERVERS.md`
+- **MCP Reference**: `docs/mcp/servers.md`
 
 ---
 

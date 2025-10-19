@@ -104,8 +104,8 @@ After deployment, monitor:
 
 ### Created:
 - `src/app/ai.txt/route.ts`
-- `docs/AI_DISCOVERY.md`
-- `docs/AI_DISCOVERY_SUMMARY.md` (this file)
+- `docs/ai/discovery/overview.md`
+- `docs/ai/discovery/summary.md` (this file)
 
 ### Modified:
 - `src/app/robots.ts`

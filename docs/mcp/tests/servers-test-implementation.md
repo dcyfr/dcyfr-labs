@@ -29,7 +29,7 @@ A Node.js test script that validates:
 
 #### ✅ Project Dependencies (3 tests)
 - MCP servers declared as project dependency
-- Documentation exists (`docs/MCP_SERVERS.md`)
+- Documentation exists (`docs/mcp/servers.md`)
 - Agent instructions updated
 
 #### ✅ Documentation (3 tests)
@@ -50,7 +50,7 @@ Added to `package.json`:
 "test:mcp-servers": "node ./scripts/test-mcp-servers.mjs"
 ```
 
-### 3. Documentation: `docs/MCP_SERVERS_TEST.md`
+### 3. Documentation: `docs/mcp/tests/servers-test.md`
 
 Comprehensive guide covering:
 - What the test validates
@@ -143,7 +143,7 @@ Success Rate: 100.0%
 The test validates that MCP servers are treated as project dependencies through:
 
 1. **Configuration**: `~/.config/Code/User/mcp.json` (or macOS path)
-2. **Documentation**: `docs/MCP_SERVERS.md` and `docs/MCP_SERVERS_TEST.md`
+2. **Documentation**: `docs/mcp/servers.md` and `docs/mcp/tests/servers-test.md`
 3. **Agent Instructions**: `.github/copilot-instructions.md` and `agents.md`
 4. **Project Scripts**: `npm run test:mcp-servers`
 
@@ -161,7 +161,7 @@ Note: In CI environments, you may need to skip the local `mcp.json` check or moc
 ## Troubleshooting
 
 ### If `mcp.json not found`
-The test provides clear path recommendations for your OS. See `docs/MCP_SERVERS_TEST.md` for setup instructions.
+The test provides clear path recommendations for your OS. See `docs/mcp/tests/servers-test.md` for setup instructions.
 
 ### If packages not accessible
 1. Check network connectivity
@@ -169,15 +169,15 @@ The test provides clear path recommendations for your OS. See `docs/MCP_SERVERS_
 3. Verify npm/npx installation
 
 ### Full troubleshooting guide
-See `docs/MCP_SERVERS_TEST.md#troubleshooting`
+See `docs/mcp/tests/servers-test.md#troubleshooting`
 
 ## Documentation Files
 
 | File | Purpose |
 |------|---------|
 | `scripts/test-mcp-servers.mjs` | Test implementation |
-| `docs/MCP_SERVERS.md` | Setup and usage guide |
-| `docs/MCP_SERVERS_TEST.md` | Test documentation |
+| `docs/mcp/servers.md` | Setup and usage guide |
+| `docs/mcp/tests/servers-test.md` | Test documentation |
 | `docs/README.md` | Updated with test references |
 | `package.json` | Added `test:mcp-servers` script |
 
@@ -189,18 +189,18 @@ See `docs/MCP_SERVERS_TEST.md#troubleshooting`
 npm run test:mcp-servers
 
 # Use MCP servers for development
-# See docs/MCP_SERVERS.md for usage patterns
+# See docs/mcp/servers.md for usage patterns
 ```
 
 ### For CI/CD
 1. Add test to your CI pipeline
-2. Review `docs/MCP_SERVERS_TEST.md#cicd-integration`
+2. Review `docs/mcp/tests/servers-test.md#cicd-integration`
 3. Consider skipping local path validation in CI
 
 ### For Team
-1. Share `docs/MCP_SERVERS.md` with team members
+1. Share `docs/mcp/servers.md` with team members
 2. Ensure they run `npm run test:mcp-servers` before committing
-3. Reference `docs/MCP_SERVERS_TEST.md` for troubleshooting
+3. Reference `docs/mcp/tests/servers-test.md` for troubleshooting
 
 ## Success Criteria Met
 
@@ -217,7 +217,7 @@ scripts/
   test-mcp-servers.mjs      (NEW - 370 lines)
 
 docs/
-  MCP_SERVERS_TEST.md        (NEW - comprehensive test guide)
+  mcp/tests/servers-test.md  (NEW - comprehensive test guide)
   README.md                  (UPDATED - added test references)
 
 package.json                 (UPDATED - added test:mcp-servers script)
@@ -232,12 +232,12 @@ npm run test:mcp-servers
 
 **View setup guide:**
 ```bash
-cat docs/MCP_SERVERS.md
+cat docs/mcp/servers.md
 ```
 
 **View test documentation:**
 ```bash
-cat docs/MCP_SERVERS_TEST.md
+cat docs/mcp/tests/servers-test.md
 ```
 
 ---

@@ -52,9 +52,9 @@ Drew. (2025). [Content Title]. Retrieved from https://cyberdrew.dev
 ### Created (4 files)
 ```
 src/app/ai.txt/route.ts               - AI policy endpoint
-docs/AI_DISCOVERY.md                  - Full documentation
-docs/AI_DISCOVERY_SUMMARY.md          - Quick summary
-docs/AI_DISCOVERY_ARCHITECTURE.md     - Visual architecture
+docs/ai/discovery/overview.md         - Full documentation
+docs/ai/discovery/summary.md          - Executive summary
+docs/ai/discovery/quick-reference.md  - Quick reference (this file)
 ```
 
 ### Modified (4 files)
@@ -128,9 +128,9 @@ All changes are:
 ## 📚 Documentation
 
 Full docs available in:
-- `docs/AI_DISCOVERY.md` - Complete guide
-- `docs/AI_DISCOVERY_SUMMARY.md` - Executive summary
-- `docs/AI_DISCOVERY_ARCHITECTURE.md` - Technical diagrams
+- `docs/ai/discovery/overview.md` - Complete guide
+- `docs/ai/discovery/summary.md` - Executive summary
+- `docs/ai/discovery/quick-reference.md` - Quick reference
 
 ---
 

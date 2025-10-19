@@ -210,13 +210,13 @@ Completed tasks are moved here with completion date for reference.
   - Updated `vercel.json` with static CSP header (defense in depth)
   - Configured CSP directives for Vercel Analytics, Google Fonts, and app resources
   - Protection against XSS and Clickjacking attacks
-  - Created comprehensive documentation in `docs/CSP_IMPLEMENTATION.md`
+  - Created comprehensive documentation in `docs/security/csp/implementation.md`
 - ✅ Implemented rate limiting for contact form API
   - Created `src/lib/rate-limit.ts` with in-memory rate limiter
   - Updated `/api/contact` route with IP-based rate limiting (3 req/60s)
   - Added standard rate limit headers (X-RateLimit-*)
   - Enhanced contact page to handle 429 responses gracefully
-  - Created comprehensive documentation in `docs/RATE_LIMITING.md`
+  - Created comprehensive documentation in `docs/security/rate-limiting/guide.md`
 
 ### 2025-10-03
 - ✅ Fixed Turbopack build claim in shipping blog post

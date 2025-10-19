@@ -66,9 +66,9 @@ block-all-mixed-content
 - ✅ No CSP violations in testing
 
 #### Documentation
-- `docs/CSP_IMPLEMENTATION.md` - Complete guide (500+ lines)
-- `docs/CSP_QUICKREF.md` - Quick reference (150+ lines)
-- `docs/CSP_IMPLEMENTATION_COMPLETE.md` - Summary (400+ lines)
+- `docs/security/csp/implementation.md` - Complete guide (500+ lines)
+- `docs/security/csp/quick-reference.md` - Quick reference (150+ lines)
+- `docs/archive/csp-implementation-complete.md` - Summary (400+ lines)
 
 ---
 
@@ -403,15 +403,15 @@ Results:
 ### Created (4 files)
 ```
 ✨ src/middleware.ts                           (90 lines, 34.2 kB)
-✨ docs/CSP_IMPLEMENTATION.md                  (500+ lines)
-✨ docs/CSP_QUICKREF.md                        (150+ lines)
-✨ docs/CSP_IMPLEMENTATION_COMPLETE.md         (400+ lines)
+✨ docs/security/csp/implementation.md         (500+ lines)
+✨ docs/security/csp/quick-reference.md        (150+ lines)
+✨ docs/archive/csp-implementation-complete.md (400+ lines)
 ```
 
 ### Modified (3 files)
 ```
 ✏️  vercel.json                                (CSP header added)
-✏️  docs/TODO.md                               (marked complete)
+✏️  docs/operations/todo.md                    (marked complete)
 ✏️  docs/README.md                             (added docs)
 ```
 
@@ -516,18 +516,18 @@ Results:
 
 Complete documentation available:
 
-1. **CSP Implementation Guide** - `docs/CSP_IMPLEMENTATION.md`
+1. **CSP Implementation Guide** - `docs/security/csp/implementation.md`
    - Complete CSP setup and configuration
    - Directive explanations
    - Testing and troubleshooting
    - 500+ lines
 
-2. **CSP Quick Reference** - `docs/CSP_QUICKREF.md`
+2. **CSP Quick Reference** - `docs/security/csp/quick-reference.md`
    - Quick lookup for developers
    - Common tasks
    - 150+ lines
 
-3. **Implementation Summary** - `docs/CSP_IMPLEMENTATION_COMPLETE.md`
+3. **Implementation Summary** - `docs/archive/csp-implementation-complete.md`
    - Complete implementation summary
    - Architecture and design
    - 400+ lines

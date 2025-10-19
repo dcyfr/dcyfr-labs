@@ -52,7 +52,7 @@ Created detailed documentation covering:
 - Upgrade paths to distributed Redis solutions (Upstash, Redis Cloud, Vercel KV)
 - Monitoring recommendations
 
-**Location:** `docs/RATE_LIMITING.md`
+**Location:** `docs/security/rate-limiting/guide.md`
 
 ### 5. Testing Script (`scripts/test-rate-limit.mjs`)
 
@@ -67,10 +67,9 @@ Created an automated test script to verify:
 ### 6. Documentation Updates
 
 Updated project documentation:
-- Marked rate limiting as complete in `docs/TODO.md`
+- Marked rate limiting as complete in `docs/operations/todo.md`
 - Added implementation details to the archive
 - Updated last modified date
-
 ## Technical Architecture
 
 ### Current Implementation: In-Memory Storage
@@ -181,13 +180,13 @@ From the TODO list, consider:
 
 **Created:**
 - `src/lib/rate-limit.ts` - Core rate limiting utility
-- `docs/RATE_LIMITING.md` - Comprehensive documentation
+- `docs/security/rate-limiting/guide.md` - Comprehensive documentation
 - `scripts/test-rate-limit.mjs` - Automated test script
 
 **Modified:**
 - `src/app/api/contact/route.ts` - Added rate limiting
 - `src/app/contact/page.tsx` - Enhanced error handling
-- `docs/TODO.md` - Updated with completion status
+- `docs/operations/todo.md` - Updated with completion status
 - `package.json` - Added test script
 
 ## Validation

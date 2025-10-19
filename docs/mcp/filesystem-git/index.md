@@ -1,4 +1,4 @@
-# Filesystem & Git MCP Integration - Documentation Index
+# Filesystem And Git MCP Integration Index
 
 **Status**: ✅ Complete  
 **Date**: October 18, 2025  
@@ -6,30 +6,30 @@
 
 ---
 
-## 📚 Documentation Overview
+## Documentation Overview
 
 This integration adds **Filesystem** and **Git** MCPs to enhance your development workflow. Here's where to find what you need:
 
 ---
 
-## 🚀 START HERE (Choose Your Level)
+## Start Here
 
-### ⚡ **5-Minute Learner** (Busy!)
-📖 **Read**: `docs/MCP_FILESYSTEM_GIT_QUICKREF.md`
+### Five-Minute Learner
+**Read:** [Quick Reference](./quick-reference.md)
 - Quick command reference
 - Common workflows
 - Pro tips
 - **Time**: 5 minutes
 
-### 📖 **10-Minute Overview** (Summary)
-📖 **Read**: `docs/MCP_FILESYSTEM_GIT_READY.md`
+### Ten-Minute Overview
+**Read:** [Ready Checklist](./ready.md)
 - What was added
 - Key capabilities
 - Getting started
 - **Time**: 10 minutes
 
-### 🎓 **30-Minute Deep Dive** (Comprehensive)
-📖 **Read**: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+### Thirty-Minute Deep Dive
+**Read:** [Integration Guide](./integration.md)
 - Complete capabilities
 - Usage examples
 - Security details
@@ -37,8 +37,8 @@ This integration adds **Filesystem** and **Git** MCPs to enhance your developmen
 - Best practices
 - **Time**: 30 minutes
 
-### 📊 **Full Status Report** (Technical)
-📖 **Read**: `docs/MCP_FILESYSTEM_GIT_COMPLETE_SUMMARY.md`
+### Full Status Report
+**Read:** [Complete Summary](../../archive/mcp-filesystem-git-complete-summary.md)
 - Implementation details
 - Verification results
 - Configuration status
@@ -82,97 +82,97 @@ This integration adds **Filesystem** and **Git** MCPs to enhance your developmen
 
 ---
 
-## 🎯 Common Tasks
+## Common Tasks
 
 ### I want to...
 
 #### ...understand file structure
 1. Use Filesystem MCP: "What's in src/components?"
 2. See: List of files and directories
-3. Read more: `docs/MCP_FILESYSTEM_GIT_QUICKREF.md`
+3. Read more: [Quick Reference](./quick-reference.md)
 
 #### ...understand recent changes
 1. Use Git MCP: "Show me recent commits"
 2. See: Commit history with messages
-3. Read more: `docs/MCP_FILESYSTEM_GIT_QUICKREF.md`
+3. Read more: [Quick Reference](./quick-reference.md)
 
 #### ...refactor code
 1. Filesystem MCP: Find all usages
 2. Sequential Thinking: Plan refactoring
 3. Filesystem MCP: Update files safely
 4. Git MCP: Verify changes
-5. Read more: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+5. Read more: [Integration Guide](./integration.md)
 
 #### ...review a change
 1. Git MCP: Show what changed
 2. Filesystem MCP: View implementations
 3. Sequential Thinking: Analyze
-4. Read more: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+4. Read more: [Integration Guide](./integration.md)
 
 #### ...learn best practices
-1. Read: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+1. Read: [Integration Guide](./integration.md)
 2. Section: "Best Practices"
 3. Section: "Practical Examples"
 
 #### ...troubleshoot issues
-1. Read: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+1. Read: [Integration Guide](./integration.md)
 2. Section: "Troubleshooting"
 3. Check: Configuration verification
 
 ---
 
-## 📁 File Structure
+## File Structure
 
 ```
 docs/
-├── MCP_FILESYSTEM_GIT_INTEGRATION.md        ← Complete guide
-├── MCP_FILESYSTEM_GIT_READY.md              ← Quick summary
-├── MCP_FILESYSTEM_GIT_QUICKREF.md           ← Quick reference
-├── MCP_FILESYSTEM_GIT_COMPLETE_SUMMARY.md   ← Status report
-├── IMPLEMENTATION_CHANGELOG.md              ← What changed
-├── MCP_FILESYSTEM_GIT_INDEX.md              ← This file!
-│
-└── Other MCP docs (existing)
-    ├── MCP_SERVERS.md
-    ├── MCP_QUICKREF.md
-    ├── MCP_TEST_COMPLETE.md
-    └── ...
+├── mcp/
+│   ├── filesystem-git/
+│   │   ├── index.md                ← This file
+│   │   ├── integration.md          ← Complete guide
+│   │   ├── quick-reference.md      ← Quick commands
+│   │   └── ready.md                ← Quick summary
+│   ├── quick-reference.md          ← MCP overview
+│   └── servers.md                  ← Setup guide
+├── operations/
+│   └── implementation-changelog.md ← What changed
+└── archive/
+   └── mcp-filesystem-git-complete-summary.md ← Historical status report
 
 .github/
-└── copilot-instructions.md                  ← Updated project guide
+└── copilot-instructions.md         ← Updated project guide
 
-agents.md                                     ← Updated team guide
+agents.md                           ← Updated team guide
 
-mcp.json                                      ← Config reference
+mcp.json                             ← Config reference
 ```
 
 ---
 
-## 🔗 Documentation Map
+## Documentation Map
 
 ### Getting Started
-1. **First time?** → `MCP_FILESYSTEM_GIT_QUICKREF.md`
-2. **Want overview?** → `MCP_FILESYSTEM_GIT_READY.md`
-3. **Need details?** → `MCP_FILESYSTEM_GIT_INTEGRATION.md`
+1. **First time?** → `./quick-reference.md`
+2. **Want overview?** → `./ready.md`
+3. **Need details?** → `./integration.md`
 
 ### Reference
-- **Quick commands** → `MCP_FILESYSTEM_GIT_QUICKREF.md`
-- **Configuration** → `IMPLEMENTATION_CHANGELOG.md`
-- **Status** → `MCP_FILESYSTEM_GIT_COMPLETE_SUMMARY.md`
+- **Quick commands** → `./quick-reference.md`
+- **Configuration** → `../../operations/implementation-changelog.md`
+- **Status** → `../../archive/mcp-filesystem-git-complete-summary.md`
 
 ### Learning
-- **Examples** → `MCP_FILESYSTEM_GIT_INTEGRATION.md`
-- **Workflows** → `MCP_FILESYSTEM_GIT_QUICKREF.md`
-- **Best practices** → `MCP_FILESYSTEM_GIT_INTEGRATION.md`
+- **Examples** → `./integration.md`
+- **Workflows** → `./quick-reference.md`
+- **Best practices** → `./integration.md`
 
 ### Troubleshooting
-- **Issues?** → `MCP_FILESYSTEM_GIT_INTEGRATION.md` (Troubleshooting section)
-- **Configuration?** → `IMPLEMENTATION_CHANGELOG.md`
-- **Status check?** → `MCP_FILESYSTEM_GIT_COMPLETE_SUMMARY.md`
+- **Issues?** → `./integration.md` (Troubleshooting section)
+- **Configuration?** → `../../operations/implementation-changelog.md`
+- **Status check?** → `../../archive/mcp-filesystem-git-complete-summary.md`
 
 ---
 
-## 🚀 Try It Now
+## Try It Now
 
 ### Filesystem MCP
 ```
@@ -200,7 +200,7 @@ Files identified + git history shown
 
 ---
 
-## ✅ Verification
+## Verification
 
 ### Configuration Status
 ✅ Filesystem MCP: Configured
@@ -221,42 +221,42 @@ Files identified + git history shown
 
 ---
 
-## 📞 Quick Links
+## Quick Links
 
 ### Most Important Files
-1. **Quick Reference**: `docs/MCP_FILESYSTEM_GIT_QUICKREF.md`
-2. **Full Guide**: `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+1. **Quick Reference**: `./quick-reference.md`
+2. **Full Guide**: `./integration.md`
 3. **Project Guide**: `.github/copilot-instructions.md`
 
 ### Related Documentation
-- **MCP Overview**: `docs/MCP_SERVERS.md`
-- **Project Setup**: `docs/MCP_SERVERS_TEST.md`
+- **MCP Overview**: `../servers.md`
+- **Project Setup**: `../tests/servers-test.md`
 - **Testing**: `npm run test:mcp-servers`
 
 ---
 
-## 🎓 Learning Path
+## Learning Path
 
 ### Level 1: Beginner (15 minutes)
-1. Read: `MCP_FILESYSTEM_GIT_QUICKREF.md`
+1. Read: [Quick Reference](./quick-reference.md)
 2. Try: Simple Filesystem commands
 3. Try: Simple Git commands
 
 ### Level 2: Intermediate (45 minutes)
-1. Read: `MCP_FILESYSTEM_GIT_READY.md`
+1. Read: [Ready Checklist](./ready.md)
 2. Try: Combining MCPs
 3. Try: Workflow examples
 4. Read: Best practices section
 
 ### Level 3: Advanced (90 minutes)
-1. Read: `MCP_FILESYSTEM_GIT_INTEGRATION.md` completely
+1. Read: [Integration Guide](./integration.md)
 2. Study: All examples and use cases
 3. Build: Custom workflows
 4. Master: Advanced combinations
 
 ---
 
-## 💡 Pro Tips
+## Pro Tips
 
 ### Quick Commands
 - Filesystem: `"What's in [directory]?"`
@@ -276,7 +276,7 @@ Files identified + git history shown
 
 ---
 
-## ⚡ What's New vs. Before
+## What's New Compared To Before
 
 ### Before Integration
 - 3 MCPs (Context7, Sequential Thinking, Memory)
@@ -306,7 +306,7 @@ Files identified + git history shown
 
 ---
 
-## 🎯 Next Steps
+## Next Steps
 
 1. **Right Now**
    - Try a Filesystem command
@@ -325,7 +325,7 @@ Files identified + git history shown
 
 ---
 
-## 📊 MCP Ecosystem
+## MCP Ecosystem
 
 Your MCPs (5 total):
 1. **Context7** - Documentation
@@ -336,7 +336,7 @@ Your MCPs (5 total):
 
 ---
 
-## 📝 Changes Summary
+## Changes Summary
 
 | Item | Count |
 |------|-------|
@@ -349,7 +349,7 @@ Your MCPs (5 total):
 
 ---
 
-## ❓ FAQ
+## FAQ
 
 **Q: Do I need to do anything to use these?**
 A: No! Configuration is complete. Start using them now.
@@ -368,7 +368,7 @@ A: Comprehensive security considerations are documented.
 
 ---
 
-## 🎉 Ready to Go
+## Ready To Go
 
 ✅ Configuration: Complete
 ✅ Documentation: Complete  
@@ -385,13 +385,13 @@ A: Comprehensive security considerations are documented.
 
 ---
 
-## 📚 All Documentation Files
+## Documentation Files
 
-1. **MCP_FILESYSTEM_GIT_QUICKREF.md** - Quick reference (5 min)
-2. **MCP_FILESYSTEM_GIT_READY.md** - Quick summary (10 min)
-3. **MCP_FILESYSTEM_GIT_INTEGRATION.md** - Full guide (30 min)
-4. **MCP_FILESYSTEM_GIT_COMPLETE_SUMMARY.md** - Status (15 min)
-5. **IMPLEMENTATION_CHANGELOG.md** - Changes (10 min)
-6. **MCP_FILESYSTEM_GIT_INDEX.md** - This file! (5 min)
+1. [Quick Reference](./quick-reference.md) — 5 minutes
+2. [Ready Checklist](./ready.md) — 10 minutes
+3. [Integration Guide](./integration.md) — 30 minutes
+4. [Complete Summary](../../archive/mcp-filesystem-git-complete-summary.md) — 15 minutes
+5. [Implementation Changelog](../../operations/implementation-changelog.md) — 10 minutes
+6. [Index](./index.md) — 5 minutes
 
 Choose what you need. You're all set! 🚀

@@ -31,22 +31,22 @@
    - Contains GitHub MCP documentation
 
 ### 3. Documentation Created
-Created 3 comprehensive documentation files in `docs/`:
+Created 3 comprehensive documentation files in `docs/mcp/github/`:
 
-1. **GITHUB_MCP_IMPLEMENTATION.md** (30-minute read)
+1. **implementation.md** (30-minute read)
    - Complete reference guide
    - Feature overview and use cases
    - Configuration and customization options
    - Security best practices
    - Troubleshooting guide
 
-2. **GITHUB_MCP_QUICKREF.md** (5-minute read)
+2. **quick-reference.md** (5-minute read)
    - Quick reference for common tasks
    - Configuration file locations
    - Toolsets overview
    - Troubleshooting quick fixes
 
-3. **GITHUB_MCP_SETUP.md** (15-minute read) ← START HERE
+3. **setup.md** (15-minute read) ← START HERE
    - Step-by-step setup guide
    - GitHub token creation walkthrough
    - Docker preparation instructions
@@ -161,9 +161,9 @@ Before you can use GitHub MCP, you need:
 5. **Enter token** when prompted
 
 ### Then Read
-1. `docs/GITHUB_MCP_SETUP.md` - Step-by-step setup guide
-2. `docs/GITHUB_MCP_QUICKREF.md` - Common operations
-3. `docs/GITHUB_MCP_IMPLEMENTATION.md` - Full reference
+1. `docs/mcp/github/setup.md` - Step-by-step setup guide
+2. `docs/mcp/github/quick-reference.md` - Common operations
+3. `docs/mcp/github/implementation.md` - Full reference
 
 ### Then Use
 ```
@@ -182,10 +182,10 @@ Before you can use GitHub MCP, you need:
 - `agents.md` - Synced with instructions
 
 ### Created (3 documentation files)
-- `docs/GITHUB_MCP_IMPLEMENTATION.md` - Complete guide
-- `docs/GITHUB_MCP_QUICKREF.md` - Quick reference
-- `docs/GITHUB_MCP_SETUP.md` - Setup instructions
-- `docs/GITHUB_MCP_IMPLEMENTATION_SUMMARY.md` - This file
+- `docs/mcp/github/implementation.md` - Complete guide
+- `docs/mcp/github/quick-reference.md` - Quick reference
+- `docs/mcp/github/setup.md` - Setup instructions
+- `docs/mcp/github/implementation-summary.md` - This file
 
 ## Technical Stack
 

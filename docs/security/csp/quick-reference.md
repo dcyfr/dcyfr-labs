@@ -154,7 +154,7 @@ response.headers.set(
 
 ## Links
 
-- **Full Documentation:** `docs/CSP_IMPLEMENTATION.md`
+- **Full Documentation:** `docs/security/csp/implementation.md`
 - **Middleware:** `src/middleware.ts`
 - **Config:** `vercel.json`
 - **CSP Evaluator:** https://csp-evaluator.withgoogle.com/

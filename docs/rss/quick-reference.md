@@ -6,13 +6,13 @@
 
 ### Files Created
 - `src/lib/mdx-to-html.ts` - MDX to HTML converter for feeds
-- `docs/RSS_FEED_IMPROVEMENTS.md` - Full documentation
+- `docs/rss/improvements.md` - Full documentation
 - `scripts/test-feeds.mjs` - Feed validation script (for reference)
 
 ### Files Modified
 - `src/app/rss.xml/route.ts` - Enhanced RSS 2.0 feed
 - `src/app/atom.xml/route.ts` - Enhanced Atom 1.0 feed
-- `docs/TODO.md` - Marked task complete
+- `docs/operations/todo.md` - Marked task complete
 
 ### Dependencies Added
 ```bash
@@ -95,7 +95,7 @@ Future enhancements could include:
 
 ## Documentation
 
-See `docs/RSS_FEED_IMPROVEMENTS.md` for complete documentation including:
+See `docs/rss/improvements.md` for complete documentation including:
 - Detailed technical implementation
 - Code examples
 - Validation checklist

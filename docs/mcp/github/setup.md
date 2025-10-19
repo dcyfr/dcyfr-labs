@@ -279,9 +279,9 @@ gh auth status
 |------|---------|
 | `~/.../Code/User/mcp.json` | VS Code MCP configuration (includes GitHub) |
 | `./mcp.json` | Project reference configuration |
-| `docs/GITHUB_MCP_IMPLEMENTATION.md` | Full documentation |
-| `docs/GITHUB_MCP_QUICKREF.md` | Quick reference |
-| `docs/GITHUB_MCP_SETUP.md` | This file |
+| `docs/mcp/github/implementation.md` | Full documentation |
+| `docs/mcp/github/quick-reference.md` | Quick reference |
+| `docs/mcp/github/setup.md` | This file |
 
 ## Getting Help
 
@@ -310,8 +310,8 @@ You know it's working when:
 
 Once verified:
 
-1. **Read** `docs/GITHUB_MCP_QUICKREF.md` (5 min) - Common operations
-2. **Explore** `docs/GITHUB_MCP_IMPLEMENTATION.md` (30 min) - Full capabilities
+1. **Read** `docs/mcp/github/quick-reference.md` (5 min) - Common operations
+2. **Explore** `docs/mcp/github/implementation.md` (30 min) - Full capabilities
 3. **Experiment** - Try different queries and toolsets
 4. **Integrate** - Use GitHub MCP in your daily workflow
 5. **Share** - Help teammates set up their GitHub MCPs

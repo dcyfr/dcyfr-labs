@@ -118,7 +118,8 @@ docker ps | grep github-mcp-server
 
 ## 📚 Documentation Files
 
-- `GITHUB_MCP_IMPLEMENTATION.md` - Complete guide (30min read)
+- `docs/mcp/github/implementation.md` - Complete guide (30min read)
+- `docs/mcp/github/setup.md` - Step-by-step onboarding (15min read)
 - This file - Quick reference (5min read)
 
 ## 🔗 Useful Links

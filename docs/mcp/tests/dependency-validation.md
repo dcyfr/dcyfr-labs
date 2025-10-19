@@ -1,6 +1,6 @@
-# MCP Servers as Project Dependencies - Implementation Complete
+# MCP Dependency Validation
 
-## 🎯 Objective Completed
+## Summary
 
 Created a comprehensive test suite to validate accessibility and proper usage of MCP servers, treating them as critical project dependencies.
 
@@ -58,9 +58,9 @@ npm run test:mcp-servers
 
 | File | Purpose |
 |------|---------|
-| `docs/MCP_SERVERS.md` | Complete MCP setup and usage guide |
-| `docs/MCP_SERVERS_TEST.md` | Comprehensive test documentation |
-| `docs/MCP_SERVERS_TEST_IMPLEMENTATION.md` | Implementation summary |
+| `docs/mcp/servers.md` | Complete MCP setup and usage guide |
+| `docs/mcp/tests/servers-test.md` | Comprehensive test documentation |
+| `docs/mcp/tests/servers-test-implementation.md` | Implementation summary |
 | `.github/copilot-instructions.md` | Updated agent instructions |
 | `agents.md` | Synced agent instructions |
 | `docs/README.md` | Updated with test references |
@@ -121,20 +121,20 @@ The test ensures three critical MCP servers are properly configured:
 
 ---
 
-## 📚 Documentation Structure
+## Documentation Structure
 
 ### For Users
-- **`docs/MCP_SERVERS.md`** — How to use each MCP server
-- **`docs/MCP_SERVERS_TEST.md`** — How to validate your setup
+- **`docs/mcp/servers.md`** — How to use each MCP server
+- **`docs/mcp/tests/servers-test.md`** — How to validate your setup
 - **`docs/README.md`** — Documentation index
 
 ### For Developers
 - **`scripts/test-mcp-servers.mjs`** — Test implementation (370 lines)
-- **`docs/MCP_SERVERS_TEST_IMPLEMENTATION.md`** — Technical summary
+- **`docs/mcp/tests/servers-test-implementation.md`** — Technical summary
 - **`.github/copilot-instructions.md`** — Agent guidelines
 
 ### For CI/CD
-- **`docs/MCP_SERVERS_TEST.md#cicd-integration`** — Pipeline integration examples
+- **`docs/mcp/tests/servers-test.md#cicd-integration`** — Pipeline integration examples
 - **`npm run test:mcp-servers`** — Runnable test command
 
 ---
@@ -160,8 +160,8 @@ The test ensures three critical MCP servers are properly configured:
 ```
 NEW FILES:
   scripts/test-mcp-servers.mjs
-  docs/MCP_SERVERS_TEST.md
-  docs/MCP_SERVERS_TEST_IMPLEMENTATION.md
+  docs/mcp/tests/servers-test.md
+  docs/mcp/tests/servers-test-implementation.md
 
 UPDATED FILES:
   package.json                    (+1 script)
@@ -219,12 +219,12 @@ npm run dev
 ### Team Onboarding
 
 1. Run `npm run test:mcp-servers` to validate setup
-2. Read `docs/MCP_SERVERS.md` for usage
-3. Reference `docs/MCP_SERVERS_TEST.md` if issues arise
+2. Read `docs/mcp/servers.md` for usage
+3. Reference `docs/mcp/tests/servers-test.md` if issues arise
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Issue: "mcp.json not found"
 
@@ -232,7 +232,7 @@ npm run dev
 ```bash
 # The test shows the correct path for your OS
 # Configure VS Code with the suggested path
-# See docs/MCP_SERVERS_TEST.md#troubleshooting
+# See docs/mcp/tests/servers-test.md#troubleshooting
 ```
 
 ### Issue: Package accessibility errors
@@ -249,11 +249,11 @@ npm run test:mcp-servers
 **Solution**:
 - Timeout is set to 5 seconds per package check
 - Usually completes in 10-15 seconds
-- See `docs/MCP_SERVERS_TEST.md#troubleshooting`
+- See `docs/mcp/tests/servers-test.md#troubleshooting`
 
 ---
 
-## 📊 Test Metrics
+## Test Metrics
 
 ### Pass Rate
 - **Current**: 100% (33/33 tests)
@@ -328,12 +328,12 @@ npm run test:mcp-servers
 
 ---
 
-## 📞 Support
+## Support
 
 ### Documentation
-1. **Setup**: `docs/MCP_SERVERS.md`
-2. **Testing**: `docs/MCP_SERVERS_TEST.md`
-3. **Implementation**: `docs/MCP_SERVERS_TEST_IMPLEMENTATION.md`
+1. **Setup**: `docs/mcp/servers.md`
+2. **Testing**: `docs/mcp/tests/servers-test.md`
+3. **Implementation**: `docs/mcp/tests/servers-test-implementation.md`
 
 ### Commands
 ```bash
@@ -341,14 +341,14 @@ npm run test:mcp-servers
 npm run test:mcp-servers
 
 # View setup guide
-cat docs/MCP_SERVERS.md
+cat docs/mcp/servers.md
 
 # View test guide
-cat docs/MCP_SERVERS_TEST.md
+cat docs/mcp/tests/servers-test.md
 ```
 
 ### Troubleshooting
-- See `docs/MCP_SERVERS_TEST.md#troubleshooting`
+- See `docs/mcp/tests/servers-test.md#troubleshooting`
 - Check test output for specific errors
 - Review `docs/README.md` for related topics
 

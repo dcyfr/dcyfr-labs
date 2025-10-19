@@ -14,7 +14,7 @@ Successfully integrated Filesystem and Git MCPs into the cyberdrew-dev project. 
 
 ## Files Created (4)
 
-### 1. `docs/MCP_FILESYSTEM_GIT_INTEGRATION.md`
+### 1. `docs/mcp/filesystem-git/integration.md`
 - **Type**: Comprehensive Integration Guide
 - **Lines**: ~350
 - **Content**: 
@@ -26,7 +26,7 @@ Successfully integrated Filesystem and Git MCPs into the cyberdrew-dev project. 
   - Best practices
   - Integration with existing MCPs
 
-### 2. `docs/MCP_FILESYSTEM_GIT_READY.md`
+### 2. `docs/mcp/filesystem-git/ready.md`
 - **Type**: Quick Summary
 - **Lines**: ~150
 - **Content**:
@@ -37,7 +37,7 @@ Successfully integrated Filesystem and Git MCPs into the cyberdrew-dev project. 
   - Verification checklist
   - Quick commands
 
-### 3. `docs/MCP_FILESYSTEM_GIT_QUICKREF.md`
+### 3. `docs/mcp/filesystem-git/quick-reference.md`
 - **Type**: Quick Reference Card
 - **Lines**: ~250
 - **Content**:
@@ -48,7 +48,7 @@ Successfully integrated Filesystem and Git MCPs into the cyberdrew-dev project. 
   - Troubleshooting
   - Documentation references
 
-### 4. `docs/MCP_FILESYSTEM_GIT_COMPLETE_SUMMARY.md`
+### 4. `docs/archive/mcp-filesystem-git-complete-summary.md`
 - **Type**: Full Status Report
 - **Lines**: ~200
 - **Content**:
@@ -88,7 +88,7 @@ Successfully integrated Filesystem and Git MCPs into the cyberdrew-dev project. 
 
 **Lines Changed**: ~15 lines modified/added
 
-### 3. `docs/TODO.md`
+### 3. `docs/operations/todo.md`
 **Changes**:
 - Updated "Last Updated" from October 16 to October 18
 - Modified MCP Servers section:
@@ -148,13 +148,13 @@ jq '.servers | keys' ~/Library/Application\ Support/Code/User/mcp.json
 
 ```
 docs/
-├── MCP_FILESYSTEM_GIT_INTEGRATION.md      ← Full guide (30 min)
-├── MCP_FILESYSTEM_GIT_READY.md            ← Quick summary (10 min)
-├── MCP_FILESYSTEM_GIT_QUICKREF.md         ← Quick reference (5 min)
-├── MCP_FILESYSTEM_GIT_COMPLETE_SUMMARY.md ← Status report (15 min)
-├── MCP_SERVERS.md                         ← Main MCP guide
-├── MCP_QUICKREF.md                        ← Original quick ref
-└── TODO.md                                ← Updated tracking
+├── mcp/filesystem-git/integration.md      ← Full guide (30 min)
+├── mcp/filesystem-git/ready.md            ← Quick summary (10 min)
+├── mcp/filesystem-git/quick-reference.md  ← Quick reference (5 min)
+├── archive/mcp-filesystem-git-complete-summary.md ← Status report (15 min)
+├── mcp/servers.md                         ← Main MCP guide
+├── mcp/quick-reference.md                 ← Updated quick ref
+└── operations/todo.md                     ← Updated tracking
 
 .github/
 └── copilot-instructions.md                ← Updated with new MCPs
@@ -182,7 +182,7 @@ npm run test:mcp-servers
 ### Documentation Verification
 ```bash
 # All new files exist and are readable
-ls -la docs/MCP_FILESYSTEM_GIT_*.md
+ls -la docs/mcp/filesystem-git/*.md
 # ✅ All files present (~1000 lines total)
 ```
 
@@ -193,7 +193,7 @@ grep -l "Filesystem\|filesystem" .github/copilot-instructions.md agents.md
 # ✅ Both files updated
 
 # TODO updated
-grep -c "completed 2025-10-18" docs/TODO.md
+grep -c "completed 2025-10-18" docs/operations/todo.md
 # ✅ Matches found
 ```
 
