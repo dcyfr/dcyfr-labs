@@ -9,6 +9,7 @@
     "lint": "eslint",
     "sync:agents": "node ./scripts/sync-agents.mjs",
     "test:rate-limit": "node ./scripts/test-rate-limit.mjs",
+    "test:mcp-servers": "node ./scripts/test-mcp-servers.mjs",
     "predev": "npm run sync:agents",
     "prebuild": "npm run sync:agents",
     "test:siteurl": "node scripts/check-siteurl.js"

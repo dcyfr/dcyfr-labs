@@ -90,6 +90,56 @@ Operational checklist for deploying and verifying the GitHub contributions featu
 
 **Use when**: Deploying to production, setting up environment variables, or troubleshooting deployment issues.
 
+### `MCP_QUICKREF.md`
+Quick reference card for MCP server testing:
+- Run the test command
+- Interpret results
+- Quick troubleshooting fixes
+- Documentation links
+- MCP servers quick overview
+
+**Use when**: Quick lookup for test command or troubleshooting common issues.
+
+### `MCP_SERVERS.md`
+Complete guide to Model Context Protocol (MCP) servers integrated with this project:
+- **Context7**: Documentation lookup for Next.js, React, Tailwind, shadcn/ui
+- **Sequential Thinking**: Complex problem-solving and architectural planning
+- **Memory**: Maintains project context and decisions across conversations
+- Configuration details, security best practices, and usage examples
+- Integration with project workflow for development, testing, and deployment
+
+**Use when**: Setting up MCP servers, understanding AI tools available, or leveraging MCP capabilities for development tasks.
+
+### `MCP_SERVERS_TEST.md`
+Validation test documentation for MCP server dependency checking:
+- Running `npm run test:mcp-servers` to validate MCP configuration
+- What the test validates and interpretation of results
+- Troubleshooting common MCP server issues
+- CI/CD integration examples
+- Maintenance procedures for MCP server validation
+
+**Use when**: Validating MCP server setup, debugging configuration issues, or integrating MCP tests into CI/CD pipelines.
+
+### `MCP_SERVERS_TEST_IMPLEMENTATION.md`
+Implementation summary for MCP server test suite:
+- What was delivered (test script, documentation, commands)
+- Test coverage details (33 tests across 6 categories)
+- MCP servers validated (Context7, Sequential Thinking, Memory)
+- Integration with project workflow
+- Files created and modified
+
+**Use when**: Understanding what was implemented or reviewing technical changes.
+
+### `MCP_DEPENDENCY_VALIDATION.md`
+Comprehensive reference for treating MCP servers as project dependencies:
+- Validation test details and results
+- Success criteria and metrics
+- Continuous integration setup
+- Maintenance procedures
+- Complete technical documentation
+
+**Use when**: Full reference for MCP server dependency validation or CI/CD integration.
+
 ### `TODO.md`
 Active project task tracker covering:
 - Bugs (active and resolved)
@@ -104,6 +154,13 @@ Active project task tracker covering:
 ---
 
 ## Quick Links by Task
+
+### Development & Tools (MCP Servers)
+- [MCP Quick Reference](./MCP_QUICKREF.md) — Quick lookup for test command and troubleshooting
+- [MCP Servers Guide](./MCP_SERVERS.md) — Setup and usage of Context7, Sequential Thinking, Memory
+- [MCP Servers Test](./MCP_SERVERS_TEST.md) — Comprehensive test documentation
+- [Test Command](./MCP_SERVERS_TEST.md#running-the-test) — Run `npm run test:mcp-servers`
+- [Dependency Validation](./MCP_DEPENDENCY_VALIDATION.md) — Full technical reference
 
 ### Security & Protection
 - [Security Findings Resolution](./SECURITY_FINDINGS_RESOLUTION.md) - Complete resolution of all security findings

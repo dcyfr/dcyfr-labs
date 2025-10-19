@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 16, 2025
+**Last Updated:** October 18, 2025
 
 ---
 
@@ -131,6 +131,12 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ---
 
 ## 🔄 Dependencies
+
+### MCP Servers
+- [x] **Filesystem MCP** - Add Filesystem MCP for enhanced project navigation and bulk operations (completed 2025-10-18)
+- [ ] **Git MCP** - Integrate Git MCP when available (currently @modelcontextprotocol/server-git doesn't exist on npm)
+- [ ] **GitHub MCP** - Set up GitHub MCP server for PR/issue automation and workflow management
+- [ ] **Slack MCP** (optional) - Add Slack MCP for deployment notifications and team updates
 
 ### Maintenance
 - [ ] Set up Dependabot or Renovate for automated dependency updates
