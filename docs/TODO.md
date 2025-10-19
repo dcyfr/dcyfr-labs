@@ -24,7 +24,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [x] **View counts** - Track and display view counts for blog posts (shipped 2025-10-16)
 
 ### Medium Priority
-- [ ] **RSS feed improvements** - Enhance RSS/Atom feeds with full content and better formatting
+- [x] **RSS feed improvements** - Enhance RSS/Atom feeds with full content and better formatting (completed 2025-10-18)
 - [ ] **Reading progress indicator** - Show reading progress bar for blog posts
 - [ ] **Table of contents** - Generate TOC for long blog posts from headings
 - [ ] **Related posts** - Show related posts at the end of each blog post based on tags
@@ -186,6 +186,18 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## Archive
 
 Completed tasks are moved here with completion date for reference.
+
+### 2025-10-18
+- ✅ **RSS feed improvements** - Enhanced RSS and Atom feeds with full content and better formatting
+  - Added full HTML content in feeds (not just summaries)
+  - Created `src/lib/mdx-to-html.ts` utility for MDX → HTML conversion
+  - Added author information (name and email) in both RSS and Atom
+  - Added categories/tags for each post
+  - Added proper feed metadata (generator, build dates, self-referential links)
+  - Improved XML formatting and structure
+  - Implemented security via sanitized HTML output
+  - Optimized performance (20 posts limit, parallel processing)
+  - Comprehensive documentation in `docs/RSS_FEED_IMPROVEMENTS.md`
 
 ### 2025-10-05
 - ✅ Resolved all security findings from security assessment
