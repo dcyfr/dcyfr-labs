@@ -1,9 +1,11 @@
 import { featuredProjects } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
+import { PostList } from "@/components/post-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { posts } from "@/data/posts";
 import { resume } from "@/data/resume";
+import { getPostBadgeMetadata } from "@/lib/post-badges";
 import {
   SITE_URL,
   SITE_TITLE,
@@ -11,7 +13,7 @@ import {
   getOgImageUrl,
 } from "@/lib/site-config";
 
-export default function Home() {
+export default async function Home() {
   const socialImage = getOgImageUrl();
   // JSON-LD structured data for home page
   const jsonLd = {
@@ -108,26 +110,23 @@ export default function Home() {
           </Button>
         </div>
         <div className="space-y-4">
-          {[...posts]
-            .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
-            .slice(0, 3)
-            .map((p) => (
-              <article key={p.slug} className="group rounded-lg border p-4 transition-colors hover:bg-muted/50">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <time dateTime={p.publishedAt}>{new Date(p.publishedAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}</time>
-                  <span>•</span>
-                  <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
-                  <span className="hidden md:inline-block">•</span>
-                  <span>{p.readingTime.text}</span>
-                </div>
-                <h3 className="mt-1 text-lg font-medium">
-                  <Link href={`/blog/${p.slug}`}>
-                    {p.title}
-                  </Link>
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">{p.summary}</p>
-              </article>
-            ))}
+          {await (async () => {
+            // Filter out archived posts
+            const recentPosts = [...posts]
+              .filter(p => !p.archived)
+              .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
+              .slice(0, 5); // top 5 recent posts
+            
+            // Get badge metadata (latest and hottest posts)
+            const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
+            
+            return <PostList 
+              posts={recentPosts}
+              latestSlug={latestSlug ?? undefined}
+              hottestSlug={hottestSlug ?? undefined}
+              titleLevel="h3"
+            />;
+          })()}
         </div>
       </section>
 

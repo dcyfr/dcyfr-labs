@@ -1,4 +1,98 @@
-# Implementation Changelog - Filesystem & Git MCP Integration
+# Implementation Changelog
+
+This document tracks all major implementations and changes to the cyberdrew-dev project.
+
+---
+
+## October 20, 2024 - Post Badges Reorganization
+
+**Status**: ✅ Complete
+
+### Summary
+Reorganized post status badges to appear consistently after titles across all blog pages. Created centralized `PostBadges` component with standardized colors and added "New" badge for recent posts.
+
+### Changes
+- **New Component**: `src/components/post-badges.tsx` - Centralized badge component
+- **Updated Pages**: Homepage, blog list, and post detail pages
+- **Badge Types**: Draft (blue), Archived (amber), New (green, < 7 days old)
+- **Consistency**: Badges now appear after title on all pages
+- **Visual Hierarchy**: Status badges separated from metadata badges
+
+### Documentation
+- Created `docs/operations/post-badges-reorganization.md`
+
+### Files Changed
+- `src/components/post-badges.tsx` (NEW)
+- `src/app/page.tsx` (MODIFIED)
+- `src/app/blog/page.tsx` (MODIFIED)
+- `src/app/blog/[slug]/page.tsx` (MODIFIED)
+
+---
+
+## October 20, 2024 - Draft Posts Implementation
+
+**Status**: ✅ Complete
+
+### Summary
+Implemented environment-based draft post filtering system that shows draft posts only in development mode.
+
+### Changes
+- Added `draft` field to Post type
+- Server-side filtering in `getAllPosts()` and `getPostBySlug()`
+- Draft badge display (blue, development only)
+- Direct URL protection (returns 404 for drafts in production)
+
+### Documentation
+- Created `docs/operations/draft-posts-implementation.md`
+
+### Files Changed
+- `src/lib/blog.ts` (MODIFIED)
+- `src/data/posts.ts` (MODIFIED)
+- `src/app/blog/page.tsx` (MODIFIED)
+- `src/app/blog/[slug]/page.tsx` (MODIFIED)
+
+---
+
+## October 20, 2024 - GitHub Heatmap Cache Badge
+
+**Status**: ✅ Complete
+
+### Summary
+Added visual indicator showing when GitHub contribution data is served from server-side cache (development only).
+
+### Changes
+- Added `source` field to ContributionResponse type
+- Added state tracking in GitHubHeatmap component
+- "Cached" badge displays in bottom-right corner (development only)
+
+### Files Changed
+- `src/components/github-heatmap.tsx` (MODIFIED)
+- `src/app/api/github-contributions/route.ts` (MODIFIED)
+
+---
+
+## October 20, 2024 - Rate Limit Test Enhancement
+
+**Status**: ✅ Complete
+
+### Summary
+Enhanced rate limit testing script to support multiple API endpoints with flexible test execution.
+
+### Changes
+- Multi-endpoint support (contact + GitHub contributions)
+- Flexible test execution (individual or all endpoints)
+- 60-second wait between test suites
+- Enhanced output formatting with progress indicators
+
+### Documentation
+- Created `docs/security/rate-limiting/test-guide.md`
+
+### Files Changed
+- `scripts/test-rate-limit.mjs` (MODIFIED)
+
+---
+
+## October 18, 2024 - Filesystem & Git MCP Integration
 
 **Date**: October 18, 2025  
 **Status**: ✅ Complete  

@@ -55,3 +55,31 @@ export async function getPostViews(slug: string): Promise<number | null> {
     return null;
   }
 }
+
+/**
+ * Get view counts for multiple posts at once
+ * Returns a map of slug -> view count
+ */
+export async function getMultiplePostViews(slugs: string[]): Promise<Map<string, number>> {
+  const client = await getClient();
+  const viewMap = new Map<string, number>();
+  
+  if (!client) return viewMap;
+  
+  try {
+    const keys = slugs.map(formatKey);
+    const values = await client.mGet(keys);
+    
+    slugs.forEach((slug, index) => {
+      const value = values[index];
+      const parsed = value === null ? 0 : Number(value);
+      if (Number.isFinite(parsed)) {
+        viewMap.set(slug, parsed);
+      }
+    });
+  } catch {
+    // Return empty map on error
+  }
+  
+  return viewMap;
+}
