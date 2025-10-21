@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { visibleProjects } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
 import { GitHubHeatmap } from "@/components/github-heatmap";
+import { GitHubHeatmapErrorBoundary } from "@/components/github-heatmap-error-boundary";
 import {
   SITE_URL,
   AUTHOR_NAME,
@@ -91,7 +92,9 @@ export default function ProjectsPage() {
         
         {/* GitHub Contribution Heatmap */}
         <div className="mt-10">
-          <GitHubHeatmap username="dcyfr" />
+          <GitHubHeatmapErrorBoundary>
+            <GitHubHeatmap username="dcyfr" />
+          </GitHubHeatmapErrorBoundary>
         </div>
         
         {/* Projects Grid */}

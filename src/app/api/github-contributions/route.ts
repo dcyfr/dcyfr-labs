@@ -252,7 +252,7 @@ export async function GET(request: NextRequest) {
       contributions: fallbackData,
       source: 'fallback',
       totalContributions: fallbackData.reduce((sum, day) => sum + day.count, 0),
-      warning: 'Unable to fetch live data from GitHub. Displaying sample data.',
+      warning: 'Unable to fetch live data.',
     };
 
     // Cache fallback data for a shorter duration

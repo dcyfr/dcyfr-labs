@@ -1,138 +1,54 @@
 # Documentation
 
-This directory contains project documentation for the developer portfolio.
+This directory is the knowledge base for the portfolio. Content is now organized by topic-focused subfolders so it is faster to find the right reference.
 
-## Files
+## Directory Overview
 
-### `API.md`
-Complete API reference documentation covering:
-- GitHub Contributions API (`/api/github-contributions`)
-- Contact Form API (`/api/contact`)
-- Security features, authentication, testing, and deployment
+- `ai/discovery/` – AI discovery research, including [`overview.md`](./ai/discovery/overview.md), [`summary.md`](./ai/discovery/summary.md), and [`quick-reference.md`](./ai/discovery/quick-reference.md).
+- `api/` – API integration references such as [`reference.md`](./api/reference.md).
+- `mcp/` – Model Context Protocol documentation, including:
+	- [`servers.md`](./mcp/servers.md) and [`quick-reference.md`](./mcp/quick-reference.md).
+	- `filesystem-git/` for the Filesystem and Git MCP rollout (index, integration, quick reference, ready checklist).
+	- `github/` for the GitHub MCP deployment notes and quick references.
+	- `tests/` for validation documentation (`servers-test.md`, `servers-test-implementation.md`, `dependency-validation.md`).
+- `operations/` – Operational checklists and historical change logs such as [`deployment-checklist.md`](./operations/deployment-checklist.md) and [`implementation-changelog.md`](./operations/implementation-changelog.md).
+- `performance/` – Site performance findings, currently [`inp-optimization.md`](./performance/inp-optimization.md).
+- `platform/` – Platform configuration references like [`site-config.md`](./platform/site-config.md) and [`view-counts.md`](./platform/view-counts.md).
+- `rss/` – Feed documentation (`improvements.md`, `quick-reference.md`).
+- `security/` – Security guidance including:
+	- `csp/` for Content Security Policy implementation and quick reference.
+	- `rate-limiting/` for rate limiting guides, flows, and implementation summaries.
+	- [`security-findings-resolution.md`](./security/security-findings-resolution.md).
+- `archive/` – Historical or superseded documentation retained for reference. Files here are read-only snapshots of earlier milestones.
 
-**Use when**: Implementing API integrations, troubleshooting API issues, or understanding security measures.
+## Quick Links
 
-### `CSP_IMPLEMENTATION.md`
-Comprehensive Content Security Policy documentation:
-- Two-layer CSP architecture (middleware + Vercel config)
-- Directive explanations and security benefits
-- Third-party service configuration
-- Testing, troubleshooting, and maintenance
-- Future enhancements and compliance information
+| Topic | Primary References |
+|-------|--------------------|
+| AI Discovery | [`overview.md`](./ai/discovery/overview.md) · [`summary.md`](./ai/discovery/summary.md) |
+| APIs | [`api/reference.md`](./api/reference.md) |
+| MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |
+| MCP (Filesystem + Git) | [`mcp/filesystem-git/index.md`](./mcp/filesystem-git/index.md) · [`mcp/filesystem-git/integration.md`](./mcp/filesystem-git/integration.md) |
+| MCP Tests | [`mcp/tests/servers-test.md`](./mcp/tests/servers-test.md) · [`mcp/tests/dependency-validation.md`](./mcp/tests/dependency-validation.md) |
+| Security – CSP | [`security/csp/implementation.md`](./security/csp/implementation.md) · [`security/csp/quick-reference.md`](./security/csp/quick-reference.md) |
+| Security – Rate Limiting | [`security/rate-limiting/guide.md`](./security/rate-limiting/guide.md) · [`security/rate-limiting/quick-reference.md`](./security/rate-limiting/quick-reference.md) |
+| Security Findings | [`security/security-findings-resolution.md`](./security/security-findings-resolution.md) |
+| Operations | [`operations/todo.md`](./operations/todo.md) · [`operations/deployment-checklist.md`](./operations/deployment-checklist.md) |
+| Environment Setup | [`operations/environment-variables.md`](./operations/environment-variables.md) · [`operations/environment-variables-quick-reference.md`](./operations/environment-variables-quick-reference.md) |
+| Platform | [`platform/site-config.md`](./platform/site-config.md) · [`platform/view-counts.md`](./platform/view-counts.md) |
+| RSS | [`rss/improvements.md`](./rss/improvements.md) |
 
-**Use when**: Understanding CSP setup, adding new services, or troubleshooting CSP violations.
+## Maintenance Guidelines
 
-### `CSP_QUICKREF.md`
-Quick reference for CSP implementation:
-- Current CSP header at a glance
-- Common tasks (adding sources, domains)
-- Troubleshooting guide
-- Testing checklist
+- Keep new documentation in the appropriate topical folder; avoid reintroducing flat files at the root.
+- Normalize headings to start with a level-one title (`# Title`) followed by a short **Summary** section when adding new content.
+- When archiving superseded material, move it into `archive/` and add a note at the top describing why it is archived.
+- Update this README whenever folders or key references change to maintain a reliable entry point.
 
-**Use when**: Quick lookup for CSP directives or making routine CSP updates.
+## Related References
 
-### `SECURITY_FINDINGS_RESOLUTION.md`
-Complete resolution summary for all security assessment findings:
-- Finding #1: Content Security Policy implementation
-- Finding #2: Clickjacking protection verification
-- Finding #3: MIME-sniffing protection verification
-- Testing, validation, and compliance information
-- Complete security posture before/after comparison
+- `.github/copilot-instructions.md` – AI contributor guidelines and architectural constraints.
+- `agents.md` – Auto-synced instructions consumed by agents.
+- Project root `README.md` – High-level overview and developer quick start.
 
-**Use when**: Understanding security improvements, compliance reporting, or reviewing resolved vulnerabilities.
-
-### `RATE_LIMITING.md`
-Comprehensive guide to the rate limiting implementation:
-- Current in-memory implementation details
-- Configuration and usage
-- Upgrade paths to distributed solutions (Vercel KV, Upstash Redis)
-- Testing procedures and monitoring
-
-**Use when**: Understanding rate limiting, upgrading to distributed storage, or troubleshooting rate limit issues.
-
-### `RATE_LIMITING_QUICKREF.md`
-Quick reference guide for developers:
-- Common code patterns and examples
-- API reference for rate limiting functions
-- Configuration recommendations by use case
-- Debugging and troubleshooting tips
-
-**Use when**: Quick lookup while implementing rate limiting features or debugging rate limit behavior.
-
-### `RATE_LIMITING_FLOW.md`
-Visual diagrams and flow charts showing:
-- Request flow from client to API
-- Rate limit decision logic
-- Storage architecture
-- Example scenarios and edge cases
-
-**Use when**: Understanding the system architecture or explaining rate limiting to others.
-
-### `RATE_LIMITING_IMPLEMENTATION.md`
-Implementation summary and change log:
-- What was implemented and why
-- Files created and modified
-- Testing and validation results
-- Next steps and future enhancements
-
-**Use when**: Reviewing the implementation, onboarding new contributors, or planning related work.
-
-### `DEPLOYMENT_CHECKLIST.md`
-Operational checklist for deploying and verifying the GitHub contributions feature.
-
-**Use when**: Deploying to production, setting up environment variables, or troubleshooting deployment issues.
-
-### `TODO.md`
-Active project task tracker covering:
-- Bugs (active and resolved)
-- Feature requests (high/medium/low priority)
-- Technical debt and improvements
-- Content tasks
-- Design and UX enhancements
-- Security considerations
-
-**Use when**: Planning new features, tracking progress, or identifying areas for improvement.
-
----
-
-## Quick Links by Task
-
-### Security & Protection
-- [Security Findings Resolution](./SECURITY_FINDINGS_RESOLUTION.md) - Complete resolution of all security findings
-- [Content Security Policy (CSP)](./CSP_IMPLEMENTATION.md) - Full CSP implementation guide
-- [CSP Quick Reference](./CSP_QUICKREF.md) - Quick CSP lookup
-- [Rate Limiting Documentation](./RATE_LIMITING.md) - Full implementation guide
-- [Rate Limiting Quick Reference](./RATE_LIMITING_QUICKREF.md) - Developer quick reference
-- [API Security](./API.md#security) - API security features and headers
-
-### Implementation & Development
-- [Rate Limiting Implementation Summary](./RATE_LIMITING_IMPLEMENTATION.md) - What was built
-- [Rate Limiting Flow Diagrams](./RATE_LIMITING_FLOW.md) - Visual architecture
-- [API Reference](./API.md) - Complete API documentation
-
-### Planning & Tasks
-- [TODO List](./TODO.md) - Active tasks and feature roadmap
-- [Deployment Checklist](./DEPLOYMENT_CHECKLIST.md) - Production deployment guide
-
----
-
-## Documentation Organization
-
-- **Active documentation**: Files in this directory are current and actively maintained
-- **Historical records**: Past implementation notes, completed work logs, and analysis documents have been archived or removed
-- **Updates**: Last updated October 5, 2025
-
-## Related Documentation
-
-- `/.github/copilot-instructions.md` - AI contributor guide and architecture overview
-- `/agents.md` - Auto-synced copy of AI instructions (root level)
-- `/README.md` - Project overview and quick start guide
-- `/src/content/blog/README.md` - Blog content guidelines
-
-## Contributing
-
-When adding documentation:
-- Keep files focused and up-to-date
-- Remove or consolidate outdated information
-- Cross-reference related files
-- Update this README when adding new documentation
+_Last reorganized: October 19, 2025._

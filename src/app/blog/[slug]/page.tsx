@@ -10,10 +10,11 @@ import {
 } from "@/lib/site-config";
 import { MDX } from "@/components/mdx";
 import { Badge } from "@/components/ui/badge";
+import { PostBadges } from "@/components/post-badges";
+import { getPostViews, incrementPostViews, getMultiplePostViews } from "@/lib/views";
+import { ReadingProgress } from "@/components/reading-progress";
 
-export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -53,6 +54,27 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = posts.find((p) => p.slug === slug);
   if (!post) notFound();
 
+  const incrementedViews = await incrementPostViews(slug);
+  const viewCount = incrementedViews ?? (await getPostViews(slug));
+  
+  // Get view counts and determine latest/hottest posts
+  const viewMap = await getMultiplePostViews(posts.map(p => p.slug));
+  
+  // Find the post with the most views
+  let hottestSlug: string | null = null;
+  let maxViews = 0;
+  viewMap.forEach((views, slug) => {
+    if (views > maxViews) {
+      maxViews = views;
+      hottestSlug = slug;
+    }
+  });
+  
+  // Latest post (most recent, not archived)
+  const latestPost = [...posts]
+    .filter(p => !p.archived)
+    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))[0];
+
   // JSON-LD structured data for SEO and AI assistants
   const socialImage = getOgImageUrl(post.title, post.summary);
   const jsonLd = {
@@ -81,10 +103,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     keywords: post.tags.join(", "),
     wordCount: post.readingTime.words,
     ...(post.archived && { archivedAt: post.updatedAt || post.publishedAt }),
+    ...(typeof viewCount === "number" && viewCount > 0
+      ? {
+          interactionStatistic: {
+            "@type": "InteractionCounter",
+            interactionType: "https://schema.org/ReadAction",
+            userInteractionCount: viewCount,
+          },
+        }
+      : {}),
   };
 
   return (
     <>
+      <ReadingProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -104,16 +136,26 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </span>
           )}
         </div>
-  <h1 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
-  <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
+        <div className="mt-2 gap-4">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
+        </div>
+        <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
+        {/* Tags and metadata */}
         <div className="mt-3 flex flex-wrap gap-2">
           {post.tags.map((t) => (
             <Badge key={t} variant="secondary">{t}</Badge>
           ))}
           <Badge variant="outline">{post.readingTime.text}</Badge>
-          {post.archived && (
-            <Badge variant="outline" className="border-amber-500/50 text-amber-600 dark:text-amber-400">Archived</Badge>
+          {typeof viewCount === "number" && (
+            <Badge variant="outline">
+              {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
+            </Badge>
           )}
+          <PostBadges 
+              post={post}
+              isLatestPost={latestPost?.slug === post.slug}
+              isHotPost={hottestSlug === post.slug && maxViews > 0}
+            />
         </div>
       </header>
       <div className="mt-8">

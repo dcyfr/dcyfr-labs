@@ -14,6 +14,7 @@ export type Post = {
   tags: string[];
   featured?: boolean;
   archived?: boolean; // posts that are no longer updated
+  draft?: boolean; // only visible in development
   body: string; // MDX content
   sources?: PostSource[];
   readingTime: {

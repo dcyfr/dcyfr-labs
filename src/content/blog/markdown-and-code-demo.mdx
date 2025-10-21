@@ -1,0 +1,83 @@
+---
+title: "Markdown & Code Blocks Demo"
+summary: "A sample post to preview markdown rendering and Shiki-powered code highlighting in light and dark themes."
+publishedAt: "2020-01-01"
+updatedAt: "2025-10-18"
+tags:
+  - demo
+  - mdx
+  - code
+draft: true
+---
+
+> This is a draft post intended for local development. It demonstrates how markdown and code blocks render with Shiki themes.
+
+## Headings, text, and lists
+
+This paragraph includes some inline code like `npm run dev` and a link to [Next.js](https://nextjs.org/).
+
+- Unordered list item A
+- Item B
+	- Nested item B.1
+	- Nested item B.2
+
+1. Ordered item one
+2. Ordered item two
+
+---
+
+## Code blocks (TypeScript)
+
+```ts
+type User = {
+	id: string
+	name: string
+	roles: ("admin" | "editor" | "viewer")[]
+}
+
+export function greet(user: User) {
+	const role = user.roles[0] ?? "viewer"
+	return `Hello, ${user.name}! Your role is ${role}.`
+}
+
+console.log(greet({ id: "1", name: "Ada", roles: ["admin"] }))
+```
+
+## Code blocks (TSX)
+
+```tsx
+import { Button } from "@/components/ui/button"
+
+export default function Demo() {
+	return (
+		<div className="space-x-2">
+			<Button variant="default">Primary</Button>
+			<Button variant="outline">Outline</Button>
+		</div>
+	)
+}
+```
+
+## Code blocks (Bash)
+
+```bash
+pnpm add shiki
+pnpm run dev
+```
+
+## Code blocks (JSON)
+
+```json
+{
+	"name": "cyberdrew-dev",
+	"private": true,
+	"scripts": { "dev": "next dev --turbopack" }
+}
+```
+
+## Plaintext (no language)
+
+```
+This block has no language hint and should use a plaintext style.
+```
+

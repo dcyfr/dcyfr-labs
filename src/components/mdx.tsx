@@ -25,7 +25,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     <ol {...props} className="list-decimal pl-5 [&>li]:mt-2" />
   ),
   code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code {...props} className="rounded bg-muted px-1.5 py-0.5 text-sm" />
+    <code {...props} className="rounded bg-muted py-0.5 text-sm" />
   ),
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
     <pre {...props} className="overflow-x-auto rounded bg-muted mt-4 p-4 text-sm" />

@@ -14,14 +14,27 @@ This repo is a minimal developer portfolio built with Next.js (App Router), Type
 - Path alias: `@/*` -> `src/*` (see `tsconfig.json`). Prefer `@/…` imports over long relative paths.
 
 ## MCP servers in VS Code
-If you’re running in VS Code with Model Context Protocol (MCP) servers configured, prefer using them for local/secure integrations instead of making direct network calls.
+Active MCP servers configured for this session:
 
-- Discovery: First check if MCP servers are available in the editor session. If present, use them for supported tasks (docs lookup, repository intelligence, secret-scoped SaaS actions) before falling back to generic web calls.
-- Preferred use cases:
-  - Documentation and framework references (e.g., Next.js, React, Tailwind, shadcn/ui) via an MCP doc/index provider.
-  - Source navigation, symbol search, and code intelligence for the open workspace.
-  - Access to developer tools or services (e.g., GitHub, Vercel) that the user has explicitly wired through an MCP with scoped credentials.
-- Fallbacks: When no suitable MCP is available for a request, proceed with local workspace analysis first, then minimal external calls as needed.
+### Core MCPs
+- **Context7** (`@upstash/context7-mcp@latest`): Documentation lookup for Next.js, React, Tailwind, shadcn/ui, and other libraries.
+- **Sequential Thinking** (`@modelcontextprotocol/server-sequential-thinking`): Complex problem-solving, planning, and multi-step task breakdown.
+- **Memory** (`@modelcontextprotocol/server-memory`): Maintains project context, decisions, and patterns across the conversation.
+
+### Project Workflow MCPs
+- **Filesystem** (`@modelcontextprotocol/server-filesystem`): Safe file operations, navigation, and bulk edits across the project workspace.
+- **GitHub** (`ghcr.io/github/github-mcp-server`): GitHub integration for repository management, issues, PRs, CI/CD, and code analysis.
+
+Additional tools available:
+- **Snyk Extension**: Security scanning and vulnerability analysis.
+- **GitHub Pull Requests Extension**: PR management and review.
+
+**Usage guidelines:**
+- Use Context7 to fetch up-to-date library documentation before making assumptions about APIs or patterns.
+- Use Sequential Thinking for architectural decisions, debugging complex issues, or planning multi-step refactors.
+- Use Memory to track project decisions, learned patterns, and context to avoid repetition.
+- Use Filesystem MCP for project-wide file operations, refactoring, and navigation (safer than terminal operations).
+- Prefer MCP servers for local/secure integrations instead of making direct network calls.
 - Security: Never exfiltrate secrets. Keep all credentials within MCP boundaries; do not print tokens or environment details. Prefer server-side routes for any third‑party calls (see `src/app/api/*`).
 - Offline-friendly: When network is restricted, rely on MCP-backed indexes and local workspace context.
 
@@ -56,7 +69,7 @@ If you’re running in VS Code with Model Context Protocol (MCP) servers configu
 - If integrating email/SaaS (Resend, Sendgrid), do it inside the server route using env vars; don’t leak secrets to the client.
 
 ## SEO and metadata
-- Global `metadata` is in `src/app/layout.tsx` (uses `metadataBase` and OG image `public/og.svg`).
+- Global `metadata` is in `src/app/layout.tsx` (uses `metadataBase` plus dynamic `/opengraph-image` and `/twitter-image` routes).
 - `sitemap.ts` and `robots.ts` are typed metadata routes. Update the base URL consistently when changing domains/environments.
 
 ## Adding pages or components (examples)

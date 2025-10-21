@@ -61,6 +61,11 @@ npm start
 - The API route at `/api/contact` validates input and logs it on the server.
 - Replace the placeholder with an email/SaaS integration (Resend, Sendgrid, etc.).
 
+## Blog View Counts
+- Each blog post increments a Redis counter (key format `views:post:<slug>`).
+- Set `REDIS_URL` in your environment (Vercel Settings → Environment Variables) to enable counting.
+- For local work, pull the variable with `vercel env pull .env.development.local` and restart `npm run dev`.
+
 ## GitHub Contributions
 - The GitHub heatmap component fetches real contribution data via `/api/github-contributions`.
 - **Optional**: Set `GITHUB_TOKEN` in `.env.local` to increase rate limits (60 → 5,000 req/hour).

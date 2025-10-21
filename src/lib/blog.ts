@@ -42,14 +42,23 @@ export function getAllPosts(): Post[] {
       tags: (data.tags as string[]) || [],
       featured: data.featured as boolean | undefined,
       archived: data.archived as boolean | undefined,
+      draft: data.draft as boolean | undefined,
       body: content,
       sources: data.sources as PostSource[] | undefined,
       readingTime: calculateReadingTime(content),
     } satisfies Post;
   });
 
+  // Filter out draft posts in production
+  const filteredPosts = posts.filter((post) => {
+    if (process.env.NODE_ENV === "production" && post.draft) {
+      return false;
+    }
+    return true;
+  });
+
   // Sort by publishedAt date, newest first
-  return posts.sort(
+  return filteredPosts.sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 }
@@ -64,7 +73,7 @@ export function getPostBySlug(slug: string): Post | undefined {
   const fileContents = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContents);
 
-  return {
+  const post: Post = {
     slug,
     title: data.title as string,
     summary: data.summary as string,
@@ -73,8 +82,16 @@ export function getPostBySlug(slug: string): Post | undefined {
     tags: (data.tags as string[]) || [],
     featured: data.featured as boolean | undefined,
     archived: data.archived as boolean | undefined,
+    draft: data.draft as boolean | undefined,
     body: content,
     sources: data.sources as PostSource[] | undefined,
     readingTime: calculateReadingTime(content),
   };
+
+  // Don't return draft posts in production
+  if (process.env.NODE_ENV === "production" && post.draft) {
+    return undefined;
+  }
+
+  return post;
 }

@@ -5,11 +5,12 @@ export const DOMAIN_DEV = "dcyfr.net";
 export const DOMAIN_PREVIEW = "cyberdrew.vercel.app";
 export const DOMAIN_PRODUCTION = "cyberdrew.dev";
 
-export const AUTHOR_NAME = "Drew ✦";
+export const AUTHOR_NAME = "Drew";
 export const AUTHOR_EMAIL = "drew@cyberdrew.dev";
 
 export const SITE_TITLE = "Drew's Lab";
-export const SITE_SHORT_TITLE = "Drew";
+export const SITE_SHORT_TITLE = "Drew ✦";
+export const SITE_DESCRIPTION = "Hi, I'm Drew, a security architect and tinkerer with over five years of experience in information security, risk management, and incident response.";
 
 // Choose the active domain/URL based on environment variables.
 // Priority for SITE_URL:
@@ -66,6 +67,7 @@ const siteConfig = {
   FROM_EMAIL,
   SITE_TITLE,
   SITE_SHORT_TITLE,
+  SITE_DESCRIPTION,
   getOgImageUrl,
   getTwitterImageUrl,
 };
