@@ -34,6 +34,7 @@ This directory is the knowledge base for the portfolio. Content is now organized
 | Security – Rate Limiting | [`security/rate-limiting/guide.md`](./security/rate-limiting/guide.md) · [`security/rate-limiting/quick-reference.md`](./security/rate-limiting/quick-reference.md) |
 | Security Findings | [`security/security-findings-resolution.md`](./security/security-findings-resolution.md) |
 | Operations | [`operations/todo.md`](./operations/todo.md) · [`operations/deployment-checklist.md`](./operations/deployment-checklist.md) |
+| Environment Setup | [`operations/environment-variables.md`](./operations/environment-variables.md) · [`operations/environment-variables-quick-reference.md`](./operations/environment-variables-quick-reference.md) |
 | Platform | [`platform/site-config.md`](./platform/site-config.md) · [`platform/view-counts.md`](./platform/view-counts.md) |
 | RSS | [`rss/improvements.md`](./rss/improvements.md) |
 

@@ -11,6 +11,7 @@ import {
 import { MDX } from "@/components/mdx";
 import { Badge } from "@/components/ui/badge";
 import { getPostViews, incrementPostViews } from "@/lib/views";
+import { ReadingProgress } from "@/components/reading-progress";
 
 export const dynamic = "force-dynamic";
 
@@ -96,6 +97,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <>
+      <ReadingProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

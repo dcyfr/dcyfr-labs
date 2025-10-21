@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 18, 2025
+**Last Updated:** October 19, 2025
 
 ---
 
@@ -25,7 +25,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 
 ### Medium Priority
 - [x] **RSS feed improvements** - Enhance RSS/Atom feeds with full content and better formatting (completed 2025-10-18)
-- [ ] **Reading progress indicator** - Show reading progress bar for blog posts
+- [x] **Reading progress indicator** - Show reading progress bar with GPU-accelerated animations for blog posts (completed 2025-10-20)
 - [ ] **Table of contents** - Generate TOC for long blog posts from headings
 - [ ] **Related posts** - Show related posts at the end of each blog post based on tags
 - [ ] **Code syntax highlighting themes** - Add syntax highlighting with theme support for code blocks
@@ -41,10 +41,13 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🔧 Technical Debt & Improvements
 
 ### Code Quality
-- [ ] **Error boundaries** - Add error boundaries for better error handling in client components
+- [x] **Error boundaries** - Add comprehensive error boundary system with 5+ specialized boundaries for client components (completed 2025-10-20)
+- [x] **GitHub heatmap refactoring** - Refactored heatmap component to work with error boundaries and simplified by removing all caching logic (completed 2025-10-20)
 - [ ] **Loading states** - Add skeleton loaders for async content
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
 - [ ] **Unit tests** - Add tests for utility functions and components
+- [x] **Contact email fallback** - Gracefully handle missing `RESEND_API_KEY` with 200 response and warning instead of 500 error (completed 2025-10-20)
+- [x] **GitHub API header hygiene** - Only send `Authorization` header when `GITHUB_TOKEN` is configured (completed 2025-10-20)
 
 ### Performance
 - [ ] **Image optimization** - Add next/image for all images in blog posts
@@ -57,13 +60,15 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [ ] **Accessibility audit** - Run full a11y audit with axe or Lighthouse
 - [ ] **Meta descriptions** - Ensure all pages have unique, optimized meta descriptions
 - [ ] **Alt text review** - Audit all images for proper alt text
- - [ ] **Vercel OG image generation** - Add server-side OG image support using Vercel's OG image generation feature (https://vercel.com/docs/og-image-generation) to produce dynamic social preview images for blog posts and projects
+- [ ] **Vercel OG image generation** - Add server-side OG image support using Vercel's OG image generation feature (https://vercel.com/docs/og-image-generation) to produce dynamic social preview images for blog posts and projects
 
 ### Documentation
-- [ ] **API documentation** - Document API routes and their expected payloads
+- [x] **API documentation** - Document API routes and their expected payloads (see `docs/api/reference.md`) - completed 2025-10-19
+- [x] **Environment variable quickstart** - Published comprehensive `.env.example` with all variables documented (completed 2025-10-20)
 - [ ] **Component documentation** - Add JSDoc comments to complex components
 - [ ] **Contributing guide** - Create CONTRIBUTING.md for potential contributors
-- [ ] **Deployment guide** - Document deployment process and environment variables
+- [ ] **Deployment guide** - Document deployment process and environment variables (partially covered in environment-variables.md)
+- [ ] **GitHub heatmap setup guide** - Add documentation that matches the in-app link referenced in `github-heatmap.tsx`
 
 ---
 
@@ -156,7 +161,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [ ] **MDX components library** - Build custom MDX components for richer content
 - [ ] **WebAssembly integration** - Experiment with WASM for performance-critical features
 - [ ] **Edge functions** - Explore edge runtime for certain API routes
- - [ ] **OG image experiments** - Prototype automated OG image templates (Vercel OG + static fallbacks) for blog posts and projects
+- [ ] **OG image experiments** - Prototype automated OG image templates (Vercel OG + static fallbacks) for blog posts and projects
 
 ### Long-term
 - [ ] Multi-language support (i18n)

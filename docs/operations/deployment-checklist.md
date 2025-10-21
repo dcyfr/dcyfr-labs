@@ -111,6 +111,7 @@ To avoid rate limiting (increases from 60 to 5,000 requests/hour):
 
 ### 📚 Documentation
 
-- `docs/API.md` - Complete API documentation
-- `.env.example` - Environment variable setup
-- `README.md` - Quick start guide
+- `docs/api/reference.md` - Complete API documentation for portfolio endpoints
+- `README.md` - Quick start guide and environment variable overview
+- `docs/operations/todo.md` - Backlog, priorities, and follow-up work
+- _Planned_: `.env.example` for copy/paste environment defaults (tracked in the TODO)

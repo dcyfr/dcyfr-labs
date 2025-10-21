@@ -3,7 +3,12 @@ import { Resend } from "resend";
 import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
 import { AUTHOR_EMAIL, FROM_EMAIL } from "@/lib/site-config";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Check if Resend API key is configured
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const isEmailConfigured = !!RESEND_API_KEY;
+
+// Only initialize Resend if the API key is present
+const resend = isEmailConfigured ? new Resend(RESEND_API_KEY) : null;
 
 // Rate limit: 3 requests per 60 seconds per IP
 const RATE_LIMIT_CONFIG = {
@@ -86,6 +91,29 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Message must be at least 10 characters" },
         { status: 400 }
+      );
+    }
+
+    // Check if email service is configured
+    if (!isEmailConfigured || !resend) {
+      // Log the submission for manual follow-up
+      console.log("Contact form submission (email not configured):", {
+        name: sanitizedData.name,
+        email: sanitizedData.email,
+        message: sanitizedData.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      return NextResponse.json(
+        { 
+          success: true,
+          message: "Message received. However, email service is not configured. Please contact me directly via social media or GitHub.",
+          warning: "Email delivery unavailable"
+        },
+        { 
+          status: 200,
+          headers: createRateLimitHeaders(rateLimitResult),
+        }
       );
     }
 
