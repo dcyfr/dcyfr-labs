@@ -46,7 +46,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "24.5.0",
-    "@types/react": "^19",
+    "@types/react": "^19.1.16",
     "@types/react-calendar-heatmap": "^1.9.0",
     "@types/react-dom": "^19",
     "eslint": "^9",
