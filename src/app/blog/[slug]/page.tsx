@@ -142,20 +142,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
         {/* Tags and metadata */}
         <div className="mt-3 flex flex-wrap gap-2">
-          {post.tags.map((t) => (
-            <Badge key={t} variant="secondary">{t}</Badge>
-          ))}
+          <PostBadges
+            post={post}
+            isLatestPost={latestPost?.slug === post.slug}
+            isHotPost={hottestSlug === post.slug && maxViews > 0}
+          />
           <Badge variant="outline">{post.readingTime.text}</Badge>
           {typeof viewCount === "number" && (
             <Badge variant="outline">
               {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
             </Badge>
           )}
-          <PostBadges 
-              post={post}
-              isLatestPost={latestPost?.slug === post.slug}
-              isHotPost={hottestSlug === post.slug && maxViews > 0}
-            />
+          {post.tags.map((t) => (
+            <Badge key={t} variant="secondary">{t}</Badge>
+          ))}
         </div>
       </header>
       <div className="mt-8">

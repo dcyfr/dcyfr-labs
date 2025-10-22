@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 19, 2025
+**Last Updated:** October 21, 2025
 
 ---
 
@@ -43,7 +43,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ### Code Quality
 - [x] **Error boundaries** - Add comprehensive error boundary system with 5+ specialized boundaries for client components (completed 2025-10-20)
 - [x] **GitHub heatmap refactoring** - Refactored heatmap component to work with error boundaries and simplified by removing all caching logic (completed 2025-10-20)
-- [ ] **Loading states** - Add skeleton loaders for async content
+- [x] **Loading states** - Add skeleton loaders for async content (completed 2025-10-21)
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
 - [ ] **Unit tests** - Add tests for utility functions and components
 - [x] **Contact email fallback** - Gracefully handle missing `RESEND_API_KEY` with 200 response and warning instead of 500 error (completed 2025-10-20)
