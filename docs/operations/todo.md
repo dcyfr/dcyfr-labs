@@ -28,7 +28,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [x] **Reading progress indicator** - Show reading progress bar with GPU-accelerated animations for blog posts (completed 2025-10-20)
 - [x] **Table of contents** - Generate TOC for long blog posts from headings (completed 2025-10-21)
 - [x] **Related posts** - Show related posts at the end of each blog post based on tags (completed 2025-10-21)
-- [ ] **Code syntax highlighting themes** - Add syntax highlighting with theme support for code blocks
+- [x] **Code syntax highlighting themes** - Add syntax highlighting with theme support for code blocks using Shiki (completed 2025-10-21)
 
 ### Low Priority
 - [ ] **Share buttons** - Add social sharing buttons to blog posts
