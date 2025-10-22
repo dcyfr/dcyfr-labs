@@ -13,6 +13,10 @@ import { Badge } from "@/components/ui/badge";
 import { PostBadges } from "@/components/post-badges";
 import { getPostViews, incrementPostViews, getMultiplePostViews } from "@/lib/views";
 import { ReadingProgress } from "@/components/reading-progress";
+import { TableOfContents } from "@/components/table-of-contents";
+import { extractHeadings } from "@/lib/toc";
+import { RelatedPosts } from "@/components/related-posts";
+import { getRelatedPosts } from "@/lib/related-posts";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +60,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   const incrementedViews = await incrementPostViews(slug);
   const viewCount = incrementedViews ?? (await getPostViews(slug));
+  
+  // Extract headings for table of contents
+  const headings = extractHeadings(post.body);
+  
+  // Get related posts based on shared tags
+  const relatedPosts = getRelatedPosts(post, posts, 3);
   
   // Get view counts and determine latest/hottest posts
   const viewMap = await getMultiplePostViews(posts.map(p => p.slug));
@@ -117,6 +127,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <ReadingProgress />
+      <TableOfContents headings={headings} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -142,20 +153,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
         {/* Tags and metadata */}
         <div className="mt-3 flex flex-wrap gap-2">
-          {post.tags.map((t) => (
-            <Badge key={t} variant="secondary">{t}</Badge>
-          ))}
+          <PostBadges
+            post={post}
+            isLatestPost={latestPost?.slug === post.slug}
+            isHotPost={hottestSlug === post.slug && maxViews > 0}
+          />
           <Badge variant="outline">{post.readingTime.text}</Badge>
           {typeof viewCount === "number" && (
             <Badge variant="outline">
               {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
             </Badge>
           )}
-          <PostBadges 
-              post={post}
-              isLatestPost={latestPost?.slug === post.slug}
-              isHotPost={hottestSlug === post.slug && maxViews > 0}
-            />
+          {post.tags.map((t) => (
+            <Badge key={t} variant="secondary">{t}</Badge>
+          ))}
         </div>
       </header>
       <div className="mt-8">
@@ -175,6 +186,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </ul>
         </footer>
       )}
+      <RelatedPosts posts={relatedPosts} />
     </article>
     </>
   );

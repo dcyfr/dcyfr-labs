@@ -36,6 +36,12 @@ export function PostList({
       {posts.map((p) => (
         <article key={p.slug} className="group rounded-lg border p-4 transition-colors hover:bg-muted/50">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <PostBadges 
+              post={p} 
+              size="sm"
+              isLatestPost={latestSlug === p.slug}
+              isHotPost={hottestSlug === p.slug}
+            />
             <time dateTime={p.publishedAt}>
               {new Date(p.publishedAt).toLocaleDateString(undefined, { 
                 year: "numeric", 
@@ -45,23 +51,15 @@ export function PostList({
             </time>
             <span className="hidden md:inline-block">•</span>
             <span>{p.readingTime.text}</span>
-            <span>•</span>
+            <span className="hidden md:inline-block">•</span>
             <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
           </div>
-          <div className="mt-1 flex items-center justify-start gap-2">
+          <div className="mt-1">
             <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-lg md:text-xl" : "text-lg"}`}>
               <Link href={`/blog/${p.slug}`}>
                 {p.title}
               </Link>
             </TitleTag>
-            <div className="flex gap-2 flex-shrink-0">
-              <PostBadges 
-                post={p} 
-                size="sm"
-                isLatestPost={latestSlug === p.slug}
-                isHotPost={hottestSlug === p.slug}
-              />
-            </div>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{p.summary}</p>
         </article>

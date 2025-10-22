@@ -5,6 +5,7 @@ import CalendarHeatmap from "react-calendar-heatmap";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
+import { GitHubHeatmapSkeleton } from "@/components/github-heatmap-skeleton";
 import "react-calendar-heatmap/dist/styles.css";
 
 interface ContributionDay {
@@ -66,21 +67,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
   startDate.setFullYear(startDate.getFullYear() - 1);
 
   if (loading) {
-    return (
-      <Card className="p-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">GitHub Activity</h3>
-          </div>
-          <div className="flex items-center justify-center py-12">
-            <div className="space-y-2 text-center">
-              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-              <div className="text-sm text-muted-foreground">Loading contributions...</div>
-            </div>
-          </div>
-        </div>
-      </Card>
-    );
+    return <GitHubHeatmapSkeleton />;
   }
 
   return (

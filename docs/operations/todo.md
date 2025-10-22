@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 19, 2025
+**Last Updated:** October 21, 2025
 
 ---
 
@@ -26,9 +26,9 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ### Medium Priority
 - [x] **RSS feed improvements** - Enhance RSS/Atom feeds with full content and better formatting (completed 2025-10-18)
 - [x] **Reading progress indicator** - Show reading progress bar with GPU-accelerated animations for blog posts (completed 2025-10-20)
-- [ ] **Table of contents** - Generate TOC for long blog posts from headings
-- [ ] **Related posts** - Show related posts at the end of each blog post based on tags
-- [ ] **Code syntax highlighting themes** - Add syntax highlighting with theme support for code blocks
+- [x] **Table of contents** - Generate TOC for long blog posts from headings (completed 2025-10-21)
+- [x] **Related posts** - Show related posts at the end of each blog post based on tags (completed 2025-10-21)
+- [x] **Code syntax highlighting themes** - Add syntax highlighting with theme support for code blocks using Shiki (completed 2025-10-21)
 
 ### Low Priority
 - [ ] **Share buttons** - Add social sharing buttons to blog posts
@@ -43,7 +43,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ### Code Quality
 - [x] **Error boundaries** - Add comprehensive error boundary system with 5+ specialized boundaries for client components (completed 2025-10-20)
 - [x] **GitHub heatmap refactoring** - Refactored heatmap component to work with error boundaries and simplified by removing all caching logic (completed 2025-10-20)
-- [ ] **Loading states** - Add skeleton loaders for async content
+- [x] **Loading states** - Add skeleton loaders for async content (completed 2025-10-21)
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
 - [ ] **Unit tests** - Add tests for utility functions and components
 - [x] **Contact email fallback** - Gracefully handle missing `RESEND_API_KEY` with 200 response and warning instead of 500 error (completed 2025-10-20)
@@ -90,10 +90,11 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🎨 Design & UX
 
 ### UI Improvements
-- [ ] **Dark mode refinements** - Review color contrast in dark mode
+- [x] **Dark mode refinements** - Review color contrast in dark mode (completed 2025-10-21)
+- [x] **Light mode refinements** - Review color contrast in light mode (completed 2025-10-21)
 - [ ] **Mobile navigation** - Improve mobile menu if navigation grows
 - [ ] **Micro-interactions** - Add subtle animations and transitions
-- [ ] **Focus states** - Audit and improve keyboard focus indicators
+- [x] **Focus states** - Audit and improve keyboard focus indicators (completed 2025-10-21)
 
 ### Layout
 - [ ] **Grid layout for projects** - Consider card grid instead of list

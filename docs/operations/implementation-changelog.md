@@ -4,6 +4,79 @@ This document tracks all major implementations and changes to the cyberdrew-dev 
 
 ---
 
+## October 21, 2025 - Related Posts
+
+**Status**: ✅ Complete
+
+### Summary
+Implemented intelligent related posts feature that suggests relevant content at the end of each blog post based on shared tags, with scoring algorithm that considers multiple factors.
+
+### Changes
+- **Related Posts Algorithm**: Server-side utility to find and rank related posts
+- **Scoring System**: Ranks posts by shared tags count with bonuses/penalties
+- **Related Posts Component**: Clean card grid display with hover effects
+- **Responsive Layout**: 1-3 columns based on screen size
+
+### Features
+- Finds posts with matching tags automatically
+- Ranks by relevance (number of shared tags)
+- Featured posts get +0.5 score bonus
+- Archived posts get -0.5 score penalty
+- Tie-breaking by newest published date
+- Displays top 3 related posts
+- Shows post title, summary, tags, date, and reading time
+- Smooth hover animations with "Read more" link
+- Excludes current post and drafts (in production)
+- Gracefully handles no related posts (hidden if none)
+
+### Algorithm
+```typescript
+score = sharedTags.length
+if (post.featured) score += 0.5
+if (post.archived) score -= 0.5
+// Sort by score DESC, then publishedAt DESC
+```
+
+### Files Changed
+- `src/lib/related-posts.ts` (NEW)
+- `src/components/related-posts.tsx` (NEW)
+- `src/app/blog/[slug]/page.tsx` (MODIFIED)
+- `scripts/test-related-posts.mjs` (NEW - test script)
+
+---
+
+## October 21, 2025 - Table of Contents
+
+**Status**: ✅ Complete
+
+### Summary
+Implemented automatic table of contents generation for blog posts with smooth scrolling, active section tracking, and collapsible sidebar display.
+
+### Changes
+- **Heading Extraction**: Server-side utility to parse MDX and extract H2/H3 headings
+- **Client Component**: Fixed sidebar TOC with IntersectionObserver for active tracking
+- **Responsive**: Shows on XL+ screens only (≥1280px)
+- **Interactive**: Collapsible, smooth scroll navigation, hover states
+- **Accessible**: Proper ARIA labels and semantic HTML
+
+### Features
+- Auto-generates from MDX content (## and ### headings)
+- Highlights active section as user scrolls
+- Smooth scroll to heading on click
+- Nested H3 display under H2s
+- Theme-aware styling
+- Zero performance impact on mobile
+
+### Documentation
+- Created `docs/operations/table-of-contents-quick-reference.md`
+
+### Files Changed
+- `src/lib/toc.ts` (NEW)
+- `src/components/table-of-contents.tsx` (NEW)
+- `src/app/blog/[slug]/page.tsx` (MODIFIED)
+
+---
+
 ## October 20, 2024 - Post Badges Reorganization
 
 **Status**: ✅ Complete

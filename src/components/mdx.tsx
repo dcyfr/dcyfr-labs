@@ -3,6 +3,29 @@ import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrettyCode from "rehype-pretty-code";
+import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
+
+// Configure syntax highlighting with Shiki
+const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
+  theme: {
+    dark: "github-dark-dimmed",
+    light: "github-light",
+  },
+  defaultLang: "plaintext",
+  // Prevent lines from collapsing in `display: grid` mode
+  onVisitLine(node) {
+    if (node.children.length === 0) {
+      node.children = [{ type: "text", value: " " }];
+    }
+  },
+  onVisitHighlightedLine(node) {
+    node.properties.className?.push("highlighted");
+  },
+  onVisitHighlightedChars(node) {
+    node.properties.className = ["word"];
+  },
+};
 
 // Map a few elements to tailwind-styled components
 const components: NonNullable<MDXRemoteProps["components"]> = {
@@ -24,11 +47,25 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
     <ol {...props} className="list-decimal pl-5 [&>li]:mt-2" />
   ),
-  code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code {...props} className="rounded bg-muted py-0.5 text-sm" />
-  ),
+  code: (props: React.HTMLAttributes<HTMLElement>) => {
+    // Inline code (no data-language attribute)
+    const isInline = !props["data-language" as keyof typeof props];
+    if (isInline) {
+      return (
+        <code 
+          {...props} 
+          className="rounded-md bg-muted px-1.5 py-0.5 text-[0.875em] font-mono font-medium border border-border/50"
+        />
+      );
+    }
+    // Code blocks handled by pre > code (rehype-pretty-code)
+    return <code {...props} />;
+  },
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre {...props} className="overflow-x-auto rounded bg-muted mt-4 p-4 text-sm" />
+    <pre 
+      {...props} 
+      className="group relative [&>code]:grid [&>code]:text-[0.875rem]"
+    />
   ),
   hr: (props: React.HTMLAttributes<HTMLHRElement>) => (
     <hr {...props} className="mt-8 mb-4 border-border" />
@@ -62,7 +99,8 @@ export function MDX({ source }: { source: string }) {
         mdxOptions: {
           remarkPlugins: [remarkGfm],
           rehypePlugins: [
-            rehypeSlug, 
+            rehypeSlug,
+            [rehypePrettyCode, rehypePrettyCodeOptions],
             [
               rehypeAutolinkHeadings, 
               { 

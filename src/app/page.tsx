@@ -83,7 +83,7 @@ export default async function Home() {
       {/* Introduction Section */}
       <section className="space-y-4">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight italic font-serif">
-          Hi, I&apos;m Drew <span className="ml-1 font-sans not-italic">&#10022;</span>
+          Hi, I&apos;m Drew
         </h1>
         <p className="text-muted-foreground text-lg md:text-xl max-w-2xl">
           {resume.shortSummary}
@@ -111,11 +111,10 @@ export default async function Home() {
         </div>
         <div className="space-y-4">
           {await (async () => {
-            // Filter out archived posts
             const recentPosts = [...posts]
               .filter(p => !p.archived)
               .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
-              .slice(0, 5); // top 5 recent posts
+              .slice(0, 5);
             
             // Get badge metadata (latest and hottest posts)
             const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
@@ -134,7 +133,7 @@ export default async function Home() {
       <section className="mt-12 md:mt-16 space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Projects</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          {featuredProjects.slice(0, 4).map((p) => (
+          {featuredProjects.slice(0, 2).map((p) => (
             <ProjectCard key={p.title} project={p} />
           ))}
         </div>

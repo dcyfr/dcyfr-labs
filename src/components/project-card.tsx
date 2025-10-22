@@ -39,7 +39,7 @@ export function ProjectCard({ project }: { project: Project }) {
       </CardHeader>
       {project.highlights && project.highlights.length > 0 && (
         <CardContent>
-          <ul className="list-disc space-y-2 pl-4 text-sm text-muted-foreground">
+          <ul className="hidden lg:inline-block list-disc space-y-2 pl-4 text-sm text-muted-foreground">
             {project.highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
             ))}
