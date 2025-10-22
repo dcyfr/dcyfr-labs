@@ -4,6 +4,38 @@ This document tracks all major implementations and changes to the cyberdrew-dev 
 
 ---
 
+## October 21, 2025 - Table of Contents
+
+**Status**: ✅ Complete
+
+### Summary
+Implemented automatic table of contents generation for blog posts with smooth scrolling, active section tracking, and collapsible sidebar display.
+
+### Changes
+- **Heading Extraction**: Server-side utility to parse MDX and extract H2/H3 headings
+- **Client Component**: Fixed sidebar TOC with IntersectionObserver for active tracking
+- **Responsive**: Shows on XL+ screens only (≥1280px)
+- **Interactive**: Collapsible, smooth scroll navigation, hover states
+- **Accessible**: Proper ARIA labels and semantic HTML
+
+### Features
+- Auto-generates from MDX content (## and ### headings)
+- Highlights active section as user scrolls
+- Smooth scroll to heading on click
+- Nested H3 display under H2s
+- Theme-aware styling
+- Zero performance impact on mobile
+
+### Documentation
+- Created `docs/operations/table-of-contents-quick-reference.md`
+
+### Files Changed
+- `src/lib/toc.ts` (NEW)
+- `src/components/table-of-contents.tsx` (NEW)
+- `src/app/blog/[slug]/page.tsx` (MODIFIED)
+
+---
+
 ## October 20, 2024 - Post Badges Reorganization
 
 **Status**: ✅ Complete
