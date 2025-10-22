@@ -46,9 +46,9 @@ export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
       <div className="space-y-6">
-        <h1 className="text-3xl md:text-4xl font-bold">Hi, I&apos;m Drew.</h1>
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight italic font-serif">Hi, I&apos;m Drew</h1>
         <p className="text-lg md:text-xl text-muted-foreground">
-          {resume.shortSummary}
+          I&apos;m a Cybersecurity Architect and Tinkerer who helps organizations build resilient security programs that empower teams to move fast and stay secure.
         </p>
         <div className="flex flex-wrap gap-3">
           <Button asChild>
@@ -64,22 +64,13 @@ export default function AboutPage() {
         <h2 className="text-xl md:text-2xl font-medium">What drives me</h2>
         <div className="space-y-3 text-muted-foreground">
           <p>
-            I build approachable security programs that help teams ship quickly
-            without sacrificing resilience. I enjoy pairing technical work like
-            threat hunting and vulnerability management with coaching that
-            brings the whole organization along for the journey.
+            I build approachable security programs that help teams ship quickly without sacrificing resilience. I enjoy pairing technical work like threat hunting and vulnerability management with coaching that brings the whole organization along for the journey.
           </p>
           <p>
-            Over the past few years I&apos;ve led audits, run incident response
-            teams, and shipped the policies that keep global engineering orgs
-            aligned. The goal is always the same: make security feel like a
-            multiplier instead of a blocker.
+            Over the past few years I&apos;ve led audits, run incident response teams, and shipped the policies that keep global engineering orgs aligned. The goal is always the same: make security feel like a multiplier instead of a blocker.
           </p>
           <p>
-            Outside the office you&apos;ll find me mentoring, hosting community
-            events, and tinkering with the tools that keep defenders a step
-            ahead. I like turning that curiosity into clear guidance for the
-            teams I support.
+            Outside the office you&apos;ll find me mentoring, hosting community events, and tinkering with the tools that keep defenders a step ahead. I like turning that curiosity into clear guidance for the teams I support.
           </p>
         </div>
       </section>

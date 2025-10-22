@@ -45,10 +45,10 @@ const projectDrafts: Project[] = [
     featured: true,
     hidden: false,
     title: "cyberdrew.dev",
-    description: "My personal website and portfolio, showcasing my projects, blog posts, and resume.",
+    description: "Developer portfolio and personal website showcasing projects, blog articles, and resume.",
     slug: "cyberdrew-dev",
     timeline: "2025 → Present",
-    tech: ["Next.js", "React", "TypeScript", "Tailwind", "shadcn/ui"],
+    tech: ["React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui"],
     tags: ["Portfolio", "Web Development", "Personal"],
     highlights: [
       "Utilized Next.js and Tailwind CSS to create a fast, accessible, and visually appealing user experience.",

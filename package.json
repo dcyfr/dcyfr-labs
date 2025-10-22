@@ -11,6 +11,7 @@
     "test:rate-limit": "node ./scripts/test-rate-limit.mjs",
     "test:mcp-servers": "node ./scripts/test-mcp-servers.mjs",
     "test:toc": "node ./scripts/test-toc.mjs",
+    "test:related-posts": "node ./scripts/test-related-posts.mjs",
     "predev": "npm run sync:agents",
     "prebuild": "npm run sync:agents",
     "test:siteurl": "node scripts/check-siteurl.js"

@@ -15,6 +15,8 @@ import { getPostViews, incrementPostViews, getMultiplePostViews } from "@/lib/vi
 import { ReadingProgress } from "@/components/reading-progress";
 import { TableOfContents } from "@/components/table-of-contents";
 import { extractHeadings } from "@/lib/toc";
+import { RelatedPosts } from "@/components/related-posts";
+import { getRelatedPosts } from "@/lib/related-posts";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +63,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   
   // Extract headings for table of contents
   const headings = extractHeadings(post.body);
+  
+  // Get related posts based on shared tags
+  const relatedPosts = getRelatedPosts(post, posts, 3);
   
   // Get view counts and determine latest/hottest posts
   const viewMap = await getMultiplePostViews(posts.map(p => p.slug));
@@ -181,6 +186,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </ul>
         </footer>
       )}
+      <RelatedPosts posts={relatedPosts} />
     </article>
     </>
   );

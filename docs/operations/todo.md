@@ -27,7 +27,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [x] **RSS feed improvements** - Enhance RSS/Atom feeds with full content and better formatting (completed 2025-10-18)
 - [x] **Reading progress indicator** - Show reading progress bar with GPU-accelerated animations for blog posts (completed 2025-10-20)
 - [x] **Table of contents** - Generate TOC for long blog posts from headings (completed 2025-10-21)
-- [ ] **Related posts** - Show related posts at the end of each blog post based on tags
+- [x] **Related posts** - Show related posts at the end of each blog post based on tags (completed 2025-10-21)
 - [ ] **Code syntax highlighting themes** - Add syntax highlighting with theme support for code blocks
 
 ### Low Priority
