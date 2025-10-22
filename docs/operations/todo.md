@@ -90,10 +90,11 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🎨 Design & UX
 
 ### UI Improvements
-- [ ] **Dark mode refinements** - Review color contrast in dark mode
+- [x] **Dark mode refinements** - Review color contrast in dark mode (completed 2025-10-21)
+- [x] **Light mode refinements** - Review color contrast in light mode (completed 2025-10-21)
 - [ ] **Mobile navigation** - Improve mobile menu if navigation grows
 - [ ] **Micro-interactions** - Add subtle animations and transitions
-- [ ] **Focus states** - Audit and improve keyboard focus indicators
+- [x] **Focus states** - Audit and improve keyboard focus indicators (completed 2025-10-21)
 
 ### Layout
 - [ ] **Grid layout for projects** - Consider card grid instead of list
