@@ -6,6 +6,13 @@ This directory is the knowledge base for the portfolio. Content is now organized
 
 - `ai/discovery/` – AI discovery research, including [`overview.md`](./ai/discovery/overview.md), [`summary.md`](./ai/discovery/summary.md), and [`quick-reference.md`](./ai/discovery/quick-reference.md).
 - `api/` – API integration references such as [`reference.md`](./api/reference.md).
+- `blog/` – Blog system documentation:
+	- [`architecture.md`](./blog/architecture.md) - Complete blog system architecture and data flow
+	- [`quick-reference.md`](./blog/quick-reference.md) - Quick patterns and common tasks
+	- More blog docs in progress (MDX processing, content creation, frontmatter schema)
+- `components/` – Component documentation:
+	- [`mdx.md`](./components/mdx.md) - Core MDX rendering component
+	- More component docs in progress (reading-progress, github-heatmap, etc.)
 - `mcp/` – Model Context Protocol documentation, including:
 	- [`servers.md`](./mcp/servers.md) and [`quick-reference.md`](./mcp/quick-reference.md).
 	- `filesystem-git/` for the Filesystem and Git MCP rollout (index, integration, quick reference, ready checklist).
@@ -27,6 +34,8 @@ This directory is the knowledge base for the portfolio. Content is now organized
 |-------|--------------------|
 | AI Discovery | [`overview.md`](./ai/discovery/overview.md) · [`summary.md`](./ai/discovery/summary.md) |
 | APIs | [`api/reference.md`](./api/reference.md) |
+| Blog System | [`blog/architecture.md`](./blog/architecture.md) · [`blog/quick-reference.md`](./blog/quick-reference.md) |
+| Components | [`components/mdx.md`](./components/mdx.md) |
 | MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |
 | MCP (Filesystem + Git) | [`mcp/filesystem-git/index.md`](./mcp/filesystem-git/index.md) · [`mcp/filesystem-git/integration.md`](./mcp/filesystem-git/integration.md) |
 | MCP Tests | [`mcp/tests/servers-test.md`](./mcp/tests/servers-test.md) · [`mcp/tests/dependency-validation.md`](./mcp/tests/dependency-validation.md) |
@@ -51,4 +60,4 @@ This directory is the knowledge base for the portfolio. Content is now organized
 - `agents.md` – Auto-synced instructions consumed by agents.
 - Project root `README.md` – High-level overview and developer quick start.
 
-_Last reorganized: October 19, 2025._
+_Last reorganized: October 23, 2025._

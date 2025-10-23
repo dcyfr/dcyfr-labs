@@ -1,6 +1,6 @@
-# Minimal Next.js Developer Portfolio
+# Next.js Developer Blog & Portfolio
 
-A modern, minimal portfolio built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui.
+A modern developer blog and portfolio built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui. Features an MDX-powered blog, GitHub integration, Redis-backed view counts, and comprehensive security features.
 
 Developing with an AI assistant? See `agents.md` for the AI contributor guide (kept in sync with `.github/copilot-instructions.md`).
 

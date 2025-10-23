@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 21, 2025
+**Last Updated:** October 23, 2025
 
 ---
 
@@ -65,10 +65,29 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ### Documentation
 - [x] **API documentation** - Document API routes and their expected payloads (see `docs/api/reference.md`) - completed 2025-10-19
 - [x] **Environment variable quickstart** - Published comprehensive `.env.example` with all variables documented (completed 2025-10-20)
-- [ ] **Component documentation** - Add JSDoc comments to complex components
+- [x] **AI instructions update** - Updated AI contributor instructions to reflect blog system and all features (completed 2025-10-23)
+- [x] **Documentation gap analysis** - Comprehensive analysis of `/docs` directory identifying missing documentation (completed 2025-10-23)
+- [x] **Blog architecture documentation** - HIGH PRIORITY: Created unified blog system architecture in `/docs/blog/architecture.md` (completed 2025-10-23)
+- [x] **Blog quick reference** - HIGH PRIORITY: Created quick reference guide in `/docs/blog/quick-reference.md` (completed 2025-10-23)
+- [x] **MDX component documentation** - HIGH PRIORITY: Documented core MDX rendering component in `/docs/components/mdx.md` (completed 2025-10-23)
+- [ ] **Blog system documentation** - MEDIUM PRIORITY: Complete remaining blog docs
+  - [ ] `mdx-processing.md` - MDX pipeline, plugins, syntax highlighting
+  - [ ] `content-creation.md` - Post authoring guide
+  - [ ] `frontmatter-schema.md` - Complete frontmatter reference
+  - [ ] `features-index.md` - Feature catalog
+- [ ] **Component documentation** - MEDIUM PRIORITY: Document remaining components in `/docs/components/`
+  - [ ] `reading-progress.md` - Reading progress indicator
+  - [ ] `github-heatmap.md` - GitHub contributions heatmap
+  - [ ] `blog-post-skeleton.md` - Blog skeleton loader
+  - [ ] `blog-search-form.md` - Search component
+- [ ] **API routes documentation** - MEDIUM PRIORITY: Centralize API docs in `/docs/api/routes/`
+  - [ ] `overview.md` - API architecture, rate limiting, error handling
+  - [ ] `contact.md` - Contact form API endpoint
+  - [ ] `github-contributions.md` - GitHub heatmap data API
+- [ ] **GitHub integration guide** - MEDIUM PRIORITY: Create `/docs/features/github-integration.md` with setup, caching, and rate limiting
+- [ ] **Component JSDoc comments** - Add JSDoc comments to complex components
 - [ ] **Contributing guide** - Create CONTRIBUTING.md for potential contributors
 - [ ] **Deployment guide** - Document deployment process and environment variables (partially covered in environment-variables.md)
-- [ ] **GitHub heatmap setup guide** - Add documentation that matches the in-app link referenced in `github-heatmap.tsx`
 
 ---
 
@@ -139,9 +158,12 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🔄 Dependencies
 
 ### MCP Servers
-- [x] **Filesystem MCP** - Add Filesystem MCP for enhanced project navigation and bulk operations (completed 2025-10-18)
-- [ ] **Git MCP** - Integrate Git MCP when available (currently @modelcontextprotocol/server-git doesn't exist on npm)
-- [ ] **GitHub MCP** - Set up GitHub MCP server for PR/issue automation and workflow management
+- [x] **Context7 MCP** - Documentation lookup for Next.js, React, Tailwind, shadcn/ui (installed and active)
+- [x] **Sequential Thinking MCP** - Complex problem-solving and planning (installed and active)
+- [x] **Memory MCP** - Project context tracking across conversations (installed and active)
+- [x] **Filesystem MCP** - Enhanced project navigation and bulk operations (completed 2025-10-18)
+- [x] **GitHub MCP** - PR/issue automation and workflow management via Docker (completed 2025-10-18, documented)
+- [ ] **Git MCP** - Consider adding @modelcontextprotocol/server-git for direct git operations (optional, filesystem covers most needs)
 - [ ] **Slack MCP** (optional) - Add Slack MCP for deployment notifications and team updates
 
 ### Maintenance
