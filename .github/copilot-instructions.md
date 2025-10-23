@@ -1,10 +1,13 @@
 # AI contributor guide for this repo
 
-This repo is a minimal developer portfolio built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui. Optimize for small, typed components, server-first rendering, and simple data flows.
+This repo is a full-featured developer blog and portfolio built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui. The site features an MDX-powered blog, GitHub integration, Redis-backed view counts, and comprehensive security features. Optimize for small, typed components, server-first rendering, and maintainable data flows.
 
 ## Stack and workspace
 - Next.js 15 App Router + React 19, strict TypeScript.
 - Tailwind v4 utilities; UI primitives from shadcn/ui under `src/components/ui/*` (Radix + CVA).
+- MDX content with `next-mdx-remote`, `gray-matter`, and rehype/remark plugins for rich blog posts.
+- Syntax highlighting via Shiki with dual-theme support (light/dark).
+- Redis for post view counts (optional, falls back gracefully).
 - Theming via `next-themes` (`ThemeProvider`) and toasts via `sonner` (`Toaster`).
 - Path alias: `@/*` -> `src/*` (see `tsconfig.json`). Prefer `@/…` imports over long relative paths.
 
@@ -43,17 +46,26 @@ Additional tools available:
 ## Architecture and routing
 - App Router under `src/app`.
   - Pages: `src/app/<segment>/page.tsx` (server components by default).
-  - Client components only when needed for interactivity: add `"use client"` (e.g., `contact/page.tsx`, `theme-toggle.tsx`).
-  - Layout: `src/app/layout.tsx` wraps header/footer, theme provider, and `Toaster`.
-  - API routes: `src/app/api/<name>/route.ts` with request handlers (e.g., `api/contact/route.ts`).
-- Static assets live in `public/`.
+  - Client components only when needed for interactivity: add `"use client"` (e.g., `contact/page.tsx`, `theme-toggle.tsx`, `github-heatmap.tsx`).
+  - Layout: `src/app/layout.tsx` wraps header/footer, theme provider, `Toaster`, and analytics.
+  - API routes: `src/app/api/<name>/route.ts` with request handlers and rate limiting.
+    - `/api/contact` - Contact form submission
+    - `/api/github-contributions` - GitHub heatmap data (with server-side caching)
+  - Dynamic routes: `/blog/[slug]` for individual blog posts.
+  - Metadata routes: `sitemap.ts`, `robots.ts`, `/atom.xml`, `/rss.xml` for SEO and feeds.
+- Static assets and data files live in `public/`.
 
 ## Conventions and patterns
 - Styling: Tailwind utilities; use `cn` from `src/lib/utils.ts` to merge classes. Avoid adding new CSS systems.
-- UI: Prefer existing shadcn/ui components (Button, Card, Input, Textarea, Label, etc.) from `src/components/ui/*`. Add new primitives there if needed.
-- Data: Keep simple typed data in `src/data`.
-  - Example: `src/data/projects.ts` exports `projects: Project[]`, where `Project` is the type from `src/components/project-card.tsx`.
-- Composition: Small, focused components under `src/components/*` (e.g., `project-card`, `site-header`, `site-footer`).
+- UI: Prefer existing shadcn/ui components (Button, Card, Input, Textarea, Label, Badge, Skeleton, etc.) from `src/components/ui/*`. Add new primitives there if needed.
+- Data: Keep typed data in `src/data`.
+  - `src/data/projects.ts` exports `projects: Project[]`
+  - `src/data/posts.ts` exports `posts: Post[]` (computed from MDX files)
+  - `src/data/resume.ts` exports resume data
+- Content: Blog posts as MDX files in `src/content/blog/` with frontmatter.
+- Composition: Small, focused components under `src/components/*` (e.g., `post-list`, `post-badges`, `project-card`, `site-header`, `site-footer`, `github-heatmap`).
+- Error Handling: All major features have dedicated error boundaries (e.g., `github-heatmap-error-boundary.tsx`, `blog-search-error-boundary.tsx`).
+- Loading States: Use skeleton loaders for async content (e.g., `post-list-skeleton.tsx`, `github-heatmap-skeleton.tsx`).
 - Imports: Use `@/…` alias consistently.
 - Documentation: Store all documentation files (analysis, guides, architecture docs) in `/docs` directory unless explicitly required in the project root (e.g., `README.md`, `LICENSE`). This keeps the workspace organized and separates documentation from code.
 
@@ -61,7 +73,42 @@ Additional tools available:
 - Client pages use fetch to App Router API routes and `sonner` for UX feedback.
   - Example: `contact/page.tsx` POSTs JSON to `/api/contact` and shows success/error toasts.
 - Validate inputs on the server route (see `api/contact/route.ts`) and return JSON via `NextResponse`.
-- If integrating email/SaaS (Resend, Sendgrid), do it inside the server route using env vars; don’t leak secrets to the client.
+- Rate limiting implemented using Redis on all public API routes.
+- If integrating email/SaaS (Resend, Sendgrid), do it inside the server route using env vars; don't leak secrets to the client.
+
+## Blog system
+- **Content**: MDX files live in `src/content/blog/` with frontmatter metadata.
+- **Data Layer**: 
+  - `src/lib/blog.ts` - File system operations, post parsing, reading time calculation
+  - `src/data/posts.ts` - Exported post array, computed at build time
+- **Post Types**:
+  - `draft: true` - Only visible in development mode
+  - `archived: true` - Marked as no longer updated
+  - `featured: true` - Highlighted on homepage
+  - Tags for categorization and related posts
+- **Features**:
+  - Post badges (Draft/Archived/New/Hot) via `PostBadges` component
+  - Table of Contents auto-generated from H2/H3 headings
+  - Related posts algorithm based on shared tags
+  - Reading progress indicator
+  - View counts (Redis-backed, optional)
+  - RSS/Atom feeds at `/rss.xml` and `/atom.xml`
+- **Rendering**: 
+  - MDX processed with `next-mdx-remote`
+  - Syntax highlighting via Shiki (dual-theme: `github-light` / `github-dark`)
+  - Rehype plugins: `rehype-slug`, `rehype-autolink-headings`, `rehype-pretty-code`
+  - Remark plugins: `remark-gfm` for GitHub-flavored markdown
+- **Pages**:
+  - `/blog` - Post list with search and filtering
+  - `/blog/[slug]` - Individual post with TOC, related posts, view count
+- **Components**: `PostList`, `PostBadges`, `RelatedPosts`, `TableOfContents`, `ReadingProgress`, `MDX`
+
+## GitHub integration
+- **Heatmap**: `github-heatmap.tsx` displays contribution activity
+- **API Route**: `/api/github-contributions` fetches data with server-side caching (1 hour TTL)
+- **Authentication**: Optional `GITHUB_TOKEN` env var increases rate limits (60 → 5,000 req/hour)
+- **Error Handling**: Falls back to sample data if GitHub API unavailable
+- **Dev Indicators**: Cache badge shows when serving cached data (development only)
 
 ## SEO and metadata
 - Global `metadata` is in `src/app/layout.tsx` (uses `metadataBase` plus dynamic `/opengraph-image` and `/twitter-image` routes).
@@ -69,12 +116,17 @@ Additional tools available:
 
 ## Adding pages or components (examples)
 - New page: create `src/app/<slug>/page.tsx` and optionally `export const metadata = { title: "…" }` (see `about/page.tsx`, `projects/page.tsx`).
-- New card/listing: define a typed component (like `ProjectCard`) and drive it from a `src/data/*` array.
+- New blog post: create `src/content/blog/<slug>.mdx` with frontmatter (see `src/content/blog/README.md` for schema).
+- New card/listing: define a typed component (like `ProjectCard` or `PostList`) and drive it from a `src/data/*` array.
 - Interactivity: mark the component/page with `"use client"`, use shadcn/ui primitives, and handle state locally.
+- Error boundaries: wrap async components in error boundaries (pattern: `<ComponentName>ErrorBoundary`)
+- Loading states: provide skeleton loaders for components that fetch data (pattern: `<ComponentName>Skeleton`)
 
 ## What not to change (without discussion)
-- Don’t introduce a new UI library or CSS framework.
-- Don’t bypass the `@/*` import alias.
-- Don’t move SEO routes (`sitemap.ts`, `robots.ts`) out of `src/app/`.
+- Don't introduce a new UI library or CSS framework.
+- Don't bypass the `@/*` import alias.
+- Don't move SEO routes (`sitemap.ts`, `robots.ts`) out of `src/app/`.
+- Don't modify MDX processing pipeline without understanding existing rehype/remark plugins.
+- Don't change blog post frontmatter schema without updating type definitions.
 
-Key files for reference: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/api/contact/route.ts`, `src/components/project-card.tsx`, `src/data/projects.ts`, `src/lib/utils.ts`. 
+Key files for reference: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/blog/[slug]/page.tsx`, `src/lib/blog.ts`, `src/data/posts.ts`, `src/components/post-list.tsx`, `src/components/mdx.tsx`, `src/lib/utils.ts`.
