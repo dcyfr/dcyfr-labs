@@ -8,11 +8,25 @@ import { ExternalLink } from "lucide-react";
 import { GitHubHeatmapSkeleton } from "@/components/github-heatmap-skeleton";
 import "react-calendar-heatmap/dist/styles.css";
 
+/**
+ * Represents a single day's contribution data from GitHub API
+ * @typedef {Object} ContributionDay
+ * @property {string} date - ISO date string (YYYY-MM-DD)
+ * @property {number} count - Number of contributions on this date
+ */
 interface ContributionDay {
   date: string;
   count: number;
 }
 
+/**
+ * API response structure for GitHub contributions data
+ * @typedef {Object} ContributionResponse
+ * @property {ContributionDay[]} contributions - Array of contribution data for the past year
+ * @property {number} [totalContributions] - Total contributions in the time period
+ * @property {string} [warning] - Optional warning message (e.g., "Using cached data")
+ * @property {string} [source] - Data source indicator ("server-cache", "api", "fallback")
+ */
 interface ContributionResponse {
   contributions: ContributionDay[];
   totalContributions?: number;
@@ -20,12 +34,47 @@ interface ContributionResponse {
   source?: string;
 }
 
+/**
+ * Props for the GitHubHeatmap component
+ * @typedef {Object} GitHubHeatmapProps
+ * @property {string} [username="dcyfr"] - GitHub username to fetch contributions for
+ */
 interface GitHubHeatmapProps {
   username?: string;
 }
 
 const DEFAULT_GITHUB_USERNAME = "dcyfr";
 
+/**
+ * GitHubHeatmap Component
+ *
+ * Displays a GitHub contribution activity heatmap for the past year.
+ * Fetches data from the `/api/github-contributions` endpoint which handles:
+ * - Server-side caching (5-minute cache with 1-minute fallback)
+ * - Rate limiting (10 requests/minute per IP)
+ * - Graceful fallback with sample data if GitHub API is unavailable
+ *
+ * @component
+ * @param {GitHubHeatmapProps} props - Component props
+ * @param {string} [props.username="dcyfr"] - GitHub username to fetch contributions for
+ *
+ * @returns {React.ReactElement} Calendar heatmap visualization with statistics
+ *
+ * @example
+ * // Display default user's contributions
+ * <GitHubHeatmap />
+ *
+ * @example
+ * // Display specific user's contributions
+ * <GitHubHeatmap username="torvalds" />
+ *
+ * @note This component is wrapped with `GitHubHeatmapErrorBoundary` in production.
+ * If the component throws an error, the error boundary displays a fallback UI.
+ *
+ * @note Loading state displays a skeleton loader to prevent layout shift (CLS).
+ *
+ * @performance Uses react-calendar-heatmap for efficient rendering of 365+ cells.
+ */
 export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeatmapProps) {
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
   const [loading, setLoading] = useState(true);

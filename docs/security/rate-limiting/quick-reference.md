@@ -2,13 +2,16 @@
 
 Quick reference for developers working with the rate limiting implementation.
 
+**Last Updated:** October 24, 2025
+
 ## 📋 At a Glance
 
-- **Endpoint:** `/api/contact`
-- **Limit:** 3 requests per 60 seconds per IP
-- **Storage:** In-memory (Map)
+- **Storage:** Redis (distributed) with in-memory fallback
+- **Endpoints:** `/api/contact`, `/api/github-contributions`
+- **Contact Limit:** 3 requests per 60 seconds per IP
+- **GitHub Limit:** 10 requests per 60 seconds per IP
 - **Status Code:** 429 (Too Many Requests)
-- **Dependencies:** Zero external dependencies
+- **Dependencies:** `redis` package
 
 ## 🚀 Quick Start
 
@@ -21,8 +24,8 @@ export async function POST(request: Request) {
   // 1. Get client IP
   const clientIp = getClientIp(request);
   
-  // 2. Check rate limit
-  const result = rateLimit(clientIp, {
+  // 2. Check rate limit (async with Redis)
+  const result = await rateLimit(clientIp, {
     limit: 3,
     windowInSeconds: 60,
   });
@@ -47,6 +50,23 @@ export async function POST(request: Request) {
     { headers: createRateLimitHeaders(result) }
   );
 }
+```
+
+### Environment Setup
+
+```bash
+# .env.local or .env.production
+REDIS_URL=redis://default:password@host:port
+
+# Without REDIS_URL:
+# - Falls back to in-memory storage
+# - Rate limits per serverless instance only
+# - Not shared across deployments
+
+# With REDIS_URL:
+# - Distributed rate limiting
+# - Shared across all instances
+# - Better protection against abuse
 ```
 
 ### Testing Rate Limits

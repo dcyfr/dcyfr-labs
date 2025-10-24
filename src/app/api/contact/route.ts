@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   try {
     // Apply rate limiting
     const clientIp = getClientIp(request);
-    const rateLimitResult = rateLimit(clientIp, RATE_LIMIT_CONFIG);
+    const rateLimitResult = await rateLimit(clientIp, RATE_LIMIT_CONFIG);
 
     if (!rateLimitResult.success) {
       return NextResponse.json(
@@ -96,11 +96,11 @@ export async function POST(request: Request) {
 
     // Check if email service is configured
     if (!isEmailConfigured || !resend) {
-      // Log the submission for manual follow-up
+      // Log the submission for monitoring (fully anonymized - no PII)
       console.log("Contact form submission (email not configured):", {
-        name: sanitizedData.name,
-        email: sanitizedData.email,
-        message: sanitizedData.message,
+        nameLength: sanitizedData.name.length,
+        emailDomain: sanitizedData.email.split('@')[1] || 'unknown',
+        messageLength: sanitizedData.message.length,
         timestamp: new Date().toISOString(),
       });
 
@@ -134,10 +134,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Log successful submission for monitoring
+    // Log successful submission for monitoring (fully anonymized - no PII)
     console.log("Contact form submission sent:", {
-      name: sanitizedData.name,
-      email: sanitizedData.email,
+      nameLength: sanitizedData.name.length,
+      emailDomain: sanitizedData.email.split('@')[1] || 'unknown',
+      messageLength: sanitizedData.message.length,
       timestamp: new Date().toISOString(),
     });
 

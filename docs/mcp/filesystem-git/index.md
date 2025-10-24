@@ -321,7 +321,7 @@ Files identified + git history shown
 3. **This Month**
    - Master advanced workflows
    - Consider GitHub MCP
-   - Consider Slack MCP
+   - Consider Discord MCP
 
 ---
 

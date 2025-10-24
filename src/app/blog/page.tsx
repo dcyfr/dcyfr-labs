@@ -97,7 +97,8 @@ export default async function BlogPage({
   
   return (
     <div className="mx-auto max-w-5xl py-14 md:py-20">
-      <div className="space-y-4">
+      {/* page hero */}
+      <div className="prose space-y-4">
         <h1 className="font-serif text-3xl md:text-4xl font-bold">Blog</h1>
         <p className="text-lg md:text-xl text-muted-foreground">
           {pageDescription}
@@ -112,10 +113,9 @@ export default async function BlogPage({
           </p>
         )}
       </div>
-
+      {/* search form */}
       <BlogSearchForm query={query} tag={tag} />
-
-      {/* Tag Filter */}
+      {/* tags filter */}
       <div className="mt-4 flex flex-wrap gap-2">
         <Badge asChild variant={tag ? "outline" : "secondary"}>
           <Link href={buildTagHref("", query)}>All</Link>
@@ -126,8 +126,7 @@ export default async function BlogPage({
           </Badge>
         ))}
       </div>
-
-      {/* Posts List */}
+      {/* blog posts list */}
       <div className="mt-8 space-y-6">
         <PostList 
           posts={filtered}

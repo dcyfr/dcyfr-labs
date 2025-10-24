@@ -5,29 +5,43 @@ import type { NextRequest } from "next/server";
 /**
  * Content Security Policy (CSP) Middleware
  * 
- * Adds CSP headers to protect against XSS attacks and control resource loading.
+ * Adds CSP headers with nonce-based protection against XSS attacks.
  * 
- * Current implementation uses 'unsafe-inline' for compatibility with:
- * - Next.js hydration scripts
- * - Tailwind JIT inline styles
- * - Vercel Analytics inline scripts
- * - Third-party component libraries (Sonner, etc.)
+ * Nonce-based CSP implementation:
+ * - Generates unique cryptographic nonce per request
+ * - Injects nonce into CSP header for script-src and style-src
+ * - Passes nonce via x-nonce header for use in components
+ * - Compatible with Vercel Analytics, next-themes, and JSON-LD scripts
  * 
- * Future enhancement: Migrate to nonce-based CSP for stricter security
+ * Nonce support verified for:
+ * - next-themes ThemeProvider (via nonce prop)
+ * - JSON-LD structured data scripts (via nonce attribute)
+ * - Vercel Analytics (inherits from script context)
  */
 
 export function middleware(request: NextRequest) {
-  // Build CSP directives
+  // Generate unique nonce for this request
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  
+  // Detect development environment
+  const isDevelopment = process.env.NODE_ENV === "development";
+  
+  // Build CSP directives with nonce
   const cspDirectives = [
     // Default: only allow same-origin resources
     "default-src 'self'",
     
-    // Scripts: self, Vercel analytics, Vercel Live (preview/dev), and unsafe-inline
-    // Note: We use unsafe-inline for compatibility with Next.js hydration and third-party scripts
-    `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel.live`,
+    // Scripts: self with nonce, external analytics, and Vercel Live
+    // Using nonce instead of unsafe-inline for improved security
+    // In development, add 'unsafe-eval' for Turbopack HMR
+    `script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel.live`,
     
-    // Styles: self, unsafe-inline for Tailwind/Sonner, Google Fonts, Vercel Live
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live",
+    // Styles: self with nonce, Google Fonts, and Vercel Live
+    // In development: use 'unsafe-inline' WITHOUT nonce (nonce blocks unsafe-inline)
+    // In production: use nonce-only for strict CSP
+    isDevelopment
+      ? "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live"
+      : `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://vercel.live`,
     
     // Images: self, data URIs, production domain, Vercel domains, and Vercel Live
   `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://vercel.live`,
@@ -36,7 +50,8 @@ export function middleware(request: NextRequest) {
     "font-src 'self' https://fonts.gstatic.com https://vercel.live",
     
     // Connect: self, Vercel analytics endpoints, and Vercel Live (for feedback/comments)
-    "connect-src 'self' https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://vercel.live https://*.pusher.com wss://*.pusher.com",
+    // In development, allow webpack/turbopack HMR websockets
+    `connect-src 'self'${isDevelopment ? " ws://localhost:* wss://localhost:*" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://vercel.live https://*.pusher.com wss://*.pusher.com`,
     
     // Frame: allow Vercel Live for preview feedback, deny all others (clickjacking protection)
     "frame-src https://vercel.live",
@@ -55,12 +70,18 @@ export function middleware(request: NextRequest) {
     
     // Block all mixed content
     "block-all-mixed-content",
+    
+    // CSP violation reporting
+    "report-uri /api/csp-report",
   ];
 
   const cspHeader = cspDirectives.join("; ");
 
   // Clone response headers
   const requestHeaders = new Headers(request.headers);
+  
+  // Pass nonce to components via custom header
+  requestHeaders.set("x-nonce", nonce);
 
   const response = NextResponse.next({
     request: {
@@ -68,7 +89,7 @@ export function middleware(request: NextRequest) {
     },
   });
 
-  // Set CSP header
+  // Set CSP header with nonce
   response.headers.set("Content-Security-Policy", cspHeader);
 
   return response;

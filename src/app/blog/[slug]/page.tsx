@@ -17,6 +17,7 @@ import { TableOfContents } from "@/components/table-of-contents";
 import { extractHeadings } from "@/lib/toc";
 import { RelatedPosts } from "@/components/related-posts";
 import { getRelatedPosts } from "@/lib/related-posts";
+import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = posts.find((p) => p.slug === slug);
   if (!post) notFound();
+
+  // Get nonce from middleware for CSP
+  const nonce = (await headers()).get("x-nonce") || "";
 
   const incrementedViews = await incrementPostViews(slug);
   const viewCount = incrementedViews ?? (await getPostViews(slug));
@@ -130,7 +134,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <TableOfContents headings={headings} />
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        suppressHydrationWarning
       />
       <article className="mx-auto max-w-3xl py-14 md:py-20">
       <header>

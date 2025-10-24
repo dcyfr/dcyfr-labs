@@ -6,11 +6,58 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+/**
+ * Props for the BlogSearchForm component
+ * @typedef {Object} BlogSearchFormProps
+ * @property {string} query - Current search query string (from URL params)
+ * @property {string} tag - Currently selected tag filter (from URL params)
+ */
 type BlogSearchFormProps = {
   query: string;
   tag: string;
 };
 
+/**
+ * BlogSearchForm Component
+ *
+ * A client-side search form for filtering blog posts by title/content and tags.
+ * Manages search state through Next.js App Router URL parameters for:
+ * - Server-side filtering without client-side search complexity
+ * - Shareable search URLs
+ * - Browser history navigation support
+ * - Preservation of tag filters across searches
+ *
+ * @component
+ * @param {BlogSearchFormProps} props - Component props
+ * @param {string} props.query - Current search query from URL parameters
+ * @param {string} props.tag - Current tag filter from URL parameters
+ *
+ * @returns {React.ReactElement} Form with search input and submit button
+ *
+ * @example
+ * // Display search form with no initial query
+ * <BlogSearchForm query="" tag="" />
+ *
+ * @example
+ * // Display search form with existing search
+ * <BlogSearchForm query="typescript" tag="web" />
+ *
+ * @behavior
+ * - Debounces search input by 250ms to reduce unnecessary URL updates
+ * - Updates URL parameters when input changes (after debounce) or form is submitted
+ * - Preserves tag filter when searching
+ * - Syncs with URL parameters when they change externally
+ * - Shows "Searching..." indicator while transition is pending
+ *
+ * @accessibility
+ * - Form has role="search" for semantic HTML
+ * - Input has aria-label for screen readers
+ * - Uses aria-live="polite" for live region updates
+ * - Hidden tag input for form data consistency
+ *
+ * @see /blog page for usage context
+ * @see src/lib/blog.ts for server-side filtering logic
+ */
 export function BlogSearchForm({ query, tag }: BlogSearchFormProps) {
   const router = useRouter();
   const pathname = usePathname();

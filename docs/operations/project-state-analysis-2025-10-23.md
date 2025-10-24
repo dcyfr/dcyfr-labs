@@ -215,7 +215,7 @@ Comprehensive analysis of cyberdrew-dev portfolio project reveals a mature, well
 #### Potential Additions (Optional)
 
 - ⏳ **Git MCP** - @modelcontextprotocol/server-git exists but may be redundant with Filesystem MCP
-- ⏳ **Slack MCP** - For deployment notifications (low priority, optional)
+- ⏳ **Discord MCP** - For deployment notifications (low priority, optional)
 
 **Analysis:** MCP ecosystem is mature and well-documented. All core productivity MCPs are active. Git MCP could be added but Filesystem MCP covers most needs. GitHub MCP provides git operations via API.
 

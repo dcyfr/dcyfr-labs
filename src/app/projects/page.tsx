@@ -10,6 +10,7 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
+import { headers } from "next/headers";
 
 const pageTitle = "Projects";
 const pageDescription = "A collection of my projects and contributions in cybersecurity and software development.";
@@ -41,7 +42,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  // Get nonce from middleware for CSP
+  const nonce = (await headers()).get("x-nonce") || "";
+  
   // JSON-LD structured data for projects collection
   const jsonLd = {
     "@context": "https://schema.org",
@@ -80,24 +84,25 @@ export default function ProjectsPage() {
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        suppressHydrationWarning
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
-        <div className="space-y-4">
+        {/* hero section */}
+        <div className="prose space-y-4">
           <h1 className="font-serif text-3xl md:text-4xl font-bold">Projects</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             {pageDescription}
           </p>
         </div>
-        
-        {/* GitHub Contribution Heatmap */}
+        {/* github contribution heatmap */}
         <div className="mt-10">
           <GitHubHeatmapErrorBoundary>
             <GitHubHeatmap username="dcyfr" />
           </GitHubHeatmapErrorBoundary>
         </div>
-        
-        {/* Projects Grid */}
+        {/* projects */}
         <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {visibleProjects.map((project) => (
             <ProjectCard key={project.slug} project={project} />

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SITE_DOMAIN } from '@/lib/site-config';
+import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 
 interface ContributionDay {
   date: string;
@@ -16,60 +17,15 @@ interface ContributionResponse {
 // Security: Only allow fetching data for the hardcoded portfolio owner
 const ALLOWED_USERNAME = 'dcyfr';
 
-// Rate limiting configuration (in-memory, suitable for serverless)
-const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
-const MAX_REQUESTS_PER_WINDOW = 10; // 10 requests per minute per IP
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+// Rate limiting configuration: 10 requests per minute per IP
+const RATE_LIMIT_CONFIG = {
+  limit: 10,
+  windowInSeconds: 60,
+};
 
 // Server-side cache configuration
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes server-side cache
 let cachedData: { data: ContributionResponse; timestamp: number } | null = null;
-
-/**
- * Check if the request is rate limited
- */
-function checkRateLimit(identifier: string): { allowed: boolean; resetAt?: number } {
-  const now = Date.now();
-  const record = rateLimitMap.get(identifier);
-
-  // Clean up expired entries periodically
-  if (rateLimitMap.size > 1000) {
-    for (const [key, value] of rateLimitMap.entries()) {
-      if (value.resetAt < now) {
-        rateLimitMap.delete(key);
-      }
-    }
-  }
-
-  if (!record || record.resetAt < now) {
-    // New window
-    rateLimitMap.set(identifier, {
-      count: 1,
-      resetAt: now + RATE_LIMIT_WINDOW,
-    });
-    return { allowed: true };
-  }
-
-  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
-    return { allowed: false, resetAt: record.resetAt };
-  }
-
-  record.count++;
-  return { allowed: true };
-}
-
-/**
- * Get client identifier for rate limiting
- */
-function getClientIdentifier(request: NextRequest): string {
-  // Try multiple headers for IP (Vercel, Cloudflare, etc.)
-  const forwarded = request.headers.get('x-forwarded-for');
-  const realIp = request.headers.get('x-real-ip');
-  const cfConnectingIp = request.headers.get('cf-connecting-ip');
-  
-  const ip = cfConnectingIp || realIp || forwarded?.split(',')[0] || 'unknown';
-  return ip;
-}
 
 /**
  * Validate username to prevent injection attacks
@@ -119,13 +75,11 @@ export async function GET(request: NextRequest) {
   }
 
   // Rate limiting check
-  const clientId = getClientIdentifier(request);
-  const rateLimitResult = checkRateLimit(clientId);
+  const clientIp = getClientIp(request);
+  const rateLimitResult = await rateLimit(clientIp, RATE_LIMIT_CONFIG);
 
-  if (!rateLimitResult.allowed) {
-    const retryAfter = rateLimitResult.resetAt 
-      ? Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000)
-      : 60;
+  if (!rateLimitResult.success) {
+    const retryAfter = Math.ceil((rateLimitResult.reset - Date.now()) / 1000);
 
     return NextResponse.json(
       { 
@@ -135,9 +89,8 @@ export async function GET(request: NextRequest) {
       { 
         status: 429,
         headers: {
+          ...createRateLimitHeaders(rateLimitResult),
           'Retry-After': retryAfter.toString(),
-          'X-RateLimit-Limit': MAX_REQUESTS_PER_WINDOW.toString(),
-          'X-RateLimit-Reset': rateLimitResult.resetAt?.toString() || '',
         },
       }
     );
@@ -239,7 +192,7 @@ export async function GET(request: NextRequest) {
       headers: {
         'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
         'X-Cache-Status': 'MISS',
-        'X-RateLimit-Limit': MAX_REQUESTS_PER_WINDOW.toString(),
+        ...createRateLimitHeaders(rateLimitResult),
       },
     });
   } catch (error) {

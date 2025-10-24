@@ -165,7 +165,7 @@ Expected output includes successful validation of all MCPs.
 
 ### Short-term
 - 📋 Add GitHub MCP (PR automation)
-- 📋 Add Slack MCP (notifications)
+- 📋 Add Discord MCP (notifications)
 
 ### Medium-term
 - 📋 Create workflow automation

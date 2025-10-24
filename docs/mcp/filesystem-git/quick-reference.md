@@ -253,4 +253,4 @@ git --version
 
 **Last Updated**: October 18, 2025  
 **Status**: ✅ Ready for Use  
-**Next MCPs to Add**: GitHub, Slack
+**Next MCPs to Add**: GitHub, Discord

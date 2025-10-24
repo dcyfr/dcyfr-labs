@@ -1,8 +1,10 @@
 # Project TODO & Issue Tracker
 
-This document tracks bugs, feature requests, improvements, and technical debt.
+This document tracks **active and pending** work only.
 
-**Last Updated:** October 23, 2025
+Completed tasks have been moved to **`done.md`** for better project organization.
+
+**Last Updated:** October 24, 2025
 
 ---
 
@@ -11,26 +13,11 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ### Active
 - None currently tracked
 
-### Resolved
-- ✅ **Turbopack build claim** - Fixed misleading claim in blog post about Turbopack being used for production builds (2025-10-03)
-
 ---
 
 ## 🚀 Feature Requests
 
 ### High Priority
-- [x] **Blog search functionality** - Add search across blog posts by title, content, and tags (shipped 2025-10-15)
-- [x] **Tag filtering** - Allow filtering blog posts by tags on `/blog` page (shipped 2025-10-15)
-- [x] **View counts** - Track and display view counts for blog posts (shipped 2025-10-16)
-
-### Medium Priority
-- [x] **RSS feed improvements** - Enhance RSS/Atom feeds with full content and better formatting (completed 2025-10-18)
-- [x] **Reading progress indicator** - Show reading progress bar with GPU-accelerated animations for blog posts (completed 2025-10-20)
-- [x] **Table of contents** - Generate TOC for long blog posts from headings (completed 2025-10-21)
-- [x] **Related posts** - Show related posts at the end of each blog post based on tags (completed 2025-10-21)
-- [x] **Code syntax highlighting themes** - Add syntax highlighting with theme support for code blocks using Shiki (completed 2025-10-21)
-
-### Low Priority
 - [ ] **Share buttons** - Add social sharing buttons to blog posts
 - [ ] **Comments system** - Consider adding comments (Giscus or similar)
 - [ ] **Newsletter signup** - Add email newsletter subscription
@@ -41,13 +28,8 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🔧 Technical Debt & Improvements
 
 ### Code Quality
-- [x] **Error boundaries** - Add comprehensive error boundary system with 5+ specialized boundaries for client components (completed 2025-10-20)
-- [x] **GitHub heatmap refactoring** - Refactored heatmap component to work with error boundaries and simplified by removing all caching logic (completed 2025-10-20)
-- [x] **Loading states** - Add skeleton loaders for async content (completed 2025-10-21)
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
 - [ ] **Unit tests** - Add tests for utility functions and components
-- [x] **Contact email fallback** - Gracefully handle missing `RESEND_API_KEY` with 200 response and warning instead of 500 error (completed 2025-10-20)
-- [x] **GitHub API header hygiene** - Only send `Authorization` header when `GITHUB_TOKEN` is configured (completed 2025-10-20)
 
 ### Performance
 - [ ] **Image optimization** - Add next/image for all images in blog posts
@@ -63,31 +45,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [ ] **Vercel OG image generation** - Add server-side OG image support using Vercel's OG image generation feature (https://vercel.com/docs/og-image-generation) to produce dynamic social preview images for blog posts and projects
 
 ### Documentation
-- [x] **API documentation** - Document API routes and their expected payloads (see `docs/api/reference.md`) - completed 2025-10-19
-- [x] **Environment variable quickstart** - Published comprehensive `.env.example` with all variables documented (completed 2025-10-20)
-- [x] **AI instructions update** - Updated AI contributor instructions to reflect blog system and all features (completed 2025-10-23)
-- [x] **Documentation gap analysis** - Comprehensive analysis of `/docs` directory identifying missing documentation (completed 2025-10-23)
-- [x] **Blog architecture documentation** - HIGH PRIORITY: Created unified blog system architecture in `/docs/blog/architecture.md` (completed 2025-10-23)
-- [x] **Blog quick reference** - HIGH PRIORITY: Created quick reference guide in `/docs/blog/quick-reference.md` (completed 2025-10-23)
-- [x] **MDX component documentation** - HIGH PRIORITY: Documented core MDX rendering component in `/docs/components/mdx.md` (completed 2025-10-23)
-- [ ] **Blog system documentation** - MEDIUM PRIORITY: Complete remaining blog docs
-  - [ ] `mdx-processing.md` - MDX pipeline, plugins, syntax highlighting
-  - [ ] `content-creation.md` - Post authoring guide
-  - [ ] `frontmatter-schema.md` - Complete frontmatter reference
-  - [ ] `features-index.md` - Feature catalog
-- [ ] **Component documentation** - MEDIUM PRIORITY: Document remaining components in `/docs/components/`
-  - [ ] `reading-progress.md` - Reading progress indicator
-  - [ ] `github-heatmap.md` - GitHub contributions heatmap
-  - [ ] `blog-post-skeleton.md` - Blog skeleton loader
-  - [ ] `blog-search-form.md` - Search component
-- [ ] **API routes documentation** - MEDIUM PRIORITY: Centralize API docs in `/docs/api/routes/`
-  - [ ] `overview.md` - API architecture, rate limiting, error handling
-  - [ ] `contact.md` - Contact form API endpoint
-  - [ ] `github-contributions.md` - GitHub heatmap data API
-- [ ] **GitHub integration guide** - MEDIUM PRIORITY: Create `/docs/features/github-integration.md` with setup, caching, and rate limiting
-- [ ] **Component JSDoc comments** - Add JSDoc comments to complex components
-- [ ] **Contributing guide** - Create CONTRIBUTING.md for potential contributors
-- [ ] **Deployment guide** - Document deployment process and environment variables (partially covered in environment-variables.md)
+- [x] **Deployment guide** - Document deployment process and environment variables (2025-10-24)
 
 ---
 
@@ -109,11 +67,8 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🎨 Design & UX
 
 ### UI Improvements
-- [x] **Dark mode refinements** - Review color contrast in dark mode (completed 2025-10-21)
-- [x] **Light mode refinements** - Review color contrast in light mode (completed 2025-10-21)
 - [ ] **Mobile navigation** - Improve mobile menu if navigation grows
 - [ ] **Micro-interactions** - Add subtle animations and transitions
-- [x] **Focus states** - Audit and improve keyboard focus indicators (completed 2025-10-21)
 
 ### Layout
 - [ ] **Grid layout for projects** - Consider card grid instead of list
@@ -125,24 +80,13 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🔐 Security
 
 ### Active
-- [ ] **CSP hardening** - Replace `unsafe-inline` allowances with nonce/hash workflow and update middleware + vercel headers accordingly
-- [ ] **Shared rate limiting store** - Move in-memory rate limiters to Redis/Vercel KV and standardize trusted client IP detection
-- [ ] **Contact form PII logging** - Remove or anonymize contact submission logs before writing to console
-- [ ] **Security docs alignment** - Reconcile CSP implementation docs with current header behavior
-- [ ] **CAPTCHA consideration** - Evaluate need for spam prevention on contact form
 - [ ] **Environment variable audit** - Ensure all sensitive data uses env vars
-- [ ] **CSP violation monitoring** - Set up endpoint to log CSP violations
 
-### Completed
-- ✅ **Security Assessment Findings** - All 3 findings from security report resolved (2025-10-05)
-  - Finding #1: Content Security Policy implemented
-  - Finding #2: Clickjacking protection (CSP + X-Frame-Options)
-  - Finding #3: MIME-sniffing protection (X-Content-Type-Options)
-- ✅ **Content Security Policy (CSP)** - Implemented comprehensive CSP with middleware and nonce support (2025-10-05)
-- ✅ **Rate limiting** - Implemented rate limiting for contact form API (3 req/60s per IP) (2025-10-05)
-- ✅ Security headers configured in vercel.json (X-Frame-Options, X-Content-Type-Options, HSTS, etc.)
-- ✅ API route input validation implemented
-- ✅ Safe MDX rendering with next-mdx-remote/rsc
+### Completed (October 24, 2025)
+- [x] **Security docs alignment** - Reconciled CSP implementation docs with current header behavior
+- [x] **CSP violation monitoring** - Set up `/api/csp-report` endpoint to log CSP violations with rate limiting
+- [x] **CSP violation testing** - Created test script (`npm run test:csp-report`) to verify reporting endpoint
+- [x] **Security status documentation** - Created comprehensive `/docs/security/security-status.md` explaining two-layer CSP approach
 
 ---
 
@@ -164,7 +108,7 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [x] **Filesystem MCP** - Enhanced project navigation and bulk operations (completed 2025-10-18)
 - [x] **GitHub MCP** - PR/issue automation and workflow management via Docker (completed 2025-10-18, documented)
 - [ ] **Git MCP** - Consider adding @modelcontextprotocol/server-git for direct git operations (optional, filesystem covers most needs)
-- [ ] **Slack MCP** (optional) - Add Slack MCP for deployment notifications and team updates
+- [ ] **Discord MCP** (optional) - Add Discord MCP for deployment notifications and team updates
 
 ### Maintenance
 - [ ] Set up Dependabot or Renovate for automated dependency updates
@@ -211,41 +155,13 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 
 ---
 
-## Archive
+## 📦 Archive
 
-Completed tasks are moved here with completion date for reference.
+Completed tasks have been moved to **`done.md`** for better project organization and historical reference.
 
-### 2025-10-18
-- ✅ **RSS feed improvements** - Enhanced RSS and Atom feeds with full content and better formatting
-  - Added full HTML content in feeds (not just summaries)
-  - Created `src/lib/mdx-to-html.ts` utility for MDX → HTML conversion
-  - Added author information (name and email) in both RSS and Atom
-  - Added categories/tags for each post
-  - Added proper feed metadata (generator, build dates, self-referential links)
-  - Improved XML formatting and structure
-  - Implemented security via sanitized HTML output
-  - Optimized performance (20 posts limit, parallel processing)
-  - Comprehensive documentation in `docs/RSS_FEED_IMPROVEMENTS.md`
-
-### 2025-10-05
-- ✅ Resolved all security findings from security assessment
-  - Finding #1: Implemented Content Security Policy (CSP)
-  - Finding #2: Confirmed clickjacking protection (CSP frame-src + X-Frame-Options)
-  - Finding #3: Confirmed MIME-sniffing protection (X-Content-Type-Options)
-  - Created comprehensive documentation in `docs/SECURITY_FINDINGS_RESOLUTION.md`
-- ✅ Implemented Content Security Policy (CSP)
-  - Created `src/middleware.ts` with dynamic CSP and nonce generation
-  - Updated `vercel.json` with static CSP header (defense in depth)
-  - Configured CSP directives for Vercel Analytics, Google Fonts, and app resources
-  - Protection against XSS and Clickjacking attacks
-  - Created comprehensive documentation in `docs/security/csp/implementation.md`
-- ✅ Implemented rate limiting for contact form API
-  - Created `src/lib/rate-limit.ts` with in-memory rate limiter
-  - Updated `/api/contact` route with IP-based rate limiting (3 req/60s)
-  - Added standard rate limit headers (X-RateLimit-*)
-  - Enhanced contact page to handle 429 responses gracefully
-  - Created comprehensive documentation in `docs/security/rate-limiting/guide.md`
-
-### 2025-10-03
-- ✅ Fixed Turbopack build claim in shipping blog post
-- ✅ Created centralized TODO tracker
+See `/docs/operations/done.md` for:
+- 🎯 Session summaries with dates and accomplishments
+- 📊 Project statistics and metrics
+- 🎓 Lessons learned and patterns established
+- 📚 Documentation coverage tracking
+- 🚀 Key achievements and milestones

@@ -36,17 +36,21 @@ app.prepare().then(() => {
 
   let server;
   
-  if (useHttps) {
-    const httpsOptions = {
-      key: readFileSync(keyPath),
-      cert: readFileSync(certPath),
-    };
-    server = createHttpsServer(httpsOptions, requestHandler);
-    console.log(`🔒 Using HTTPS with local certificates`);
-  } else {
-    server = createHttpServer(requestHandler);
-    console.log(`⚠️  Running in HTTP mode (certificates not found at ${certPath})`);
-    console.log(`   Run: mkcert -install && mkdir -p certs && cd certs && mkcert localhost 127.0.0.1 ::1`);
+  try {
+    if (useHttps) {
+      const httpsOptions = {
+        key: readFileSync(keyPath),
+        cert: readFileSync(certPath),
+      };
+      server = createHttpsServer(httpsOptions, requestHandler);
+      console.log(`🔒 Using HTTPS with local certificates`);
+    } else {
+      console.warn(`⚠️  HTTPS certificates not found at ${certPath}`);
+      process.exit(1);
+    }
+  } catch (err) {
+    console.error(`Failed to load HTTPS certificates: ${err.message}`);
+    process.exit(1);
   }
 
   server.listen(port, (err) => {

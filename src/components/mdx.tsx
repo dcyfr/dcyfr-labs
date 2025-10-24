@@ -6,6 +6,20 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
 
+/**
+ * Configuration for the rehype-pretty-code plugin
+ * Enables syntax highlighting with Shiki using dual-theme support:
+ * - Dark theme: "github-dark-dimmed" (optimized for dark mode)
+ * - Light theme: "github-light" (optimized for light mode)
+ *
+ * Features:
+ * - Automatic theme switching based on user's theme preference
+ * - Line and character highlighting support
+ * - Empty line prevention in grid layout
+ * - Configurable default language (plaintext for unknown languages)
+ *
+ * @type {RehypePrettyCodeOptions}
+ */
 // Configure syntax highlighting with Shiki
 const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
   theme: {
@@ -27,6 +41,22 @@ const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
   },
 };
 
+/**
+ * Custom component mapping for MDX elements
+ * Maps HTML/Markdown elements to styled React components using Tailwind CSS.
+ *
+ * Includes:
+ * - Heading hierarchy (h1-h3) with serif fonts and proper spacing
+ * - Paragraph styling with leading and margin adjustment
+ * - Code blocks with theme-aware syntax highlighting
+ * - Inline code with monospace font and border
+ * - Lists with proper indentation
+ * - Blockquotes with left border and italics
+ * - Links with external link handling and underline styling
+ * - Horizontal rules for content separation
+ *
+ * @type {NonNullable<MDXRemoteProps["components"]>}
+ */
 // Map a few elements to tailwind-styled components
 const components: NonNullable<MDXRemoteProps["components"]> = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -97,6 +127,59 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   },
 };
 
+/**
+ * MDX Component
+ *
+ * Renders MDX (Markdown + JSX) content with rich formatting, syntax highlighting,
+ * and automatic table of contents generation.
+ *
+ * Processing Pipeline:
+ * 1. **Remark plugins**:
+ *    - remark-gfm: GitHub-flavored markdown (tables, strikethrough, task lists)
+ *
+ * 2. **Rehype plugins** (in order):
+ *    - rehype-slug: Generates IDs for headings (used by TOC and anchor links)
+ *    - rehype-pretty-code: Syntax highlighting with Shiki (dual-theme support)
+ *    - rehype-autolink-headings: Wraps headings with self-referential links
+ *
+ * 3. **Component mapping**:
+ *    - Custom Tailwind-styled components for HTML elements
+ *    - Consistent typography and spacing via utility classes
+ *    - Theme-aware styling (light/dark mode)
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {string} props.source - Raw MDX source code to render
+ *
+ * @returns {React.ReactElement} Rendered MDX content with styled elements
+ *
+ * @example
+ * // Render blog post content
+ * const mdxSource = "# Hello World\n\nThis is **bold** text.";
+ * <MDX source={mdxSource} />
+ *
+ * @features
+ * - **Syntax Highlighting**: Code blocks use Shiki with github-light/github-dark-dimmed themes
+ * - **Auto-generated Headings IDs**: Headings get slugified IDs for linking
+ * - **Header Links**: Heading anchors for direct navigation
+ * - **GitHub Tables**: Support for markdown tables
+ * - **Task Lists**: Checkbox lists in markdown
+ * - **External Links**: Automatic target="_blank" and rel="noopener noreferrer"
+ * - **Theme Aware**: All components respect light/dark mode preferences
+ *
+ * @performance
+ * - Server-side rendering: MDX processing happens at build time via next-mdx-remote/rsc
+ * - No client-side JavaScript overhead for rendering
+ * - Syntax highlighting pre-computed during build
+ *
+ * @accessibility
+ * - Semantic HTML structure with proper heading hierarchy
+ * - Links are keyboard accessible and screen reader friendly
+ * - Code blocks have proper language hints for assistive technology
+ * - Heading anchors wrap the entire heading for better click targets
+ *
+ * @see /docs/components/mdx.md for detailed documentation
+ */
 export function MDX({ source }: { source: string }) {
   return (
     <MDXRemote

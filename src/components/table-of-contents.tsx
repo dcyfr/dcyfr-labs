@@ -4,10 +4,63 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
 
+/**
+ * Props for the TableOfContents component
+ * @typedef {Object} TableOfContentsProps
+ * @property {TocHeading[]} headings - Array of headings (h2/h3) to render in TOC
+ */
 type TableOfContentsProps = {
   headings: TocHeading[];
 };
 
+/**
+ * TableOfContents Component
+ *
+ * A sticky, collapsible table of contents for blog posts that automatically
+ * highlights the currently visible heading as the user scrolls.
+ *
+ * Features:
+ * - Fixed position on the right side of the viewport (XL breakpoint and up)
+ * - Collapsible with "On this page" header button
+ * - Smooth scroll to heading on click
+ * - Active state indicator based on IntersectionObserver
+ * - Hierarchical indentation for h3 sub-headings
+ * - Keyboard and screen reader accessible
+ *
+ * @component
+ * @param {TableOfContentsProps} props - Component props
+ * @param {TocHeading[]} props.headings - Array of headings from parsed MDX content
+ *
+ * @returns {React.ReactElement | null} Navigation element or null if no headings
+ *
+ * @example
+ * // Render TOC for blog post
+ * const headings = [
+ *   { id: "intro", level: 2, text: "Introduction" },
+ *   { id: "setup", level: 2, text: "Setup" },
+ *   { id: "setup-step1", level: 3, text: "Step 1" },
+ * ];
+ * <TableOfContents headings={headings} />
+ *
+ * @implementation
+ * - Uses IntersectionObserver to track which heading is currently visible
+ * - rootMargin="-80px 0px -80% 0px" activates heading when near top
+ * - Smooth scrolls to heading with 80px offset (accounting for fixed header)
+ * - Tracks activeId state for visual indicator
+ * - Expandable to save viewport space on XL+ screens
+ *
+ * @accessibility
+ * - nav has aria-label="Table of contents"
+ * - Links are actual anchor tags for native browser behavior
+ * - Collapse button has aria-expanded attribute
+ * - SVG toggle icon has aria-hidden="true"
+ * - Keyboard navigation works with Tab/Enter
+ *
+ * @performance
+ * - Only rendered on client (checks typeof window)
+ * - Returns null if no headings (prevents empty nav)
+ * - Cleanup on unmount prevents memory leaks from observer
+ */
 export function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = React.useState<string>("");
   const [isExpanded, setIsExpanded] = React.useState(false);

@@ -345,7 +345,7 @@ Sequential Thinking → Identifies changes needing documentation
 - 📋 Create automation scripts using MCPs
 - 📋 Set up commit message templates
 - 📋 Implement code review workflows
-- 📋 Add Slack MCP for notifications
+- 📋 Add Discord MCP for notifications
 
 ### Long-term
 - 📋 Full MCP ecosystem maturity
