@@ -18,6 +18,7 @@ import { RelatedPosts } from "@/components/related-posts";
 import { getRelatedPosts } from "@/lib/related-posts";
 import { headers } from "next/headers";
 import { ShareButtons } from "@/components/share-buttons";
+import { GiscusComments } from "@/components/giscus-comments";
 import {
   getArticleSchema,
   getBreadcrumbSchema,
@@ -167,6 +168,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           tags={post.tags}
         />
       </div>
+      
+      {/* Comments section */}
+      <GiscusComments />
       
       {post.sources && post.sources.length > 0 && (
           <footer className="mt-12 border-t pt-6">

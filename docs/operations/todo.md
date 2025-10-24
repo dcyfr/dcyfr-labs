@@ -18,12 +18,12 @@ Completed tasks have been moved to **`done.md`** for better project organization
 ## 🚀 Feature Requests
 
 ### High Priority
-- [ ] **Comments system** - Consider adding comments (Giscus or similar)
 - [ ] **Newsletter signup** - Add email newsletter subscription
 - [ ] **Print stylesheet improvements** - Enhance print.css for better blog post printing
 
 ### Completed (October 24, 2025)
 - [x] **Share buttons** - Add social sharing buttons to blog posts (Twitter, LinkedIn, copy link with toast feedback)
+- [x] **Comments system (Giscus)** - GitHub Discussions-powered comments on blog posts with automatic theme switching and lazy loading
 
 ---
 
