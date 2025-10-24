@@ -43,13 +43,13 @@ export default function ResumePage() {
   return (
     <div className="mx-auto max-w-4xl py-12 md:py-16 space-y-8">
       {/* hero section */}
-      <div className="space-y-4">
+      <div className="prose space-y-4">
         <h1 className="font-serif text-3xl md:text-4xl font-bold">Drew&apos;s Resume</h1>
         <p className="text-lg md:text-xl text-muted-foreground">
           {resume.summary}
         </p>
       </div>
-      {/* experience section */}
+      {/* experience */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Experience</h2>
         <div className="space-y-4">
@@ -68,7 +68,7 @@ export default function ResumePage() {
           ))}
         </div>
       </section>
-      {/* education & certifications section */}
+      {/* education & certifications */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Education &amp; Certifications</h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -119,7 +119,7 @@ export default function ResumePage() {
           </Card>
         </div>
       </section>
-      {/* skills section */}
+      {/* skills */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Skills</h2>
         <div className="space-y-3">

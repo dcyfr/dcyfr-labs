@@ -302,7 +302,7 @@ Expected: Files listed + git history shown
 - 📋 Share with team
 
 ### Medium-term (This Month)
-- 📋 Add Slack MCP for notifications
+- 📋 Add Discord MCP for notifications
 - 📋 Build automation scripts
 - 📋 Optimize workflows
 

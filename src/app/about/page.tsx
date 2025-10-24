@@ -45,16 +45,16 @@ export default function AboutPage() {
   const currentRole = resume.experience[0];
 
   return (
-    <div className="prose mx-auto max-w-3xl py-12 md:py-16 space-y-12">
-      {/* hero section */}
-      <div className="space-y-6">
+    <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
+      {/* page hero */}
+      <div className="prose space-y-6">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">I&apos;m Drew <Logo width={24} height={24} className="ml-2" /></h1>
         <p className="text-lg md:text-xl text-muted-foreground">
           {resume.shortSummary}
         </p>
       </div>
-      {/* about me section */}
-      <section className="space-y-4">
+      {/* about me */}
+      <section className="prose space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">What drives me</h2>
         <div className="space-y-3 text-muted-foreground">
           <p>
@@ -68,12 +68,12 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
-      {/* current role section */}
+      {/* current role */}
       <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Currently</h2>
+        <h2 className="text-xl md:text-2xl font-medium">Currently at {currentRole.company}</h2>
         <Card className="p-6 space-y-3">
           <div className="space-y-1">
-            <p className="font-medium text-lg">{currentRole.title} @ {currentRole.company}</p>
+            <p className="font-medium text-lg">{currentRole.title}</p>
             <p className="text-sm text-muted-foreground">{currentRole.duration}</p>
           </div>
           <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
@@ -83,16 +83,21 @@ export default function AboutPage() {
           </ul>
         </Card>
       </section>
-      {/* previous roles section */}
+      {/* previous roles */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Previously</h2>
-        <div className="space-y-4">
-          {resume.experience.slice(1, 4).map((role, index) => (
-            <Card key={index} className="p-6 space-y-3">
+        <div className="space-y-6">
+          {resume.experience.slice(1,4).map((role, idx) => (
+            <Card key={idx} className="p-6 space-y-3">
               <div className="space-y-1">
-                <p className="font-medium text-lg">{role.title} @ {role.company}</p>
+                <p className="font-medium text-lg">{role.title} at {role.company}</p>
                 <p className="text-sm text-muted-foreground">{role.duration}</p>
               </div>
+              {/* <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                {role.responsibilities.map((item, rIdx) => (
+                  <li key={rIdx}>{item}</li>
+                ))}
+              </ul> */}
             </Card>
           ))}
         </div>
@@ -102,8 +107,8 @@ export default function AboutPage() {
           </Link>
         </div>
       </section>
-      {/* call to action section */}
-      <div className="mt-24 text-center space-y-4">
+      {/* call to action */}
+      <div className="mx-auto max-w-2xl mt-24 text-center space-y-4">
         <h2 className="text-xl md:text-2xl font-medium italic">Let&apos;s connect!</h2>
         <p className="text-muted-foreground">
           I&apos;m always open to discussing new opportunities, collaborations, or just chatting about all things security. Feel free to reach out!

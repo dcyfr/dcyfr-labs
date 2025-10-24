@@ -97,7 +97,7 @@ This allows manual follow-up via the logged contact information.
 ## Future Enhancements
 
 Consider adding:
-- Alternative notification methods (Slack webhook, Discord, etc.)
+- Alternative notification methods (Discord, Slack webhook, etc.)
 - Database persistence of contact submissions
 - Admin dashboard for viewing submissions
 - Email queue for retry logic

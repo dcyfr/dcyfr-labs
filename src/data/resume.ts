@@ -67,7 +67,7 @@ export const resume: Resume = {
     },
     {
       title: "Co-founder & Vice President",
-      company: "Information Security Network, Inc",
+      company: "Information Security Network, Inc.",
       duration: "Sep 2019 → Sep 2021",
       responsibilities: [
         "Co-founded Information Security Network, focusing on aligning IT and security objectives with nonprofit strategies.",
@@ -77,7 +77,7 @@ export const resume: Resume = {
     },
     {
       title: "Security Operations Analyst II",
-      company: "Creative Breakthroughs, Inc",
+      company: "Creative Breakthroughs, Inc.",
       duration: "Dec 2020 → Jul 2021",
       responsibilities: [
         "Triaged and validated level one escalations and led incident response efforts for over 20 contracts.",
@@ -87,7 +87,7 @@ export const resume: Resume = {
     },
     {
       title: "IT Security Specialist",
-      company: "Escambia County Board of County Commissioners",
+      company: "Escambia County Commissioners Office",
       duration: "Mar 2020 → Dec 2020",
       responsibilities: [
         "Developed and implemented a comprehensive security awareness program, enhancing phishing detection by over 40%.",
@@ -245,7 +245,7 @@ export const resume: Resume = {
         "Kubernetes",
         "REST API",
         "SQL",
-        "YARA-L",
+        "YARA",
         "Ansible",
         "React",
         "HTML/CSS",

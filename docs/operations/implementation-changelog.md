@@ -262,7 +262,7 @@ Successfully integrated Filesystem and Git MCPs into the cyberdrew-dev project. 
   - Marked Filesystem MCP as completed [x]
   - Marked Git MCP as completed [x]
   - Changed GitHub MCP to high priority
-  - Made Slack MCP optional
+  - Made Discord MCP optional
 
 **Lines Changed**: ~5 lines modified
 
@@ -505,7 +505,7 @@ Git → Verify
 
 ### Short-term
 - GitHub MCP for PR automation
-- Slack MCP for notifications
+- Discord MCP for notifications
 
 ### Medium-term
 - Workflow automation scripts
