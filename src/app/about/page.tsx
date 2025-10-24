@@ -45,7 +45,7 @@ export default function AboutPage() {
   const currentRole = resume.experience[0];
 
   return (
-    <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
+    <div className="prose mx-auto max-w-3xl py-12 md:py-16 space-y-12">
       {/* hero section */}
       <div className="space-y-6">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">I&apos;m Drew <Logo width={24} height={24} className="ml-2" /></h1>
@@ -104,7 +104,7 @@ export default function AboutPage() {
       </section>
       {/* call to action section */}
       <div className="mt-24 text-center space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Let&apos;s connect!</h2>
+        <h2 className="text-xl md:text-2xl font-medium italic">Let&apos;s connect!</h2>
         <p className="text-muted-foreground">
           I&apos;m always open to discussing new opportunities, collaborations, or just chatting about all things security. Feel free to reach out!
         </p>
