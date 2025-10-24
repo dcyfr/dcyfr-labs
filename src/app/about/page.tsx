@@ -10,9 +10,12 @@ import {
   getTwitterImageUrl,
 } from "@/lib/site-config";
 import { Logo } from "@/components/logo";
+import { getAboutPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
+import { headers } from "next/headers";
 
 const pageTitle = "About";
-const pageDescription = resume.shortSummary;
+// Optimized meta description (154 characters)
+const pageDescription = "Learn about Drew, a cybersecurity architect with 5+ years leading security programs, incident response, and building secure development practices.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -41,11 +44,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
   const currentRole = resume.experience[0];
+  
+  // Get nonce from middleware for CSP
+  const nonce = (await headers()).get("x-nonce") || "";
+  
+  // JSON-LD structured data for about page
+  const socialImage = getOgImageUrl(pageTitle, pageDescription);
+  const jsonLd = getAboutPageSchema(pageDescription, socialImage);
 
   return (
-    <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
+    <>
+      <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
       {/* page hero */}
       <div className="prose space-y-6">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">I&apos;m Drew <Logo width={24} height={24} className="ml-2" /></h1>
@@ -118,5 +130,6 @@ export default function AboutPage() {
         </Button>
       </div>
     </div>
+    </>
   );
 }

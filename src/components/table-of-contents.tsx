@@ -142,7 +142,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
         </button>
         
         {isExpanded && (
-          <ul className="space-y-2 text-sm border-l-2 border-border">
+          <ul className="pace-y-2 text-sm border-l-2 border-border">
             {headings.map((heading) => {
               const isActive = activeId === heading.id;
               const isH3 = heading.level === 3;

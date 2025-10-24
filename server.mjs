@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { createServer as createHttpsServer } from 'https';
-import { createServer as createHttpServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
 import { readFileSync, existsSync } from 'fs';
