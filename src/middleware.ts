@@ -43,8 +43,8 @@ export function middleware(request: NextRequest) {
       ? "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live"
       : `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://vercel.live`,
     
-    // Images: self, data URIs, production domain, Vercel domains, and Vercel Live
-  `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://vercel.live`,
+    // Images: self, data URIs, production domain, Vercel domains, GitHub (for Giscus avatars), and Vercel Live
+  `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://avatars.githubusercontent.com https://github.githubassets.com https://vercel.live`,
     
     // Fonts: self, Google Fonts CDN, and Vercel Live
     "font-src 'self' https://fonts.gstatic.com https://vercel.live",
@@ -53,8 +53,8 @@ export function middleware(request: NextRequest) {
     // In development, allow webpack/turbopack HMR websockets
     `connect-src 'self'${isDevelopment ? " ws://localhost:* wss://localhost:*" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://vercel.live https://*.pusher.com wss://*.pusher.com`,
     
-    // Frame: allow Vercel Live for preview feedback, deny all others (clickjacking protection)
-    "frame-src https://vercel.live",
+    // Frame: allow Vercel Live for preview feedback and Giscus for blog comments
+    "frame-src https://vercel.live https://giscus.app",
     
     // Objects: no plugins
     "object-src 'none'",

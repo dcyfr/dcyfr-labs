@@ -12,7 +12,11 @@ This guide documents all environment variables used in the project, their purpos
 |----------|----------|---------|------------------|
 | `RESEND_API_KEY` | Production only | Email delivery for contact form | Logs submissions, shows warning |
 | `GITHUB_TOKEN` | Recommended | GitHub API rate limits | Uses unauthenticated API (60 req/hr) |
-| `REDIS_URL` | Optional | Blog post view counts | Disables view tracking |
+| `REDIS_URL` | Optional | Blog post view counts & rate limiting | Disables view tracking, falls back to in-memory rate limiting |
+| `NEXT_PUBLIC_GISCUS_REPO` | Optional | Comments system - repository | Comments section hidden |
+| `NEXT_PUBLIC_GISCUS_REPO_ID` | Optional | Comments system - repo ID | Comments section hidden |
+| `NEXT_PUBLIC_GISCUS_CATEGORY` | Optional | Comments system - category | Comments section hidden |
+| `NEXT_PUBLIC_GISCUS_CATEGORY_ID` | Optional | Comments system - category ID | Comments section hidden |
 | `NEXT_PUBLIC_SITE_URL` | Optional | Site URL override | Uses environment-based defaults |
 | `NEXT_PUBLIC_SITE_DOMAIN` | Optional | Domain override | Uses environment-based defaults |
 
@@ -146,6 +150,88 @@ This guide documents all environment variables used in the project, their purpos
 - File: `src/app/api/github-contributions/route.ts`
 - Conditional header: Only adds `Authorization` when token exists
 - No empty header sent when missing
+
+### Comments System (Giscus)
+
+#### `NEXT_PUBLIC_GISCUS_REPO`
+- **Type:** String (repository in "owner/repo" format)
+- **Required:** No
+- **Example:** `dcyfr/cyberdrew-dev`
+- **Purpose:** GitHub repository for Giscus comments
+
+#### `NEXT_PUBLIC_GISCUS_REPO_ID`
+- **Type:** String (repository ID)
+- **Required:** No
+- **Purpose:** GitHub repository ID (from Giscus setup)
+
+#### `NEXT_PUBLIC_GISCUS_CATEGORY`
+- **Type:** String (category name)
+- **Required:** No
+- **Example:** `Blog Comments`
+- **Purpose:** Discussion category name for comments
+
+#### `NEXT_PUBLIC_GISCUS_CATEGORY_ID`
+- **Type:** String (category ID)
+- **Required:** No
+- **Purpose:** Discussion category ID (from Giscus setup)
+
+**Setup Instructions:**
+
+1. **Enable GitHub Discussions:**
+   - Go to: `https://github.com/YOUR_USERNAME/YOUR_REPO/settings`
+   - Under "Features", check "Discussions"
+   - Click "Set up discussions"
+
+2. **Create Discussion Category:**
+   - Go to your repository's Discussions tab
+   - Create a new category (recommended: "Blog Comments")
+   - Use "Announcement" format (only maintainers can create discussions)
+
+3. **Configure Giscus:**
+   - Visit [giscus.app](https://giscus.app/)
+   - Enter your repository name
+   - Select Discussion category
+   - Choose settings (we recommend):
+     - Page ↔️ Discussions Mapping: `pathname`
+     - Discussion Category: your created category
+     - Features: Enable reactions
+     - Theme: We handle this automatically (light/dark sync)
+   - Copy the generated configuration values
+
+4. **Add Environment Variables:**
+   ```bash
+   NEXT_PUBLIC_GISCUS_REPO=owner/repo
+   NEXT_PUBLIC_GISCUS_REPO_ID=R_xxxxx
+   NEXT_PUBLIC_GISCUS_CATEGORY=Blog Comments
+   NEXT_PUBLIC_GISCUS_CATEGORY_ID=DIC_xxxxx
+   ```
+
+**Behavior without Giscus:**
+- ✅ Blog posts work normally
+- ❌ Comments section not displayed
+- ✅ No errors or broken UI
+- ✅ Silent graceful degradation
+
+**Behavior with Giscus:**
+- ✅ Comments section appears on all blog posts
+- ✅ Users can comment with GitHub account
+- ✅ Comments sync with GitHub Discussions
+- ✅ Automatic theme switching (light/dark)
+- ✅ Reactions, replies, and moderation support
+- ✅ Lazy loading for better performance
+
+**Features:**
+- Automatic theme synchronization with site theme
+- Lazy loading (loads when scrolled into view)
+- Pathname-based mapping (each blog post gets its own discussion)
+- Top-level input for better UX
+- Reactions enabled
+
+**Implementation:**
+- Component: `src/components/giscus-comments.tsx`
+- Check: All four env vars must be present to render
+- Integration: Appears after share buttons on blog posts
+- Theme: Uses `next-themes` for automatic dark/light mode
 
 ### Redis (View Counts)
 

@@ -8,6 +8,89 @@ This document tracks completed projects, features, and improvements. Items are o
 
 ## 🎯 Session Summary: October 24, 2025
 
+### Comments System Implementation (Giscus)
+**Completed**: Integrated GitHub Discussions-powered commenting system for blog posts
+
+- ✅ **Package Installation** - Added `@giscus/react` (official React component)
+  - 73 packages added, 0 vulnerabilities
+  - Official Giscus React wrapper for seamless integration
+
+- ✅ **GiscusComments Component** - Created reusable client component
+  - File: `src/components/giscus-comments.tsx`
+  - Features:
+    - Automatic theme switching (light/dark) synced with site theme via `next-themes`
+    - Lazy loading for optimal performance (loads only when scrolled into view)
+    - Graceful degradation when not configured (returns null, no errors)
+    - Environment-based configuration with all 4 required env vars
+    - Proper TypeScript types and comprehensive JSDoc comments
+  - Configuration:
+    - Mapping: `pathname` (each blog post gets its own discussion)
+    - Input position: `top` for better UX
+    - Reactions enabled
+    - Lazy loading for performance
+  - Security:
+    - No database storage needed (GitHub Discussions as backend)
+    - GitHub authentication only
+    - Moderation via GitHub's built-in tools
+
+- ✅ **Environment Variables** - Added 4 new public env vars
+  - `NEXT_PUBLIC_GISCUS_REPO` - Repository in "owner/repo" format
+  - `NEXT_PUBLIC_GISCUS_REPO_ID` - Repository ID from Giscus setup
+  - `NEXT_PUBLIC_GISCUS_CATEGORY` - Discussion category name
+  - `NEXT_PUBLIC_GISCUS_CATEGORY_ID` - Category ID from Giscus setup
+  - Updated `.env.example` with detailed setup instructions
+  - Updated `/docs/operations/environment-variables.md` with:
+    - Quick reference table entry
+    - Full section with setup instructions
+    - Behavior documentation (with/without configuration)
+    - 4-step setup guide (GitHub Discussions → Giscus config → env vars)
+
+- ✅ **Blog Integration** - Added comments to blog post pages
+  - File: `src/app/blog/[slug]/page.tsx`
+  - Placement: After share buttons, before sources section
+  - Flow: Article → Share buttons → Comments → Sources → Related posts
+  - Zero breaking changes, graceful when not configured
+
+- ✅ **Component Documentation** - Comprehensive guide created
+  - File: `/docs/components/giscus-comments.md`
+  - 400+ lines of detailed documentation
+  - Sections:
+    - Overview and features list
+    - Usage examples and current implementation
+    - Complete configuration guide with all 4 steps
+    - How it works (component behavior, theme sync, lazy loading, pathname mapping)
+    - User experience (configured vs. not configured)
+    - Troubleshooting guide (5+ common issues with solutions)
+    - Security & privacy considerations
+    - Moderation tools
+    - Advanced configuration options
+    - References and related docs
+
+- ✅ **Build Verification** - Confirmed no regressions
+  - `npm run build` successful
+  - All routes compile correctly
+  - No TypeScript errors
+  - No lint errors
+  - Total build time: ~5s
+
+**Key Benefits:**
+- Users can comment using GitHub accounts (no additional auth system needed)
+- Comments sync with GitHub Discussions (moderation, backups handled by GitHub)
+- Automatic theme switching for seamless user experience
+- Lazy loading improves performance (loads only when visible)
+- Zero infrastructure cost (GitHub Discussions is free)
+- Full featured: reactions, replies, threading, moderation
+- Graceful fallback: silently hides when not configured (no broken UI)
+
+**Learning:**
+- Giscus is the perfect comments solution for developer blogs
+- `@giscus/react` simplifies integration vs. script-based approach
+- Environment-based configuration enables easy on/off toggle
+- Lazy loading is crucial for performance (comments at bottom of page)
+- Pathname mapping ensures each post has isolated discussions
+- Theme synchronization requires `next-themes` integration
+- Comprehensive documentation reduces setup friction for users
+
 ### Meta Descriptions Optimization
 **Completed**: Optimized meta descriptions across all 7 pages
 
