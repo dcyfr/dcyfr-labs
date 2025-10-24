@@ -8,7 +8,6 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
-import { Link } from "lucide-react";
 
 const pageTitle = "Resume";
 const pageDescription = resume.summary;
@@ -45,7 +44,7 @@ export default function ResumePage() {
     <div className="mx-auto max-w-4xl py-12 md:py-16 space-y-8">
       {/* hero section */}
       <div className="space-y-4">
-        <h1 className="font-serif text-3xl md:text-4xl font-bold">Drew's Resume</h1>
+        <h1 className="font-serif text-3xl md:text-4xl font-bold">Drew&apos;s Resume</h1>
         <p className="text-lg md:text-xl text-muted-foreground">
           {resume.summary}
         </p>

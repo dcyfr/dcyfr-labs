@@ -8,7 +8,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-5xl px-6 md:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-4 font-serif text-xl md:text-2xl font-semibold tracking-tight">
           <Logo width={24} height={24} />
-          <span>Drew's Lab</span>
+          <span>Drew&apos;s Lab</span>
         </Link>
         <nav aria-label="Main navigation" className="flex items-center gap-4 text-sm">
           <Link 
