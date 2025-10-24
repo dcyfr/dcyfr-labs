@@ -1,14 +1,54 @@
 /**
- * Simple in-memory rate limiter for API routes
+ * Distributed rate limiter for API routes using Redis
  * 
- * NOTE: This uses in-memory storage which works for single-instance deployments
- * and Vercel's serverless functions (requests to the same function instance share memory).
- * For distributed systems or high-traffic sites, consider upgrading to:
- * - Vercel KV (Redis)
- * - Upstash Redis
- * - Redis with connection pooling
+ * Uses Redis for shared rate limiting across serverless instances when REDIS_URL is configured.
+ * Falls back to in-memory storage for local development without Redis.
+ * 
+ * Features:
+ * - Distributed rate limiting (Redis)
+ * - Automatic TTL/expiration
+ * - Graceful fallback to in-memory
+ * - Standard rate limit headers
  */
 
+import { createClient } from "redis";
+
+type RedisClient = ReturnType<typeof createClient>;
+
+const RATE_LIMIT_KEY_PREFIX = "ratelimit:";
+const redisUrl = process.env.REDIS_URL;
+
+declare global {
+  var __rateLimitRedisClient: RedisClient | undefined;
+}
+
+/**
+ * Get or create the Redis client for rate limiting
+ */
+async function getRateLimitClient(): Promise<RedisClient | null> {
+  if (!redisUrl) return null;
+
+  if (!globalThis.__rateLimitRedisClient) {
+    const client = createClient({ url: redisUrl });
+    client.on("error", (error) => {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Rate limit Redis error:", error);
+      }
+    });
+    globalThis.__rateLimitRedisClient = client;
+  }
+
+  const client = globalThis.__rateLimitRedisClient;
+  if (!client) return null;
+
+  if (!client.isOpen) {
+    await client.connect();
+  }
+
+  return client;
+}
+
+// In-memory fallback for local development without Redis
 type RateLimitEntry = {
   count: number;
   resetTime: number;
@@ -53,13 +93,87 @@ export type RateLimitResult = {
 };
 
 /**
- * Rate limit a request by identifier
+ * Rate limit a request by identifier using Redis (distributed) or in-memory (fallback)
  * 
  * @param identifier - Unique identifier (e.g., IP address, user ID)
  * @param config - Rate limit configuration
  * @returns Rate limit result with success status and metadata
  */
-export function rateLimit(
+export async function rateLimit(
+  identifier: string,
+  config: RateLimitConfig
+): Promise<RateLimitResult> {
+  const client = await getRateLimitClient();
+  
+  // Use Redis if available (distributed rate limiting)
+  if (client) {
+    return rateLimitRedis(client, identifier, config);
+  }
+  
+  // Fallback to in-memory rate limiting (local development)
+  return rateLimitMemory(identifier, config);
+}
+
+/**
+ * Redis-based distributed rate limiting
+ */
+async function rateLimitRedis(
+  client: RedisClient,
+  identifier: string,
+  config: RateLimitConfig
+): Promise<RateLimitResult> {
+  const key = `${RATE_LIMIT_KEY_PREFIX}${identifier}`;
+  const now = Date.now();
+  const windowMs = config.windowInSeconds * 1000;
+  const resetTime = now + windowMs;
+
+  try {
+    // Use Redis INCR with PXAT (millisecond expiration timestamp)
+    const count = await client.incr(key);
+    
+    // Set expiration on first request
+    if (count === 1) {
+      await client.pExpireAt(key, resetTime);
+    }
+    
+    // Get the TTL to calculate reset time
+    const ttl = await client.pTtl(key);
+    const ttlMs = typeof ttl === 'number' && ttl > 0 ? ttl : windowMs;
+    const actualResetTime = now + ttlMs;
+
+    if (count <= config.limit) {
+      return {
+        success: true,
+        limit: config.limit,
+        remaining: Math.max(0, config.limit - count),
+        reset: actualResetTime,
+      };
+    }
+
+    return {
+      success: false,
+      limit: config.limit,
+      remaining: 0,
+      reset: actualResetTime,
+    };
+  } catch (error) {
+    // On Redis error, fail open (allow request) to maintain availability
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Rate limit Redis error, failing open:", error);
+    }
+    return {
+      success: true,
+      limit: config.limit,
+      remaining: config.limit,
+      reset: resetTime,
+    };
+  }
+}
+
+/**
+ * In-memory rate limiting (fallback for local development)
+ */
+function rateLimitMemory(
   identifier: string,
   config: RateLimitConfig
 ): RateLimitResult {

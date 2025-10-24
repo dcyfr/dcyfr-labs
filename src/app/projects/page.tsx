@@ -10,6 +10,7 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
+import { headers } from "next/headers";
 
 const pageTitle = "Projects";
 const pageDescription = "A collection of my projects and contributions in cybersecurity and software development.";
@@ -41,7 +42,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  // Get nonce from middleware for CSP
+  const nonce = (await headers()).get("x-nonce") || "";
+  
   // JSON-LD structured data for projects collection
   const jsonLd = {
     "@context": "https://schema.org",
@@ -80,6 +84,7 @@ export default function ProjectsPage() {
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">

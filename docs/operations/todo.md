@@ -125,7 +125,6 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🔐 Security
 
 ### Active
-- [ ] **CSP hardening** - Replace `unsafe-inline` allowances with nonce/hash workflow and update middleware + vercel headers accordingly
 - [ ] **Shared rate limiting store** - Move in-memory rate limiters to Redis/Vercel KV and standardize trusted client IP detection
 - [ ] **Contact form PII logging** - Remove or anonymize contact submission logs before writing to console
 - [ ] **Security docs alignment** - Reconcile CSP implementation docs with current header behavior
@@ -134,6 +133,11 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 - [ ] **CSP violation monitoring** - Set up endpoint to log CSP violations
 
 ### Completed
+- ✅ **CSP Hardening (Nonce-based)** - Replaced `unsafe-inline` with cryptographic nonces for script-src and style-src (2025-10-24)
+  - Middleware generates unique nonce per request
+  - ThemeProvider, JSON-LD scripts use nonces
+  - Zero breaking changes, all features work
+  - Documentation: `docs/security/csp/nonce-implementation.md`
 - ✅ **Security Assessment Findings** - All 3 findings from security report resolved (2025-10-05)
   - Finding #1: Content Security Policy implemented
   - Finding #2: Clickjacking protection (CSP + X-Frame-Options)

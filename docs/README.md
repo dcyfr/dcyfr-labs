@@ -44,7 +44,7 @@ This directory is the knowledge base for the portfolio. Content is now organized
 | MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |
 | MCP (Filesystem + Git) | [`mcp/filesystem-git/index.md`](./mcp/filesystem-git/index.md) · [`mcp/filesystem-git/integration.md`](./mcp/filesystem-git/integration.md) |
 | MCP Tests | [`mcp/tests/servers-test.md`](./mcp/tests/servers-test.md) · [`mcp/tests/dependency-validation.md`](./mcp/tests/dependency-validation.md) |
-| Security – CSP | [`security/csp/implementation.md`](./security/csp/implementation.md) · [`security/csp/quick-reference.md`](./security/csp/quick-reference.md) |
+| Security – CSP | [`security/csp/nonce-implementation.md`](./security/csp/nonce-implementation.md) · [`security/csp/nonce-quick-reference.md`](./security/csp/nonce-quick-reference.md) · [`security/csp/implementation.md`](./security/csp/implementation.md) · [`security/csp/quick-reference.md`](./security/csp/quick-reference.md) |
 | Security – Rate Limiting | [`security/rate-limiting/guide.md`](./security/rate-limiting/guide.md) · [`security/rate-limiting/quick-reference.md`](./security/rate-limiting/quick-reference.md) |
 | Security Findings | [`security/security-findings-resolution.md`](./security/security-findings-resolution.md) |
 | Operations | [`operations/todo.md`](./operations/todo.md) · [`operations/deployment-checklist.md`](./operations/deployment-checklist.md) |

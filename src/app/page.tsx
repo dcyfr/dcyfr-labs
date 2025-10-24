@@ -13,8 +13,12 @@ import {
   AUTHOR_NAME,
   getOgImageUrl,
 } from "@/lib/site-config";
+import { headers } from "next/headers";
 
 export default async function Home() {
+  // Get nonce from middleware for CSP
+  const nonce = (await headers()).get("x-nonce") || "";
+  
   const socialImage = getOgImageUrl();
   // JSON-LD structured data for home page
   const jsonLd = {
@@ -78,6 +82,7 @@ export default async function Home() {
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
