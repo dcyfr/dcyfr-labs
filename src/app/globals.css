@@ -143,11 +143,11 @@
   }
 
   /* Star bullets for unordered lists */
-  :where(ul) {
+  :where(.prose ul) {
     list-style-type: disc;
   }
 
-  :where(ul li)::marker {
+  :where(.prose ul li)::marker {
     content: "\2726\2000";
     font-size: 0.9em;
     color: currentColor;

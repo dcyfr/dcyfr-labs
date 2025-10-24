@@ -119,46 +119,46 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <TableOfContents headings={headings} />
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <article className="mx-auto max-w-3xl py-14 md:py-20">
-      <header>
-        <div className="text-xs text-muted-foreground">
-          <time dateTime={post.publishedAt}>
-            {new Date(post.publishedAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
-          </time>
-          {post.updatedAt && (
-            <span className="ml-2 inline-flex items-center gap-1">
-              <span aria-hidden>•</span>
-              <span>
-                Updated {new Date(post.updatedAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
+        <header>
+          <div className="text-xs text-muted-foreground">
+            <time dateTime={post.publishedAt}>
+              {new Date(post.publishedAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
+            </time>
+            {post.updatedAt && (
+              <span className="ml-2 inline-flex items-center gap-1">
+                <span aria-hidden>•</span>
+                <span>
+                  Updated {new Date(post.updatedAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
+                </span>
               </span>
-            </span>
-          )}
+            )}
+          </div>
+          <div className="mt-2 gap-4">
+            <h1 className="font-serif text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
+          </div>
+          <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
+          {/* Tags and metadata */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            <PostBadges
+              post={post}
+              isLatestPost={latestPost?.slug === post.slug}
+              isHotPost={hottestSlug === post.slug && maxViews > 0}
+            />
+            <Badge variant="outline">{post.readingTime.text}</Badge>
+            {typeof viewCount === "number" && (
+              <Badge variant="outline">
+                {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
+              </Badge>
+            )}
+            {post.tags.map((t) => (
+              <Badge key={t} variant="secondary">{t}</Badge>
+            ))}
+          </div>
+        </header>
+        <div className="prose mt-8">
+          <MDX source={post.body} />
         </div>
-        <div className="mt-2 gap-4">
-          <h1 className="font-serif text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
-        </div>
-        <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
-        {/* Tags and metadata */}
-        <div className="mt-3 flex flex-wrap gap-2">
-          <PostBadges
-            post={post}
-            isLatestPost={latestPost?.slug === post.slug}
-            isHotPost={hottestSlug === post.slug && maxViews > 0}
-          />
-          <Badge variant="outline">{post.readingTime.text}</Badge>
-          {typeof viewCount === "number" && (
-            <Badge variant="outline">
-              {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
-            </Badge>
-          )}
-          {post.tags.map((t) => (
-            <Badge key={t} variant="secondary">{t}</Badge>
-          ))}
-        </div>
-      </header>
-      <div className="mt-8">
-        <MDX source={post.body} />
-      </div>
-      
+        
       {/* Share buttons */}
       <div className="mt-12 border-t pt-8">
         <ShareButtons
@@ -169,20 +169,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
       
       {post.sources && post.sources.length > 0 && (
-        <footer className="mt-12 border-t pt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Sources</h2>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            {post.sources.map((source) => (
-              <li key={source.href}>
-                <a className="underline underline-offset-4 hover:text-primary" href={source.href} target="_blank" rel="noreferrer">
-                  {source.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </footer>
-      )}
-      <RelatedPosts posts={relatedPosts} />
+          <footer className="mt-12 border-t pt-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Sources</h2>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              {post.sources.map((source) => (
+                <li key={source.href}>
+                  <a className="underline underline-offset-4 hover:text-primary" href={source.href} target="_blank" rel="noreferrer">
+                    {source.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </footer>
+        )}
+        <RelatedPosts posts={relatedPosts} />
     </article>
     </>
   );
