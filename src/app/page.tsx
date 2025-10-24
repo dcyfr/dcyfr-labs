@@ -82,7 +82,7 @@ export default async function Home() {
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
       {/* Introduction Section */}
-      <section className="py-6 md:py-12 space-y-4 md:space-y-6 text-center">
+      <section className="prose py-6 md:py-12 space-y-4 md:space-y-6 text-center">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2 justify-center">
           Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
         </h1>
