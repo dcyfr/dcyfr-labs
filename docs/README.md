@@ -13,6 +13,10 @@ This directory is the knowledge base for the portfolio. Content is now organized
 - `components/` – Component documentation:
 	- [`mdx.md`](./components/mdx.md) - Core MDX rendering component
 	- More component docs in progress (reading-progress, github-heatmap, etc.)
+- `design/` – Design system documentation:
+	- [`typography.md`](./design/typography.md) - Typography system (Geist Sans, Source Serif 4, Geist Mono)
+	- [`typography-quick-reference.md`](./design/typography-quick-reference.md) - Quick patterns for daily use
+	- [`typography-implementation-summary.md`](./design/typography-implementation-summary.md) - Complete implementation details
 - `mcp/` – Model Context Protocol documentation, including:
 	- [`servers.md`](./mcp/servers.md) and [`quick-reference.md`](./mcp/quick-reference.md).
 	- `filesystem-git/` for the Filesystem and Git MCP rollout (index, integration, quick reference, ready checklist).
@@ -36,6 +40,7 @@ This directory is the knowledge base for the portfolio. Content is now organized
 | APIs | [`api/reference.md`](./api/reference.md) |
 | Blog System | [`blog/architecture.md`](./blog/architecture.md) · [`blog/quick-reference.md`](./blog/quick-reference.md) |
 | Components | [`components/mdx.md`](./components/mdx.md) |
+| Design System | [`design/typography.md`](./design/typography.md) · [`design/typography-quick-reference.md`](./design/typography-quick-reference.md) |
 | MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |
 | MCP (Filesystem + Git) | [`mcp/filesystem-git/index.md`](./mcp/filesystem-git/index.md) · [`mcp/filesystem-git/integration.md`](./mcp/filesystem-git/integration.md) |
 | MCP Tests | [`mcp/tests/servers-test.md`](./mcp/tests/servers-test.md) · [`mcp/tests/dependency-validation.md`](./mcp/tests/dependency-validation.md) |

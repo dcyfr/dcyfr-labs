@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { SITE_DESCRIPTION, SITE_DOMAIN, SITE_TITLE } from "@/lib/site-config";
+import { LOGO_PATH, LOGO_VIEWBOX } from "@/lib/logo-config";
 
 export const runtime = "edge";
 export const size = {
@@ -69,14 +70,15 @@ export default function OpenGraphImage({
               color: "#d1d5db",
             }}
           >
-            <div
-              style={{
-                width: 16,
-                height: 16,
-                borderRadius: "50%",
-                background: "rgba(96, 165, 250, 0.9)",
-              }}
-            />
+            <svg
+              width="28"
+              height="28"
+              viewBox={LOGO_VIEWBOX}
+              fill="#f9fafb"
+              style={{ display: "flex" }}
+            >
+              <path d={LOGO_PATH} />
+            </svg>
             {SITE_DOMAIN}
           </div>
         </div>

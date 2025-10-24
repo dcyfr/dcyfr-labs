@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import "./print.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -20,11 +20,19 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -59,13 +67,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      // default
-      { url: "/icons/icon-light.png" },
-      // dark mode
-      { url: "/icons/icon-dark.png", media: "(prefers-color-scheme: dark)" },
-      // light mode
-      { url: "/icons/icon-light.png", media: "(prefers-color-scheme: light)" },
-    ]
+      { url: "/icon", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark", media: "(prefers-color-scheme: dark)" },
+    ],
+    apple: [
+      { url: "/apple-icon", media: "(prefers-color-scheme: light)" },
+      { url: "/apple-icon-dark", media: "(prefers-color-scheme: dark)" },
+    ],
   },
   alternates: {
     canonical: SITE_URL,
@@ -83,7 +91,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SiteHeader />
           <main className="min-h-[calc(100dvh-128px)] px-6 md:px-8">{children}</main>

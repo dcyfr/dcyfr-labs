@@ -8,6 +8,7 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
+import { Link } from "lucide-react";
 
 const pageTitle = "Resume";
 const pageDescription = resume.summary;
@@ -42,23 +43,22 @@ export const metadata: Metadata = {
 export default function ResumePage() {
   return (
     <div className="mx-auto max-w-4xl py-12 md:py-16 space-y-8">
+      {/* hero section */}
       <div className="space-y-4">
-        <h1 className="text-3xl md:text-4xl font-bold">Resume</h1>
+        <h1 className="font-serif text-3xl md:text-4xl font-bold">Drew's Resume</h1>
         <p className="text-lg md:text-xl text-muted-foreground">
           {resume.summary}
         </p>
       </div>
-
+      {/* experience section */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Experience</h2>
         <div className="space-y-4">
           {resume.experience.map((exp, index) => (
             <Card key={index} className="p-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                <h3 className="font-medium text-lg">{exp.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1 md:mt-0">
-                  {exp.company} • {exp.duration}
-                </p>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
+                <h3 className="font-medium text-lg">{exp.title} at {exp.company}</h3>
+                <p className="text-sm text-muted-foreground mt-1 md:mt-0">{exp.duration}</p>
               </div>
               <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                 {exp.responsibilities.map((resp, idx) => (
@@ -69,7 +69,7 @@ export default function ResumePage() {
           ))}
         </div>
       </section>
-
+      {/* education & certifications section */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Education &amp; Certifications</h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -94,7 +94,6 @@ export default function ResumePage() {
               ))}
             </div>
           </Card>
-
           <Card className="p-6">
             <h3 className="font-medium mb-3">Certifications</h3>
             <div className="space-y-3">
@@ -121,7 +120,7 @@ export default function ResumePage() {
           </Card>
         </div>
       </section>
-
+      {/* skills section */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Skills</h2>
         <div className="space-y-3">
