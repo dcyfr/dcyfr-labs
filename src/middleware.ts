@@ -36,12 +36,12 @@ export function middleware(request: NextRequest) {
     // In development, add 'unsafe-eval' for Turbopack HMR
     `script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel.live`,
     
-    // Styles: self with nonce, Google Fonts, and Vercel Live
-    // In development: use 'unsafe-inline' WITHOUT nonce (nonce blocks unsafe-inline)
-    // In production: use nonce-only for strict CSP
-    isDevelopment
-      ? "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live"
-      : `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://vercel.live`,
+    // Styles: self with unsafe-inline (no nonce)
+    // Note: Cannot use nonce for styles because third-party scripts (Vercel, Next.js fonts, React)
+    // inject styles dynamically without nonces, and browsers ignore 'unsafe-inline' when nonce is present.
+    // This is acceptable because inline style injection poses much lower XSS risk than inline scripts.
+    // We maintain strict nonce-based CSP for scripts where it matters most for security.
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live",
     
     // Images: self, data URIs, production domain, Vercel domains, GitHub (for Giscus avatars), and Vercel Live
   `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://avatars.githubusercontent.com https://github.githubassets.com https://vercel.live`,

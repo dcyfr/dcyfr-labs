@@ -169,8 +169,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         />
       </div>
       
-      {/* Comments section */}
-      <GiscusComments />
+      {/* Comments section - hidden for draft posts */}
+      {!post.draft && <GiscusComments />}
       
       {post.sources && post.sources.length > 0 && (
           <footer className="mt-12 border-t pt-6">
