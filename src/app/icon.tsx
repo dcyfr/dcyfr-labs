@@ -8,7 +8,25 @@ export const size = {
 };
 export const contentType = "image/png";
 
-export default function Icon() {
+export function generateImageMetadata() {
+  return [
+    {
+      contentType: "image/png",
+      size: { width: 512, height: 512 },
+      id: "light",
+    },
+    {
+      contentType: "image/png",
+      size: { width: 512, height: 512 },
+      id: "dark",
+    },
+  ];
+}
+
+export default async function Icon({ id }: { id: Promise<string> }) {
+  const iconId = await id;
+  const isDark = iconId === "dark";
+
   return new ImageResponse(
     (
       <div
@@ -28,7 +46,9 @@ export default function Icon() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "linear-gradient(135deg, #020617 0%, #111827 100%)",
+            background: isDark
+              ? "linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%)"
+              : "linear-gradient(135deg, #020617 0%, #111827 100%)",
             borderRadius: "50%",
           }}
         >
@@ -36,7 +56,7 @@ export default function Icon() {
             width="320"
             height="320"
             viewBox={LOGO_VIEWBOX}
-            fill="#f9fafb"
+            fill={isDark ? "#020617" : "#f9fafb"}
           >
             <path d={LOGO_PATH} />
           </svg>
