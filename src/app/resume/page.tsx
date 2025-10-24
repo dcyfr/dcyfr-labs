@@ -10,7 +10,8 @@ import {
 } from "@/lib/site-config";
 
 const pageTitle = "Resume";
-const pageDescription = resume.summary;
+// Optimized meta description (157 characters)
+const pageDescription = "Professional resume for Drew - cybersecurity architect with expertise in risk management, incident response, cloud security, and compliance (ISO 27001, SOC2).";
 
 export const metadata: Metadata = {
   title: pageTitle,

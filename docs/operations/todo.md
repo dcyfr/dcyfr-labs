@@ -41,11 +41,11 @@ Completed tasks have been moved to **`done.md`** for better project organization
 
 ### SEO & Accessibility
 - [ ] **Accessibility audit** - Run full a11y audit with axe or Lighthouse
-- [ ] **Meta descriptions** - Ensure all pages have unique, optimized meta descriptions
 - [ ] **Alt text review** - Audit all images for proper alt text
 - [ ] **Vercel OG image generation** - Add server-side OG image support using Vercel's OG image generation feature (https://vercel.com/docs/og-image-generation) to produce dynamic social preview images for blog posts and projects
 
 ### Completed (October 24, 2025)
+- [x] **Meta descriptions** - Optimized all page descriptions (150-160 characters) with keywords and compelling copy
 - [x] **Structured data (JSON-LD)** - Enhanced Schema.org structured data across all pages with reusable utilities
 
 ### Documentation

@@ -4,7 +4,6 @@ import { PostList } from "@/components/post-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { posts } from "@/data/posts";
-import { resume } from "@/data/resume";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { Logo } from "@/components/logo";
 import {
@@ -12,8 +11,39 @@ import {
   SITE_TITLE,
   AUTHOR_NAME,
   getOgImageUrl,
+  getTwitterImageUrl,
 } from "@/lib/site-config";
 import { headers } from "next/headers";
+import type { Metadata } from "next";
+
+// Optimized meta description for homepage (157 characters)
+const pageDescription = "Cybersecurity architect and developer building resilient security programs. Explore my blog on secure development, projects, and technical insights.";
+
+export const metadata: Metadata = {
+  description: pageDescription,
+  openGraph: {
+    title: SITE_TITLE,
+    description: pageDescription,
+    url: SITE_URL,
+    siteName: SITE_TITLE,
+    type: "website",
+    images: [
+      {
+        url: getOgImageUrl(),
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: SITE_TITLE,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: pageDescription,
+    images: [getTwitterImageUrl()],
+  },
+};
 
 export default async function Home() {
   // Get nonce from middleware for CSP
@@ -29,7 +59,7 @@ export default async function Home() {
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
         name: SITE_TITLE,
-        description: resume.shortSummary,
+        description: pageDescription,
         publisher: {
           "@id": `${SITE_URL}/#person`,
         },
@@ -41,7 +71,7 @@ export default async function Home() {
         name: AUTHOR_NAME,
         url: SITE_URL,
         image: socialImage,
-        description: resume.shortSummary,
+        description: pageDescription,
         jobTitle: "Cybersecurity Architect & Developer",
         sameAs: [
           "https://linkedin.com/in/dcyfr",
@@ -71,7 +101,7 @@ export default async function Home() {
         about: {
           "@id": "https://cyberdrew.dev/#person",
         },
-        description: resume.shortSummary,
+        description: pageDescription,
         inLanguage: "en-US",
         image: socialImage,
       },

@@ -13,7 +13,8 @@ import {
 import { headers } from "next/headers";
 
 const pageTitle = "Projects";
-const pageDescription = "A collection of my projects and contributions in cybersecurity and software development.";
+// Optimized meta description (155 characters)
+const pageDescription = "Explore my cybersecurity and development projects: security tools, automation frameworks, and open-source contributions. View my GitHub activity.";
 
 export const metadata: Metadata = {
   title: pageTitle,

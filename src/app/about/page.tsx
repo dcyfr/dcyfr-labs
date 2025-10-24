@@ -14,7 +14,8 @@ import { getAboutPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
 
 const pageTitle = "About";
-const pageDescription = resume.shortSummary;
+// Optimized meta description (154 characters)
+const pageDescription = "Learn about Drew, a cybersecurity architect with 5+ years leading security programs, incident response, and building secure development practices.";
 
 export const metadata: Metadata = {
   title: pageTitle,

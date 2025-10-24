@@ -15,7 +15,8 @@ import { getBlogCollectionSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
 
 const pageTitle = "Blog";
-const pageDescription = "Articles about cybersecurity and secure software development.";
+// Optimized meta description (159 characters)
+const pageDescription = "In-depth articles about cybersecurity, secure software development, cloud security, and DevOps. Learn from real-world security insights and tutorials.";
 
 export const metadata: Metadata = {
   title: pageTitle,

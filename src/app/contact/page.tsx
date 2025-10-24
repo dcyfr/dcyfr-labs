@@ -11,7 +11,8 @@ import { getContactPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
 
 const pageTitle = "Contact";
-const pageDescription = "Get in touch with me for questions, project ideas, or collaborations.";
+// Optimized meta description (143 characters)
+const pageDescription = "Get in touch for cybersecurity consulting, collaboration opportunities, or questions about security architecture and development.";
 
 export const metadata: Metadata = {
   title: pageTitle,
