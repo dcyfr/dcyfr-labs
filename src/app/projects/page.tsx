@@ -86,6 +86,7 @@ export default async function ProjectsPage() {
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        suppressHydrationWarning
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
         <div className="space-y-4">

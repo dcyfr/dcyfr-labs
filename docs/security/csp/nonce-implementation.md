@@ -136,6 +136,40 @@ export function middleware(request: NextRequest) {
 - Nonce stored in `x-nonce` custom header for RSC access
 - CSP applied to all HTML routes (middleware matcher excludes static assets)
 
+### Development Mode Relaxations
+
+**For Turbopack/Webpack HMR Compatibility:**
+
+In development, the CSP is automatically relaxed to support hot module replacement:
+
+```typescript
+const isDevelopment = process.env.NODE_ENV === "development";
+
+const cspDirectives = [
+  // Allow eval() for Turbopack HMR in development
+  `script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ""} ...`,
+  
+  // CRITICAL: In dev, use 'unsafe-inline' WITHOUT nonce
+  // Nonce blocks 'unsafe-inline' per CSP spec, so we can't use both
+  isDevelopment
+    ? "style-src 'self' 'unsafe-inline' ..."  // Dev: no nonce
+    : `style-src 'self' 'nonce-${nonce}' ...`, // Prod: nonce only
+  
+  // Allow localhost websockets for HMR in development
+  `connect-src 'self'${isDevelopment ? " ws://localhost:* wss://localhost:*" : ""} ...`,
+];
+```
+
+**Development-only relaxations:**
+- ✅ `'unsafe-eval'` in `script-src` - Required for Turbopack's runtime code evaluation
+- ✅ `'unsafe-inline'` in `style-src` WITHOUT nonce - Required for Turbopack's HMR style injection
+- ✅ `ws://localhost:*` and `wss://localhost:*` in `connect-src` - HMR websocket connections
+
+**Critical CSP Spec Detail:**  
+Per the CSP specification, when a nonce is present in `style-src`, `'unsafe-inline'` is **completely ignored** by browsers. This is why we must **remove the nonce in development** to allow Turbopack's dynamic style injection. Production keeps strict nonce-only CSP.
+
+**Security Note:** These relaxations are **automatically removed in production** when `NODE_ENV=production`. Production builds maintain strict nonce-only CSP without eval, unsafe-inline, or localhost websockets.
+
 ### 2. ThemeProvider Nonce Injection
 
 **File:** `src/app/layout.tsx`

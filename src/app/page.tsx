@@ -84,6 +84,7 @@ export default async function Home() {
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        suppressHydrationWarning
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
       {/* Introduction Section */}

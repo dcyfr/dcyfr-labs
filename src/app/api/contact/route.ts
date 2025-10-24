@@ -96,12 +96,10 @@ export async function POST(request: Request) {
 
     // Check if email service is configured
     if (!isEmailConfigured || !resend) {
-      // Log the submission for manual follow-up (anonymized)
-      const emailHash = sanitizedData.email.substring(0, 3) + '***@' + sanitizedData.email.split('@')[1];
+      // Log the submission for monitoring (fully anonymized - no PII)
       console.log("Contact form submission (email not configured):", {
         nameLength: sanitizedData.name.length,
-        emailDomain: sanitizedData.email.split('@')[1],
-        emailHint: emailHash,
+        emailDomain: sanitizedData.email.split('@')[1] || 'unknown',
         messageLength: sanitizedData.message.length,
         timestamp: new Date().toISOString(),
       });
@@ -136,12 +134,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Log successful submission for monitoring (anonymized)
-    const emailHash = sanitizedData.email.substring(0, 3) + '***@' + sanitizedData.email.split('@')[1];
+    // Log successful submission for monitoring (fully anonymized - no PII)
     console.log("Contact form submission sent:", {
       nameLength: sanitizedData.name.length,
-      emailDomain: sanitizedData.email.split('@')[1],
-      emailHint: emailHash,
+      emailDomain: sanitizedData.email.split('@')[1] || 'unknown',
+      messageLength: sanitizedData.message.length,
       timestamp: new Date().toISOString(),
     });
 

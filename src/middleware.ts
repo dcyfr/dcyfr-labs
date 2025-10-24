@@ -23,6 +23,9 @@ export function middleware(request: NextRequest) {
   // Generate unique nonce for this request
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   
+  // Detect development environment
+  const isDevelopment = process.env.NODE_ENV === "development";
+  
   // Build CSP directives with nonce
   const cspDirectives = [
     // Default: only allow same-origin resources
@@ -30,11 +33,15 @@ export function middleware(request: NextRequest) {
     
     // Scripts: self with nonce, external analytics, and Vercel Live
     // Using nonce instead of unsafe-inline for improved security
-    `script-src 'self' 'nonce-${nonce}' https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel.live`,
+    // In development, add 'unsafe-eval' for Turbopack HMR
+    `script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel.live`,
     
     // Styles: self with nonce, Google Fonts, and Vercel Live
-    // Nonce supports next-themes and any dynamic styles
-    `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://vercel.live`,
+    // In development: use 'unsafe-inline' WITHOUT nonce (nonce blocks unsafe-inline)
+    // In production: use nonce-only for strict CSP
+    isDevelopment
+      ? "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live"
+      : `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://vercel.live`,
     
     // Images: self, data URIs, production domain, Vercel domains, and Vercel Live
   `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://vercel.live`,
@@ -43,7 +50,8 @@ export function middleware(request: NextRequest) {
     "font-src 'self' https://fonts.gstatic.com https://vercel.live",
     
     // Connect: self, Vercel analytics endpoints, and Vercel Live (for feedback/comments)
-    "connect-src 'self' https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://vercel.live https://*.pusher.com wss://*.pusher.com",
+    // In development, allow webpack/turbopack HMR websockets
+    `connect-src 'self'${isDevelopment ? " ws://localhost:* wss://localhost:*" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://vercel.live https://*.pusher.com wss://*.pusher.com`,
     
     // Frame: allow Vercel Live for preview feedback, deny all others (clickjacking protection)
     "frame-src https://vercel.live",

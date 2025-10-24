@@ -69,6 +69,38 @@ Additional tools available:
 - Imports: Use `@/…` alias consistently.
 - Documentation: Store all documentation files (analysis, guides, architecture docs) in `/docs` directory unless explicitly required in the project root (e.g., `README.md`, `LICENSE`). This keeps the workspace organized and separates documentation from code.
 
+## Task tracking
+This project uses **two complementary todo systems**:
+
+### 1. Persistent Todo List (`docs/operations/todo.md`)
+- **Purpose**: Project-wide todo tracker for bugs, features, technical debt, and long-term planning
+- **Scope**: All issues, improvements, and ideas across the entire project
+- **Persistence**: Committed to git, survives across all sessions
+- **Organization**: Categorized by type (Bugs, Features, Technical Debt, Security, Documentation, etc.)
+- **When to use**: 
+  - Planning new features or improvements
+  - Tracking bugs and technical debt
+  - Documenting long-term project goals
+  - Reviewing project status and priorities
+- **When to update**: Mark items complete with ✅ when finished, add new items as they arise
+
+### 2. In-Memory Todo List (`manage_todo_list` tool)
+- **Purpose**: Track active work within a single conversation session
+- **Scope**: Current task breakdown and progress tracking
+- **Persistence**: Session-only, does not survive between conversations
+- **Organization**: Sequential task list with status tracking (not-started, in-progress, completed)
+- **When to use**:
+  - Breaking down a current task into actionable steps
+  - Tracking progress on multi-step work in real-time
+  - Providing visibility into what you're actively working on
+- **Best practices**: 
+  - Create at start of complex multi-step tasks
+  - Mark ONE item in-progress before starting work
+  - Mark completed IMMEDIATELY after finishing each step
+  - Read first if user asks "what's next" or "next todo"
+
+**Workflow**: Check persistent `todo.md` for project priorities → Create in-memory todo list for active session work → Update `todo.md` when major items complete.
+
 ## Forms and API
 - Client pages use fetch to App Router API routes and `sonner` for UX feedback.
   - Example: `contact/page.tsx` POSTs JSON to `/api/contact` and shows success/error toasts.

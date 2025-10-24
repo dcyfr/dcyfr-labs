@@ -2,7 +2,7 @@
 
 This document tracks bugs, feature requests, improvements, and technical debt.
 
-**Last Updated:** October 23, 2025
+**Last Updated:** October 24, 2025
 
 ---
 
@@ -125,14 +125,14 @@ This document tracks bugs, feature requests, improvements, and technical debt.
 ## 🔐 Security
 
 ### Active
-- [ ] **Shared rate limiting store** - Move in-memory rate limiters to Redis/Vercel KV and standardize trusted client IP detection
-- [ ] **Contact form PII logging** - Remove or anonymize contact submission logs before writing to console
 - [ ] **Security docs alignment** - Reconcile CSP implementation docs with current header behavior
-- [ ] **CAPTCHA consideration** - Evaluate need for spam prevention on contact form
 - [ ] **Environment variable audit** - Ensure all sensitive data uses env vars
 - [ ] **CSP violation monitoring** - Set up endpoint to log CSP violations
 
 ### Completed
+- ✅ **Contact form PII logging** - Removed all PII from logs, only log metadata (domain, length) (2025-10-24)
+- ✅ **CAPTCHA evaluation** - Documented recommendation for spam prevention (Cloudflare Turnstile) (2025-10-24)
+- ✅ **Shared rate limiting store** - Redis-backed rate limiting already implemented with graceful fallback (2025-10-24 audit confirmed)
 - ✅ **CSP Hardening (Nonce-based)** - Replaced `unsafe-inline` with cryptographic nonces for script-src and style-src (2025-10-24)
   - Middleware generates unique nonce per request
   - ThemeProvider, JSON-LD scripts use nonces

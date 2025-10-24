@@ -136,6 +136,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        suppressHydrationWarning
       />
       <article className="mx-auto max-w-3xl py-14 md:py-20">
       <header>

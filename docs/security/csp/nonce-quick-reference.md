@@ -18,6 +18,7 @@ Quick reference for nonce-based Content Security Policy implementation.
 
 ## Current CSP (Primary Layer)
 
+**Production:**
 ```csp
 default-src 'self';
 script-src 'self' 'nonce-{unique}' https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel.live;
@@ -33,7 +34,14 @@ upgrade-insecure-requests;
 block-all-mixed-content;
 ```
 
-**Note:** `{unique}` = base64-encoded random UUID, changes every request
+**Development (Turbopack HMR):**
+```csp
+script-src 'self' 'nonce-{unique}' 'unsafe-eval' ...;
+style-src 'self' 'unsafe-inline' ...;  /* NO nonce - would block unsafe-inline */
+connect-src 'self' ws://localhost:* wss://localhost:* ...;
+```
+
+**Note:** `{unique}` = base64-encoded random UUID, changes every request. In development, `style-src` uses `'unsafe-inline'` **without nonce** because CSP spec ignores `'unsafe-inline'` when nonce is present. Production uses nonce-only for strict CSP.
 
 ---
 
