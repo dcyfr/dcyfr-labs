@@ -4,7 +4,6 @@ import { posts } from "@/data/posts";
 import {
   SITE_URL,
   SITE_TITLE,
-  AUTHOR_NAME,
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
@@ -19,6 +18,11 @@ import { RelatedPosts } from "@/components/related-posts";
 import { getRelatedPosts } from "@/lib/related-posts";
 import { headers } from "next/headers";
 import { ShareButtons } from "@/components/share-buttons";
+import {
+  getArticleSchema,
+  getBreadcrumbSchema,
+  getJsonLdScriptProps,
+} from "@/lib/json-ld";
 
 export const dynamic = "force-dynamic";
 
@@ -90,55 +94,30 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     .filter(p => !p.archived)
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))[0];
 
-  // JSON-LD structured data for SEO and AI assistants
+  // Enhanced JSON-LD structured data for SEO and AI assistants
   const socialImage = getOgImageUrl(post.title, post.summary);
+  
+  // Article schema with all recommended properties
+  const articleSchema = getArticleSchema(post, viewCount, socialImage);
+  
+  // Breadcrumb navigation for better SEO
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: "Blog", url: `${SITE_URL}/blog` },
+    { name: post.title, url: `${SITE_URL}/blog/${post.slug}` },
+  ]);
+  
+  // Combine schemas in a graph
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.summary,
-    datePublished: post.publishedAt,
-    ...(post.updatedAt && { dateModified: post.updatedAt }),
-    author: {
-      "@type": "Person",
-      name: AUTHOR_NAME,
-      url: SITE_URL,
-    },
-    publisher: {
-      "@type": "Person",
-      name: AUTHOR_NAME,
-      url: SITE_URL,
-    },
-    url: `${SITE_URL}/blog/${post.slug}`,
-    image: socialImage,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${SITE_URL}/blog/${post.slug}`,
-    },
-    keywords: post.tags.join(", "),
-    wordCount: post.readingTime.words,
-    ...(post.archived && { archivedAt: post.updatedAt || post.publishedAt }),
-    ...(typeof viewCount === "number" && viewCount > 0
-      ? {
-          interactionStatistic: {
-            "@type": "InteractionCounter",
-            interactionType: "https://schema.org/ReadAction",
-            userInteractionCount: viewCount,
-          },
-        }
-      : {}),
+    "@graph": [articleSchema, breadcrumbSchema],
   };
 
   return (
     <>
       <ReadingProgress />
       <TableOfContents headings={headings} />
-      <script
-        type="application/ld+json"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        suppressHydrationWarning
-      />
+      <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <article className="mx-auto max-w-3xl py-14 md:py-20">
       <header>
         <div className="text-xs text-muted-foreground">

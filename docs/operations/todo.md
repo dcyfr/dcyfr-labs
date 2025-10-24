@@ -40,11 +40,13 @@ Completed tasks have been moved to **`done.md`** for better project organization
 - [ ] **Incremental Static Regeneration** - Consider ISR for blog posts if content updates frequently
 
 ### SEO & Accessibility
-- [ ] **Structured data** - Add JSON-LD structured data for blog posts
 - [ ] **Accessibility audit** - Run full a11y audit with axe or Lighthouse
 - [ ] **Meta descriptions** - Ensure all pages have unique, optimized meta descriptions
 - [ ] **Alt text review** - Audit all images for proper alt text
 - [ ] **Vercel OG image generation** - Add server-side OG image support using Vercel's OG image generation feature (https://vercel.com/docs/og-image-generation) to produce dynamic social preview images for blog posts and projects
+
+### Completed (October 24, 2025)
+- [x] **Structured data (JSON-LD)** - Enhanced Schema.org structured data across all pages with reusable utilities
 
 ### Documentation
 - [x] **Deployment guide** - Document deployment process and environment variables (2025-10-24)

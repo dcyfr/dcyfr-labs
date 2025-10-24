@@ -11,6 +11,8 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
+import { getBlogCollectionSchema, getJsonLdScriptProps } from "@/lib/json-ld";
+import { headers } from "next/headers";
 
 const pageTitle = "Blog";
 const pageDescription = "Articles about cybersecurity and secure software development.";
@@ -95,8 +97,20 @@ export default async function BlogPage({
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
   
+  // Get nonce from middleware for CSP
+  const nonce = (await headers()).get("x-nonce") || "";
+  
+  // JSON-LD structured data for blog collection
+  const collectionTitle = tag ? `Blog - ${tag}` : pageTitle;
+  const collectionDescription = tag 
+    ? `Articles tagged with "${tag}"` 
+    : pageDescription;
+  const jsonLd = getBlogCollectionSchema(filtered, collectionTitle, collectionDescription);
+  
   return (
-    <div className="mx-auto max-w-5xl py-14 md:py-20">
+    <>
+      <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <div className="mx-auto max-w-5xl py-14 md:py-20">
       {/* page hero */}
       <div className="prose space-y-4">
         <h1 className="font-serif text-3xl md:text-4xl font-bold">Blog</h1>
@@ -137,5 +151,6 @@ export default async function BlogPage({
         />
       </div>
     </div>
+    </>
   );
 }
