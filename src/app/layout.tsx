@@ -67,12 +67,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icon", media: "(prefers-color-scheme: light)" },
-      { url: "/icon-dark", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon/light", media: "(prefers-color-scheme: light)" },
+      { url: "/icon/dark", media: "(prefers-color-scheme: dark)" },
     ],
     apple: [
-      { url: "/apple-icon", media: "(prefers-color-scheme: light)" },
-      { url: "/apple-icon-dark", media: "(prefers-color-scheme: dark)" },
+      { url: "/apple-icon/light", media: "(prefers-color-scheme: light)" },
+      { url: "/apple-icon/dark", media: "(prefers-color-scheme: dark)" },
     ],
   },
   alternates: {

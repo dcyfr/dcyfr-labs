@@ -8,7 +8,25 @@ export const size = {
 };
 export const contentType = "image/png";
 
-export default function AppleIcon() {
+export function generateImageMetadata() {
+  return [
+    {
+      contentType: "image/png",
+      size: { width: 180, height: 180 },
+      id: "light",
+    },
+    {
+      contentType: "image/png",
+      size: { width: 180, height: 180 },
+      id: "dark",
+    },
+  ];
+}
+
+export default async function AppleIcon({ id }: { id: Promise<string> }) {
+  const iconId = await id;
+  const isDark = iconId === "dark";
+
   return new ImageResponse(
     (
       <div
@@ -28,7 +46,9 @@ export default function AppleIcon() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "linear-gradient(135deg, #020617 0%, #111827 100%)",
+            background: isDark
+              ? "linear-gradient(135deg, #020617 0%, #111827 100%)"
+              : "linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%)",
             borderRadius: "50%",
           }}
         >
@@ -36,7 +56,7 @@ export default function AppleIcon() {
             width="110"
             height="110"
             viewBox={LOGO_VIEWBOX}
-            fill="#f9fafb"
+            fill={isDark ? "#f9fafb" : "#020617"}
           >
             <path d={LOGO_PATH} />
           </svg>
