@@ -12,7 +12,7 @@ import {
 } from "@/lib/site-config";
 
 const pageTitle = "Projects";
-const pageDescription = "A collection of projects in cybersecurity and software development.";
+const pageDescription = "A collection of my projects and contributions in cybersecurity and software development.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -84,7 +84,7 @@ export default function ProjectsPage() {
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
         <div className="space-y-4">
-          <h1 className="text-3xl md:text-4xl font-bold">Projects</h1>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold">Projects</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             {pageDescription}
           </p>

@@ -9,6 +9,7 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
+import { Logo } from "@/components/logo";
 
 const pageTitle = "About";
 const pageDescription = resume.shortSummary;
@@ -45,52 +46,72 @@ export default function AboutPage() {
 
   return (
     <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
+      {/* hero section */}
       <div className="space-y-6">
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight italic font-serif">Hi, I&apos;m Drew</h1>
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">I&apos;m Drew <Logo width={24} height={24} className="ml-2" /></h1>
         <p className="text-lg md:text-xl text-muted-foreground">
-          I&apos;m a Cybersecurity Architect and Tinkerer who helps organizations build resilient security programs that empower teams to move fast and stay secure.
+          {resume.shortSummary}
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Button asChild>
-            <Link href="/resume">View my resume</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/contact">Get in touch</Link>
-          </Button>
-        </div>
       </div>
-
+      {/* about me section */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">What drives me</h2>
         <div className="space-y-3 text-muted-foreground">
           <p>
-            I build approachable security programs that help teams ship quickly without sacrificing resilience. I enjoy pairing technical work like threat hunting and vulnerability management with coaching that brings the whole organization along for the journey.
+            My passion lies in helping organizations build resilient security programs that empower teams to move fast and stay secure. I believe security must be an enabler, not a bottleneck, and I strive to create solutions that balance risk management with business agility.
           </p>
           <p>
-            Over the past few years I&apos;ve led audits, run incident response teams, and shipped the policies that keep global engineering orgs aligned. The goal is always the same: make security feel like a multiplier instead of a blocker.
+            Throughout my career, I have dedicated myself to fostering a culture of security awareness and continuous improvement. I enjoy collaborating with cross-functional teams to identify vulnerabilities, implement robust security frameworks, and deliver technical solutions that scale.
           </p>
           <p>
-            Outside the office you&apos;ll find me mentoring, hosting community events, and tinkering with the tools that keep defenders a step ahead. I like turning that curiosity into clear guidance for the teams I support.
+            Outside of work, I consider myself an avid tinkerer who loves exploring new technologies and staying up-to-date with the latest trends in cybersecurity. I am always eager to learn, grow, and share my experience with others.
           </p>
         </div>
       </section>
-
+      {/* current role section */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Currently</h2>
         <Card className="p-6 space-y-3">
           <div className="space-y-1">
-            <p className="font-medium text-lg">{currentRole.title}</p>
-            <p className="text-sm text-muted-foreground">
-              {currentRole.company} • {currentRole.duration}
-            </p>
+            <p className="font-medium text-lg">{currentRole.title} @ {currentRole.company}</p>
+            <p className="text-sm text-muted-foreground">{currentRole.duration}</p>
           </div>
           <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-            {currentRole.responsibilities.map((item, index) => (
-              <li key={index}>{item}</li>
+            {currentRole.responsibilities.map((item, idx) => (
+              <li key={idx}>{item}</li>
             ))}
           </ul>
         </Card>
       </section>
+      {/* previous roles section */}
+      <section className="space-y-4">
+        <h2 className="text-xl md:text-2xl font-medium">Previously</h2>
+        <div className="space-y-4">
+          {resume.experience.slice(1, 4).map((role, index) => (
+            <Card key={index} className="p-6 space-y-3">
+              <div className="space-y-1">
+                <p className="font-medium text-lg">{role.title} @ {role.company}</p>
+                <p className="text-sm text-muted-foreground">{role.duration}</p>
+              </div>
+            </Card>
+          ))}
+        </div>
+        <div className="text-center mt-6">
+          <Link className="text-sm text-primary underline" href="/resume">
+            View my full resume
+          </Link>
+        </div>
+      </section>
+      {/* call to action section */}
+      <div className="mt-24 text-center space-y-4">
+        <h2 className="text-xl md:text-2xl font-medium">Let&apos;s connect!</h2>
+        <p className="text-muted-foreground">
+          I&apos;m always open to discussing new opportunities, collaborations, or just chatting about all things security. Feel free to reach out!
+        </p>
+        <Button asChild>
+          <Link href="/contact">Get in Touch</Link>
+        </Button>
+      </div>
     </div>
   );
 }

@@ -30,16 +30,22 @@ const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
 // Map a few elements to tailwind-styled components
 const components: NonNullable<MDXRemoteProps["components"]> = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 {...props} className="text-3xl md:text-4xl font-semibold tracking-tight mt-8 first:mt-0 scroll-mt-20" />
+    <h1 {...props} className="font-serif text-3xl md:text-4xl font-semibold tracking-tight mt-8 first:mt-0 scroll-mt-20" />
   ),
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 {...props} className="text-2xl md:text-3xl font-semibold tracking-tight mt-8 scroll-mt-20" />
+    <h2 {...props} className="font-serif text-2xl md:text-3xl font-semibold tracking-tight mt-8 scroll-mt-20" />
   ),
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 {...props} className="text-xl md:text-2xl font-medium mt-6 scroll-mt-20" />
+    <h3 {...props} className="font-serif text-xl md:text-2xl font-medium mt-6 scroll-mt-20" />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p {...props} className="leading-7 [&:not(:first-child)]:mt-4" />
+  ),
+  blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
+    <blockquote 
+      {...props} 
+      className="font-serif italic border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground"
+    />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
     <ul {...props} className="list-disc pl-5 [&>li]:mt-2" />

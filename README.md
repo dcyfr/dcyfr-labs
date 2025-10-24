@@ -21,6 +21,18 @@ npm run dev
 
 Then open http://localhost:3000.
 
+### HTTPS Development (Safari on macOS)
+
+Safari on macOS Tahoe and newer versions have strict TLS requirements. If you encounter TLS errors in Safari, use the HTTPS development server:
+
+```sh
+npm run dev:https
+```
+
+This will serve the site over HTTPS at https://localhost:3000 using locally-trusted certificates (via mkcert).
+
+**First-time setup**: The certificates are already generated. If you need to regenerate them, see `certs/README.md`.
+
 ## Build & Start
 
 ```sh

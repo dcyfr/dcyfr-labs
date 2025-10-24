@@ -6,6 +6,7 @@ import Link from "next/link";
 import { posts } from "@/data/posts";
 import { resume } from "@/data/resume";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
+import { Logo } from "@/components/logo";
 import {
   SITE_URL,
   SITE_TITLE,
@@ -81,14 +82,14 @@ export default async function Home() {
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
       {/* Introduction Section */}
-      <section className="space-y-4">
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight italic font-serif">
-          Hi, I&apos;m Drew
+      <section className="py-6 md:py-12 space-y-4 md:space-y-6 text-center">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2 justify-center">
+          Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
         </h1>
-        <p className="text-muted-foreground text-lg md:text-xl max-w-2xl">
-          {resume.shortSummary}
+        <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto">
+          Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
         </p>
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-2 justify-center">
           <Button asChild>
             <Link href="/about">Learn more</Link>
           </Button>
@@ -104,7 +105,7 @@ export default async function Home() {
       {/* Blog Section */}
       <section className="mt-12 md:mt-16 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl md:text-2xl font-medium">Latest articles</h2>
+          <h2 className="font-serif text-xl md:text-2xl font-medium">Latest articles</h2>
           <Button variant="ghost" asChild>
             <Link href="/blog">View all</Link>
           </Button>
@@ -131,7 +132,7 @@ export default async function Home() {
 
       {/* Projects Section */}
       <section className="mt-12 md:mt-16 space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Projects</h2>
+        <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {featuredProjects.slice(0, 2).map((p) => (
             <ProjectCard key={p.title} project={p} />

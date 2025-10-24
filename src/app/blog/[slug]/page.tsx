@@ -148,7 +148,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           )}
         </div>
         <div className="mt-2 gap-4">
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
+          <h1 className="font-serif text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
         </div>
         <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
         {/* Tags and metadata */}
