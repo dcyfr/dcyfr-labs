@@ -18,6 +18,7 @@ import { extractHeadings } from "@/lib/toc";
 import { RelatedPosts } from "@/components/related-posts";
 import { getRelatedPosts } from "@/lib/related-posts";
 import { headers } from "next/headers";
+import { ShareButtons } from "@/components/share-buttons";
 
 export const dynamic = "force-dynamic";
 
@@ -178,6 +179,16 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <div className="mt-8">
         <MDX source={post.body} />
       </div>
+      
+      {/* Share buttons */}
+      <div className="mt-12 border-t pt-8">
+        <ShareButtons
+          url={`${SITE_URL}/blog/${post.slug}`}
+          title={post.title}
+          tags={post.tags}
+        />
+      </div>
+      
       {post.sources && post.sources.length > 0 && (
         <footer className="mt-12 border-t pt-6">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Sources</h2>
