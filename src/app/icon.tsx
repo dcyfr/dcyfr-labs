@@ -47,8 +47,8 @@ export default async function Icon({ id }: { id: Promise<string> }) {
             alignItems: "center",
             justifyContent: "center",
             background: isDark
-              ? "linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%)"
-              : "linear-gradient(135deg, #020617 0%, #111827 100%)",
+              ? "linear-gradient(135deg, #020617 0%, #111827 100%)"
+              : "linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%)",
             borderRadius: "50%",
           }}
         >
@@ -56,7 +56,7 @@ export default async function Icon({ id }: { id: Promise<string> }) {
             width="320"
             height="320"
             viewBox={LOGO_VIEWBOX}
-            fill={isDark ? "#020617" : "#f9fafb"}
+            fill={isDark ? "#f9fafb" : "#020617"}
           >
             <path d={LOGO_PATH} />
           </svg>
