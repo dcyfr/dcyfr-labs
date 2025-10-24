@@ -10,6 +10,7 @@
     "lint": "eslint",
     "sync:agents": "node ./scripts/sync-agents.mjs",
     "test:rate-limit": "node ./scripts/test-rate-limit.mjs",
+    "test:csp-report": "node ./scripts/test-csp-report.mjs",
     "test:mcp-servers": "node ./scripts/test-mcp-servers.mjs",
     "test:toc": "node ./scripts/test-toc.mjs",
     "test:related-posts": "node ./scripts/test-related-posts.mjs",

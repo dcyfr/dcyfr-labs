@@ -80,9 +80,13 @@ Completed tasks have been moved to **`done.md`** for better project organization
 ## 🔐 Security
 
 ### Active
-- [ ] **Security docs alignment** - Reconcile CSP implementation docs with current header behavior
 - [ ] **Environment variable audit** - Ensure all sensitive data uses env vars
-- [ ] **CSP violation monitoring** - Set up endpoint to log CSP violations
+
+### Completed (October 24, 2025)
+- [x] **Security docs alignment** - Reconciled CSP implementation docs with current header behavior
+- [x] **CSP violation monitoring** - Set up `/api/csp-report` endpoint to log CSP violations with rate limiting
+- [x] **CSP violation testing** - Created test script (`npm run test:csp-report`) to verify reporting endpoint
+- [x] **Security status documentation** - Created comprehensive `/docs/security/security-status.md` explaining two-layer CSP approach
 
 ---
 

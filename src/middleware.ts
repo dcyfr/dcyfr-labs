@@ -70,6 +70,9 @@ export function middleware(request: NextRequest) {
     
     // Block all mixed content
     "block-all-mixed-content",
+    
+    // CSP violation reporting
+    "report-uri /api/csp-report",
   ];
 
   const cspHeader = cspDirectives.join("; ");
