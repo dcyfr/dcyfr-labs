@@ -119,7 +119,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <ReadingProgress />
       <TableOfContents headings={headings} />
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <article className="mx-auto max-w-3xl py-14 md:py-20">
+      <article className="mx-auto max-w-3xl py-14 md:py-20" data-url={`${SITE_URL}/blog/${post.slug}`}>
         <header>
           <div className="text-xs text-muted-foreground">
             <time dateTime={post.publishedAt}>
