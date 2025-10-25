@@ -14,6 +14,7 @@
     "test:mcp-servers": "node ./scripts/test-mcp-servers.mjs",
     "test:toc": "node ./scripts/test-toc.mjs",
     "test:related-posts": "node ./scripts/test-related-posts.mjs",
+    "test:print": "node ./scripts/test-print.mjs",
     "predev": "npm run sync:agents",
     "predev:https": "npm run sync:agents",
     "prebuild": "npm run sync:agents",
