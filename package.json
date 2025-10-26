@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "dev:https": "node server.mjs",
     "build": "next build",
+    "analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "eslint",
     "sync:agents": "node ./scripts/sync-agents.mjs",
@@ -25,6 +26,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@react-email/render": "^1.3.1",
     "@vercel/analytics": "1.5.0",
+    "@vercel/og": "^0.8.5",
     "@vercel/speed-insights": "1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -53,7 +55,9 @@
     "unified": "^11.0.5"
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.11.0",
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^16.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "24.5.0",
     "@types/react": "^19",
@@ -61,6 +65,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
+    "lighthouse": "^13.0.1",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
