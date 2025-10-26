@@ -18,7 +18,7 @@ This document tracks **active and pending** work only. Completed tasks are moved
 - None currently
 
 ### Backlog
-- [ ] **Public Analytics Dashboard** - Display trending posts and view statistics (data already being collected via Inngest - ready to build when needed)
+- [x] **Public Analytics Dashboard** - Display trending posts and view statistics (✅ Complete - dev-only, see `/docs/features/analytics-dashboard.md`)
 - [ ] **Newsletter signup** - Email subscription functionality for blog updates
 - [ ] **Email Templates** - HTML email templates with branding for contact form and notifications
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
