@@ -15,9 +15,10 @@ This document tracks **active and pending** work only. Completed tasks are moved
 ## 🚀 Features
 
 ### High Priority
-- [ ] **Public Analytics Dashboard** - Display trending posts and view statistics (moved up - data already being collected via Inngest)
+- None currently
 
 ### Backlog
+- [ ] **Public Analytics Dashboard** - Display trending posts and view statistics (data already being collected via Inngest - ready to build when needed)
 - [ ] **Newsletter signup** - Email subscription functionality for blog updates
 - [ ] **Email Templates** - HTML email templates with branding for contact form and notifications
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
@@ -46,6 +47,7 @@ This document tracks **active and pending** work only. Completed tasks are moved
 ## 📝 Content & Design
 
 ### Blog Posts
+- [ ] **Reconsider series naming** - "Tiny Portfolio" doesn't fit scale anymore. Consider: "Full-Stack Portfolio", "Weekend to Production", "Production Portfolio", or other alternatives (see `/docs/operations/content-strategy.md` for options)
 - [ ] Write about implementing GitHub contributions heatmap
 - [ ] Write about security best practices for Next.js apps
 - [ ] Write about MDX setup and customization
