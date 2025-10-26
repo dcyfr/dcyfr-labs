@@ -29,8 +29,7 @@ This document tracks **active and pending** work only. Completed tasks are moved
 ## 🔧 Technical Improvements
 
 ### Performance
-- [ ] **Bundle analysis** - Set up bundle analyzer to monitor bundle size
-- [ ] **Font optimization** - Review font loading strategy for better performance
+- None currently - all optimized
 
 ### SEO & Accessibility
 - [ ] **Accessibility audit** - Run full a11y audit with axe or Lighthouse (automated testing)

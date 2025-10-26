@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "dev:https": "node server.mjs",
     "build": "next build",
+    "analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "eslint",
     "sync:agents": "node ./scripts/sync-agents.mjs",
@@ -54,6 +55,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^16.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "24.5.0",
     "@types/react": "^19",
