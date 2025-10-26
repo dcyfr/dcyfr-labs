@@ -29,13 +29,15 @@ export function ProjectCard({ project }: { project: Project }) {
         <CardDescription className="text-sm md:text-[0.95rem] leading-relaxed">
           {project.description}
         </CardDescription>
-        <div className="flex flex-wrap gap-1.5">
-          {project.tech.map((tech) => (
-            <Badge key={tech} variant="outline" className="font-normal">
-              {tech}
-            </Badge>
-          ))}
-        </div>
+        {project.tech && project.tech.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {project.tech.map((tech) => (
+              <Badge key={tech} variant="outline" className="font-normal">
+                {tech}
+              </Badge>
+            ))}
+          </div>
+        )}
       </CardHeader>
       {project.highlights && project.highlights.length > 0 && (
         <CardContent>

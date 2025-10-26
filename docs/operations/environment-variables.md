@@ -1,6 +1,6 @@
 # Environment Variables Guide
 
-**Last Updated:** October 20, 2025
+**Last Updated:** October 26, 2025
 
 ## Overview
 
@@ -10,9 +10,11 @@ This guide documents all environment variables used in the project, their purpos
 
 | Variable | Required | Purpose | Default Behavior |
 |----------|----------|---------|------------------|
-| `RESEND_API_KEY` | Production only | Email delivery for contact form | Logs submissions, shows warning |
-| `GITHUB_TOKEN` | Recommended | GitHub API rate limits | Uses unauthenticated API (60 req/hr) |
-| `REDIS_URL` | Optional | Blog post view counts & rate limiting | Disables view tracking, falls back to in-memory rate limiting |
+| `INNGEST_EVENT_KEY` | Production only | Inngest event sending | Functions work in dev mode only |
+| `INNGEST_SIGNING_KEY` | Production only | Inngest webhook verification | Functions work in dev mode only |
+| `RESEND_API_KEY` | Production only | Email delivery (contact form, milestones) | Logs submissions, shows warning |
+| `GITHUB_TOKEN` | Recommended | GitHub API rate limits (60 → 5,000/hr) | Uses unauthenticated API (60 req/hr) |
+| `REDIS_URL` | Recommended | Blog analytics, view counts, rate limiting | Disables analytics, falls back to in-memory |
 | `NEXT_PUBLIC_GISCUS_REPO` | Optional | Comments system - repository | Comments section hidden |
 | `NEXT_PUBLIC_GISCUS_REPO_ID` | Optional | Comments system - repo ID | Comments section hidden |
 | `NEXT_PUBLIC_GISCUS_CATEGORY` | Optional | Comments system - category | Comments section hidden |
@@ -80,7 +82,7 @@ This guide documents all environment variables used in the project, their purpos
 #### `RESEND_API_KEY`
 - **Type:** String (API key)
 - **Required:** Yes (for production)
-- **Purpose:** Send emails via Resend API from contact form
+- **Purpose:** Send emails via Resend API from contact form and milestone notifications
 - **Get key at:** [resend.com/api-keys](https://resend.com/api-keys)
 - **Setup:**
   1. Sign up at Resend
@@ -89,15 +91,65 @@ This guide documents all environment variables used in the project, their purpos
   4. Add key to environment variables
 
 **Behavior without key:**
-- ✅ Contact form still displays
+- ✅ Contact form still displays and queues events
 - ✅ Form validation works
 - ✅ Rate limiting applies
-- ⚠️  Submissions are logged to console only
-- ⚠️  User sees warning: "Email notifications are not configured"
+- ⚠️  Inngest functions run but skip email steps
+- ⚠️  Logs indicate email not configured
 - ❌ No actual emails sent
 
 **Implementation:**
-- File: `src/app/api/contact/route.ts`
+- File: `src/inngest/contact-functions.ts`
+- Used by: Contact form submissions, milestone notifications
+
+### Background Jobs (Inngest)
+
+#### `INNGEST_EVENT_KEY`
+- **Type:** String (API key)
+- **Required:** Yes (for production event sending)
+- **Purpose:** Authentication for sending events to Inngest Cloud
+- **Get key at:** [app.inngest.com](https://app.inngest.com) → Your App → Keys
+- **Setup:**
+  1. Sign up for Inngest
+  2. Create a new app
+  3. Copy Event Key from dashboard
+  4. Add to environment variables
+
+**Behavior without key:**
+- ✅ Dev mode works perfectly (local Inngest Dev Server)
+- ✅ All functions testable locally
+- ✅ View dev UI at http://localhost:3001/api/inngest
+- ❌ Events can't be sent in production
+- ⚠️  Functions won't trigger in production
+
+#### `INNGEST_SIGNING_KEY`
+- **Type:** String (signing key)
+- **Required:** Yes (for production webhook verification)
+- **Purpose:** Verify requests from Inngest Cloud to your function endpoint
+- **Get key at:** [app.inngest.com](https://app.inngest.com) → Your App → Keys
+- **Setup:**
+  1. Copy Signing Key from Inngest dashboard (same page as Event Key)
+  2. Add to environment variables
+  3. Configure webhook URL in Inngest: `https://cyberdrew.dev/api/inngest`
+
+**Behavior without key:**
+- ✅ Dev mode works (no verification needed locally)
+- ❌ Production webhook requests rejected
+- ⚠️  Functions registered but won't execute
+
+**Current Inngest Functions:**
+1. **Contact Form** (`contactFormSubmitted`) - Async email delivery
+2. **GitHub Refresh** (`refreshGitHubData`) - Scheduled every 5 minutes
+3. **Manual GitHub Refresh** (`manualRefreshGitHubData`) - On-demand
+4. **Post View Tracking** (`trackPostView`) - Per-view analytics
+5. **Milestone Handler** (`handleMilestone`) - Celebrates achievements
+6. **Trending Calculator** (`calculateTrending`) - Hourly trending posts
+7. **Analytics Summary** (`generateAnalyticsSummary`) - On-demand reports
+8. **Daily Analytics** (`dailyAnalyticsSummary`) - Daily at midnight UTC
+
+**Documentation:** See `/docs/features/inngest-integration.md`
+
+### Email Configuration (Legacy - Now via Inngest)
 - Check: `const isEmailConfigured = !!process.env.RESEND_API_KEY`
 - Returns: 200 status with warning instead of 500 error
 

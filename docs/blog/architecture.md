@@ -144,9 +144,10 @@ All posts are parsed once at build time (or on dev server start), ensuring fast 
 
 **Individual Post:** `/blog/[slug]` → `src/app/blog/[slug]/page.tsx`
 - Dynamic route for each post
-- Server component (pre-rendered at build time)
+- **Incremental Static Regeneration (ISR)** with 1-hour revalidation
+- Server component (pre-rendered at build time with `generateStaticParams`)
 - Increments view count on page load
-- Shows related posts based on tags
+- Shows related posts based on shared tags
 - Table of contents (auto-generated from headings)
 - Reading progress indicator
 - Post metadata (reading time, view count, tags)
@@ -260,14 +261,27 @@ All MDX files parsed
   ↓
 posts array exported from src/data/posts.ts
   ↓
-generateStaticParams() creates routes
+generateStaticParams() creates routes for all posts
   ↓
-Each post page pre-rendered
+Each post page pre-rendered as static HTML
   ↓
 Static HTML + JSON generated
   ↓
-Deploy (instant page loads)
+Deploy to CDN (instant page loads)
+  ↓
+Incremental Static Regeneration (ISR)
+  - Pages cached for 1 hour
+  - Background revalidation after expiry
+  - Automatic content updates without rebuild
 ```
+
+**Performance Benefits:**
+- **Fast page loads**: Static HTML served from CDN
+- **Fresh content**: Automatic updates every hour
+- **Scalability**: No server rendering on every request
+- **View count updates**: Picked up during revalidation
+
+See [ISR Implementation Guide](../performance/isr-implementation.md) for details.
 
 ---
 

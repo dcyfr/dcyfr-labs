@@ -18,7 +18,12 @@ Completed tasks have been moved to **`done.md`** for better project organization
 ## 🚀 Feature Requests
 
 ### High Priority
-- [ ] **Newsletter signup** - Add email newsletter subscription
+- None currently prioritized
+
+### Backlog
+- [ ] **Newsletter signup** - Add email newsletter subscription functionality
+- [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
+- [ ] **Unit tests** - Add tests for utility functions and components
 
 ### Completed (October 24, 2025)
 - [x] **Print stylesheet improvements** - Enhance print.css for better blog post printing (comprehensive improvements with documentation)
@@ -30,14 +35,15 @@ Completed tasks have been moved to **`done.md`** for better project organization
 ## 🔧 Technical Debt & Improvements
 
 ### Code Quality
-- [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
-- [ ] **Unit tests** - Add tests for utility functions and components
+- None currently prioritized
 
 ### Performance
 - [ ] **Image optimization** - Add next/image for all images in blog posts
 - [ ] **Bundle analysis** - Set up bundle analyzer to monitor bundle size
 - [ ] **Font optimization** - Review font loading strategy for better performance
-- [ ] **Incremental Static Regeneration** - Consider ISR for blog posts if content updates frequently
+
+### Completed (October 25, 2025)
+- [x] **Incremental Static Regeneration** - Implemented ISR for blog posts with 1-hour revalidation, pre-generation at build time
 
 ### SEO & Accessibility
 - [ ] **Accessibility audit** - Run full a11y audit with axe or Lighthouse

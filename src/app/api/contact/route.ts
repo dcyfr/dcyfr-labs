@@ -1,14 +1,6 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
-import { AUTHOR_EMAIL, FROM_EMAIL } from "@/lib/site-config";
-
-// Check if Resend API key is configured
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const isEmailConfigured = !!RESEND_API_KEY;
-
-// Only initialize Resend if the API key is present
-const resend = isEmailConfigured ? new Resend(RESEND_API_KEY) : null;
+import { inngest } from "@/inngest/client";
 
 // Rate limit: 3 requests per 60 seconds per IP
 const RATE_LIMIT_CONFIG = {
@@ -94,10 +86,22 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if email service is configured
-    if (!isEmailConfigured || !resend) {
-      // Log the submission for monitoring (fully anonymized - no PII)
-      console.log("Contact form submission (email not configured):", {
+    // Send event to Inngest for background processing
+    // This returns immediately, making the API response much faster
+    try {
+      await inngest.send({
+        name: "contact/form.submitted",
+        data: {
+          name: sanitizedData.name,
+          email: sanitizedData.email,
+          message: sanitizedData.message,
+          submittedAt: new Date().toISOString(),
+          ip: clientIp,
+        },
+      });
+
+      // Log submission (anonymized)
+      console.log("Contact form submission queued:", {
         nameLength: sanitizedData.name.length,
         emailDomain: sanitizedData.email.split('@')[1] || 'unknown',
         messageLength: sanitizedData.message.length,
@@ -107,51 +111,20 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { 
           success: true,
-          message: "Message received. However, email service is not configured. Please contact me directly via social media or GitHub.",
-          warning: "Email delivery unavailable"
+          message: "Message received successfully. You'll receive a confirmation email shortly." 
         },
         { 
           status: 200,
           headers: createRateLimitHeaders(rateLimitResult),
         }
       );
-    }
-
-    // Send email via Resend
-    try {
-      await resend.emails.send({
-        from: FROM_EMAIL,
-        to: AUTHOR_EMAIL,
-        subject: `Contact form: ${sanitizedData.name}`,
-        replyTo: sanitizedData.email,
-        text: `From: ${sanitizedData.name} <${sanitizedData.email}>\n\n${sanitizedData.message}`,
-      });
-    } catch (emailError) {
-      console.error("Failed to send email:", emailError);
+    } catch (inngestError) {
+      console.error("Failed to queue contact form:", inngestError);
       return NextResponse.json(
-        { error: "Failed to send email. Please try again later." },
+        { error: "Failed to process your message. Please try again later." },
         { status: 500 }
       );
     }
-
-    // Log successful submission for monitoring (fully anonymized - no PII)
-    console.log("Contact form submission sent:", {
-      nameLength: sanitizedData.name.length,
-      emailDomain: sanitizedData.email.split('@')[1] || 'unknown',
-      messageLength: sanitizedData.message.length,
-      timestamp: new Date().toISOString(),
-    });
-
-    return NextResponse.json(
-      { 
-        success: true,
-        message: "Message received successfully" 
-      },
-      { 
-        status: 200,
-        headers: createRateLimitHeaders(rateLimitResult),
-      }
-    );
   } catch (error) {
     console.error("Contact form error:", error);
     return NextResponse.json(
