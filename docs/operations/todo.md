@@ -4,7 +4,7 @@ This document tracks **active and pending** work only.
 
 Completed tasks have been moved to **`done.md`** for better project organization.
 
-**Last Updated:** October 25, 2025
+**Last Updated:** October 26, 2025
 
 ---
 
@@ -18,12 +18,31 @@ Completed tasks have been moved to **`done.md`** for better project organization
 ## 🚀 Feature Requests
 
 ### High Priority
-- None currently prioritized
+- [ ] **Deploy Inngest to Production** - Complete Inngest Cloud setup and production deployment
+  - Sign up for Inngest Cloud
+  - Get Event Key and Signing Key
+  - Add environment variables to Vercel
+  - Configure webhook URL
+  - Test in production environment
+  - See `/docs/features/inngest-integration.md` for guide
 
 ### Backlog
 - [ ] **Newsletter signup** - Add email newsletter subscription functionality
+- [ ] **Public Analytics Dashboard** - Display trending posts and view statistics
+- [ ] **Email Templates** - HTML email templates with branding for contact form
+- [ ] **Milestone Notifications** - Email/Slack alerts when posts hit milestones
+- [ ] **Weekly Digest** - Automated weekly summary emails
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
 - [ ] **Unit tests** - Add tests for utility functions and components
+
+### Completed (October 26, 2025)
+- [x] **Inngest Integration** - Complete background job system with 9 functions
+  - Contact form async email processing with retries
+  - GitHub data scheduled refresh (every 5 minutes)
+  - Blog analytics system (views, trending, milestones)
+  - Full TypeScript event schemas
+  - Comprehensive documentation
+  - See `/docs/features/inngest-integration.md`
 
 ### Completed (October 24, 2025)
 - [x] **Print stylesheet improvements** - Enhance print.css for better blog post printing (comprehensive improvements with documentation)

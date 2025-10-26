@@ -17,13 +17,24 @@ This directory is the knowledge base for the portfolio. Content is now organized
 	- [`typography.md`](./design/typography.md) - Typography system (Geist Sans, Source Serif 4, Geist Mono)
 	- [`typography-quick-reference.md`](./design/typography-quick-reference.md) - Quick patterns for daily use
 	- [`typography-implementation-summary.md`](./design/typography-implementation-summary.md) - Complete implementation details
+	- [`print-stylesheet.md`](./design/print-stylesheet.md) - Print stylesheet implementation
+- `features/` – Feature documentation:
+	- [`inngest-integration.md`](./features/inngest-integration.md) - Complete Inngest background jobs guide (500+ lines)
+	- [`inngest-testing.md`](./features/inngest-testing.md) - Testing quick reference
+	- [`github-integration.md`](./features/github-integration.md) - GitHub API integration
 - `mcp/` – Model Context Protocol documentation, including:
 	- [`servers.md`](./mcp/servers.md) and [`quick-reference.md`](./mcp/quick-reference.md).
 	- `filesystem-git/` for the Filesystem and Git MCP rollout (index, integration, quick reference, ready checklist).
 	- `github/` for the GitHub MCP deployment notes and quick references.
 	- `tests/` for validation documentation (`servers-test.md`, `servers-test-implementation.md`, `dependency-validation.md`).
-- `operations/` – Operational checklists and historical change logs such as [`deployment-checklist.md`](./operations/deployment-checklist.md) and [`implementation-changelog.md`](./operations/implementation-changelog.md).
-- `performance/` – Site performance findings, currently [`inp-optimization.md`](./performance/inp-optimization.md).
+- `operations/` – Operational checklists and historical change logs:
+	- [`todo.md`](./operations/todo.md) - Active tasks and priorities
+	- [`done.md`](./operations/done.md) - Completed projects archive
+	- [`environment-variables.md`](./operations/environment-variables.md) - Complete environment setup
+	- [`deployment-checklist.md`](./operations/deployment-checklist.md) - Deployment guide
+- `performance/` – Site performance documentation:
+	- [`inp-optimization.md`](./performance/inp-optimization.md) - INP optimization
+	- [`isr-implementation.md`](./performance/isr-implementation.md) - ISR setup and benefits
 - `platform/` – Platform configuration references like [`site-config.md`](./platform/site-config.md) and [`view-counts.md`](./platform/view-counts.md).
 - `rss/` – Feed documentation (`improvements.md`, `quick-reference.md`).
 - `security/` – Security guidance including:
@@ -41,13 +52,16 @@ This directory is the knowledge base for the portfolio. Content is now organized
 | Blog System | [`blog/architecture.md`](./blog/architecture.md) · [`blog/quick-reference.md`](./blog/quick-reference.md) |
 | Components | [`components/mdx.md`](./components/mdx.md) |
 | Design System | [`design/typography.md`](./design/typography.md) · [`design/typography-quick-reference.md`](./design/typography-quick-reference.md) |
+| **Background Jobs** | **[`features/inngest-integration.md`](./features/inngest-integration.md) · [`features/inngest-testing.md`](./features/inngest-testing.md)** |
+| GitHub Integration | [`features/github-integration.md`](./features/github-integration.md) |
 | MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |
 | MCP (Filesystem + Git) | [`mcp/filesystem-git/index.md`](./mcp/filesystem-git/index.md) · [`mcp/filesystem-git/integration.md`](./mcp/filesystem-git/integration.md) |
 | MCP Tests | [`mcp/tests/servers-test.md`](./mcp/tests/servers-test.md) · [`mcp/tests/dependency-validation.md`](./mcp/tests/dependency-validation.md) |
-| Security – CSP | [`security/csp/nonce-implementation.md`](./security/csp/nonce-implementation.md) · [`security/csp/nonce-quick-reference.md`](./security/csp/nonce-quick-reference.md) · [`security/csp/implementation.md`](./security/csp/implementation.md) · [`security/csp/quick-reference.md`](./security/csp/quick-reference.md) |
+| **Operations** | **[`operations/todo.md`](./operations/todo.md) · [`operations/done.md`](./operations/done.md) · [`operations/environment-variables.md`](./operations/environment-variables.md)** |
+| Performance | [`performance/isr-implementation.md`](./performance/isr-implementation.md) · [`performance/inp-optimization.md`](./performance/inp-optimization.md) |
+| Security – CSP | [`security/csp/nonce-implementation.md`](./security/csp/nonce-implementation.md) · [`security/csp/nonce-quick-reference.md`](./security/csp/nonce-quick-reference.md) |
 | Security – Rate Limiting | [`security/rate-limiting/guide.md`](./security/rate-limiting/guide.md) · [`security/rate-limiting/quick-reference.md`](./security/rate-limiting/quick-reference.md) |
 | Security Findings | [`security/security-findings-resolution.md`](./security/security-findings-resolution.md) |
-| Operations | [`operations/todo.md`](./operations/todo.md) · [`operations/deployment-checklist.md`](./operations/deployment-checklist.md) |
 | Environment Setup | [`operations/environment-variables.md`](./operations/environment-variables.md) · [`operations/environment-variables-quick-reference.md`](./operations/environment-variables-quick-reference.md) |
 | Platform | [`platform/site-config.md`](./platform/site-config.md) · [`platform/view-counts.md`](./platform/view-counts.md) |
 | RSS | [`rss/improvements.md`](./rss/improvements.md) |
