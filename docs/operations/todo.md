@@ -121,3 +121,18 @@ See `/docs/operations/done.md` for:
 - Run `npm run lint`
 - Test with `npm run build`
 - Review Lighthouse scores for major UI changes
+
+---
+
+## ⚙️ Automation & CI (Recommended backlog)
+
+Small, low-risk automation items to pick up (prioritized):
+
+- [ ] **GitHub Actions CI** — Add a lightweight CI workflow that runs `npm ci`, `npm run check` (lint + typecheck), and `npm run build`. Cache node modules and `.next/cache` to speed runs.
+- [ ] **Snyk scan in CI** — Run `snyk test` as an optional step when `SNYK_TOKEN` is provided (store token in GitHub Secrets). This provides authenticated vulnerability checks and reporting.
+- [ ] **Husky + lint-staged** — Install and configure to run `prettier --write` and `eslint --fix` on staged files to keep PRs clean.
+- [ ] **Dependabot / Renovate** — Configure automated dependency update PRs (weekly) for npm packages.
+- [ ] **Cache build artifacts** — Preserve `.next/cache` between CI runs keyed by lockfile + Node version.
+- [ ] **Lighthouse / Performance checks** — Add an optional Lighthouse CI job to track performance regressions on the main branch.
+
+These are intentionally low-risk and incremental. Prioritize `GitHub Actions CI` and `Dependabot` first.

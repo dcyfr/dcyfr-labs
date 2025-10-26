@@ -25,6 +25,20 @@ export function middleware(request: NextRequest) {
   
   // Detect development environment
   const isDevelopment = process.env.NODE_ENV === "development";
+
+  // Protect developer-only pages at request time. Even if a page was
+  // prerendered during build as development content, middleware runs at
+  // request time so we can reliably serve a 404 in non-development envs.
+  const devOnlyPaths = ["/analytics"];
+  const pathname = request.nextUrl.pathname;
+  if (!isDevelopment) {
+    for (const p of devOnlyPaths) {
+      if (pathname === p || pathname.startsWith(p + "/")) {
+        // Rewrite to Next's not-found page
+        return NextResponse.rewrite(new URL("/_not-found", request.url));
+      }
+    }
+  }
   
   // Build CSP directives with nonce
   const cspDirectives = [
