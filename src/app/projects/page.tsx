@@ -73,7 +73,7 @@ export default async function ProjectsPage() {
             codeRepository: project.links.find(l => l.type === "github")?.href,
           }),
           programmingLanguage: project.tech,
-          keywords: [...project.tech, ...(project.tags || [])].join(", "),
+          keywords: [...(project.tech || []), ...(project.tags || [])].join(", "),
           creativeWorkStatus: project.status === "active" ? "Published" : 
                              project.status === "in-progress" ? "Draft" : "Archived",
         },

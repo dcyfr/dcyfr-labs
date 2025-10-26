@@ -25,7 +25,16 @@ import {
   getJsonLdScriptProps,
 } from "@/lib/json-ld";
 
-export const dynamic = "force-dynamic";
+// Enable Incremental Static Regeneration with 1 hour revalidation
+// Pages are statically generated at build time and revalidated every hour
+export const revalidate = 3600; // 1 hour in seconds
+
+// Pre-generate all blog post pages at build time
+export async function generateStaticParams() {
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

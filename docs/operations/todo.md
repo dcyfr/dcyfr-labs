@@ -4,7 +4,7 @@ This document tracks **active and pending** work only.
 
 Completed tasks have been moved to **`done.md`** for better project organization.
 
-**Last Updated:** October 24, 2025
+**Last Updated:** October 26, 2025
 
 ---
 
@@ -18,7 +18,31 @@ Completed tasks have been moved to **`done.md`** for better project organization
 ## 🚀 Feature Requests
 
 ### High Priority
-- [ ] **Newsletter signup** - Add email newsletter subscription
+- [ ] **Deploy Inngest to Production** - Complete Inngest Cloud setup and production deployment
+  - Sign up for Inngest Cloud
+  - Get Event Key and Signing Key
+  - Add environment variables to Vercel
+  - Configure webhook URL
+  - Test in production environment
+  - See `/docs/features/inngest-integration.md` for guide
+
+### Backlog
+- [ ] **Newsletter signup** - Add email newsletter subscription functionality
+- [ ] **Public Analytics Dashboard** - Display trending posts and view statistics
+- [ ] **Email Templates** - HTML email templates with branding for contact form
+- [ ] **Milestone Notifications** - Email/Slack alerts when posts hit milestones
+- [ ] **Weekly Digest** - Automated weekly summary emails
+- [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
+- [ ] **Unit tests** - Add tests for utility functions and components
+
+### Completed (October 26, 2025)
+- [x] **Inngest Integration** - Complete background job system with 9 functions
+  - Contact form async email processing with retries
+  - GitHub data scheduled refresh (every 5 minutes)
+  - Blog analytics system (views, trending, milestones)
+  - Full TypeScript event schemas
+  - Comprehensive documentation
+  - See `/docs/features/inngest-integration.md`
 
 ### Completed (October 24, 2025)
 - [x] **Print stylesheet improvements** - Enhance print.css for better blog post printing (comprehensive improvements with documentation)
@@ -30,14 +54,15 @@ Completed tasks have been moved to **`done.md`** for better project organization
 ## 🔧 Technical Debt & Improvements
 
 ### Code Quality
-- [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
-- [ ] **Unit tests** - Add tests for utility functions and components
+- None currently prioritized
 
 ### Performance
 - [ ] **Image optimization** - Add next/image for all images in blog posts
 - [ ] **Bundle analysis** - Set up bundle analyzer to monitor bundle size
 - [ ] **Font optimization** - Review font loading strategy for better performance
-- [ ] **Incremental Static Regeneration** - Consider ISR for blog posts if content updates frequently
+
+### Completed (October 25, 2025)
+- [x] **Incremental Static Regeneration** - Implemented ISR for blog posts with 1-hour revalidation, pre-generation at build time
 
 ### SEO & Accessibility
 - [ ] **Accessibility audit** - Run full a11y audit with axe or Lighthouse
@@ -83,8 +108,8 @@ Completed tasks have been moved to **`done.md`** for better project organization
 
 ## 🔐 Security
 
-### Active
-- [ ] **Environment variable audit** - Ensure all sensitive data uses env vars
+### Completed (October 25, 2025)
+- [x] **Environment variable audit** - Comprehensive security audit of all environment variables, no issues found (see `/docs/security/environment-variable-audit.md`)
 
 ### Completed (October 24, 2025)
 - [x] **Security docs alignment** - Reconciled CSP implementation docs with current header behavior

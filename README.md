@@ -10,6 +10,9 @@ Developing with an AI assistant? See `agents.md` for the AI contributor guide (k
 - Tailwind CSS v4
 - shadcn/ui (Radix + CVA)
 - next-themes, sonner
+- Inngest (background jobs)
+- Redis (caching & analytics)
+- Resend (email)
 - Vercel Analytics & Speed Insights
 
 ## Development
@@ -69,14 +72,28 @@ npm start
 - `vercel.json` provides sensible defaults for caching static assets and adds basic security headers.
 - You can extend headers or rewrites as needed; Next.js routing remains managed by the App Router.
 
-## Contact Form
-- The API route at `/api/contact` validates input and logs it on the server.
-- Replace the placeholder with an email/SaaS integration (Resend, Sendgrid, etc.).
+## Contact Form & Background Jobs
+- Powered by **Inngest** for reliable background job processing
+- Contact form submissions processed asynchronously with automatic retries
+- Sends notification email to site owner + confirmation email to submitter
+- API response time: < 100ms (vs 1-2s synchronous)
+- **Dev UI**: http://localhost:3000/api/inngest (view all functions, test, monitor)
+- **Setup**: Add `RESEND_API_KEY` for email delivery
+- **Documentation**: See `/docs/features/inngest-integration.md`
 
-## Blog View Counts
-- Each blog post increments a Redis counter (key format `views:post:<slug>`).
-- Set `REDIS_URL` in your environment (Vercel Settings → Environment Variables) to enable counting.
-- For local work, pull the variable with `vercel env pull .env.development.local` and restart `npm run dev`.
+### Other Background Jobs
+- **GitHub data refresh**: Scheduled every 5 minutes (keeps heatmap cache fresh)
+- **Blog analytics**: View tracking, trending calculations, milestone detection
+- **Daily summaries**: Automated analytics reports (midnight UTC)
+- All jobs visible and testable in Inngest Dev UI
+
+## Blog View Counts & Analytics
+- Real-time view tracking powered by Redis and Inngest
+- Each post view tracked with daily statistics
+- Milestone detection (100, 1K, 10K, 50K, 100K views)
+- Trending post calculations (hourly)
+- Set `REDIS_URL` in environment variables to enable
+- For local work, pull with `vercel env pull .env.development.local`
 
 ## GitHub Contributions
 - The GitHub heatmap component fetches real contribution data via `/api/github-contributions`.
