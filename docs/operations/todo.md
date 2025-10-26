@@ -4,7 +4,7 @@ This document tracks **active and pending** work only.
 
 Completed tasks have been moved to **`done.md`** for better project organization.
 
-**Last Updated:** October 24, 2025
+**Last Updated:** October 25, 2025
 
 ---
 
@@ -83,8 +83,8 @@ Completed tasks have been moved to **`done.md`** for better project organization
 
 ## 🔐 Security
 
-### Active
-- [ ] **Environment variable audit** - Ensure all sensitive data uses env vars
+### Completed (October 25, 2025)
+- [x] **Environment variable audit** - Comprehensive security audit of all environment variables, no issues found (see `/docs/security/environment-variable-audit.md`)
 
 ### Completed (October 24, 2025)
 - [x] **Security docs alignment** - Reconciled CSP implementation docs with current header behavior
