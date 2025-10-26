@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "@/components/logo";
+import DevToolsDropdown from "@/components/dev-tools-dropdown";
+import { Badge } from "@/components/ui/badge";
 
 export function SiteHeader() {
   return (
@@ -10,7 +12,7 @@ export function SiteHeader() {
           <Logo width={24} height={24} />
           <span className="hidden md:block">Drew&apos;s Lab</span>
         </Link>
-        <nav aria-label="Main navigation" className="flex items-center gap-4 text-sm">
+  <nav aria-label="Main navigation" className="flex items-center gap-4 text-sm">
           <Link 
             href="/about" 
             className="hover:underline underline-offset-4 will-change-auto"
@@ -33,6 +35,19 @@ export function SiteHeader() {
             Projects
           </Link>
           <ThemeToggle />
+          {process.env.NODE_ENV === "development" && <DevToolsDropdown />}
+          {/* Environment badge - show only when NOT production (server-rendered) */}
+          {process.env.NODE_ENV !== "production" && (
+            <Badge
+              variant={
+                process.env.NODE_ENV === "development"
+                  ? "destructive"
+                  : "secondary"
+              }
+            >
+              {process.env.NODE_ENV ?? "unknown"}
+            </Badge>
+          )}
         </nav>
       </div>
     </header>

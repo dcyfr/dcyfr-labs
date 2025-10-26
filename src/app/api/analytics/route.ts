@@ -46,6 +46,8 @@ export async function GET() {
         summary: post.summary,
         publishedAt: post.publishedAt,
         tags: post.tags,
+        archived: post.archived ?? false,
+        draft: post.draft ?? false,
         views: viewMap.get(post.slug) || 0,
         readingTime: post.readingTime,
       }))

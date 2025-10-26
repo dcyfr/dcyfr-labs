@@ -12,6 +12,8 @@ interface PostAnalytics {
   summary: string;
   publishedAt: string;
   tags: string[];
+  archived?: boolean;
+  draft?: boolean;
   views: number;
   readingTime: {
     words: number;
@@ -41,6 +43,8 @@ export default function AnalyticsDashboard() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hideDrafts, setHideDrafts] = useState(false);
+  const [hideArchived, setHideArchived] = useState(false);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -95,7 +99,31 @@ export default function AnalyticsDashboard() {
     );
   }
 
-  const { summary, posts: allPosts, trending } = data;
+  const { posts: allPosts, trending } = data;
+
+  // Apply client-side filters for drafts/archived posts
+  const filteredPosts = allPosts.filter((post) => {
+    if (hideDrafts && post.draft) return false;
+    if (hideArchived && post.archived) return false;
+    return true;
+  });
+
+  const filteredTrending = (trending || []).filter((post) => {
+    if (hideDrafts && post.draft) return false;
+    if (hideArchived && post.archived) return false;
+    return true;
+  });
+
+  // Recompute summary based on filtered posts so the dashboard reflects filtering
+  const filteredSummary = {
+    totalPosts: filteredPosts.length,
+    totalViews: filteredPosts.reduce((s, p) => s + p.views, 0),
+    averageViews:
+      filteredPosts.length > 0
+        ? Math.round(filteredPosts.reduce((s, p) => s + p.views, 0) / filteredPosts.length)
+        : 0,
+    topPost: filteredPosts.length > 0 ? filteredPosts[0] : null,
+  };
 
   return (
     <div className="mx-auto max-w-6xl py-14 md:py-20">
@@ -106,6 +134,27 @@ export default function AnalyticsDashboard() {
         <p className="mt-2 text-muted-foreground">
           Blog performance metrics and statistics (development only)
         </p>
+        <div className="mt-4 flex items-center gap-4">
+          <label className="inline-flex items-center text-sm gap-2">
+            <input
+              type="checkbox"
+              checked={hideDrafts}
+              onChange={(e) => setHideDrafts(e.target.checked)}
+              className="h-4 w-4 rounded border-muted bg-background"
+            />
+            <span className="text-sm">Hide drafts</span>
+          </label>
+
+          <label className="inline-flex items-center text-sm gap-2">
+            <input
+              type="checkbox"
+              checked={hideArchived}
+              onChange={(e) => setHideArchived(e.target.checked)}
+              className="h-4 w-4 rounded border-muted bg-background"
+            />
+            <span className="text-sm">Hide archived</span>
+          </label>
+        </div>
       </div>
 
       {/* Summary Cards */}
@@ -114,7 +163,7 @@ export default function AnalyticsDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-muted-foreground">Total Posts</p>
-              <p className="text-3xl font-bold mt-2">{summary.totalPosts}</p>
+              <p className="text-3xl font-bold mt-2">{filteredSummary.totalPosts}</p>
             </div>
             <FileText className="h-8 w-8 text-muted-foreground opacity-50" />
           </div>
@@ -125,7 +174,7 @@ export default function AnalyticsDashboard() {
             <div>
               <p className="text-sm text-muted-foreground">Total Views</p>
               <p className="text-3xl font-bold mt-2">
-                {summary.totalViews.toLocaleString()}
+                {filteredSummary.totalViews.toLocaleString()}
               </p>
             </div>
             <Eye className="h-8 w-8 text-muted-foreground opacity-50" />
@@ -137,7 +186,7 @@ export default function AnalyticsDashboard() {
             <div>
               <p className="text-sm text-muted-foreground">Average Views</p>
               <p className="text-3xl font-bold mt-2">
-                {summary.averageViews.toLocaleString()}
+                {filteredSummary.averageViews.toLocaleString()}
               </p>
             </div>
             <TrendingUp className="h-8 w-8 text-muted-foreground opacity-50" />
@@ -147,13 +196,13 @@ export default function AnalyticsDashboard() {
         <Card className="p-6">
           <div>
             <p className="text-sm text-muted-foreground">Top Post</p>
-            {summary.topPost ? (
+            {filteredSummary.topPost ? (
               <div className="mt-2">
                 <p className="font-semibold text-sm line-clamp-2">
-                  {summary.topPost.title}
+                  {filteredSummary.topPost?.title}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {summary.topPost.views.toLocaleString()} views
+                  {filteredSummary.topPost?.views.toLocaleString()} views
                 </p>
               </div>
             ) : (
@@ -164,11 +213,11 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Trending Posts */}
-      {trending && trending.length > 0 && (
+          {filteredTrending && filteredTrending.length > 0 && (
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Trending Posts</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {trending.slice(0, 3).map((post) => (
+            {filteredTrending.slice(0, 3).map((post) => (
               <Card key={post.slug} className="p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <h3 className="font-semibold text-sm line-clamp-2">
@@ -210,7 +259,7 @@ export default function AnalyticsDashboard() {
               </tr>
             </thead>
             <tbody>
-              {allPosts.map((post) => (
+              {filteredPosts.map((post) => (
                 <tr
                   key={post.slug}
                   className="border-b hover:bg-muted/50 transition-colors"
