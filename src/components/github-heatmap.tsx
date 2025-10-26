@@ -131,7 +131,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
             className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1.5"
           >
             <span>@{username}</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3 h-3" aria-hidden="true" />
           </a>
         </div>
 
@@ -142,6 +142,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                 className="w-4 h-4 text-amber-600 dark:text-amber-500 mt-0.5 flex-shrink-0"
                 fill="currentColor"
                 viewBox="0 0 20 20"
+                aria-hidden="true"
               >
                 <path
                   fillRule="evenodd"

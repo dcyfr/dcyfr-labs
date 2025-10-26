@@ -16,7 +16,7 @@ function GitHubHeatmapErrorFallback({ error, resetError }: ErrorFallbackProps) {
     <Card className="p-6 border-amber-200 dark:border-amber-800/50 bg-amber-50/50 dark:bg-amber-900/5">
       <div className="space-y-4">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500 mt-0.5 flex-shrink-0" />
+          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
           <div className="flex-1 space-y-2">
             <div>
               <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100">
@@ -45,7 +45,7 @@ function GitHubHeatmapErrorFallback({ error, resetError }: ErrorFallbackProps) {
                   className="inline-flex items-center gap-1.5"
                 >
                   <span>View on GitHub</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="w-3 h-3" aria-hidden="true" />
                 </a>
               </Button>
             </div>
