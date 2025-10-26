@@ -82,7 +82,7 @@ let devProc = null
         try {
           console.log('Stopping dev server started for tests...')
           devProc.kill('SIGTERM')
-        } catch (e) {
+        } catch {
           // ignore
         }
       }
