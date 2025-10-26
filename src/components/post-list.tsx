@@ -129,9 +129,9 @@ export function PostList({
                 day: "numeric" 
               })}
             </time>
-            <span className="hidden md:inline-block">•</span>
+            <span className="hidden md:inline-block" aria-hidden="true">•</span>
             <span>{p.readingTime.text}</span>
-            <span className="hidden md:inline-block">•</span>
+            <span className="hidden md:inline-block" aria-hidden="true">•</span>
             <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
           </div>
           <div className="mt-1">

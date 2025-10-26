@@ -106,7 +106,7 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
               </div>
               <div className="flex items-center gap-1 text-sm text-primary pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <span>Read more</span>
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </div>
             </div>
           </Link>

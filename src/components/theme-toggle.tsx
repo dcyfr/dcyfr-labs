@@ -29,7 +29,7 @@ export function ThemeToggle() {
         className="opacity-0"
         disabled
       >
-        <Sun className="size-5" />
+        <Sun className="size-5" aria-hidden="true" />
       </Button>
     );
   }
@@ -42,7 +42,7 @@ export function ThemeToggle() {
       onClick={handleToggle}
       disabled={isPending}
    >
-      {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
+      {isDark ? <Sun className="size-5" aria-hidden="true" /> : <Moon className="size-5" aria-hidden="true" />}
     </Button>
   );
 }
