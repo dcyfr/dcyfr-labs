@@ -176,7 +176,7 @@ Drew. (2025). [Content Title]. Retrieved from https://cyberdrew.dev
 
 Example:
 ```
-Drew. (2025). Shipping a Next.js Tiny Portfolio. Retrieved from https://cyberdrew.dev/blog/shipping-a-nextjs-tiny-portfolio
+Drew. (2025). Shipping a Next.js Developer Portfolio. Retrieved from https://cyberdrew.dev/blog/shipping-a-nextjs-tiny-portfolio
 ```
 
 ## Maintenance

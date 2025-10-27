@@ -9,7 +9,7 @@ declare global {
   var __redisClient: RedisClient | undefined;
 }
 
-const formatKey = (slug: string) => `${VIEW_KEY_PREFIX}${slug}`;
+const formatKey = (postId: string) => `${VIEW_KEY_PREFIX}${postId}`;
 
 async function getClient(): Promise<RedisClient | null> {
   if (!redisUrl) return null;
@@ -34,21 +34,32 @@ async function getClient(): Promise<RedisClient | null> {
   return client;
 }
 
-export async function incrementPostViews(slug: string): Promise<number | null> {
+/**
+ * Increment view count for a post by its ID
+ * Uses the permanent post ID (not the slug) so views survive post renames
+ * @param postId Permanent post identifier (from post.id field)
+ * @returns Updated view count, or null if Redis unavailable
+ */
+export async function incrementPostViews(postId: string): Promise<number | null> {
   const client = await getClient();
   if (!client) return null;
   try {
-    return await client.incr(formatKey(slug));
+    return await client.incr(formatKey(postId));
   } catch {
     return null;
   }
 }
 
-export async function getPostViews(slug: string): Promise<number | null> {
+/**
+ * Get view count for a post by its ID
+ * @param postId Permanent post identifier (from post.id field)
+ * @returns View count, or null if Redis unavailable
+ */
+export async function getPostViews(postId: string): Promise<number | null> {
   const client = await getClient();
   if (!client) return null;
   try {
-    const value = await client.get(formatKey(slug));
+    const value = await client.get(formatKey(postId));
     const parsed = value === null ? null : Number(value);
     return Number.isFinite(parsed) ? parsed : null;
   } catch {
@@ -57,24 +68,26 @@ export async function getPostViews(slug: string): Promise<number | null> {
 }
 
 /**
- * Get view counts for multiple posts at once
- * Returns a map of slug -> view count
+ * Get view counts for multiple posts at once (by ID)
+ * Uses post IDs instead of slugs for permanence
+ * @param postIds Array of permanent post identifiers
+ * @returns Map of postId -> view count
  */
-export async function getMultiplePostViews(slugs: string[]): Promise<Map<string, number>> {
+export async function getMultiplePostViews(postIds: string[]): Promise<Map<string, number>> {
   const client = await getClient();
   const viewMap = new Map<string, number>();
   
   if (!client) return viewMap;
   
   try {
-    const keys = slugs.map(formatKey);
+    const keys = postIds.map(formatKey);
     const values = await client.mGet(keys);
     
-    slugs.forEach((slug, index) => {
+    postIds.forEach((postId, index) => {
       const value = values[index];
       const parsed = value === null ? 0 : Number(value);
       if (Number.isFinite(parsed)) {
-        viewMap.set(slug, parsed);
+        viewMap.set(postId, parsed);
       }
     });
   } catch {

@@ -136,9 +136,18 @@ async function rateLimitRedis(
       await client.pExpireAt(key, resetTime);
     }
     
-    // Get the TTL to calculate reset time
-    const ttl = await client.pTtl(key);
-    const ttlMs = typeof ttl === 'number' && ttl > 0 ? ttl : windowMs;
+    // Get the TTL - use pttl which is the millisecond version
+    let ttlMs = windowMs;
+    try {
+      const pttlResult = await (client.pttl ? client.pttl(key) : Promise.resolve(-2));
+      if (typeof pttlResult === 'number' && pttlResult > 0) {
+        ttlMs = pttlResult;
+      }
+    } catch {
+      // Fallback to window if pttl fails
+      console.debug('Could not get pttl from Redis, using window duration:', windowMs);
+      ttlMs = windowMs;
+    }
     const actualResetTime = now + ttlMs;
 
     if (count <= config.limit) {

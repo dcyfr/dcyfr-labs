@@ -96,7 +96,7 @@ export type PostSource = {
 };
 
 export type Post = {
-  slug: string;              // Derived from filename
+  slug: string;              // Derived from filename (active/current slug)
   title: string;             // Required
   summary: string;           // Required
   publishedAt: string;       // Required (ISO date string)
@@ -107,6 +107,7 @@ export type Post = {
   draft?: boolean;           // Optional (default: undefined)
   body: string;              // MDX content (not in frontmatter)
   sources?: PostSource[];    // Optional (array of objects)
+  previousSlugs?: string[];  // Optional (old slugs that 301 redirect to current)
   readingTime: {             // Auto-calculated (not in frontmatter)
     words: number;
     minutes: number;
@@ -690,6 +691,107 @@ sources: [{ label: "Source 1", href: "https://example.com/1" }]
 - Original source material
 - Further reading suggestions
 - Attribution for ideas/code
+
+---
+
+### `previousSlugs` (Optional)
+
+**Type:** `string[] | undefined`  
+**Parsed As:** `data.previousSlugs as string[] | undefined`  
+**Default:** `undefined`
+
+**Description:**
+Array of old/previous URL slugs that should redirect to the current slug. Used for maintaining backward compatibility when a post's URL changes or gets renamed.
+
+**Constraints:**
+- Optional (can be omitted)
+- Array of strings if present
+- Each string is a slug that previously existed
+- Should not contain duplicate slugs within the array
+- Should not reference slugs that still exist as active posts
+
+**SEO Behavior:**
+- Old URLs return **301 Permanent Redirect** to the new canonical slug
+- Preserves search engine rankings and external links
+- Tells search engines the content has permanently moved
+- Automatically added to `generateStaticParams()` for prerendering
+
+**Example:**
+```yaml
+# Current filename: building-nextjs-blog.mdx
+# Renamed from: nextjs-blog-tutorial.mdx and creating-a-blog-with-nextjs.mdx
+
+previousSlugs:
+  - "nextjs-blog-tutorial"
+  - "creating-a-blog-with-nextjs"
+```
+
+**How It Works:**
+
+1. **New URL:** `https://example.com/blog/building-nextjs-blog`
+2. **Old URL:** `https://example.com/blog/nextjs-blog-tutorial`
+3. **Result:** Browser receives 301 redirect to new URL
+
+**Display:**
+Internally, the redirect happens at the Next.js level. End users don't see the old slug unless:
+- They have old links bookmarked or in browser history
+- External sites link to the old URL
+- Search engines haven't fully reindexed yet
+
+**Use Cases:**
+- Renamed post after SEO optimization
+- Consolidated multiple posts into one
+- Changed URL structure or naming convention
+- Post moved to different section/category
+- Corrected spelling or grammar in slug
+
+**Migration Workflow:**
+```yaml
+# Before rename (old filename)
+# src/content/blog/old-slug-name.mdx
+---
+title: "My Post"
+slug: "old-slug-name"  # Not needed - derived from filename
+---
+
+# After rename (new filename + redirect)
+# src/content/blog/new-slug-name.mdx
+---
+title: "My Post"
+previousSlugs:
+  - "old-slug-name"
+---
+```
+
+**Redirect Utilities:**
+
+The blog system provides utility functions for working with redirects:
+
+```typescript
+// Get the canonical slug for any given slug
+import { getCanonicalSlug } from "@/lib/blog";
+const canonical = getCanonicalSlug("old-slug", posts); // "new-slug"
+
+// Find a post by current or previous slug
+import { getPostByAnySlug } from "@/lib/blog";
+const result = getPostByAnySlug("old-slug", posts);
+if (result?.needsRedirect) {
+  redirect(`/blog/${result.canonicalSlug}`);
+}
+
+// Build a redirect map for bulk lookups
+import { buildRedirectMap } from "@/lib/blog";
+const redirects = buildRedirectMap(posts);
+const canonical = redirects.get("old-slug") ?? "old-slug";
+```
+
+**Implementation Details:**
+
+- Redirects are handled in `src/app/blog/[slug]/page.tsx`
+- Both old and new slugs are prerendered at build time
+- Visiting an old URL automatically redirects to the new one
+- No need to update links in blog content (automatic)
+- Works for both development and production deployments
 
 ---
 

@@ -399,6 +399,6 @@ Each page will get its own discussion based on pathname.
 
 ## Related Documentation
 
-- **Environment Variables:** `/docs/operations/environment-variables.md`
+- **Environment Variables:** `/docs/platform/environment-variables.md`
 - **Blog Architecture:** `/docs/blog/architecture.md`
 - **Component JSDoc:** `/docs/components/README.md`

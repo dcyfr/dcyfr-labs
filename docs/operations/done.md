@@ -2,11 +2,111 @@
 
 This document tracks completed projects, features, and improvements. Items are organized by category and date for historical reference and learning purposes.
 
-**Last Updated:** October 26, 2025
+**Last Updated:** October 27, 2025
 
 ---
 
-## 🎯 Session Summary: October 26, 2025 (Latest)
+## 🎯 Session Summary: October 27, 2025 (Latest)
+
+### Post ID Architecture: Stable Blog Post Identifiers
+**Completed**: Implemented stable post IDs for permanent view tracking; eliminated need for migrations on post renames
+
+- ✅ **Architecture Design**
+  - Added `id` field to Post type (permanent, never changes)
+  - Auto-generated IDs from `publishedAt + slug` (deterministic)
+  - IDs independent of URLs/slugs
+  - Format: `post-{YYYYMMDD}-{sha256-hash}`
+
+- ✅ **Implementation**
+  - Modified Post type: `src/data/posts.ts`
+  - Added ID generation: `src/lib/blog.ts`
+  - Updated view tracking: `src/lib/views.ts`
+  - Updated blog page: `src/app/blog/[slug]/page.tsx`
+  - Updated analytics: `src/app/api/analytics/route.ts`
+  - Updated badges: `src/lib/post-badges.ts`
+
+- ✅ **Data Migration**
+  - Created: `scripts/migrate-redis-keys-to-ids.mjs`
+  - Migrated 4 posts, 566 total views
+  - Old slug-based keys cleaned up
+  - All view data preserved with zero loss
+
+- ✅ **Build Verification**
+  - Build succeeds (26 pages generated)
+  - No TypeScript errors
+  - No linting errors
+  - All view counts migrated correctly
+
+**Files Modified:**
+- `src/data/posts.ts` - Added `id` field
+- `src/lib/blog.ts` - ID generation logic
+- `src/lib/views.ts` - Use `post.id` instead of `post.slug`
+- `src/app/blog/[slug]/page.tsx` - Track views by post ID
+- `src/app/api/analytics/route.ts` - Query by post ID
+- `src/lib/post-badges.ts` - Use post ID for calculations
+
+**Files Created:**
+- `scripts/migrate-redis-keys-to-ids.mjs` - Redis key migration
+- `docs/operations/post-id-architecture.md` - Design document
+- `docs/operations/post-id-implementation-complete.md` - Implementation guide
+
+**Key Improvements:**
+- ✅ No more migrations needed when renaming posts
+- ✅ View data permanently tied to post, not URL
+- ✅ Posts can be renamed unlimited times
+- ✅ Scalable to multiple blog instances
+- ✅ All 566 views preserved across migrations
+
+**Example: Before vs After**
+
+Before:
+```
+Rename: shipping-tiny-portfolio → shipping-developer-portfolio
+Result: Views lost, requires migration script ❌
+```
+
+After:
+```
+Rename: shipping-developer-portfolio → shipping-with-nextjs-tailwind
+Result: Views automatically preserved, no action needed ✅
+ID stays: post-20250910-7ada0393
+```
+
+---
+
+### View Tracking Fix: Slug Rename Migration (Earlier)
+**Completed**: Fixed broken view tracking when renaming blog posts; recovered 252 lost views from Redis
+
+- ✅ **Root Cause Analysis**
+  - Issue #1: View increment happened AFTER redirect (code order)
+  - Issue #2: Historical views stored under old slug keys in Redis
+  - Combined effect: New views not tracked + old views inaccessible
+
+- ✅ **Code Fix (Prevention)**
+  - File: `src/app/blog/[slug]/page.tsx`
+  - Moved `incrementPostViews()` to occur BEFORE redirect check
+  - Ensures future visits to old URLs are tracked before redirect
+  - Added clarifying comments explaining the order
+
+- ✅ **Data Migration (Recovery)**
+  - Created: `scripts/migrate-views.mjs`
+  - Results:
+    - `hardening-tiny-portfolio` → `hardening-developer-portfolio`: **95 views recovered**
+    - `shipping-tiny-portfolio` → `shipping-developer-portfolio`: **157 views recovered**
+    - **Total recovered: 252 views**
+
+- ✅ **Documentation**
+  - Created: `/docs/operations/view-tracking-fix-2025-10-27.md`
+
+**Key Improvements:**
+- ✅ Future view tracking on old URLs now works
+- ✅ Historical views recovered (252 views)
+- ✅ Analytics dashboard now shows accurate data
+- ✅ No more 0 views for renamed posts
+
+---
+
+## 🎯 Session Summary: October 26, 2025
 
 ### Public Analytics Dashboard - Development-Only
 **Completed**: Development-only analytics dashboard for monitoring blog performance

@@ -111,15 +111,27 @@ export async function GET(request: NextRequest) {
 
   try {
     // Try fetching from GitHub's GraphQL API
+    console.log(`Fetching GitHub contributions for user: ${username}`);
+    console.log(`GitHub token configured: ${!!process.env.GITHUB_TOKEN}`);
+    
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      'User-Agent': `${SITE_DOMAIN}-portfolio`,
+    };
+    
+    // Only add Authorization header if token is available
+    if (process.env.GITHUB_TOKEN) {
+      const tokenValue = process.env.GITHUB_TOKEN;
+      console.log(`Token length: ${tokenValue.length}, first 10 chars: ${tokenValue.substring(0, 10)}`);
+      headers['Authorization'] = `Bearer ${tokenValue}`;
+      console.log('Using authenticated GitHub API');
+    } else {
+      console.log('Using unauthenticated GitHub API (subject to rate limits)');
+    }
+    
     const response = await fetch('https://api.github.com/graphql', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': process.env.GITHUB_TOKEN 
-          ? `Bearer ${process.env.GITHUB_TOKEN}` 
-          : '',
-  'User-Agent': `${SITE_DOMAIN}-portfolio`,
-      },
+      headers,
       body: JSON.stringify({
         query: `
           query($username: String!) {
@@ -144,19 +156,22 @@ export async function GET(request: NextRequest) {
       signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
+    console.log(`GitHub API response status: ${response.status}`);
     if (!response.ok) {
       throw new Error(`GitHub API error: ${response.status}`);
     }
 
     const data = await response.json();
+    console.log('GitHub GraphQL response received, data structure check...');
 
     // Check for GraphQL errors
     if (data.errors) {
       console.error('GitHub GraphQL errors:', data.errors);
-      throw new Error('GitHub GraphQL query failed');
+      throw new Error(`GitHub GraphQL query failed: ${JSON.stringify(data.errors)}`);
     }
 
     if (!data.data?.user?.contributionsCollection?.contributionCalendar) {
+      console.error('Invalid response structure. Full response:', JSON.stringify(data, null, 2));
       throw new Error('Invalid GitHub API response structure');
     }
 
@@ -196,7 +211,10 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error fetching GitHub contributions:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error('Error fetching GitHub contributions:', errorMessage);
+    if (errorStack) console.error('Stack trace:', errorStack);
 
     // Return fallback data instead of an error
     const fallbackData = generateFallbackData();

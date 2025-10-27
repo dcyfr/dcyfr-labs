@@ -274,10 +274,10 @@ scripts/test-related-posts.mjs       (NEW - test suite)
 
 ## Example Output
 
-For post: "Hardening a Tiny Portfolio" (tags: Security, Performance, Next.js)
+For post: "Hardening a Developer Portfolio" (tags: Security, Performance, Next.js)
 
 **Related Posts Shown:**
-1. "Shipping a Tiny Portfolio" - shares Next.js tag
+1. "Shipping a Developer Portfolio" - shares Next.js tag
 2. "Performance Optimization" - shares Performance tag
 3. "Security Best Practices" - shares Security tag
 

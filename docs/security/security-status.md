@@ -449,7 +449,7 @@ document.body.innerHTML += '<script>alert("xss")</script>';
 - [Rate Limiting Guide](/docs/security/rate-limiting/guide.md) - Rate limit setup
 - [API Routes Overview](/docs/api/routes/overview.md) - API architecture
 - [Environment Variable Audit](/docs/security/environment-variable-audit.md) - Security audit report
-- [Environment Variables Guide](/docs/operations/environment-variables.md) - Setup guide
+- [Environment Variables Guide](/docs/platform/environment-variables.md) - Setup guide
 
 ### Standards
 - [OWASP CSP Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html)

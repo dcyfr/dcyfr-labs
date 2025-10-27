@@ -32,11 +32,9 @@ export async function GET() {
   }
 
   try {
-    // Get all post slugs
-    const slugs = posts.map((p) => p.slug);
-
-    // Get view counts for all posts
-    const viewMap = await getMultiplePostViews(slugs);
+    // Get view counts for all posts using their stable post IDs
+    const postIds = posts.map((p) => p.id);
+    const viewMap = await getMultiplePostViews(postIds);
 
     // Combine with post data
     const postsWithViews = posts
@@ -48,7 +46,7 @@ export async function GET() {
         tags: post.tags,
         archived: post.archived ?? false,
         draft: post.draft ?? false,
-        views: viewMap.get(post.slug) || 0,
+        views: viewMap.get(post.id) || 0,
         readingTime: post.readingTime,
       }))
       .sort((a, b) => b.views - a.views);

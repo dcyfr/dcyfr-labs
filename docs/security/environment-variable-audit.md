@@ -215,7 +215,7 @@ All API routes reviewed for proper secret handling:
 
 ### ✅ 3. Documentation
 - Comprehensive `.env.example` with instructions
-- Full documentation in `docs/operations/environment-variables.md`
+- Full documentation in `docs/platform/environment-variables.md`
 - Quick reference guide available
 - In-code comments explaining usage
 
@@ -359,7 +359,7 @@ describe('Environment Variable Security', () => {
 - [Next.js Environment Variables Documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables)
 - [OWASP Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
 - [12-Factor App: Config](https://12factor.net/config)
-- Project Documentation: `docs/operations/environment-variables.md`
+- Project Documentation: `docs/platform/environment-variables.md`
 - Example File: `.env.example`
 
 ---
