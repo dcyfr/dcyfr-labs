@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { posts } from "@/data/posts";
+import { getPostByAnySlug } from "@/lib/blog";
 import {
   SITE_URL,
   SITE_TITLE,
@@ -31,16 +32,34 @@ export const revalidate = 3600; // 1 hour in seconds
 
 // Pre-generate all blog post pages at build time
 export async function generateStaticParams() {
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  const allParams = [];
+  
+  // Add current slugs
+  for (const post of posts) {
+    allParams.push({ slug: post.slug });
+  }
+  
+  // Add previous slugs for redirect pages
+  for (const post of posts) {
+    if (post.previousSlugs) {
+      for (const oldSlug of post.previousSlugs) {
+        allParams.push({ slug: oldSlug });
+      }
+    }
+  }
+  
+  return allParams;
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
-  if (!post) return {};
+  const result = getPostByAnySlug(slug, posts);
+  
+  if (!result) return {};
+  
+  const post = result.post;
   const imageUrl = getOgImageUrl(post.title, post.summary);
+  
   return {
     title: post.title,
     description: post.summary,
@@ -71,14 +90,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
-  if (!post) notFound();
-
+  const result = getPostByAnySlug(slug, posts);
+  
+  if (!result) {
+    notFound();
+  }
+  
+  const { post, needsRedirect, canonicalSlug } = result;
+  
   // Get nonce from middleware for CSP
   const nonce = (await headers()).get("x-nonce") || "";
 
-  const incrementedViews = await incrementPostViews(slug);
-  const viewCount = incrementedViews ?? (await getPostViews(slug));
+  // Increment views using post ID (stable identifier, not affected by slug changes)
+  const incrementedViews = await incrementPostViews(post.id);
+  
+  // If this is an old slug, redirect to the current one
+  // Views are tracked before redirect so old URL accesses are counted
+  if (needsRedirect) {
+    redirect(`/blog/${canonicalSlug}`);
+  }
+  const viewCount = incrementedViews ?? (await getPostViews(post.id));
   
   // Extract headings for table of contents
   const headings = extractHeadings(post.body);

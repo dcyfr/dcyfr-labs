@@ -76,14 +76,14 @@ curl https://preview.example.com/api/analytics
     "averageViews": 417,
     "topPost": {
       "slug": "hardening-tiny-portfolio",
-      "title": "Hardening Tiny Portfolio",
+      "title": "Hardening Developer Portfolio",
       "views": 500
     }
   },
   "posts": [
     {
       "slug": "hardening-tiny-portfolio",
-      "title": "Hardening Tiny Portfolio",
+      "title": "Hardening Developer Portfolio",
       "summary": "...",
       "publishedAt": "2025-10-20T00:00:00Z",
       "tags": ["security", "portfolio"],

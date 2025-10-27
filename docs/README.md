@@ -1,6 +1,13 @@
 # Documentation
 
-This directory is the knowledge base for the portfolio. Content is now organized by topic-focused subfolders so it is faster to find the right reference.
+This directory is the knowledge base for the portfolio. Content is organized by topic-focused subfolders for faster navigation.
+
+## 🚀 Start Here
+
+**New to this documentation?** Start with:
+- **[`QUICK_START.md`](./QUICK_START.md)** – Single-page navigation hub linking all quick-references and guides
+- **[`INDEX.md`](./INDEX.md)** – Complete directory structure and search-friendly index
+- This `README.md` (current page) – Topic overview and key links
 
 ## Directory Overview
 
@@ -9,15 +16,18 @@ This directory is the knowledge base for the portfolio. Content is now organized
 - `blog/` – Blog system documentation:
 	- [`architecture.md`](./blog/architecture.md) - Complete blog system architecture and data flow
 	- [`quick-reference.md`](./blog/quick-reference.md) - Quick patterns and common tasks
-	- More blog docs in progress (MDX processing, content creation, frontmatter schema)
-- `components/` – Component documentation:
-	- [`mdx.md`](./components/mdx.md) - Core MDX rendering component
-	- More component docs in progress (reading-progress, github-heatmap, etc.)
+	- [`content-creation.md`](./blog/content-creation.md) - Post authoring guide
+	- [`mdx-processing.md`](./blog/mdx-processing.md) - MDX pipeline and plugins
+	- [`frontmatter-schema.md`](./blog/frontmatter-schema.md) - Post metadata reference
+- `components/` – Component documentation (15 files):
+	- **Quick References:** [`post-badges.md`](./components/post-badges.md) · [`error-boundaries.md`](./components/error-boundaries.md) · [`loading-states.md`](./components/loading-states.md)
+	- **Advanced Components:** [`related-posts.md`](./components/related-posts.md) · [`table-of-contents.md`](./components/table-of-contents.md) · [`syntax-highlighting.md`](./components/syntax-highlighting.md)
+	- **Core Components:** [`mdx.md`](./components/mdx.md) · [`post-list.md`](./components/post-list.md) · [`blog-search-form.md`](./components/blog-search-form.md)
+	- **Additional:** [`reading-progress.md`](./components/reading-progress.md) · [`github-heatmap.md`](./components/github-heatmap.md) · [`giscus-comments.md`](./components/giscus-comments.md) · [`share-buttons.md`](./components/share-buttons.md) · [`logo.md`](./components/logo.md) · [`blog-post-skeleton.md`](./components/blog-post-skeleton.md)
 - `design/` – Design system documentation:
-	- [`typography.md`](./design/typography.md) - Typography system (Geist Sans, Source Serif 4, Geist Mono)
-	- [`typography-quick-reference.md`](./design/typography-quick-reference.md) - Quick patterns for daily use
-	- [`typography-implementation-summary.md`](./design/typography-implementation-summary.md) - Complete implementation details
+	- [`typography.md`](./design/typography.md) - Typography system (Geist Sans, Source Serif 4, Geist Mono) with quick reference
 	- [`print-stylesheet.md`](./design/print-stylesheet.md) - Print stylesheet implementation
+	- [`color-contrast-improvements.md`](./design/color-contrast-improvements.md) - Accessibility improvements
 - `features/` – Feature documentation:
 	- [`inngest-integration.md`](./features/inngest-integration.md) - Complete Inngest background jobs guide (500+ lines)
 	- [`inngest-testing.md`](./features/inngest-testing.md) - Testing quick reference
@@ -30,12 +40,13 @@ This directory is the knowledge base for the portfolio. Content is now organized
 - `operations/` – Operational checklists and historical change logs:
 	- [`todo.md`](./operations/todo.md) - Active tasks and priorities
 	- [`done.md`](./operations/done.md) - Completed projects archive
-	- [`environment-variables.md`](./operations/environment-variables.md) - Complete environment setup
-	- [`deployment-checklist.md`](./operations/deployment-checklist.md) - Deployment guide
 - `performance/` – Site performance documentation:
 	- [`inp-optimization.md`](./performance/inp-optimization.md) - INP optimization
 	- [`isr-implementation.md`](./performance/isr-implementation.md) - ISR setup and benefits
-- `platform/` – Platform configuration references like [`site-config.md`](./platform/site-config.md) and [`view-counts.md`](./platform/view-counts.md).
+- `platform/` – Platform configuration references:
+	- [`environment-variables.md`](./platform/environment-variables.md) - Complete environment setup and all variables
+	- [`site-config.md`](./platform/site-config.md) - Domain and URL configuration
+	- [`view-counts.md`](./platform/view-counts.md) - Blog analytics and Redis setup
 - `rss/` – Feed documentation (`improvements.md`, `quick-reference.md`).
 - `security/` – Security guidance including:
 	- `csp/` for Content Security Policy implementation and quick reference.
@@ -47,24 +58,23 @@ This directory is the knowledge base for the portfolio. Content is now organized
 
 | Topic | Primary References |
 |-------|--------------------|
+| **Getting Started** | **[`QUICK_START.md`](./QUICK_START.md) - Navigation hub** |
 | AI Discovery | [`overview.md`](./ai/discovery/overview.md) · [`summary.md`](./ai/discovery/summary.md) |
-| APIs | [`api/reference.md`](./api/reference.md) |
-| Blog System | [`blog/architecture.md`](./blog/architecture.md) · [`blog/quick-reference.md`](./blog/quick-reference.md) |
-| Components | [`components/mdx.md`](./components/mdx.md) |
-| Design System | [`design/typography.md`](./design/typography.md) · [`design/typography-quick-reference.md`](./design/typography-quick-reference.md) |
+| APIs | [`api/reference.md`](./api/reference.md) · [`api/routes/overview.md`](./api/routes/overview.md) |
+| Blog System | [`blog/architecture.md`](./blog/architecture.md) · [`blog/content-creation.md`](./blog/content-creation.md) · [`blog/quick-reference.md`](./blog/quick-reference.md) |
+| Components | [`components/post-badges.md`](./components/post-badges.md) · [`components/error-boundaries.md`](./components/error-boundaries.md) · [`components/mdx.md`](./components/mdx.md) |
+| Component List | *15 components documented* – [See components/](./components/) |
+| Design System | [`design/typography.md`](./design/typography.md) · [`design/print-stylesheet.md`](./design/print-stylesheet.md) |
 | **Background Jobs** | **[`features/inngest-integration.md`](./features/inngest-integration.md) · [`features/inngest-testing.md`](./features/inngest-testing.md)** |
 | GitHub Integration | [`features/github-integration.md`](./features/github-integration.md) |
 | MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |
-| MCP (Filesystem + Git) | [`mcp/filesystem-git/index.md`](./mcp/filesystem-git/index.md) · [`mcp/filesystem-git/integration.md`](./mcp/filesystem-git/integration.md) |
-| MCP Tests | [`mcp/tests/servers-test.md`](./mcp/tests/servers-test.md) · [`mcp/tests/dependency-validation.md`](./mcp/tests/dependency-validation.md) |
-| **Operations** | **[`operations/todo.md`](./operations/todo.md) · [`operations/done.md`](./operations/done.md) · [`operations/environment-variables.md`](./operations/environment-variables.md)** |
-| Performance | [`performance/isr-implementation.md`](./performance/isr-implementation.md) · [`performance/inp-optimization.md`](./performance/inp-optimization.md) |
-| Security – CSP | [`security/csp/nonce-implementation.md`](./security/csp/nonce-implementation.md) · [`security/csp/nonce-quick-reference.md`](./security/csp/nonce-quick-reference.md) |
-| Security – Rate Limiting | [`security/rate-limiting/guide.md`](./security/rate-limiting/guide.md) · [`security/rate-limiting/quick-reference.md`](./security/rate-limiting/quick-reference.md) |
-| Security Findings | [`security/security-findings-resolution.md`](./security/security-findings-resolution.md) |
-| Environment Setup | [`operations/environment-variables.md`](./operations/environment-variables.md) · [`operations/environment-variables-quick-reference.md`](./operations/environment-variables-quick-reference.md) |
-| Platform | [`platform/site-config.md`](./platform/site-config.md) · [`platform/view-counts.md`](./platform/view-counts.md) |
-| RSS | [`rss/improvements.md`](./rss/improvements.md) |
+| **Operations** | **[`operations/todo.md`](./operations/todo.md) · [`operations/done.md`](./operations/done.md)** |
+| Performance | [`performance/bundle-analysis.md`](./performance/bundle-analysis.md) |
+| Security – CSP | [`security/csp/nonce-implementation.md`](./security/csp/nonce-implementation.md) |
+| Security – Rate Limiting | [`security/rate-limiting/guide.md`](./security/rate-limiting/guide.md) |
+| **Environment Setup** | **[`platform/environment-variables.md`](./platform/environment-variables.md)** |
+| Platform Config | [`platform/site-config.md`](./platform/site-config.md) · [`platform/view-counts.md`](./platform/view-counts.md) |
+| RSS/Feeds | [`rss/improvements.md`](./rss/improvements.md) |
 
 ## Maintenance Guidelines
 
@@ -79,4 +89,4 @@ This directory is the knowledge base for the portfolio. Content is now organized
 - `agents.md` – Auto-synced instructions consumed by agents.
 - Project root `README.md` – High-level overview and developer quick start.
 
-_Last reorganized: October 23, 2025._
+_Last reorganized: October 27, 2025. [QUICK_START.md](./QUICK_START.md) added as primary entry point._

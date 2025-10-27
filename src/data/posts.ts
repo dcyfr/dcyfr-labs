@@ -6,7 +6,8 @@ export type PostSource = {
 };
 
 export type Post = {
-  slug: string; // unique URL segment
+  id: string; // stable permanent identifier (never changes, independent of slug)
+  slug: string; // unique URL segment (active/current slug - can change)
   title: string;
   summary: string;
   publishedAt: string; // ISO string
@@ -17,6 +18,7 @@ export type Post = {
   draft?: boolean; // only visible in development
   body: string; // MDX content
   sources?: PostSource[];
+  previousSlugs?: string[]; // old slugs that should 301 redirect to current slug
   readingTime: {
     words: number;
     minutes: number;

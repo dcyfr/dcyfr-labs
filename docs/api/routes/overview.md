@@ -481,7 +481,7 @@ Check Vercel Logs for:
 - **Contact Endpoint:** `contact.md`
 - **GitHub Contributions:** `github-contributions.md`
 - **Rate Limiting Utility:** `src/lib/rate-limit.ts`
-- **Environment Variables:** `docs/operations/environment-variables.md`
+- **Environment Variables:** `docs/platform/environment-variables.md`
 - **Security:** `docs/security/`
 
 ## Changelog

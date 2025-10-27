@@ -737,7 +737,7 @@ None - endpoint works without environment variables
 - **Contact Endpoint:** `contact.md`
 - **GitHub Heatmap Component:** `docs/components/github-heatmap.md`
 - **Rate Limiting:** `src/lib/rate-limit.ts`
-- **Environment Variables:** `docs/operations/environment-variables.md`
+- **Environment Variables:** `docs/platform/environment-variables.md`
 
 ## Troubleshooting
 

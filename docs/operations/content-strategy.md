@@ -1,8 +1,35 @@
 # Content Strategy & Editorial Calendar
 
-**Last Updated:** October 26, 2025  
-**Publishing Cadence:** 1 post per month (starting Q4 2025)  
-**Target Audience:** Mid-senior developers, tech leads, indie builders
+**Last Updated:** October 27, 2025  
+**Publishing Cadence:** 1 post per month  
+**Target Audience:** Full-stack developers, tech leads, builders shipping to production
+
+---
+
+## 🎯 Content Pillars
+
+This blog focuses on three interconnected pillars that reflect real-world development:
+
+### 1. **Developer Portfolio Series** — From Shipping to Scale
+Building and evolving a production-grade portfolio and blog platform. This series covers the entire journey: architecture decisions, security hardening, feature implementation, and performance optimization.
+
+**Audience:** Developers building their own platforms, learning full-stack patterns  
+**Current Status:** 2 posts published, series expanding with new features  
+**Cadence:** 1 post/month (flexible with new features)
+
+### 2. **AI & Agentic Developer Workflows** — Human-AI Collaboration
+How AI assistants (GitHub Copilot, Claude, etc.) and agentic systems (MCP servers, automation frameworks) can augment developer productivity without replacing critical thinking.
+
+**Audience:** Developers adopting AI, teams building automation, prompt engineers  
+**Current Status:** New pillar, launching Q4 2025  
+**Cadence:** 1 post/month
+
+### 3. **Cybersecurity in Production** — Practical Hardening
+Real-world security patterns, threat modeling, compliance, and DevSecOps. Moving beyond "security + next.js" to comprehensive hardening strategies.
+
+**Audience:** Full-stack developers, team leads, security-conscious builders  
+**Current Status:** Initial coverage in portfolio series, expanding Q4 2025  
+**Cadence:** 1 post/month
 
 ---
 
@@ -10,364 +37,794 @@
 
 ### Q4 2025 (October - December)
 
-**November 2025** - "Tiny Portfolio" Series Part 3  
-**Title:** *Background Jobs at the Edge: Inngest, Next.js & Event-Driven Architecture*  
-**Status:** 🟢 Ready to write (documentation complete, code shipped)  
+**November 2025** - Developer Portfolio Series  
+**Title:** *Building Event-Driven Architecture: Inngest, Background Jobs & Reliability*  
+**Series:** Developer Portfolio (Part 3)  
+**Pillar:** Developer Portfolio  
+**Status:** 🟢 Ready to write (code complete, documentation done)  
 **Estimated Length:** 2,500-3,000 words  
-**Target Publish Date:** November 15, 2025
-
-**December 2025** - "Tiny Portfolio" Series Part 4  
-**Title:** *Next.js Performance Mastery: ISR, Caching & CDN Strategy*  
-**Status:** 🟡 Planning phase (implementation complete, needs outline)  
-**Estimated Length:** 2,000-2,500 words  
-**Target Publish Date:** December 15, 2025
-
-### Q1 2026 (January - March)
-
-**January 2026** - "Tiny Portfolio" Series Part 5  
-**Title:** *Zero-Infrastructure Blog Features: Comments, Analytics & RSS*  
-**Status:** 🟡 Planning phase  
-**Estimated Length:** 1,800-2,200 words  
-**Target Publish Date:** January 15, 2026
-
-**February 2026** - "Tiny Portfolio" Series Part 6  
-**Title:** *Developer Experience: AI Assistants, MCP & Documentation-Driven Development*  
-**Status:** 🟡 Planning phase  
-**Estimated Length:** 2,200-2,800 words  
-**Target Publish Date:** February 15, 2026
-
-**March 2026** - New Series Launch  
-**Title:** *TBD - Select from backlog*  
-**Status:** 🔴 Backlog  
-**Target Publish Date:** March 15, 2026
-
-### Q2 2026 (April - June)
-
-**April 2026** - Continued from March series or standalone  
-**May 2026** - Continued or new topic  
-**June 2026** - Continued or new topic
+**Target Publish Date:** November 15, 2025  
+**Key Topics:** Event-driven patterns, async processing, retry logic, observability, contact form optimization
 
 ---
 
-## 📚 Current Series: "From Weekend to Production"
+**December 2025** - Cybersecurity in Production  
+**Title:** *From CSP to Zero-Trust: A Practical Security Audit of a Next.js Portfolio*  
+**Series:** Cybersecurity in Production (Part 1)  
+**Pillar:** Cybersecurity  
+**Status:** 🟡 Planning phase (implementation complete, needs polish)  
+**Estimated Length:** 2,500-3,200 words  
+**Target Publish Date:** December 15, 2025  
+**Key Topics:** CSP deep-dive, rate limiting, HTTP security headers, threat modeling, defense-in-depth
 
-**Series Overview:**  
-A comprehensive journey from building a minimal portfolio in a weekend to running a production-grade, observable platform. Each post builds on the previous, showing real-world challenges and solutions.
+### Q1 2026 (January - March)
+
+**January 2026** - AI & Agentic Workflows  
+**Title:** *AI Assistants as Pair Programmers: Model Context Protocol, Instructions & Workflows*  
+**Series:** AI & Agentic Workflows (Part 1)  
+**Pillar:** AI & Agentic Workflows  
+**Status:** 🟡 Planning phase  
+**Estimated Length:** 2,200-2,800 words  
+**Target Publish Date:** January 15, 2026  
+**Key Topics:** GitHub Copilot patterns, MCP servers, contributor instructions, AI code review
+
+---
+
+**February 2026** - Developer Portfolio Series  
+**Title:** *Blog Analytics Without the Database: Redis, View Counts & Trending Posts*  
+**Series:** Developer Portfolio (Part 4)  
+**Pillar:** Developer Portfolio  
+**Status:** 🟡 Planning phase  
+**Estimated Length:** 2,000-2,500 words  
+**Target Publish Date:** February 15, 2026  
+**Key Topics:** Redis integration, analytics architecture, graceful degradation, privacy-preserving tracking
+
+---
+
+**March 2026** - Cybersecurity in Production  
+**Title:** *Secrets Management: From .env to Production — A No-Compromise Approach*  
+**Series:** Cybersecurity in Production (Part 2)  
+**Pillar:** Cybersecurity  
+**Status:** 🔴 Backlog  
+**Estimated Length:** 2,000-2,400 words  
+**Target Publish Date:** March 15, 2026  
+**Key Topics:** Environment variables, secret rotation, CI/CD security, accidental exposure prevention
+
+### Q2 2026 (April - June)
+
+**April 2026** - Developer Portfolio Series  
+**Title:** *Search at Scale: Full-Text Search Without Elasticsearch*  
+**Series:** Developer Portfolio (Part 5)  
+**Pillar:** Developer Portfolio  
+**Status:** 🔴 Backlog  
+**Estimated Length:** 2,000-2,600 words  
+**Target Publish Date:** April 15, 2026  
+**Key Topics:** Algolia integration, client-side search, indexing strategies, search UX
+
+---
+
+**May 2026** - AI & Agentic Workflows  
+**Title:** *Automating Repetitive Tasks: Building Agentic Workflows with Inngest & AI*  
+**Series:** AI & Agentic Workflows (Part 2)  
+**Pillar:** AI & Agentic Workflows  
+**Status:** 🔴 Backlog  
+**Estimated Length:** 2,200-2,800 words  
+**Target Publish Date:** May 15, 2026  
+**Key Topics:** Inngest for AI workflows, function chaining, human approval loops, cost optimization
+
+---
+
+**June 2026** - Cybersecurity in Production  
+**Title:** *OWASP Top 10 for Next.js: Practical Defense Against Real Attacks*  
+**Series:** Cybersecurity in Production (Part 3)  
+**Pillar:** Cybersecurity  
+**Status:** 🔴 Backlog  
+**Estimated Length:** 2,800-3,200 words  
+**Target Publish Date:** June 15, 2026  
+**Key Topics:** XSS/CSRF prevention, SQL injection in ORMs, authentication patterns, vulnerability assessment
+
+---
+
+## 📚 Active Series Overview
+
+### Series 1: Developer Portfolio — From Shipping to Scale
+
+**Series Tagline:** "Building a production-grade portfolio platform and learning full-stack patterns along the way."
+
+**Overview:**
+A comprehensive journey from weekend project to production platform. Each post covers a distinct technical challenge: security hardening, event-driven architecture, analytics, performance optimization, and search. Real code, real constraints, real solutions.
+
+**Target Audience:** Full-stack developers, indie builders, developers learning advanced Next.js patterns  
+**Key Themes:** Next.js, TypeScript, serverless, full-stack architecture, observability
 
 **Series Arc:**
-1. ✅ **Foundation** - Shipping a Tiny Portfolio (Published: Sep 2025)
-2. ✅ **Hardening** - Security, Performance & Production Readiness (Published: Oct 2025)
-3. 🎯 **Scaling** - Event-Driven Architecture & Background Jobs (Nov 2025)
-4. 🎯 **Optimization** - ISR, Caching & CDN Strategy (Dec 2025)
-5. 🎯 **Features** - Zero-Infrastructure Blog Additions (Jan 2026)
-6. 🎯 **DX** - AI Assistants & Workflow Automation (Feb 2026)
+1. ✅ **Shipping Fast** - Shipping a Developer Portfolio (Published: Sep 2025)
+2. ✅ **Security Hardening** - Security, Performance & Production Readiness (Published: Oct 2025)
+3. 🎯 **Event-Driven** - Background Jobs & Inngest (Nov 2025)
+4. 🎯 **Analytics** - Redis, View Counts & Trending (Feb 2026)
+5. 🎯 **Search** - Full-Text Search Without Elasticsearch (Apr 2026)
 
-**Target Audience:** Developers who want to ship fast but also care about production quality.
+**Lessons Learned (from first 2 posts):**
+- Server-first rendering is powerful but requires discipline
+- Security hardening is continuous, not a one-time task
+- Production readiness requires thinking about failure modes
+- Documentation of decisions matters as much as the decisions themselves
 
-**Key Themes:** Next.js, TypeScript, serverless, edge computing, developer experience
+---
+
+### Series 2: Cybersecurity in Production — Real Threats, Real Defenses
+
+**Series Tagline:** "Moving beyond checkbox security to practical, defense-in-depth strategies."
+
+**Overview:**
+Deep dive into security hardening for full-stack applications. Not theoretical; based on real vulnerabilities and fixes. Covers threat modeling, defense-in-depth, compliance considerations, and lessons from production incidents.
+
+**Target Audience:** Full-stack developers, tech leads, security-conscious builders  
+**Key Themes:** Threat modeling, defense-in-depth, OWASP, DevSecOps, incident response
+
+**Series Arc:**
+1. 🎯 **Foundations** - CSP & HTTP Security Headers (Dec 2025)
+2. 🎯 **Secrets** - Environment Variables & Secret Management (Mar 2026)
+3. 🎯 **Threats** - OWASP Top 10 & Real Attacks (Jun 2026)
+4. (Future) **Compliance** - GDPR, HIPAA, PCI-DSS for indie builders
+5. (Future) **Monitoring** - Security observability and incident response
+
+**Why This Matters:**
+Security is often treated as a checklist ("add CSP headers, enable HTTPS, done"). In reality, it's a continuous process of understanding threats, building defenses, and iterating based on incident learnings.
+
+---
+
+### Series 3: AI & Agentic Developer Workflows — Human-AI Collaboration
+
+**Series Tagline:** "Using AI assistants and agentic systems to augment, not replace, developer capability."
+
+**Overview:**
+Practical patterns for integrating AI assistants (GitHub Copilot, Claude, etc.) and agentic systems (MCP servers, Inngest workflows) into developer workflows. Focuses on augmentation, not automation; productivity gains, not blind AI generation.
+
+**Target Audience:** All developers, teams adopting AI, builders interested in agentic systems  
+**Key Themes:** GitHub Copilot, MCP, LLMs, agentic systems, prompt engineering, AI code review
+
+**Series Arc:**
+1. 🎯 **AI Assistants** - Copilot Patterns & Contributor Instructions (Jan 2026)
+2. 🎯 **Agentic Workflows** - Automating Tasks with Inngest & AI (May 2026)
+3. (Future) **AI-Assisted Testing** - Unit tests, E2E tests, mutation testing
+4. (Future) **Code Review with AI** - Structural feedback, security scanning, performance analysis
+5. (Future) **Prompt Engineering** - Techniques for effective AI interaction
+
+**Why This Matters:**
+AI is transformative, but only when used thoughtfully. This series shares patterns for integrating AI into your workflow in ways that enhance rather than compromise code quality and developer experience.
 
 ---
 
 ## 📝 Detailed Post Outlines
 
-### Part 3: Background Jobs at the Edge (November 2025)
+---
 
-**Working Title:** *Background Jobs at the Edge: Inngest, Next.js & Event-Driven Architecture*
+### Developer Portfolio Part 3: Event-Driven Architecture (November 2025)
 
-**Hook:** "Your API routes are lying to your users. They say '200 OK' while work is still happening. Here's how to fix it."
+**Working Title:** *Building Event-Driven Architecture: Inngest, Background Jobs & Reliability*
+
+**Hook:** "Your API routes are lying to your users. They say '200 OK' while work is still happening. Here's how Inngest fixed that problem for our portfolio."
 
 **Outline:**
 
 1. **The Problem** (300 words)
-   - Synchronous API route limitations (slow, can timeout, poor UX)
+   - Synchronous API route limitations in Next.js
    - Real example: Contact form taking 1-2s to respond
-   - What happens when email service is slow or down?
-   - User experience degrades with each integration
+   - Cascading failures when third-party services are slow
+   - User experience: what users actually care about
 
 2. **Why Event-Driven?** (400 words)
-   - Decouple response time from work time
-   - Automatic retries without user involvement
-   - Better observability and debugging
+   - Decouple response time from work completion time
+   - Automatic retries without explicit error handling
+   - Better observability and distributed tracing
    - Scales infinitely with serverless
-   - When NOT to use event-driven (simple CRUD, low traffic)
+   - When NOT to use (CRUD operations, low latency requirements)
 
 3. **Introducing Inngest** (300 words)
-   - What it is: Durable execution engine for serverless
-   - Why not just Vercel cron? (Comparison table)
+   - What it is: serverless durable execution engine
+   - Comparison to: cron jobs, webhooks, message queues
    - Key features: retries, scheduling, observability, local dev
-   - Pricing transparency (generous free tier)
+   - Free tier generosity vs. paid plans
+   - Why we chose it over other solutions
 
-4. **Implementation: Contact Form** (600 words)
-   - Before/after architecture diagram
-   - Code walkthrough: sending events
-   - Step functions with retry logic
-   - Email sending with failure handling
-   - Result: 1-2s → <100ms (10-20x improvement)
+4. **Architecture: Before & After** (400 words)
+   - Before: Contact form → email service → slow response
+   - After: Contact form → event → Inngest queue → email + logging + monitoring
+   - Sequence diagrams
+   - Key: user gets 100ms response, work happens in background
 
-5. **Implementation: Scheduled Jobs** (500 words)
-   - GitHub data pre-population (cron every 5 minutes)
-   - Cache warming for instant page loads
-   - Code example with error handling
-   - Why scheduled vs. on-demand
+5. **Implementation: Contact Form** (600 words)
+   - Step 1: Send event from API route (code walkthrough)
+   - Step 2: Define step function with retry logic
+   - Step 3: Email sending with failure handling
+   - Step 4: Error notifications
+   - Result metrics: latency improvement, reliability gains
 
-6. **Implementation: Blog Analytics** (500 words)
-   - View tracking pipeline (5 functions)
-   - Milestone celebrations (100, 1K, 10K views)
-   - Trending post calculation (hourly cron)
-   - Daily analytics summaries
-   - Event-driven data flow diagram
+6. **Implementation: Scheduled Tasks** (400 words)
+   - GitHub contribution heatmap pre-population (5-min cron)
+   - View count aggregation and trending calculation
+   - Cache warming for blog posts
+   - Running locally with Inngest Dev UI
 
-7. **Developer Experience** (300 words)
-   - Local dev UI (http://localhost:3001/api/inngest)
-   - Testing individual functions
+7. **Developer Experience & Testing** (300 words)
+   - Local dev UI for testing functions
    - Replay failed executions
-   - Type-safe events with TypeScript
+   - Monitoring runs and errors
+   - Debugging tips and common pitfalls
 
-8. **Production Deployment** (200 words)
-   - Vercel integration
-   - Environment variables
-   - Monitoring and observability
-   - Cost considerations
+8. **Deployment & Observability** (200 words)
+   - Vercel integration and environment setup
+   - Monitoring dashboard overview
+   - Cost analysis (generous free tier)
+   - Production readiness checklist
 
 9. **Key Takeaways** (200 words)
-   - When to use event-driven architecture
-   - Performance isn't just about speed, it's about reliability
+   - Event-driven isn't just for "big tech"
+   - Reliability compounds: each 9% improvement stacks
    - User experience > implementation complexity
    - Start simple, add complexity when needed
 
-10. **What's Next** (100 words)
-    - Preview of Part 4 (caching strategies)
-    - Call to action
-
 **Assets Needed:**
-- Architecture diagrams (before/after)
+- Before/after architecture diagrams
 - Inngest Dev UI screenshots
-- Performance comparison graphs
-- Code snippets (already have in `/src/inngest/`)
+- Performance comparison graphs (latency, error rates)
+- Code snippets from `/src/inngest/`
 
-**SEO Keywords:** event-driven architecture, Next.js background jobs, Inngest, serverless functions, async processing, durable execution
+**SEO Keywords:** event-driven architecture, Next.js background jobs, Inngest, async processing, durable execution, serverless
 
 ---
 
-### Part 4: Performance Mastery (December 2025)
+### Cybersecurity Part 1: CSP & HTTP Security (December 2025)
 
-**Working Title:** *Next.js Performance Mastery: ISR, Caching & CDN Strategy*
+**Working Title:** *From CSP to Zero-Trust: A Practical Security Audit of a Next.js Portfolio*
 
-**Hook:** "Your blog is fast, but is it $0.01/month fast? Here's how I serve 10,000 page views for less than a coffee."
+**Hook:** "I found 7 security vulnerabilities in my portfolio in the first security audit. Most could have been prevented with better headers and middleware."
 
 **Outline:**
 
-1. **The Performance Problem** (300 words)
-   - Server-rendering every request is expensive
-   - 100-300ms might seem fast, but it compounds
-   - Cost scaling with traffic
-   - CDN vs. compute trade-offs
+1. **Why Security Audits Matter** (250 words)
+   - Security is often an afterthought
+   - Real-world incidents: how breaches happen
+   - The cost of ignoring security (reputation, legal, data)
+   - Shifting left: security during development
 
-2. **Understanding Next.js Rendering** (400 words)
-   - Static Site Generation (SSG)
-   - Server-Side Rendering (SSR)
-   - Incremental Static Regeneration (ISR)
-   - When to use each (decision tree)
+2. **Content Security Policy (CSP)** (600 words)
+   - What CSP does: prevents XSS, clickjacking, data exfiltration
+   - Common mistakes: `unsafe-inline`, overly permissive policies
+   - Nonce-based CSP in Next.js middleware (our approach)
+   - Testing and debugging CSP violations
+   - Common pain points and solutions
+   - Code walkthrough: `src/middleware.ts` implementation
 
-3. **Implementing ISR for Blog Posts** (600 words)
-   - `generateStaticParams()` explained
-   - `revalidate` configuration (why 1 hour?)
-   - Stale-while-revalidate pattern
-   - Build output analysis
-   - Code examples with before/after
+3. **HTTP Security Headers** (500 words)
+   - X-Frame-Options: DENY (clickjacking prevention)
+   - X-Content-Type-Options: nosniff (MIME-sniffing)
+   - Strict-Transport-Security (HSTS)
+   - Referrer-Policy (privacy protection)
+   - Permissions-Policy (browser feature control)
+   - Vercel configuration example
 
-4. **Multi-Layer Caching Strategy** (700 words)
-   - **Layer 1:** Build-time static generation
-   - **Layer 2:** CDN edge caching (Vercel)
-   - **Layer 3:** Server-side caching (GitHub API)
-   - **Layer 4:** Redis for dynamic data (view counts)
-   - **Layer 5:** Client-side caching (localStorage for heatmap)
-   - Cache invalidation strategies
-   - Diagram showing all layers
+4. **Rate Limiting & DOS Protection** (500 words)
+   - Why rate limiting matters (spam, DOS, cost control)
+   - Our implementation: Redis-backed with graceful fallback
+   - Per-IP vs. per-route vs. per-user
+   - Testing rate limits locally
+   - Cost implications (what happens under attack?)
 
-5. **Redis Integration** (400 words)
-   - When to use Redis vs. ISR
-   - View count implementation
-   - Graceful fallback without Redis
-   - Cost optimization (connection pooling)
+5. **Defense-In-Depth** (300 words)
+   - Security is layers, not a single solution
+   - Application layer + CDN layer + WAF
+   - When to add each layer
+   - Diminishing returns (don't over-engineer)
 
-6. **Performance Results** (300 words)
-   - Before/after metrics table
-   - Lighthouse scores
-   - Real User Monitoring data
-   - Cost analysis (compute vs. bandwidth)
+6. **Threat Model** (300 words)
+   - Who would attack my portfolio? (probably nobody)
+   - What could they do? (XSS, DOS, data theft)
+   - What am I protecting? (user data, reputation)
+   - Proportional defenses based on threat level
 
-7. **Trade-offs & Gotchas** (300 words)
-   - Content freshness vs. performance
-   - Cache invalidation complexity
-   - Debugging cached content
-   - When to skip caching
+7. **Monitoring & Incident Response** (250 words)
+   - How to detect attacks (CSP reports, rate limit alerts)
+   - Responding to security incidents
+   - Post-incident analysis
+   - When to escalate
 
 8. **Key Takeaways** (200 words)
-   - Right tool for right job
-   - Performance budgets matter
-   - User experience > absolute speed
-   - Monitor your cache hit rates
+   - Security isn't optional, even for small projects
+   - Start with basics (headers, CSP, rate limiting)
+   - Automate security checks in CI
+   - Monitor and iterate based on real data
 
 **Assets Needed:**
-- Multi-layer caching architecture diagram
-- Lighthouse performance screenshots
-- Cache hit rate graphs
-- Cost comparison table
+- CSP violation examples (browser DevTools screenshots)
+- Attack scenario diagrams
+- Header comparison table (before/after)
+- Monitoring dashboard screenshots
 
-**SEO Keywords:** Next.js ISR, incremental static regeneration, CDN caching, Redis caching, web performance optimization
+**SEO Keywords:** Content Security Policy, HTTP security headers, Next.js security, XSS prevention, DOS protection, CSP nonce
 
 ---
 
-### Part 5: Zero-Infrastructure Features (January 2026)
+### AI & Agentic Workflows Part 1: AI Assistants (January 2026)
 
-**Working Title:** *Zero-Infrastructure Blog Features: Comments, Analytics & RSS*
+**Working Title:** *AI Assistants as Pair Programmers: Model Context Protocol, Instructions & Workflows*
 
-**Hook:** "I added comments, analytics, and RSS feeds to my blog without spinning up a single database. Here's how."
-
-**Outline:**
-
-1. **The Infrastructure Trap** (250 words)
-   - Why developers over-engineer blog features
-   - Database costs for simple features
-   - Maintenance burden vs. benefit
-   - The "zero-infrastructure" philosophy
-
-2. **GitHub Discussions as Comments** (600 words)
-   - Why Giscus over Disqus/Commento
-   - Setup guide (4 steps with screenshots)
-   - Theme integration (automatic dark mode)
-   - Lazy loading for performance
-   - Moderation with GitHub tools
-   - Cost: $0/month forever
-
-3. **Redis-Backed View Counts** (500 words)
-   - Why track views? (User engagement, trending content)
-   - Upstash Redis serverless setup
-   - Atomic increments for accuracy
-   - Graceful degradation without Redis
-   - Displaying view counts (badges, lists)
-   - Privacy considerations (no user tracking)
-
-4. **RSS & Atom Feeds** (400 words)
-   - Why RSS still matters in 2025
-   - Next.js route handlers for feeds
-   - Full content vs. summaries
-   - Feed validation tools
-   - Auto-discovery meta tags
-   - Serving at `/rss.xml` and `/atom.xml`
-
-5. **Print Stylesheet** (300 words)
-   - Professional PDF exports for readers
-   - Typography optimization for print
-   - Smart page breaks
-   - Hiding interactive elements
-   - Code block handling
-
-6. **Typography System** (300 words)
-   - Readable line lengths
-   - Proper heading hierarchy
-   - Code syntax highlighting (Shiki dual-theme)
-   - Mobile-first responsive text
-
-7. **What We Didn't Build** (200 words)
-   - Newsletter (use existing platforms)
-   - Search (coming later with Algolia or simple JS)
-   - User accounts (unnecessary complexity)
-   - Admin dashboard (content in Git)
-
-8. **Key Takeaways** (150 words)
-   - Leverage existing platforms (GitHub, Upstash)
-   - Zero infrastructure ≠ zero features
-   - User experience matters most
-   - Start simple, add complexity only when needed
-
-**Assets Needed:**
-- Giscus setup screenshots
-- Print stylesheet examples (before/after)
-- RSS feed reader screenshots
-- Cost comparison table (traditional vs. zero-infra)
-
-**SEO Keywords:** Giscus comments, GitHub Discussions, RSS feed Next.js, blog analytics, zero-infrastructure blog
-
----
-
-### Part 6: Developer Experience (February 2026)
-
-**Working Title:** *Developer Experience: AI Assistants, MCP & Documentation-Driven Development*
-
-**Hook:** "I taught an AI assistant my entire codebase's rules. Now it writes better code than I do."
+**Hook:** "I taught an AI my codebase's rules. Now it writes code that's actually usable without heavy revision."
 
 **Outline:**
 
-1. **The DX Problem** (300 words)
-   - Context switching kills productivity
-   - Documentation drift and outdated guides
-   - AI assistants that break conventions
-   - Onboarding new contributors (including AI)
+1. **The AI Adoption Problem** (250 words)
+   - AI tools often violate project conventions
+   - Generic code that doesn't fit your architecture
+   - Constant context-switching and correction
+   - Why most AI adoption fails (wrong expectations)
 
-2. **AI Contributor Guidelines** (500 words)
+2. **AI as Augmentation, Not Replacement** (350 words)
+   - What AI is good at: scaffolding, boilerplate, exploration
+   - What AI is bad at: architecture decisions, trade-offs, requirements
+   - Mental model: AI as intern, you as architect
+   - Where AI-assisted coding shines vs. fails
+
+3. **Contributor Instructions: Teaching AI Your Rules** (500 words)
    - `.github/copilot-instructions.md` strategy
-   - What to document (architecture, conventions, constraints)
-   - What NOT to document (too much detail kills flexibility)
-   - Auto-sync with workspace root
-   - Example rules from this project
-   - Measuring effectiveness (fewer reverts, faster PRs)
+   - What to document (stack, conventions, constraints)
+   - What NOT to document (leave room for AI creativity)
+   - Auto-sync with workspace for IDE integration
+   - Example: our contributor instructions and results
 
-3. **Model Context Protocol (MCP)** (600 words)
-   - What is MCP? (standardized AI-tool communication)
-   - Why it matters for local-first development
-   - Available servers:
-     - **Context7:** Library documentation lookup
-     - **Sequential Thinking:** Problem-solving and planning
-     - **Memory:** Project context persistence
-     - **Filesystem:** Safe file operations
-     - **GitHub:** Repository management and PR workflows
-   - Configuration in VS Code (`mcp.json`)
-   - Security benefits (no cloud API calls for local data)
+4. **Model Context Protocol (MCP)** (400 words)
+   - What is MCP? (standardized communication between AI and tools)
+   - Why it matters: security, local-first, extensibility
+   - Available servers: Context7, Sequential Thinking, Memory, Filesystem, GitHub
+   - Configuration in VS Code
+   - MCP example: Filesystem MCP for safe bulk edits
 
-4. **Testing Automation** (400 words)
-   - Test scripts in `/scripts/` directory
-   - Testing CSP headers, rate limiting, feeds, related posts
-   - Running tests locally vs. CI
-   - Integration with Inngest Dev UI
+5. **AI Code Review & Quality Gates** (350 words)
+   - Using GitHub Copilot for code review
+   - What to automate: style, patterns, obvious bugs
+   - What NOT to automate: architecture, trade-offs, security
+   - Integrating AI review into PR workflow
 
-5. **Documentation-Driven Development** (400 words)
-   - Documentation BEFORE implementation
-   - `/docs/` structure and organization
-   - Component documentation with JSDoc
-   - API documentation with OpenAPI potential
-   - Keeping docs in sync with code (tests that verify examples)
+6. **Real Workflow: From Prompt to Merge** (400 words)
+   - Case study: Using AI to add a new feature to our blog
+   - Step 1: Prompt with requirements + contributor instructions
+   - Step 2: AI generates code, sometimes with hallucinations
+   - Step 3: Local testing and human review
+   - Step 4: Requesting AI to fix issues
+   - Step 5: Final human approval and merge
 
-6. **Environment Variable Security** (300 words)
-   - Security audit process
-   - `.env.example` as documentation
-   - Client vs. server variable separation
-   - Graceful degradation patterns
+7. **Avoiding Common Pitfalls** (300 words)
+   - Over-reliance on AI: the quality cliff
+   - Security blindspots: AI doesn't think about attacks
+   - Hallucination: AI confidently suggests wrong solutions
+   - When to push back: trusting your instincts
+   - Measuring effectiveness (fewer revisions = better instructions)
 
-7. **Developer Velocity Metrics** (200 words)
-   - How to measure DX improvements
-   - Time to first PR for new contributors
-   - AI-assisted code quality
-   - Documentation update frequency
-
-8. **Key Takeaways** (150 words)
-   - Invest in DX early, it compounds
-   - AI assistants need guardrails
-   - Documentation is code
-   - Local-first tools reduce security risks
+8. **Key Takeaways** (200 words)
+   - AI is a force multiplier, not a replacement
+   - Your project's documentation matters more than ever
+   - Good contributor guidelines = better AI assistance
+   - Pair it with MCP for even better results
 
 **Assets Needed:**
+- Contributor instructions examples
 - MCP server architecture diagram
-- VS Code with MCP screenshots
-- Documentation structure visualization
-- Before/after comparison (AI code quality)
+- Before/after code comparison (AI vs. AI-assisted)
+- Copilot output screenshot with annotation
 
-**SEO Keywords:** GitHub Copilot, Model Context Protocol, MCP servers, AI coding assistants, documentation-driven development, developer experience
+**SEO Keywords:** GitHub Copilot, AI coding assistants, Model Context Protocol, contributor guidelines, AI code review, prompt engineering
 
 ---
 
-## 🎨 Editorial Guidelines
+### Developer Portfolio Part 4: Analytics (February 2026)
+
+**Working Title:** *Blog Analytics Without the Database: Redis, View Counts & Trending Posts*
+
+**Hook:** "How I track blog analytics with just Redis and no database—and how the fallback still works when Redis is down."
+
+**Outline:**
+
+1. **The Analytics Dilemma** (250 words)
+   - Why track analytics? (measure success, find great content)
+   - Common approach: full analytics platforms (Amplitude, Mixpanel)
+   - Cost for indie builders: can be expensive
+   - Privacy concerns: tracking users
+   - A better way: minimal analytics
+
+2. **Redis for Real-Time Counters** (400 words)
+   - Why Redis? (fast, atomic operations, expiration)
+   - View count tracking architecture
+   - Per-post counters with INCR
+   - Graceful fallback when Redis is unavailable
+   - Upstash Redis: serverless Redis setup
+
+3. **Trending Post Algorithm** (400 words)
+   - Simple algorithm: views in last 7/30 days
+   - More sophisticated: weighted by recency
+   - Implementation: cron job to aggregate daily
+   - Displaying trending on homepage
+   - Why trending matters for discoverability
+
+4. **Privacy-First Tracking** (300 words)
+   - What NOT to track (user IDs, sessions, behavior paths)
+   - What to track (page views, traffic source if available)
+   - GDPR considerations
+   - Cookie-free tracking
+   - User privacy as feature, not afterthought
+
+5. **Analytics Dashboard** (300 words)
+   - Simple internal dashboard showing metrics
+   - Post view leaderboard
+   - Traffic over time
+   - When to hide (production) vs. show (dev)
+   - Read-only for developers, read-write for author
+
+6. **Integration with Inngest** (300 words)
+   - Scheduled aggregation jobs
+   - Moving raw counts → daily summaries
+   - Archiving old data to reduce Redis size
+   - Cost optimization: batch operations
+
+7. **Handling Edge Cases** (200 words)
+   - Redis connection failures
+   - Preventing double-counting (INCR race conditions)
+   - Time zone handling for daily aggregation
+   - Importing historical data
+
+8. **Key Takeaways** (150 words)
+   - You don't need complex analytics platforms
+   - Redis is incredibly useful for simple counting
+   - Graceful degradation is underrated
+   - Start simple, add features when needed
+
+**Assets Needed:**
+- Analytics dashboard screenshots
+- Redis architecture diagram
+- Trending algorithm visualization
+- Fallback flow chart
+
+**SEO Keywords:** blog analytics, Redis, view counts, serverless database, trending posts, Upstash
+
+---
+
+### Cybersecurity Part 2: Secrets Management (March 2026)
+
+**Working Title:** *Secrets Management: From .env to Production — A No-Compromise Approach*
+
+**Hook:** "A developer on my team accidentally committed an API key. Here's the story and how I fixed it."
+
+**Outline:**
+
+1. **The Secrets Leak Problem** (300 words)
+   - Real incident: API key in GitHub (takes minutes to compromise)
+   - Cost of exposure: account takeover, data theft, ransom
+   - Why it happens: developers aren't trained, tooling is confusing
+   - Prevention: people + process + tooling
+
+2. **Types of Secrets & Their Lifecycle** (350 words)
+   - API keys (GitHub, third-party services)
+   - Database credentials
+   - Private encryption keys
+   - OAuth tokens and JWTs
+   - Each has different rotation requirements
+
+3. **Development: Local .env Files** (300 words)
+   - `.env.local` for development (never commit)
+   - `.env.example` as documentation
+   - Tools for managing multiple .env files
+   - Dangers: still commits mistakes
+   - Best practices: automation that prevents commits
+
+4. **CI/CD: GitHub Secrets** (300 words)
+   - GitHub Actions secrets management
+   - Organization vs. repository secrets
+   - Principle of least privilege: minimal scope
+   - Audit trail: who accessed what and when
+   - Rotating secrets: automation vs. manual
+
+5. **Production: Secret Management Services** (400 words)
+   - Vercel Environment Variables: right for Vercel deployments
+   - AWS Secrets Manager / Systems Manager Parameter Store
+   - HashiCorp Vault: for self-hosted
+   - 1Password / Bitwarden: team-friendly alternatives
+   - When to use each
+
+6. **Preventing Accidental Commits** (250 words)
+   - Git hooks: pre-commit scanning
+   - Tools: `git-secrets`, `gitguardian`
+   - GitHub push protection
+   - CI/CD scanning before deploy
+   - Defense in depth: multiple layers
+
+7. **Access Control & Rotation** (250 words)
+   - Principle of least privilege
+   - Role-based access control (RBAC)
+   - Secret rotation schedules
+   - Automated vs. manual rotation
+   - Audit logging for compliance
+
+8. **Incident Response** (200 words)
+   - If a secret leaks: immediate rotation
+   - Scanning commit history
+   - Timeline of access (who accessed it, when)
+   - Post-incident: automation to prevent recurrence
+
+9. **Key Takeaways** (150 words)
+   - Secrets are risk vectors, treat accordingly
+   - Automate everything (prevent human mistakes)
+   - Rotation is as important as protection
+   - Audit trail is critical for compliance
+
+**Assets Needed:**
+- Secret types comparison table
+- Lifecycle diagram (create → rotate → retire)
+- Access control matrix
+- Incident response flowchart
+
+**SEO Keywords:** secrets management, API keys, environment variables, GitHub secrets, credential rotation, DevSecOps
+
+---
+
+### Developer Portfolio Part 5: Search (April 2026)
+
+**Working Title:** *Search at Scale: Full-Text Search Without Elasticsearch*
+
+**Hook:** "I added full-text blog search without a single database query. Here's how Algolia changed the game."
+
+**Outline:**
+
+1. **The Search Problem** (250 words)
+   - Basic client-side search: poor UX for large blogs
+   - Database search: adds complexity, cost
+   - Elasticsearch: overkill for indie blogs, operational burden
+   - The sweet spot: managed search services
+
+2. **Search UX Fundamentals** (300 words)
+   - Instant results (no page reload)
+   - Typeahead suggestions
+   - Relevance ranking
+   - Filtering (by tag, date, author)
+   - Mobile-friendly
+   - Accessibility considerations
+
+3. **Algolia: Managed Search** (400 words)
+   - What it is: hosted full-text search service
+   - Why it's great for blogs: generously free tier, fantastic UX
+   - Indexing: how to keep search index in sync with blog posts
+   - Query API: simple, powerful, well-documented
+   - Cost: free tier covers most indie blogs
+
+4. **Implementation: Indexing** (350 words)
+   - Static index at build time (MDX posts)
+   - Sending index to Algolia (API call)
+   - Metadata: title, URL, date, tags, content
+   - Partial indexing: updating only changed posts
+   - Vercel integration: automatic on deploy
+
+5. **Implementation: Search UI** (350 words)
+   - React component for search input
+   - Client-side Algolia SDK
+   - Debounced queries (no query spam)
+   - Displaying results: title, excerpt, metadata
+   - Highlighting matching terms
+   - Analytics: tracking searches
+
+6. **Advanced Features** (250 words)
+   - Faceted search (filter by tag)
+   - Typo tolerance (fuzzy matching)
+   - Synonyms (different terms for same concept)
+   - Ranking customization (boost recent posts)
+   - A/B testing search ranking
+
+7. **Analytics: What People Search For** (200 words)
+   - Popular search terms
+   - Search success rate (found what they wanted?)
+   - No results queries (content gap indicator)
+   - Using analytics to improve content
+
+8. **Privacy & Performance** (200 words)
+   - Search queries are sent to Algolia (privacy consideration)
+   - Algolia's privacy policy
+   - Client-side search as alternative (slower, more storage)
+   - Performance impact: minimal with Algolia
+
+9. **Key Takeaways** (150 words)
+   - Search enhances discoverability
+   - Managed solutions (Algolia) beat DIY
+   - Even small blogs benefit from search
+   - Use analytics to guide content strategy
+
+**Assets Needed:**
+- Search UI screenshots
+- Indexing pipeline diagram
+- Before/after blog navigation
+- Analytics examples (popular searches)
+
+**SEO Keywords:** full-text search, Algolia, blog search, Next.js search, typeahead, search UX
+
+---
+
+### AI & Agentic Workflows Part 2: Automating Tasks (May 2026)
+
+**Working Title:** *Automating Repetitive Tasks: Building Agentic Workflows with Inngest & AI*
+
+**Hook:** "Every time a new blog post publishes, 5 things happen automatically. Here's how I built a no-code orchestration system with Inngest and AI."
+
+**Outline:**
+
+1. **The Automation Problem** (250 words)
+   - Manual tasks are error-prone and time-consuming
+   - Automation without agentic systems is fragile
+   - AI-assisted automation: the next frontier
+   - When to automate vs. when to keep manual
+
+2. **What is an Agentic Workflow?** (350 words)
+   - Definition: system that makes decisions and takes actions
+   - Examples: approve-then-publish, multi-step pipelines
+   - State machines and error recovery
+   - Human-in-the-loop: keeping humans as decision-makers
+   - Why Inngest: visual workflows, local dev, reliability
+
+3. **Case Study: Blog Post Publishing Workflow** (600 words)
+   - Trigger: new post file created/updated
+   - Step 1: Validate frontmatter and content
+   - Step 2: Generate social media posts (AI-assisted)
+   - Step 3: Human review and approval
+   - Step 4: Publish to blog and update index
+   - Step 5: Send notifications (newsletter, social)
+   - Human approval gates: where humans stay in control
+   - Dashboard: visibility into workflow runs
+
+4. **AI in Workflows: Augmentation Patterns** (400 words)
+   - Generate content summaries from posts
+   - Create social media variations (Twitter, LinkedIn, HN)
+   - Suggest tags and categories
+   - Draft email newsletter content
+   - Important: AI-generated ≠ AI-published (humans decide)
+
+5. **Building the Workflow** (400 words)
+   - Defining events and triggers
+   - Step functions with branching logic
+   - Retry logic and error handling
+   - Human approval steps (long-running flows)
+   - Local testing with Inngest Dev UI
+   - Deploying to production
+
+6. **Monitoring & Observability** (250 words)
+   - Dashboard: workflow success rate
+   - Error patterns: what fails and why
+   - Logs: debugging failed runs
+   - Notifications: alerts for failures
+   - Cost tracking: automation vs. manual
+
+7. **Other Automation Opportunities** (250 words)
+   - GitHub workflow automation (PR reviews, releases)
+   - Content moderation (Giscus comments)
+   - Analytics aggregation (daily/weekly reports)
+   - Cache warming and index updates
+   - When to say no (keep it simple)
+
+8. **Key Takeaways** (150 words)
+   - Automation amplifies mistakes if done wrong
+   - Human approval gates are critical
+   - AI + Inngest = powerful automation
+   - Start with high-value tasks
+   - Measure ROI (time saved vs. complexity)
+
+**Assets Needed:**
+- Workflow diagram (Inngest visual)
+- Step function sequence diagram
+- Dashboard screenshots
+- AI-generated content examples
+
+**SEO Keywords:** agentic workflows, Inngest automation, AI automation, event-driven automation, workflow orchestration, no-code automation
+
+---
+
+### Cybersecurity Part 3: OWASP Top 10 (June 2026)
+
+**Working Title:** *OWASP Top 10 for Next.js: Practical Defense Against Real Attacks*
+
+**Hook:** "The OWASP Top 10 is your roadmap to security. Here's how to defend against each one in your Next.js application."
+
+**Outline:**
+
+1. **What is OWASP?** (200 words)
+   - OWASP Top 10 explained
+   - Most critical web vulnerabilities
+   - How it guides security testing
+   - Version 2021 vs. 2017 changes
+
+2. **A1: Broken Access Control** (350 words)
+   - What it is: users accessing resources they shouldn't
+   - Real example: accessing other user's data by ID guessing
+   - Prevention: middleware, row-level security, API checks
+   - Testing: attempt to access unauthorized resources
+   - Code example: protected API route with auth check
+
+3. **A2: Cryptographic Failures** (300 words)
+   - Storing secrets in plaintext
+   - Using outdated encryption
+   - Not hashing passwords
+   - Exposed credentials in version control
+   - Prevention: bcrypt, environment variables, secrets rotation
+
+4. **A3: Injection** (350 words)
+   - SQL injection (ORM protection)
+   - NoSQL injection (validation)
+   - Command injection (avoid shell commands)
+   - Prevention: parameterized queries, input validation, ORM
+   - Real example: contact form validation
+
+5. **A4: Insecure Design** (300 words)
+   - Missing security requirements
+   - Threat modeling not done
+   - Security patterns not applied
+   - Prevention: threat modeling, design review, STRIDE
+   - Our threat model for the portfolio
+
+6. **A5: Security Misconfiguration** (250 words)
+   - Debug mode enabled in production
+   - Default credentials not changed
+   - Missing security headers
+   - Verbose error messages revealing internals
+   - Prevention: security headers, environment-based config
+
+7. **A6: Vulnerable Components** (250 words)
+   - Outdated dependencies with known CVEs
+   - Dependencies with transitive vulnerabilities
+   - Testing: Snyk, npm audit, supply chain risks
+   - Prevention: regular updates, automated scanning
+   - Case study: fixing a real CVE in our dependencies
+
+8. **A7: Identification Failures** (250 words)
+   - Weak authentication (predictable sessions)
+   - No rate limiting on login
+   - Credential stuffing attacks
+   - Session fixation
+   - Prevention: strong passwords, rate limiting, secure sessions
+
+9. **A8: Data Integrity Failures** (200 words)
+   - Trusting user input
+   - Lack of validation on both client and server
+   - Insecure CI/CD pipelines
+   - Prevention: validation, code signing, secure deployment
+
+10. **A9: Logging Failures** (200 words)
+    - Not logging security events
+    - Logs not monitored
+    - Insufficient retention
+    - Prevention: comprehensive logging, alerts, retention policy
+
+11. **A10: SSRF (Server-Side Request Forgery)** (250 words)
+    - Attacker makes server fetch malicious content
+    - Real example: GitHub API integration with untrusted URL
+    - Prevention: URL validation, allowlists, network segmentation
+    - Testing: attempting to access internal services
+
+12. **Defense-In-Depth Architecture** (250 words)
+    - Layered defenses for each vulnerability class
+    - No single defense is sufficient
+    - Security testing checklist
+    - Common patterns across the OWASP Top 10
+
+13. **Key Takeaways** (150 words)
+    - OWASP Top 10 is your security curriculum
+    - Not all 10 apply equally to your app (threat modeling)
+    - Automation (Snyk, SAST) catches some, not all
+    - Manual testing and code review are critical
+    - Security is ongoing, not a checkbox
+
+**Assets Needed:**
+- OWASP Top 10 comparison table
+- Real attack scenarios (screenshots/diagrams)
+- Vulnerability examples from code
+- Remediation checklist
+
+**SEO Keywords:** OWASP Top 10, Next.js security, web application security, OWASP 2021, secure coding practices
+
+---
 
 ### Writing Style
 
@@ -441,207 +898,36 @@ A comprehensive journey from building a minimal portfolio in a weekend to runnin
 ### Growth Targets
 
 **Q4 2025:** Establish publishing cadence, 2 posts published  
-**Q1 2026:** Complete "Tiny Portfolio" series (4 more posts), 10K monthly views  
+**Q1 2026:** Complete "Developer Portfolio" series (4 more posts), 10K monthly views  
 **Q2 2026:** Launch new series, 20K monthly views  
 **Q3 2026:** 2 active series, 40K monthly views
 
 ---
 
-## 🗂️ Content Backlog: Series Ideas
+## 🗂️ Future Series Ideas (2026+)
 
-### Series 1: "API Design in Practice"
+These series are planned for future exploration based on community interest and project evolution:
 
-**Concept:** Practical API design patterns using real-world examples from this project
+### Q3 2026: "Zero-Infrastructure Features" 
+Building blog features without a database: Giscus comments, RSS/Atom feeds, print stylesheets, zero-downtime migrations.
 
-**Potential Posts:**
-1. "RESTful API Design: Contact Form to Production" (API routes, validation, error handling)
-2. "Rate Limiting Strategies: From In-Memory to Distributed" (evolution of rate limiting)
-3. "API Observability: Logging, Monitoring & Debugging" (Inngest, error tracking)
-4. "Versioning APIs Without Breaking Clients" (backward compatibility)
-5. "GraphQL vs. REST: When to Use Each" (GitHub API integration lessons)
+### Q4 2026: "TypeScript Patterns at Scale"
+Practical TypeScript patterns: type-safe environment variables, discriminated unions for API responses, generic components, Zod for runtime safety.
 
-**Target Audience:** Backend developers, API designers  
-**Estimated Series Length:** 5-6 posts  
-**Difficulty Level:** Intermediate to Advanced
+### Q1 2027: "Performance Optimization Deep-Dive"
+ISR strategies, multi-layer caching, CDN edge functions, image optimization, font loading strategies, INP optimization.
 
----
+### Q2 2027: "DevOps for Indie Developers"
+Deployments, preview environments, monitoring, error tracking, performance budgets, incident response for solo builders.
 
-### Series 2: "Security Without the Boring Parts"
-
-**Concept:** Make security interesting by showing attacks and defenses in action
-
-**Potential Posts:**
-1. "XSS Attacks Explained: Breaking and Fixing a Real Site" (CSP implementation story)
-2. "Rate Limiting: Stop Attacks Before They Start" (spam prevention, DOS mitigation)
-3. "OWASP Top 10 for Next.js Applications" (practical implementations)
-4. "Secrets Management: From .env to Production" (environment variable security)
-5. "Content Security Policy: The Good Parts" (CSP without headaches)
-6. "Security Headers That Actually Matter" (beyond cargo cult security)
-
-**Target Audience:** Full-stack developers, security-curious engineers  
-**Estimated Series Length:** 6-8 posts  
-**Difficulty Level:** Beginner to Intermediate
+### Future: "Real-World Patterns from Production"
+Case studies and lessons learned from running the blog at scale (if/when traffic grows), real incidents and how they were handled, architectural evolution.
 
 ---
 
-### Series 3: "TypeScript Patterns at Scale"
+## 🔬 Content Exploration Topics
 
-**Concept:** Practical TypeScript patterns learned while building this project
-
-**Potential Posts:**
-1. "Type-Safe Environment Variables in Next.js" (validation, autocomplete)
-2. "Discriminated Unions for API Responses" (error handling patterns)
-3. "Generic Components with TypeScript" (React + TS best practices)
-4. "Zod for Runtime Type Safety" (schema validation)
-5. "TypeScript Utility Types You'll Actually Use" (Pick, Omit, Partial, etc.)
-6. "When to Use 'any' (And How to Remove It Later)" (pragmatic typing)
-
-**Target Audience:** TypeScript developers, React developers  
-**Estimated Series Length:** 6-8 posts  
-**Difficulty Level:** Intermediate
-
----
-
-### Series 4: "The MDX Blog Engine"
-
-**Concept:** Deep dive into building a production-ready blog with MDX
-
-**Potential Posts:**
-1. "Why MDX? (And Why Not Markdown or a CMS)" (decision-making framework)
-2. "Frontmatter Schema Design for Blogs" (metadata architecture)
-3. "Syntax Highlighting with Shiki: Dual Themes & Copy Buttons" (code blocks)
-4. "Auto-Generated Table of Contents with IntersectionObserver" (TOC implementation)
-5. "Related Posts Algorithm: Simple but Effective" (tag-based recommendations)
-6. "Search Without a Database: Full-Text Search in Next.js" (client-side search)
-7. "Reading Progress Indicators & Reading Time Estimation" (UX enhancements)
-
-**Target Audience:** Content-focused developers, technical bloggers  
-**Estimated Series Length:** 7-9 posts  
-**Difficulty Level:** Beginner to Intermediate
-
----
-
-### Series 5: "Serverless Architecture Patterns"
-
-**Concept:** Real-world serverless patterns using Vercel and Next.js
-
-**Potential Posts:**
-1. "Edge vs. Node.js Runtime: When to Use Each" (Vercel runtimes)
-2. "Durable Execution with Inngest" (background jobs deep-dive)
-3. "Caching Strategies for Serverless APIs" (Redis, ISR, CDN)
-4. "Cold Starts: Measuring and Mitigating" (performance optimization)
-5. "Serverless Costs: The Real Numbers" (transparency on pricing)
-6. "Multi-Region Serverless Without the Complexity" (Vercel edge network)
-
-**Target Audience:** Cloud architects, serverless developers  
-**Estimated Series Length:** 6-7 posts  
-**Difficulty Level:** Intermediate to Advanced
-
----
-
-### Series 6: "AI-Augmented Development"
-
-**Concept:** How to effectively use AI assistants in your workflow
-
-**Potential Posts:**
-1. "Teaching AI Your Codebase Rules" (contributor guidelines)
-2. "Model Context Protocol: Local-First AI Tools" (MCP deep-dive)
-3. "Code Review with AI: What Works and What Doesn't" (GitHub Copilot patterns)
-4. "AI for Documentation: Auto-Generated Guides That Don't Suck" (doc generation)
-5. "Debugging with AI: Beyond Stack Overflow" (problem-solving workflows)
-6. "When NOT to Use AI: Knowing the Limits" (honest assessment)
-
-**Target Audience:** All developers, AI-curious engineers  
-**Estimated Series Length:** 6-8 posts  
-**Difficulty Level:** Beginner to Advanced
-
----
-
-### Series 7: "React Server Components in Production"
-
-**Concept:** Practical patterns for React Server Components (RSC) in Next.js
-
-**Potential Posts:**
-1. "Server Components vs. Client Components: The Mental Model" (when to use each)
-2. "Data Fetching Patterns in App Router" (async components, streaming)
-3. "Streaming and Suspense for Better UX" (progressive rendering)
-4. "Server Actions: Forms Without JavaScript" (progressive enhancement)
-5. "Error Boundaries and Loading States" (resilient UI patterns)
-6. "Migrating from Pages Router to App Router" (migration strategy)
-
-**Target Audience:** React developers, Next.js users  
-**Estimated Series Length:** 6-7 posts  
-**Difficulty Level:** Intermediate
-
----
-
-### Series 8: "CSS Architecture for Modern Apps"
-
-**Concept:** Tailwind v4, CSS-in-JS, and styling strategies
-
-**Potential Posts:**
-1. "Tailwind v4: What Changed and Why It Matters" (migration guide)
-2. "Component Variants with CVA (Class Variance Authority)" (shadcn/ui patterns)
-3. "Dark Mode That Doesn't Flash" (theme implementation)
-4. "CSS Variables vs. Tailwind Classes: When to Use Each" (hybrid approach)
-5. "Print Stylesheets in 2025: Still Relevant?" (PDF generation)
-6. "Responsive Typography: Beyond px and rem" (fluid type scales)
-
-**Target Audience:** Frontend developers, designers-who-code  
-**Estimated Series Length:** 6-7 posts  
-**Difficulty Level:** Beginner to Intermediate
-
----
-
-## 🔬 Research & Exploration Topics
-
-Topics to research and potentially write about in the future:
-
-### Performance & Optimization
-- [ ] View Transitions API in Next.js
-- [ ] Partial Prerendering (PPR) in Next.js 15
-- [ ] Web Workers for expensive client-side operations
-- [ ] Image optimization strategies (beyond next/image)
-- [ ] Font loading strategies (FOUT vs. FOIT)
-
-### Testing & Quality
-- [ ] E2E testing with Playwright
-- [ ] Visual regression testing
-- [ ] Accessibility testing automation
-- [ ] Performance budgets and CI integration
-- [ ] Mutation testing for better coverage
-
-### Infrastructure & DevOps
-- [ ] Blue-green deployments on Vercel
-- [ ] Feature flags without a service
-- [ ] Preview deployments workflow
-- [ ] Disaster recovery for serverless apps
-- [ ] Multi-tenant Next.js architecture
-
-### Advanced Features
-- [ ] Real-time features with Server-Sent Events (SSE)
-- [ ] WebSockets in serverless (Pusher, Ably)
-- [ ] PDF generation server-side
-- [ ] Email templates with React Email
-- [ ] Video transcoding on the edge
-
-### User Experience
-- [ ] Optimistic UI patterns
-- [ ] Skeleton loaders vs. spinners
-- [ ] Empty states that convert
-- [ ] Error messages users actually understand
-- [ ] Progressive enhancement in 2025
-
-### AI & ML Integration
-- [ ] OpenAI API integration patterns
-- [ ] Semantic search with embeddings
-- [ ] AI-generated summaries for blog posts
-- [ ] Content moderation with AI
-- [ ] Personalized content recommendations
-
----
-
-## 📈 Content Distribution Strategy
+These are topics we'll explore as blog post opportunities emerge:
 
 ### Primary Channels
 
@@ -691,7 +977,7 @@ Topics to research and potentially write about in the future:
 - [ ] Improve average time on page to 6+ minutes
 
 ### Q1 2026
-- [ ] Complete "Tiny Portfolio" series (4 more posts)
+- [ ] Complete "Developer Portfolio" series (4 more posts)
 - [ ] Reach 10K monthly blog views
 - [ ] Start second series (pick from backlog)
 - [ ] Guest post opportunity or podcast interview
@@ -712,6 +998,8 @@ Topics to research and potentially write about in the future:
 
 ---
 
+---
+
 ## 📋 Content Production Checklist
 
 ### Pre-Writing Phase (1-2 hours)
@@ -728,8 +1016,8 @@ Topics to research and potentially write about in the future:
 - [ ] Insert images, diagrams, and visual breaks
 - [ ] Write introduction hook
 - [ ] Write conclusion and key takeaways
-- [ ] Add internal links to previous posts
-- [ ] Add external links to documentation
+- [ ] Add internal links to previous posts in series
+- [ ] Add external links to official documentation
 
 ### Editing Phase (2-3 hours)
 - [ ] Read aloud for flow and clarity
@@ -743,21 +1031,56 @@ Topics to research and potentially write about in the future:
 ### Pre-Publish Phase (1 hour)
 - [ ] Add frontmatter (title, summary, tags, dates)
 - [ ] Set featured status if applicable
-- [ ] Generate OpenGraph image (if custom)
+- [ ] Generate OpenGraph image
 - [ ] Write social media posts (Twitter, LinkedIn)
-- [ ] Schedule publish date in CMS/Git
+- [ ] Schedule publish date
 - [ ] Verify sitemap will update
 - [ ] Check RSS/Atom feed generation
 
-### Post-Publish Phase (1 hour + ongoing)
+### Post-Publish Phase (ongoing)
 - [ ] Share on social media immediately
-- [ ] Submit to relevant communities (Reddit, HN - if appropriate)
+- [ ] Submit to relevant communities (Reddit, HN)
 - [ ] Monitor comments and respond
 - [ ] Check analytics after 24 hours
 - [ ] Fix any typos or broken links reported
-- [ ] Update `done.md` with post completion
+- [ ] Update project todo with completion
 
 **Total Time per Post:** 10-15 hours (research to publish)
+
+---
+
+## 🎬 Immediate Next Steps
+
+**November 2025 - Event-Driven Architecture Post:**
+1. [ ] Finalize outline
+2. [ ] Gather Inngest code from `/src/inngest/` directory
+3. [ ] Create architecture diagrams (before/after)
+4. [ ] Write first draft (target: 2,500-3,000 words)
+5. [ ] Get code examples working with syntax highlighting
+6. [ ] Edit and polish
+7. [ ] Publish by November 15, 2025
+
+**December 2025 - CSP & Security Headers Post:**
+1. [ ] Begin research on current CSP best practices
+2. [ ] Document security improvements made in this project
+3. [ ] Create screenshots of security headers
+4. [ ] Start outline mid-November
+5. [ ] Begin writing by end of November
+6. [ ] Target publish: December 15, 2025
+
+---
+
+**Document Maintenance:**
+- Update this document after each post publishes
+- Track actual vs. estimated writing time for planning
+- Adjust future topics based on traffic and engagement metrics
+- Review quarterly and adjust goals based on performance
+
+**Content Strategy Owner:** Drew (dcyfr)  
+**Last Updated:** October 27, 2025  
+**Next Quarterly Review:** January 15, 2026
+
+---
 
 ---
 

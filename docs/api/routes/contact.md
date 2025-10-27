@@ -588,7 +588,7 @@ test.describe('POST /api/contact', () => {
 - **GitHub Contributions:** `github-contributions.md`
 - **Rate Limiting:** `src/lib/rate-limit.ts`
 - **Client Implementation:** `src/app/contact/page.tsx`
-- **Environment Variables:** `docs/operations/environment-variables.md`
+- **Environment Variables:** `docs/platform/environment-variables.md`
 
 ## Troubleshooting
 

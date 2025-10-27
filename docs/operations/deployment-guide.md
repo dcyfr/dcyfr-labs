@@ -504,7 +504,7 @@ After deploying, consider:
 
 ## Related Documentation
 
-- **Environment Variables:** [/docs/operations/environment-variables.md](/docs/operations/environment-variables.md)
+- **Environment Variables:** [/docs/platform/environment-variables.md](/docs/platform/environment-variables.md)
 - **Deployment Checklist:** [/docs/operations/deployment-checklist.md](/docs/operations/deployment-checklist.md)
 - **Security Implementation:** [/docs/security/](/docs/security/)
 - **Architecture:** [/docs/blog/architecture.md](/docs/blog/architecture.md)

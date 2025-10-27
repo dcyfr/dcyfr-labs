@@ -45,7 +45,6 @@ This document tracks **active and pending** work only. Completed tasks are moved
 ## 📝 Content & Design
 
 ### Blog Posts
-- [ ] **Reconsider series naming** - "Tiny Portfolio" doesn't fit scale anymore. Consider: "Full-Stack Portfolio", "Weekend to Production", "Production Portfolio", or other alternatives (see `/docs/operations/content-strategy.md` for options)
 - [ ] Write about implementing GitHub contributions heatmap
 - [ ] Write about security best practices for Next.js apps
 - [ ] Write about MDX setup and customization

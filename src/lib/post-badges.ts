@@ -17,22 +17,24 @@ export async function getPostBadgeMetadata(posts: Post[]): Promise<PostBadgeMeta
     .filter(p => !p.archived && !p.draft)
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))[0];
   
-  // Get view counts for all non-archived, non-draft posts
+  // Get view counts for all non-archived, non-draft posts using their post IDs
   const eligiblePosts = posts.filter(p => !p.archived && !p.draft);
-  const viewMap = await getMultiplePostViews(eligiblePosts.map(p => p.slug));
+  const viewMap = await getMultiplePostViews(eligiblePosts.map(p => p.id));
   
   // Find the post with the most views
   let hottestSlug: string | null = null;
   let maxViews = 0;
-  viewMap.forEach((views, slug) => {
+  
+  for (const post of eligiblePosts) {
+    const views = viewMap.get(post.id) || 0;
     if (views > maxViews) {
       maxViews = views;
-      hottestSlug = slug;
+      hottestSlug = post.slug;
     }
-  });
+  }
   
   return {
     latestSlug: latestPost?.slug ?? null,
-    hottestSlug: maxViews > 0 ? hottestSlug : null,
+    hottestSlug,
   };
 }
