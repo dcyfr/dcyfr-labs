@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getMultiplePostViews } from "@/lib/views";
+import { getMultiplePostViews, getMultiplePostViews24h } from "@/lib/views";
 import { posts } from "@/data/posts";
 import { createClient } from "redis";
 
@@ -35,6 +35,7 @@ export async function GET() {
     // Get view counts for all posts using their stable post IDs
     const postIds = posts.map((p) => p.id);
     const viewMap = await getMultiplePostViews(postIds);
+    const views24hMap = await getMultiplePostViews24h(postIds);
 
     // Combine with post data
     const postsWithViews = posts
@@ -47,17 +48,25 @@ export async function GET() {
         archived: post.archived ?? false,
         draft: post.draft ?? false,
         views: viewMap.get(post.id) || 0,
+        views24h: views24hMap.get(post.id) || 0,
         readingTime: post.readingTime,
       }))
       .sort((a, b) => b.views - a.views);
 
     // Calculate statistics
     const totalViews = postsWithViews.reduce((sum, post) => sum + post.views, 0);
+    const totalViews24h = postsWithViews.reduce((sum, post) => sum + post.views24h, 0);
     const averageViews =
       postsWithViews.length > 0 ? totalViews / postsWithViews.length : 0;
+    const averageViews24h =
+      postsWithViews.length > 0 ? totalViews24h / postsWithViews.length : 0;
     const topPost = postsWithViews[0];
+    
+    // Get top posts in last 24 hours
+    const topPost24h = [...postsWithViews].sort((a, b) => b.views24h - a.views24h)[0];
+    
     const trendingPosts = postsWithViews.slice(0, 5);
-
+    
     // Get trending data from Redis if available
     let trendingFromRedis = null;
     const redis = await getRedisClient();
@@ -79,12 +88,23 @@ export async function GET() {
       summary: {
         totalPosts: postsWithViews.length,
         totalViews,
+        totalViews24h,
         averageViews: Math.round(averageViews),
+        averageViews24h: Math.round(averageViews24h),
         topPost: topPost
           ? {
               slug: topPost.slug,
               title: topPost.title,
               views: topPost.views,
+              views24h: topPost.views24h,
+            }
+          : null,
+        topPost24h: topPost24h
+          ? {
+              slug: topPost24h.slug,
+              title: topPost24h.title,
+              views: topPost24h.views,
+              views24h: topPost24h.views24h,
             }
           : null,
       },
