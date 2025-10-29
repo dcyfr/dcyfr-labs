@@ -43,18 +43,21 @@ const projectDrafts: Project[] = [
     ],
   },
   {
-    slug: "information-security-network",
-    title: "Information Security Network, Inc.",
-    description: "A non-profit organization dedicated to promoting information security awareness and education.",
-    timeline: "2019 → 2021",
-    status: "archived",
-    tech: ["WordPress", "PHP", "MySQL", "JavaScript", "CSS"],
-    tags: ["Non-profit", "Cybersecurity", "Community"],
-    links: [],
+    slug: "x64-indie-cyber-publication",
+    title: "X64: The Indie Cyber Publication",
+    description: "A digital publication focused on cybersecurity, technology trends, and industry insights.",
+    timeline: "2024 → Present",
+    status: "active",
+    tech: ["Ghost", "JavaScript", "CSS"],
+    tags: ["Publication", "Cybersecurity", "Writing"],
+    links: [
+      { label: "Website", href: `https://x64.onl`, type: "demo" }
+    ],
+    featured: true,
     highlights: [
-      "Co-founded and managed a non-profit organization focused on information security awareness and education.",
-      "Organized events, workshops, and training sessions to educate individuals and organizations on cybersecurity best practices.",
-      "Collaborated with industry professionals and volunteers to deliver high-quality content and resources to the community."
+      "Founded and manage X64, an indie cyber publication delivering high-quality articles on cybersecurity and technology trends.",
+      "Write and edit articles, curate content, and engage with a growing community of readers and contributors.",
+      "Collaborate with writers and industry experts to deliver diverse perspectives and insights.",
     ],
   },
   {
@@ -77,23 +80,20 @@ const projectDrafts: Project[] = [
     ],
   },
   {
-    slug: "x64-indie-cyber-publication",
-    title: "X64: The Indie Cyber Publication",
-    description: "A digital publication focused on cybersecurity, technology trends, and industry insights.",
-    timeline: "2024 → Present",
-    status: "active",
-    tech: ["Ghost", "JavaScript", "CSS"],
-    tags: ["Publication", "Cybersecurity", "Writing"],
-    links: [
-      { label: "Website", href: `https://x64.onl`, type: "demo" }
-    ],
-    featured: true,
+    slug: "information-security-network",
+    title: "Information Security Network, Inc.",
+    description: "A non-profit organization dedicated to promoting information security awareness and education.",
+    timeline: "2019 → 2021",
+    status: "archived",
+    tech: ["WordPress", "PHP", "MySQL", "JavaScript", "CSS"],
+    tags: ["Non-profit", "Cybersecurity", "Community"],
+    links: [],
     highlights: [
-      "Founded and manage X64, an indie cyber publication delivering high-quality articles on cybersecurity and technology trends.",
-      "Write and edit articles, curate content, and engage with a growing community of readers and contributors.",
-      "Collaborate with writers and industry experts to deliver diverse perspectives and insights.",
+      "Co-founded and managed a non-profit organization focused on information security awareness and education.",
+      "Organized events, workshops, and training sessions to educate individuals and organizations on cybersecurity best practices.",
+      "Collaborated with industry professionals and volunteers to deliver high-quality content and resources to the community."
     ],
-  }
+  },
 ];
 
 export const projects = Object.freeze(projectDrafts);

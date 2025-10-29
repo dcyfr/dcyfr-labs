@@ -74,7 +74,6 @@ export default function ResumePage() {
         <h2 className="text-xl md:text-2xl font-medium">Education &amp; Certifications</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <Card className="p-6">
-            <h3 className="font-medium mb-3">Education</h3>
             <div className="space-y-3">
               {resume.education.map((edu, index) => (
                 <div key={index} className="space-y-1">
@@ -95,7 +94,6 @@ export default function ResumePage() {
             </div>
           </Card>
           <Card className="p-6">
-            <h3 className="font-medium mb-3">Certifications</h3>
             <div className="space-y-3">
               {resume.certifications.map((certCategory, index) => (
                 <div key={index} className="space-y-1">

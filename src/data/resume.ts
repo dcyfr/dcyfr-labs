@@ -33,7 +33,7 @@ export type Resume = {
 
 export const resume: Resume = {
   shortSummary: "Cybersecurity architect with over five years of experience leading organizations in enterprise risk management, operational security, and incident response.",
-  summary: "I'm a cybersecurity architect and avid tinkerer with over five years of experience leading teams towards improved enterprise risk management, information security, and incident response. My expertise spans security domains across application development, cloud security, vulnerability management, and automating security operations and incident response. I have successfully built and led security programs, implemented robust security frameworks, and delivered highly technical solutions at scale. With a strong foundation in both technical and leadership skills, I am dedicated to promoting a culture of security awareness and continuous improvement within teams and organizations.",
+  summary: "I'm a cybersecurity architect with over five years of experience leading teams in risk management, information security, and incident response. My skills include application development, cloud security, vulnerability management, and automating security operations. I have built and led security programs, implemented frameworks, and delivered technical solutions at scale, with a focus on fostering security awareness and ongoing improvement.",
   experience: [
     {
       title: "Principal Security Engineer",
@@ -46,13 +46,14 @@ export const resume: Resume = {
       ]
     },
     {
-      title: "Security Engineering Lead",
+      title: "Security Engineering & Operations Lead",
       company: "Monks (formerly Media.Monks)",
       duration: "Jul 2022 → Jul 2023",
       responsibilities: [
-        "Established global security operations and incident response programs to ensure swift and effective responses to incidents.",
         "Developed comprehensive policies and procedures for mergers and acquisitions to enhance security integration.",
-        "Spearheaded threat hunting and vulnerability management initiatives to proactively address security risks."
+        "Spearheaded threat hunting and vulnerability management initiatives to address security risks proactively.",
+        "Established global security operations and incident response programs to ensure swift and effective responses to incidents."
+
       ]
     },
     {
@@ -60,9 +61,10 @@ export const resume: Resume = {
       company: "Monks (formerly MightyHive)",
       duration: "Jul 2021 → Jul 2022",
       responsibilities: [
-        "Developed foundational global security operations and engineering programs to enhance organizational security posture.",
         "Conducted comprehensive technical audits to identify vulnerabilities, prioritizing future security initiatives.",
+        "Developed foundational global security operations and engineering programs to enhance organizational security posture.",
         "Served as a Subject Matter Expert, providing insights and recommendations directly to the CISO."
+
       ]
     },
     {
@@ -73,6 +75,7 @@ export const resume: Resume = {
         "Co-founded Information Security Network, focusing on aligning IT and security objectives with nonprofit strategies.",
         "Led virtual seminars and training events, including BSides and Hack Pensacola, to enhance community engagement.",
         "Collaborated with DC850 to promote security awareness and education initiatives."
+
       ]
     },
     {
@@ -80,9 +83,9 @@ export const resume: Resume = {
       company: "Creative Breakthroughs, Inc.",
       duration: "Dec 2020 → Jul 2021",
       responsibilities: [
-        "Triaged and validated level one escalations and led incident response efforts for over 20 contracts.",
-        "Collaborated with engineering teams to resolve issues and enhance operational procedures.",
-        "Developed entity-tailored playbooks and documentation for diverse client environments."
+        "Triaged and validated level one escalations, leading incident response for over 20 contracts.",
+        "Collaborated with engineering teams to resolve operational issues and enhance procedures.",
+        "Developed tailored playbooks and documentation for diverse client environments."
       ]
     },
     {
@@ -93,6 +96,7 @@ export const resume: Resume = {
         "Developed and implemented a comprehensive security awareness program, enhancing phishing detection by over 40%.",
         "Managed triage of alerts and conducted forensics and incident response for over 1k CJIS-certified systems.",
         "Applied CIS and NIST controls to bolster security for public and emergency support systems."
+
       ]
     }
   ],
@@ -113,9 +117,10 @@ export const resume: Resume = {
       institution: "Pensacola State College",
       duration: "Dec 2020",
       highlights: [
-        "National Technical Honor Society Member",
-        "Cyber Defense Club Training Officer & CTF Lead",
-        "Computer Science & Mathematics Academic Scholar",
+        "Computer Science Academic Scholar",
+        "Cyber Defense Club Training Officer",
+        "Capture the Flag Competition Lead",
+        "National Technical Honors Society",
         "Three-time National Cyber League Gold Bracket Finalist"
       ]
     }
@@ -142,118 +147,31 @@ export const resume: Resume = {
     {
       category: "Critical Skills",
       skills: [
-        "Leadership",
-        "Communication",
-        "Analytical Skills",
-        "Collaboration",
-        "Customer Service",
-        "Problem Solving",
-        "Critical Thinking",
-        "Adaptability",
-        "Time Management",
-        "Project Management",
-        "Mentoring & Training"
+        "Leadership", "Communication", "Analytical Skills", "Collaboration", "Customer Service", "Problem Solving", "Critical Thinking", "Adaptability", "Time Management", "Project Management", "Mentoring & Training"
       ]
     },
     {
       category: "Security Knowledge",
       skills: [
-        "Risk Management",
-        "Vulnerability Management",
-        "Incident Response",
-        "Threat Hunting",
-        "Security Operations",
-        "Cloud Security",
-        "Application Security",
-        "Network Security",
-        "Identity & Access Management",
-        "Data Protection"
+        "Risk Management", "Vulnerability Management", "Incident Response", "Threat Hunting", "Security Operations", "Cloud Security", "Application Security", "Network Security", "Identity & Access Management", "Data Protection"
       ]
     },
     {
       category: "Frameworks & Standards",
       skills: [
-        "NIST CSF",
-        "SOC2",
-        "ISO 27001",
-        "ITIL",
-        "STIGs",
-        "OWASP",
-        "NIST 800-53",
-        "CCPA",
-        "CIS Controls",
-        "TISAX",
-        "TPN",
-        "CJIS",
-        "LGPD",
-        "GDPR"
+        "NIST", "CSF", "SOC2", "ISO 27001", "ITIL", "LGPD", "STIGs", "OWASP", "NIST 800-53", "CCPA/CPA", "CIS Controls", "TISAX", "TPN", "CJIS", "GDPR"
       ]
     },
     {
       category: "Technologies & Tools",
       skills: [
-        "AWS",
-        "Cloudflare",
-        "Snyk",
-        "Google Cloud",
-        "Claude",
-        "CrowdStrike",
-        "Visual Studio Code",
-        "Tenable",
-        "Vercel",
-        "Qualys",
-        "ChatGPT",
-        "Zscaler",
-        "MacOS",
-        "Splunk",
-        "Axiom",
-        "Nessus",
-        "Palo Alto",
-        "Proofpoint",
-        "VMware",
-        "Wireshark",
-        "Perplexity",
-        "GitHub",
-        "Carbon Black",
-        "Burp Suite",
-        "Google Gemini",
-        "Metasploit",
-        "Windows",
-        "Google Workspace",
-        "Postman",
-        "Kali Linux",
-        "Linux",
-        "Bitbucket",
-        "Microsoft Office 365",
-        "Azure"
+        "AWS", "Cloudflare", "Snyk", "Google Cloud", "Claude", "CrowdStrike", "Visual Studio Code", "Tenable", "Vercel", "Qualys", "ChatGPT", "Zscaler", "macOS", "Splunk", "Axiom", "Nessus", "Palo Alto", "Proofpoint", "VMware", "Wireshark", "Perplexity", "GitHub", "Carbon Black", "Burp Suite", "Google Gemini", "Metasploit", "Windows", "Google Workspace", "Postman", "Kali Linux", "Linux", "Microsoft Office 365", "Azure"
       ]
     },
     {
       category: "Programming & Automation",
       skills: [
-        "Python",
-        "Next.js",
-        "Bash",
-        "PowerShell",
-        "Git",
-        "Node.js",
-        "CI/CD",
-        "TypeScript",
-        "Terraform",
-        "YAML",
-        "Docker",
-        "Kubernetes",
-        "REST API",
-        "SQL",
-        "YARA",
-        "Ansible",
-        "React",
-        "HTML/CSS",
-        "JSON",
-        "JavaScript",
-        "Go",
-        "React",
-        "C/C++"
+        "Python", "Next.js", "Bash", "PowerShell", "Git", "Node.js", "CI/CD", "TypeScript", "Terraform", "YAML", "Docker", "Kubernetes", "REST API", "SQL", "Ansible", "React", "JavaScript", "JSON", "Go", "Java", "HTML/CSS", "C/C++"
       ]
     }
   ]
