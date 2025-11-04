@@ -13,6 +13,7 @@ import {
 } from "@/lib/site-config";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { BottomNav } from "@/components/bottom-nav";
 import { Toaster } from "@/components/ui/sonner";
 import { BackToTop } from "@/components/back-to-top";
 import { LoadingBar } from "@/components/loading-bar";
@@ -101,8 +102,9 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
           <LoadingBar />
           <SiteHeader />
-          <main className="min-h-[calc(100dvh-128px)] px-4 sm:px-6 md:px-8">{children}</main>
+          <main className="min-h-[calc(100dvh-128px)] px-4 sm:px-6 md:px-8 pb-20 md:pb-8">{children}</main>
           <SiteFooter />
+          <BottomNav />
           <BackToTop />
           <Toaster richColors position="top-center" />
           {/* Vercel Analytics & Speed Insights */}

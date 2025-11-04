@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu } from "lucide-react";
+import { List } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
@@ -18,9 +18,15 @@ import { Button } from "@/components/ui/button";
  * Props for the TableOfContents component
  * @typedef {Object} TableOfContentsProps
  * @property {TocHeading[]} headings - Array of headings (h2/h3) to render in TOC
+ * @property {boolean} [hideFAB] - Optional: Hide the FAB button (for external control)
+ * @property {boolean} [externalOpen] - Optional: Control sheet open state externally
+ * @property {(open: boolean) => void} [onOpenChange] - Optional: Callback when sheet state changes
  */
 type TableOfContentsProps = {
   headings: TocHeading[];
+  hideFAB?: boolean;
+  externalOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 /**
@@ -73,11 +79,21 @@ type TableOfContentsProps = {
  * - Cleanup on unmount prevents memory leaks from observer
  * - Sheet auto-closes on navigation for better mobile UX
  */
-export function TableOfContents({ headings }: TableOfContentsProps) {
+export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpenChange }: TableOfContentsProps) {
   const [activeId, setActiveId] = React.useState<string>("");
   const [isExpanded, setIsExpanded] = React.useState(true); // Open by default on desktop
-  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const [internalOpen, setInternalOpen] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
+  
+  // Use external control if provided, otherwise use internal state
+  const isSheetOpen = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setIsSheetOpen = (open: boolean) => {
+    if (onOpenChange) {
+      onOpenChange(open);
+    } else {
+      setInternalOpen(open);
+    }
+  };
 
   // Show FAB after scrolling down a bit
   React.useEffect(() => {
@@ -172,27 +188,29 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       {/* Mobile TOC - Floating Action Button with Sheet */}
       <div className="xl:hidden">
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-          <SheetTrigger asChild>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={
-                isVisible
-                  ? { opacity: 1, scale: 1 }
-                  : { opacity: 0, scale: 0.8 }
-              }
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed bottom-[168px] right-4 z-40"
-            >
-              <Button
-                size="icon"
-                className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-                aria-label="Open table of contents"
-                style={{ pointerEvents: isVisible ? "auto" : "none" }}
+          {!hideFAB && (
+            <SheetTrigger asChild>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={
+                  isVisible
+                    ? { opacity: 1, scale: 1 }
+                    : { opacity: 0, scale: 0.8 }
+                }
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="fixed bottom-[176px] right-4 sm:right-6 md:right-8 z-40"
               >
-                <Menu className="h-6 w-6" />
-              </Button>
-            </motion.div>
-          </SheetTrigger>
+                <Button
+                  size="icon"
+                  className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+                  aria-label="Open table of contents"
+                  style={{ pointerEvents: isVisible ? "auto" : "none" }}
+                >
+                  <List className="h-6 w-6" />
+                </Button>
+              </motion.div>
+            </SheetTrigger>
+          )}
           <SheetContent side="bottom" className="h-[80vh]">
             <SheetHeader>
               <SheetTitle>Table of Contents</SheetTitle>

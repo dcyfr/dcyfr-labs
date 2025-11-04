@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { PostBadges } from "@/components/post-badges";
 import { getPostViews, incrementPostViews, getMultiplePostViews } from "@/lib/views";
 import { ReadingProgress } from "@/components/reading-progress";
-import { TableOfContents } from "@/components/table-of-contents";
+import { BlogFABMenu } from "@/components/blog-fab-menu";
 import { extractHeadings } from "@/lib/toc";
 import { RelatedPosts } from "@/components/related-posts";
 import { getRelatedPosts } from "@/lib/related-posts";
@@ -157,7 +157,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <ReadingProgress />
-      <TableOfContents headings={headings} />
+      <BlogFABMenu headings={headings} />
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <article className="mx-auto max-w-3xl py-14 md:py-20" data-url={`${SITE_URL}/blog/${post.slug}`}>
         <header>
