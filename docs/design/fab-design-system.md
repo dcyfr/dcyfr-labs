@@ -113,10 +113,11 @@ window.addEventListener("scroll", handleScroll, { passive: true });
 
 ## Current FAB Implementations
 
-### 1. BackToTop (Global - All Pages)
+### 1. BackToTop (Blog Posts Only)
 
 **Location:** `src/components/back-to-top.tsx`  
-**Visibility:** Global (all pages)  
+**Visibility:** Individual blog post pages only (`/blog/[slug]`)  
+**Hidden on:** Homepage, `/blog` list, `/projects`, and other pages  
 **Position:** `bottom-24 right-4` (96px from bottom for footer clearance)
 
 ```tsx
@@ -132,12 +133,14 @@ window.addEventListener("scroll", handleScroll, { passive: true });
 ```
 
 **Features:**
-- Shows after 400px scroll
+- Shows only on individual blog post pages
+- Appears after 400px scroll threshold
 - Framer Motion animation
 - Smooth scroll to top
 - 56px circular button
 - Secondary variant (muted)
 - Positioned above footer (never overlaps)
+- Uses `usePathname()` to detect blog post pages
 
 ---
 

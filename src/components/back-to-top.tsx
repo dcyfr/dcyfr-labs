@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,8 +9,13 @@ import { Button } from "@/components/ui/button";
 /**
  * BackToTop Component - Floating Action Button
  * 
- * Globally available scroll-to-top button that appears after scrolling down.
+ * Scroll-to-top button that appears after scrolling down on blog post pages.
  * Part of the unified FAB (Floating Action Button) system.
+ * 
+ * Visibility:
+ * - Only shown on individual blog post pages (/blog/[slug])
+ * - Hidden on homepage, /blog list, /projects, and other pages
+ * - Appears after 400px scroll threshold
  * 
  * Design System:
  * - Size: 56px (h-14 w-14) - Standard FAB size
@@ -24,9 +30,18 @@ import { Button } from "@/components/ui/button";
  * @returns {React.ReactElement} Floating action button or null
  */
 export function BackToTop() {
+  const pathname = usePathname();
   const [show, setShow] = useState(false);
 
+  // Only show on individual blog post pages
+  const isOnBlogPost = pathname?.startsWith("/blog/") && pathname !== "/blog";
+
   useEffect(() => {
+    if (!isOnBlogPost) {
+      setShow(false);
+      return;
+    }
+
     const handleScroll = () => {
       // Show after scrolling 400px (about 1.5 viewports)
       setShow(window.scrollY > 400);
@@ -36,7 +51,7 @@ export function BackToTop() {
     handleScroll(); // Check initial position
     
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isOnBlogPost]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
