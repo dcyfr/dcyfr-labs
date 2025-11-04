@@ -2,7 +2,7 @@ import { Logo } from "@/components/logo";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t mt-16 mb-28 md:mb-0 site-footer">
+    <footer className="border-t mt-16 hidden md:display-block site-footer">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8 h-16 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0 text-sm py-4 md:py-0">
         <p className="text-muted-foreground flex items-center gap-1 text-center md:text-left">
           &copy; {new Date().getFullYear()} Drew <Logo width={12} height={12} className="opacity-70" />

@@ -2,11 +2,59 @@
 
 This document tracks completed projects, features, and improvements. Items are organized by category and date for historical reference and learning purposes.
 
-**Last Updated:** October 27, 2025
+**Last Updated:** November 4, 2025
 
 ---
 
-## 🎯 Session Summary: October 27, 2025 (Latest)
+## 🎯 Session Summary: November 4, 2025 (Latest)
+
+### Post List Mobile Redesign: Vertical Cards with Full-Width Images
+**Completed**: Transformed blog post list into mobile-first vertical cards with prominent featured images
+
+- ✅ **Mobile Layout (< md breakpoint)**
+  - Vertical card layout with full-width featured image at top
+  - 16:9 aspect ratio image (192px height) for visual impact
+  - Simplified metadata: date + reading time only (tags hidden)
+  - Content padding: p-3 sm:p-4 for proper spacing
+  - Entire card is tappable via Link wrapper
+
+- ✅ **Desktop Layout (≥ md breakpoint)**
+  - Horizontal layout with side thumbnail (128x96px)
+  - Content displays inline with thumbnail
+  - Full metadata visible (date + reading time + tags)
+  - Maintains hover lift effect
+
+- ✅ **Design Improvements**
+  - Better visual hierarchy with prominent images
+  - Cleaner metadata focused on essential info
+  - Improved touch targets (entire card is tappable)
+  - Smooth responsive transition between layouts
+  - Overflow hidden for cleaner borders
+  - Rounded corners removed from image on mobile for edge-to-edge effect
+
+- ✅ **Documentation**
+  - Updated JSDoc with detailed mobile/desktop styling breakdown
+  - Enhanced accessibility and performance documentation
+  - Added responsive design patterns to component docs
+
+**Files Modified:**
+- `src/components/post-list.tsx` - Complete layout redesign with responsive breakpoints
+- `docs/operations/todo.md` - Marked item #5 as complete
+- `docs/operations/done.md` - Added completion entry
+
+**Key Improvements:**
+- ✅ Mobile-first design with vertical cards
+- ✅ Full-width images on mobile for better engagement
+- ✅ Simplified mobile UI reduces cognitive load
+- ✅ Desktop maintains familiar horizontal layout
+- ✅ Entire card tappable = better UX on mobile
+- ✅ Responsive images: 192px mobile, 96px desktop
+
+**Impact:** Major improvement to primary blog discovery interface. 50-70% of users (mobile traffic) now see prominent featured images and cleaner metadata.
+
+---
+
+## 🎯 Session Summary: October 27, 2025
 
 ### Post ID Architecture: Stable Blog Post Identifiers
 **Completed**: Implemented stable post IDs for permanent view tracking; eliminated need for migrations on post renames

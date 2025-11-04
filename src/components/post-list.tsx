@@ -27,14 +27,17 @@ interface PostListProps {
 /**
  * PostList Component
  *
- * Reusable component for displaying blog posts in a consistent list format.
+ * Reusable component for displaying blog posts in a responsive, mobile-first format.
  * Used across the site: homepage hero section, /blog page, search results, tag filters.
  *
  * Features:
- * - Responsive list with hover effects
+ * - **Mobile-first responsive design** with vertical cards on mobile, horizontal on desktop
+ * - **Full-width 16:9 images** on mobile (< md breakpoint) for better visual impact
+ * - **Simplified metadata** on mobile screens (date + reading time only)
  * - Post badges (Draft, Archived, New, Hot)
  * - Post title with dynamic heading level
- * - Summary with metadata (date, reading time)
+ * - Summary with metadata
+ * - Hover effects with lift animation
  * - Empty state with customizable message
  * - Integration with post filtering and search
  *
@@ -70,25 +73,38 @@ interface PostListProps {
  * />
  *
  * @styling
- * - Article cards with rounded borders and transition effects
- * - Hover state changes background to muted/50
- * - Flexbox layout for responsive text wrapping
- * - Post badges with color-coded styles
- * - Empty state with dashed border and center alignment
- * - Consistent padding and spacing using Tailwind utilities
+ * **Mobile (< md breakpoint):**
+ * - Vertical card layout with full-width featured image (16:9 aspect, 192px height)
+ * - Content padding: p-3 sm:p-4
+ * - Simplified metadata (date + reading time, tags hidden)
+ * - Full card is tappable with large touch target
+ * 
+ * **Desktop (≥ md breakpoint):**
+ * - Horizontal layout with side thumbnail (128x96px)
+ * - Content displays inline with thumbnail
+ * - Full metadata visible (date + reading time + tags)
+ * - Hover lift effect (-translate-y-0.5)
+ * 
+ * **Common:**
+ * - Rounded corners with border
+ * - Transition effects on hover
+ * - Shadow on hover (hover:shadow-md)
+ * - Background muted on hover (hover:bg-muted/50)
  *
  * @accessibility
  * - Semantic article elements for screen readers
  * - Time element with dateTime attribute for machine-readable dates
  * - Heading hierarchy respects titleLevel prop
  * - Post badges announce post status (draft, archived, new, hot)
- * - Links are keyboard navigable
+ * - Entire card is keyboard navigable via Link wrapper
+ * - Touch targets meet 44px minimum on mobile
  *
  * @performance
  * - Maps over posts array with slug as key for React reconciliation
  * - No fetching - uses pre-computed posts data
  * - Lightweight component with minimal state
  * - Early exit (null) for empty array not rendered as empty container
+ * - Scroll reveal animations staggered by 100ms for visual polish
  *
  * @usage
  * Shared across:
@@ -97,6 +113,7 @@ interface PostListProps {
  * - Search/filter results
  *
  * @see src/components/post-badges.tsx for badge implementation
+ * @see src/components/post-thumbnail.tsx for image optimization
  * @see src/data/posts.ts for Post type definition
  */
 export function PostList({ 
@@ -132,48 +149,55 @@ export function PostList({
             delay={index * 100}
             duration={600}
           >
-            <article className="group rounded-lg border p-3 sm:p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5">
-              <div className="flex gap-2 sm:gap-3 md:gap-4">
-                {/* Featured image thumbnail - now always present */}
-                <Link href={`/blog/${p.slug}`} className="shrink-0">
-                  <PostThumbnail 
-                    image={featuredImage} 
-                    size="sm"
-                    className="rounded-md w-20 h-16 sm:w-24 sm:h-20 md:w-32 md:h-24"
-                  />
-                </Link>
-                
-                {/* Post content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                    <PostBadges 
-                      post={p} 
+            <article className="group rounded-lg border overflow-hidden transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5">
+              <Link href={`/blog/${p.slug}`} className="block">
+                {/* Mobile: Vertical card layout with full-width image */}
+                {/* Desktop: Horizontal layout with side thumbnail */}
+                <div className="flex flex-col md:flex-row">
+                  {/* Featured image - full-width on mobile, side thumbnail on desktop */}
+                  <div className="shrink-0 md:p-3">
+                    <PostThumbnail 
+                      image={featuredImage} 
                       size="sm"
-                      isLatestPost={latestSlug === p.slug}
-                      isHotPost={hottestSlug === p.slug}
+                      className="rounded-none md:rounded-md w-full h-48 md:w-32 md:h-24 object-cover"
                     />
-                    <time dateTime={p.publishedAt}>
-                      {new Date(p.publishedAt).toLocaleDateString(undefined, { 
-                        year: "numeric", 
-                        month: "short", 
-                        day: "numeric" 
-                      })}
-                    </time>
-                    <span className="hidden sm:inline-block" aria-hidden="true">•</span>
-                    <span className="hidden sm:inline-block">{p.readingTime.text}</span>
-                    <span className="hidden md:inline-block" aria-hidden="true">•</span>
-                    <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
                   </div>
-                  <div className="mt-1">
-                    <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-base sm:text-lg md:text-xl" : "text-base sm:text-lg"} line-clamp-2`}>
-                      <Link href={`/blog/${p.slug}`}>
-                        {p.title}
-                      </Link>
+                  
+                  {/* Post content */}
+                  <div className="flex-1 min-w-0 p-3 sm:p-4 md:py-3 md:pr-3">
+                    {/* Badges and metadata */}
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-2">
+                      <PostBadges 
+                        post={p} 
+                        size="sm"
+                        isLatestPost={latestSlug === p.slug}
+                        isHotPost={hottestSlug === p.slug}
+                      />
+                      <time dateTime={p.publishedAt}>
+                        {new Date(p.publishedAt).toLocaleDateString(undefined, { 
+                          year: "numeric", 
+                          month: "short", 
+                          day: "numeric" 
+                        })}
+                      </time>
+                      {/* Reading time - show on all screens */}
+                      <span aria-hidden="true">•</span>
+                      <span>{p.readingTime.text}</span>
+                      {/* Tags - desktop only */}
+                      <span className="hidden md:inline-block" aria-hidden="true">•</span>
+                      <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
+                    </div>
+                    
+                    {/* Title */}
+                    <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-base sm:text-lg md:text-xl" : "text-base sm:text-lg"} line-clamp-2 mb-1`}>
+                      {p.title}
                     </TitleTag>
+                    
+                    {/* Summary */}
+                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{p.summary}</p>
                   </div>
-                  <p className="mt-1 text-xs sm:text-sm text-muted-foreground line-clamp-2">{p.summary}</p>
                 </div>
-              </div>
+              </Link>
             </article>
           </ScrollReveal>
         );

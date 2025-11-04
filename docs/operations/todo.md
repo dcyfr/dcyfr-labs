@@ -290,17 +290,25 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 
 ---
 
-#### 5. Post List Mobile Redesign (P1)
+#### 5. Post List Mobile Redesign (P1) ✅ **COMPLETE** (Nov 4, 2025)
 **Effort:** 4-5 hours  
-**Why High:** Primary blog discovery interface
+**Completed:** Vertical card layout with full-width images for mobile
 
-**Action:** Vertical cards with full-width thumbnails
-- Full-width 16:9 images (currently 96px horizontal)
-- Simplified metadata display
-- Better spacing and touch targets
-- Files: `post-list.tsx`
+**Implementation:**
+- Vertical card layout on mobile (< md), horizontal on desktop (≥ md)
+- Full-width 16:9 featured images on mobile (192px height)
+- Simplified metadata: date + reading time (tags hidden on mobile)
+- Entire card is now tappable with Link wrapper
+- Content padding: p-3 sm:p-4 on mobile, optimized spacing on desktop
+- Desktop maintains side thumbnail (128x96px) with horizontal layout
+- Files: `post-list.tsx` (updated JSDoc and layout)
 
-**Reference:** [`/docs/design/mobile-first-optimization-analysis.md#2-blog-post-list-post-listtsx`](../design/mobile-first-optimization-analysis.md#2-blog-post-list-post-listtsx)
+**Design improvements:**
+- Better visual hierarchy with prominent images on mobile
+- Cleaner metadata display focused on essential info
+- Improved touch targets (entire card is tappable)
+- Smooth responsive transition between mobile/desktop layouts
+- Overflow hidden on article element for cleaner borders
 
 ---
 
