@@ -1,14 +1,16 @@
 # Table of Contents Component
 
-**Status:** ✅ Implemented  
+**Status:** ✅ Implemented (Enhanced with Mobile Support - Nov 4, 2025)  
 **Location:** `src/components/table-of-contents.tsx`  
-**Date:** October 21, 2025
+**Date:** October 21, 2025 (Updated November 4, 2025)
 
 ---
 
 ## Overview
 
-Automatically generates a table of contents for blog posts by extracting H2 and H3 headings from MDX content. Displays as a fixed, collapsible sidebar on large screens (XL+) with smooth scrolling, active section tracking, and full keyboard accessibility.
+Automatically generates a responsive table of contents for blog posts by extracting H2 and H3 headings from MDX content. On mobile/tablet (< XL), displays as a floating action button with a sheet drawer. On desktop (≥ XL), shows as a fixed collapsible sidebar with smooth scrolling, active section tracking, and full keyboard accessibility.
+
+**Mobile Update (Nov 4, 2025):** Enhanced with Sheet component for mobile navigation, replacing the previous desktop-only implementation.
 
 ---
 
@@ -27,11 +29,12 @@ const headings = extractHeadings(post.body);
 ### Features
 
 - **Auto-generated:** Extracts headings from MDX at build time
-- **Fixed sidebar:** Stays visible while scrolling (large screens only)
-- **Collapsible:** Toggle with "On this page" button
+- **Responsive:** Mobile FAB + Sheet drawer (< XL) | Fixed sidebar (≥ XL) **[NEW]**
+- **Mobile-friendly:** 44px touch targets, 80vh sheet height **[NEW]**
+- **Collapsible:** Toggle with "On this page" button (desktop, expanded by default) or tap FAB (mobile) **[UPDATED]**
 - **Active tracking:** Highlights current section via IntersectionObserver
-- **Smooth scroll:** Animated navigation to clicked heading
-- **Responsive:** Hidden on mobile/tablet, visible on XL+ screens
+- **Smooth scroll:** Animated navigation to clicked heading with 80px offset
+- **Auto-close:** Sheet automatically closes after navigation on mobile **[NEW]**
 - **Accessible:** Full keyboard navigation and screen reader support
 
 ### Supported Headings

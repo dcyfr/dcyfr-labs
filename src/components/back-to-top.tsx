@@ -6,14 +6,29 @@ import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /**
- * Back to top button that appears when user scrolls down.
- * Provides smooth scroll to top of page with fade in/out animation.
+ * BackToTop Component - Floating Action Button
+ * 
+ * Globally available scroll-to-top button that appears after scrolling down.
+ * Part of the unified FAB (Floating Action Button) system.
+ * 
+ * Design System:
+ * - Size: 56px (h-14 w-14) - Standard FAB size
+ * - Position: bottom-24 right-4 (96px from bottom, 16px from right)
+ * - Z-index: 40 (below modals, above content)
+ * - Animation: Framer Motion scale + opacity
+ * - Scroll threshold: 400px
+ * - Touch target: Meets 44px minimum (56px exceeds)
+ * - Footer clearance: 96px keeps FAB above 64px footer + margin
+ * 
+ * @component
+ * @returns {React.ReactElement} Floating action button or null
  */
 export function BackToTop() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      // Show after scrolling 400px (about 1.5 viewports)
       setShow(window.scrollY > 400);
     };
 
@@ -34,17 +49,17 @@ export function BackToTop() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.2 }}
-          className="fixed bottom-8 right-8 z-40"
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="fixed bottom-24 right-4 z-40"
         >
           <Button
             variant="secondary"
             size="icon"
-            className="rounded-full shadow-lg h-12 w-12"
+            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
             onClick={scrollToTop}
             aria-label="Scroll to top"
           >
-            <ArrowUp className="h-5 w-5" />
+            <ArrowUp className="h-6 w-6" />
           </Button>
         </motion.div>
       )}

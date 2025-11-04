@@ -112,11 +112,12 @@ A comprehensive security analysis has been completed with an overall **A+ rating
   - Create `mobile-nav.tsx` with grid layout, icon+label, active state highlighting
   - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#option-b-bottom-navigation-app-like)
 
-- [ ] **Mobile Table of Contents** - Floating button with bottom sheet instead of hidden sidebar
-  - Current: TOC completely hidden on mobile (lg:block)
-  - Action: Floating FAB bottom-right, Sheet with large tappable headings, smooth scroll
-  - Files: `table-of-contents.tsx`
-  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#3-table-of-contents-table-of-contentstsx)
+- [ ] **Mobile Table of Contents for Blog Posts** 🔴 **CRITICAL** - Bottom sheet drawer with TOC
+  - Current: TOC completely hidden below xl: breakpoint, no navigation on mobile/tablet
+  - Action: Floating FAB button (bottom-right), Sheet component slide-up drawer, active section tracking
+  - Features: Smooth scroll with offset, visual active state, collapsible with "On this page" header
+  - Files: `table-of-contents.tsx`, possibly new `mobile-toc.tsx` component
+  - Effort: 3-4h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-mobile-table-of-contents-toc)
 
 - [ ] **Project card optimization** - Progressive disclosure for highlights, improved mobile layout
   - Current: Highlights hidden on mobile (lg:inline-block)
@@ -130,7 +131,27 @@ A comprehensive security analysis has been completed with an overall **A+ rating
   - Files: `post-list.tsx`
   - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#2-blog-post-list-post-listtsx)
 
+- [ ] **Mobile Blog Typography Enhancements** 🔴 **CRITICAL** - Better readability on small screens
+  - Current: Desktop prose spacing, may feel cramped on mobile
+  - Action: Mobile-specific CSS - larger font (17px), more line-height (1.85), better paragraph separation
+  - Includes: Heading size adjustments, improved whitespace, enhanced code block sizing (13px)
+  - Files: `globals.css` (prose section)
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-mobile-optimized-prose-spacing)
+
+- [ ] **Jump to Top Button for Blog Posts** - Floating FAB that appears on scroll
+  - Action: Bottom-right floating button, fade-in after scrolling 2-3 viewports, smooth scroll animation
+  - Consider: Combine with TOC button in FAB menu or place in opposite corner
+  - Files: New component `jump-to-top.tsx`, integrate in `blog/[slug]/page.tsx`
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-jump-to-top-button)
+
 **Phase 3: Interactions - Week 3** (P1 - High, ~10-14 hours)
+- [ ] **Native Share API for Blog Posts** - Mobile-optimized sharing
+  - Current: ShareButtons component may not be optimized for mobile
+  - Action: Add Web Share API with fallback, larger touch targets (44x44px), icon-only on mobile
+  - Features: Native share sheet on mobile devices, better mobile layout
+  - Files: `share-buttons.tsx`
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-share-buttons-mobile-optimization)
+
 - [ ] **Swipe gestures** - Blog post prev/next navigation, card actions
   - Implement swipe-left/right for post navigation, visual indicators
   - Library: react-swipeable or Framer Motion drag
@@ -149,6 +170,23 @@ A comprehensive security analysis has been completed with an overall **A+ rating
   - Effort: 2-3h
 
 **Phase 4: Performance - Week 4** (P2 - Medium, ~8-12 hours)
+- [ ] **Blog Badge Overflow Handling** - Better mobile layout for multiple tags
+  - Current: Tags/badges may wrap poorly when there are many
+  - Options: Horizontal scroll container, "+N more" collapse button, separate "Tags" section
+  - Files: `blog/[slug]/page.tsx`, possibly `post-badges.tsx`
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-badge-overflow-handling)
+
+- [ ] **Related Posts Mobile Layout** - Card-based horizontal scroll
+  - Current: May not be optimized for mobile
+  - Action: Horizontal scrollable cards or stacked vertical layout on mobile
+  - Files: `related-posts.tsx`
+  - Effort: 2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-related-posts-mobile-layout)
+
+- [ ] **Lazy Load Giscus Comments on Mobile** - Improve initial page load
+  - Action: Use IntersectionObserver or "Load Comments" button instead of auto-load
+  - Files: `giscus-comments.tsx`
+  - Effort: 1h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#c-comment-section-giscus)
+
 - [ ] **Code splitting for mobile** - Conditional loading by viewport, lazy load heavy components
   - Dynamic imports for GitHub heatmap, use-media-query hook
   - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#1-reduce-javascript-for-mobile)
@@ -166,6 +204,23 @@ A comprehensive security analysis has been completed with an overall **A+ rating
   - Effort: 2-3h
 
 **Phase 5: PWA & Polish - Week 5** (P2 - Medium, ~10-14 hours)
+- [ ] **Reading Preferences UI** - Font size, spacing, theme controls for blog
+  - Features: A-/A+ buttons, Compact/Comfortable/Spacious spacing, persist to localStorage
+  - Action: New toolbar component for blog posts, preference management
+  - Files: New `reading-preferences.tsx`, hook `use-reading-preferences.tsx`
+  - Effort: 3-4h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-mobile-reading-preferences-advanced)
+
+- [ ] **Blog Article Width Optimization** - Adaptive sizing for mobile/tablet
+  - Current: max-w-3xl (768px) on all screens
+  - Action: Use max-w-full sm:max-w-2xl md:max-w-3xl, add responsive padding
+  - Files: `blog/[slug]/page.tsx`
+  - Effort: 0.5h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#c-article-width-on-tablets)
+
+- [ ] **Progressive Image Loading for Blog** - Blur placeholders, lazy loading
+  - Action: Add blur placeholders to featured images, lazy load in-content images
+  - Files: MDX component mappings, image handling in posts
+  - Effort: 2-3h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-progressive-image-loading)
+
 - [ ] **PWA setup** - Web app manifest, service worker, install prompt, offline fallback
   - Create manifest.json, add icons, implement install prompt component
   - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#pwa-enhancements)

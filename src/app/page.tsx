@@ -161,7 +161,12 @@ export default async function Home() {
         </section>
         {/* latest projects */}
         <section className="mt-12 md:mt-16 space-y-4">
-          <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
+            <Button variant="ghost" asChild>
+              <Link href="/projects">View all</Link>
+            </Button>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {featuredProjects.slice(0, 2).map((p) => (
               <ProjectCard key={p.title} project={p} showHighlights={false} />

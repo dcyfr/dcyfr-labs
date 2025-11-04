@@ -1,8 +1,18 @@
 "use client";
 
 import * as React from "react";
+import { Menu } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 /**
  * Props for the TableOfContents component
@@ -16,16 +26,17 @@ type TableOfContentsProps = {
 /**
  * TableOfContents Component
  *
- * A sticky, collapsible table of contents for blog posts that automatically
- * highlights the currently visible heading as the user scrolls.
+ * A responsive table of contents for blog posts that adapts to screen size:
+ * - Mobile/Tablet (< XL): Floating action button that opens a bottom sheet drawer
+ * - Desktop (≥ XL): Fixed sidebar on the right side of the viewport
  *
  * Features:
- * - Fixed position on the right side of the viewport (XL breakpoint and up)
- * - Collapsible with "On this page" header button
- * - Smooth scroll to heading on click
- * - Active state indicator based on IntersectionObserver
+ * - Automatically highlights the currently visible heading as the user scrolls
+ * - Smooth scroll to heading on click with offset for fixed header
  * - Hierarchical indentation for h3 sub-headings
+ * - Collapsible on desktop (expanded by default for better UX)
  * - Keyboard and screen reader accessible
+ * - Touch-friendly 48px FAB button on mobile
  *
  * @component
  * @param {TableOfContentsProps} props - Component props
@@ -46,24 +57,38 @@ type TableOfContentsProps = {
  * - Uses IntersectionObserver to track which heading is currently visible
  * - rootMargin="-80px 0px -80% 0px" activates heading when near top
  * - Smooth scrolls to heading with 80px offset (accounting for fixed header)
- * - Tracks activeId state for visual indicator
- * - Expandable to save viewport space on XL+ screens
+ * - Mobile: Sheet component with large touch targets (min 48px)
+ * - Desktop: Fixed position sidebar, collapsible
  *
  * @accessibility
  * - nav has aria-label="Table of contents"
  * - Links are actual anchor tags for native browser behavior
  * - Collapse button has aria-expanded attribute
- * - SVG toggle icon has aria-hidden="true"
+ * - Mobile FAB has aria-label for screen readers
  * - Keyboard navigation works with Tab/Enter
  *
  * @performance
  * - Only rendered on client (checks typeof window)
  * - Returns null if no headings (prevents empty nav)
  * - Cleanup on unmount prevents memory leaks from observer
+ * - Sheet auto-closes on navigation for better mobile UX
  */
 export function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = React.useState<string>("");
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(true); // Open by default on desktop
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  // Show FAB after scrolling down a bit
+  React.useEffect(() => {
+    const handleScroll = () => {
+      // Show after scrolling 400px (consistent with BackToTop)
+      setIsVisible(window.scrollY > 400);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   React.useEffect(() => {
     // Only run on client
@@ -107,69 +132,115 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       const top = element.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top, behavior: "smooth" });
       setActiveId(id);
+      // Close sheet on mobile after navigation
+      setIsSheetOpen(false);
     }
   };
 
-  return (
-    <nav
-      className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-8rem)] overflow-y-auto"
-      aria-label="Table of contents"
-    >
-      <div className="space-y-2">
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="flex w-full items-center justify-between text-sm font-semibold text-foreground hover:text-primary transition-colors"
-          aria-expanded={isExpanded}
-        >
-          <span>On this page</span>
-          <svg
-            className={cn(
-              "h-4 w-4 transition-transform",
-              isExpanded && "rotate-180"
-            )}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-        
-        {isExpanded && (
-          <ul className="pace-y-2 text-sm border-l-2 border-border">
-            {headings.map((heading) => {
-              const isActive = activeId === heading.id;
-              const isH3 = heading.level === 3;
+  // Shared TOC list component
+  const TocList = () => (
+    <ul className="space-y-2 text-sm border-l-2 border-border">
+      {headings.map((heading) => {
+        const isActive = activeId === heading.id;
+        const isH3 = heading.level === 3;
 
-              return (
-                <li
-                  key={heading.id}
-                  className={cn(isH3 && "ml-4")}
-                >
-                  <a
-                    href={`#${heading.id}`}
-                    onClick={(e) => handleClick(e, heading.id)}
-                    className={cn(
-                      "block py-1 pl-4 border-l-2 -ml-[2px] transition-colors",
-                      isActive
-                        ? "border-primary text-primary font-medium"
-                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-                    )}
-                  >
-                    {heading.text}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        return (
+          <li
+            key={heading.id}
+            className={cn(isH3 && "ml-4")}
+          >
+            <a
+              href={`#${heading.id}`}
+              onClick={(e) => handleClick(e, heading.id)}
+              className={cn(
+                "flex items-center py-2 pl-4 border-l-2 -ml-[2px] transition-colors min-h-[44px]",
+                isActive
+                  ? "border-primary text-primary font-medium"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+              )}
+            >
+              {heading.text}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  return (
+    <>
+      {/* Mobile TOC - Floating Action Button with Sheet */}
+      <div className="xl:hidden">
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetTrigger asChild>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={
+                isVisible
+                  ? { opacity: 1, scale: 1 }
+                  : { opacity: 0, scale: 0.8 }
+              }
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed bottom-[168px] right-4 z-40"
+            >
+              <Button
+                size="icon"
+                className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+                aria-label="Open table of contents"
+                style={{ pointerEvents: isVisible ? "auto" : "none" }}
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+            </motion.div>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-[80vh]">
+            <SheetHeader>
+              <SheetTitle>Table of Contents</SheetTitle>
+            </SheetHeader>
+            <nav
+              className="mt-6 overflow-y-auto h-[calc(80vh-5rem)]"
+              aria-label="Table of contents"
+            >
+              <TocList />
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
-    </nav>
+
+      {/* Desktop TOC - Fixed Sidebar */}
+      <nav
+        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-8rem)] overflow-y-auto"
+        aria-label="Table of contents"
+      >
+        <div className="space-y-2">
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex w-full items-center justify-between text-sm font-semibold text-foreground hover:text-primary transition-colors"
+            aria-expanded={isExpanded}
+          >
+            <span>On this page</span>
+            <svg
+              className={cn(
+                "h-4 w-4 transition-transform",
+                isExpanded && "rotate-180"
+              )}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          
+          {isExpanded && <TocList />}
+        </div>
+      </nav>
+    </>
   );
 }

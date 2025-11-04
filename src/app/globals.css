@@ -487,6 +487,70 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   margin-bottom: 1rem;
 }
 
+/* Mobile typography enhancements */
+@media (max-width: 768px) {
+  .prose {
+    font-size: 1.0625rem; /* 17px - iOS standard for better readability */
+  }
+
+  .prose p {
+    line-height: 1.85; /* More breathing room on mobile */
+    margin-bottom: 1.25rem; /* Better paragraph separation */
+  }
+
+  .prose h1 {
+    font-size: 2rem; /* 32px - slightly smaller than desktop */
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose h2 {
+    font-size: 1.75rem; /* 28px */
+    margin-top: 2.5rem; /* More section separation */
+    margin-bottom: 1rem;
+  }
+
+  .prose h3 {
+    font-size: 1.375rem; /* 22px */
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Code blocks optimized for mobile */
+  .prose pre {
+    font-size: 0.8125rem; /* 13px - optimal for mobile code */
+    padding: 0.75rem;
+    margin-left: -1rem; /* Bleed to container edges for max width */
+    margin-right: -1rem;
+    border-radius: 0; /* Square edges when bleeding */
+    overflow-x: auto;
+  }
+
+  .prose code {
+    font-size: 0.875rem; /* Inline code slightly larger */
+  }
+
+  /* Lists with better spacing */
+  .prose ul,
+  .prose ol {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose li {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Blockquotes more prominent */
+  .prose blockquote {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+  }
+}
+
+
 /* GitHub Heatmap Custom Styles */
 .react-calendar-heatmap .color-empty {
   fill: hsl(var(--muted));
