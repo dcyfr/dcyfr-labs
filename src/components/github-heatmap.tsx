@@ -67,6 +67,7 @@ function calculateStreaks(contributions: ContributionDay[]): {
   let longestStreak = 0;
   let tempStreak = 0;
   let lastStreakDate: Date | null = null; // Track the last date counted in current streak
+  let currentStreakEnded = false; // Flag to track when current streak calculation is done
 
   // Calculate current streak (from most recent date backwards)
   const today = new Date();
@@ -79,21 +80,23 @@ function calculateStreaks(contributions: ContributionDay[]): {
     contribDate.setHours(0, 0, 0, 0);
 
     if (sorted[i].count > 0) {
-      // Check if this is part of current streak
-      if (i === 0 && (contribDate.getTime() === today.getTime() || contribDate.getTime() === yesterday.getTime())) {
-        currentStreak++;
-        lastStreakDate = contribDate;
-      } else if (currentStreak > 0 && lastStreakDate) {
-        const dayDiff = Math.floor((lastStreakDate.getTime() - contribDate.getTime()) / (1000 * 60 * 60 * 24));
-        if (dayDiff === 1) {
+      // Calculate current streak (only if not yet ended)
+      if (!currentStreakEnded) {
+        if (i === 0 && (contribDate.getTime() === today.getTime() || contribDate.getTime() === yesterday.getTime())) {
           currentStreak++;
           lastStreakDate = contribDate;
-        } else {
-          break;
+        } else if (currentStreak > 0 && lastStreakDate) {
+          const dayDiff = Math.floor((lastStreakDate.getTime() - contribDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (dayDiff === 1) {
+            currentStreak++;
+            lastStreakDate = contribDate;
+          } else {
+            currentStreakEnded = true; // Mark as ended but continue loop
+          }
         }
       }
 
-      // Calculate longest streak
+      // Calculate longest streak (always continue through all contributions)
       tempStreak++;
       longestStreak = Math.max(longestStreak, tempStreak);
     } else {
