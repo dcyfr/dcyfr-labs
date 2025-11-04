@@ -371,3 +371,56 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   line-height: 1.75;
   margin-bottom: 1rem;
 }
+
+/* GitHub Heatmap Custom Styles */
+.react-calendar-heatmap .color-empty {
+  fill: hsl(var(--muted));
+}
+
+.react-calendar-heatmap .color-scale-1 {
+  fill: rgb(134, 239, 172);
+}
+
+.react-calendar-heatmap .color-scale-2 {
+  fill: rgb(74, 222, 128);
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: rgb(34, 197, 94);
+}
+
+.react-calendar-heatmap .color-scale-4 {
+  fill: rgb(21, 128, 61);
+}
+
+.dark .react-calendar-heatmap .color-empty {
+  fill: hsl(var(--muted));
+}
+
+.dark .react-calendar-heatmap .color-scale-1 {
+  fill: rgb(20, 83, 45);
+}
+
+.dark .react-calendar-heatmap .color-scale-2 {
+  fill: rgb(21, 128, 61);
+}
+
+.dark .react-calendar-heatmap .color-scale-3 {
+  fill: rgb(34, 197, 94);
+}
+
+.dark .react-calendar-heatmap .color-scale-4 {
+  fill: rgb(134, 239, 172);
+}
+
+.react-calendar-heatmap rect {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.react-calendar-heatmap rect:hover {
+  stroke: hsl(var(--primary));
+  stroke-width: 2px;
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}

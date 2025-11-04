@@ -16,7 +16,7 @@ import { headers } from "next/headers";
 
 const pageTitle = "Blog";
 // Optimized meta description (159 characters)
-const pageDescription = "In-depth articles about cybersecurity, secure software development, cloud security, and DevOps. Learn from real-world security insights and tutorials.";
+const pageDescription = "In-depth articles on web development, programming, and tech trends.";
 
 export const metadata: Metadata = {
   title: pageTitle,
