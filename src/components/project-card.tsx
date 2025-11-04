@@ -128,13 +128,13 @@ export function ProjectCard({
       {/* Content - positioned above background */}
       <CardHeader className="space-y-2 relative z-10 px-4 sm:px-6 py-4 sm:py-6">
         {project.timeline && (
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            {project.timeline}
+          <p className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+            <Badge variant={STATUS_VARIANT[project.status]}>{STATUS_LABEL[project.status]}</Badge> {project.timeline}
           </p>
         )}
         <div className="flex flex-wrap items-center gap-2">
           <CardTitle className="text-base sm:text-lg md:text-xl flex align-middle gap-2">
-          <Badge variant={STATUS_VARIANT[project.status]}>{STATUS_LABEL[project.status]}</Badge> {project.title}
+           {project.title}
           </CardTitle>
         </div>
         <CardDescription className="text-sm sm:text-base md:text-[0.95rem] leading-relaxed">
@@ -142,11 +142,16 @@ export function ProjectCard({
         </CardDescription>
         {project.tech && project.tech.length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-1">
-            {project.tech.map((tech) => (
+            {project.tech.slice(0, 3).map((tech) => (
               <Badge key={tech} variant="outline" className="font-normal text-xs sm:text-sm">
                 {tech}
               </Badge>
             ))}
+            {project.tech.length > 3 && (
+              <Badge variant="outline" className="font-normal text-xs sm:text-sm text-muted-foreground">
+                +{project.tech.length - 3}
+              </Badge>
+            )}
           </div>
         )}
       </CardHeader>

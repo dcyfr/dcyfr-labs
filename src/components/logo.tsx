@@ -47,7 +47,10 @@ export const Logo: React.FC<LogoProps> = ({
   return (
     <svg
         className={className}
-        style={style}
+        style={{
+          shapeRendering: 'geometricPrecision',
+          ...style
+        }}
         fill={fill}
         width={width}
         height={height}

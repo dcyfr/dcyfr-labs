@@ -198,9 +198,16 @@ export function PostList({
                       {/* Reading time - show on all screens */}
                       <span aria-hidden="true">•</span>
                       <span>{p.readingTime.text}</span>
-                      {/* Tags - desktop only (limit 3) */}
-                      <span className="hidden md:inline-block" aria-hidden="true">•</span>
-                      <span className="hidden md:inline-block">{p.tags.slice(0, 3).join(" · ")}</span>
+                      {/* Tags - desktop only (limit 3 + count) */}
+                      {p.tags.length > 0 && (
+                        <>
+                          <span className="hidden md:inline-block" aria-hidden="true">•</span>
+                          <span className="hidden md:inline-block">
+                            {p.tags.slice(0, 3).join(" · ")}
+                            {p.tags.length > 3 && ` · +${p.tags.length - 3}`}
+                          </span>
+                        </>
+                      )}
                     </div>
                     
                     {/* Title */}

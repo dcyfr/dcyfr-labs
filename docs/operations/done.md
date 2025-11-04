@@ -8,6 +8,242 @@ This document tracks completed projects, features, and improvements. Items are o
 
 ## 🎯 Session Summary: November 4, 2025 (Latest)
 
+### Clickable Tag Links on Blog Posts
+**Completed**: Made post tags clickable links to filter blog posts by that tag
+
+- ✅ **Tag Links Implementation** (`src/app/blog/[slug]/page.tsx`)
+  - Tags now link to `/blog?tag={tagName}` with proper URL encoding
+  - Each tag is wrapped in a `<Link>` component
+  - Added hover effect: `hover:bg-secondary/80` for visual feedback
+  - Cursor changes to pointer on hover
+  - Smooth transition on hover state
+  
+- ✅ **User Experience**
+  - Users can click any tag to see all posts with that tag
+  - Direct navigation from post to related content
+  - Visual feedback on hover (darker background)
+  - Maintains existing secondary badge styling
+
+- ✅ **Technical Implementation**
+  - Uses `encodeURIComponent()` for safe URL encoding
+  - Leverages existing blog page search/filter functionality
+  - No additional backend changes needed
+  - Works with existing query parameter handling
+
+**Example Usage:**
+- Click "security" tag → navigates to `/blog?tag=security`
+- Click "tutorial" tag → navigates to `/blog?tag=tutorial`
+- Multi-word tags properly encoded (e.g., "web development" → `web%20development`)
+
+**Files Modified:**
+- `src/app/blog/[slug]/page.tsx` - Added Link wrapper and hover styling
+
+**Visual Changes:**
+- Tags now have cursor-pointer
+- Subtle darkening on hover
+- Smooth transition effect
+
+**Impact:** Improved navigation and content discovery. Users can easily explore related posts by clicking tags directly from blog post pages.
+
+---
+
+### Badge Limiting: Cleaner Card Layouts
+**Completed**: Limited technology badges and post tags to 3 items with "+X" indicator for additional items
+
+- ✅ **Project Technology Badges** (`src/components/project-card.tsx`)
+  - Display first 3 technologies only
+  - Add "+X" badge when more than 3 exist
+  - "+X" badge uses muted foreground color for subtle appearance
+  - Example: `React` `Next.js` `TypeScript` `+2` (for 5 total)
+  
+- ✅ **Post Tag Lists** (`src/components/post-list.tsx`)
+  - Display first 3 tags with " · " separator
+  - Append " · +X" when more than 3 exist
+  - Maintains desktop-only visibility
+  - Example: `security · development · tutorial · +3` (for 6 total)
+
+- ✅ **Implementation Details**
+  - Uses `array.slice(0, 3)` for efficient slicing
+  - Conditional rendering: `{array.length > 3 && ...}`
+  - Accurate count calculation: `array.length - 3`
+  - Non-mutating (doesn't modify original arrays)
+  - Graceful handling of empty arrays and edge cases
+
+- ✅ **Comprehensive Documentation** (`/docs/design/badge-limiting.md`)
+  - Before/after code examples
+  - Visual design rationale
+  - UX benefits explanation
+  - Testing checklist
+  - Performance analysis
+  - Future enhancement ideas
+
+**Problems Solved:**
+- Project cards with many technologies appeared cluttered
+- Inconsistent card heights due to badge wrapping
+- Visual hierarchy unclear with too many badges
+- Difficult to scan and compare projects/posts
+
+**User Experience Benefits:**
+- Cleaner, more professional card appearance
+- Consistent card heights in grid layouts
+- Easier to scan and compare content
+- Reduced visual clutter
+- Information hierarchy maintained (most important shown first)
+
+**Files Modified:**
+- `src/components/project-card.tsx` - Tech badge limiting
+- `src/components/post-list.tsx` - Tag limiting
+
+**Files Created:**
+- `docs/design/badge-limiting.md` - Complete implementation guide
+
+**Visual Impact:**
+- Cards no longer overflow with badges
+- Cleaner homepage and projects page
+- Better mobile experience (less wrapping)
+- Professional, polished appearance
+
+**Performance:** Negligible impact - simple array operations, fewer DOM elements
+
+**Locations Affected:**
+- Homepage projects section
+- Projects page (/projects)
+- Homepage blog section
+- Blog listing page (/blog)
+- Search results
+- Tag-filtered results
+
+**Impact:** Significantly improved card layouts with cleaner visual design. Users can now easily scan projects and posts without overwhelming badge displays. Future-proof as projects add more technologies.
+
+---
+
+### Light/Dark Mode Design Consistency Fixes
+**Completed**: Ensured visual consistency between light and dark modes across badges and GitHub heatmap
+
+- ✅ **Badge Border Consistency** (`src/components/ui/badge.tsx`)
+  - **Secondary badges**: Added subtle border (`border-secondary/20`) in light mode
+  - **Outline badges**: Now use proper `border-border` color variable
+  - **Hover states**: Enhanced border visibility on interaction
+  - **Result**: Consistent, professional appearance across both themes
+
+- ✅ **GitHub Heatmap Visibility** (`src/app/globals.css`)
+  - **Light mode**: Darkened contribution colors for better visibility
+    - Scale 1: `oklch(0.75 0.12 145)` - visible light green
+    - Scale 4: `oklch(0.32 0.26 145)` - strong dark green
+  - **Dark mode**: Brightened colors with proper progression
+    - Scale 1: `oklch(0.35 0.10 145)` - medium dark
+    - Scale 4: `oklch(0.75 0.22 145)` - bright green
+  - **Fixed**: Dark mode scale-3 and scale-4 were identical
+  - **Improved**: Increased chroma (saturation) for punchier colors
+  - **Adjusted**: Hue from 142 → 145 for better green tone
+
+- ✅ **Heatmap Legend Color Matching** (`src/components/github-heatmap.tsx`)
+  - Replaced generic Tailwind colors with exact OKLCH values
+  - Added borders to legend squares for better definition
+  - Legend now perfectly matches actual heatmap colors
+  - Consistent across light and dark modes
+
+- ✅ **Comprehensive Documentation** (`/docs/design/light-dark-mode-consistency.md`)
+  - Before/after color comparisons
+  - OKLCH color space explanation
+  - Visual impact analysis
+  - Testing checklist
+  - Browser compatibility matrix
+
+**Problems Solved:**
+- "Active" badges had no border in light mode (flat appearance)
+- GitHub contribution squares were washed out and hard to see in light mode
+- Dark mode heatmap had duplicate colors (scale-3 = scale-4)
+- Legend colors didn't match actual heatmap colors
+
+**Technical Details:**
+- Used OKLCH color space for perceptually uniform colors
+- Light mode: darker colors (lower lightness values)
+- Dark mode: brighter colors (higher lightness values)
+- Increased chroma for better saturation and visibility
+- Added subtle borders (20% opacity) for definition
+
+**Files Modified:**
+- `src/components/ui/badge.tsx` - Border consistency
+- `src/app/globals.css` - Heatmap color scales
+- `src/components/github-heatmap.tsx` - Legend colors
+
+**Files Created:**
+- `docs/design/light-dark-mode-consistency.md` - Complete guide
+
+**Visual Impact:**
+- Project status badges now have consistent borders
+- GitHub heatmap clearly visible in both modes
+- All 4 contribution levels properly distinct
+- Professional, polished appearance
+
+**Performance:** Zero impact - pure CSS changes
+
+**Impact:** Significantly improved design consistency and visual clarity across light and dark modes. Users can now clearly see activity patterns and badge hierarchy regardless of theme preference.
+
+---
+
+### Font Rendering Optimization: Cross-Browser Typography Enhancement
+**Completed**: Comprehensive font rendering improvements for smoother, more readable text across all browsers
+
+- ✅ **CSS Optimizations Added** (`src/app/globals.css`)
+  - **Antialiasing**: `-webkit-font-smoothing: antialiased` + `-moz-osx-font-smoothing: grayscale`
+  - **Legibility**: `text-rendering: optimizeLegibility` for body text and headings
+  - **OpenType Features**: Kerning (`kern`), ligatures (`liga`, `calt`), contextual alternates
+  - **Code Optimization**: Separate settings for monospace fonts (subpixel rendering for clarity)
+  - **Heading Enhancement**: Discretionary ligatures (`dlig`) for professional display text
+
+- ✅ **Features Enabled**
+  - Professional ligatures: fi, fl, ff, ffi, ffl in body text
+  - Improved kerning for better letter spacing
+  - Contextual alternates for smoother text flow
+  - Consistent antialiasing across Chrome, Safari, Edge, Firefox (macOS)
+  - Code blocks maintain clarity with subpixel rendering
+
+- ✅ **Comprehensive Documentation** (`/docs/design/font-rendering-optimization.md`)
+  - Complete explanation of all CSS properties and their effects
+  - Browser support matrix (Chrome, Safari, Firefox, Edge)
+  - OpenType features guide with examples
+  - Visual before/after comparison
+  - Performance impact analysis (negligible)
+  - Testing checklist for verification
+  - Troubleshooting common issues
+  - Related files and further reading
+
+**Browser Support:**
+- ✅ Chrome/Edge: Full support (webkit antialiasing)
+- ✅ Safari: Full support (webkit antialiasing)
+- ✅ Firefox (macOS): Full support (moz antialiasing)
+- ⚠️ Firefox (Windows/Linux): Good (graceful degradation)
+
+**Visual Impact:**
+- Smoother, more professional text rendering
+- Better readability across all screen sizes
+- Professional ligatures in body text
+- Code blocks remain crisp and clear
+- Headings look more polished
+- Consistent appearance across browsers
+
+**Performance:** Zero impact - pure CSS solution with no additional assets or JavaScript
+
+**Files Modified:**
+- `src/app/globals.css` - Added font rendering rules (lines 6-46)
+
+**Files Created:**
+- `docs/design/font-rendering-optimization.md` - Complete guide
+
+**Key Benefits:**
+- Professional typography with ligatures and kerning
+- Consistent antialiasing on macOS (Chrome, Safari, Firefox)
+- Code blocks optimized separately for clarity
+- Headings enhanced with discretionary ligatures
+- Zero performance impact
+- Graceful degradation on all browsers
+
+**Impact:** Significantly improved typography readability and professional appearance. All text rendering optimized for modern browsers while maintaining backward compatibility.
+
+---
+
 ### Skeleton Sync Strategy Implementation: Preventing Layout Shifts
 **Completed**: Comprehensive solution to keep skeleton loaders synchronized with their actual components
 

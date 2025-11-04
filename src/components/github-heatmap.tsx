@@ -419,22 +419,22 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       transition={{ type: "spring", stiffness: 400, damping: 10 }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 bg-green-200 dark:bg-green-900 rounded-sm"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-300 dark:border-green-800 bg-[oklch(0.75_0.12_145)] dark:bg-[oklch(0.35_0.10_145)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{ type: "spring", stiffness: 400, damping: 10 }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 bg-green-400 dark:bg-green-700 rounded-sm"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-400 dark:border-green-700 bg-[oklch(0.58_0.18_145)] dark:bg-[oklch(0.50_0.14_145)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{ type: "spring", stiffness: 400, damping: 10 }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 bg-green-600 dark:bg-green-500 rounded-sm"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-500 dark:border-green-600 bg-[oklch(0.45_0.22_145)] dark:bg-[oklch(0.65_0.18_145)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{ type: "spring", stiffness: 400, damping: 10 }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 bg-green-800 dark:bg-green-300 rounded-sm"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-700 dark:border-green-400 bg-[oklch(0.32_0.26_145)] dark:bg-[oklch(0.75_0.22_145)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{ type: "spring", stiffness: 400, damping: 10 }}
                     />

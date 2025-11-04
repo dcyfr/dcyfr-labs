@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
 import { posts } from "@/data/posts";
 import { getPostByAnySlug } from "@/lib/blog";
 import {
@@ -192,7 +193,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               </Badge>
             )}
             {post.tags.map((t) => (
-              <Badge key={t} variant="secondary">{t}</Badge>
+              <Link key={t} href={`/blog?tag=${encodeURIComponent(t)}`}>
+                <Badge variant="secondary" className="cursor-pointer hover:bg-secondary/80 transition-colors">
+                  {t}
+                </Badge>
+              </Link>
             ))}
           </div>
         </header>
