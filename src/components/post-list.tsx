@@ -132,20 +132,20 @@ export function PostList({
             delay={index * 100}
             duration={600}
           >
-            <article className="group rounded-lg border p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5">
-              <div className="flex gap-4">
+            <article className="group rounded-lg border p-3 sm:p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5">
+              <div className="flex gap-2 sm:gap-3 md:gap-4">
                 {/* Featured image thumbnail - now always present */}
                 <Link href={`/blog/${p.slug}`} className="shrink-0">
                   <PostThumbnail 
                     image={featuredImage} 
                     size="sm"
-                    className="rounded-md"
+                    className="rounded-md w-20 h-16 sm:w-24 sm:h-20 md:w-32 md:h-24"
                   />
                 </Link>
                 
                 {/* Post content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
                     <PostBadges 
                       post={p} 
                       size="sm"
@@ -159,19 +159,19 @@ export function PostList({
                         day: "numeric" 
                       })}
                     </time>
-                    <span className="hidden md:inline-block" aria-hidden="true">•</span>
-                    <span>{p.readingTime.text}</span>
+                    <span className="hidden sm:inline-block" aria-hidden="true">•</span>
+                    <span className="hidden sm:inline-block">{p.readingTime.text}</span>
                     <span className="hidden md:inline-block" aria-hidden="true">•</span>
                     <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
                   </div>
                   <div className="mt-1">
-                    <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-lg md:text-xl" : "text-lg"}`}>
+                    <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-base sm:text-lg md:text-xl" : "text-base sm:text-lg"} line-clamp-2`}>
                       <Link href={`/blog/${p.slug}`}>
                         {p.title}
                       </Link>
                     </TitleTag>
                   </div>
-                  <p className="mt-1 text-sm text-muted-foreground">{p.summary}</p>
+                  <p className="mt-1 text-xs sm:text-sm text-muted-foreground line-clamp-2">{p.summary}</p>
                 </div>
               </div>
             </article>

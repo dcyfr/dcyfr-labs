@@ -123,7 +123,7 @@ export default async function BlogPage({
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className="mx-auto max-w-5xl py-14 md:py-20">
+      <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
         {/* Page header */}
         <header className="prose space-y-4">
           <h1 className="font-serif text-3xl md:text-4xl font-bold">Blog</h1>
@@ -145,12 +145,12 @@ export default async function BlogPage({
         <BlogSearchForm query={query} tag={tag} />
 
         {/* Tag filters */}
-        <nav className="mt-4 flex flex-wrap gap-3" aria-label="Filter by tag">
-          <Badge asChild variant={tag ? "outline" : "secondary"} className="h-10 px-4">
+        <nav className="mt-4 flex flex-wrap gap-2 sm:gap-3" aria-label="Filter by tag">
+          <Badge asChild variant={tag ? "outline" : "secondary"} className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm">
             <Link href={buildTagHref("", query)}>All</Link>
           </Badge>
           {tagList.map((t) => (
-            <Badge key={t} asChild variant={tag === t ? "secondary" : "outline"} className="h-10 px-4">
+            <Badge key={t} asChild variant={tag === t ? "secondary" : "outline"} className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm">
               <Link href={buildTagHref(t, query)}>{t}</Link>
             </Badge>
           ))}

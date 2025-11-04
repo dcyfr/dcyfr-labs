@@ -78,9 +78,9 @@ export function PostThumbnail({
   className,
   priority = false 
 }: PostThumbnailProps) {
-  // Size configurations for container sizing
+  // Default size configurations (can be overridden by className prop)
   const sizeClasses = {
-    sm: "w-[200px] h-[150px]",
+    sm: "w-32 h-24",
     md: "w-[400px] h-[300px]",
     lg: "w-[800px] h-[600px]",
   };
@@ -89,8 +89,8 @@ export function PostThumbnail({
     <div
       className={cn(
         "relative overflow-hidden bg-muted",
-        "h-full w-full", // Fill container dimensions
-        sizeClasses[size],
+        // Only apply default size if no custom sizing in className
+        !className?.match(/\b(w-|h-|min-w-|min-h-|max-w-|max-h-)/) && sizeClasses[size],
         className
       )}
     >
@@ -100,7 +100,7 @@ export function PostThumbnail({
         fill
         className="object-cover transition-transform duration-300 hover:scale-105"
         priority={priority}
-        sizes={`(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px`}
+        sizes={`(max-width: 640px) 80px, (max-width: 768px) 128px, 200px`}
       />
     </div>
   );

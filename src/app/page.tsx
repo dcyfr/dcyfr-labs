@@ -129,23 +129,23 @@ export default async function Home() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2 justify-center">
             Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
           </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto">
+          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto px-4">
             Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
           </p>
-          <div className="flex gap-3 pt-2 justify-center">
-            <Button asChild>
+          <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center px-4">
+            <Button asChild size="default">
               <Link href="/about">Learn more</Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button variant="outline" asChild size="default">
               <Link href="/blog">Read my blog</Link>
             </Button>
-            <Button variant="outline" className="hidden sm:inline-block" asChild>
+            <Button variant="outline" className="hidden sm:inline-flex" asChild size="default">
               <Link href="/projects">View Projects</Link>
             </Button>
           </div>
         </section>
         {/* latest blog articles */}
-        <section className="mt-12 md:mt-16 space-y-4">
+        <section className="mt-12 md:mt-16 space-y-4 px-4 sm:px-0">
           <div className="flex items-center justify-between">
             <h2 className="font-serif text-xl md:text-2xl font-medium">Latest articles</h2>
             <Button variant="ghost" asChild>
@@ -160,7 +160,7 @@ export default async function Home() {
           />
         </section>
         {/* latest projects */}
-        <section className="mt-12 md:mt-16 space-y-4">
+        <section className="mt-12 md:mt-16 space-y-4 px-4 sm:px-0">
           <div className="flex items-center justify-between">
             <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
             <Button variant="ghost" asChild>
