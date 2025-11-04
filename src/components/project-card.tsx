@@ -17,7 +17,7 @@ const STATUS_LABEL: Record<ProjectStatus, string> = {
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <Card className="flex h-full flex-col">
+    <Card className="flex h-full flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       <CardHeader className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           <CardTitle className="text-base md:text-lg">{project.title}</CardTitle>

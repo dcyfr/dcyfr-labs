@@ -114,7 +114,7 @@ export function PostList({
   return (
     <>
       {posts.map((p) => (
-        <article key={p.slug} className="group rounded-lg border p-4 transition-colors hover:bg-muted/50">
+        <article key={p.slug} className="group rounded-lg border p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <PostBadges 
               post={p} 

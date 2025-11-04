@@ -5,6 +5,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
+import { CopyCodeButton } from "@/components/copy-code-button";
 
 /**
  * Configuration for the rehype-pretty-code plugin
@@ -40,6 +41,23 @@ const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
     node.properties.className = ["word"];
   },
 };
+
+/**
+ * Helper function to extract text content from React children recursively
+ */
+function extractTextFromChildren(children: React.ReactNode): string {
+  if (typeof children === "string") {
+    return children;
+  }
+  if (Array.isArray(children)) {
+    return children.map(extractTextFromChildren).join("");
+  }
+  if (React.isValidElement(children) && children.props) {
+    const props = children.props as { children?: React.ReactNode };
+    return extractTextFromChildren(props.children);
+  }
+  return "";
+}
 
 /**
  * Custom component mapping for MDX elements
@@ -97,12 +115,28 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     // Code blocks handled by pre > code (rehype-pretty-code)
     return <code {...props} />;
   },
-  pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre 
-      {...props} 
-      className="group relative [&>code]:grid [&>code]:text-[0.875rem]"
-    />
-  ),
+  pre: (props: React.HTMLAttributes<HTMLPreElement>) => {
+    // Extract the code content for the copy button
+    const codeContent = React.Children.toArray(props.children)
+      .map((child) => {
+        if (React.isValidElement(child)) {
+          const childProps = child.props as { children?: React.ReactNode };
+          return extractTextFromChildren(childProps.children);
+        }
+        return "";
+      })
+      .join("");
+
+    return (
+      <div className="relative group">
+        <CopyCodeButton code={codeContent} />
+        <pre 
+          {...props} 
+          className="[&>code]:grid [&>code]:text-[0.875rem] overflow-x-auto"
+        />
+      </div>
+    );
+  },
   hr: (props: React.HTMLAttributes<HTMLHRElement>) => (
     <hr {...props} className="mt-8 mb-4 border-border" />
   ),

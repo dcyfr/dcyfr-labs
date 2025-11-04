@@ -142,6 +142,49 @@
     }
   }
 
+  /* Shimmer animation for skeleton loaders */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted-foreground) / 0.1) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Reduced motion: disable shimmer animation */
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-shimmer {
+      animation: none;
+      background: hsl(var(--muted));
+    }
+  }
+
+  /* Card hover effects - smooth lift with shadow */
+  .group.rounded-lg.border,
+  .flex.h-full.flex-col {
+    will-change: transform, box-shadow;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .group.rounded-lg.border,
+    .flex.h-full.flex-col {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+
   /* Star bullets for unordered lists */
   :where([data-slot="card"] ul, .prose ul) {
     list-style-type: disc;
@@ -192,8 +235,42 @@
 }
 
 .dark .react-calendar-heatmap .color-scale-4 {
-  fill: oklch(0.7 0.2 142);
+  fill: oklch(0.55 0.2 142);
 }
+
+/* ========================================
+   Reduced Motion - Accessibility
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable specific animations */
+  .skeleton-shimmer {
+    animation: none !important;
+    background: hsl(var(--muted)) !important;
+  }
+
+  /* Disable transforms on cards and interactive elements */
+  .group.rounded-lg.border,
+  .flex.h-full.flex-col {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  /* Keep box-shadow transitions for visual feedback but remove motion */
+  .group.rounded-lg.border:hover,
+  .flex.h-full.flex-col:hover {
+    transform: none !important;
+  }
+}
+
 
 .react-calendar-heatmap text {
   fill: hsl(var(--muted-foreground));
