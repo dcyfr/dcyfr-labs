@@ -24,10 +24,15 @@ This directory is the knowledge base for the portfolio. Content is organized by 
 	- **Advanced Components:** [`related-posts.md`](./components/related-posts.md) · [`table-of-contents.md`](./components/table-of-contents.md) · [`syntax-highlighting.md`](./components/syntax-highlighting.md)
 	- **Core Components:** [`mdx.md`](./components/mdx.md) · [`post-list.md`](./components/post-list.md) · [`blog-search-form.md`](./components/blog-search-form.md)
 	- **Additional:** [`reading-progress.md`](./components/reading-progress.md) · [`github-heatmap.md`](./components/github-heatmap.md) · [`giscus-comments.md`](./components/giscus-comments.md) · [`share-buttons.md`](./components/share-buttons.md) · [`logo.md`](./components/logo.md) · [`blog-post-skeleton.md`](./components/blog-post-skeleton.md)
-- `design/` – Design system documentation:
+- `design/` – Design system and UX documentation:
 	- [`typography.md`](./design/typography.md) - Typography system (Geist Sans, Source Serif 4, Geist Mono) with quick reference
 	- [`print-stylesheet.md`](./design/print-stylesheet.md) - Print stylesheet implementation
 	- [`color-contrast-improvements.md`](./design/color-contrast-improvements.md) - Accessibility improvements
+	- **Mobile-First Design Optimization:**
+		- [`mobile-first-optimization-analysis.md`](./design/mobile-first-optimization-analysis.md) - Comprehensive mobile UX analysis (500+ lines)
+		- [`mobile-first-quick-reference.md`](./design/mobile-first-quick-reference.md) - Quick wins and priorities
+		- [`mobile-first-visual-comparison.md`](./design/mobile-first-visual-comparison.md) - Before/after visual guide
+	- [`ui-ux-optimization-roadmap.md`](./design/ui-ux-optimization-roadmap.md) - Animation and micro-interaction roadmap
 - `features/` – Feature documentation:
 	- [`inngest-integration.md`](./features/inngest-integration.md) - Complete Inngest background jobs guide (500+ lines)
 	- [`inngest-testing.md`](./features/inngest-testing.md) - Testing quick reference
@@ -65,6 +70,8 @@ This directory is the knowledge base for the portfolio. Content is organized by 
 | Components | [`components/post-badges.md`](./components/post-badges.md) · [`components/error-boundaries.md`](./components/error-boundaries.md) · [`components/mdx.md`](./components/mdx.md) |
 | Component List | *15 components documented* – [See components/](./components/) |
 | Design System | [`design/typography.md`](./design/typography.md) · [`design/print-stylesheet.md`](./design/print-stylesheet.md) |
+| **Mobile-First UX** | **[`design/mobile-first-optimization-analysis.md`](./design/mobile-first-optimization-analysis.md) · [`design/mobile-first-quick-reference.md`](./design/mobile-first-quick-reference.md)** |
+| UI/UX Roadmap | [`design/ui-ux-optimization-roadmap.md`](./design/ui-ux-optimization-roadmap.md) |
 | **Background Jobs** | **[`features/inngest-integration.md`](./features/inngest-integration.md) · [`features/inngest-testing.md`](./features/inngest-testing.md)** |
 | GitHub Integration | [`features/github-integration.md`](./features/github-integration.md) |
 | MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |

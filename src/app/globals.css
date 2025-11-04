@@ -195,6 +195,44 @@
     font-size: 0.9em;
     color: currentColor;
   }
+
+  /* Touch Target Utilities - Mobile-First UX */
+  /* Ensures minimum 44x44px touch targets per Apple/Google guidelines */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .touch-target-lg {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .touch-target-xl {
+    min-height: 56px;
+    min-width: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Expand touch area without affecting visual size */
+  .touch-target-expand::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    min-height: 44px;
+    min-width: 44px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 /* GitHub Heatmap Styles */

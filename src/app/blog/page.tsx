@@ -145,12 +145,12 @@ export default async function BlogPage({
         <BlogSearchForm query={query} tag={tag} />
 
         {/* Tag filters */}
-        <nav className="mt-4 flex flex-wrap gap-2" aria-label="Filter by tag">
-          <Badge asChild variant={tag ? "outline" : "secondary"}>
+        <nav className="mt-4 flex flex-wrap gap-3" aria-label="Filter by tag">
+          <Badge asChild variant={tag ? "outline" : "secondary"} className="h-10 px-4">
             <Link href={buildTagHref("", query)}>All</Link>
           </Badge>
           {tagList.map((t) => (
-            <Badge key={t} asChild variant={tag === t ? "secondary" : "outline"}>
+            <Badge key={t} asChild variant={tag === t ? "secondary" : "outline"} className="h-10 px-4">
               <Link href={buildTagHref(t, query)}>{t}</Link>
             </Badge>
           ))}

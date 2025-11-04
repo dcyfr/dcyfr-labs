@@ -70,6 +70,7 @@ export function ContactForm() {
           id="name"
           name="name"
           type="text"
+          inputMode="text"
           placeholder="Your name"
           autoComplete="name"
           required
@@ -82,6 +83,7 @@ export function ContactForm() {
           id="email"
           name="email"
           type="email"
+          inputMode="email"
           placeholder="your.email@example.com"
           autoComplete="email"
           required
@@ -97,9 +99,10 @@ export function ContactForm() {
           required
           disabled={isSubmitting}
           rows={6}
+          className="resize-none"
         />
       </div>
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
         {isSubmitting ? "Sending..." : "Send Message"}
       </Button>
     </form>

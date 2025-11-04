@@ -11,8 +11,11 @@ export function SiteFooter() {
           <a href="/contact" className="hover:underline underline-offset-4 will-change-auto">
             Contact
           </a>
-          <a href="/rss.xml" className="hover:underline underline-offset-4 will-change-auto">
+          <a href="/atom.xml" className="hover:underline underline-offset-4 will-change-auto">
             Feed
+          </a>
+          <a href="/rss.xml" className="hover:underline underline-offset-4 will-change-auto">
+            RSS
           </a>
           <a href="/sitemap.xml" className="hover:underline underline-offset-4 will-change-auto">
             Sitemap

@@ -2,11 +2,24 @@
 
 This document tracks **active and pending** work only. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 3, 2025
+**Last Updated:** November 4, 2025
 
 ---
 
 ## 📌 Recent Updates
+
+### Mobile-First Design Optimization Analysis (Nov 4, 2025)
+A comprehensive mobile-first UX analysis has been completed identifying critical touch target and navigation issues.
+
+**Status:** 🔴 **Critical Issues Identified**  
+**Key Findings:** Touch targets below 44px minimum, no mobile navigation, hidden content, forms not optimized
+
+**Documents:**
+- 📍 **Start here:** [`/docs/design/mobile-first-quick-reference.md`](../design/mobile-first-quick-reference.md) - 5-minute overview
+- 📊 **Full analysis:** [`/docs/design/mobile-first-optimization-analysis.md`](../design/mobile-first-optimization-analysis.md) - 500+ lines, detailed guide
+- 🎨 **Visual guide:** [`/docs/design/mobile-first-visual-comparison.md`](../design/mobile-first-visual-comparison.md) - Before/after diagrams
+
+**Critical Issues** (4 items added to Features > Mobile-First UX below - P0 priority)
 
 ### UI/UX Animation Phase 1 - Quick Wins Completed (Nov 3, 2025)
 All Phase 1 quick wins from the UI/UX optimization roadmap have been implemented:
@@ -48,9 +61,145 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 ## 🚀 Features
 
 ### High Priority
-- None currently
+
+#### Mobile-First UX Optimization (Nov 4, 2025) 🔴 **CRITICAL**
+
+**Phase 1: Foundation - Week 1** (P0 - Critical, ~8-12 hours) — **IN PROGRESS (3/4 complete)**
+- [x] **Touch target audit & fixes** — ✅ COMPLETE (Nov 4, 2025)
+  - Added touch-target utility classes to globals.css (44px, 48px, 56px)
+  - Updated site-header.tsx navigation links with touch-target class and px-2 padding
+  - Increased blog tag filter badges to h-10 (40px) with px-4 padding
+  - Logo now always visible on mobile (removed hidden md:block)
+  - Header height reduced to h-14 (56px) on mobile, h-16 (64px) on desktop
+  - All interactive elements now meet 44px minimum touch target
+  - Files changed: `globals.css`, `site-header.tsx`, `blog/page.tsx`
+
+- [ ] **Mobile navigation implementation** - Replace horizontal nav with hamburger menu using Sheet component
+  - Current: Cramped horizontal links with small targets, logo text hidden on mobile
+  - Action: Implement Sheet drawer with large touch targets (56px), keep desktop horizontal nav
+  - Files: `site-header.tsx`, create `mobile-nav.tsx` (optional bottom nav)
+  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#1-site-header-site-headertsx)
+
+- [x] **Form optimization** — ✅ COMPLETE (Nov 4, 2025)
+  - Updated Input component: h-12 (48px) on mobile, h-10 (40px) on desktop
+  - Updated Textarea component: min-h-[120px], text-base on mobile
+  - Added inputMode="email" and inputMode="text" attributes to contact form
+  - Contact form submit button: size="lg" (40px height), full-width on mobile
+  - Textarea set to resize-none for better mobile UX
+  - Better font sizing: text-base on mobile, text-sm on desktop
+  - Files changed: `ui/input.tsx`, `ui/textarea.tsx`, `contact-form.tsx`
+
+- [x] **Responsive spacing system** — ✅ COMPLETE (Nov 4, 2025)
+  - Updated main layout padding: px-4 sm:px-6 md:px-8 (progressive enhancement)
+  - Reduced mobile padding from px-6 to px-4 for more content space
+  - Header updated with px-4 sm:px-6 md:px-8 padding
+  - Files changed: `layout.tsx`, `site-header.tsx`
+
+**Success Metrics:**
+- ✅ All touch targets ≥ 44x44px
+- ✅ Mobile navigation functional with large targets
+- ✅ Form completion rate increase
+- ✅ Lighthouse Accessibility: 100
+
+**Reference:** [`/docs/design/mobile-first-optimization-analysis.md`](../design/mobile-first-optimization-analysis.md)
 
 ### Backlog
+
+#### Mobile-First UX Optimization - Later Phases
+
+**Phase 2: Navigation & Structure - Week 2** (P1 - High, ~12-16 hours)
+- [ ] **Bottom navigation bar** - App-like bottom nav with 4 primary destinations (Home, Blog, Projects, Contact)
+  - Create `mobile-nav.tsx` with grid layout, icon+label, active state highlighting
+  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#option-b-bottom-navigation-app-like)
+
+- [ ] **Mobile Table of Contents** - Floating button with bottom sheet instead of hidden sidebar
+  - Current: TOC completely hidden on mobile (lg:block)
+  - Action: Floating FAB bottom-right, Sheet with large tappable headings, smooth scroll
+  - Files: `table-of-contents.tsx`
+  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#3-table-of-contents-table-of-contentstsx)
+
+- [ ] **Project card optimization** - Progressive disclosure for highlights, improved mobile layout
+  - Current: Highlights hidden on mobile (lg:inline-block)
+  - Action: Expandable "Key Features" section, stacked action buttons, better spacing
+  - Files: `project-card.tsx`
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#4-project-cards-project-cardtsx)
+
+- [ ] **Post list mobile redesign** - Vertical cards with full-width thumbnails
+  - Current: Horizontal layout with small thumbnails (96px)
+  - Action: Vertical cards on mobile, full-width 16:9 images, simplified metadata
+  - Files: `post-list.tsx`
+  - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#2-blog-post-list-post-listtsx)
+
+**Phase 3: Interactions - Week 3** (P1 - High, ~10-14 hours)
+- [ ] **Swipe gestures** - Blog post prev/next navigation, card actions
+  - Implement swipe-left/right for post navigation, visual indicators
+  - Library: react-swipeable or Framer Motion drag
+  - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#1-swipe-navigation-for-blog-posts)
+
+- [ ] **Pull-to-refresh** - Refresh blog list with native-like pull gesture
+  - Touch handlers with visual spinner, router.refresh() on completion
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#2-pull-to-refresh-for-blog-list)
+
+- [ ] **Active states & feedback** - Scale animations, ripple effects, haptic feedback
+  - Add active:scale-[0.98] to cards, tap feedback animations
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#phase-3-interactions-week-3)
+
+- [ ] **Loading states polish** - Shimmer skeletons, progressive content appearance
+  - Already have shimmer, add staggered appearance for lists
+  - Effort: 2-3h
+
+**Phase 4: Performance - Week 4** (P2 - Medium, ~8-12 hours)
+- [ ] **Code splitting for mobile** - Conditional loading by viewport, lazy load heavy components
+  - Dynamic imports for GitHub heatmap, use-media-query hook
+  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#1-reduce-javascript-for-mobile)
+
+- [ ] **Image optimization** - Mobile-specific sizes, blur placeholders, priority hints
+  - Update Next/Image sizes prop, add blur placeholders
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#2-image-optimization)
+
+- [ ] **Font loading optimization** - Reduce weights, subset, optimize fallbacks
+  - Review font-display, reduce loaded weights, subset Latin only
+  - Effort: 1-2h | [See analysis](../design/mobile-first-optimization-analysis.md#3-font-loading-strategy)
+
+- [ ] **Bundle size reduction** - Analyze dependencies, tree-shake, remove unused code
+  - Run bundle analyzer, identify large dependencies
+  - Effort: 2-3h
+
+**Phase 5: PWA & Polish - Week 5** (P2 - Medium, ~10-14 hours)
+- [ ] **PWA setup** - Web app manifest, service worker, install prompt, offline fallback
+  - Create manifest.json, add icons, implement install prompt component
+  - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#pwa-enhancements)
+
+- [ ] **Advanced interactions** - Long-press menus, double-tap actions, pinch-to-zoom
+  - Context menus on long-press, gesture handlers
+  - Effort: 3-4h
+
+- [ ] **Accessibility enhancements** - Mobile screen reader testing, voice-over optimization
+  - Test with VoiceOver/TalkBack, improve ARIA labels
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#mobile-accessibility-enhancements)
+
+- [ ] **Reduced motion support expansion** - Ensure all new animations respect user preferences
+  - Audit all animations, add motion-reduce variants
+  - Effort: 1-2h
+
+**Testing & Validation** (Ongoing)
+- [ ] Real device testing on iPhone SE, iPhone 14 Pro, Samsung Galaxy, iPad Mini
+- [ ] Lighthouse mobile audit (target: Performance >90, Accessibility 100)
+- [ ] Touch target validation (Chrome DevTools device emulation)
+- [ ] Form completion flow testing on mobile
+- [ ] Navigation flow testing (menu, bottom nav, TOC)
+
+**Success Metrics (Overall):**
+- Mobile bounce rate < 40%
+- Time on page (mobile) > 2 minutes
+- Form completion rate > 60%
+- Page load (3G) < 3 seconds
+- Lighthouse Performance > 90
+- Lighthouse Accessibility: 100
+- PWA install rate > 5%
+
+#### General Features
+
 - [x] **Public Analytics Dashboard** - Display trending posts and view statistics (✅ Complete - dev-only, see `/docs/features/analytics-dashboard.md`)
 - [ ] **Newsletter signup** - Email subscription functionality for blog updates
 - [ ] **Email Templates** - HTML email templates with branding for contact form and notifications
