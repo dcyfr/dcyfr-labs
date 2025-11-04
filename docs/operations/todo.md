@@ -105,15 +105,33 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [x] Navigation loading bar (top progress bar for route transitions)
 - [x] `prefers-reduced-motion` support (hook + comprehensive CSS rules)
 
-**Phase 2: Enhanced Interactions** (~26 hours)
-- [ ] **Staggered list animations** - Blog posts/projects fade in sequentially with delay
-- [ ] **Scroll-triggered animations** - Content fades/slides as it enters viewport (IntersectionObserver)
+**Phase 1.5: Blog Featured Images & Animations** ✅ **COMPLETE** (Nov 3, 2025 - ~5 hours)
+- [x] Extended Post type with optional `image` field (url, alt, width, height, caption, credit, position)
+- [x] Created `PostThumbnail` component with next/image optimization
+- [x] Updated `PostList` with conditional thumbnail rendering
+- [x] Built `useScrollAnimation` hook with IntersectionObserver + prefers-reduced-motion
+- [x] Created `ScrollReveal` wrapper component for scroll animations
+- [x] Applied staggered fade-in animations to post list items
+
+**Phase 2: Blog Image System & Detail Pages** (~8-10 hours) 🆕
+- [ ] **Hero image component** - Full-width hero with gradient overlays for post detail pages
+- [ ] **Image caption display** - Caption and credit rendering below images
+- [ ] **OG image integration** - Use featured images for social shares (fallback to generated)
+- [ ] **Magazine layout variant** - Alternate large image left/right layout for PostList
+- [ ] **Grid layout variant** - 2-column grid with images on top
+- [ ] **Related posts with images** - Update RelatedPosts component to show thumbnails
+- [ ] **RSS feed images** - Include featured images in RSS/Atom feeds with `<enclosure>` tags
+- [ ] **Frontmatter schema docs** - Document image field in `/docs/blog/frontmatter-schema.md`
+
+**Phase 3: Enhanced Interactions** (~26 hours)
 - [ ] **Enhanced table of contents** - Sliding active indicator, smoother expand/collapse
 - [ ] **Toast improvements** - Custom enter/exit animations for sonner, success micro-animations
 - [ ] **GitHub heatmap polish** - Staggered square appearance, animated tooltips, smooth data loading transition
 - [ ] **Theme transition animations** - Smooth dark/light mode switch without FOUC
+- [ ] **Parallax hero images** - Subtle parallax effect for hero images (desktop only, 0.8x scroll speed)
+- [ ] **Progressive image blur** - Images start blurred and sharpen as they load
 
-**Phase 3: Advanced Features** (~74 hours)
+**Phase 4: Advanced Features** (~74 hours)
 - [ ] **Command palette (Cmd+K)** - Search posts, navigate site, keyboard shortcuts (cmdk + Radix UI)
 - [ ] **Page transition system** - View Transitions API (primary) + Framer Motion fallback
 - [ ] **Micro-interactions library** - Reusable animated components (button ripples, input focus effects, success/error animations)
@@ -121,8 +139,10 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [ ] **Reading mode toggle** - Distraction-free interface (hide header/footer, adjust typography)
 - [ ] **Advanced gestures** - Swipe navigation on mobile, pull-to-refresh, drag-to-share
 - [ ] **3D card tilt effect** - Subtle tilt on hover for project cards (vanilla-tilt or Framer Motion)
+- [ ] **Image galleries** - Multiple images per post with lightbox viewer
+- [ ] **Pull quotes** - Styled blockquotes with custom borders and typography
 
-**Phase 4: Future Considerations** (Backlog - no timeline)
+**Phase 5: Future Considerations** (Backlog - no timeline)
 - [ ] Infinite scroll for blog list
 - [ ] Keyboard navigation (j/k for posts, Esc to close)
 - [ ] Progressive image loading (LQIP)
@@ -130,7 +150,8 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [ ] Animated mesh backgrounds (hero sections)
 - [ ] Font size controls (user preference)
 - [ ] Reading time indicator (live progress)
-- [ ] Parallax effects (subtle, tasteful)
+- [ ] Multi-author support with author cards
+- [ ] Post series indicator and navigation
 
 **Reference:** [`/docs/design/ui-ux-optimization-roadmap.md`](../design/ui-ux-optimization-roadmap.md) - Complete analysis, code examples, and implementation guide
 

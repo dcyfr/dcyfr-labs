@@ -5,6 +5,16 @@ export type PostSource = {
   href: string;
 };
 
+export type PostImage = {
+  url: string; // local path (e.g., "/blog/images/post-slug/hero.jpg") or external URL
+  alt: string; // required for accessibility
+  width?: number; // optional, for next/image optimization
+  height?: number; // optional, maintains aspect ratio
+  caption?: string; // optional, displayed below image
+  credit?: string; // optional, photographer/source attribution
+  position?: "top" | "left" | "right" | "background"; // list view placement hint
+};
+
 export type Post = {
   id: string; // stable permanent identifier (never changes, independent of slug)
   slug: string; // unique URL segment (active/current slug - can change)
@@ -19,6 +29,7 @@ export type Post = {
   body: string; // MDX content
   sources?: PostSource[];
   previousSlugs?: string[]; // old slugs that should 301 redirect to current slug
+  image?: PostImage; // optional featured image
   readingTime: {
     words: number;
     minutes: number;

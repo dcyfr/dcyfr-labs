@@ -50,6 +50,15 @@ export default async function Home() {
   // Get nonce from middleware for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
+  // Prepare recent posts for homepage
+  const recentPosts = [...posts]
+    .filter(p => !p.archived)
+    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
+    .slice(0, 3);
+  
+  // Get badge metadata (latest and hottest posts)
+  const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
+  
   const socialImage = getOgImageUrl();
   // JSON-LD structured data for home page
   const jsonLd = {
@@ -143,31 +152,19 @@ export default async function Home() {
               <Link href="/blog">View all</Link>
             </Button>
           </div>
-          <div className="space-y-4">
-            {await (async () => {
-              const recentPosts = [...posts]
-                .filter(p => !p.archived)
-                .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
-                .slice(0, 5);
-              
-              // Get badge metadata (latest and hottest posts)
-              const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
-              
-              return <PostList 
-                posts={recentPosts}
-                latestSlug={latestSlug ?? undefined}
-                hottestSlug={hottestSlug ?? undefined}
-                titleLevel="h3"
-              />;
-            })()}
-          </div>
+          <PostList 
+            posts={recentPosts}
+            latestSlug={latestSlug ?? undefined}
+            hottestSlug={hottestSlug ?? undefined}
+            titleLevel="h3"
+          />
         </section>
         {/* latest projects */}
         <section className="mt-12 md:mt-16 space-y-4">
           <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {featuredProjects.slice(0, 2).map((p) => (
-              <ProjectCard key={p.title} project={p} />
+              <ProjectCard key={p.title} project={p} showHighlights={false} />
             ))}
           </div>
         </section>
