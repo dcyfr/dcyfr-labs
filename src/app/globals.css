@@ -142,6 +142,49 @@
     }
   }
 
+  /* Shimmer animation for skeleton loaders */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted-foreground) / 0.1) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Reduced motion: disable shimmer animation */
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-shimmer {
+      animation: none;
+      background: hsl(var(--muted));
+    }
+  }
+
+  /* Card hover effects - smooth lift with shadow */
+  .group.rounded-lg.border,
+  .flex.h-full.flex-col {
+    will-change: transform, box-shadow;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .group.rounded-lg.border,
+    .flex.h-full.flex-col {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+
   /* Star bullets for unordered lists */
   :where([data-slot="card"] ul, .prose ul) {
     list-style-type: disc;
@@ -151,6 +194,44 @@
     content: "\2726\2000";
     font-size: 0.9em;
     color: currentColor;
+  }
+
+  /* Touch Target Utilities - Mobile-First UX */
+  /* Ensures minimum 44x44px touch targets per Apple/Google guidelines */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .touch-target-lg {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .touch-target-xl {
+    min-height: 56px;
+    min-width: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Expand touch area without affecting visual size */
+  .touch-target-expand::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    min-height: 44px;
+    min-width: 44px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -192,8 +273,42 @@
 }
 
 .dark .react-calendar-heatmap .color-scale-4 {
-  fill: oklch(0.7 0.2 142);
+  fill: oklch(0.55 0.2 142);
 }
+
+/* ========================================
+   Reduced Motion - Accessibility
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable specific animations */
+  .skeleton-shimmer {
+    animation: none !important;
+    background: hsl(var(--muted)) !important;
+  }
+
+  /* Disable transforms on cards and interactive elements */
+  .group.rounded-lg.border,
+  .flex.h-full.flex-col {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  /* Keep box-shadow transitions for visual feedback but remove motion */
+  .group.rounded-lg.border:hover,
+  .flex.h-full.flex-col:hover {
+    transform: none !important;
+  }
+}
+
 
 .react-calendar-heatmap text {
   fill: hsl(var(--muted-foreground));
@@ -370,4 +485,121 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 .prose p {
   line-height: 1.75;
   margin-bottom: 1rem;
+}
+
+/* Mobile typography enhancements */
+@media (max-width: 768px) {
+  .prose {
+    font-size: 1.0625rem; /* 17px - iOS standard for better readability */
+  }
+
+  .prose p {
+    line-height: 1.85; /* More breathing room on mobile */
+    margin-bottom: 1.25rem; /* Better paragraph separation */
+  }
+
+  .prose h1 {
+    font-size: 2rem; /* 32px - slightly smaller than desktop */
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose h2 {
+    font-size: 1.75rem; /* 28px */
+    margin-top: 2.5rem; /* More section separation */
+    margin-bottom: 1rem;
+  }
+
+  .prose h3 {
+    font-size: 1.375rem; /* 22px */
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Code blocks optimized for mobile */
+  .prose pre {
+    font-size: 0.8125rem; /* 13px - optimal for mobile code */
+    padding: 0.75rem;
+    margin-left: -1rem; /* Bleed to container edges for max width */
+    margin-right: -1rem;
+    border-radius: 0; /* Square edges when bleeding */
+    overflow-x: auto;
+  }
+
+  .prose code {
+    font-size: 0.875rem; /* Inline code slightly larger */
+  }
+
+  /* Lists with better spacing */
+  .prose ul,
+  .prose ol {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .prose li {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Blockquotes more prominent */
+  .prose blockquote {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+  }
+}
+
+
+/* GitHub Heatmap Custom Styles */
+.react-calendar-heatmap .color-empty {
+  fill: hsl(var(--muted));
+}
+
+.react-calendar-heatmap .color-scale-1 {
+  fill: rgb(134, 239, 172);
+}
+
+.react-calendar-heatmap .color-scale-2 {
+  fill: rgb(74, 222, 128);
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: rgb(34, 197, 94);
+}
+
+.react-calendar-heatmap .color-scale-4 {
+  fill: rgb(21, 128, 61);
+}
+
+.dark .react-calendar-heatmap .color-empty {
+  fill: hsl(var(--muted));
+}
+
+.dark .react-calendar-heatmap .color-scale-1 {
+  fill: rgb(20, 83, 45);
+}
+
+.dark .react-calendar-heatmap .color-scale-2 {
+  fill: rgb(21, 128, 61);
+}
+
+.dark .react-calendar-heatmap .color-scale-3 {
+  fill: rgb(34, 197, 94);
+}
+
+.dark .react-calendar-heatmap .color-scale-4 {
+  fill: rgb(134, 239, 172);
+}
+
+.react-calendar-heatmap rect {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.react-calendar-heatmap rect:hover {
+  stroke: hsl(var(--primary));
+  stroke-width: 2px;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }

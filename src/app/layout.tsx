@@ -14,6 +14,8 @@ import {
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
+import { BackToTop } from "@/components/back-to-top";
+import { LoadingBar } from "@/components/loading-bar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { headers } from "next/headers";
@@ -97,9 +99,11 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
+          <LoadingBar />
           <SiteHeader />
-          <main className="min-h-[calc(100dvh-128px)] px-6 md:px-8">{children}</main>
+          <main className="min-h-[calc(100dvh-128px)] px-4 sm:px-6 md:px-8">{children}</main>
           <SiteFooter />
+          <BackToTop />
           <Toaster richColors position="top-center" />
           {/* Vercel Analytics & Speed Insights */}
           <Analytics />

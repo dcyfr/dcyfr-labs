@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import type { Post } from "@/data/posts";
 import { PostBadges } from "@/components/post-badges";
+import { PostThumbnail } from "@/components/post-thumbnail";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import { ensurePostImage } from "@/lib/default-images";
 
 /**
  * Props for the PostList component
@@ -113,37 +118,66 @@ export function PostList({
 
   return (
     <>
-      {posts.map((p) => (
-        <article key={p.slug} className="group rounded-lg border p-4 transition-colors hover:bg-muted/50">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <PostBadges 
-              post={p} 
-              size="sm"
-              isLatestPost={latestSlug === p.slug}
-              isHotPost={hottestSlug === p.slug}
-            />
-            <time dateTime={p.publishedAt}>
-              {new Date(p.publishedAt).toLocaleDateString(undefined, { 
-                year: "numeric", 
-                month: "short", 
-                day: "numeric" 
-              })}
-            </time>
-            <span className="hidden md:inline-block" aria-hidden="true">•</span>
-            <span>{p.readingTime.text}</span>
-            <span className="hidden md:inline-block" aria-hidden="true">•</span>
-            <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
-          </div>
-          <div className="mt-1">
-            <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-lg md:text-xl" : "text-lg"}`}>
-              <Link href={`/blog/${p.slug}`}>
-                {p.title}
-              </Link>
-            </TitleTag>
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">{p.summary}</p>
-        </article>
-      ))}
+      {posts.map((p, index) => {
+        // Ensure every post has an image (use default if none specified)
+        const featuredImage = ensurePostImage(p.image, {
+          title: p.title,
+          tags: p.tags,
+        });
+
+        return (
+          <ScrollReveal 
+            key={p.slug} 
+            animation="fade-up"
+            delay={index * 100}
+            duration={600}
+          >
+            <article className="group rounded-lg border p-4 transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5">
+              <div className="flex gap-4">
+                {/* Featured image thumbnail - now always present */}
+                <Link href={`/blog/${p.slug}`} className="shrink-0">
+                  <PostThumbnail 
+                    image={featuredImage} 
+                    size="sm"
+                    className="rounded-md"
+                  />
+                </Link>
+                
+                {/* Post content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <PostBadges 
+                      post={p} 
+                      size="sm"
+                      isLatestPost={latestSlug === p.slug}
+                      isHotPost={hottestSlug === p.slug}
+                    />
+                    <time dateTime={p.publishedAt}>
+                      {new Date(p.publishedAt).toLocaleDateString(undefined, { 
+                        year: "numeric", 
+                        month: "short", 
+                        day: "numeric" 
+                      })}
+                    </time>
+                    <span className="hidden md:inline-block" aria-hidden="true">•</span>
+                    <span>{p.readingTime.text}</span>
+                    <span className="hidden md:inline-block" aria-hidden="true">•</span>
+                    <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
+                  </div>
+                  <div className="mt-1">
+                    <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-lg md:text-xl" : "text-lg"}`}>
+                      <Link href={`/blog/${p.slug}`}>
+                        {p.title}
+                      </Link>
+                    </TitleTag>
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">{p.summary}</p>
+                </div>
+              </div>
+            </article>
+          </ScrollReveal>
+        );
+      })}
     </>
   );
 }

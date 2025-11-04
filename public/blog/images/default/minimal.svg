@@ -1,0 +1,121 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Deep dark background with subtle gradient -->
+  <defs>
+    <linearGradient id="dark-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Refined dot pattern -->
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#94a3b8" opacity="0.08"/>
+    </pattern>
+    
+    <!-- Grid lines for tech feel -->
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.05"/>
+    </pattern>
+    
+    <!-- Accent gradient for code icon -->
+    <linearGradient id="code-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background layers -->
+  <rect width="1200" height="630" fill="url(#dark-gradient)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+  
+  <!-- Accent glow in corners -->
+  <circle cx="100" cy="100" r="200" fill="#3b82f6" opacity="0.03"/>
+  <circle cx="1100" cy="530" r="200" fill="#8b5cf6" opacity="0.03"/>
+  
+  <!-- Content container -->
+  <g transform="translate(600, 315)">
+    <!-- Code icon with modern design -->
+    <g transform="translate(0, -95)">
+      <!-- Icon background with glow -->
+      <circle cx="0" cy="0" r="58" fill="url(#code-gradient)" opacity="0.08"/>
+      <circle cx="0" cy="0" r="52" fill="url(#code-gradient)" opacity="0.05"/>
+      
+      <!-- Terminal/code brackets -->
+      <g stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <!-- Left bracket -->
+        <path d="M -25 -12 L -35 0 L -25 12" stroke="url(#code-gradient)"/>
+        <!-- Right bracket -->
+        <path d="M 25 -12 L 35 0 L 25 12" stroke="url(#code-gradient)"/>
+        <!-- Forward slash -->
+        <line x1="-8" y1="-18" x2="8" y2="18" stroke="#8b5cf6"/>
+      </g>
+      
+      <!-- Code cursor blink indicator -->
+      <rect x="38" y="-3" width="3" height="6" fill="#3b82f6" opacity="0.7"/>
+    </g>
+    
+    <!-- Main heading -->
+    <text 
+      x="0" 
+      y="45" 
+      text-anchor="middle" 
+      fill="#f8fafc" 
+      font-family="'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace" 
+      font-size="54" 
+      font-weight="700"
+      letter-spacing="-1"
+    >
+      Technical Article
+    </text>
+    
+    <!-- Code-style subtitle -->
+    <text 
+      x="0" 
+      y="88" 
+      text-anchor="middle" 
+      fill="#94a3b8" 
+      font-family="'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace" 
+      font-size="16" 
+      font-weight="500"
+      letter-spacing="3"
+    >
+      CODE • ENGINEERING • SYSTEMS
+    </text>
+    
+    <!-- Decorative code comment -->
+    <text 
+      x="0" 
+      y="125" 
+      text-anchor="middle" 
+      fill="#475569" 
+      font-family="'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace" 
+      font-size="14" 
+      font-weight="400"
+      opacity="0.7"
+    >
+      // building better software
+    </text>
+  </g>
+  
+  <!-- Terminal-style corner indicators -->
+  <g fill="#3b82f6" opacity="0.15">
+    <!-- Top left corner -->
+    <rect x="35" y="35" width="4" height="60" rx="2"/>
+    <rect x="35" y="35" width="60" height="4" rx="2"/>
+    
+    <!-- Top right corner -->
+    <rect x="1161" y="35" width="4" height="60" rx="2"/>
+    <rect x="1101" y="35" width="60" height="4" rx="2"/>
+    
+    <!-- Bottom left corner -->
+    <rect x="35" y="535" width="4" height="60" rx="2"/>
+    <rect x="35" y="591" width="60" height="4" rx="2"/>
+    
+    <!-- Bottom right corner -->
+    <rect x="1161" y="535" width="4" height="60" rx="2"/>
+    <rect x="1101" y="591" width="60" height="4" rx="2"/>
+  </g>
+  
+  <!-- Subtle scan line effect -->
+  <line x1="0" y1="315" x2="1200" y2="315" stroke="#3b82f6" stroke-width="1" opacity="0.05"/>
+</svg>

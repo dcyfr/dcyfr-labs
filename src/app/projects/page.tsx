@@ -14,7 +14,7 @@ import { headers } from "next/headers";
 
 const pageTitle = "Projects";
 // Optimized meta description (155 characters)
-const pageDescription = "Explore my cybersecurity and development projects: security tools, automation frameworks, and open-source contributions. View my GitHub activity.";
+const pageDescription = "My portfolio of development and open-source projects.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -52,7 +52,7 @@ export default async function ProjectsPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Projects",
-    description: "A collection of my projects in cybersecurity and software development.",
+    description: "",
     url: `${SITE_URL}/projects`,
     author: {
       "@type": "Person",

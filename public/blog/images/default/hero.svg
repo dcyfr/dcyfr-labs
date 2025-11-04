@@ -1,0 +1,116 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Modern gradient background with mesh effect -->
+  <defs>
+    <linearGradient id="bg-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d946ef;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="glow-1" cx="30%" cy="20%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="glow-2" cx="70%" cy="80%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- Noise texture for depth -->
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" />
+      <feColorMatrix type="saturate" values="0"/>
+      <feBlend mode="multiply" in="SourceGraphic" />
+    </filter>
+  </defs>
+  
+  <!-- Background layers -->
+  <rect width="1200" height="630" fill="url(#bg-gradient-1)"/>
+  <rect width="1200" height="630" fill="url(#glow-1)"/>
+  <rect width="1200" height="630" fill="url(#glow-2)"/>
+  <rect width="1200" height="630" fill="black" opacity="0.02" filter="url(#noise)"/>
+  
+  <!-- Abstract flowing shapes -->
+  <path d="M 0 200 Q 300 150 600 200 T 1200 200 L 1200 0 L 0 0 Z" fill="white" opacity="0.03"/>
+  <path d="M 0 630 Q 300 580 600 630 T 1200 630 L 1200 400 Q 900 450 600 400 T 0 400 Z" fill="black" opacity="0.05"/>
+  
+  <!-- Floating particles -->
+  <circle cx="150" cy="120" r="4" fill="white" opacity="0.4"/>
+  <circle cx="920" cy="480" r="3" fill="white" opacity="0.3"/>
+  <circle cx="280" cy="520" r="5" fill="white" opacity="0.5"/>
+  <circle cx="1050" cy="150" r="4" fill="white" opacity="0.4"/>
+  <circle cx="450" cy="90" r="3" fill="white" opacity="0.3"/>
+  <circle cx="750" cy="540" r="4" fill="white" opacity="0.35"/>
+  
+  <!-- Center content -->
+  <g transform="translate(600, 315)">
+    <!-- Modern icon container with depth -->
+    <g transform="translate(0, -100)">
+      <!-- Icon shadow -->
+      <rect x="-55" y="-52" width="110" height="110" rx="24" fill="black" opacity="0.15"/>
+      <!-- Icon background -->
+      <rect x="-55" y="-55" width="110" height="110" rx="24" fill="white" opacity="0.15"/>
+      <!-- Icon border -->
+      <rect x="-55" y="-55" width="110" height="110" rx="24" fill="none" stroke="white" stroke-width="2" opacity="0.4"/>
+      
+      <!-- Document icon with modern lines -->
+      <g transform="translate(0, 0)">
+        <line x1="-25" y1="-20" x2="25" y2="-20" stroke="white" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+        <line x1="-25" y1="-5" x2="25" y2="-5" stroke="white" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
+        <line x1="-25" y1="10" x2="15" y2="10" stroke="white" stroke-width="3.5" stroke-linecap="round" opacity="0.5"/>
+      </g>
+    </g>
+    
+    <!-- Main text with enhanced typography -->
+    <text 
+      x="0" 
+      y="50" 
+      text-anchor="middle" 
+      fill="white" 
+      font-family="system-ui, -apple-system, sans-serif" 
+      font-size="58" 
+      font-weight="800"
+      letter-spacing="-2"
+    >
+      Blog Article
+    </text>
+    
+    <!-- Subtitle with modern spacing -->
+    <text 
+      x="0" 
+      y="95" 
+      text-anchor="middle" 
+      fill="white" 
+      font-family="system-ui, -apple-system, sans-serif" 
+      font-size="18" 
+      font-weight="500"
+      opacity="0.85"
+      letter-spacing="4"
+    >
+      EXPLORE • LEARN • CREATE
+    </text>
+    
+    <!-- Decorative underline -->
+    <line x1="-80" y1="120" x2="80" y2="120" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+  </g>
+  
+  <!-- Corner frame elements -->
+  <g opacity="0.25">
+    <!-- Top left -->
+    <line x1="40" y1="40" x2="120" y2="40" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="40" y1="40" x2="40" y2="120" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Top right -->
+    <line x1="1160" y1="40" x2="1080" y2="40" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="1160" y1="40" x2="1160" y2="120" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Bottom left -->
+    <line x1="40" y1="590" x2="120" y2="590" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="40" y1="590" x2="40" y2="510" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Bottom right -->
+    <line x1="1160" y1="590" x2="1080" y2="590" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="1160" y1="590" x2="1160" y2="510" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

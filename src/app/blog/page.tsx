@@ -16,7 +16,7 @@ import { headers } from "next/headers";
 
 const pageTitle = "Blog";
 // Optimized meta description (159 characters)
-const pageDescription = "In-depth articles about cybersecurity, secure software development, cloud security, and DevOps. Learn from real-world security insights and tutorials.";
+const pageDescription = "In-depth articles on web development, programming, and tech trends.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -77,81 +77,96 @@ export default async function BlogPage({
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  // Get nonce from middleware for CSP
+  const nonce = (await headers()).get("x-nonce") || "";
+  
+  // Resolve and parse search parameters
   const resolvedSearchParams = (await searchParams) ?? {};
   const tag = getParamValue(resolvedSearchParams.tag);
   const query = getParamValue(resolvedSearchParams.q);
   const normalizedQuery = query.trim().toLowerCase();
-  const all = [...posts].sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+  
+  // Sort all posts by date (newest first)
+  const allPosts = [...posts].sort((a, b) => 
+    a.publishedAt < b.publishedAt ? 1 : -1
+  );
+  
+  // Generate tag list sorted by count
   const tagList = Object.entries(postTagCounts)
     .sort((a, b) => b[1] - a[1])
     .map(([name]) => name);
-  const filtered = all.filter((post) => {
+  
+  // Filter posts based on tag and search query
+  const filteredPosts = allPosts.filter((post) => {
     const matchesTag = !tag || post.tags.includes(tag);
     if (!matchesTag) return false;
     if (!normalizedQuery) return true;
+    
     const haystack = `${post.title} ${post.summary} ${post.tags.join(" ")} ${post.body}`.toLowerCase();
     return haystack.includes(normalizedQuery);
   });
-  const hasActiveFilters = Boolean(tag || normalizedQuery);
-  const clearHref = "/blog";
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
   
-  // Get nonce from middleware for CSP
-  const nonce = (await headers()).get("x-nonce") || "";
+  // Filter state
+  const hasActiveFilters = Boolean(tag || normalizedQuery);
+  const clearHref = "/blog";
   
   // JSON-LD structured data for blog collection
   const collectionTitle = tag ? `Blog - ${tag}` : pageTitle;
   const collectionDescription = tag 
     ? `Articles tagged with "${tag}"` 
     : pageDescription;
-  const jsonLd = getBlogCollectionSchema(filtered, collectionTitle, collectionDescription);
+  const jsonLd = getBlogCollectionSchema(filteredPosts, collectionTitle, collectionDescription);
   
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <div className="mx-auto max-w-5xl py-14 md:py-20">
-      {/* page hero */}
-      <div className="prose space-y-4">
-        <h1 className="font-serif text-3xl md:text-4xl font-bold">Blog</h1>
-        <p className="text-lg md:text-xl text-muted-foreground">
-          {pageDescription}
-        </p>
-        {hasActiveFilters && (
-          <p className="text-sm text-muted-foreground">
-            Showing {describeResults(filtered.length, tag, query)}. {" "}
-            <Link href={clearHref} className="underline underline-offset-4">
-              Clear filters
-            </Link>
-            .
+        {/* Page header */}
+        <header className="prose space-y-4">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold">Blog</h1>
+          <p className="text-lg md:text-xl text-muted-foreground">
+            {pageDescription}
           </p>
-        )}
-      </div>
-      {/* search form */}
-      <BlogSearchForm query={query} tag={tag} />
-      {/* tags filter */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Badge asChild variant={tag ? "outline" : "secondary"}>
-          <Link href={buildTagHref("", query)}>All</Link>
-        </Badge>
-        {tagList.map((t) => (
-          <Badge key={t} asChild variant={tag === t ? "secondary" : "outline"}>
-            <Link href={buildTagHref(t, query)}>{t}</Link>
+          {hasActiveFilters && (
+            <p className="text-sm text-muted-foreground">
+              Showing {describeResults(filteredPosts.length, tag, query)}.{" "}
+              <Link href={clearHref} className="underline underline-offset-4">
+                Clear filters
+              </Link>
+              .
+            </p>
+          )}
+        </header>
+
+        {/* Search form */}
+        <BlogSearchForm query={query} tag={tag} />
+
+        {/* Tag filters */}
+        <nav className="mt-4 flex flex-wrap gap-3" aria-label="Filter by tag">
+          <Badge asChild variant={tag ? "outline" : "secondary"} className="h-10 px-4">
+            <Link href={buildTagHref("", query)}>All</Link>
           </Badge>
-        ))}
+          {tagList.map((t) => (
+            <Badge key={t} asChild variant={tag === t ? "secondary" : "outline"} className="h-10 px-4">
+              <Link href={buildTagHref(t, query)}>{t}</Link>
+            </Badge>
+          ))}
+        </nav>
+
+        {/* Blog posts list */}
+        <section className="mt-8 space-y-4">
+          <PostList 
+            posts={filteredPosts}
+            latestSlug={latestSlug ?? undefined}
+            hottestSlug={hottestSlug ?? undefined}
+            titleLevel="h2"
+            emptyMessage="No posts found. Try adjusting your search or filters."
+          />
+        </section>
       </div>
-      {/* blog posts list */}
-      <div className="mt-8 space-y-6">
-        <PostList 
-          posts={filtered}
-          latestSlug={latestSlug ?? undefined}
-          hottestSlug={hottestSlug ?? undefined}
-          titleLevel="h2"
-          emptyMessage="No posts found. Try adjusting your search or filters."
-        />
-      </div>
-    </div>
     </>
   );
 }

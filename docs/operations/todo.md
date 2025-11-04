@@ -2,11 +2,39 @@
 
 This document tracks **active and pending** work only. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** October 28, 2025
+**Last Updated:** November 4, 2025
 
 ---
 
 ## 📌 Recent Updates
+
+### Mobile-First Design Optimization Analysis (Nov 4, 2025)
+A comprehensive mobile-first UX analysis has been completed identifying critical touch target and navigation issues.
+
+**Status:** 🔴 **Critical Issues Identified**  
+**Key Findings:** Touch targets below 44px minimum, no mobile navigation, hidden content, forms not optimized
+
+**Documents:**
+- 📍 **Start here:** [`/docs/design/mobile-first-quick-reference.md`](../design/mobile-first-quick-reference.md) - 5-minute overview
+- 📊 **Full analysis:** [`/docs/design/mobile-first-optimization-analysis.md`](../design/mobile-first-optimization-analysis.md) - 500+ lines, detailed guide
+- 🎨 **Visual guide:** [`/docs/design/mobile-first-visual-comparison.md`](../design/mobile-first-visual-comparison.md) - Before/after diagrams
+
+**Critical Issues** (4 items added to Features > Mobile-First UX below - P0 priority)
+
+### UI/UX Animation Phase 1 - Quick Wins Completed (Nov 3, 2025)
+All Phase 1 quick wins from the UI/UX optimization roadmap have been implemented:
+
+✅ **Completed:**
+- Shimmer skeleton loader (replaced animate-pulse with gradient)
+- Card hover lift effects (project cards and blog posts)
+- Copy code buttons for MDX with success animation
+- Back to top floating button with scroll detection
+- Navigation loading bar for route transitions
+- `prefers-reduced-motion` support (hook + comprehensive CSS)
+
+**Next:** Phase 2 enhancements (staggered animations, scroll-triggered effects, enhanced components)
+
+**Reference:** [`/docs/design/ui-ux-optimization-roadmap.md`](../design/ui-ux-optimization-roadmap.md)
 
 ### Security Analysis Completed (Oct 28, 2025)
 A comprehensive security analysis has been completed with an overall **A+ rating (Excellent)**.
@@ -33,14 +61,303 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 ## 🚀 Features
 
 ### High Priority
-- None currently
+
+#### Mobile-First UX Optimization (Nov 4, 2025) 🔴 **CRITICAL**
+
+**Phase 1: Foundation - Week 1** (P0 - Critical, ~8-12 hours) — **IN PROGRESS (3/4 complete)**
+- [x] **Touch target audit & fixes** — ✅ COMPLETE (Nov 4, 2025)
+  - Added touch-target utility classes to globals.css (44px, 48px, 56px)
+  - Updated site-header.tsx navigation links with touch-target class and px-2 padding
+  - Increased blog tag filter badges to h-10 (40px) with px-4 padding
+  - Logo now always visible on mobile (removed hidden md:block)
+  - Header height reduced to h-14 (56px) on mobile, h-16 (64px) on desktop
+  - All interactive elements now meet 44px minimum touch target
+  - Files changed: `globals.css`, `site-header.tsx`, `blog/page.tsx`
+
+- [ ] **Mobile navigation implementation** - Replace horizontal nav with hamburger menu using Sheet component
+  - Current: Cramped horizontal links with small targets, logo text hidden on mobile
+  - Action: Implement Sheet drawer with large touch targets (56px), keep desktop horizontal nav
+  - Files: `site-header.tsx`, create `mobile-nav.tsx` (optional bottom nav)
+  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#1-site-header-site-headertsx)
+
+- [x] **Form optimization** — ✅ COMPLETE (Nov 4, 2025)
+  - Updated Input component: h-12 (48px) on mobile, h-10 (40px) on desktop
+  - Updated Textarea component: min-h-[120px], text-base on mobile
+  - Added inputMode="email" and inputMode="text" attributes to contact form
+  - Contact form submit button: size="lg" (40px height), full-width on mobile
+  - Textarea set to resize-none for better mobile UX
+  - Better font sizing: text-base on mobile, text-sm on desktop
+  - Files changed: `ui/input.tsx`, `ui/textarea.tsx`, `contact-form.tsx`
+
+- [x] **Responsive spacing system** — ✅ COMPLETE (Nov 4, 2025)
+  - Updated main layout padding: px-4 sm:px-6 md:px-8 (progressive enhancement)
+  - Reduced mobile padding from px-6 to px-4 for more content space
+  - Header updated with px-4 sm:px-6 md:px-8 padding
+  - Files changed: `layout.tsx`, `site-header.tsx`
+
+**Success Metrics:**
+- ✅ All touch targets ≥ 44x44px
+- ✅ Mobile navigation functional with large targets
+- ✅ Form completion rate increase
+- ✅ Lighthouse Accessibility: 100
+
+**Reference:** [`/docs/design/mobile-first-optimization-analysis.md`](../design/mobile-first-optimization-analysis.md)
 
 ### Backlog
+
+#### Mobile-First UX Optimization - Later Phases
+
+**Phase 2: Navigation & Structure - Week 2** (P1 - High, ~12-16 hours)
+- [ ] **Bottom navigation bar** - App-like bottom nav with 4 primary destinations (Home, Blog, Projects, Contact)
+  - Create `mobile-nav.tsx` with grid layout, icon+label, active state highlighting
+  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#option-b-bottom-navigation-app-like)
+
+- [ ] **Mobile Table of Contents for Blog Posts** 🔴 **CRITICAL** - Bottom sheet drawer with TOC
+  - Current: TOC completely hidden below xl: breakpoint, no navigation on mobile/tablet
+  - Action: Floating FAB button (bottom-right), Sheet component slide-up drawer, active section tracking
+  - Features: Smooth scroll with offset, visual active state, collapsible with "On this page" header
+  - Files: `table-of-contents.tsx`, possibly new `mobile-toc.tsx` component
+  - Effort: 3-4h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-mobile-table-of-contents-toc)
+
+- [ ] **Project card optimization** - Progressive disclosure for highlights, improved mobile layout
+  - Current: Highlights hidden on mobile (lg:inline-block)
+  - Action: Expandable "Key Features" section, stacked action buttons, better spacing
+  - Files: `project-card.tsx`
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#4-project-cards-project-cardtsx)
+
+- [ ] **Post list mobile redesign** - Vertical cards with full-width thumbnails
+  - Current: Horizontal layout with small thumbnails (96px)
+  - Action: Vertical cards on mobile, full-width 16:9 images, simplified metadata
+  - Files: `post-list.tsx`
+  - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#2-blog-post-list-post-listtsx)
+
+- [ ] **Mobile Blog Typography Enhancements** 🔴 **CRITICAL** - Better readability on small screens
+  - Current: Desktop prose spacing, may feel cramped on mobile
+  - Action: Mobile-specific CSS - larger font (17px), more line-height (1.85), better paragraph separation
+  - Includes: Heading size adjustments, improved whitespace, enhanced code block sizing (13px)
+  - Files: `globals.css` (prose section)
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-mobile-optimized-prose-spacing)
+
+- [ ] **Jump to Top Button for Blog Posts** - Floating FAB that appears on scroll
+  - Action: Bottom-right floating button, fade-in after scrolling 2-3 viewports, smooth scroll animation
+  - Consider: Combine with TOC button in FAB menu or place in opposite corner
+  - Files: New component `jump-to-top.tsx`, integrate in `blog/[slug]/page.tsx`
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-jump-to-top-button)
+
+**Phase 3: Interactions - Week 3** (P1 - High, ~10-14 hours)
+- [ ] **Native Share API for Blog Posts** - Mobile-optimized sharing
+  - Current: ShareButtons component may not be optimized for mobile
+  - Action: Add Web Share API with fallback, larger touch targets (44x44px), icon-only on mobile
+  - Features: Native share sheet on mobile devices, better mobile layout
+  - Files: `share-buttons.tsx`
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-share-buttons-mobile-optimization)
+
+- [ ] **Swipe gestures** - Blog post prev/next navigation, card actions
+  - Implement swipe-left/right for post navigation, visual indicators
+  - Library: react-swipeable or Framer Motion drag
+  - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#1-swipe-navigation-for-blog-posts)
+
+- [ ] **Pull-to-refresh** - Refresh blog list with native-like pull gesture
+  - Touch handlers with visual spinner, router.refresh() on completion
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#2-pull-to-refresh-for-blog-list)
+
+- [ ] **Active states & feedback** - Scale animations, ripple effects, haptic feedback
+  - Add active:scale-[0.98] to cards, tap feedback animations
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#phase-3-interactions-week-3)
+
+- [ ] **Loading states polish** - Shimmer skeletons, progressive content appearance
+  - Already have shimmer, add staggered appearance for lists
+  - Effort: 2-3h
+
+**Phase 4: Performance - Week 4** (P2 - Medium, ~8-12 hours)
+- [ ] **Blog Badge Overflow Handling** - Better mobile layout for multiple tags
+  - Current: Tags/badges may wrap poorly when there are many
+  - Options: Horizontal scroll container, "+N more" collapse button, separate "Tags" section
+  - Files: `blog/[slug]/page.tsx`, possibly `post-badges.tsx`
+  - Effort: 1-2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-badge-overflow-handling)
+
+- [ ] **Related Posts Mobile Layout** - Card-based horizontal scroll
+  - Current: May not be optimized for mobile
+  - Action: Horizontal scrollable cards or stacked vertical layout on mobile
+  - Files: `related-posts.tsx`
+  - Effort: 2h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-related-posts-mobile-layout)
+
+- [ ] **Lazy Load Giscus Comments on Mobile** - Improve initial page load
+  - Action: Use IntersectionObserver or "Load Comments" button instead of auto-load
+  - Files: `giscus-comments.tsx`
+  - Effort: 1h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#c-comment-section-giscus)
+
+- [ ] **Code splitting for mobile** - Conditional loading by viewport, lazy load heavy components
+  - Dynamic imports for GitHub heatmap, use-media-query hook
+  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#1-reduce-javascript-for-mobile)
+
+- [ ] **Image optimization** - Mobile-specific sizes, blur placeholders, priority hints
+  - Update Next/Image sizes prop, add blur placeholders
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#2-image-optimization)
+
+- [ ] **Font loading optimization** - Reduce weights, subset, optimize fallbacks
+  - Review font-display, reduce loaded weights, subset Latin only
+  - Effort: 1-2h | [See analysis](../design/mobile-first-optimization-analysis.md#3-font-loading-strategy)
+
+- [ ] **Bundle size reduction** - Analyze dependencies, tree-shake, remove unused code
+  - Run bundle analyzer, identify large dependencies
+  - Effort: 2-3h
+
+**Phase 5: PWA & Polish - Week 5** (P2 - Medium, ~10-14 hours)
+- [ ] **Reading Preferences UI** - Font size, spacing, theme controls for blog
+  - Features: A-/A+ buttons, Compact/Comfortable/Spacious spacing, persist to localStorage
+  - Action: New toolbar component for blog posts, preference management
+  - Files: New `reading-preferences.tsx`, hook `use-reading-preferences.tsx`
+  - Effort: 3-4h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#b-mobile-reading-preferences-advanced)
+
+- [ ] **Blog Article Width Optimization** - Adaptive sizing for mobile/tablet
+  - Current: max-w-3xl (768px) on all screens
+  - Action: Use max-w-full sm:max-w-2xl md:max-w-3xl, add responsive padding
+  - Files: `blog/[slug]/page.tsx`
+  - Effort: 0.5h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#c-article-width-on-tablets)
+
+- [ ] **Progressive Image Loading for Blog** - Blur placeholders, lazy loading
+  - Action: Add blur placeholders to featured images, lazy load in-content images
+  - Files: MDX component mappings, image handling in posts
+  - Effort: 2-3h | [See brainstorm](../design/mobile-blog-improvements-brainstorm.md#a-progressive-image-loading)
+
+- [ ] **PWA setup** - Web app manifest, service worker, install prompt, offline fallback
+  - Create manifest.json, add icons, implement install prompt component
+  - Effort: 4-5h | [See analysis](../design/mobile-first-optimization-analysis.md#pwa-enhancements)
+
+- [ ] **Advanced interactions** - Long-press menus, double-tap actions, pinch-to-zoom
+  - Context menus on long-press, gesture handlers
+  - Effort: 3-4h
+
+- [ ] **Accessibility enhancements** - Mobile screen reader testing, voice-over optimization
+  - Test with VoiceOver/TalkBack, improve ARIA labels
+  - Effort: 2-3h | [See analysis](../design/mobile-first-optimization-analysis.md#mobile-accessibility-enhancements)
+
+- [ ] **Reduced motion support expansion** - Ensure all new animations respect user preferences
+  - Audit all animations, add motion-reduce variants
+  - Effort: 1-2h
+
+**Testing & Validation** (Ongoing)
+- [ ] Real device testing on iPhone SE, iPhone 14 Pro, Samsung Galaxy, iPad Mini
+- [ ] Lighthouse mobile audit (target: Performance >90, Accessibility 100)
+- [ ] Touch target validation (Chrome DevTools device emulation)
+- [ ] Form completion flow testing on mobile
+- [ ] Navigation flow testing (menu, bottom nav, TOC)
+
+**Success Metrics (Overall):**
+- Mobile bounce rate < 40%
+- Time on page (mobile) > 2 minutes
+- Form completion rate > 60%
+- Page load (3G) < 3 seconds
+- Lighthouse Performance > 90
+- Lighthouse Accessibility: 100
+- PWA install rate > 5%
+
+#### General Features
+
 - [x] **Public Analytics Dashboard** - Display trending posts and view statistics (✅ Complete - dev-only, see `/docs/features/analytics-dashboard.md`)
 - [ ] **Newsletter signup** - Email subscription functionality for blog updates
 - [ ] **Email Templates** - HTML email templates with branding for contact form and notifications
 - [ ] **E2E tests** - Set up Playwright or Cypress for critical user flows
 - [ ] **Unit tests** - Add tests for utility functions and components
+
+#### GitHub Integration Enhancements (Nov 3, 2025)
+
+**Phase 1: Quick Wins (In Progress - 4/5 Complete)**
+- [x] **Tooltips on heatmap** - Show date, count, and top commits on hover using Radix UI Tooltip ✅
+- [x] **Streak statistics** - Calculate and display current streak and longest streak with badges ✅
+- [ ] **Contribution breakdown** - Show commits/PRs/issues/reviews split (requires API update - deferred to Phase 2)
+- [x] **Smooth animations** - Add fade-in and micro-interactions with Framer Motion ✅
+- [x] **Activity analytics** - Display busiest day/week/month stats and averages ✅
+
+**Implementation Summary:** See `/docs/features/github-integration-enhancements.md`
+
+**Phase 2: Medium-Term Enhancements**
+- [ ] **Repository showcase** - Display 3-6 pinned repos with stars/forks (new API endpoint)
+- [ ] **Language breakdown** - Pie/bar chart of top languages (analyze repo data)
+- [ ] **Activity feed** - Recent 10 GitHub events with descriptions (Events API)
+- [ ] **Year-over-year comparison** - "X% more active than last year" stat
+- [ ] **Interactive date range** - Allow exploring different time periods
+
+**Phase 3: Long-Term Features**
+- [ ] **GitHub Wrapped** - Annual summary page (Spotify Wrapped style, launch December)
+- [ ] **Contribution impact** - Stars earned, issues closed, PRs merged stats
+- [ ] **Blog-GitHub integration** - Link blog posts to repositories/commits
+- [ ] **Achievement system** - Unlock badges based on activity (gamification)
+
+**Architecture Improvements**
+- [ ] **Redis caching** - Upgrade from in-memory to Redis for contributions
+- [ ] **Stale-while-revalidate** - Return cached data immediately, refresh in background
+- [ ] **GitHub service layer** - Create `src/lib/github-service.ts` for centralized API logic
+- [ ] **Build-time data fetching** - Pre-fetch at build time with ISR
+- [ ] **Reusable hooks** - Create `useGitHubContributions`, `useGitHubRepos`, `useGitHubStats`
+- [ ] **Testing** - Unit tests for transformations, integration tests for API routes
+
+**UX/UI Polish**
+- [ ] **Mobile improvements** - Swipe gestures, better responsive grid
+- [ ] **Theme optimization** - Better color scales for dark/light modes
+- [ ] **Shareable stats** - Generate OG image with yearly stats, export as PNG/SVG
+- [ ] **Accessibility** - Ensure WCAG contrast ratios, keyboard navigation
+
+#### UI/UX Animation & Interaction Enhancements (Nov 3, 2025)
+
+**Phase 1: Quick Wins** ✅ **COMPLETE** (All 6 items - ~15 hours total)
+- [x] Shimmer skeleton loader (gradient shimmer replacing pulse)
+- [x] Card hover lift effects (project cards + blog posts with shadow)
+- [x] Copy code buttons for MDX (with success animation)
+- [x] Back to top button (floating FAB with scroll detection)
+- [x] Navigation loading bar (top progress bar for route transitions)
+- [x] `prefers-reduced-motion` support (hook + comprehensive CSS rules)
+
+**Phase 1.5: Blog Featured Images & Animations** ✅ **COMPLETE** (Nov 3, 2025 - ~5 hours)
+- [x] Extended Post type with optional `image` field (url, alt, width, height, caption, credit, position)
+- [x] Created `PostThumbnail` component with next/image optimization
+- [x] Updated `PostList` with conditional thumbnail rendering
+- [x] Built `useScrollAnimation` hook with IntersectionObserver + prefers-reduced-motion
+- [x] Created `ScrollReveal` wrapper component for scroll animations
+- [x] Applied staggered fade-in animations to post list items
+
+**Phase 2: Blog Image System & Detail Pages** (~8-10 hours) 🆕
+- [ ] **Hero image component** - Full-width hero with gradient overlays for post detail pages
+- [ ] **Image caption display** - Caption and credit rendering below images
+- [ ] **OG image integration** - Use featured images for social shares (fallback to generated)
+- [ ] **Magazine layout variant** - Alternate large image left/right layout for PostList
+- [ ] **Grid layout variant** - 2-column grid with images on top
+- [ ] **Related posts with images** - Update RelatedPosts component to show thumbnails
+- [ ] **RSS feed images** - Include featured images in RSS/Atom feeds with `<enclosure>` tags
+- [ ] **Frontmatter schema docs** - Document image field in `/docs/blog/frontmatter-schema.md`
+
+**Phase 3: Enhanced Interactions** (~26 hours)
+- [ ] **Enhanced table of contents** - Sliding active indicator, smoother expand/collapse
+- [ ] **Toast improvements** - Custom enter/exit animations for sonner, success micro-animations
+- [ ] **GitHub heatmap polish** - Staggered square appearance, animated tooltips, smooth data loading transition
+- [ ] **Theme transition animations** - Smooth dark/light mode switch without FOUC
+- [ ] **Parallax hero images** - Subtle parallax effect for hero images (desktop only, 0.8x scroll speed)
+- [ ] **Progressive image blur** - Images start blurred and sharpen as they load
+
+**Phase 4: Advanced Features** (~74 hours)
+- [ ] **Command palette (Cmd+K)** - Search posts, navigate site, keyboard shortcuts (cmdk + Radix UI)
+- [ ] **Page transition system** - View Transitions API (primary) + Framer Motion fallback
+- [ ] **Micro-interactions library** - Reusable animated components (button ripples, input focus effects, success/error animations)
+- [ ] **Virtual scrolling** - For blog list with >50 posts (@tanstack/virtual)
+- [ ] **Reading mode toggle** - Distraction-free interface (hide header/footer, adjust typography)
+- [ ] **Advanced gestures** - Swipe navigation on mobile, pull-to-refresh, drag-to-share
+- [ ] **3D card tilt effect** - Subtle tilt on hover for project cards (vanilla-tilt or Framer Motion)
+- [ ] **Image galleries** - Multiple images per post with lightbox viewer
+- [ ] **Pull quotes** - Styled blockquotes with custom borders and typography
+
+**Phase 5: Future Considerations** (Backlog - no timeline)
+- [ ] Infinite scroll for blog list
+- [ ] Keyboard navigation (j/k for posts, Esc to close)
+- [ ] Progressive image loading (LQIP)
+- [ ] Blog post preview on hover (tooltip with excerpt)
+- [ ] Animated mesh backgrounds (hero sections)
+- [ ] Font size controls (user preference)
+- [ ] Reading time indicator (live progress)
+- [ ] Multi-author support with author cards
+- [ ] Post series indicator and navigation
+
+**Reference:** [`/docs/design/ui-ux-optimization-roadmap.md`](../design/ui-ux-optimization-roadmap.md) - Complete analysis, code examples, and implementation guide
 
 ---
 

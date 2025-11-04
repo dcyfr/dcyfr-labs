@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Share2, Twitter, Linkedin, Link as LinkIcon, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -10,13 +10,15 @@ import { cn } from "@/lib/utils";
  * ShareButtons Component
  * 
  * A reusable component for sharing blog posts on social media platforms.
- * Provides buttons for Twitter, LinkedIn, and copy-to-clipboard functionality.
+ * Provides buttons for Twitter, LinkedIn, native sharing, and copy-to-clipboard.
  * 
  * Features:
+ * - Native Web Share API on mobile devices (when available)
  * - Twitter share with pre-filled text and hashtags
  * - LinkedIn share with URL
  * - Copy link to clipboard with visual feedback
- * - Responsive design with icons and labels
+ * - Responsive design - icon-only on mobile, text+icon on desktop
+ * - Touch-friendly 44px button size on mobile
  * - Toast notifications for user feedback
  * - Accessible with proper ARIA labels and keyboard navigation
  * 
@@ -41,6 +43,37 @@ interface ShareButtonsProps {
 
 export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
+  const [canShare, setCanShare] = useState(false);
+
+  // Check if Web Share API is available (typically on mobile)
+  useEffect(() => {
+    if (typeof navigator !== 'undefined' && 'share' in navigator) {
+      setCanShare(true);
+    }
+  }, []);
+
+  /**
+   * Handle native Web Share API
+   * Falls back to traditional sharing if not available
+   */
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: `Check out this post: ${title}`,
+          url: url,
+        });
+        toast.success("Shared successfully!");
+      } catch (error) {
+        // User cancelled the share dialog or error occurred
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error sharing:', error);
+          toast.error("Failed to share");
+        }
+      }
+    }
+  };
 
   /**
    * Generate Twitter share URL with encoded parameters
@@ -136,36 +169,26 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
       </div>
       
       <div className="flex flex-wrap gap-2">
-        {/* Twitter Share Button */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleShare(getTwitterShareUrl(), 'twitter')}
-          className="gap-2"
-          aria-label="Share on Twitter"
-        >
-          <Twitter className="h-4 w-4" aria-hidden="true" />
-          <span className="hidden sm:inline">Twitter</span>
-        </Button>
-
-        {/* LinkedIn Share Button */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleShare(getLinkedInShareUrl(), 'linkedin')}
-          className="gap-2"
-          aria-label="Share on LinkedIn"
-        >
-          <Linkedin className="h-4 w-4" aria-hidden="true" />
-          <span className="hidden sm:inline">LinkedIn</span>
-        </Button>
+        {/* Native Share Button (Mobile only) */}
+        {canShare && (
+          <Button
+            variant="outline"
+            size="default"
+            onClick={handleNativeShare}
+            className="gap-2 h-11 md:h-10"
+            aria-label="Share via native share menu"
+          >
+            <Share2 className="h-4 w-4" aria-hidden="true" />
+            <span className="hidden sm:inline">Share</span>
+          </Button>
+        )}
 
         {/* Copy Link Button */}
         <Button
           variant="outline"
-          size="sm"
+          size="default"
           onClick={handleCopyLink}
-          className={cn("gap-2", copied && "text-green-600 dark:text-green-400")}
+          className={cn("gap-2 h-11 md:h-10", copied && "text-green-600 dark:text-green-400")}
           aria-label="Copy link to clipboard"
         >
           {copied ? (
@@ -176,6 +199,30 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
           <span className="hidden sm:inline">
             {copied ? "Copied!" : "Copy Link"}
           </span>
+        </Button>
+
+        {/* Twitter Share Button */}
+        <Button
+          variant="outline"
+          size="default"
+          onClick={() => handleShare(getTwitterShareUrl(), 'twitter')}
+          className="gap-2 h-11 md:h-10"
+          aria-label="Share on Twitter"
+        >
+          <Twitter className="h-4 w-4" aria-hidden="true" />
+          <span className="hidden sm:inline">Twitter</span>
+        </Button>
+
+        {/* LinkedIn Share Button */}
+        <Button
+          variant="outline"
+          size="default"
+          onClick={() => handleShare(getLinkedInShareUrl(), 'linkedin')}
+          className="gap-2 h-11 md:h-10"
+          aria-label="Share on LinkedIn"
+        >
+          <Linkedin className="h-4 w-4" aria-hidden="true" />
+          <span className="hidden sm:inline">LinkedIn</span>
         </Button>
       </div>
     </div>

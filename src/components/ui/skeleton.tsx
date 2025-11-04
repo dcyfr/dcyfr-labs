@@ -2,12 +2,13 @@ import { cn } from "@/lib/utils";
 
 /**
  * Base skeleton component for loading states.
- * Provides a pulsing animation effect.
+ * Provides a shimmer animation effect (gradient moving left-to-right).
+ * More engaging than pulse and implies loading direction.
  */
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
+      className={cn("skeleton-shimmer rounded-md bg-muted", className)}
       {...props}
     />
   );

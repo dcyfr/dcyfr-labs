@@ -1,3 +1,5 @@
+import { SITE_TITLE } from "@/lib/site-config";
+
 export type ProjectLink = {
   label: string;
   href: string;
@@ -5,6 +7,14 @@ export type ProjectLink = {
 };
 
 export type ProjectStatus = "active" | "in-progress" | "archived";
+
+export type ProjectImage = {
+  url: string; // local path or external URL
+  alt: string; // required for accessibility
+  width?: number; // optional, for optimization
+  height?: number; // optional, for aspect ratio
+  position?: "center" | "top" | "bottom" | "left" | "right"; // background position
+};
 
 export type Project = {
   slug: string;
@@ -18,6 +28,7 @@ export type Project = {
   featured?: boolean; // false
   hidden?: boolean; // false
   highlights?: string[];
+  image?: ProjectImage; // optional featured image
 };
 
 const projectDrafts: Project[] = [
@@ -35,6 +46,11 @@ const projectDrafts: Project[] = [
       { label: "Code", href: `#`, type: "github" }
     ],
     featured: false,
+    image: {
+      url: "/projects/default/general.svg",
+      alt: "Example Project - brief image description",
+      position: "center",
+    },
     hidden: true,
     highlights: [
       "Highlight 1 about the project.",
@@ -61,8 +77,8 @@ const projectDrafts: Project[] = [
     ],
   },
   {
-    slug: "developer-portfolio",
-    title: "Developer Portfolio",
+    slug: "cyberdrew-dev",
+    title: SITE_TITLE,
     description: "A personal portfolio website showcasing blog articles, projects and proof of concept works.",
     timeline: "2020 → Present",
     status: "active",
@@ -88,6 +104,7 @@ const projectDrafts: Project[] = [
     tech: ["WordPress", "PHP", "MySQL", "JavaScript", "CSS"],
     tags: ["Non-profit", "Cybersecurity", "Community"],
     links: [],
+    featured: false,
     highlights: [
       "Co-founded and managed a non-profit organization focused on information security awareness and education.",
       "Organized events, workshops, and training sessions to educate individuals and organizations on cybersecurity best practices.",
