@@ -17,6 +17,7 @@ function calculateStreaks(contributions) {
   let longestStreak = 0;
   let tempStreak = 0;
   let lastStreakDate = null;
+  let currentStreakEnded = false;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -28,16 +29,18 @@ function calculateStreaks(contributions) {
     contribDate.setHours(0, 0, 0, 0);
 
     if (sorted[i].count > 0) {
-      if (i === 0 && (contribDate.getTime() === today.getTime() || contribDate.getTime() === yesterday.getTime())) {
-        currentStreak++;
-        lastStreakDate = contribDate;
-      } else if (currentStreak > 0 && lastStreakDate) {
-        const dayDiff = Math.floor((lastStreakDate.getTime() - contribDate.getTime()) / (1000 * 60 * 60 * 24));
-        if (dayDiff === 1) {
+      if (!currentStreakEnded) {
+        if (i === 0 && (contribDate.getTime() === today.getTime() || contribDate.getTime() === yesterday.getTime())) {
           currentStreak++;
           lastStreakDate = contribDate;
-        } else {
-          // Current streak ended
+        } else if (currentStreak > 0 && lastStreakDate) {
+          const dayDiff = Math.floor((lastStreakDate.getTime() - contribDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (dayDiff === 1) {
+            currentStreak++;
+            lastStreakDate = contribDate;
+          } else {
+            currentStreakEnded = true;
+          }
         }
       }
 
