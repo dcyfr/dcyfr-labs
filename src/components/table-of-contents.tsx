@@ -198,7 +198,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
                     : { opacity: 0, scale: 0.8 }
                 }
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="fixed bottom-[176px] right-4 sm:right-6 md:right-8 z-40"
+                className="md:hidden fixed bottom-[176px] right-4 sm:right-6 z-40"
               >
                 <Button
                   size="icon"
