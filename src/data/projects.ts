@@ -1,3 +1,5 @@
+import { SITE_TITLE } from "@/lib/site-config";
+
 export type ProjectLink = {
   label: string;
   href: string;
@@ -61,8 +63,8 @@ const projectDrafts: Project[] = [
     ],
   },
   {
-    slug: "developer-portfolio",
-    title: "Developer Portfolio",
+    slug: "cyberdrew-dev",
+    title: SITE_TITLE,
     description: "A personal portfolio website showcasing blog articles, projects and proof of concept works.",
     timeline: "2020 → Present",
     status: "active",

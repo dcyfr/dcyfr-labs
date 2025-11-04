@@ -6,6 +6,7 @@ import Link from "next/link";
 import { posts } from "@/data/posts";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { Logo } from "@/components/logo";
+import { getSocialUrls } from "@/data/socials";
 import {
   SITE_URL,
   SITE_TITLE,
@@ -73,10 +74,7 @@ export default async function Home() {
         image: socialImage,
         description: pageDescription,
         jobTitle: "Cybersecurity Architect & Developer",
-        sameAs: [
-          "https://linkedin.com/in/dcyfr",
-          "https://github.com/dcyfr"
-        ],
+        sameAs: getSocialUrls(),
         knowsAbout: [
           "Cybersecurity",
           "Software Development",

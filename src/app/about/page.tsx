@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { resume } from "@/data/resume";
+import { socialLinks } from "@/data/socials";
 import {
   SITE_TITLE,
   SITE_URL,
@@ -12,6 +12,7 @@ import {
 import { Logo } from "@/components/logo";
 import { getAboutPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
+import { Github, Linkedin, Heart, Users, BookOpen, Home, Mail, Calendar, Award, GraduationCap, ExternalLink } from "lucide-react";
 
 const pageTitle = "About";
 // Optimized meta description (154 characters)
@@ -105,11 +106,6 @@ export default async function AboutPage() {
                 <p className="font-medium text-lg">{role.title} at {role.company}</p>
                 <p className="text-sm text-muted-foreground">{role.duration}</p>
               </div>
-              {/* <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-                {role.responsibilities.map((item, rIdx) => (
-                  <li key={rIdx}>{item}</li>
-                ))}
-              </ul> */}
             </Card>
           ))}
         </div>
@@ -119,17 +115,65 @@ export default async function AboutPage() {
           </Link>
         </div>
       </section>
-      {/* call to action */}
-      <div className="mx-auto max-w-2xl mt-24 text-center space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium italic">Let&apos;s connect!</h2>
+      {/* call to action & socials */}
+      <section className="space-y-4">
+        <h2 className="text-xl md:text-2xl font-medium">Connect with me</h2>
         <p className="text-muted-foreground">
           I&apos;m always open to discussing new opportunities, collaborations, or just chatting about all things security. Feel free to reach out!
         </p>
-        <Button asChild>
-          <Link href="/contact">Get in Touch</Link>
-        </Button>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {socialLinks.map((social) => {
+            // Map platform to icon component
+            const IconComponent = social.platform === "homepage" ? Home
+              : social.platform === "email" ? Mail
+              : social.platform === "calendar" ? Calendar
+              : social.platform === "linkedin" ? Linkedin
+              : social.platform === "github" ? Github
+              : social.platform === "github-sponsor" ? Heart
+              : social.platform === "peerlist" ? Users
+              : social.platform === "goodreads" ? BookOpen
+              : social.platform === "credly" ? Award
+              : social.platform === "orcid" ? GraduationCap
+              : ExternalLink;
+
+            return (
+              <a
+                key={social.platform}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group"
+              >
+                <Card className="p-4 h-full transition-colors hover:border-primary">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-shrink-0">
+                      <IconComponent 
+                        className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" 
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm group-hover:text-primary transition-colors">
+                        {social.label}
+                      </p>
+                      {social.description && (
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {social.description}
+                        </p>
+                      )}
+                    </div>
+                    <ExternalLink 
+                      className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" 
+                      aria-hidden="true"
+                    />
+                  </div>
+                </Card>
+              </a>
+            );
+          })}
+        </div>
+      </section>
       </div>
-    </div>
     </>
   );
 }

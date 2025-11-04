@@ -11,6 +11,7 @@
  */
 
 import { SITE_URL, AUTHOR_NAME, SITE_TITLE } from "./site-config";
+import { getSocialUrls } from "@/data/socials";
 import type { Post } from "@/data/posts";
 
 /**
@@ -25,10 +26,7 @@ export function getPersonSchema(socialImage?: string) {
     url: SITE_URL,
     ...(socialImage && { image: socialImage }),
     jobTitle: "Cybersecurity Architect & Developer",
-    sameAs: [
-      "https://linkedin.com/in/dcyfr",
-      "https://github.com/dcyfr",
-    ],
+    sameAs: getSocialUrls(),
   };
 }
 
