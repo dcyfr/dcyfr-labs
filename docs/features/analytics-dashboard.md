@@ -1,43 +1,169 @@
 # Public Analytics Dashboard
 
-Development-only analytics dashboard for monitoring blog performance and viewing real-time statistics.
+Development-only analytics dashboard for monitoring blog performance and viewing real-time statistics with responsive mobile-first design.
 
 ## Overview
 
-The analytics dashboard provides insights into blog post performance, including:
-- Total views across all posts
-- Average views per post
-- Top-performing posts
-- Trending posts (from Inngest calculations)
-- Complete post listing with view counts
-- Post metadata (tags, reading time, publication date)
+The analytics dashboard provides comprehensive insights into blog post performance, including:
+- **Total views** across all posts with 24-hour trends
+- **Average views** per post with daily comparisons
+- **Top-performing posts** (all-time and 24h rankings)
+- **Trending posts** with hot/cold indicators
+- **Complete post listing** with interactive filters
+- **Real-time metrics** from Redis with trend analysis
 
 **Important**: This dashboard is **only available in development mode** and will return a 403 error in preview or production environments.
 
 ## Features
 
-### Summary Statistics
-- **Total Posts** - Number of published blog posts
-- **Total Views** - Cumulative views across all posts
-- **Average Views** - Mean views per post
-- **Top Post** - Best-performing post with view count
+### Summary Statistics (4 Cards)
 
-### Trending Posts
-- Top 3 trending posts displayed as cards
-- Shows post title, summary, and view count
-- Links to individual blog posts
-- Reading time indicator
+1. **Total Posts**
+   - Count of published blog posts
+   - Respects draft/archived filters
+   - Icon: FileText
+
+2. **Total Views**
+   - Cumulative views across all posts
+   - Shows 24h views as secondary metric
+   - Icon: Eye
+   - Format: `1,234` (locale-formatted with commas)
+
+3. **Average Views**
+   - Mean views per post
+   - Shows 24h average as secondary metric  
+   - Icon: TrendingUp
+   - Format: `417` (locale-formatted)
+
+4. **24h Trend**
+   - Total views in last 24 hours
+   - Trend percentage vs previous period
+   - Visual indicators: ⬆️ green (positive), ⬇️ red (negative), ➖ gray (neutral)
+   - Icon: Flame (🔥)
+   - Format: `+15%` or `-5%`
+
+### Filter Controls
+
+Interactive checkboxes with enhanced touch targets:
+- **Hide drafts** - Exclude draft posts from all metrics
+- **Hide archived** - Exclude archived posts from all metrics
+- Minimum 44px touch targets for mobile accessibility
+- Cursor pointer on hover
+- Real-time filtering (no page reload)
+
+### Top Posts (2 Cards)
+
+#### All-Time Top Post
+- Single highest-viewed post overall
+- Shows total views prominently
+- Displays 24h views as secondary metric
+- Direct link to post with 44px touch target
+- Card layout: Title → Total views → 24h views → Link
+
+#### Trending Post (24h)
+- Hottest post in last 24 hours
+- Shows 24h views prominently
+- Displays total views as secondary metric
+- Flame icon (🔥) indicator
+- Card layout: Title → 24h views → Total views → Link
+
+### Trending Posts Grid
+
+Top 3 trending posts from Inngest calculations:
+- Responsive grid: 1 column mobile, 2 columns tablet, 3 columns desktop
+- Each card shows:
+  - Post title (line-clamp-2 for overflow)
+  - Post summary (line-clamp-2, ~150 chars)
+  - 24h views badge (with flame icon)
+  - All-time views badge
+  - Reading time
+  - View link with touch target
+- Hover effects: shadow-md transition
 
 ### Complete Post Table
-- All posts sorted by view count (highest first)
-- Columns: Title, Views, Published Date, Tags
-- Clickable post titles linking to blog posts
-- Tag badges with overflow handling
+
+Full listing with responsive design:
+- **Mobile** (< 768px): Title, All-time views, 24h views
+- **Tablet** (≥ 768px): + Published date
+- **Desktop** (≥ 1024px): + Tags column
+- **Sorting**: Highest views first (all-time)
+- **Interactive rows**: Hover background color
+- **Touch-optimized links**: 44px minimum target
+- **Flame indicators**: 🔥 icon for posts with 24h activity
+- **Badge system**: Draft/Archived status badges
+- **Tag overflow**: Shows first 2 tags + "+N more" badge
+- **Horizontal scroll**: Overflow-x-auto for narrow screens
 
 ### Data Sources
 - **View Counts**: Real-time from Redis (via `src/lib/views.ts`)
 - **Trending Data**: From Inngest calculations (if available)
+### Data Sources
+
+- **View Counts**: Real-time from Redis (via `src/lib/views.ts`)
+  - All-time views per post (key: `post:views:${postId}`)
+  - 24-hour views (key: `post:views24h:${postId}`)
+  - Updated on every post view via `/api/views/[postId]/increment`
+  
+- **Trending Data**: From Inngest calculations (if available)
+  - Scheduled background job calculates trending posts
+  - Stored in Redis: `trending:posts`
+  - Updated periodically
+  
 - **Post Metadata**: From blog post frontmatter
+  - Title, slug, summary, tags
+  - Publication date
+  - Draft/archived status
+  - Reading time calculations
+
+## Responsive Design
+
+### Breakpoints
+
+- **Mobile** (< 640px): 
+  - 2-column grid for summary cards
+  - Stacked top posts (1 column)
+  - Single-column trending posts
+  - Table shows: Title, Views (All), Views (24h)
+  - Touch targets: minimum 44px height
+
+- **Tablet** (640px - 767px):
+  - 2-column grid for summary cards
+  - 2-column top posts
+  - 2-column trending grid
+  - Table shows: Title, Views (All), Views (24h)
+
+- **Tablet+ (768px - 1023px)**:
+  - 4-column grid for summary cards
+  - 2-column top posts
+  - 2-column trending grid
+  - Table adds: Published date column
+
+- **Desktop** (≥ 1024px):
+  - 4-column grid for summary cards
+  - 2-column top posts  
+  - 3-column trending grid
+  - Table adds: Tags column
+  - Optimized spacing and padding
+
+### Touch Targets & Accessibility
+
+- **Minimum touch target**: 44px × 44px (WCAG 2.1 AA)
+- **Applied to**:
+  - Filter checkboxes with labels
+  - All interactive links (post titles, "View post →")
+  - Table row links
+- **Implementation**: `.touch-target` utility class
+  - Adds minimum height/padding for sufficient clickable area
+  - Consistent across all interactive elements
+
+### Padding & Spacing
+
+- **Progressive padding**: Increases with screen size
+  - Container: `px-4 sm:px-6 md:px-8`
+  - Cards: `p-4 sm:p-6`
+  - Gaps: `gap-4 sm:gap-6`
+- **Consistent spacing**: `mb-8` for major sections
+- **Card headers**: `border-b border-border` for visual separation
 
 ## Usage
 
@@ -106,38 +232,62 @@ curl https://preview.example.com/api/analytics
 
 ### Files
 
-- **`src/app/analytics/page.tsx`** - Dashboard UI (client component)
-  - Fetches data from `/api/analytics`
-  - Displays summary cards, trending posts, and post table
-  - Loading and error states
-  - Dev-only notice
+- **`src/app/analytics/page.tsx`** - Server wrapper component
+  - Enforces dev-only access via `assertDevOr404()`
+  - Returns 404 in preview/production
+  - Renders `AnalyticsClient` component
+
+- **`src/app/analytics/AnalyticsClient.tsx`** - Main dashboard UI (client component)
+  - Fetches data from `/api/analytics` on mount
+  - Loading skeleton with structural matching
+  - Error boundary with Card components
+  - Interactive filters (hideDrafts, hideArchived)
+  - Responsive layout with progressive padding
+  - Touch-optimized interactive elements
+  - Real-time trend calculations
 
 - **`src/app/api/analytics/route.ts`** - Analytics API endpoint
   - Checks `NODE_ENV === "development"`
   - Returns 403 if not in development
-  - Fetches view counts from Redis
+  - Fetches view counts from Redis (all-time + 24h)
   - Combines with post metadata
-  - Retrieves trending data from Redis if available
+  - Retrieves trending data from Inngest/Redis
+  - Calculates summary statistics
 
 ### Data Flow
 
 ```
-Dashboard Page (Client)
+Dashboard Page (Server)
     ↓
-    fetch("/api/analytics")
+    assertDevOr404() - Ensure dev environment
+    ↓
+AnalyticsClient (Client Component)
+    ↓
+    useEffect: fetch("/api/analytics")
     ↓
 API Route (/api/analytics)
     ↓
-    Check: isDev?
+    Check: isDev? → 403 if not
     ↓
-    Get post slugs from posts.ts
+    Get post data from posts.ts
     ↓
-    Fetch view counts from Redis
+    Redis: Fetch view counts
+      - post:views:${postId} (all-time)
+      - post:views24h:${postId} (24h)
     ↓
-    Combine with post metadata
+    Redis: Fetch trending:posts (from Inngest)
     ↓
-    Fetch trending data from Redis
+    Calculate summary statistics
     ↓
+    Return JSON response
+    ↓
+AnalyticsClient
+    ↓
+    Filter posts (hideDrafts/hideArchived)
+    ↓
+    Calculate trends (24h % change)
+    ↓
+    Render dashboard sections
     Return JSON response
     ↓
 Dashboard renders data

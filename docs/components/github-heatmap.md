@@ -257,12 +257,23 @@ try {
 
 ### GitHubHeatmapSkeleton
 
-While data is loading, displays a skeleton with:
-- Header skeleton (title + username)
-- Heatmap grid placeholder (53 weeks × 7 days)
-- Footer stats skeleton
+While data is loading, displays a skeleton that matches the actual component structure:
+- **Header skeleton** - Title + username link
+- **Statistics grid** - 4 stat cards (current streak, longest streak, total contributions, avg/day)
+- **Heatmap grid** - 53 weeks × 7 days contribution grid
+- **Footer skeleton** - Total contributions summary + date range
 
-Provides visual feedback that content is loading without page jump.
+**Structure:**
+```tsx
+Card with p-6 padding
+├── Header (title + username)
+├── Statistics Grid (2x2 on mobile, 4 columns on desktop)
+│   └── 4 stat cards with label, value, and unit
+├── Heatmap Grid (53 weeks × 7 days with overflow-x-auto)
+└── Footer (contributions summary + date range)
+```
+
+Provides visual feedback that content is loading without layout shift or page jump.
 
 ## Component Rendering
 

@@ -123,16 +123,16 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         suppressHydrationWarning
       />
-      <div className="mx-auto max-w-5xl py-14 md:py-20">
+      <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
       {/* page hero */}
         <section className="py-6 md:py-12 space-y-4 md:space-y-6 text-center">
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2 justify-center">
             Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
           </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto px-4">
+          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto">
             Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
           </p>
-          <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center px-4">
+          <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
             <Button asChild size="default">
               <Link href="/about">Learn more</Link>
             </Button>
@@ -145,7 +145,7 @@ export default async function Home() {
           </div>
         </section>
         {/* latest blog articles */}
-        <section className="mt-12 md:mt-16 space-y-4 px-4 sm:px-0">
+        <section className="mt-12 md:mt-16 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-serif text-xl md:text-2xl font-medium">Latest articles</h2>
             <Button variant="ghost" asChild>
@@ -160,7 +160,7 @@ export default async function Home() {
           />
         </section>
         {/* latest projects */}
-        <section className="mt-12 md:mt-16 space-y-4 px-4 sm:px-0">
+        <section className="mt-12 md:mt-16 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
             <Button variant="ghost" asChild>

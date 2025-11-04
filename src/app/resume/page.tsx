@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 
 export default function ResumePage() {
   return (
-    <div className="mx-auto max-w-4xl py-12 md:py-16 space-y-8">
+    <div className="mx-auto max-w-4xl py-12 md:py-16 px-4 sm:px-6 md:px-8 space-y-8">
       {/* hero section */}
       <div className="prose space-y-4">
         <h1 className="font-serif text-3xl md:text-4xl font-bold">Drew&apos;s Resume</h1>

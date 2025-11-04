@@ -89,7 +89,7 @@ export default async function ProjectsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         suppressHydrationWarning
       />
-      <div className="mx-auto max-w-5xl py-14 md:py-20">
+      <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
         {/* hero section */}
         <div className="prose space-y-4">
           <h1 className="font-serif text-3xl md:text-4xl font-bold">Projects</h1>

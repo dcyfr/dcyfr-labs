@@ -6,7 +6,7 @@ import CalendarHeatmap from "react-calendar-heatmap";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ExternalLink, Flame, TrendingUp, Calendar } from "lucide-react";
+import { ExternalLink, Flame, TrendingUp, Calendar, Target } from "lucide-react";
 import { GitHubHeatmapSkeleton } from "@/components/github-heatmap-skeleton";
 import "react-calendar-heatmap/dist/styles.css";
 
@@ -159,6 +159,20 @@ function formatTooltipDate(dateString: string): string {
  * - Rate limiting (10 requests/minute per IP)
  * - Graceful fallback with sample data if GitHub API is unavailable
  *
+ * ⚠️ SKELETON SYNC REQUIRED
+ * When updating this component's structure, also update:
+ * - src/components/github-heatmap-skeleton.tsx
+ * 
+ * Key structural elements that must match:
+ * - Card: p-6 padding
+ * - Header section: flex justify-between with title + username link
+ * - Statistics Grid: grid-cols-2 md:grid-cols-4, gap-3
+ *   - 4 stat cards: bg-muted/50, rounded-lg, p-3, border
+ *   - Each card: icon + label + value + unit
+ * - Heatmap section: overflow-x-auto with inline-flex
+ *   - 53 weeks × 7 days grid structure
+ * - Footer: flex justify-between with contributions summary + date range
+ * 
  * @component
  * @param {GitHubHeatmapProps} props - Component props
  * @param {string} [props.username="dcyfr"] - GitHub username to fetch contributions for
@@ -179,6 +193,9 @@ function formatTooltipDate(dateString: string): string {
  * @note Loading state displays a skeleton loader to prevent layout shift (CLS).
  *
  * @performance Uses react-calendar-heatmap for efficient rendering of 365+ cells.
+ * 
+ * @see {@link /docs/components/github-heatmap.md} for detailed documentation
+ * @see {@link /docs/components/skeleton-sync-strategy.md} for skeleton sync guidelines
  */
 export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeatmapProps) {
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
@@ -354,10 +371,13 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="text-sm text-muted-foreground"
+                className="text-sm text-muted-foreground flex items-center gap-1.5"
               >
-                🎯 Busiest day: <span className="font-medium text-foreground">{formatTooltipDate(activityStats.busiestDay.date)}</span> with{" "}
-                <span className="font-medium text-foreground">{activityStats.busiestDay.count} contributions</span>
+                <Target className="h-4 w-4 shrink-0" />
+                <span>
+                  Busiest day: <span className="font-medium text-foreground">{formatTooltipDate(activityStats.busiestDay.date)}</span> with{" "}
+                  <span className="font-medium text-foreground">{activityStats.busiestDay.count} contributions</span>
+                </span>
               </motion.div>
             )}
 

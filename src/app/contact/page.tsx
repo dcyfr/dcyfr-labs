@@ -51,7 +51,7 @@ export default async function ContactPage() {
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className="mx-auto max-w-2xl py-14 md:py-20">
+      <div className="mx-auto max-w-2xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
       {/* page hero */}
       <div className="prose space-y-4">
         <h1 className="font-serif text-3xl md:text-4xl font-bold">Contact Me</h1>

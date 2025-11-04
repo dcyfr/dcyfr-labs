@@ -58,7 +58,7 @@ export default async function AboutPage() {
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className="mx-auto max-w-3xl py-12 md:py-16 space-y-12">
+      <div className="mx-auto max-w-3xl py-12 md:py-16 px-4 sm:px-6 md:px-8 space-y-12">
       {/* page hero */}
       <div className="prose space-y-6">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">I&apos;m Drew <Logo width={24} height={24} className="ml-2" /></h1>

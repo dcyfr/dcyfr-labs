@@ -41,6 +41,22 @@ interface PostListProps {
  * - Empty state with customizable message
  * - Integration with post filtering and search
  *
+ * ⚠️ SKELETON SYNC REQUIRED
+ * When updating this component's structure, also update:
+ * - src/components/post-list-skeleton.tsx
+ * 
+ * Key structural elements that must match:
+ * - article: rounded-lg, border, overflow-hidden
+ * - Mobile (< md): Vertical layout
+ *   - PostThumbnail: w-full, aspect-video (192px height)
+ *   - Content: p-3 sm:p-4 with space-y-2
+ *   - Metadata: Only date + reading time (tags hidden)
+ * - Desktop (≥ md): Horizontal layout (flex-row)
+ *   - Thumbnail: w-32, h-24 (128x96px)
+ *   - Content: flex-1 with padding
+ *   - Metadata: All visible (date + reading time + tags)
+ * - Hover effects: hover:bg-muted/50, hover:shadow-md, hover:-translate-y-0.5
+ *
  * @component
  * @param {PostListProps} props - Component props
  * @param {Post[]} props.posts - Array of posts to display
@@ -115,6 +131,7 @@ interface PostListProps {
  * @see src/components/post-badges.tsx for badge implementation
  * @see src/components/post-thumbnail.tsx for image optimization
  * @see src/data/posts.ts for Post type definition
+ * @see /docs/components/skeleton-sync-strategy.md for skeleton sync guidelines
  */
 export function PostList({ 
   posts, 
@@ -167,12 +184,10 @@ export function PostList({
                   <div className="flex-1 min-w-0 p-3 sm:p-4 md:py-3 md:pr-3">
                     {/* Badges and metadata */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-2">
-                      <PostBadges 
-                        post={p} 
-                        size="sm"
-                        isLatestPost={latestSlug === p.slug}
-                        isHotPost={hottestSlug === p.slug}
-                      />
+                      
+                      {/* Post badges */}
+                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
+                      {/* Published date */}
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString(undefined, { 
                           year: "numeric", 
@@ -183,13 +198,13 @@ export function PostList({
                       {/* Reading time - show on all screens */}
                       <span aria-hidden="true">•</span>
                       <span>{p.readingTime.text}</span>
-                      {/* Tags - desktop only */}
+                      {/* Tags - desktop only (limit 3) */}
                       <span className="hidden md:inline-block" aria-hidden="true">•</span>
-                      <span className="hidden md:inline-block">{p.tags.join(" · ")}</span>
+                      <span className="hidden md:inline-block">{p.tags.slice(0, 3).join(" · ")}</span>
                     </div>
                     
                     {/* Title */}
-                    <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-base sm:text-lg md:text-xl" : "text-base sm:text-lg"} line-clamp-2 mb-1`}>
+                    <TitleTag className={`font-medium ${titleLevel === "h2" ? "text-base sm:text-lg md:text-xl" : "text-base sm:text-lg"} line-clamp-2 mb-1 `}>
                       {p.title}
                     </TitleTag>
                     
