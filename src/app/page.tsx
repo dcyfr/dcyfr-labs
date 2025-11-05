@@ -3,7 +3,7 @@ import { ProjectCard } from "@/components/project-card";
 import { PostList } from "@/components/post-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { posts } from "@/data/posts";
+import { posts, featuredPosts } from "@/data/posts";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { Logo } from "@/components/logo";
 import { getSocialUrls } from "@/data/socials";
@@ -16,6 +16,9 @@ import {
 } from "@/lib/site-config";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
+import { FeaturedPostHero } from "@/components/featured-post-hero";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import Image from "next/image";
 
 // Optimized meta description for homepage (157 characters)
 const pageDescription = "Cybersecurity architect and developer building resilient security programs. Explore my blog on secure development, projects, and technical insights.";
@@ -49,6 +52,9 @@ export const metadata: Metadata = {
 export default async function Home() {
   // Get nonce from middleware for CSP
   const nonce = (await headers()).get("x-nonce") || "";
+  
+  // Get featured post for hero section
+  const featuredPost = featuredPosts[0];
   
   // Prepare recent posts for homepage
   const recentPosts = [...posts]
@@ -125,54 +131,84 @@ export default async function Home() {
       />
       <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
       {/* page hero */}
-        <section className="py-6 md:py-12 space-y-4 md:space-y-6 text-center">
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2 justify-center">
-            Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
-          </h1>
-          <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto">
-            Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
-          </p>
-          <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
-            <Button asChild size="default">
-              <Link href="/about">Learn more</Link>
-            </Button>
-            <Button variant="outline" asChild size="default">
-              <Link href="/blog">Read my blog</Link>
-            </Button>
-            <Button variant="outline" className="hidden sm:inline-flex" asChild size="default">
-              <Link href="/projects">View Projects</Link>
-            </Button>
-          </div>
-        </section>
+        <ScrollReveal animation="fade-up">
+          <section className="py-6 md:py-12 space-y-4 md:space-y-6 text-center">
+            {/* Avatar */}
+            <div className="flex justify-center mb-6">
+              <div className="relative w-32 h-32 md:w-40 md:h-40">
+                <Image
+                  src="/images/avatar.jpg"
+                  alt="Drew's profile picture"
+                  fill
+                  className="rounded-full object-cover ring-4 ring-border shadow-lg"
+                  priority
+                />
+              </div>
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2 justify-center">
+              Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
+            </h1>
+            <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto">
+              Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
+            </p>
+            <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
+              <Button asChild size="default">
+                <Link href="/about">Learn more</Link>
+              </Button>
+              <Button variant="outline" asChild size="default">
+                <Link href="/blog">Read my blog</Link>
+              </Button>
+              <Button variant="outline" className="hidden sm:inline-flex" asChild size="default">
+                <Link href="/projects">View Projects</Link>
+              </Button>
+            </div>
+          </section>
+        </ScrollReveal>
+
+        {/* featured post hero */}
+        {featuredPost && (
+          <ScrollReveal animation="fade-up" delay={100}>
+            <section className="mt-12 md:mt-16">
+              <FeaturedPostHero post={featuredPost} />
+            </section>
+          </ScrollReveal>
+        )}
+
         {/* latest blog articles */}
-        <section className="mt-12 md:mt-16 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-serif text-xl md:text-2xl font-medium">Latest articles</h2>
-            <Button variant="ghost" asChild>
-              <Link href="/blog">View all</Link>
-            </Button>
-          </div>
-          <PostList 
-            posts={recentPosts}
-            latestSlug={latestSlug ?? undefined}
-            hottestSlug={hottestSlug ?? undefined}
-            titleLevel="h3"
-          />
-        </section>
+        <ScrollReveal animation="fade-up" delay={200}>
+          <section className="mt-12 md:mt-16 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="font-serif text-xl md:text-2xl font-medium">Latest articles</h2>
+              <Button variant="ghost" asChild>
+                <Link href="/blog">View all</Link>
+              </Button>
+            </div>
+            <PostList 
+              posts={recentPosts}
+              latestSlug={latestSlug ?? undefined}
+              hottestSlug={hottestSlug ?? undefined}
+              titleLevel="h3"
+            />
+          </section>
+        </ScrollReveal>
+
         {/* latest projects */}
-        <section className="mt-12 md:mt-16 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
-            <Button variant="ghost" asChild>
-              <Link href="/projects">View all</Link>
-            </Button>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {featuredProjects.slice(0, 2).map((p) => (
-              <ProjectCard key={p.title} project={p} showHighlights={false} />
-            ))}
-          </div>
-        </section>
+        <ScrollReveal animation="fade-up" delay={300}>
+          <section className="mt-12 md:mt-16 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
+              <Button variant="ghost" asChild>
+                <Link href="/projects">View all</Link>
+              </Button>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {featuredProjects.slice(0, 2).map((p) => (
+                <ProjectCard key={p.title} project={p} showHighlights={false} />
+              ))}
+            </div>
+          </section>
+        </ScrollReveal>
       </div>
     </>
   );

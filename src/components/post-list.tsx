@@ -204,7 +204,7 @@ export function PostList({
                           <span className="hidden md:inline-block" aria-hidden="true">•</span>
                           <span className="hidden md:inline-block">
                             {p.tags.slice(0, 3).join(" · ")}
-                            {p.tags.length > 3 && ` · +${p.tags.length - 3}`}
+                            {p.tags.length > 3 && ` +${p.tags.length - 3}`}
                           </span>
                         </>
                       )}

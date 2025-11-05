@@ -515,6 +515,78 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 
 ## 💡 Ideas & Future Enhancements
 
+### Homepage Improvements (Nov 4, 2025)
+**Recently Completed:**
+- ✅ **Featured Post Hero** - Large prominent card showcasing featured blog posts (Nov 4)
+- ✅ **Scroll Reveal Animations** - Fade-up animations for homepage sections (Nov 4)
+
+**Tier 1: Quick Wins (High Impact, Low Effort)**
+- [ ] **GitHub Contribution Heatmap on Homepage** - Shows activity, builds technical credibility
+  - Component already exists (`github-heatmap.tsx`)
+  - Just needs import and placement between hero and latest articles
+  - Effort: 5-10 minutes
+  
+- [ ] **Stats/Metrics Section** - Quantifiable expertise display
+  - Total blog posts published
+  - Projects completed
+  - Years of experience
+  - Technologies mastered
+  - Effort: 30 minutes
+  
+- [ ] **Better Section Spacing** - Improve visual hierarchy
+  - Increase spacing from 12-16 to 16-24
+  - Add subtle dividers or visual breaks
+  - Make section headers more distinctive
+  - Effort: 15 minutes
+
+**Tier 2: High Value Additions (Weekend Project)**
+- [ ] **Tech Stack Visualization** - Show expertise with icon grid
+  - React, Next.js, TypeScript, Tailwind
+  - Security tools/frameworks
+  - Cloud platforms
+  - Simple icon grid or logo cloud
+  - Effort: 2-3 hours
+  
+- [ ] **Newsletter Signup Section** - Most important for growth!
+  - Form component pattern already exists (contact form)
+  - Add email capture above footer
+  - Integrate with newsletter service (Resend, ConvertKit, etc.)
+  - Build audience
+  - Effort: 2-3 hours
+  
+- [ ] **Popular/Trending Posts Section** - Social proof via view counts
+  - Show "Hot" posts (view count based)
+  - Separate from "Latest" articles
+  - View count system already implemented
+  - Effort: 1-2 hours
+  
+- [ ] **Tag Cloud / Popular Topics** - Content discovery + SEO
+  - Show most-used blog tags
+  - Visual sizing based on usage
+  - Clickable (links to `/blog?tag=<tag>`)
+  - Effort: 1-2 hours
+  
+- [ ] **Social Links Section** - More prominent social presence
+  - Dedicated section vs. just footer
+  - Larger icons with hover effects
+  - "Let's connect" framing
+  - Links already in `socials.ts`
+  - Effort: 1 hour
+
+**Tier 3: Nice-to-Have Enhancements**
+- [ ] **Testimonials/Recommendations** - LinkedIn recommendations, client testimonials, peer endorsements
+- [ ] **Recent Activity Timeline** - Blog posts, project updates, GitHub activity, talks/appearances
+- [ ] **Call-Out Boxes** - "Currently learning...", "Available for consulting", "Latest project..."
+- [ ] **Better CTA Strategy** - More specific/action-oriented calls-to-action
+- [ ] **Mobile Post Carousel** - Swipeable post cards on mobile, native app-like feel
+
+**Tier 4: Advanced Features (Future)**
+- [ ] **Newsletter Preview** - Show latest newsletter issue, drive subscriptions
+- [ ] **Live Search on Homepage** - Quick access to content, search-first experience
+- [ ] **Interactive Filters** - Filter posts by technology, projects by type
+- [ ] **Personalization** - Remember preferences, suggest content, adaptive layout
+- [ ] **A/B Testing** - Test different hero copy, CTA placement, data-driven optimization
+
 ### Content & Interactivity
 - [ ] **Interactive demos** - Add interactive code examples to blog posts
 - [ ] **MDX components library** - Build custom MDX components for richer content
