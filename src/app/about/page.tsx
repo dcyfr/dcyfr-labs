@@ -13,6 +13,11 @@ import { Logo } from "@/components/logo";
 import { getAboutPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
 import { Github, Linkedin, Heart, Users, BookOpen, Home, Mail, Calendar, Award, GraduationCap, ExternalLink } from "lucide-react";
+import { AboutAvatar } from "@/components/about-avatar";
+import { AboutStats } from "@/components/about-stats";
+import { AboutSkills } from "@/components/about-skills";
+import { AboutCertifications } from "@/components/about-certifications";
+import { AboutCurrentlyLearning } from "@/components/about-currently-learning";
 
 const pageTitle = "About";
 // Optimized meta description (154 characters)
@@ -61,11 +66,20 @@ export default async function AboutPage() {
       <div className="mx-auto max-w-3xl py-12 md:py-16 px-4 sm:px-6 md:px-8 space-y-12">
       {/* page hero */}
       <div className="prose space-y-6">
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">I&apos;m Drew <Logo width={24} height={24} className="ml-2" /></h1>
+        <div className="flex items-center gap-4 md:gap-6">
+          <AboutAvatar size="md" />
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">
+            I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
+          </h1>
+        </div>
         <p className="text-lg md:text-xl text-muted-foreground">
           {resume.shortSummary}
         </p>
       </div>
+      
+      {/* stats showcase */}
+      <AboutStats />
+      
       {/* about me */}
       <section className="prose space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">What drives me</h2>
@@ -115,6 +129,16 @@ export default async function AboutPage() {
           </Link>
         </div>
       </section>
+      
+      {/* currently learning */}
+      <AboutCurrentlyLearning />
+      
+      {/* skills & expertise */}
+      <AboutSkills />
+      
+      {/* certifications */}
+      <AboutCertifications />
+      
       {/* call to action & socials */}
       <section className="space-y-4">
         <h2 className="text-xl md:text-2xl font-medium">Connect with me</h2>

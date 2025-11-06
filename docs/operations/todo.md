@@ -683,3 +683,28 @@ Small, low-risk automation items to pick up (prioritized):
 - [ ] **Lighthouse / Performance checks** — Add an optional Lighthouse CI job to track performance regressions on the main branch.
 
 These are intentionally low-risk and incremental. Prioritize `GitHub Actions CI` and `Dependabot` first.
+
+---
+
+## 🎨 About Page Enhancements (Backlog)
+
+**Phase 2 - Enhanced UX** (Medium Priority):
+- [ ] **Interactive Timeline** — Replace card-based "Previously" section with vertical timeline with connection lines, animated reveals on scroll, expandable cards
+- [ ] **Featured Blog Posts Section** — Show 2-3 recent/featured posts with snippets to drive engagement and showcase expertise
+- [ ] **Downloadable Resume Button** — Add PDF download option near "View full resume" link with download icon
+- [ ] **Mission Statement Callout** — Prominent highlighted quote box for "security as enabler" philosophy with accent styling
+- [ ] **Enhanced Personal Interests** — Expand "Outside work" with specific hobbies, side projects (this site!), community involvement details
+
+**Phase 3 - Advanced Features** (Low Priority):
+- [ ] **Testimonials/Recommendations** — Add rotating testimonials or static quotes from LinkedIn with attribution and company logos
+- [ ] **FAQ/Quick Facts Accordion** — Expandable sections for common questions (work approach, industries, consulting availability, tech stack preferences)
+- [ ] **Community Contributions Display** — Reuse GitHub heatmap component to show open source contributions and blog post frequency
+- [ ] **Interactive Career Map** — Geographic visualization of companies worked at with logos and tooltips
+- [ ] **Currently Available Status** — Toggle indicator for consulting/collaboration availability with booking calendar link
+- [ ] **Reading List Integration** — Sync with Goodreads to show currently reading book and security recommendations
+
+**Implementation Notes:**
+- All Phase 2/3 items should follow existing design patterns (shadcn/ui, Tailwind, responsive-first)
+- Use `ScrollReveal` component for animations
+- Maintain accessibility standards (keyboard nav, ARIA labels)
+- Keep mobile experience optimized
