@@ -634,6 +634,43 @@ See `/docs/operations/done.md` for:
 
 ---
 
+## 🔧 Configuration & Architecture (Backlog)
+
+### Site Configuration Centralization
+**Status:** ✅ Phase 1 Complete (Nov 5, 2025)  
+**Goal:** Centralize all site configuration for easier maintenance and type safety
+
+**Completed:**
+- ✅ **FEATURES** config - Feature flags for all toggleable features
+- ✅ **CONTENT_CONFIG** - Display settings, reading metrics, badges, TOC, code themes
+- ✅ **SERVICES** config - External service integration (GitHub, Redis, Giscus, Resend, Inngest, Vercel)
+- ✅ TypeScript types exported (`SiteConfig` type)
+- ✅ Example refactor: `giscus-comments.tsx` now uses centralized config
+
+**Remaining Work:**
+- [ ] **Refactor components to use centralized config**
+  - Update components with hardcoded values (views, badges, TOC, related posts, etc.)
+  - Replace direct `process.env` checks with `siteConfig.services.*.enabled`
+  - Pattern: See `giscus-comments.tsx` for reference implementation
+  
+- [ ] **SEO_CONFIG** - SEO & metadata defaults (locale, Twitter, OG images, sitemap priorities, robots, schemas)
+- [ ] **SECURITY_CONFIG** - Rate limits per endpoint, CSP settings, CORS
+- [ ] **NAV_CONFIG** - Header/footer links, mobile breakpoints, logo
+- [ ] **THEME_CONFIG** - Default theme, fonts, logo paths/sizes
+- [ ] **CACHE_CONFIG** - ISR revalidation times, server cache durations, SWR
+- [ ] **ANALYTICS_CONFIG** - Tracking preferences, privacy settings, custom events
+- [ ] **CONTACT_CONFIG** - Email settings, form validation, calendar
+- [ ] **BLOG_CONFIG** - Content dir, visibility rules, feeds, search, defaults
+
+**Benefits:**
+- Single source of truth for all configuration
+- Type-safe config access across codebase
+- Easier environment management
+- Centralized feature toggling
+- Better documentation through structure
+
+---
+
 ## ⚙️ Automation & CI (Recommended backlog)
 
 Small, low-risk automation items to pick up (prioritized):

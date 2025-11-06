@@ -2,11 +2,128 @@
 
 This document tracks completed projects, features, and improvements. Items are organized by category and date for historical reference and learning purposes.
 
-**Last Updated:** November 4, 2025
+**Last Updated:** November 5, 2025
 
 ---
 
-## 🎯 Session Summary: November 4, 2025 (Latest)
+## 🎯 Session Summary: November 5, 2025 (Latest)
+
+### Site Configuration Centralization - Phase 1
+**Completed**: Centralized core site configuration with feature flags, content settings, and service configuration
+
+#### Overview
+Implemented the first phase of site configuration centralization in `src/lib/site-config.ts`, providing a single source of truth for site-wide settings with full TypeScript type safety.
+
+#### What Was Added
+
+**1. FEATURES Config** - Feature flags for toggleable functionality
+```typescript
+export const FEATURES = {
+  enableComments: true,
+  enableViews: true,
+  enableAnalytics: true,
+  enableShareButtons: true,
+  enableRelatedPosts: true,
+  enableGitHubHeatmap: true,
+  enableReadingProgress: true,
+  enableTableOfContents: true,
+  enableDarkMode: true,
+  enableDevTools: process.env.NODE_ENV === "development",
+  enableRSS: true,
+  enableSearchParams: true,
+  enablePrintStyles: true,
+} as const;
+```
+
+**2. CONTENT_CONFIG** - Display and content settings
+```typescript
+export const CONTENT_CONFIG = {
+  postsPerPage: 10,
+  relatedPostsCount: 3,
+  recentPostsCount: 5,
+  wordsPerMinute: 200,
+  newPostDays: 7,
+  hotPostViewsThreshold: 100,
+  tocMinHeadings: 2,
+  tocMaxDepth: 3,
+  excerptLength: 160,
+  codeTheme: { light: "github-light", dark: "github-dark" },
+} as const;
+```
+
+**3. SERVICES Config** - External service integration
+```typescript
+export const SERVICES = {
+  github: { username: "dcyfr", enabled: true, cacheMinutes: 5 },
+  redis: { enabled: !!process.env.REDIS_URL, viewKeyPrefix: "views:post:", ... },
+  giscus: { enabled: !!(env vars), repo, repoId, category, categoryId, ... },
+  resend: { enabled: !!process.env.RESEND_API_KEY, fromName: "Drew's Lab" },
+  inngest: { enabled: !!(env keys) },
+  vercel: { analyticsEnabled: true, speedInsightsEnabled: true },
+} as const;
+```
+
+**4. TypeScript Types**
+```typescript
+export type SiteConfig = typeof siteConfig;
+```
+
+#### Example Refactor: Giscus Comments
+Updated `src/components/giscus-comments.tsx` to demonstrate the pattern:
+
+**Before:**
+```typescript
+const isConfigured =
+  process.env.NEXT_PUBLIC_GISCUS_REPO &&
+  process.env.NEXT_PUBLIC_GISCUS_REPO_ID &&
+  process.env.NEXT_PUBLIC_GISCUS_CATEGORY &&
+  process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID;
+```
+
+**After:**
+```typescript
+import siteConfig from "@/lib/site-config";
+
+const isConfigured = siteConfig.features.enableComments && siteConfig.services.giscus.enabled;
+```
+
+#### Benefits Achieved
+- ✅ **Single Source of Truth**: All core settings in one place
+- ✅ **Type Safety**: Full TypeScript support with `as const` assertions
+- ✅ **Feature Flags**: Easy A/B testing and gradual rollouts
+- ✅ **Better Defaults**: Centralized values (e.g., 200 WPM for reading time)
+- ✅ **Easier Testing**: Mock entire config object for tests
+- ✅ **Documentation**: Self-documenting through clear structure
+- ✅ **Environment Awareness**: Configs adapt to dev/preview/production
+
+#### Files Modified
+- `src/lib/site-config.ts` - Added FEATURES, CONTENT_CONFIG, SERVICES, type exports
+- `src/components/giscus-comments.tsx` - Updated to use centralized config (example pattern)
+
+#### Backlog Items Added
+Remaining configuration sections documented in `/docs/operations/todo.md`:
+- SEO_CONFIG (locale, Twitter, OG images, sitemap priorities)
+- SECURITY_CONFIG (rate limits, CSP, CORS)
+- NAV_CONFIG (header/footer links, mobile breakpoints)
+- THEME_CONFIG (default theme, fonts, logo)
+- CACHE_CONFIG (ISR revalidation, server cache durations)
+- ANALYTICS_CONFIG (tracking preferences, privacy)
+- CONTACT_CONFIG (email settings, form validation)
+- BLOG_CONFIG (content dir, feeds, search, defaults)
+
+Plus: Refactor remaining components to use centralized config
+
+#### Next Steps
+1. Gradually refactor components that hardcode values (views, badges, TOC, related posts)
+2. Replace direct `process.env` checks with `siteConfig.services.*.enabled`
+3. Implement remaining config sections as needed
+4. Update documentation as configs are migrated
+
+**Impact:** Foundation for maintainable, type-safe site configuration. Pattern established for future config additions. Easy feature toggling without code changes.
+
+---
+
+## 🎯 Session Summary: November 4, 2025
 
 ### Clickable Tag Links on Blog Posts
 **Completed**: Made post tags clickable links to filter blog posts by that tag

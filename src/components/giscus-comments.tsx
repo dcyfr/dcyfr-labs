@@ -3,6 +3,7 @@
 import Giscus from "@giscus/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import siteConfig from "@/lib/site-config";
 
 /**
  * GiscusComments component integrates GitHub Discussions as a commenting system.
@@ -34,12 +35,8 @@ export function GiscusComments() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Check if Giscus is configured
-  const isConfigured =
-    process.env.NEXT_PUBLIC_GISCUS_REPO &&
-    process.env.NEXT_PUBLIC_GISCUS_REPO_ID &&
-    process.env.NEXT_PUBLIC_GISCUS_CATEGORY &&
-    process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID;
+  // Check if Giscus is configured using centralized config
+  const isConfigured = siteConfig.features.enableComments && siteConfig.services.giscus.enabled;
 
   // Wait for component to mount to avoid hydration issues
   useEffect(() => {
@@ -55,14 +52,14 @@ export function GiscusComments() {
     <div className="mt-12 border-t pt-8">
       <h2 className="mb-6 text-2xl font-semibold">Comments</h2>
       <Giscus
-        repo={process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`}
-        repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID!}
-        category={process.env.NEXT_PUBLIC_GISCUS_CATEGORY!}
-        categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID!}
-        mapping="pathname"
+        repo={siteConfig.services.giscus.repo!}
+        repoId={siteConfig.services.giscus.repoId!}
+        category={siteConfig.services.giscus.category!}
+        categoryId={siteConfig.services.giscus.categoryId!}
+        mapping={siteConfig.services.giscus.mapping}
         strict="0"
-        reactionsEnabled="1"
-        emitMetadata="0"
+        reactionsEnabled={siteConfig.services.giscus.reactionsEnabled ? "1" : "0"}
+        emitMetadata={siteConfig.services.giscus.emitMetadata ? "1" : "0"}
         inputPosition="top"
         theme={resolvedTheme === "dark" ? "dark" : "light"}
         lang="en"

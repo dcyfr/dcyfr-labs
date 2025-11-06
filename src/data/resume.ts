@@ -47,24 +47,22 @@ export const resume: Resume = {
     },
     {
       title: "Security Engineering & Operations Lead",
-      company: "Monks (formerly Media.Monks)",
+      company: "Monks",
       duration: "Jul 2022 → Jul 2023",
       responsibilities: [
         "Developed comprehensive policies and procedures for mergers and acquisitions to enhance security integration.",
         "Spearheaded threat hunting and vulnerability management initiatives to address security risks proactively.",
         "Established global security operations and incident response programs to ensure swift and effective responses to incidents."
-
       ]
     },
     {
       title: "Information Security Engineer",
-      company: "Monks (formerly MightyHive)",
+      company: "Monks",
       duration: "Jul 2021 → Jul 2022",
       responsibilities: [
         "Conducted comprehensive technical audits to identify vulnerabilities, prioritizing future security initiatives.",
         "Developed foundational global security operations and engineering programs to enhance organizational security posture.",
         "Served as a Subject Matter Expert, providing insights and recommendations directly to the CISO."
-
       ]
     },
     {
@@ -75,7 +73,6 @@ export const resume: Resume = {
         "Co-founded Information Security Network, focusing on aligning IT and security objectives with nonprofit strategies.",
         "Led virtual seminars and training events, including BSides and Hack Pensacola, to enhance community engagement.",
         "Collaborated with DC850 to promote security awareness and education initiatives."
-
       ]
     },
     {

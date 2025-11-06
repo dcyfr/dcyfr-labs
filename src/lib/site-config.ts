@@ -1,16 +1,116 @@
 // Centralized site configuration used across the app.
 // Keep values here for easy updates across environments and build-time usage.
 
-export const DOMAIN_DEV = "dcyfr.net";
+export const DOMAIN_DEV = "localhost:3000";
 export const DOMAIN_PREVIEW = "cyberdrew.vercel.app";
 export const DOMAIN_PRODUCTION = "cyberdrew.dev";
 
-export const AUTHOR_NAME = "Drew";
+export const AUTHOR_NAME = "Drew (dcyfr)";
 export const AUTHOR_EMAIL = "drew@cyberdrew.dev";
 
 export const SITE_TITLE = "Drew's Lab";
-export const SITE_SHORT_TITLE = "Drew ✦";
+export const SITE_SUBTITLE = "Cybersecurity, Tech, and More";
 export const SITE_DESCRIPTION = "Hi, I'm Drew, a security architect and tinkerer with over five years of experience in information security, risk management, and incident response.";
+
+/**
+ * Feature Flags
+ * Enable/disable features centrally without code changes
+ */
+export const FEATURES = {
+  enableComments: true,
+  enableViews: true,
+  enableAnalytics: true,
+  enableShareButtons: true,
+  enableRelatedPosts: true,
+  enableGitHubHeatmap: true,
+  enableReadingProgress: true,
+  enableTableOfContents: true,
+  enableDarkMode: true,
+  enableDevTools: process.env.NODE_ENV === "development",
+  enableRSS: true,
+  enableSearchParams: true, // URL-based search/filters
+  enablePrintStyles: true,
+} as const;
+
+/**
+ * Content & Display Configuration
+ * Settings for content display, reading metrics, and UI elements
+ */
+export const CONTENT_CONFIG = {
+  // Post display
+  postsPerPage: 10,
+  relatedPostsCount: 3,
+  recentPostsCount: 5,
+  
+  // Reading metrics
+  wordsPerMinute: 200, // for reading time calculation
+  
+  // Badges & indicators
+  newPostDays: 7, // "New" badge threshold
+  hotPostViewsThreshold: 100, // "Hot" badge threshold
+  
+  // TOC configuration
+  tocMinHeadings: 2, // minimum headings to show TOC
+  tocMaxDepth: 3, // H1-H3 only
+  
+  // Excerpt/summary
+  excerptLength: 160, // characters for truncated summaries
+  
+  // Code blocks
+  codeTheme: {
+    light: "github-light",
+    dark: "github-dark",
+  },
+} as const;
+
+/**
+ * External Service Configuration
+ * Settings for third-party integrations and services
+ */
+export const SERVICES = {
+  github: {
+    username: "dcyfr",
+    enabled: true,
+    cacheMinutes: 5,
+  },
+  
+  redis: {
+    enabled: !!process.env.REDIS_URL,
+    viewKeyPrefix: "views:post:",
+    historyKeyPrefix: "views:history:post:",
+    analyticsKeyPrefix: "analytics:",
+  },
+  
+  giscus: {
+    enabled: !!(
+      process.env.NEXT_PUBLIC_GISCUS_REPO &&
+      process.env.NEXT_PUBLIC_GISCUS_REPO_ID &&
+      process.env.NEXT_PUBLIC_GISCUS_CATEGORY &&
+      process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID
+    ),
+    repo: process.env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}` | undefined,
+    repoId: process.env.NEXT_PUBLIC_GISCUS_REPO_ID,
+    category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY,
+    categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID,
+    mapping: "pathname" as const,
+    reactionsEnabled: true,
+    emitMetadata: false,
+  },
+  
+  resend: {
+    enabled: !!process.env.RESEND_API_KEY,
+    fromName: "Drew",
+  },
+  
+  inngest: {
+    enabled: !!(process.env.INNGEST_EVENT_KEY && process.env.INNGEST_SIGNING_KEY),
+  },
+  
+  vercel: {
+    analyticsEnabled: true,
+    speedInsightsEnabled: true,
+  },
+} as const;
 
 // Choose the active domain/URL based on environment variables.
 // Priority for SITE_URL:
@@ -54,7 +154,7 @@ export const getTwitterImageUrl = (title?: string, description?: string): string
 // Can be overridden with NEXT_PUBLIC_FROM_EMAIL at build/runtime if needed.
 export const FROM_EMAIL =
   (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_FROM_EMAIL) ||
-  "contact@cyberdrew.dev";
+  AUTHOR_EMAIL;
 
 const siteConfig = {
   DOMAIN_DEV,
@@ -66,10 +166,16 @@ const siteConfig = {
   AUTHOR_EMAIL,
   FROM_EMAIL,
   SITE_TITLE,
-  SITE_SHORT_TITLE,
+  SITE_SUBTITLE,
   SITE_DESCRIPTION,
+  features: FEATURES,
+  content: CONTENT_CONFIG,
+  services: SERVICES,
   getOgImageUrl,
   getTwitterImageUrl,
 };
 
 export default siteConfig;
+
+// Export type for type-safe access
+export type SiteConfig = typeof siteConfig;
