@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { posts, postTagCounts } from "@/data/posts";
-import { Badge } from "@/components/ui/badge";
 import { PostList } from "@/components/post-list";
 import { BlogSearchForm } from "@/components/blog-search-form";
+import { ActiveFilters } from "@/components/active-filters";
+import { BlogFilters } from "@/components/blog-filters";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import {
   SITE_TITLE,
@@ -16,7 +17,7 @@ import { headers } from "next/headers";
 
 const pageTitle = "Blog";
 // Optimized meta description (159 characters)
-const pageDescription = "In-depth articles on web development, programming, and tech trends.";
+const pageDescription = "Articles about coding, tech, cybersecurity, AI, and personal development.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -52,13 +53,17 @@ const getParamValue = (value: string | string[] | undefined): string => {
   return value ?? "";
 };
 
-const buildTagHref = (tag: string, query: string) => {
+const buildTagHref = (tag: string, query: string, page?: number, readingTime?: string) => {
   const params = new URLSearchParams();
   if (tag) params.set("tag", tag);
   if (query) params.set("q", query);
+  if (page && page > 1) params.set("page", page.toString());
+  if (readingTime) params.set("readingTime", readingTime);
   const suffix = params.toString();
   return suffix ? `/blog?${suffix}` : "/blog";
 };
+
+const POSTS_PER_PAGE = 12;
 
 const describeResults = (count: number, tag: string, query: string) => {
   const noun = count === 1 ? "post" : "posts";
@@ -84,6 +89,9 @@ export default async function BlogPage({
   const resolvedSearchParams = (await searchParams) ?? {};
   const tag = getParamValue(resolvedSearchParams.tag);
   const query = getParamValue(resolvedSearchParams.q);
+  const readingTime = getParamValue(resolvedSearchParams.readingTime);
+  const pageParam = getParamValue(resolvedSearchParams.page);
+  const currentPage = Math.max(1, parseInt(pageParam) || 1);
   const normalizedQuery = query.trim().toLowerCase();
   
   // Sort all posts by date (newest first)
@@ -100,11 +108,27 @@ export default async function BlogPage({
   const filteredPosts = allPosts.filter((post) => {
     const matchesTag = !tag || post.tags.includes(tag);
     if (!matchesTag) return false;
+    
+    // Reading time filter
+    if (readingTime) {
+      const minutes = post.readingTime.minutes;
+      if (readingTime === "quick" && minutes > 5) return false;
+      if (readingTime === "medium" && (minutes <= 5 || minutes > 15)) return false;
+      if (readingTime === "deep" && minutes <= 15) return false;
+    }
+    
     if (!normalizedQuery) return true;
     
     const haystack = `${post.title} ${post.summary} ${post.tags.join(" ")} ${post.body}`.toLowerCase();
     return haystack.includes(normalizedQuery);
   });
+  
+  // Calculate pagination
+  const totalPosts = filteredPosts.length;
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
@@ -139,33 +163,97 @@ export default async function BlogPage({
               .
             </p>
           )}
+          {totalPages > 1 && (
+            <p className="text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages} ({totalPosts} total posts)
+            </p>
+          )}
         </header>
 
         {/* Search form */}
-        <BlogSearchForm query={query} tag={tag} />
+        <BlogSearchForm query={query} tag={tag} readingTime={readingTime} />
 
-        {/* Tag filters */}
-        <nav className="mt-4 flex flex-wrap gap-2 sm:gap-3" aria-label="Filter by tag">
-          <Badge asChild variant={tag ? "outline" : "secondary"} className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm">
-            <Link href={buildTagHref("", query)}>All</Link>
-          </Badge>
-          {tagList.map((t) => (
-            <Badge key={t} asChild variant={tag === t ? "secondary" : "outline"} className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm">
-              <Link href={buildTagHref(t, query)}>{t}</Link>
-            </Badge>
-          ))}
-        </nav>
+        {/* Dropdown filters */}
+        <BlogFilters 
+          tag={tag} 
+          readingTime={readingTime} 
+          tagList={tagList} 
+        />
+
+        {/* Active filters */}
+        <ActiveFilters tag={tag} query={query} readingTime={readingTime} />
 
         {/* Blog posts list */}
-        <section className="mt-8 space-y-4">
+        <section className="mt-6 space-y-4">
           <PostList 
-            posts={filteredPosts}
+            posts={paginatedPosts}
             latestSlug={latestSlug ?? undefined}
             hottestSlug={hottestSlug ?? undefined}
             titleLevel="h2"
             emptyMessage="No posts found. Try adjusting your search or filters."
           />
         </section>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
+            {currentPage > 1 && (
+              <Link
+                href={buildTagHref(tag, query, currentPage - 1, readingTime)}
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors min-h-[44px]"
+                aria-label="Previous page"
+              >
+                ← Previous
+              </Link>
+            )}
+            
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                // Show first page, last page, current page, and pages around current
+                const showPage = 
+                  page === 1 || 
+                  page === totalPages || 
+                  (page >= currentPage - 1 && page <= currentPage + 1);
+                
+                const showEllipsis = 
+                  (page === 2 && currentPage > 3) || 
+                  (page === totalPages - 1 && currentPage < totalPages - 2);
+                
+                if (showEllipsis) {
+                  return <span key={page} className="px-2 text-muted-foreground">…</span>;
+                }
+                
+                if (!showPage) return null;
+                
+                return (
+                  <Link
+                    key={page}
+                    href={buildTagHref(tag, query, page, readingTime)}
+                    className={`inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors min-h-[44px] min-w-[44px] ${
+                      page === currentPage
+                        ? "bg-primary text-primary-foreground"
+                        : "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+                    }`}
+                    aria-label={`Page ${page}`}
+                    aria-current={page === currentPage ? "page" : undefined}
+                  >
+                    {page}
+                  </Link>
+                );
+              })}
+            </div>
+            
+            {currentPage < totalPages && (
+              <Link
+                href={buildTagHref(tag, query, currentPage + 1, readingTime)}
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors min-h-[44px]"
+                aria-label="Next page"
+              >
+                Next →
+              </Link>
+            )}
+          </nav>
+        )}
       </div>
     </>
   );

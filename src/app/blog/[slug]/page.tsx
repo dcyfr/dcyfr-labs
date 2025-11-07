@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { posts } from "@/data/posts";
+import { posts, postsBySeries } from "@/data/posts";
 import { getPostByAnySlug } from "@/lib/blog";
 import {
   SITE_URL,
@@ -21,6 +21,8 @@ import { getRelatedPosts } from "@/lib/related-posts";
 import { headers } from "next/headers";
 import { ShareButtons } from "@/components/share-buttons";
 import { GiscusComments } from "@/components/giscus-comments";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { SeriesNavigation } from "@/components/series-navigation";
 import {
   getArticleSchema,
   getBreadcrumbSchema,
@@ -118,6 +120,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   // Get related posts based on shared tags
   const relatedPosts = getRelatedPosts(post, posts, 3);
   
+  // Get series posts if this post is part of a series
+  const seriesPosts = post.series ? postsBySeries[post.series.name] ?? [] : [];
+  
   // Get view counts and determine latest/hottest posts
   const viewMap = await getMultiplePostViews(posts.map(p => p.slug));
   
@@ -161,6 +166,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <BlogFABMenu headings={headings} />
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <article className="mx-auto max-w-3xl py-14 md:py-20" data-url={`${SITE_URL}/blog/${post.slug}`}>
+        <Breadcrumbs items={[
+          { label: "Home", href: "/" },
+          { label: "Blog", href: "/blog" },
+          { label: post.title }
+        ]} />
         <header>
           <div className="text-xs text-muted-foreground">
             <time dateTime={post.publishedAt}>
@@ -201,6 +211,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             ))}
           </div>
         </header>
+        
+        {/* Series navigation - show after header if post is part of a series */}
+        {post.series && seriesPosts.length > 0 && (
+          <SeriesNavigation currentPost={post} seriesPosts={seriesPosts} />
+        )}
+        
         <div className="prose mt-8">
           <MDX source={post.body} />
         </div>

@@ -28,7 +28,7 @@ export function AboutCurrentlyLearning() {
     <section className="space-y-4">
       <div className="flex items-center gap-2">
         <GraduationCap className="h-5 w-5 text-primary" aria-hidden="true" />
-        <h2 className="text-xl md:text-2xl font-medium">Currently Learning</h2>
+        <h2 className="text-xl md:text-2xl font-medium font-serif">Currently Learning</h2>
       </div>
       
       <Card className="p-6 space-y-4 border-primary/20 bg-primary/5">

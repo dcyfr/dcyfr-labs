@@ -65,9 +65,9 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   }
 
   return (
-    <aside className="mt-16 border-t pt-8">
-      <h2 className="font-serif text-xl font-semibold mb-6">Related Posts</h2>
-      <div className="grid gap-6 sm:grid-cols-2">
+    <aside className="mt-12 border-t pt-6">
+      <h2 className="font-serif text-xl font-semibold mb-4">Related Posts</h2>
+      <div className="grid gap-5 sm:grid-cols-2">
         {posts.map((post) => (
           <Link
             key={post.slug}

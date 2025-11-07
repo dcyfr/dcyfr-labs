@@ -35,7 +35,7 @@ function SkillCategoryCard({ category, defaultExpanded = false }: SkillCategoryC
   const hasMore = category.skills.length > 8;
 
   return (
-    <Card className="p-6 space-y-4">
+    <Card className="p-5 space-y-3">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-medium text-lg">{category.category}</h3>
@@ -94,7 +94,7 @@ export function AboutSkills() {
   return (
     <section className="space-y-4">
       <div className="space-y-2">
-        <h2 className="text-xl md:text-2xl font-medium">Skills & Expertise</h2>
+        <h2 className="text-xl md:text-2xl font-medium font-serif">Skills & Expertise</h2>
         <p className="text-sm text-muted-foreground">
           Technical competencies and frameworks I work with regularly
         </p>

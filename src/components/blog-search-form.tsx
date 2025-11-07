@@ -4,17 +4,18 @@ import type { FormEvent } from "react";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 /**
  * Props for the BlogSearchForm component
  * @typedef {Object} BlogSearchFormProps
  * @property {string} query - Current search query string (from URL params)
  * @property {string} tag - Currently selected tag filter (from URL params)
+ * @property {string} readingTime - Currently selected reading time filter (from URL params)
  */
 type BlogSearchFormProps = {
   query: string;
   tag: string;
+  readingTime?: string;
 };
 
 /**
@@ -25,12 +26,13 @@ type BlogSearchFormProps = {
  * - Server-side filtering without client-side search complexity
  * - Shareable search URLs
  * - Browser history navigation support
- * - Preservation of tag filters across searches
+ * - Preservation of tag and reading time filters across searches
  *
  * @component
  * @param {BlogSearchFormProps} props - Component props
  * @param {string} props.query - Current search query from URL parameters
  * @param {string} props.tag - Current tag filter from URL parameters
+ * @param {string} props.readingTime - Current reading time filter from URL parameters
  *
  * @returns {React.ReactElement} Form with search input and submit button
  *
@@ -40,12 +42,12 @@ type BlogSearchFormProps = {
  *
  * @example
  * // Display search form with existing search
- * <BlogSearchForm query="typescript" tag="web" />
+ * <BlogSearchForm query="typescript" tag="web" readingTime="quick" />
  *
  * @behavior
  * - Debounces search input by 250ms to reduce unnecessary URL updates
  * - Updates URL parameters when input changes (after debounce) or form is submitted
- * - Preserves tag filter when searching
+ * - Preserves tag and reading time filters when searching
  * - Syncs with URL parameters when they change externally
  * - Shows "Searching..." indicator while transition is pending
  *
@@ -58,16 +60,16 @@ type BlogSearchFormProps = {
  * @see /blog page for usage context
  * @see src/lib/blog.ts for server-side filtering logic
  */
-export function BlogSearchForm({ query, tag }: BlogSearchFormProps) {
+export function BlogSearchForm({ query, tag, readingTime }: BlogSearchFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(query);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     setValue(query);
-  }, [query, tag]);
+  }, [query, tag, readingTime]);
 
   const applySearch = useCallback(
     (next: string) => {
@@ -84,6 +86,10 @@ export function BlogSearchForm({ query, tag }: BlogSearchFormProps) {
     } else {
       params.delete("tag");
     }
+    
+    if (readingTime) {
+      params.set("readingTime", readingTime);
+    }
 
     const target = params.size > 0 ? `${pathname}?${params.toString()}` : pathname;
 
@@ -91,7 +97,7 @@ export function BlogSearchForm({ query, tag }: BlogSearchFormProps) {
       router.replace(target, { scroll: false });
     });
     },
-    [pathname, router, searchParams, tag]
+    [pathname, router, searchParams, tag, readingTime]
   );
 
   useEffect(() => {
@@ -117,7 +123,7 @@ export function BlogSearchForm({ query, tag }: BlogSearchFormProps) {
     <form
       onSubmit={handleSubmit}
       role="search"
-      className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
+      className="mt-6"
     >
       <div className="flex w-full items-center gap-2" aria-live="polite">
         <Input
@@ -131,9 +137,6 @@ export function BlogSearchForm({ query, tag }: BlogSearchFormProps) {
           className="w-full"
         />
         {tag && <input type="hidden" name="tag" value={tag} />}
-        <Button type="submit" variant="secondary" disabled={isPending}>
-          {isPending ? "Searching..." : "Search"}
-        </Button>
       </div>
     </form>
   );

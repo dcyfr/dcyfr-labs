@@ -32,8 +32,8 @@ export type Resume = {
 };
 
 export const resume: Resume = {
-  shortSummary: "Cybersecurity architect with over five years of experience leading organizations in enterprise risk management, operational security, and incident response.",
-  summary: "I'm a cybersecurity architect with over five years of experience leading teams in risk management, information security, and incident response. My skills include application development, cloud security, vulnerability management, and automating security operations. I have built and led security programs, implemented frameworks, and delivered technical solutions at scale, with a focus on fostering security awareness and ongoing improvement.",
+  shortSummary: "I'm a cybersecurity architect leading global organizations in cyber risk management, operational security, and incident response. Sometimes I write about tech and personal development on my blog. When I'm not working, I enjoy hiking, photography, and exploring new and innovative technologies.",
+  summary: "I'm a cybersecurity architect with five years of experience leading global teams in cyber risk management, information security, and incident response. My skills include application development, cloud security, vulnerability management, and automating security operations. I have built and led security programs, implemented frameworks, and delivered technical solutions at scale, with a focus on fostering security awareness and ongoing improvement.",
   experience: [
     {
       title: "Principal Security Engineer",

@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 4, 2025
+**Last Updated:** November 5, 2025
 
 ---
 
@@ -16,11 +16,35 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 - **🟢 LOW** - Polish, nice-to-have improvements
 - **⚪ BACKLOG** - Future consideration, exploration
 
-**Current Focus:** Mobile-first UX optimization (3/4 P0 items complete, critical gaps remain)
+**Current Focus:** Blog improvements completed (Nov 5) - 5 quick wins implemented!
 
 ---
 
 ## 📌 Recent Updates
+
+### Blog Quick Wins Complete (Nov 5, 2025) ✅
+**5 improvements implemented** - Enhanced blog UX and content discovery
+
+**Completed:**
+- ✅ Pagination (12 posts per page with Previous/Next navigation)
+- ✅ Reading time filters (Quick <5min, Medium 5-15min, Deep >15min)
+- ✅ Breadcrumb navigation in blog posts
+- ✅ Post series/collections feature with dedicated pages
+- ✅ Verified social sharing and comments already implemented
+
+**New Components:**
+- `breadcrumbs.tsx` - Hierarchical navigation component
+- `series-navigation.tsx` - Series navigation UI for posts
+- `/blog/series/[slug]` - Series listing pages
+
+**Updated:**
+- Enhanced Post type with optional `series` field
+- Blog page now supports pagination and reading time filters
+- BlogSearchForm preserves all filters across searches
+
+**Impact:** Better content discovery, navigation, and reading experience. Series feature enables multi-part content organization.
+
+---
 
 ### Bottom Navigation Bar Complete (Nov 4, 2025) ✅
 **First HIGH priority item complete** - App-like mobile navigation
@@ -448,6 +472,49 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [ ] Keyboard navigation (j/k for posts, Esc to close)
 - [ ] Progressive image loading (LQIP)
 - [ ] Blog post preview on hover (tooltip with excerpt)
+
+---
+
+### Resume Page Enhancements
+
+**Quick Wins Completed** ✅ (Nov 5, 2025 - ~2 hours)
+- [x] **Print CSS** - Print-optimized layout with hidden nav, adjusted spacing
+- [x] **GitHub heatmap integration** - Visual proof of development activity in Skills section
+- [x] **Collapsible certifications** - Mobile-friendly expandable cert display (fixes overflow)
+- [x] **Metric highlighting** - Bold/colored emphasis for achievements (23%, 35%, 40%)
+- [x] **Semantic HTML** - article, section, header, time elements with ARIA labels
+
+**Files Modified:**
+- `src/app/resume/page.tsx` - Added print styles, semantic HTML, metric highlighting
+- `src/components/collapsible-certifications.tsx` - New component for expandable certs
+- `src/lib/highlight-metrics.tsx` - Utility to parse and style quantifiable achievements
+
+---
+
+**Phase 1: Professional Polish** (~6-8 hours)
+- [ ] **Timeline visualization** - Visual timeline for experience with duration bars
+- [ ] **Certification verification links** - Clickable badges linking to Credly/verification
+- [ ] **Download options** - PDF generation (jsPDF or server route), JSON export
+- [ ] **Company logos** - Small logos/favicons next to experience cards
+
+**Phase 2: Interactive Features** (~8-10 hours)
+- [ ] **Skills search/filter** - Debounced search like blog-search-form (100+ skills)
+- [ ] **Skills proficiency levels** - Visual indicators for expertise (dots, bars, gradients)
+- [ ] **Dynamic summary toggle** - Switch between shortSummary and full summary
+- [ ] **Dark mode optimization** - Better badge contrast and readability
+
+**Phase 3: Advanced Features** (~12-16 hours)
+- [ ] **View analytics** - Redis-backed view counter like blog posts
+- [ ] **Testimonials carousel** - Rotating quotes from colleagues/LinkedIn
+- [ ] **"Ask About My Resume" AI chat** - Interactive Q&A chatbot
+- [ ] **A/B testing layouts** - Track conversion to /contact after /resume visit
+
+**Phase 4: Future Exploration** (Backlog)
+- [ ] **Multi-language support** - i18n for PT, ES translations
+- [ ] **Dynamic resume generator** - Admin interface or headless CMS integration
+- [ ] **Component extraction** - Create `resume/` component directory like `/about`
+
+---
 - [ ] Animated mesh backgrounds (hero sections)
 - [ ] Font size controls (user preference)
 - [ ] Reading time indicator (live progress)
@@ -593,6 +660,165 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [ ] **Video content integration** - Support for video content
 - [ ] **Podcast/audio content** - Audio content support
 
+---
+
+## 📝 Blog Feature Enhancements (Future Improvements)
+
+**Status:** Added Nov 5, 2025 - Comprehensive blog improvement backlog
+
+### Quick Wins Already Implemented ✅
+- [x] **Pagination** - 12 posts per page with Previous/Next navigation (Nov 5)
+- [x] **Reading Time Filters** - Quick (<5min), Medium (5-15min), Deep (>15min) (Nov 5)
+- [x] **Breadcrumb Navigation** - Hierarchical navigation in blog posts (Nov 5)
+- [x] **Post Series/Collections** - Multi-part content organization with dedicated pages (Nov 5)
+- [x] **Social Sharing** - ShareButtons component already integrated
+- [x] **Comments System** - Giscus (GitHub Discussions) already integrated
+
+### Medium Effort (3-5 days each)
+- [ ] **Popular Posts Widget** — Sidebar showing top 5 posts by views (Redis-backed), updates daily
+- [ ] **Bookmark/Reading List** — Let readers save posts for later, localStorage for anonymous users
+- [ ] **Post Reactions** — Quick emoji reactions (👍 ❤️ 🔥 💡) beyond view counts, Redis counters + client UI
+- [ ] **Keyboard Shortcuts** — `/` for search, `n`/`p` for next/prev post, `t` for TOC toggle, power user feature
+- [ ] **Print-Friendly Styling** — `@media print` CSS rules for clean printing/PDF export
+- [ ] **Advanced Search Filters** — Date range picker, multiple tag selection, sort by popularity/date/reading-time
+- [ ] **Newsletter Signup Widget** — Email capture form (integrate with Buttondown, ConvertKit, or Mailchimp)
+
+### Major Projects (1-2 weeks each)
+- [ ] **Full-Text Search** — Replace client-side search with Meilisearch/Algolia/SQLite FTS for better quality and search analytics
+- [ ] **Content Analytics Dashboard** — `/admin` route with charts, post performance, search queries, engagement metrics (query Redis)
+- [ ] **Infinite Scroll Option** — Auto-load more posts on scroll (alternative to pagination), Intersection Observer + dynamic loading
+- [ ] **Reading History & Recommendations** — Track read posts, recommend based on history, localStorage tracking + tag-based suggestions
+- [ ] **Post Scheduling System** — Schedule posts for future publication, `scheduledAt` frontmatter + build hook or cron job
+- [ ] **Draft Preview Sharing** — Shareable preview links for draft posts with secret token auth
+
+### Future Considerations (Complex/Lower Priority)
+- [ ] **PWA / Offline Reading** — Service worker for offline post access, read saved posts without internet (high complexity)
+- [ ] **Multi-Author Support** — Author profiles, filter by author (only needed if expanding beyond solo blog)
+- [ ] **Code Playground Embeds** — Interactive code editors (CodeSandbox, StackBlitz) embedded in posts
+- [ ] **AI-Powered Summaries** — Auto-generate TL;DR using GPT during build (OpenAI API)
+- [ ] **Post Translation** — Multi-language support for international readers (i18n)
+- [ ] **Audio Version** — Text-to-speech or recorded audio versions of posts
+- [ ] **Related Posts by ML** — Use embeddings/vectors for smarter recommendations beyond tag matching
+- [ ] **Post Edit History** — Show changelog/version history for updated posts
+- [ ] **Collaborative Editing** — Allow guest authors or co-authors
+- [ ] **Post Templates** — Pre-built templates for tutorials, announcements, essays
+- [ ] **Table of Contents Improvements** — Nested TOC, progress tracking per section, estimated time per section
+
+**Impact:** These enhancements focus on content discovery, reader engagement, and content management workflows.  
+**Reference:** Blog improvements brainstorm session (Nov 5, 2025)
+
+---
+
+## 🎨 Blog Search & Filter UI Improvements (Backlog)
+
+**Status:** Added Nov 5, 2025 - P0 Quick Wins Complete!
+
+### ✅ Implemented (Nov 5, 2025)
+- [x] **Remove "Reading time:" label** - Badges are self-explanatory, cleaner UI
+- [x] **Remove Search button** - Auto-submit on type (250ms debounce), one less click
+- [x] **Active filter pills** - Dismissible chips showing query/tag/reading time with individual X buttons
+- [x] **Clear all filters link** - Single click to reset all active filters
+- [x] **Improved badge contrast** - Active = `default` variant (solid), Inactive = `outline`, hover states
+
+**Files Changed:**
+- `src/app/blog/page.tsx` - Removed label, updated badge variants, added ActiveFilters
+- `src/components/blog-search-form.tsx` - Removed Search button and imports
+- `src/components/active-filters.tsx` - New component for dismissible filter pills
+
+**Impact:** Cleaner, simpler UI with better visual feedback and one-click filter management
+
+---
+
+### P1: High Impact Improvements (3-5 hours each)
+
+- [ ] **Collapsible Tag List**
+  - Show top 5-8 most popular tags by default
+  - "Show more tags" button to expand full list
+  - Reduces visual overwhelm for growing tag collections
+  - Effort: 2-3 hours
+
+- [ ] **Combine Reading Time into Search Bar**
+  - Add dropdown/select inside search bar: `[Search posts...] [All times ▾]`
+  - Saves vertical space, groups related filters
+  - Stack on mobile for responsive design
+  - Effort: 3-4 hours
+
+- [ ] **Sticky Filter Bar**
+  - Make filter section sticky after scrolling past header
+  - Easy to refine search without scrolling back
+  - Common pattern in e-commerce/search UIs
+  - Effort: 1-2 hours
+
+- [ ] **Keyboard Shortcuts**
+  - `/` - Focus search bar
+  - `Esc` - Clear search/filters
+  - `↓/↑` - Navigate results (future)
+  - Add tooltip documentation
+  - Effort: 2-3 hours
+
+- [ ] **Smart Sorting Toggle**
+  - Add sort options: Latest (default) | Popular (views) | Relevant (when searching)
+  - Better discovery and multiple browsing modes
+  - Effort: 3-4 hours
+
+---
+
+### P2: Mobile-Specific Improvements (5-8 hours)
+
+- [ ] **Bottom Sheet Filters (Mobile)**
+  - "Filters" button opens bottom sheet modal
+  - Contains: Search, Reading time, Tags, Apply/Clear
+  - More space for results on small screens
+  - Similar to existing TOC sheet pattern
+  - Effort: 6-8 hours
+
+- [ ] **Horizontal Scroll Tags (Mobile)**
+  - Single row with horizontal scroll instead of wrapping
+  - Snap scroll with fade indicators at edges
+  - Saves vertical space
+  - Effort: 2-3 hours
+
+- [ ] **Floating Filter FAB (Mobile)**
+  - Floating button like TOC FAB
+  - Opens filter bottom sheet
+  - Badge shows active filter count
+  - Maximizes content space
+  - Effort: 4-5 hours
+
+---
+
+### P3: Advanced Features (8+ hours)
+
+- [ ] **Search Suggestions/Autocomplete**
+  - Dropdown showing: Recent searches, Popular tags, Matching post titles
+  - Faster search and improved discovery
+  - Effort: 8-10 hours
+
+- [ ] **Tag Search/Filter**
+  - Search bar within tag list (for 50+ tags)
+  - Scalability for growing tag collection
+  - Effort: 2-3 hours
+
+- [ ] **Saved Searches**
+  - Save filter combinations in localStorage
+  - Power user workflow optimization
+  - Effort: 5-6 hours
+
+- [ ] **Pretty Filter URLs**
+  - SEO-friendly URLs like `/blog/quick-reads/typescript`
+  - More shareable, better for SEO
+  - Effort: 6-8 hours
+
+**Guiding Principles:**
+- **Simplicity** - Remove visual noise, consolidate elements
+- **Progressive Disclosure** - Hide complexity until needed
+- **Clear Feedback** - Obvious active states, easy dismissal
+- **Mobile-First** - Appropriate patterns for small screens
+
+**Reference:** Search/filter UI brainstorm session (Nov 5, 2025)
+
+---
+
 ### Technical Exploration
 - [ ] **WebAssembly integration** - Experiment with WASM for performance-critical features
 - [ ] **Edge functions** - Explore edge runtime for certain API routes
@@ -601,6 +827,59 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 ### Optional Integrations
 - [ ] **Git MCP** - Consider @modelcontextprotocol/server-git for direct git operations
 - [ ] **Discord MCP** - Deployment notifications and team updates
+
+---
+
+## 📊 Analytics Dashboard Enhancements (Backlog)
+
+### TIER 1: ✅ COMPLETE (Nov 5, 2025)
+**Status:** All quick wins implemented successfully!
+
+- [x] **Sortable Table Columns** — Click-to-sort on views, 24h views, published date, title, and range views. Visual indicators (↑/↓). Preference saved in URL state.
+- [x] **Date Range Selector** — Toggle between 24h/7d/30d/90d/All Time. All metrics update based on selection. Uses existing Redis sorted sets.
+- [x] **Search & Filter Posts** — Search bar for title filtering, multi-select tag filter, filter by post status. Active filter count badge shows applied filters.
+- [x] **Export to CSV/JSON** — Download buttons for full analytics dataset. Respects current filters/date range. Includes metadata.
+- [x] **Auto-Refresh Toggle** — Polling option (every 30s), manual refresh button with loading spinner, last updated timestamp display.
+- [x] **URL State Persistence** — All filters, sorting, date range saved in URL params. Enables sharing views and browser back/forward navigation.
+
+**Implementation Notes:**
+- Added new backend functions: `getPostViewsInRange()`, `getMultiplePostViewsInRange()` in `src/lib/views.ts`
+- API route now accepts `?days=1|7|30|90|all` parameter for flexible date ranges
+- Client component uses Next.js `useRouter` and `useSearchParams` for URL state management
+- Export functions generate timestamped CSV/JSON files with full metadata
+- Auto-refresh uses 30-second interval with visual loading indicators
+
+### TIER 2: Enhanced Insights (Medium Priority)
+**Goal:** Visual analytics and deeper insights into content performance
+
+- [ ] **Visual Trend Charts** — Add recharts or tremor for line charts (views over time), bar charts (top 10 comparison), area charts (cumulative by tag)
+- [ ] **Sparkline Trends in Table** — Mini 7-day view trend chart in each row. Color-coded (green = up, red = down, gray = stable)
+- [ ] **Historical Data Snapshots** — Daily/weekly/monthly rollups via Inngest. Store in Redis as `analytics:snapshot:{date}`. Enable week-over-week comparisons.
+- [ ] **Tag Performance Dashboard** — Dedicated view showing analytics by tag, average views per tag, most popular tags by post count vs views, tag growth trends
+- [ ] **Post Lifecycle Labels** — Auto-detect and badge posts: "🔥 Viral" (5x spike), "🌲 Evergreen" (consistent 30+ days), "📈 Rising" (20%+ growth), "📉 Declining" (30%+ drop), "🆕 Fresh" (<7 days old)
+- [ ] **Content Performance Metrics** — Views per day since publication (velocity), peak views with timestamp, reading time vs views correlation, tag combination performance
+
+### TIER 3: Advanced Analytics (Low Priority / Future)
+**Goal:** Production-ready analytics with engagement tracking and intelligence
+
+- [ ] **Engagement Tracking** — Client-side instrumentation: scroll depth (25/50/75/100%), time on page buckets, code block copy events, external link clicks
+- [ ] **Real-Time Updates** — WebSocket or SSE for live view counter, "someone is reading now" indicator, throttled updates
+- [ ] **Advanced Trending Algorithm** — Weighted scoring: `(views24h * recency) + (velocity * momentum) + (totalViews * authority)`. Factor in recency, velocity (views/hour), authority boost, time decay
+- [ ] **Referrer & Traffic Analysis** — Privacy-respecting referrer tracking via `document.referrer`. Categorize: Direct/Social/Search/Internal. Top referrers by domain, UTM support
+- [ ] **Goal & Conversion Tracking** — Track conversions from blog posts: newsletter signups with source post, contact form submissions, GitHub repo stars, project page visits, related post clicks
+
+### UX & Visual Enhancements (Backlog)
+- [ ] **Improved Visual Hierarchy** — Color-coded performance tiers (green/yellow/red), larger trending indicators, better mobile/tablet responsive layout, sticky table headers
+- [ ] **Contextual Tooltips** — Explain metrics on hover ("What is views24h?"), show formulas for calculated metrics, tips for improving performance
+- [ ] **Comparative Views** — Side-by-side: this week vs last week, this month vs last month, post A vs B comparison mode, personal best highlights
+- [ ] **Simplified Mobile View** — Swipeable cards for top posts, collapsible sections, touch-optimized filters, portrait-oriented charts
+
+### Technical Architecture (Backlog)
+- [ ] **Optimized Data Layer** — Improve Redis key structure: `analytics:post:{id}:views:hourly/daily`, `analytics:global:summary`, `analytics:tags:{tag}:summary`
+- [ ] **Background Aggregation Jobs** — Inngest functions: hourly rollups, daily snapshots/lifecycle labels, weekly tag performance, monthly archival
+- [ ] **API Query Optimizations** — Parallel Redis queries with `Promise.all()`, response caching (5-10s TTL), server-side filtering/sorting, incremental loading
+
+**Reference:** Full brainstorm in analysis session (Nov 5, 2025)
 
 ---
 

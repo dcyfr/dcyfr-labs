@@ -106,6 +106,35 @@ export async function getPostViews24h(postId: string): Promise<number | null> {
 }
 
 /**
+ * Get view count for a post within a time range
+ * @param postId Permanent post identifier (from post.id field)
+ * @param days Number of days to look back (7, 30, 90, etc.) or null for all time
+ * @returns View count in specified range, or null if Redis unavailable
+ */
+export async function getPostViewsInRange(postId: string, days: number | null): Promise<number | null> {
+  const client = await getClient();
+  if (!client) return null;
+  
+  // If days is null, return all-time views
+  if (days === null) {
+    return getPostViews(postId);
+  }
+  
+  try {
+    const now = Date.now();
+    const rangeStart = now - (days * 24 * 60 * 60 * 1000);
+    const count = await client.zCount(
+      formatHistoryKey(postId),
+      rangeStart,
+      now
+    );
+    return count;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Get view counts for multiple posts at once (by ID)
  * Uses post IDs instead of slugs for permanence
  * @param postIds Array of permanent post identifiers
@@ -157,6 +186,55 @@ export async function getMultiplePostViews24h(postIds: string[]): Promise<Map<st
           const count = await client.zCount(
             formatHistoryKey(postId),
             twentyFourHoursAgo,
+            now
+          );
+          return { postId, count };
+        } catch {
+          return { postId, count: 0 };
+        }
+      })
+    );
+    
+    counts.forEach(({ postId, count }) => {
+      if (Number.isFinite(count)) {
+        viewMap.set(postId, count);
+      }
+    });
+  } catch {
+    // Return empty map on error
+  }
+  
+  return viewMap;
+}
+
+/**
+ * Get view counts for multiple posts within a time range
+ * @param postIds Array of permanent post identifiers
+ * @param days Number of days to look back (7, 30, 90, etc.) or null for all time
+ * @returns Map of postId -> view count in range
+ */
+export async function getMultiplePostViewsInRange(postIds: string[], days: number | null): Promise<Map<string, number>> {
+  const client = await getClient();
+  const viewMap = new Map<string, number>();
+  
+  if (!client) return viewMap;
+  
+  // If days is null, return all-time views
+  if (days === null) {
+    return getMultiplePostViews(postIds);
+  }
+  
+  try {
+    const now = Date.now();
+    const rangeStart = now - (days * 24 * 60 * 60 * 1000);
+    
+    // Get counts for all posts in parallel
+    const counts = await Promise.all(
+      postIds.map(async (postId) => {
+        try {
+          const count = await client.zCount(
+            formatHistoryKey(postId),
+            rangeStart,
             now
           );
           return { postId, count };

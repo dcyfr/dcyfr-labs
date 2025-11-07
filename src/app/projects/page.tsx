@@ -104,7 +104,7 @@ export default async function ProjectsPage() {
           </GitHubHeatmapErrorBoundary>
         </div>
         {/* projects */}
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2">
           {visibleProjects.map((project) => (
             <ProjectCard key={project.slug} project={project} />
           ))}

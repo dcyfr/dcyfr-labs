@@ -126,7 +126,7 @@ export function ProjectCard({
       </div>
 
       {/* Content - positioned above background */}
-      <CardHeader className="space-y-2 relative z-10 px-4 sm:px-6 py-4 sm:py-6">
+      <CardHeader className="space-y-1.5 relative z-10 px-4 sm:px-6 py-4 sm:py-5">
         {project.timeline && (
           <p className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
             <Badge variant={STATUS_VARIANT[project.status]}>{STATUS_LABEL[project.status]}</Badge> {project.timeline}

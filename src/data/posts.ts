@@ -30,6 +30,10 @@ export type Post = {
   sources?: PostSource[];
   previousSlugs?: string[]; // old slugs that should 301 redirect to current slug
   image?: PostImage; // optional featured image
+  series?: {
+    name: string; // series name (e.g., "React Hooks Deep Dive")
+    order: number; // position in series (1-indexed)
+  };
   readingTime: {
     words: number;
     minutes: number;
@@ -52,3 +56,25 @@ export const postTagCounts = posts.reduce<Record<string, number>>((acc, post) =>
 export const allPostTags = Object.freeze(Object.keys(postTagCounts).sort());
 
 export const featuredPosts = Object.freeze(posts.filter((post) => post.featured));
+
+// Group posts by series
+export const postsBySeries = posts.reduce<Record<string, Post[]>>((acc, post) => {
+  if (post.series) {
+    if (!acc[post.series.name]) {
+      acc[post.series.name] = [];
+    }
+    acc[post.series.name].push(post);
+  }
+  return acc;
+}, {});
+
+// Sort posts within each series by order
+Object.keys(postsBySeries).forEach(seriesName => {
+  postsBySeries[seriesName].sort((a, b) => {
+    const orderA = a.series?.order ?? 0;
+    const orderB = b.series?.order ?? 0;
+    return orderA - orderB;
+  });
+});
+
+export const allSeriesNames = Object.freeze(Object.keys(postsBySeries).sort());

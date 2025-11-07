@@ -150,7 +150,7 @@ function StatCard({ stat }: { stat: Stat }) {
 export function AboutStats() {
   return (
     <section className="space-y-4">
-      <h2 className="text-xl md:text-2xl font-medium">By the Numbers</h2>
+      <h2 className="text-xl md:text-2xl font-medium font-serif">By the Numbers</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat, idx) => (
           <StatCard key={idx} stat={stat} />

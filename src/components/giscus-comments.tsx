@@ -49,8 +49,8 @@ export function GiscusComments() {
   }
 
   return (
-    <div className="mt-12 border-t pt-8">
-      <h2 className="mb-6 text-2xl font-semibold">Comments</h2>
+    <section className="mt-12 border-t pt-8">
+      <h2 className="mb-6 text-2xl font-semibold font-serif">Comments</h2>
       <Giscus
         repo={siteConfig.services.giscus.repo!}
         repoId={siteConfig.services.giscus.repoId!}
@@ -65,6 +65,6 @@ export function GiscusComments() {
         lang="en"
         loading="lazy"
       />
-    </div>
+    </section>
   );
 }

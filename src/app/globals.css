@@ -681,3 +681,84 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   transform: scale(1.1);
   filter: brightness(1.2);
 }
+
+/* ===================================================================
+   Print Styles
+   ================================================================ */
+
+/**
+ * Print-optimized styles for resume and general content.
+ * Optimizes layout for PDF generation and physical printing.
+ */
+@media print {
+  /* Hide navigation, footer, and interactive elements */
+  header,
+  footer,
+  nav,
+  .no-print,
+  button:not(.print-visible),
+  [role="navigation"],
+  [data-radix-scroll-area-viewport] {
+    display: none !important;
+  }
+
+  /* Optimize page layout */
+  body {
+    background: white !important;
+    color: black !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Force visible borders on components */
+  [class*="card"],
+  .card {
+    border: 1px solid #e5e7eb !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure badges are visible */
+  [class*="badge"],
+  .badge {
+    border: 1px solid #d1d5db !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Prevent orphans and widows */
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Avoid page breaks inside semantic elements */
+  section,
+  article,
+  blockquote,
+  pre,
+  code {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure headings stay with following content */
+  h1, h2, h3, h4, h5, h6 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Optimize links for print */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Don't show URLs for internal links or buttons */
+  a[href^="#"]::after,
+  a[href^="/"]::after {
+    content: "";
+  }
+}

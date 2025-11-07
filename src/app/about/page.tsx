@@ -63,7 +63,7 @@ export default async function AboutPage() {
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className="mx-auto max-w-3xl py-12 md:py-16 px-4 sm:px-6 md:px-8 space-y-12">
+      <div className="mx-auto max-w-3xl py-12 md:py-16 px-4 sm:px-6 md:px-8 space-y-10">
       {/* page hero */}
       <div className="prose space-y-6">
         <div className="flex items-center gap-4 md:gap-6">
@@ -82,7 +82,7 @@ export default async function AboutPage() {
       
       {/* about me */}
       <section className="prose space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">What drives me</h2>
+        <h2 className="text-xl md:text-2xl font-medium font-serif">What drives me</h2>
         <div className="space-y-3 text-muted-foreground">
           <p>
             My passion lies in helping organizations build resilient security programs that empower teams to move fast and stay secure. I believe security must be an enabler, not a bottleneck, and I strive to create solutions that balance risk management with business agility.
@@ -97,8 +97,8 @@ export default async function AboutPage() {
       </section>
       {/* current role */}
       <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Currently at {currentRole.company}</h2>
-        <Card className="p-6 space-y-3">
+        <h2 className="text-xl md:text-2xl font-medium font-serif">Currently at {currentRole.company}</h2>
+        <Card className="p-5 space-y-3">
           <div className="space-y-1">
             <p className="font-medium text-lg">{currentRole.title}</p>
             <p className="text-sm text-muted-foreground">{currentRole.duration}</p>
@@ -112,10 +112,10 @@ export default async function AboutPage() {
       </section>
       {/* previous roles */}
       <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Previously</h2>
-        <div className="space-y-6">
+        <h2 className="text-xl md:text-2xl font-medium font-serif">Previously</h2>
+        <div className="space-y-4">
           {resume.experience.slice(1,4).map((role, idx) => (
-            <Card key={idx} className="p-6 space-y-3">
+            <Card key={idx} className="p-5">
               <div className="space-y-1">
                 <p className="font-medium text-lg">{role.title} at {role.company}</p>
                 <p className="text-sm text-muted-foreground">{role.duration}</p>
@@ -125,7 +125,7 @@ export default async function AboutPage() {
         </div>
         <div className="text-center mt-6">
           <Link className="text-sm text-primary underline" href="/resume">
-            View my full resume
+            View full resume
           </Link>
         </div>
       </section>
@@ -141,7 +141,7 @@ export default async function AboutPage() {
       
       {/* call to action & socials */}
       <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium">Connect with me</h2>
+        <h2 className="text-xl md:text-2xl font-medium font-serif">Connect with me</h2>
         <p className="text-muted-foreground">
           I&apos;m always open to discussing new opportunities, collaborations, or just chatting about all things security. Feel free to reach out!
         </p>

@@ -36,7 +36,7 @@ function CertificationCard({ provider, certifications }: { provider: string; cer
   const credlyUrl = getCredlyUrl(provider);
   
   return (
-    <Card className="p-6 space-y-4">
+    <Card className="p-5 space-y-3">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-primary flex-shrink-0" aria-hidden="true" />
@@ -85,7 +85,7 @@ export function AboutCertifications() {
   return (
     <section className="space-y-4">
       <div className="space-y-2">
-        <h2 className="text-xl md:text-2xl font-medium">Professional Certifications</h2>
+        <h2 className="text-xl md:text-2xl font-medium font-serif">Professional Certifications</h2>
         <p className="text-sm text-muted-foreground">
           {totalCerts} industry certifications across leading providers
         </p>

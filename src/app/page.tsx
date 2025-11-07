@@ -132,9 +132,9 @@ export default async function Home() {
       <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
       {/* page hero */}
         <ScrollReveal animation="fade-up">
-          <section className="py-6 md:py-12 space-y-4 md:space-y-6 text-center">
+          <section className="py-4 md:py-8 space-y-4 md:space-y-5 text-center">
             {/* Avatar */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4 md:mb-5">
               <div className="relative w-32 h-32 md:w-40 md:h-40">
                 <Image
                   src="/images/avatar.jpg"
@@ -169,7 +169,7 @@ export default async function Home() {
         {/* featured post hero */}
         {featuredPost && (
           <ScrollReveal animation="fade-up" delay={100}>
-            <section className="mt-12 md:mt-16">
+            <section className="mt-10 md:mt-12">
               <FeaturedPostHero post={featuredPost} />
             </section>
           </ScrollReveal>
@@ -177,7 +177,7 @@ export default async function Home() {
 
         {/* latest blog articles */}
         <ScrollReveal animation="fade-up" delay={200}>
-          <section className="mt-12 md:mt-16 space-y-4">
+          <section className="mt-10 md:mt-12 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="font-serif text-xl md:text-2xl font-medium">Latest articles</h2>
               <Button variant="ghost" asChild>
@@ -195,7 +195,7 @@ export default async function Home() {
 
         {/* latest projects */}
         <ScrollReveal animation="fade-up" delay={300}>
-          <section className="mt-12 md:mt-16 space-y-4">
+          <section className="mt-10 md:mt-12 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
               <Button variant="ghost" asChild>
