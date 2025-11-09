@@ -11,6 +11,8 @@ Comprehensive UX/UI consistency analysis and design system implementation:
 
 ### Quick Start
 - 📘 **[Design System Quick Start](./design/QUICK_START.md)** - Start here! (5 min read)
+- ⚡ **[ESLint Warnings Quick Ref](./design/eslint-warnings-quick-ref.md)** - How to fix warnings (NEW)
+- 📋 **[ESLint Resolution Plan](./design/eslint-warnings-resolution.md)** - Complete strategy & timeline (NEW)
 - 📊 **[UX/UI Consistency Analysis](./design/ux-ui-consistency-analysis.md)** - Full problem breakdown
 - 📚 **[Design System Guide](./design/design-system.md)** - Complete reference
 - 🎨 **[Component Patterns](./design/component-patterns.md)** - Copy-paste examples
@@ -23,6 +25,7 @@ Comprehensive UX/UI consistency analysis and design system implementation:
 - **Typography:** Mixed font weights → Standardized semibold
 - **Hover effects:** 4 different patterns → 4 semantic patterns
 - **Spacing:** Ad-hoc → System-based vertical rhythm
+- **ESLint warnings:** 100+ → 78 (22% reduction, Nov 9, 2025)
 
 **See [QUICK_START.md](./design/QUICK_START.md) for usage examples and before/after comparisons.**
 

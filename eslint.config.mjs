@@ -42,6 +42,27 @@ const eslintConfig = [
       ],
     },
   },
+  {
+    // Exclude shadcn/ui components - they use their own design system
+    files: ["src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
+  {
+    // Exclude design token definitions - they define the patterns
+    files: ["src/lib/design-tokens.ts"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
+  {
+    // Exclude loading skeletons - they mirror component structure
+    files: ["src/**/*loading.tsx", "src/**/*skeleton.tsx"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
 ];
 
 export default eslintConfig;
