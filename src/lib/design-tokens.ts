@@ -160,19 +160,19 @@ export const SPACING = {
  */
 export const HOVER_EFFECTS = {
   /** Standard card hover (projects, posts, content cards) */
-  card: "transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:bg-muted/30",
+  card: "transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:bg-muted/30 active:scale-[0.98] active:shadow-md",
   
   /** Subtle hover for secondary/inline cards */
-  cardSubtle: "transition-all duration-300 hover:shadow-md hover:bg-muted/50",
+  cardSubtle: "transition-all duration-300 hover:shadow-md hover:bg-muted/50 active:scale-[0.99]",
   
   /** Featured/hero cards (already prominent, minimal transform) */
-  cardFeatured: "transition-all duration-300 hover:shadow-xl",
+  cardFeatured: "transition-all duration-300 hover:shadow-xl active:scale-[0.99]",
   
   /** Interactive buttons (FAB, CTAs) */
-  button: "transition-shadow hover:shadow-xl",
+  button: "transition-shadow hover:shadow-xl active:scale-95 active:shadow-lg",
   
   /** Text links */
-  link: "hover:underline underline-offset-4 will-change-auto transition-colors",
+  link: "hover:underline underline-offset-4 will-change-auto transition-colors active:opacity-70",
 } as const;
 
 // ============================================================================

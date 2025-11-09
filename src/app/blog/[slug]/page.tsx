@@ -24,6 +24,7 @@ import { ShareButtons } from "@/components/share-buttons";
 import { GiscusComments } from "@/components/giscus-comments";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { SeriesNavigation } from "@/components/series-navigation";
+import { SwipeableBlogPost } from "@/components/swipeable-blog-post";
 import {
   getArticleSchema,
   getBreadcrumbSchema,
@@ -142,6 +143,16 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     .filter(p => !p.archived)
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))[0];
 
+  // Get previous and next posts for swipe navigation
+  // Filter out draft and archived posts, then sort by publish date (newest first)
+  const publishedPosts = posts
+    .filter(p => !p.draft && !p.archived)
+    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+  
+  const currentIndex = publishedPosts.findIndex(p => p.id === post.id);
+  const prevPost = currentIndex < publishedPosts.length - 1 ? publishedPosts[currentIndex + 1] : undefined;
+  const nextPost = currentIndex > 0 ? publishedPosts[currentIndex - 1] : undefined;
+
   // Enhanced JSON-LD structured data for SEO and AI assistants
   const socialImage = getOgImageUrl(post.title, post.summary);
   
@@ -166,7 +177,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <ReadingProgress />
       <BlogFABMenu headings={headings} />
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <article className={`mx-auto ${CONTAINER_WIDTHS.prose} ${CONTAINER_VERTICAL_PADDING} ${CONTAINER_PADDING}`} data-url={`${SITE_URL}/blog/${post.slug}`}>
+      <SwipeableBlogPost
+        prevSlug={prevPost?.slug}
+        nextSlug={nextPost?.slug}
+        prevTitle={prevPost?.title}
+        nextTitle={nextPost?.title}
+      >
+        <article className={`mx-auto ${CONTAINER_WIDTHS.prose} ${CONTAINER_VERTICAL_PADDING} ${CONTAINER_PADDING}`} data-url={`${SITE_URL}/blog/${post.slug}`}>
         <Breadcrumbs items={[
           { label: "Home", href: "/" },
           { label: "Blog", href: "/blog" },
@@ -257,7 +274,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </footer>
         )}
         <RelatedPosts posts={relatedPosts} />
-    </article>
+      </article>
+      </SwipeableBlogPost>
     </>
   );
 }
