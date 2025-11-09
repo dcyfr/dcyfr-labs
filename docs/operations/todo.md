@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 8, 2025
+**Last Updated:** October 27, 2025
 
 ---
 

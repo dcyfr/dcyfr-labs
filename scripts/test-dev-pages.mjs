@@ -9,7 +9,7 @@ async function main() {
     console.log('Building project (production) with a clean env...');
     // Ensure build runs with NODE_ENV=production and VERCEL_ENV=production so
     // dev-only pages are not prerendered as development content.
-  const buildEnv = { ...process.env, NODE_ENV: 'production', VERCEL_ENV: 'production', CYBERDREW_DISABLE_DEV_PAGES: '1' };
+  const buildEnv = { ...process.env, NODE_ENV: 'production', VERCEL_ENV: 'production', DISABLE_DEV_PAGES: '1' };
     // Remove any NEXT_PUBLIC_VERCEL_ENV which could indicate a preview environment
     delete buildEnv.NEXT_PUBLIC_VERCEL_ENV;
 
@@ -32,7 +32,7 @@ async function main() {
     }
 
     console.log('Starting production server (clean env)...');
-  const startEnv = { ...process.env, NODE_ENV: 'production', VERCEL_ENV: 'production', CYBERDREW_DISABLE_DEV_PAGES: '1' };
+  const startEnv = { ...process.env, NODE_ENV: 'production', VERCEL_ENV: 'production', DISABLE_DEV_PAGES: '1' };
     delete startEnv.NEXT_PUBLIC_VERCEL_ENV;
 
     const child = spawn('npm', ['run', 'start'], {

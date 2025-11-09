@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { resume } from "@/data/resume";
-import { GitHubHeatmap } from "@/components/github-heatmap";
 import { CollapsibleCertifications } from "@/components/collapsible-certifications";
 import { highlightMetrics } from "@/lib/highlight-metrics";
 import {

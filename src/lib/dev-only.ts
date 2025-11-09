@@ -12,9 +12,9 @@ export function assertDevOr404() {
 
   // Allow a force-disable override. In some build/test environments env vars or
   // .env files can cause pages to be prerendered as development content. Set
-  // CYBERDREW_DISABLE_DEV_PAGES=1 to explicitly disable dev pages during
+  // DISABLE_DEV_PAGES=1 to explicitly disable dev pages during
   // builds or tests.
-  const disableFlag = process.env.CYBERDREW_DISABLE_DEV_PAGES === "1";
+  const disableFlag = process.env.DISABLE_DEV_PAGES === "1";
   const isDev = !disableFlag && (nodeEnv === "development" || vercelEnv === "development");
 
   if (!isDev) {

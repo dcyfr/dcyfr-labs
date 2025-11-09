@@ -1,6 +1,6 @@
 # Environment Variables Guide
 
-**Last Updated:** October 26, 2025  
+**Last Updated:** November 8, 2025  
 **Status:** Consolidated from operations/  
 **Location:** `docs/platform/` (project configuration)
 
@@ -13,6 +13,7 @@
 | `INNGEST_EVENT_KEY` | Production only | Inngest event sending | Functions work in dev mode only |
 | `INNGEST_SIGNING_KEY` | Production only | Inngest webhook verification | Functions work in dev mode only |
 | `RESEND_API_KEY` | Production only | Email delivery (contact form, milestones) | Logs submissions, shows warning |
+| `NEXT_PUBLIC_FROM_EMAIL` | Optional | Override sender email address | Uses `no-reply@cyberdrew.dev` |
 | `GITHUB_TOKEN` | Recommended | GitHub API rate limits (60 → 5,000/hr) | Uses unauthenticated API (60 req/hr) |
 | `REDIS_URL` | Recommended | Blog analytics, view counts, rate limiting | Disables analytics, falls back to in-memory |
 | `NEXT_PUBLIC_GISCUS_REPO` | Optional | Comments system - repository | Comments section hidden |
@@ -21,6 +22,7 @@
 | `NEXT_PUBLIC_GISCUS_CATEGORY_ID` | Optional | Comments system - category ID | Comments section hidden |
 | `NEXT_PUBLIC_SITE_URL` | Optional | Site URL override | Uses environment-based defaults |
 | `NEXT_PUBLIC_SITE_DOMAIN` | Optional | Domain override | Uses environment-based defaults |
+| `DISABLE_DEV_PAGES` | Optional | Hide dev pages in development | Dev pages visible in dev mode |
 
 ---
 
@@ -105,6 +107,19 @@ npm run dev
 - File: `src/inngest/contact-functions.ts`
 - Used by: Contact form, milestone notifications
 - Fallback: Graceful degradation with warning
+
+### `NEXT_PUBLIC_FROM_EMAIL`
+
+- **Type:** String (email address)
+- **Required:** No
+- **Default:** `no-reply@cyberdrew.dev`
+- **Purpose:** Override the "from" email address for outgoing emails
+- **Example:** `NEXT_PUBLIC_FROM_EMAIL=contact@yourdomain.com`
+- **When to use:** Custom domain, different sender branding
+
+**Implementation:**
+- File: `src/lib/site-config.ts`
+- Used by: Contact form emails, milestone notifications
 
 ---
 
@@ -343,6 +358,24 @@ npm run dev
   - `npm start` → `production`
   - `npm test` → `test`
 - **Do not set manually**
+
+### `DISABLE_DEV_PAGES`
+
+- **Type:** String (`"1"` to enable)
+- **Required:** No
+- **Default:** Dev pages visible in development mode
+- **Purpose:** Hide development-only pages (e.g., `/dev/*`) even in development
+- **Example:** `DISABLE_DEV_PAGES=1`
+- **When to use:** Testing production-like behavior, demonstrations, screenshots
+
+**Behavior:**
+- Default: Dev pages visible in development (`NODE_ENV=development`)
+- With `DISABLE_DEV_PAGES=1`: Dev pages hidden in all environments
+- Production: Dev pages always hidden (regardless of this flag)
+
+**Implementation:**
+- File: `src/lib/dev-only.ts`
+- Returns `false` for dev page visibility when flag is set
 
 ---
 

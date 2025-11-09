@@ -204,7 +204,7 @@ export default async function Home() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {featuredProjects.slice(0, 2).map((p) => (
-                <ProjectCard key={p.title} project={p} showHighlights={false} />
+                <ProjectCard key={p.title} project={p} />
               ))}
             </div>
           </section>
