@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Post } from "@/data/posts";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * Props for the RelatedPosts component
@@ -19,10 +21,11 @@ type RelatedPostsProps = {
  * Used in conjunction with the related posts algorithm that calculates posts sharing tags.
  *
  * Features:
- * - Responsive 3-column grid (1 col mobile, 2 cols tablet, 3 cols desktop)
+ * - Responsive 2-column grid (1 col mobile, 2 cols tablet+)
+ * - Optional thumbnail images (shown if post.image exists)
  * - Post cards with title, summary, tags, and publish date
  * - Reading time estimate display
- * - Interactive hover state with "Read more" indicator
+ * - Interactive hover state with "Read more" indicator and image zoom
  * - Tag limit (shows first 3, "+N more" badge if additional)
  * - Early exit if no related posts (renders null)
  *
@@ -44,9 +47,10 @@ type RelatedPostsProps = {
  * @styling
  * - Uses Card variant bg-card with hover:bg-accent
  * - Primary color highlight on post title and "Read more" link
- * - Serif font for consistency with blog post titles
+ * - Serif font for consistency with blog post titles (via TYPOGRAPHY.h2.standard)
  * - Truncated summary at 2 lines (line-clamp-2)
  * - Responsive spacing with gap utilities
+ * - Thumbnail: 160px height (h-40), scale hover effect (105%)
  *
  * @accessibility
  * - Links use semantic Next.js Link component
@@ -54,10 +58,11 @@ type RelatedPostsProps = {
  * - Decorative bullet (•) has aria-hidden="true"
  * - Arrow icon is not interactive (part of text node)
  * - Hover states visible and announced via CSS transitions
+ * - Image alt text falls back to post title if not provided
  *
  * @usage
  * Called from blog post template in src/app/blog/[slug]/page.tsx
- * Related posts are calculated in src/lib/blog.ts by matching tags
+ * Related posts are calculated in src/lib/related-posts.ts by matching tags
  */
 export function RelatedPosts({ posts }: RelatedPostsProps) {
   if (posts.length === 0) {
@@ -66,15 +71,28 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
 
   return (
     <aside className="mt-12 border-t pt-6">
-      <h2 className="font-serif text-xl font-semibold mb-4">Related Posts</h2>
+      <h2 className={`${TYPOGRAPHY.h2.standard} mb-4`}>Related Posts</h2>
       <div className="grid gap-5 sm:grid-cols-2">
         {posts.map((post) => (
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group block rounded-lg border bg-card p-4 transition-colors hover:bg-accent"
+            className="group block rounded-lg border bg-card overflow-hidden transition-colors hover:bg-accent"
           >
-            <div className="space-y-2">
+            {/* Optional thumbnail image */}
+            {post.image && (
+              <div className="relative w-full h-40 bg-muted">
+                <Image
+                  src={post.image.url}
+                  alt={post.image.alt || post.title}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                />
+              </div>
+            )}
+            
+            <div className="space-y-2 p-4">
               <h3 className="font-medium leading-tight group-hover:text-primary transition-colors">
                 {post.title}
               </h3>

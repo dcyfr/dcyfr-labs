@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
  * - Prevents scroll interference
  * - Visual feedback during swipe with animated indicators
  * - Respects user preference for reduced motion
+ * - Modal-aware: Disables swipe gestures when Sheet/Dialog is open
  * 
  * @param props.prevSlug - Slug of the previous blog post (optional)
  * @param props.nextSlug - Slug of the next blog post (optional)
@@ -72,8 +73,20 @@ export function SwipeableBlogPost({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
   
+  /**
+   * Check if user is interacting with a modal or sheet
+   * Prevents swipe gestures from interfering with modal interactions
+   */
+  const isModalOpen = () => {
+    // Check if any Sheet/Dialog/Modal is currently open
+    return document.querySelector('[role="dialog"]') !== null;
+  };
+  
   const handlers = useSwipeable({
     onSwipedLeft: () => {
+      // Don't navigate if modal is open
+      if (isModalOpen()) return;
+      
       if (nextSlug) {
         router.push(`/blog/${nextSlug}`);
       }
@@ -81,6 +94,9 @@ export function SwipeableBlogPost({
       setSwipeDirection(null);
     },
     onSwipedRight: () => {
+      // Don't navigate if modal is open
+      if (isModalOpen()) return;
+      
       if (prevSlug) {
         router.push(`/blog/${prevSlug}`);
       }
@@ -88,6 +104,9 @@ export function SwipeableBlogPost({
       setSwipeDirection(null);
     },
     onSwiping: (eventData) => {
+      // Don't show indicators if modal is open
+      if (isModalOpen()) return;
+      
       // Show visual feedback while swiping
       if (Math.abs(eventData.deltaX) > 20) {
         setIsSwiping(true);

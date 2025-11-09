@@ -97,7 +97,7 @@ export default async function ProjectsPage() {
       <div className={getContainerClasses('standard')}>
         {/* hero section */}
         <div className={SPACING.proseHero}>
-          <h1 className={TYPOGRAPHY.h1.standard}>Projects Archive</h1>
+          <h1 className={TYPOGRAPHY.h1.standard}>Projects</h1>
           <p className={TYPOGRAPHY.description}>
             {pageDescription}
           </p>

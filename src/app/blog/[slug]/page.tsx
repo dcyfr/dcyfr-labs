@@ -25,6 +25,7 @@ import { GiscusComments } from "@/components/giscus-comments";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { SeriesNavigation } from "@/components/series-navigation";
 import { SwipeableBlogPost } from "@/components/swipeable-blog-post";
+import { PostHeroImage } from "@/components/post-hero-image";
 import {
   getArticleSchema,
   getBreadcrumbSchema,
@@ -63,7 +64,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!result) return {};
   
   const post = result.post;
-  const imageUrl = getOgImageUrl(post.title, post.summary);
+  
+  // Use hero image for OG if available, otherwise use dynamic generator
+  const hasHeroImage = post.image?.url;
+  const ogImageUrl = hasHeroImage 
+    ? `${SITE_URL}${post.image?.url}`
+    : getOgImageUrl(post.title, post.summary);
+  const twitterImageUrl = hasHeroImage
+    ? `${SITE_URL}${post.image?.url}`
+    : getTwitterImageUrl(post.title, post.summary);
+  
+  // Use hero image dimensions if provided, otherwise use default OG dimensions
+  const imageWidth = post.image?.width ?? 1200;
+  const imageHeight = post.image?.height ?? 630;
   
   return {
     title: post.title,
@@ -76,11 +89,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       siteName: SITE_TITLE,
       images: [
         {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          type: "image/png",
-          alt: `${post.title} — ${SITE_TITLE}`,
+          url: ogImageUrl,
+          width: imageWidth,
+          height: imageHeight,
+          type: hasHeroImage ? "image/jpeg" : "image/png", // hero images typically JPEG
+          alt: post.image?.alt ?? `${post.title} — ${SITE_TITLE}`,
         },
       ],
     },
@@ -88,7 +101,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       card: "summary_large_image",
       title: post.title,
       description: post.summary,
-      images: [getTwitterImageUrl(post.title, post.summary)],
+      images: [twitterImageUrl],
     },
   };
 }
@@ -237,6 +250,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             ))}
           </div>
         </header>
+        
+        {/* Hero image - show after header if post has featured image */}
+        {post.image && (
+          <PostHeroImage
+            image={post.image}
+            title={post.title}
+            priority={true}
+          />
+        )}
         
         {/* Series navigation - show after header if post is part of a series */}
         {post.series && seriesPosts.length > 0 && (

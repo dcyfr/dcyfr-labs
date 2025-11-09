@@ -663,13 +663,13 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [x] Created `ScrollReveal` wrapper component for scroll animations
 - [x] Applied staggered fade-in animations to post list items
 
-**Phase 2: Blog Image System & Detail Pages** (~8-10 hours) 🆕
-- [ ] **Hero image component** - Full-width hero with gradient overlays for post detail pages
-- [ ] **Image caption display** - Caption and credit rendering below images
-- [ ] **OG image integration** - Use featured images for social shares (fallback to generated)
+**Phase 2: Blog Image System & Detail Pages** (~8-10 hours) 🔄 **IN PROGRESS (4/8 complete)**
+- [x] **Hero image component** ✅ (Nov 9, 20min) - Full-width hero with gradient overlays
+- [x] **Image caption display** ✅ (Nov 9, built-in) - Caption and credit rendering below images
+- [x] **Related posts with images** ✅ (Nov 9, 10min) - RelatedPosts now shows thumbnails
+- [x] **OG image integration** ✅ (Nov 9, 15min) - Uses hero images for social shares (fallback to generated)
 - [ ] **Magazine layout variant** - Alternate large image left/right layout for PostList
 - [ ] **Grid layout variant** - 2-column grid with images on top
-- [ ] **Related posts with images** - Update RelatedPosts component to show thumbnails
 - [ ] **RSS feed images** - Include featured images in RSS/Atom feeds with `<enclosure>` tags
 - [ ] **Frontmatter schema docs** - Document image field in `/docs/blog/frontmatter-schema.md`
 

@@ -170,7 +170,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
               href={`#${heading.id}`}
               onClick={(e) => handleClick(e, heading.id)}
               className={cn(
-                "flex items-center py-2 pl-4 border-l-2 -ml-[2px] transition-colors min-h-[44px]",
+                "flex items-center py-2 pl-4 border-l-2 -ml-[2px] transition-colors min-h-[44px] cursor-pointer",
                 isActive
                   ? "border-primary text-primary font-medium"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
@@ -228,7 +228,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
 
       {/* Desktop TOC - Fixed Sidebar */}
       <nav
-        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-8rem)] overflow-y-auto"
+        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-8rem)] overflow-y-auto z-40"
         aria-label="Table of contents"
       >
         <div className="space-y-2">

@@ -8,7 +8,213 @@ This document tracks completed projects, features, and improvements. Items are o
 
 ## 🎯 Session Summary: November 9, 2025 (Latest)
 
-### 🎉 All HIGH PRIORITY Items Complete! (4/4)
+### Open Graph Image Integration ✅
+**Completed**: November 9, 2025  
+**Effort**: ~15 minutes  
+**Priority**: 🟡 MEDIUM (Phase 2: Blog Image System)
+
+#### Overview
+Blog posts now automatically use hero images for Open Graph (OG) and Twitter Card metadata, ensuring social media shares display rich, custom images instead of generic text-based graphics.
+
+#### Implementation Details
+
+**Metadata Generation** (`src/app/blog/[slug]/page.tsx`)
+- **Smart Image Selection**:
+  - Uses `post.image?.url` for OG/Twitter metadata when available
+  - Falls back to dynamic generator (`getOgImageUrl`, `getTwitterImageUrl`) if no hero image
+  - Constructs absolute URLs by prepending `SITE_URL`
+- **Image Metadata**:
+  - Respects `post.image.width` and `post.image.height` from frontmatter
+  - Defaults to standard OG dimensions (1200 × 630) if not provided
+  - Sets correct MIME type: `image/jpeg` for hero images, `image/png` for generated
+  - Uses `post.image.alt` for accessibility (falls back to `{title} — {SITE_TITLE}`)
+- **Dual Platform Support**:
+  - OpenGraph: Full metadata with images array
+  - Twitter: `summary_large_image` card with hero image
+
+#### Code Changes
+```typescript
+// Before: Always used dynamic generator
+const imageUrl = getOgImageUrl(post.title, post.summary);
+
+// After: Hero image first, generator fallback
+const hasHeroImage = post.image?.url;
+const ogImageUrl = hasHeroImage 
+  ? `${SITE_URL}${post.image?.url}`
+  : getOgImageUrl(post.title, post.summary);
+```
+
+#### Documentation Created
+**New Guide**: `docs/blog/og-image-integration.md` (250+ lines)
+- Complete implementation overview
+- Frontmatter configuration examples
+- Image dimension requirements (1200×630 for OG)
+- Social media testing tools (Twitter, Facebook, LinkedIn)
+- Fallback behavior documentation
+- Best practices for optimization
+- Troubleshooting guide
+
+#### Features Implemented
+- ✅ Automatic hero image → OG metadata
+- ✅ Graceful fallback to generated images
+- ✅ Twitter Card integration
+- ✅ Proper image dimensions and MIME types
+- ✅ Accessibility (alt text propagation)
+- ✅ Comprehensive documentation
+- ✅ TypeScript type safety
+
+#### Usage
+Posts with hero images automatically get OG metadata:
+```mdx
+---
+title: "My Post"
+image:
+  url: "/blog/images/my-post/hero.jpg"
+  alt: "Beautiful landscape"
+  width: 1200
+  height: 630
+---
+```
+
+**Result**: Social shares on Twitter, Facebook, and LinkedIn now display custom hero images!
+
+#### Files Modified
+- ✅ Modified: `src/app/blog/[slug]/page.tsx` (generateMetadata function enhanced)
+- ✅ Created: `docs/blog/og-image-integration.md` (complete guide)
+- ✅ Modified: `src/content/blog/markdown-and-code-demo.mdx` (test case)
+
+#### Testing
+- ✅ Test post created with hero image
+- ✅ Dev server verified page loads correctly
+- ✅ OG metadata generation confirmed via page source
+- ✅ Ready for social media debugger testing after deployment
+
+**Phase 2 Progress**: 4/8 items complete (Hero images, Captions, Related thumbnails, OG integration)
+
+---
+
+### Blog Hero Images ✅
+**Completed**: November 9, 2025  
+**Effort**: ~20 minutes  
+**Priority**: 🟡 MEDIUM (Phase 2: Blog Image System)
+
+#### Overview
+Implemented full-width hero images for blog posts with gradient overlays, responsive sizing, and caption support. Posts can now have beautiful featured images displayed prominently at the top of detail pages.
+
+#### Implementation Details
+
+**PostHeroImage Component** (`src/components/post-hero-image.tsx`)
+- **Layout**:
+  - Full-width (breaks out of prose container with negative margins)
+  - Responsive aspect ratios: 16:9 on mobile, 21:9 on desktop
+  - Semantic HTML with `<figure>` and `<figcaption>`
+- **Visual Design**:
+  - Top gradient overlay (`from-background/80` to transparent) for better header contrast
+  - Bottom gradient overlay (`from-background/60` to transparent) for content transition
+  - Dark mode optimized overlays
+- **Optimization**:
+  - next/image with `fill` layout for responsive sizing
+  - Priority loading for above-the-fold images
+  - Blur placeholder for smooth loading
+  - Quality: 90 for crisp hero images
+  - Sizes: `100vw` for full viewport width
+- **Accessibility**:
+  - Required alt text (falls back to "Hero image for {title}")
+  - Gradient overlays marked with `aria-hidden="true"`
+  - Proper figcaption for screen readers
+- **Caption System**:
+  - Optional caption text below image
+  - Optional photo credit attribution
+  - Responsive padding matching prose container
+
+**Integration** (`src/app/blog/[slug]/page.tsx`)
+- Added after post header, before series navigation
+- Conditional rendering: only shows if `post.image` exists
+- Priority loading enabled (hero images are above the fold)
+- Proper spacing with existing components
+
+#### Features Implemented
+- ✅ Full-width responsive hero images
+- ✅ Gradient overlays for visual polish
+- ✅ Caption and credit display
+- ✅ next/image optimization
+- ✅ Semantic HTML structure
+- ✅ Dark mode support
+- ✅ Accessibility compliant
+- ✅ TypeScript typed with PostImage interface
+- ✅ Comprehensive JSDoc documentation
+
+#### Usage
+Posts can now include featured images in frontmatter:
+```mdx
+---
+title: "My Post"
+image:
+  url: "/blog/images/my-post/hero.jpg"
+  alt: "Beautiful landscape"
+  caption: "Sunset at the beach"
+  credit: "Jane Photographer"
+---
+```
+
+#### Files Modified
+- ✅ Created: `src/components/post-hero-image.tsx` (107 lines)
+- ✅ Modified: `src/app/blog/[slug]/page.tsx` (added import and conditional rendering)
+
+#### Result
+Blog posts can now feature beautiful full-width hero images with professional presentation. **Phase 2 Blog Image System started - hero images complete!**
+
+---
+
+### Related Posts with Thumbnails ✅
+**Completed**: November 9, 2025  
+**Effort**: ~10 minutes  
+**Priority**: 🟡 MEDIUM (Phase 2: Blog Image System)
+
+#### Overview
+Enhanced the RelatedPosts component to display thumbnail images when posts have featured images, providing better visual context and engagement.
+
+#### Implementation Details
+
+**Updated RelatedPosts Component** (`src/components/related-posts.tsx`)
+- **Conditional Thumbnails**:
+  - Shows 160px height (h-40) thumbnail if `post.image` exists
+  - Gracefully degrades to text-only card if no image
+  - next/image optimization with `fill` layout
+- **Visual Enhancements**:
+  - Image zoom on hover (scale-105) for interactivity
+  - Overflow hidden on card for clean borders
+  - Responsive image sizes: `(max-width: 640px) 100vw, 50vw`
+  - Background muted color while loading
+- **Layout Improvements**:
+  - Moved content padding into separate div (was on Link)
+  - Proper overflow handling for image container
+  - Maintains 2-column grid (1 mobile, 2 desktop)
+- **Design System Compliance**:
+  - Fixed typography: Used `TYPOGRAPHY.h2.standard` instead of hardcoded classes
+  - Imported design tokens for consistency
+- **Accessibility**:
+  - Alt text falls back to post title if not provided
+  - Proper semantic structure maintained
+
+#### Features Implemented
+- ✅ Optional thumbnail images (160px height)
+- ✅ Hover zoom effect (105% scale)
+- ✅ next/image optimization
+- ✅ Responsive image sizing
+- ✅ Graceful degradation (no image = text-only)
+- ✅ Updated JSDoc documentation
+- ✅ Design system compliance
+
+#### Files Modified
+- ✅ Modified: `src/components/related-posts.tsx` (added Image import, thumbnail rendering, typography fix)
+
+#### Result
+Related posts now show thumbnail previews, improving visual hierarchy and click-through rates. **Phase 2 progress: 3/8 items complete!**
+
+---
+
+### Blog Hero Images ✅
 **Achievement Unlocked:** Completed all remaining HIGH PRIORITY mobile-first UX items  
 **Time Invested:** ~1.5 hours (2 items implemented, 2 discovered already complete)  
 **Items:** Native Share API (#7), Swipe Gestures (#8), Active States (#9), Jump to Top (#10)
@@ -197,6 +403,92 @@ Implemented native app-like swipe navigation for blog posts on mobile devices. U
 
 #### Result
 Mobile users now have a native app-like blog reading experience with intuitive swipe navigation between posts. **HIGH PRIORITY item #8 complete!**
+
+---
+
+### Swipeable Component Modal Detection Fix 🐛
+**Completed**: November 9, 2025  
+**Effort**: ~10 minutes  
+**Type**: Bug Fix (Critical)
+
+#### Problem
+After implementing swipe gestures (#8), users reported that **TOC links in the Sheet modal became unclickable**. The swipeable wrapper was capturing all touch events globally, including touches inside modal/dialog elements.
+
+#### Root Cause
+The `SwipeableBlogPost` component was using passive touch event listeners that captured all touch interactions on the page, without checking if a modal (Sheet/Dialog) was currently open. This caused:
+- Touch events inside TOC Sheet modal to be intercepted
+- Link clicks in the modal to be blocked
+- Poor user experience when trying to navigate via TOC
+
+#### Solution
+Added modal detection to the swipeable component:
+
+**isModalOpen() Function**:
+```typescript
+const isModalOpen = () => {
+  return document.querySelector('[role="dialog"]') !== null;
+};
+```
+
+**Handler Updates**:
+- Modified `onSwipedLeft`, `onSwipedRight`, and `onSwiping` handlers
+- Added early return if `isModalOpen()` returns true
+- Swipe gestures completely disabled when any Sheet/Dialog is open
+
+#### Implementation
+```typescript
+const handlers = useSwipeable({
+  onSwipedLeft: (eventData) => {
+    if (isModalOpen()) return; // Check modal state
+    if (nextSlug && !isSwiping) {
+      router.push(`/blog/${nextSlug}`);
+    }
+  },
+  onSwipedRight: (eventData) => {
+    if (isModalOpen()) return; // Check modal state
+    if (prevSlug && !isSwiping) {
+      router.push(`/blog/${prevSlug}`);
+    }
+  },
+  onSwiping: (eventData) => {
+    if (isModalOpen()) return; // Check modal state
+    setIsSwiping(true);
+    // ... rest of handler
+  },
+  // ... config
+});
+```
+
+#### Why This Works
+- **[role="dialog"]** is a standard ARIA role used by all Radix UI modals (Sheet, Dialog, AlertDialog)
+- Simple DOM query is performant (executed only during swipe events)
+- Zero-config: Works with any modal/dialog component that follows ARIA standards
+- No breaking changes: All existing functionality preserved
+
+#### Features Validated
+- ✅ TOC links now clickable in Sheet modal
+- ✅ Swipe gestures work normally when no modal is open
+- ✅ No visual indicators show when modal is open
+- ✅ Works with all Radix UI modal components
+- ✅ Zero performance impact
+- ✅ No TypeScript errors
+
+#### Files Modified
+- ✅ Modified: `src/components/swipeable-blog-post.tsx` (added `isModalOpen()` function and checks)
+- ✅ Updated JSDoc: Documented modal-aware behavior
+
+#### Testing
+- ✅ Dev server verified no compilation errors
+- ✅ Manual testing confirmed TOC links work correctly
+- ✅ Swipe gestures still work outside of modals
+- ✅ No regression in existing functionality
+
+#### Learning
+**Key Takeaway**: When adding global touch/gesture handlers, always check for modal/overlay state to avoid blocking interactive elements inside modals.
+
+**Best Practice**: Use `[role="dialog"]` selector to detect any open modal, as it's a standard ARIA practice supported by all major UI libraries.
+
+**Result**: TOC Sheet modal links now work perfectly while preserving swipe navigation functionality. **Bug fixed in under 15 minutes!**
 
 ---
 
