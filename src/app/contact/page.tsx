@@ -17,7 +17,7 @@ import {
 
 const pageTitle = "Contact";
 // Optimized meta description (143 characters)
-const pageDescription = "Get in touch for cybersecurity consulting, collaboration opportunities, or questions about security architecture and development.";
+const pageDescription = "Get in touch for inquiries, collaborations, or feedback.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -61,7 +61,7 @@ export default async function ContactPage() {
       <div className={SPACING.proseHero}>
         <h1 className={TYPOGRAPHY.h1.standard}>Contact Me</h1>
         <p className={TYPOGRAPHY.description}>
-          I&apos;d love to hear from you! Whether you have a question, a project idea, or just want to say hello, feel free to reach out using the form below.
+          Whether you have questions, feedback, or collaboration ideas, feel free to reach out using the form below.
         </p>
       </div>
       {/* contact form */}

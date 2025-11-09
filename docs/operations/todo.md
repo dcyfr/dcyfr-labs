@@ -16,11 +16,39 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 - **🟢 LOW** - Polish, nice-to-have improvements
 - **⚪ BACKLOG** - Future consideration, exploration
 
-**Current Focus:** Design System Phase 2-4 complete (Nov 9) - Core pages and components migrated!
+**Current Focus:** ESLint quick wins complete (Nov 9) - High-traffic pages migrated to design tokens!
 
 ---
 
 ## 📌 Recent Updates
+
+### 🎯 ESLint Quick Wins Complete (Nov 9, 2025) ✅
+**Status:** High-traffic pages migrated to design tokens
+
+**Actions Completed:**
+- ✅ **Blog post detail page** (`src/app/blog/[slug]/page.tsx`) - 3 warnings fixed
+  - Container: `max-w-3xl` → `CONTAINER_WIDTHS.prose`
+  - H1: hardcoded classes → `TYPOGRAPHY.h1.article`
+  - Sources H2: hardcoded → `TYPOGRAPHY.h2.standard`
+- ✅ **Series page** (`src/app/blog/series/[slug]/page.tsx`) - 2 warnings fixed
+  - Container: `max-w-5xl` → `CONTAINER_WIDTHS.standard`
+  - H1: `font-bold` → `TYPOGRAPHY.h1.standard`
+- ✅ **404 page** (`src/app/not-found.tsx`) - 2 warnings fixed
+  - Container: `max-w-2xl` → `CONTAINER_WIDTHS.narrow`
+  - H1: hardcoded → `TYPOGRAPHY.h1.standard`
+
+**Results:**
+- **Warnings: 78 → 71** (9% improvement, 7 warnings fixed)
+- **Highest-traffic pages now consistent** - Blog detail, series, 404
+- **Design tokens applied** where they matter most
+- **Remaining work backlogged** - See backlog section below
+
+**Next Steps:**
+- Remaining 71 warnings moved to backlog (low priority)
+- Future: Migrate analytics, projects, resume, and component files
+- See `docs/design/eslint-warnings-quick-ref.md` for migration patterns
+
+---
 
 ### 🔧 ESLint Warnings Resolution (Nov 9, 2025) ✅
 **Status:** False positives eliminated, phased migration plan created
@@ -442,97 +470,7 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 
 **Deliverables:** Design tokens, Quick Start, Executive Summary, Full Analysis, Design System Guide, Component Patterns, Implementation Roadmap
 
----
-
-#### Phase 2: Page Updates (TODO - ~6 hours)
-**Goal:** Standardize typography, containers, and spacing across all pages  
-**Files:** 6 page files to update
-
-- [ ] **Update H1 font weights** (~2 hours)
-  - Projects page: Change `font-bold` → `font-semibold`
-  - Contact page: Change `font-bold` → `font-semibold`
-  - Import and use `TYPOGRAPHY.h1.standard` from design tokens
-  - Files: `src/app/projects/page.tsx`, `src/app/contact/page.tsx`
-
-- [ ] **Standardize page containers** (~3 hours)
-  - Replace hard-coded container classes with `getContainerClasses()`
-  - Update About page: `py-12 md:py-16` → `py-14 md:py-20`
-  - Verify all pages use appropriate width (prose/standard/narrow)
-  - Files: `src/app/page.tsx`, `src/app/about/page.tsx`, `src/app/blog/page.tsx`, `src/app/projects/page.tsx`, `src/app/contact/page.tsx`, `src/app/resume/page.tsx`
-
-- [ ] **Fix prose spacing inconsistency** (~1 hour)
-  - About page hero: Change `prose space-y-6` → `prose space-y-4`
-  - Use `SPACING.proseHero` constant
-  - Files: `src/app/about/page.tsx`
-
-**Success Criteria:**
-- All pages use `font-semibold` for H1
-- All pages use consistent container patterns
-- All prose wrappers use `space-y-4`
-- No visual regressions
-
-**Reference:** [`docs/design/implementation-roadmap.md`](../design/implementation-roadmap.md#phase-2-page-updates-week-1-2)
-
----
-
-#### Phase 3: Component Updates (TODO - ~8 hours)
-**Goal:** Standardize hover effects and card styling  
-**Files:** 3 component files + 2 skeleton files
-
-- [ ] **Update card hover effects** (~4 hours)
-  - ProjectCard: Use `HOVER_EFFECTS.card` (change `-translate-y-1` → `-translate-y-0.5`)
-  - PostList: Use `HOVER_EFFECTS.card` (add `hover:bg-muted/30`)
-  - FeaturedPostHero: Use `HOVER_EFFECTS.cardFeatured`
-  - Files: `src/components/project-card.tsx`, `src/components/post-list.tsx`, `src/components/featured-post-hero.tsx`
-
-- [ ] **Update skeleton components** (~2 hours)
-  - Ensure skeletons match updated card styles
-  - Files: `src/components/project-card-skeleton.tsx`, `src/components/post-list-skeleton.tsx`
-
-- [ ] **Update component documentation** (~2 hours)
-  - Add design token imports to JSDoc examples
-  - Document hover effect patterns
-  - Link to design system docs
-  - Files: Same as above
-
-**Success Criteria:**
-- All cards use consistent hover effects
-- Skeletons match production components
-- Component docs reference design tokens
-
-**Reference:** [`docs/design/implementation-roadmap.md`](../design/implementation-roadmap.md#phase-3-component-updates-week-2-3)
-
----
-
-#### Phase 4: Enforcement & Tooling (TODO - ~13 hours)
-**Goal:** Prevent future inconsistencies with automation  
-**Priority:** Medium (can be done incrementally)
-
-- [ ] **ESLint rules for design tokens** (~3 hours)
-  - Warn on hard-coded spacing values
-  - Warn on hard-coded font weights
-  - Warn on hard-coded container widths
-  - Suggest design token imports
-
-- [ ] **Visual regression tests** (~4 hours)
-  - Set up Playwright
-  - Create test snapshots for all pages (light/dark)
-  - Create test snapshots for components
-  - Add to CI pipeline
-
-- [ ] **Interactive documentation site** (~6 hours)
-  - Set up Storybook or similar
-  - Add stories for all components
-  - Add stories for design tokens
-  - Deploy to Vercel subdomain or `/design-system` route
-
-**Success Criteria:**
-- ESLint catches common violations
-- Visual regression tests in CI
-- Interactive docs published
-- Team onboarded to new patterns
-
-**Reference:** [`docs/design/implementation-roadmap.md`](../design/implementation-roadmap.md#phase-4-enforcement--tooling-week-3)
+**Note:** Remaining Phase 2-4 work (71 ESLint warnings) has been moved to backlog. See "ESLint Design Token Migration" in backlog section below.
 
 ---
 
@@ -951,6 +889,65 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 
 **Impact:** These enhancements focus on content discovery, reader engagement, and content management workflows.  
 **Reference:** Blog improvements brainstorm session (Nov 5, 2025)
+
+---
+
+## 🔧 ESLint Design Token Migration (Backlog)
+
+**Status:** Quick wins complete (Nov 9, 2025) - Remaining 71 warnings backlogged  
+**Priority:** ⚪ LOW - Maintenance/polish, no user-facing impact  
+**Effort:** ~10-15 hours for complete migration
+
+### Completed (Nov 9)
+- ✅ Blog post detail page (`blog/[slug]/page.tsx`) - 3 warnings fixed
+- ✅ Series page (`blog/series/[slug]/page.tsx`) - 2 warnings fixed  
+- ✅ 404 page (`not-found.tsx`) - 2 warnings fixed
+- ✅ **Result:** 78 → 71 warnings (9% improvement)
+
+### Remaining Work (71 warnings)
+
+**Analytics Page** (~18 warnings) - `src/app/analytics/AnalyticsClient.tsx`
+- 3 container max-w violations
+- 15 typography violations (headings in chart components)
+- Low priority: Internal admin page, not public-facing
+
+**Project Detail Page** (~7 warnings) - `src/app/projects/[slug]/page.tsx`
+- 1 container violation
+- 5 typography violations (section headings)
+- 1 hover effect violation (tech tag links)
+- Medium traffic, but consistent patterns
+
+**Resume Page** (~5 warnings) - `src/app/resume/page.tsx`
+- 1 container violation
+- 4 typography violations (section headings)
+- Low traffic, print-focused
+
+**Component Files** (~39 warnings)
+- About page components (certifications, skills, stats, currently-learning) - ~6 warnings
+- Error boundaries (2 files) - ~4 warnings
+- Featured post hero - 2 warnings
+- GitHub heatmap - 4 warnings
+- Giscus comments - 1 warning
+- Bottom nav - 1 warning
+- Table of contents - 1 warning
+- Other components - ~20 warnings
+
+**Blog Page False Positives** (2 warnings)
+- Lines 183, 229: `font-medium` on pagination links (not headings)
+- Not actual violations, enforcement rule too broad
+
+### Migration Strategy
+When prioritizing this work in the future:
+1. **Projects page first** - Public-facing, moderate traffic
+2. **Resume page next** - Quick wins, fewer warnings
+3. **Component files** - As needed when editing those files
+4. **Analytics page last** - Internal only, lowest priority
+5. **Consider refining ESLint rules** - Exclude `font-medium` on non-heading elements
+
+**Reference:** 
+- `docs/design/eslint-warnings-quick-ref.md` - Migration patterns
+- `docs/design/eslint-warnings-resolution.md` - Complete strategy
+- Run `npm run lint` to see current violations
 
 ---
 

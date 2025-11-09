@@ -21,7 +21,8 @@ import { AboutCurrentlyLearning } from "@/components/about-currently-learning";
 import { 
   getContainerClasses, 
   TYPOGRAPHY, 
-  SPACING 
+  SPACING,
+  HOVER_EFFECTS
 } from "@/lib/design-tokens";
 
 const pageTitle = "About";
@@ -115,22 +116,20 @@ export default async function AboutPage() {
           </ul>
         </Card>
       </section>
-      {/* previous roles */}
+      {/* professional background */}
       <section className={SPACING.content}>
-        <h2 className={TYPOGRAPHY.h2.standard}>Previously</h2>
-        <div className="space-y-4">
-          {resume.experience.slice(1,4).map((role, idx) => (
-            <Card key={idx} className="p-5">
-              <div className="space-y-1">
-                <p className="font-medium text-lg">{role.title} at {role.company}</p>
-                <p className="text-sm text-muted-foreground">{role.duration}</p>
-              </div>
-            </Card>
-          ))}
-        </div>
-        <div className="text-center mt-6">
-          <Link className="text-sm text-primary underline" href="/resume">
-            View full resume
+        <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
+        <p className="text-muted-foreground mb-4">
+          I bring {resume.experience.length}+ years of hands-on experience across security engineering, architecture, and leadership roles. 
+          My career has spanned diverse industries including healthcare, finance, and technology, where I&apos;ve built and scaled security programs from the ground up.
+        </p>
+        <div className="text-center">
+          <Link 
+            className={`inline-flex items-center gap-2 text-primary ${HOVER_EFFECTS.link}`}
+            href="/resume"
+          >
+            View full resume and work history
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>
       </section>
@@ -148,7 +147,7 @@ export default async function AboutPage() {
       <section className={SPACING.content}>
         <h2 className={TYPOGRAPHY.h2.standard}>Connect with me</h2>
         <p className="text-muted-foreground">
-          I&apos;m always open to discussing new opportunities, collaborations, or just chatting about all things security. Feel free to reach out!
+          I&apos;m open to connecting with fellow builders, sharing knowledge, and exploring new opportunities. Feel free to reach out through any of the platforms below!
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {socialLinks.map((social) => {
@@ -165,6 +164,51 @@ export default async function AboutPage() {
               : social.platform === "orcid" ? GraduationCap
               : ExternalLink;
 
+            // Determine if this is an internal link
+            const isInternalLink = social.url.startsWith('/') || 
+              (social.url.includes('cyberdrew.dev') && (
+                social.url.endsWith('/') || 
+                social.url.endsWith('/contact')
+              ));
+            
+            // Get the internal path for homepage and contact
+            const internalPath = social.platform === "homepage" ? "/" 
+              : social.platform === "email" ? "/contact" 
+              : social.url;
+
+            // Render internal links with Link component
+            if (isInternalLink && (social.platform === "homepage" || social.platform === "email")) {
+              return (
+                <Link
+                  key={social.platform}
+                  href={internalPath}
+                  className="group"
+                >
+                  <Card className="p-4 h-full transition-colors hover:border-primary">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0">
+                        <IconComponent 
+                          className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" 
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm group-hover:text-primary transition-colors">
+                          {social.label}
+                        </p>
+                        {social.description && (
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {social.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
+              );
+            }
+
+            // Render external links with <a> tag
             return (
               <a
                 key={social.platform}

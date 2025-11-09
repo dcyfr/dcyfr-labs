@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { PostList } from "@/components/post-list";
 import { BookOpen } from "lucide-react";
 import { SITE_TITLE, SITE_URL, getOgImageUrl, getTwitterImageUrl } from "@/lib/site-config";
+import { CONTAINER_WIDTHS, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING, TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * Generate static paths for all series at build time
@@ -88,7 +89,7 @@ export default async function SeriesPage({
   }
 
   return (
-    <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
+    <div className={`mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_VERTICAL_PADDING} ${CONTAINER_PADDING}`}>
       {/* Page header */}
       <header className="space-y-4 mb-8">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -102,7 +103,7 @@ export default async function SeriesPage({
         <div className="flex items-start gap-4">
           <BookOpen className="h-8 w-8 mt-1 text-primary flex-shrink-0" />
           <div className="flex-1">
-            <h1 className="font-serif text-3xl md:text-4xl font-bold">
+            <h1 className={TYPOGRAPHY.h1.standard}>
               {seriesName}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mt-2">

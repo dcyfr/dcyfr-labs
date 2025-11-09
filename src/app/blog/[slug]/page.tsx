@@ -9,6 +9,7 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
+import { CONTAINER_WIDTHS, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING, TYPOGRAPHY } from "@/lib/design-tokens";
 import { MDX } from "@/components/mdx";
 import { Badge } from "@/components/ui/badge";
 import { PostBadges } from "@/components/post-badges";
@@ -165,7 +166,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <ReadingProgress />
       <BlogFABMenu headings={headings} />
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <article className="mx-auto max-w-3xl py-14 md:py-20" data-url={`${SITE_URL}/blog/${post.slug}`}>
+      <article className={`mx-auto ${CONTAINER_WIDTHS.prose} ${CONTAINER_VERTICAL_PADDING} ${CONTAINER_PADDING}`} data-url={`${SITE_URL}/blog/${post.slug}`}>
         <Breadcrumbs items={[
           { label: "Home", href: "/" },
           { label: "Blog", href: "/blog" },
@@ -188,7 +189,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </div>
 
           {/* Title with generous spacing */}
-          <h1 className="font-serif text-3xl md:text-5xl font-semibold tracking-tight leading-tight">
+          <h1 className={TYPOGRAPHY.h1.article}>
             {post.title}
           </h1>
 
@@ -243,7 +244,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       
       {post.sources && post.sources.length > 0 && (
           <footer className="mt-12 border-t pt-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Sources</h2>
+            <h2 className={`text-sm uppercase tracking-wide text-muted-foreground ${TYPOGRAPHY.h2.standard}`}>Sources</h2>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               {post.sources.map((source) => (
                 <li key={source.href}>
