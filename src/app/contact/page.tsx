@@ -9,6 +9,11 @@ import {
 } from "@/lib/site-config";
 import { getContactPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
+import { 
+  getContainerClasses, 
+  TYPOGRAPHY, 
+  SPACING 
+} from "@/lib/design-tokens";
 
 const pageTitle = "Contact";
 // Optimized meta description (143 characters)
@@ -51,11 +56,11 @@ export default async function ContactPage() {
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className="mx-auto max-w-2xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
+      <div className={getContainerClasses('narrow')}>
       {/* page hero */}
-      <div className="prose space-y-4">
-        <h1 className="font-serif text-3xl md:text-4xl font-bold">Contact Me</h1>
-        <p className="text-lg md:text-xl text-muted-foreground">
+      <div className={SPACING.proseHero}>
+        <h1 className={TYPOGRAPHY.h1.standard}>Contact Me</h1>
+        <p className={TYPOGRAPHY.description}>
           I&apos;d love to hear from you! Whether you have a question, a project idea, or just want to say hello, feel free to reach out using the form below.
         </p>
       </div>

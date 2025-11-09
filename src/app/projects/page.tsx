@@ -11,6 +11,11 @@ import {
   getTwitterImageUrl,
 } from "@/lib/site-config";
 import { headers } from "next/headers";
+import { 
+  getContainerClasses, 
+  TYPOGRAPHY, 
+  SPACING 
+} from "@/lib/design-tokens";
 
 const pageTitle = "Projects Archive";
 // Optimized meta description (155 characters)
@@ -89,11 +94,11 @@ export default async function ProjectsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         suppressHydrationWarning
       />
-      <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
+      <div className={getContainerClasses('standard')}>
         {/* hero section */}
-        <div className="prose space-y-4">
-          <h1 className="font-serif text-3xl md:text-4xl font-bold">Projects Archive</h1>
-          <p className="text-lg md:text-xl text-muted-foreground">
+        <div className={SPACING.proseHero}>
+          <h1 className={TYPOGRAPHY.h1.standard}>Projects Archive</h1>
+          <p className={TYPOGRAPHY.description}>
             {pageDescription}
           </p>
         </div>

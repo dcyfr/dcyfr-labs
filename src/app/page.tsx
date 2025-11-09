@@ -19,6 +19,11 @@ import type { Metadata } from "next";
 import { FeaturedPostHero } from "@/components/featured-post-hero";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import Image from "next/image";
+import { 
+  getContainerClasses, 
+  TYPOGRAPHY, 
+  SPACING 
+} from "@/lib/design-tokens";
 
 // Optimized meta description for homepage (157 characters)
 const pageDescription = "Cybersecurity architect and developer building resilient security programs. Explore my blog on secure development, projects, and technical insights.";
@@ -129,10 +134,10 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         suppressHydrationWarning
       />
-      <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
+      <div className={getContainerClasses('standard')}>
       {/* page hero */}
         <ScrollReveal animation="fade-up">
-          <section className="py-4 md:py-8 space-y-4 md:space-y-5 text-center">
+          <section className={`py-4 md:py-8 ${SPACING.content} text-center`}>
             {/* Avatar */}
             <div className="flex justify-center mb-4 md:mb-5">
               <div className="relative w-32 h-32 md:w-40 md:h-40">
@@ -146,10 +151,10 @@ export default async function Home() {
               </div>
             </div>
             
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2 justify-center">
+            <h1 className={`${TYPOGRAPHY.h1.hero} flex items-center gap-2 justify-center`}>
               Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
             </h1>
-            <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mx-auto">
+            <p className={`max-w-2xl mx-auto ${TYPOGRAPHY.description}`}>
               Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
             </p>
             <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
@@ -177,9 +182,9 @@ export default async function Home() {
 
         {/* latest blog articles */}
         <ScrollReveal animation="fade-up" delay={200}>
-          <section className="mt-10 md:mt-12 space-y-4">
+          <section className={`mt-10 md:mt-12 ${SPACING.content}`}>
             <div className="flex items-center justify-between">
-              <h2 className="font-serif text-xl md:text-2xl font-medium">Latest articles</h2>
+              <h2 className={TYPOGRAPHY.h2.standard}>Latest articles</h2>
               <Button variant="ghost" asChild>
                 <Link href="/blog">View all</Link>
               </Button>
@@ -195,9 +200,9 @@ export default async function Home() {
 
         {/* latest projects */}
         <ScrollReveal animation="fade-up" delay={300}>
-          <section className="mt-10 md:mt-12 space-y-4">
+          <section className={`mt-10 md:mt-12 ${SPACING.content}`}>
             <div className="flex items-center justify-between">
-              <h2 className="font-serif text-xl md:text-2xl font-medium">Projects</h2>
+              <h2 className={TYPOGRAPHY.h2.standard}>Projects</h2>
               <Button variant="ghost" asChild>
                 <Link href="/projects">View all</Link>
               </Button>

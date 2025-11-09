@@ -14,6 +14,11 @@ import {
 } from "@/lib/site-config";
 import { getBlogCollectionSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
+import { 
+  getContainerClasses, 
+  TYPOGRAPHY, 
+  SPACING 
+} from "@/lib/design-tokens";
 
 const pageTitle = "Blog";
 // Optimized meta description (159 characters)
@@ -131,15 +136,15 @@ export default async function BlogPage({
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
+      <div className={getContainerClasses('standard')}>
         {/* Page header */}
-        <header className="prose space-y-4">
-          <h1 className="font-serif text-3xl md:text-4xl font-bold">Blog</h1>
-          <p className="text-lg md:text-xl text-muted-foreground">
+        <header className={SPACING.proseHero}>
+          <h1 className={TYPOGRAPHY.h1.standard}>Blog</h1>
+          <p className={TYPOGRAPHY.description}>
             {pageDescription}
           </p>
           {totalPages > 1 && (
-            <p className="text-sm text-muted-foreground">
+            <p className={TYPOGRAPHY.metadata}>
               Page {currentPage} of {totalPages} ({totalPosts} total posts)
             </p>
           )}
@@ -159,7 +164,7 @@ export default async function BlogPage({
         <ActiveFilters tag={tag} query={query} readingTime={readingTime} />
 
         {/* Blog posts list */}
-        <section className="mt-6 space-y-4">
+        <section className={`mt-6 ${SPACING.content}`}>
           <PostList 
             posts={paginatedPosts}
             latestSlug={latestSlug ?? undefined}

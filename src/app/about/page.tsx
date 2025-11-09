@@ -18,6 +18,11 @@ import { AboutStats } from "@/components/about-stats";
 import { AboutSkills } from "@/components/about-skills";
 import { AboutCertifications } from "@/components/about-certifications";
 import { AboutCurrentlyLearning } from "@/components/about-currently-learning";
+import { 
+  getContainerClasses, 
+  TYPOGRAPHY, 
+  SPACING 
+} from "@/lib/design-tokens";
 
 const pageTitle = "About";
 // Optimized meta description (154 characters)
@@ -63,16 +68,16 @@ export default async function AboutPage() {
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className="mx-auto max-w-3xl py-12 md:py-16 px-4 sm:px-6 md:px-8 space-y-10">
+      <div className={`${getContainerClasses('prose')} ${SPACING.section}`}>
       {/* page hero */}
-      <div className="prose space-y-6">
+      <div className={`${SPACING.proseHero}`}>
         <div className="flex items-center gap-4 md:gap-6">
           <AboutAvatar size="md" />
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight font-serif flex items-center gap-2">
+          <h1 className={`${TYPOGRAPHY.h1.standard} flex items-center gap-2`}>
             I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
           </h1>
         </div>
-        <p className="text-lg md:text-xl text-muted-foreground">
+        <p className={TYPOGRAPHY.description}>
           {resume.shortSummary}
         </p>
       </div>
@@ -81,8 +86,8 @@ export default async function AboutPage() {
       <AboutStats />
       
       {/* about me */}
-      <section className="prose space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium font-serif">What drives me</h2>
+      <section className={`prose ${SPACING.content}`}>
+        <h2 className={TYPOGRAPHY.h2.standard}>What drives me</h2>
         <div className="space-y-3 text-muted-foreground">
           <p>
             My passion lies in helping organizations build resilient security programs that empower teams to move fast and stay secure. I believe security must be an enabler, not a bottleneck, and I strive to create solutions that balance risk management with business agility.
@@ -96,8 +101,8 @@ export default async function AboutPage() {
         </div>
       </section>
       {/* current role */}
-      <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium font-serif">Currently at {currentRole.company}</h2>
+      <section className={SPACING.content}>
+        <h2 className={TYPOGRAPHY.h2.standard}>Currently at {currentRole.company}</h2>
         <Card className="p-5 space-y-3">
           <div className="space-y-1">
             <p className="font-medium text-lg">{currentRole.title}</p>
@@ -111,8 +116,8 @@ export default async function AboutPage() {
         </Card>
       </section>
       {/* previous roles */}
-      <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium font-serif">Previously</h2>
+      <section className={SPACING.content}>
+        <h2 className={TYPOGRAPHY.h2.standard}>Previously</h2>
         <div className="space-y-4">
           {resume.experience.slice(1,4).map((role, idx) => (
             <Card key={idx} className="p-5">
@@ -140,8 +145,8 @@ export default async function AboutPage() {
       <AboutCertifications />
       
       {/* call to action & socials */}
-      <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-medium font-serif">Connect with me</h2>
+      <section className={SPACING.content}>
+        <h2 className={TYPOGRAPHY.h2.standard}>Connect with me</h2>
         <p className="text-muted-foreground">
           I&apos;m always open to discussing new opportunities, collaborations, or just chatting about all things security. Feel free to reach out!
         </p>
