@@ -33,7 +33,7 @@ export const socialLinks: SocialLink[] = [
     {
       platform: "homepage",
       label: "Homepage",
-      url: "https://cyberdrew.dev",
+      url: "https://cyberdrew.dev/",
       icon: "home",
       description: "Visit my website"
     },
@@ -49,14 +49,14 @@ export const socialLinks: SocialLink[] = [
       label: "Book a Meeting",
       url: "https://cal.com/dcyfr",
       icon: "calendar",
-      description: "Schedule a meeting with me"
+      description: "Let's meet up"
     },
     {
       platform: "github-sponsor",
       label: "Become a Sponsor",
       url: "https://github.com/sponsors/dcyfr",
       icon: "heart",
-      description: "Support my open source work"
+      description: "Support open source contributions"
     },
     {
       platform: "linkedin",
@@ -70,14 +70,14 @@ export const socialLinks: SocialLink[] = [
       label: "Peerlist",
       url: "https://peerlist.io/dcyfr",
       icon: "users",
-      description: "View my professional profile on Peerlist"
+      description: "Build with me on Peerlist"
     },
     {
       platform: "github",
       label: "GitHub",
       url: "https://github.com/dcyfr",
       icon: "github",
-      description: "View my open source projects"
+      description: "View my code"
     },
     {
       platform: "credly",
@@ -91,14 +91,14 @@ export const socialLinks: SocialLink[] = [
       label: "ORCID",
       url: "https://orcid.org/0009-0008-1312-2812",
       icon: "graduation-cap",
-      description: "View my researcher profile"
+      description: "View my research contributions"
     },
     {
       platform: "goodreads",
       label: "Goodreads",
       url: "https://www.goodreads.com/dcyfr",
       icon: "book-open",
-      description: "See what I'm reading"
+      description: "Look through my bookshelf"
     }
   ];
 
