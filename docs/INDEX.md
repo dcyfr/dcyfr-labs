@@ -1,11 +1,25 @@
 # Documentation Index
 
-**Last Updated:** October 27, 2025  
-**Status:** Design System documentation added ✅
+**Last Updated:** November 9, 2025  
+**Status:** About page improvements and design system documentation complete ✅
 
 ---
 
-## 🎨 **NEW: Design System Documentation**
+## 🎉 **LATEST: About Page UX Improvements (Nov 9, 2025)**
+
+Enhanced the About page with smart internal link handling and content consolidation:
+
+### What Was Updated
+- ✅ **Internal Links**: Homepage and Contact links now use Next.js `Link` component for seamless navigation
+- ✅ **Content Consolidation**: Replaced detailed previous roles with summary to avoid duplication with Resume page
+- ✅ **Design Tokens**: Full compliance with design system patterns
+- 📚 **Documentation**: Updated AI instructions, component docs, and feature guides
+
+**See [done.md](./operations/done.md) for complete details.**
+
+---
+
+## 🎨 **Design System Documentation**
 
 Comprehensive UX/UI consistency analysis and design system implementation:
 

@@ -1,6 +1,12 @@
 # Social Media Links
 
-Centralized management of social media accounts and profiles across the site.
+Centralized management of social media accounts and profiles across the site with intelligent internal/external link handling.
+
+**Last Updated:** November 9, 2025
+
+## Overview
+
+The social links system provides a single source of truth for all social media and contact information. It intelligently handles both internal links (homepage, contact) and external links (GitHub, LinkedIn, etc.) with appropriate rendering and UX patterns.
 
 ## Data File
 
@@ -59,14 +65,42 @@ const linkedin = getSocialLink("linkedin");
 
 ### About Page
 
-The about page displays all social links in a responsive grid with:
+**Location:** `src/app/about/page.tsx`
+
+The about page displays all social links in a responsive grid with intelligent link handling:
+
+**Internal Links** (use Next.js `Link` component):
+- Homepage (`/`)
+- Contact page (`/contact`)
+- Benefits: Client-side navigation, no page reload, instant routing
+- No external link icon
+
+**External Links** (use `<a>` tag):
+- All other platforms (GitHub, LinkedIn, Cal.com, etc.)
+- Open in new tab (`target="_blank"`)
+- Security attributes (`rel="noopener noreferrer"`)
+- External link icon shown on hover
+
+**Visual Features:**
 - Icon for each platform (from lucide-react)
 - Label and description
 - Hover effects with border color change
-- External link indicator
+- External link indicator (external links only)
 - Accessible markup
+- Responsive 2-column grid
 
-**Location:** `src/app/about/page.tsx`
+**Link Detection Logic:**
+```typescript
+const isInternalLink = social.url.startsWith('/') || 
+  (social.url.includes('cyberdrew.dev') && (
+    social.url.endsWith('/') || 
+    social.url.endsWith('/contact')
+  ));
+
+const internalPath = social.platform === "homepage" ? "/" 
+  : social.platform === "email" ? "/contact" 
+  : social.url;
+```
 
 ### JSON-LD Schema
 

@@ -2,10 +2,84 @@
 
 ## Overview
 
-The about page features five new interactive components that enhance the presentation of professional information. All components follow the project's design system (shadcn/ui, Tailwind CSS) and are fully responsive.
+The about page features five interactive components that enhance the presentation of professional information, plus intelligent internal/external link handling in the "Connect with me" section. All components follow the project's design system (shadcn/ui, Tailwind CSS) and are fully responsive.
 
 **Created:** November 5, 2025  
+**Last Updated:** November 9, 2025  
 **Components:** AboutAvatar, AboutStats, AboutSkills, AboutCertifications, AboutCurrentlyLearning
+
+---
+
+## Page Structure & Content Strategy
+
+### Content Philosophy
+The About page focuses on **personality, values, and overview**, while `/resume` contains the complete work history. This separation prevents duplication and gives each page a clear purpose:
+
+- **About Page**: Who you are, what drives you, current focus, skills overview
+- **Resume Page**: Complete chronological work history, detailed responsibilities
+
+### Page Sections (in order)
+1. **Hero** - Avatar, name, short summary (`resume.shortSummary`)
+2. **Stats Showcase** - Animated achievement counters (`AboutStats`)
+3. **What Drives Me** - Personal narrative and values
+4. **Current Role** - Detailed view of current position from `resume.experience[0]`
+5. **Professional Background** - High-level experience summary with link to full resume
+6. **Currently Learning** - Active learning and development (`AboutCurrentlyLearning`)
+7. **Skills & Expertise** - Skills grid (`AboutSkills`)
+8. **Certifications** - Credential showcase (`AboutCertifications`)
+9. **Connect with Me** - Social links with intelligent internal/external link handling
+
+### Internal vs External Link Handling
+
+**Location**: "Connect with me" section at bottom of About page  
+**Updated**: November 9, 2025
+
+The social links section intelligently differentiates between internal and external links:
+
+**Internal Links** (use Next.js `Link` component):
+- Homepage (`/`)
+- Contact page (`/contact`)
+- Benefits: Client-side navigation, no page reload, faster UX
+- No external icon shown
+
+**External Links** (use `<a>` tag):
+- All other platforms (GitHub, LinkedIn, Cal.com, etc.)
+- Open in new tab (`target="_blank"`)
+- Security attributes (`rel="noopener noreferrer"`)
+- Show ExternalLink icon on hover
+
+**Detection Logic:**
+```typescript
+const isInternalLink = social.url.startsWith('/') || 
+  (social.url.includes('cyberdrew.dev') && (
+    social.url.endsWith('/') || 
+    social.url.endsWith('/contact')
+  ));
+
+const internalPath = social.platform === "homepage" ? "/" 
+  : social.platform === "email" ? "/contact" 
+  : social.url;
+```
+
+**Rendering:**
+```tsx
+// Internal links
+{isInternalLink && (social.platform === "homepage" || social.platform === "email") ? (
+  <Link href={internalPath} className="group">
+    <Card>{/* content */}</Card>
+  </Link>
+) : (
+  // External links
+  <a href={social.url} target="_blank" rel="noopener noreferrer">
+    <Card>
+      {/* content */}
+      <ExternalLink className="..." />
+    </Card>
+  </a>
+)}
+```
+
+**Data Source**: `src/data/socials.ts` (`socialLinks` array)
 
 ---
 

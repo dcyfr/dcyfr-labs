@@ -28,6 +28,7 @@ Quick references for all reusable components:
 
 | Component | Purpose | Quick Ref |
 |-----------|---------|-----------|
+| **About Page Components** | Avatar, stats, skills, certifications | [about-page-components.md](./components/about-page-components.md) |
 | **Post Badges** | Status indicators (Draft, Archived, New, Hot) | [post-badges.md](./components/post-badges.md) |
 | **Error Boundaries** | Error handling for async components | [error-boundaries.md](./components/error-boundaries.md) |
 | **Loading States** | Skeleton loaders and loading indicators | [loading-states.md](./components/loading-states.md) |

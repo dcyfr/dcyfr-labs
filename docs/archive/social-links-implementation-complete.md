@@ -1,10 +1,36 @@
 # Social Media Links Implementation - Complete
 
-**Date:** November 3, 2025
+**Date:** November 3, 2025  
+**Last Updated:** November 9, 2025 (internal link support added)
 
 ## Summary
 
-Successfully implemented centralized social media links management with display on the `/about` page and integration into JSON-LD structured data.
+Successfully implemented centralized social media links management with display on the `/about` page and integration into JSON-LD structured data. **Updated November 9, 2025** to add intelligent internal/external link handling.
+
+## Updates (November 9, 2025)
+
+### Internal Link Support Added
+The "Connect with me" section now intelligently differentiates between internal and external links:
+
+**Changes:**
+- Internal links (homepage `/`, contact `/contact`) now use Next.js `Link` component
+- External links continue to use `<a>` tags with `target="_blank"`
+- Internal links don't show the external link icon
+- Detection logic checks URL patterns to determine link type
+- Better UX: no page reloads for internal navigation
+
+**Implementation:**
+```typescript
+const isInternalLink = social.url.startsWith('/') || 
+  (social.url.includes('cyberdrew.dev') && (
+    social.url.endsWith('/') || 
+    social.url.endsWith('/contact')
+  ));
+```
+
+See `src/app/about/page.tsx` lines 145-244 for full implementation.
+
+## Original Implementation (November 3, 2025)
 
 ## Changes Made
 

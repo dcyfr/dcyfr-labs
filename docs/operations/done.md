@@ -8,6 +8,80 @@ This document tracks completed projects, features, and improvements. Items are o
 
 ## 🎯 Session Summary: November 9, 2025 (Latest)
 
+### About Page UX Improvements ✨
+**Completed**: Enhanced internal navigation and consolidated content to eliminate duplication with Resume page
+
+#### Overview
+Improved the About page (`/about`) user experience by adding proper internal link support and streamlining content to focus on personality and overview, while the Resume page (`/resume`) handles complete work history.
+
+#### What Was Completed
+
+**1. Internal Link Support in Contact Section**
+- **Issue**: All social links were external, even for homepage and contact page
+- **Solution**: Intelligently detect and render internal links with Next.js `Link` component
+- **Changes**:
+  - Homepage (`/`) link now uses `Link` component for seamless client-side navigation
+  - Contact page (`/contact`) link uses `Link` component
+  - External links continue using `<a>` tags with `target="_blank"` and `rel="noopener noreferrer"`
+  - External links show ExternalLink icon; internal links do not
+- **Impact**: Better UX with instant navigation, no page reloads for internal routes
+- **File**: `src/app/about/page.tsx` (lines 145-244)
+
+**2. Content Consolidation with Resume Page**
+- **Issue**: "Previously" section duplicated detailed role information from `/resume`
+- **Solution**: Replaced with concise "Professional Background" summary
+- **Changes**:
+  - Removed detailed cards showing 3 previous roles with responsibilities
+  - Added high-level summary paragraph highlighting experience breadth
+  - Clear call-to-action link to `/resume` for full work history
+  - Maintains current role detail (still unique to About page)
+- **Benefits**:
+  - Eliminates content duplication between `/about` and `/resume`
+  - About page focuses on personality, values, and overview
+  - Resume page remains the single source of truth for work history
+  - Cleaner, more focused About page narrative
+- **File**: `src/app/about/page.tsx` (lines 119-133)
+
+**3. Design System Compliance**
+- **Updated**: Link styling to use design tokens
+- **Changes**: Used `HOVER_EFFECTS.link` instead of hardcoded classes
+- **Import**: Added `HOVER_EFFECTS` to design token imports
+- **Result**: Consistent link behavior across the site, passes ESLint checks
+- **File**: `src/app/about/page.tsx` (lines 20-24, 127)
+
+#### Technical Details
+
+**Internal Link Detection Logic:**
+```typescript
+const isInternalLink = social.url.startsWith('/') || 
+  (social.url.includes('cyberdrew.dev') && (
+    social.url.endsWith('/') || 
+    social.url.endsWith('/contact')
+  ));
+
+const internalPath = social.platform === "homepage" ? "/" 
+  : social.platform === "email" ? "/contact" 
+  : social.url;
+```
+
+**Rendering Strategy:**
+- Internal links: `<Link href={internalPath}>` (no target, no rel, no external icon)
+- External links: `<a href={url} target="_blank" rel="noopener noreferrer">` (with ExternalLink icon)
+
+#### Documentation Updates
+- Updated `.github/copilot-instructions.md` with new "About page (/about)" section
+- Documented content strategy, internal link handling, and resume integration
+- Cross-referenced component documentation
+
+#### Testing
+- ✅ Build passes with no errors
+- ✅ ESLint warnings resolved (design token compliance)
+- ✅ Internal links navigate without page reload
+- ✅ External links open in new tab with proper security attributes
+- ✅ Content no longer duplicates between `/about` and `/resume`
+
+---
+
 ### ESLint Warnings Resolution & Design System Enforcement Complete ✨
 **Completed**: Fixed build warnings, refined ESLint rules, created comprehensive migration documentation
 
