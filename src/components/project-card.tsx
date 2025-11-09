@@ -8,6 +8,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
+import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
 const STATUS_VARIANT: Record<ProjectStatus, "secondary" | "default" | "outline"> = {
   "active": "secondary",
@@ -86,7 +87,7 @@ export function ProjectCard({
   });
   
   return (
-    <Card className="flex h-full flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden relative">
+    <Card className={cn("flex h-full flex-col overflow-hidden relative", HOVER_EFFECTS.card)}>
       {/* Background Image - always present now (custom or default) */}
       <div className="absolute inset-0 z-0">
         <Image

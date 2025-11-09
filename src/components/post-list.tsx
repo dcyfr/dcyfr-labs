@@ -6,6 +6,7 @@ import { PostBadges } from "@/components/post-badges";
 import { PostThumbnail } from "@/components/post-thumbnail";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { ensurePostImage } from "@/lib/default-images";
+import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
 /**
  * Props for the PostList component
@@ -166,7 +167,7 @@ export function PostList({
             delay={index * 100}
             duration={600}
           >
-            <article className="group rounded-lg border overflow-hidden transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-0.5">
+            <article className={`group rounded-lg border overflow-hidden ${HOVER_EFFECTS.cardSubtle}`}>
               <Link href={`/blog/${p.slug}`} className="block">
                 {/* Mobile: Vertical card layout with full-width image */}
                 {/* Desktop: Horizontal layout with side thumbnail */}

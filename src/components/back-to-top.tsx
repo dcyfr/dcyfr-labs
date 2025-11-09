@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
 /**
  * BackToTop Component - Floating Action Button
@@ -76,7 +77,7 @@ export function BackToTop() {
           <Button
             variant="secondary"
             size="icon"
-            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
             onClick={scrollToTop}
             aria-label="Scroll to top"
           >

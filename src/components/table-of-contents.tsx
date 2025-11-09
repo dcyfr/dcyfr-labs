@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
 /**
  * Props for the TableOfContents component
@@ -202,7 +203,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
               >
                 <Button
                   size="icon"
-                  className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+                  className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
                   aria-label="Open table of contents"
                   style={{ pointerEvents: isVisible ? "auto" : "none" }}
                 >

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock } from "lucide-react";
 import type { Post } from "@/data/posts";
+import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
 interface FeaturedPostHeroProps {
   post: Post;
@@ -56,7 +57,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
   });
 
   return (
-    <Card className="group relative overflow-hidden border-2 transition-all hover:shadow-lg">
+    <Card className={`group relative overflow-hidden border-2 ${HOVER_EFFECTS.cardFeatured}`}>
       {/* Optional: Gradient accent border */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
       
