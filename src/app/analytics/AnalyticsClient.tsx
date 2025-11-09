@@ -288,6 +288,55 @@ export default function AnalyticsDashboard() {
 
   const { posts: allPosts, trending } = data;
 
+  // Calculate tag analytics
+  const tagAnalytics = allPosts.reduce<Record<string, {
+    postCount: number;
+    totalViews: number;
+    totalViews24h: number;
+    totalViewsRange: number;
+    avgViews: number;
+    avgViews24h: number;
+    avgViewsRange: number;
+    posts: PostAnalytics[];
+  }>>((acc, post) => {
+    // Skip drafts/archived if filters are active
+    if (hideDrafts && post.draft) return acc;
+    if (hideArchived && post.archived) return acc;
+    
+    for (const tag of post.tags) {
+      if (!acc[tag]) {
+        acc[tag] = {
+          postCount: 0,
+          totalViews: 0,
+          totalViews24h: 0,
+          totalViewsRange: 0,
+          avgViews: 0,
+          avgViews24h: 0,
+          avgViewsRange: 0,
+          posts: [],
+        };
+      }
+      acc[tag].postCount++;
+      acc[tag].totalViews += post.views;
+      acc[tag].totalViews24h += post.views24h;
+      acc[tag].totalViewsRange += post.viewsRange;
+      acc[tag].posts.push(post);
+    }
+    return acc;
+  }, {});
+
+  // Calculate averages for each tag
+  Object.keys(tagAnalytics).forEach(tag => {
+    const stats = tagAnalytics[tag];
+    stats.avgViews = Math.round(stats.totalViews / stats.postCount);
+    stats.avgViews24h = Math.round(stats.totalViews24h / stats.postCount);
+    stats.avgViewsRange = Math.round(stats.totalViewsRange / stats.postCount);
+  });
+
+  // Sort tags by total views (descending)
+  const sortedTagAnalytics = Object.entries(tagAnalytics)
+    .sort(([, a], [, b]) => b.totalViews - a.totalViews);
+
   // Apply client-side filters for drafts/archived posts, search, and tags
   const filteredPosts = allPosts.filter((post) => {
     if (hideDrafts && post.draft) return false;
@@ -774,6 +823,126 @@ export default function AnalyticsDashboard() {
         </Card>
       </div>
 
+      {/* Tag Analytics */}
+      {sortedTagAnalytics.length > 0 && (
+        <Card className="mb-6 overflow-hidden">
+          <CardHeader className="p-4 border-b border-border">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base">Tag Analytics</CardTitle>
+                <CardDescription className="text-xs mt-1">
+                  Performance metrics by content tag
+                </CardDescription>
+              </div>
+              <Filter className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border bg-muted/30">
+                  <tr>
+                    <th className="text-left py-2.5 px-4 font-semibold">Tag</th>
+                    <th className="text-center py-2.5 px-3 font-semibold whitespace-nowrap">Posts</th>
+                    <th className="text-right py-2.5 px-3 font-semibold whitespace-nowrap">Total Views</th>
+                    {dateRange !== "all" && (
+                      <th className="text-right py-2.5 px-3 font-semibold whitespace-nowrap">
+                        {DATE_RANGE_LABELS[dateRange]}
+                      </th>
+                    )}
+                    <th className="text-right py-2.5 px-3 font-semibold whitespace-nowrap">24h Views</th>
+                    <th className="text-right py-2.5 px-3 font-semibold whitespace-nowrap hidden md:table-cell">Avg Views</th>
+                    <th className="text-right py-2.5 px-3 font-semibold whitespace-nowrap hidden lg:table-cell">Avg (24h)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedTagAnalytics.map(([tag, stats], index) => {
+                    const isSelected = selectedTags.includes(tag);
+                    const trend24h = stats.totalViews24h;
+                    const previousViews = stats.totalViews - trend24h || 1;
+                    const trendPercent = Math.round(((trend24h - previousViews) / previousViews) * 100);
+                    
+                    return (
+                      <tr
+                        key={tag}
+                        className={cn(
+                          "border-b hover:bg-muted/50 transition-colors cursor-pointer",
+                          isSelected && "bg-primary/5"
+                        )}
+                        onClick={() => {
+                          setSelectedTags(prev => 
+                            prev.includes(tag) 
+                              ? prev.filter(t => t !== tag)
+                              : [...prev, tag]
+                          );
+                        }}
+                      >
+                        <td className="py-2.5 px-4">
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant={isSelected ? "default" : "outline"}
+                              className="text-xs font-medium"
+                            >
+                              {tag}
+                            </Badge>
+                            {index < 3 && (
+                              <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                                Top {index + 1}
+                              </Badge>
+                            )}
+                          </div>
+                        </td>
+                        <td className="text-center py-2.5 px-3 font-medium tabular-nums">
+                          {stats.postCount}
+                        </td>
+                        <td className="text-right py-2.5 px-3 font-bold tabular-nums">
+                          {stats.totalViews.toLocaleString()}
+                        </td>
+                        {dateRange !== "all" && (
+                          <td className="text-right py-2.5 px-3 font-semibold tabular-nums">
+                            {stats.totalViewsRange.toLocaleString()}
+                          </td>
+                        )}
+                        <td className="text-right py-2.5 px-3">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {trend24h > 0 && (
+                              <Flame className="h-3 w-3 text-orange-500" />
+                            )}
+                            <span className="font-semibold tabular-nums">
+                              {stats.totalViews24h.toLocaleString()}
+                            </span>
+                            {trendPercent !== 0 && (
+                              <span className={cn(
+                                "text-xs font-medium",
+                                trendPercent > 0 && "text-green-600",
+                                trendPercent < 0 && "text-red-600"
+                              )}>
+                                {trendPercent > 0 ? "+" : ""}{trendPercent}%
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="text-right py-2.5 px-3 text-muted-foreground tabular-nums hidden md:table-cell">
+                          {stats.avgViews.toLocaleString()}
+                        </td>
+                        <td className="text-right py-2.5 px-3 text-muted-foreground tabular-nums hidden lg:table-cell">
+                          {stats.avgViews24h.toLocaleString()}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {sortedTagAnalytics.length > 5 && (
+              <div className="p-3 border-t border-border bg-muted/20 text-center text-xs text-muted-foreground">
+                Showing all {sortedTagAnalytics.length} tags • Click any tag to filter posts
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Trending Posts */}
       {filteredTrending && filteredTrending.length > 0 && (
         <div className="mb-6">
@@ -820,8 +989,43 @@ export default function AnalyticsDashboard() {
       {/* All Posts Table */}
       <Card className="overflow-hidden mb-6">
         <CardHeader className="p-3 border-b border-border">
-          <CardTitle className="text-base">All Posts</CardTitle>
-          <CardDescription className="text-xs">Complete list of blog posts with analytics</CardDescription>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1">
+              <CardTitle className="text-base">All Posts</CardTitle>
+              <CardDescription className="text-xs">
+                Complete list of blog posts with analytics
+              </CardDescription>
+              {selectedTags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  <span className="text-xs text-muted-foreground">Filtered by:</span>
+                  {selectedTags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="default"
+                      className="text-xs cursor-pointer hover:bg-primary/80 transition-colors"
+                      onClick={() => {
+                        setSelectedTags(prev => prev.filter(t => t !== tag));
+                      }}
+                    >
+                      {tag}
+                      <span className="ml-1 hover:text-primary-foreground/80">×</span>
+                    </Badge>
+                  ))}
+                  <button
+                    onClick={() => setSelectedTags([])}
+                    className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+            </div>
+            {sortedPosts.length !== allPosts.length && (
+              <div className="text-xs text-muted-foreground whitespace-nowrap">
+                {sortedPosts.length} of {allPosts.length}
+              </div>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
