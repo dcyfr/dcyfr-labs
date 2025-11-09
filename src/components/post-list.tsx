@@ -16,6 +16,7 @@ import { HOVER_EFFECTS } from "@/lib/design-tokens";
  * @property {string} [hottestSlug] - Slug of the hottest/trending post (for "Hot" badge)
  * @property {"h2" | "h3"} [titleLevel="h2"] - HTML heading level for post titles
  * @property {string} [emptyMessage="No posts found."] - Message to show when posts array is empty
+ * @property {"default" | "magazine" | "grid"} [layout="default"] - Layout variant to use
  */
 interface PostListProps {
   posts: Post[];
@@ -23,6 +24,7 @@ interface PostListProps {
   hottestSlug?: string;
   titleLevel?: "h2" | "h3";
   emptyMessage?: string;
+  layout?: "default" | "magazine" | "grid";
 }
 
 /**
@@ -41,6 +43,7 @@ interface PostListProps {
  * - Hover effects with lift animation
  * - Empty state with customizable message
  * - Integration with post filtering and search
+ * - **Layout variants**: default (compact), magazine (alternating large images), grid (2-column)
  *
  * ⚠️ SKELETON SYNC REQUIRED
  * When updating this component's structure, also update:
@@ -139,7 +142,8 @@ export function PostList({
   latestSlug,
   hottestSlug,
   titleLevel = "h2",
-  emptyMessage = "No posts found."
+  emptyMessage = "No posts found.",
+  layout = "default"
 }: PostListProps) {
   if (posts.length === 0) {
     return (
@@ -151,6 +155,160 @@ export function PostList({
 
   const TitleTag = titleLevel;
 
+  // Magazine layout: alternating large images
+  if (layout === "magazine") {
+    return (
+      <div className="space-y-12">
+        {posts.map((p, index) => {
+          const featuredImage = ensurePostImage(p.image, {
+            title: p.title,
+            tags: p.tags,
+          });
+          const isEven = index % 2 === 0;
+
+          return (
+            <ScrollReveal 
+              key={p.slug} 
+              animation="fade-up"
+              delay={index * 100}
+              duration={600}
+            >
+              <article className={`group rounded-lg border overflow-hidden ${HOVER_EFFECTS.cardSubtle}`}>
+                <Link href={`/blog/${p.slug}`} className="block">
+                  {/* Alternating layout: even = image left, odd = image right */}
+                  <div className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                    {/* Large featured image */}
+                    <div className="shrink-0 md:w-1/2">
+                      <PostThumbnail 
+                        image={featuredImage} 
+                        size="lg"
+                        className="w-full h-64 md:h-80 object-cover"
+                      />
+                    </div>
+                    
+                    {/* Post content */}
+                    <div className="flex-1 min-w-0 p-6 md:p-8 flex flex-col justify-center">
+                      {/* Badges and metadata */}
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-3">
+                        <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
+                        <time dateTime={p.publishedAt}>
+                          {new Date(p.publishedAt).toLocaleDateString(undefined, { 
+                            year: "numeric", 
+                            month: "short", 
+                            day: "numeric" 
+                          })}
+                        </time>
+                        <span aria-hidden="true">•</span>
+                        <span>{p.readingTime.text}</span>
+                      </div>
+                      
+                      {/* Title - larger for magazine layout */}
+                      <TitleTag className="font-semibold text-xl md:text-2xl lg:text-3xl line-clamp-3 mb-3">
+                        {p.title}
+                      </TitleTag>
+                      
+                      {/* Summary - more lines visible */}
+                      <p className="text-sm md:text-base text-muted-foreground line-clamp-3 md:line-clamp-4 mb-4">{p.summary}</p>
+                      
+                      {/* Tags */}
+                      {p.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {p.tags.slice(0, 5).map(tag => (
+                            <span key={tag} className="text-xs px-2 py-1 rounded-md bg-secondary text-secondary-foreground">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              </article>
+            </ScrollReveal>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Grid layout: 2-column grid with images on top
+  if (layout === "grid") {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {posts.map((p, index) => {
+          const featuredImage = ensurePostImage(p.image, {
+            title: p.title,
+            tags: p.tags,
+          });
+
+          return (
+            <ScrollReveal 
+              key={p.slug} 
+              animation="fade-up"
+              delay={index * 50}
+              duration={600}
+            >
+              <article className={`group rounded-lg border overflow-hidden ${HOVER_EFFECTS.cardSubtle} flex flex-col h-full`}>
+                <Link href={`/blog/${p.slug}`} className="flex flex-col h-full">
+                  {/* Image on top */}
+                  <div className="shrink-0">
+                    <PostThumbnail 
+                      image={featuredImage} 
+                      size="md"
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                  
+                  {/* Post content */}
+                  <div className="flex-1 p-4 flex flex-col">
+                    {/* Badges and metadata */}
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-2">
+                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
+                      <time dateTime={p.publishedAt}>
+                        {new Date(p.publishedAt).toLocaleDateString(undefined, { 
+                          year: "numeric", 
+                          month: "short", 
+                          day: "numeric" 
+                        })}
+                      </time>
+                      <span aria-hidden="true">•</span>
+                      <span>{p.readingTime.text}</span>
+                    </div>
+                    
+                    {/* Title */}
+                    <TitleTag className="font-semibold text-lg md:text-xl line-clamp-2 mb-2">
+                      {p.title}
+                    </TitleTag>
+                    
+                    {/* Summary */}
+                    <p className="text-sm text-muted-foreground line-clamp-3 flex-1">{p.summary}</p>
+                    
+                    {/* Tags */}
+                    {p.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {p.tags.slice(0, 3).map(tag => (
+                          <span key={tag} className="text-xs px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground">
+                            {tag}
+                          </span>
+                        ))}
+                        {p.tags.length > 3 && (
+                          <span className="text-xs px-2 py-0.5 text-muted-foreground">
+                            +{p.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              </article>
+            </ScrollReveal>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Default layout: compact horizontal cards
   return (
     <>
       {posts.map((p, index) => {

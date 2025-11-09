@@ -84,8 +84,14 @@ export default async function BlogPage({
   const query = getParamValue(resolvedSearchParams.q);
   const readingTime = getParamValue(resolvedSearchParams.readingTime);
   const pageParam = getParamValue(resolvedSearchParams.page);
+  const layoutParam = getParamValue(resolvedSearchParams.layout);
   const currentPage = Math.max(1, parseInt(pageParam) || 1);
   const normalizedQuery = query.trim().toLowerCase();
+  
+  // Validate layout parameter - default to "grid" for better visual presentation
+  const layout = (layoutParam === "magazine" || layoutParam === "default") 
+    ? layoutParam 
+    : "grid";
   
   // Sort all posts by date (newest first)
   const allPosts = [...posts].sort((a, b) => 
@@ -170,6 +176,7 @@ export default async function BlogPage({
             latestSlug={latestSlug ?? undefined}
             hottestSlug={hottestSlug ?? undefined}
             titleLevel="h2"
+            layout={layout}
             emptyMessage="No posts found. Try adjusting your search or filters."
           />
         </section>

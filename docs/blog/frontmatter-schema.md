@@ -95,6 +95,16 @@ export type PostSource = {
   href: string;
 };
 
+export type PostImage = {
+  url: string;               // local path or external URL
+  alt: string;               // required for accessibility
+  width?: number;            // optional, for next/image optimization
+  height?: number;           // optional, maintains aspect ratio
+  caption?: string;          // optional, displayed below image
+  credit?: string;           // optional, photographer/source attribution
+  position?: "top" | "left" | "right" | "background"; // list view placement hint
+};
+
 export type Post = {
   slug: string;              // Derived from filename (active/current slug)
   title: string;             // Required
@@ -108,6 +118,7 @@ export type Post = {
   body: string;              // MDX content (not in frontmatter)
   sources?: PostSource[];    // Optional (array of objects)
   previousSlugs?: string[];  // Optional (old slugs that 301 redirect to current)
+  image?: PostImage;         // Optional (featured image object)
   readingTime: {             // Auto-calculated (not in frontmatter)
     words: number;
     minutes: number;
@@ -691,6 +702,140 @@ sources: [{ label: "Source 1", href: "https://example.com/1" }]
 - Original source material
 - Further reading suggestions
 - Attribution for ideas/code
+
+---
+
+### `image` (Optional)
+
+**Type:** `PostImage | undefined`  
+**Parsed As:** `data.image as PostImage | undefined`  
+**Default:** `undefined`
+
+**Description:**
+Featured image for the blog post. Used for hero images on post detail pages, thumbnails in post listings, Open Graph/Twitter Card social sharing images, and RSS/Atom feed enclosures.
+
+**Schema:**
+```typescript
+type PostImage = {
+  url: string;              // Required: local path or external URL
+  alt: string;              // Required: accessibility text
+  width?: number;           // Optional: pixel width for optimization
+  height?: number;          // Optional: pixel height for optimization
+  caption?: string;         // Optional: displayed below image
+  credit?: string;          // Optional: photographer/source
+  position?: "top" | "left" | "right" | "background"; // Optional: layout hint
+};
+```
+
+**Constraints:**
+- Optional (can be omitted, defaults to generated default image)
+- `url` and `alt` are required if `image` object is present
+- Local URLs should start with `/` (e.g., `/blog/images/post-slug/hero.jpg`)
+- External URLs must be absolute (with protocol)
+- For social sharing, recommended dimensions: 1200 × 630px (1.91:1)
+- Supported formats: JPEG, PNG, WebP, SVG (though SVG may not work in all social platforms)
+
+**Example:**
+```yaml
+image:
+  url: "/blog/images/nextjs-guide/hero.jpg"
+  alt: "Next.js logo with code editor in background"
+  width: 1200
+  height: 630
+  caption: "Next.js makes building React apps easier"
+  credit: "Photo by John Doe on Unsplash"
+  position: "top"
+```
+
+**Display Locations:**
+
+1. **Post Hero Image** (Post Detail Page)
+   - Full-width responsive image at top of post
+   - 16:9 aspect on mobile, 21:9 on desktop
+   - Gradient overlays for visual polish
+   - Caption and credit displayed below
+
+2. **Post Listings** (Blog Page, Homepage)
+   - Thumbnail in card layouts (varies by layout variant)
+   - Default layout: 128×96px side thumbnail (desktop)
+   - Magazine layout: 50% width large image
+   - Grid layout: Full-width 192px height image on top
+
+3. **Related Posts**
+   - 160px height thumbnail (h-40)
+   - Hover zoom effect (scale-105)
+
+4. **Open Graph / Twitter Cards**
+   - Used for social media link previews
+   - Fallback to dynamic text-based generator if no image
+   - `og:image` and `twitter:image` meta tags
+
+5. **RSS/Atom Feeds**
+   - RSS: `<enclosure>` tag with image URL
+   - Atom: `<link rel="enclosure">` with image URL
+
+**Usage Examples:**
+
+```yaml
+# Minimal (required fields only)
+image:
+  url: "/blog/images/my-post/hero.jpg"
+  alt: "Descriptive alt text for accessibility"
+
+# With dimensions for OG optimization
+image:
+  url: "/blog/images/my-post/hero.jpg"
+  alt: "Next.js App Router architecture diagram"
+  width: 1200
+  height: 630
+
+# Full metadata with caption
+image:
+  url: "/blog/images/security-guide/hero.jpg"
+  alt: "Lock icon representing application security"
+  width: 1200
+  height: 630
+  caption: "Security should be built in from the start"
+  credit: "Photo by Dan Nelson on Unsplash"
+  position: "top"
+
+# External image
+image:
+  url: "https://images.unsplash.com/photo-123456789"
+  alt: "Beautiful landscape photo"
+  width: 1920
+  height: 1080
+  credit: "Unsplash"
+```
+
+**Best Practices:**
+
+1. **Always provide alt text** for accessibility
+2. **Optimize images before upload** (target < 200KB for fast loading)
+3. **Use 1200×630px for social sharing** (OG/Twitter standard)
+4. **Store local images in** `/public/blog/images/{post-slug}/`
+5. **Use descriptive filenames** (e.g., `hero.jpg`, `diagram.png`)
+6. **Consider lazy loading** for images below the fold (automatic with next/image)
+7. **Provide width/height** to prevent layout shift
+
+**File Storage:**
+```
+public/blog/images/
+├── default/              # Default/shared images
+│   ├── hero.svg
+│   ├── minimal.svg
+│   └── geometric.svg
+├── nextjs-guide/         # Post-specific images
+│   ├── hero.jpg
+│   └── diagram.png
+└── security-basics/
+    └── hero.jpg
+```
+
+**See Also:**
+- [Featured Images Guide](/docs/blog/featured-images.md) - Hero image implementation
+- [OG Image Integration](/docs/blog/og-image-integration.md) - Social sharing setup
+- [Default Images](/docs/blog/default-images-quick-ref.md) - Fallback image system
 
 ---
 

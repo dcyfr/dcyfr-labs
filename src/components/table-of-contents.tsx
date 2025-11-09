@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { List } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
 import {
@@ -155,34 +155,68 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
   };
 
   // Shared TOC list component
-  const TocList = () => (
-    <ul className="space-y-2 text-sm border-l-2 border-border">
-      {headings.map((heading) => {
-        const isActive = activeId === heading.id;
-        const isH3 = heading.level === 3;
+  const TocList = () => {
+    const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+    const listRef = React.useRef<HTMLUListElement>(null);
+    const itemRefs = React.useRef<Map<string, HTMLLIElement>>(new Map());
 
-        return (
-          <li
-            key={heading.id}
-            className={cn(isH3 && "ml-4")}
-          >
-            <a
-              href={`#${heading.id}`}
-              onClick={(e) => handleClick(e, heading.id)}
-              className={cn(
-                "flex items-center py-2 pl-4 border-l-2 -ml-[2px] transition-colors min-h-[44px] cursor-pointer",
-                isActive
-                  ? "border-primary text-primary font-medium"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-              )}
+    // Track active item for sliding indicator
+    React.useEffect(() => {
+      const index = headings.findIndex((h) => h.id === activeId);
+      setActiveIndex(index >= 0 ? index : null);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeId, headings]);
+
+    return (
+      <ul ref={listRef} className="relative space-y-2 text-sm border-l-2 border-border">
+        {/* Sliding active indicator */}
+        {activeIndex !== null && (
+          <motion.div
+            layoutId="toc-active-indicator"
+            className="absolute left-0 -ml-[2px] w-0.5 bg-primary"
+            initial={false}
+            animate={{
+              top: `${activeIndex * 44 + (activeIndex * 8)}px`, // item height (44px) + gap (8px)
+              height: "44px",
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+            }}
+          />
+        )}
+        
+        {headings.map((heading) => {
+          const isActive = activeId === heading.id;
+          const isH3 = heading.level === 3;
+
+          return (
+            <li
+              key={heading.id}
+              ref={(el) => {
+                if (el) itemRefs.current.set(heading.id, el);
+              }}
+              className={cn(isH3 && "ml-4")}
             >
-              {heading.text}
-            </a>
-          </li>
-        );
-      })}
-    </ul>
-  );
+              <a
+                href={`#${heading.id}`}
+                onClick={(e) => handleClick(e, heading.id)}
+                className={cn(
+                  "flex items-center py-2 pl-4 border-l-2 -ml-[2px] transition-colors min-h-[44px] cursor-pointer",
+                  isActive
+                    ? "border-transparent text-primary font-medium"
+                    : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                )}
+              >
+                {heading.text}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
 
   return (
     <>
@@ -234,19 +268,20 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
         <div className="space-y-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
+            // Not a semantic heading - button label doesn't need TYPOGRAPHY token
+            // eslint-disable-next-line no-restricted-syntax
             className="flex w-full items-center justify-between text-sm font-semibold text-foreground hover:text-primary transition-colors"
             aria-expanded={isExpanded}
           >
             <span>On this page</span>
-            <svg
-              className={cn(
-                "h-4 w-4 transition-transform",
-                isExpanded && "rotate-180"
-              )}
+            <motion.svg
+              className="h-4 w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <path
                 strokeLinecap="round"
@@ -254,10 +289,22 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
                 strokeWidth={2}
                 d="M19 9l-7 7-7-7"
               />
-            </svg>
+            </motion.svg>
           </button>
           
-          {isExpanded && <TocList />}
+          <AnimatePresence initial={false}>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                style={{ overflow: "hidden" }}
+              >
+                <TocList />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </nav>
     </>

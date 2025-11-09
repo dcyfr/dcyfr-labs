@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Share2, Twitter, Linkedin, Link as LinkIcon, Check } from "lucide-react";
+import { Share2, Linkedin, Link as LinkIcon, Check } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
 /**
@@ -44,6 +45,8 @@ interface ShareButtonsProps {
 export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareCount, setShareCount] = useState(0);
 
   // Check if Web Share API is available (typically on mobile)
   useEffect(() => {
@@ -53,47 +56,36 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
   }, []);
 
   /**
-   * Handle native Web Share API
-   * Falls back to traditional sharing if not available
+   * Handle native Web Share API with proper state management
+   * Prevents "An earlier share has not yet completed" error
    */
   const handleNativeShare = async () => {
+    // Prevent multiple simultaneous share attempts
+    if (isSharing) {
+      return;
+    }
+
     if (navigator.share) {
+      setIsSharing(true);
       try {
         await navigator.share({
           title: title,
           text: `Check out this post: ${title}`,
           url: url,
         });
+        setShareCount(prev => prev + 1);
         toast.success("Shared successfully!");
       } catch (error) {
-        // User cancelled the share dialog or error occurred
+        // User cancelled the share dialog (AbortError) - don't show error toast
         if ((error as Error).name !== 'AbortError') {
           console.error('Error sharing:', error);
           toast.error("Failed to share");
         }
+      } finally {
+        // Reset sharing state after a short delay to prevent rapid re-triggering
+        setTimeout(() => setIsSharing(false), 500);
       }
     }
-  };
-
-  /**
-   * Generate Twitter share URL with encoded parameters
-   * Includes title, URL, and up to 3 relevant hashtags
-   */
-  const getTwitterShareUrl = () => {
-    const text = title;
-    // Take first 3 tags and clean them for hashtags (remove spaces, special chars)
-    const hashtags = tags
-      .slice(0, 3)
-      .map(tag => tag.replace(/[^a-zA-Z0-9]/g, ''))
-      .join(',');
-    
-    const params = new URLSearchParams({
-      text,
-      url,
-      ...(hashtags && { hashtags }),
-    });
-    
-    return `https://twitter.com/intent/tweet?${params.toString()}`;
   };
 
   /**
@@ -128,6 +120,7 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
       }
       
       setCopied(true);
+      setShareCount(prev => prev + 1);
       toast.success("Link copied to clipboard!");
       
       // Reset copied state after 2 seconds
@@ -150,6 +143,9 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
         'width=600,height=400,toolbar=no,menubar=no,resizable=yes'
       );
       
+      // Increment share count on successful share
+      setShareCount(prev => prev + 1);
+      
       // Fallback if popup is blocked
       if (!popup || popup.closed || typeof popup.closed === 'undefined') {
         window.open(shareUrl, '_blank', 'noopener,noreferrer');
@@ -163,9 +159,30 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <Share2 className="h-4 w-4" aria-hidden="true" />
-        <span>Share this post</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+          <Share2 className="h-4 w-4" aria-hidden="true" />
+          <span>Share this post</span>
+        </div>
+        
+        {/* Share Counter */}
+        {shareCount > 0 && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full"
+          >
+            <motion.span
+              key={shareCount}
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              {shareCount}
+            </motion.span>
+            <span>share{shareCount !== 1 ? 's' : ''}</span>
+          </motion.div>
+        )}
       </div>
       
       <div className="flex flex-wrap gap-2">
@@ -199,18 +216,6 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
           <span className="hidden sm:inline">
             {copied ? "Copied!" : "Copy Link"}
           </span>
-        </Button>
-
-        {/* Twitter Share Button */}
-        <Button
-          variant="outline"
-          size="default"
-          onClick={() => handleShare(getTwitterShareUrl(), 'twitter')}
-          className="gap-2 h-11 md:h-10"
-          aria-label="Share on Twitter"
-        >
-          <Twitter className="h-4 w-4" aria-hidden="true" />
-          <span className="hidden sm:inline">Twitter</span>
         </Button>
 
         {/* LinkedIn Share Button */}

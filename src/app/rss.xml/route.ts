@@ -47,6 +47,12 @@ export async function GET() {
 ${itemsWithHtml
   .map((p) => {
     const categories = p.tags.map((tag) => `      <category>${escapeXml(tag)}</category>`).join("\n");
+    
+    // Add enclosure for featured image if available
+    const enclosure = p.image?.url
+      ? `      <enclosure url="${site}${p.image.url}" type="image/jpeg" />`
+      : "";
+    
     return `    <item>
       <title><![CDATA[${p.title}]]></title>
       <link>${site}/blog/${p.slug}</link>
@@ -56,6 +62,7 @@ ${itemsWithHtml
       <description><![CDATA[${p.summary}]]></description>
       <content:encoded><![CDATA[${p.htmlContent}]]></content:encoded>
 ${categories}
+${enclosure}
     </item>`;
   })
   .join("\n")}

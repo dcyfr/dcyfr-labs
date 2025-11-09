@@ -50,9 +50,16 @@ ${itemsWithHtml
       .join("\n");
     const published = p.publishedAt;
     const updated = p.updatedAt ?? p.publishedAt;
+    
+    // Add link element for featured image if available
+    const imageLink = p.image?.url
+      ? `    <link rel="enclosure" type="image/jpeg" href="${site}${p.image.url}" />`
+      : "";
+    
     return `  <entry>
     <title type="text">${escapeXml(p.title)}</title>
     <link href="${site}/blog/${p.slug}" rel="alternate" type="text/html" />
+${imageLink}
     <id>${site}/blog/${p.slug}</id>
     <published>${published}</published>
     <updated>${updated}</updated>
