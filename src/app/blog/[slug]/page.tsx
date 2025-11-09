@@ -171,13 +171,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           { label: "Blog", href: "/blog" },
           { label: post.title }
         ]} />
-        <header>
-          <div className="text-xs text-muted-foreground">
+        <header className="space-y-6">
+          {/* Date metadata with improved size and spacing */}
+          <div className="text-sm text-muted-foreground">
             <time dateTime={post.publishedAt}>
               {new Date(post.publishedAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
             </time>
             {post.updatedAt && (
-              <span className="ml-2 inline-flex items-center gap-1">
+              <span className="ml-2 inline-flex items-center gap-1.5">
                 <span aria-hidden>•</span>
                 <span>
                   Updated {new Date(post.updatedAt).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}
@@ -185,12 +186,19 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               </span>
             )}
           </div>
-          <div className="mt-2 gap-4">
-            <h1 className="font-serif text-3xl md:text-4xl font-semibold tracking-tight">{post.title}</h1>
-          </div>
-          <p className="mt-2 text-lg md:text-xl text-muted-foreground">{post.summary}</p>
-          {/* Tags and metadata */}
-          <div className="mt-3 flex flex-wrap gap-2">
+
+          {/* Title with generous spacing */}
+          <h1 className="font-serif text-3xl md:text-5xl font-semibold tracking-tight leading-tight">
+            {post.title}
+          </h1>
+
+          {/* Summary with improved readability */}
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            {post.summary}
+          </p>
+
+          {/* Tags and metadata with clear visual separation */}
+          <div className="flex flex-wrap items-center gap-2">
             <PostBadges
               post={post}
               isLatestPost={latestPost?.slug === post.slug}

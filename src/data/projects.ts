@@ -59,7 +59,7 @@ const projectDrafts: Project[] = [
     ],
   },
   {
-    slug: "x64-indie-cyber-publication",
+    slug: "x64",
     title: "X64: The Indie Cyber Publication",
     description: "A digital publication focused on cybersecurity, technology trends, and industry insights.",
     timeline: "2024 → Present",
@@ -77,7 +77,7 @@ const projectDrafts: Project[] = [
     ],
   },
   {
-    slug: "cyberdrew-dev",
+    slug: "drews-lab",
     title: SITE_TITLE,
     description: "A personal portfolio website showcasing blog articles, projects and proof of concept works.",
     timeline: "2020 → Present",
@@ -96,7 +96,7 @@ const projectDrafts: Project[] = [
     ],
   },
   {
-    slug: "information-security-network",
+    slug: "isn-inc",
     title: "Information Security Network, Inc.",
     description: "A non-profit organization dedicated to promoting information security awareness and education.",
     timeline: "2019 → 2021",

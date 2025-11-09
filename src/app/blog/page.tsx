@@ -17,7 +17,7 @@ import { headers } from "next/headers";
 
 const pageTitle = "Blog";
 // Optimized meta description (159 characters)
-const pageDescription = "Articles about coding, tech, cybersecurity, AI, and personal development.";
+const pageDescription = "Articles on web development, cybersecurity, artificial intelligence, and more.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -64,18 +64,6 @@ const buildTagHref = (tag: string, query: string, page?: number, readingTime?: s
 };
 
 const POSTS_PER_PAGE = 12;
-
-const describeResults = (count: number, tag: string, query: string) => {
-  const noun = count === 1 ? "post" : "posts";
-  const pieces: string[] = [`${count} ${noun}`];
-  if (query) {
-    pieces.push(`matching “${query}”`);
-  }
-  if (tag) {
-    pieces.push(`tagged “${tag}”`);
-  }
-  return pieces.join(" ");
-};
 
 export default async function BlogPage({
   searchParams,
@@ -133,10 +121,6 @@ export default async function BlogPage({
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
   
-  // Filter state
-  const hasActiveFilters = Boolean(tag || normalizedQuery);
-  const clearHref = "/blog";
-  
   // JSON-LD structured data for blog collection
   const collectionTitle = tag ? `Blog - ${tag}` : pageTitle;
   const collectionDescription = tag 
@@ -154,15 +138,6 @@ export default async function BlogPage({
           <p className="text-lg md:text-xl text-muted-foreground">
             {pageDescription}
           </p>
-          {hasActiveFilters && (
-            <p className="text-sm text-muted-foreground">
-              Showing {describeResults(filteredPosts.length, tag, query)}.{" "}
-              <Link href={clearHref} className="underline underline-offset-4">
-                Clear filters
-              </Link>
-              .
-            </p>
-          )}
           {totalPages > 1 && (
             <p className="text-sm text-muted-foreground">
               Page {currentPage} of {totalPages} ({totalPosts} total posts)

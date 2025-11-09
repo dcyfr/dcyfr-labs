@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Project, ProjectStatus } from "@/data/projects";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
 
@@ -26,8 +24,7 @@ const STATUS_LABEL: Record<ProjectStatus, string> = {
 /**
  * ProjectCard Component
  * 
- * Displays a portfolio project with adaptive layout for mobile and desktop.
- * Features progressive disclosure for project highlights on mobile devices.
+ * Displays a portfolio project card in archive view with link to detail page.
  * 
  * ⚠️ SKELETON SYNC REQUIRED
  * When updating this component's structure, also update:
@@ -35,77 +32,58 @@ const STATUS_LABEL: Record<ProjectStatus, string> = {
  * 
  * Key structural elements that must match:
  * - Card: flex, h-full, relative positioning, overflow-hidden
- * - CardHeader: space-y-3, px-4 sm:px-6, py-4 sm:py-6, z-10
- *   - Timeline (optional, text-xs)
- *   - Title + Status Badge (flex-wrap, gap-2)
+ * - CardHeader: space-y-1.5, px-4 sm:px-6, py-4 sm:py-5, z-10
+ *   - Timeline (optional, text-xs with status badge)
+ *   - Title (text-base sm:text-lg md:text-xl)
  *   - Description (CardDescription)
- *   - Tech Stack (flex-wrap, gap-1.5, Badge variant="outline")
- * - CardContent: px-4 sm:px-6, py-0 (highlights section)
- *   - Mobile: Expandable button (lg:hidden)
- *   - Desktop: Always-visible list (hidden lg:block)
- * - CardFooter: flex-col sm:flex-row, gap-2 sm:gap-3, px-4 sm:px-6, py-4
- *   - Action buttons/links
+ *   - Tech Stack (flex-wrap, gap-1.5, Badge variant="outline", max 3 shown)
+ * - CardFooter: flex-col sm:flex-row, gap-2 sm:gap-3, px-4 sm:px-6, py-3 sm:py-4
+ *   - "View Details" link as primary action
+ *   - External project links
  * 
  * @component
  * 
- * Mobile Optimizations (< lg breakpoint):
- * - Expandable "Key Features" section with smooth accordion animation
+ * Mobile Optimizations:
  * - Full-width stacked action buttons with 44px touch targets
  * - Enhanced padding and spacing for better readability
  * - Button-like link styling with background colors
  * 
- * Desktop Features (≥ lg breakpoint):
- * - Always-visible highlights list
+ * Desktop Features:
  * - Inline link layout with padding for hover
  * - Optimized spacing for larger screens
  * 
  * @param {Object} props - Component props
  * @param {Project} props.project - Project data object
- * @param {boolean} [props.showHighlights=true] - Whether to display project highlights
  * 
  * @example
  * ```tsx
  * <ProjectCard project={projectData} />
- * <ProjectCard project={projectData} showHighlights={false} />
  * ```
  * 
  * Accessibility:
  * - Touch targets meet 44px minimum (mobile action buttons)
- * - Expandable section uses aria-expanded and aria-controls
  * - Semantic HTML with proper heading hierarchy
- * - Keyboard navigation support for expand/collapse
- * 
- * State Management:
- * - Local state for mobile accordion (expand/collapse)
- * - No external state dependencies
+ * - External links indicate opening in new tab
  * 
  * Related Components:
  * - Card components from @/components/ui/card
- * - Button from @/components/ui/button
  * - Badge from @/components/ui/badge
  * - ProjectCardSkeleton from @/components/project-card-skeleton
  * 
- * @see {@link /docs/design/mobile-first-optimization-analysis.md} for design rationale
  * @see {@link /docs/components/project-card.md} for detailed documentation
  * @see {@link /docs/components/skeleton-sync-strategy.md} for skeleton sync guidelines
  */
 export function ProjectCard({ 
-  project,
-  showHighlights = true 
+  project
 }: { 
   project: Project;
-  showHighlights?: boolean;
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
   
   // Always ensure we have an image (custom or default)
   const image = ensureProjectImage(project.image, {
     tags: project.tags,
     tech: project.tech,
   });
-  
-  // Check if we have highlights to show
-  const hasHighlights = showHighlights && project.highlights && project.highlights.length > 0;
   
   return (
     <Card className="flex h-full flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden relative">
@@ -156,61 +134,25 @@ export function ProjectCard({
         )}
       </CardHeader>
       
-      {/* Key Features / Highlights Section */}
-      {hasHighlights && (
-        <CardContent className="relative z-10 px-4 sm:px-6 pb-0">
-          {/* Desktop: Always visible */}
-          <ul className="hidden lg:block list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
-            {project.highlights!.map((highlight) => (
-              <li key={highlight}>{highlight}</li>
-            ))}
-          </ul>
-          
-          {/* Mobile: Expandable with button */}
-          <div className="lg:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="w-full justify-between text-sm font-medium hover:bg-accent/50 touch-target"
-              aria-expanded={isExpanded}
-              aria-controls={`highlights-${project.slug}`}
-            >
-              <span>Key Features ({project.highlights!.length})</span>
-              <ChevronDown 
-                className={cn(
-                  "h-4 w-4 transition-transform duration-200",
-                  isExpanded && "rotate-180"
-                )}
-                aria-hidden="true"
-              />
-            </Button>
-            
-            {/* Expandable content with smooth animation */}
-            <div
-              id={`highlights-${project.slug}`}
-              className={cn(
-                "overflow-hidden transition-all duration-300 ease-in-out",
-                isExpanded ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"
-              )}
-            >
-              <ul className="list-disc space-y-1.5 pl-4 text-sm text-muted-foreground">
-                {project.highlights!.map((highlight) => (
-                  <li key={highlight}>{highlight}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      )}
-      
       <CardFooter className="mt-auto flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 relative z-10 px-4 sm:px-6 py-3 sm:py-4">
+        {/* View Details link as primary action */}
+        <Link
+          href={`/projects/${project.slug}`}
+          className={cn(
+            "inline-flex items-center justify-center gap-1.5 text-sm font-medium transition-colors",
+            "w-full sm:w-auto px-4 py-2.5 sm:px-3 sm:py-2 rounded-md",
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+            "touch-target"
+          )}
+        >
+          <span>View Details</span>
+        </Link>
+        
+        {/* External project links */}
         {project.links.map((link) => {
           const isExternal = /^(?:https?:)?\/\//.test(link.href);
-          // Mobile: Full-width buttons with touch targets, Desktop: Consistent padding for hover
           const linkClassName = cn(
             "inline-flex items-center justify-center gap-1.5 text-sm font-medium transition-colors",
-            // Mobile: Button-like styling with full width
             "w-full sm:w-auto px-4 py-2.5 sm:px-3 sm:py-2 rounded-md",
             "bg-accent/50 hover:bg-accent sm:bg-transparent sm:hover:bg-accent/30",
             "touch-target"

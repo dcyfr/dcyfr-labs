@@ -65,7 +65,7 @@ export function ActiveFilters({ tag, query, readingTime }: ActiveFiltersProps) {
   const filterCount = [tag, query, readingTime].filter(Boolean).length;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 py-3 border-y">
+    <div className="flex flex-wrap items-center gap-2 py-4 mt-4">
       <span className="text-sm text-muted-foreground">Active filters:</span>
       
       {query && (

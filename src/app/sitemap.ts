@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { posts } from "@/data/posts";
+import { visibleProjects } from "@/data/projects";
 import { readdirSync, statSync } from "fs";
 import { join } from "path";
 import { SITE_URL } from "@/lib/site-config";
@@ -89,5 +90,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
   
-  return [...pageEntries, ...blogPostEntries];
+  // Generate sitemap entries for project detail pages
+  const projectEntries = visibleProjects.map((project) => ({
+    url: `${base}/projects/${project.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+  
+  return [...pageEntries, ...blogPostEntries, ...projectEntries];
 }

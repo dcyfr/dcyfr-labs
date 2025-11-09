@@ -12,9 +12,9 @@ import {
 } from "@/lib/site-config";
 import { headers } from "next/headers";
 
-const pageTitle = "Projects";
+const pageTitle = "Projects Archive";
 // Optimized meta description (155 characters)
-const pageDescription = "My portfolio of development and open-source projects.";
+const pageDescription = "Browse my portfolio of development projects, open-source contributions, and published work.";
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -51,8 +51,8 @@ export default async function ProjectsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Projects",
-    description: "",
+    name: "Projects Archive",
+    description: pageDescription,
     url: `${SITE_URL}/projects`,
     author: {
       "@type": "Person",
@@ -68,7 +68,7 @@ export default async function ProjectsPage() {
           "@type": "SoftwareSourceCode",
           name: project.title,
           description: project.description,
-          url: `${SITE_URL}/projects#${project.slug}`,
+          url: `${SITE_URL}/projects/${project.slug}`,
           ...(project.links.find(l => l.type === "github") && {
             codeRepository: project.links.find(l => l.type === "github")?.href,
           }),
@@ -92,7 +92,7 @@ export default async function ProjectsPage() {
       <div className="mx-auto max-w-5xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
         {/* hero section */}
         <div className="prose space-y-4">
-          <h1 className="font-serif text-3xl md:text-4xl font-bold">Projects</h1>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold">Projects Archive</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             {pageDescription}
           </p>
