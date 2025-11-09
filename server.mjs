@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { createServer as createHttpsServer } from 'https';
-import { parse } from 'url';
 import next from 'next';
 import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
@@ -24,7 +23,8 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const requestHandler = async (req, res) => {
     try {
-      const parsedUrl = parse(req.url, true);
+      // Use WHATWG URL API instead of deprecated url.parse()
+      const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
       await handle(req, res, parsedUrl);
     } catch (err) {
       console.error('Error occurred handling', req.url, err);
