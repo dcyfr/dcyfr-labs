@@ -6,6 +6,18 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
 import { CopyCodeButton } from "@/components/copy-code-button";
+import { HorizontalRule } from "@/components/horizontal-rule";
+import { 
+  Check, 
+  X, 
+  CornerDownLeft, 
+  AlertTriangle, 
+  Info, 
+  Lightbulb,
+  Zap,
+  Lock,
+  Rocket
+} from "lucide-react";
 
 /**
  * Configuration for the rehype-pretty-code plugin
@@ -84,7 +96,16 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     <h2 {...props} className="font-serif text-2xl md:text-3xl font-semibold tracking-tight mt-8 scroll-mt-20" />
   ),
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 {...props} className="font-serif text-xl md:text-2xl font-medium mt-6 scroll-mt-20" />
+    <h3 {...props} className="font-sans text-lg md:text-xl font-bold tracking-tight mt-6 scroll-mt-20" />
+  ),
+  h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h4 {...props} className="font-sans text-base md:text-lg font-bold italic tracking-tight mt-5 scroll-mt-20" />
+  ),
+  h5: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h5 {...props} className="font-sans text-sm md:text-base font-semibold tracking-tight mt-4 scroll-mt-20" />
+  ),
+  h6: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h6 {...props} className="font-sans text-sm font-semibold italic tracking-tight mt-4 scroll-mt-20" />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p {...props} className="leading-7 [&:not(:first-child)]:mt-4" />
@@ -92,8 +113,28 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote 
       {...props} 
-      className="font-serif italic border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground"
+      className="font-serif border-l-4 border-primary/30 pl-8 pr-4 my-8 text-muted-foreground text-xl leading-relaxed"
     />
+  ),
+  table: (props: React.HTMLAttributes<HTMLTableElement>) => (
+    <div className="my-6 w-full overflow-x-auto">
+      <table {...props} className="w-full border-collapse border border-border" />
+    </div>
+  ),
+  thead: (props: React.HTMLAttributes<HTMLTableSectionElement>) => (
+    <thead {...props} className="bg-muted" />
+  ),
+  tbody: (props: React.HTMLAttributes<HTMLTableSectionElement>) => (
+    <tbody {...props} className="divide-y divide-border" />
+  ),
+  tr: (props: React.HTMLAttributes<HTMLTableRowElement>) => (
+    <tr {...props} className="border-b border-border" />
+  ),
+  th: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
+    <th {...props} className="border border-border px-4 py-2 text-left font-semibold bg-muted/50" />
+  ),
+  td: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
+    <td {...props} className="border border-border px-4 py-2" />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
     <ul {...props} className="list-disc pl-5 [&>li]:mt-2" />
@@ -108,7 +149,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
       return (
         <code 
           {...props} 
-          className="rounded-md bg-muted px-1.5 py-0.5 text-[0.875em] font-mono font-medium border border-border/50"
+          className="rounded-md bg-primary/10 px-2 py-1 text-[0.875em] font-mono font-semibold border border-primary/20 text-primary"
         />
       );
     }
@@ -137,9 +178,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
       </div>
     );
   },
-  hr: (props: React.HTMLAttributes<HTMLHRElement>) => (
-    <hr {...props} className="mt-8 mb-4 border-border" />
-  ),
+  hr: () => <HorizontalRule />,
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
     const isHeaderAnchor = props.className?.includes('no-underline');
     const href = props.href || '';
@@ -158,6 +197,44 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
         })}
       />
     );
+  },
+  // Icon components for consistent styling across the site
+  CheckIcon: () => <Check className="inline-block w-4 h-4 text-green-600 dark:text-green-400" aria-label="Check" />,
+  XIcon: () => <X className="inline-block w-4 h-4 text-red-600 dark:text-red-400" aria-label="Cross" />,
+  ReturnIcon: () => <CornerDownLeft className="inline-block w-4 h-4 text-muted-foreground" aria-label="Return" />,
+  WarningIcon: () => <AlertTriangle className="inline-block w-4 h-4 text-yellow-600 dark:text-yellow-400" aria-label="Warning" />,
+  InfoIcon: () => <Info className="inline-block w-4 h-4 text-blue-600 dark:text-blue-400" aria-label="Information" />,
+  IdeaIcon: () => <Lightbulb className="inline-block w-4 h-4 text-yellow-600 dark:text-yellow-400" aria-label="Idea" />,
+  ZapIcon: () => <Zap className="inline-block w-4 h-4 text-purple-600 dark:text-purple-400" aria-label="Lightning" />,
+  LockIcon: () => <Lock className="inline-block w-4 h-4 text-muted-foreground" aria-label="Lock" />,
+  RocketIcon: () => <Rocket className="inline-block w-4 h-4 text-blue-600 dark:text-blue-400" aria-label="Rocket" />,
+  // Footnote superscripts with icon
+  sup: (props: React.HTMLAttributes<HTMLElement>) => {
+    // Check if this contains a link (footnote reference) or has footnote-related attributes
+    const hasLink = React.Children.toArray(props.children).some(
+      child => React.isValidElement(child) && child.type === 'a'
+    );
+    
+    if (hasLink) {
+      // This is a footnote reference - replace the content with our icon
+      // Get the href from the link to preserve navigation
+      const linkChild = React.Children.toArray(props.children).find(
+        child => React.isValidElement(child) && child.type === 'a'
+      ) as React.ReactElement | undefined;
+      
+      const href = (linkChild?.props as { href?: string })?.href;
+      
+      return (
+        <sup {...props} className="ml-0.5 inline-flex items-center">
+          <a href={href} className="no-underline hover:opacity-70 transition-opacity">
+            <CornerDownLeft className="inline-block w-3 h-3 text-primary" aria-label="Footnote reference" />
+          </a>
+        </sup>
+      );
+    }
+    
+    // Default superscript for non-footnote uses
+    return <sup {...props} />;
   },
 };
 

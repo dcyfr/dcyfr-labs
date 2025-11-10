@@ -1,90 +1,574 @@
 ---
-title: "Markdown & Code Blocks Demo"
-summary: "A sample post to preview markdown rendering and Shiki-powered code highlighting in light and dark themes."
+title: "Typography & Markdown Demo"
+summary: "Comprehensive showcase of typographic styles, markdown elements, and syntax highlighting with dual-theme support."
 publishedAt: "2020-01-07"
-updatedAt: "2025-10-18"
+updatedAt: "2025-11-09"
 tags:
   - demo
   - mdx
+  - typography
   - code
 draft: true
 image:
   url: "/blog/images/default/hero.svg"
   alt: "Abstract geometric pattern representing code and markdown"
-  caption: "Testing hero image integration with OG metadata"
+  caption: "Complete demonstration of typography and markdown rendering"
   credit: "Default Blog Image"
   width: 1200
   height: 630
 ---
 
-> This is a draft post intended for local development. It demonstrates how markdown and code blocks render with Shiki themes.
+This page demonstrates all typographic styles and markdown elements used throughout the site. It showcases the **Newsreader** serif font for body text paired with **Geist Sans** for UI elements.
 
-## Headings, text, and lists
+## Typography Styles
 
-This paragraph includes some inline code like `npm run dev` and a link to [Next.js](https://nextjs.org/).
+### Heading Level 3
+This is how a third-level heading looks with the current typography system.
 
-- Unordered list item A
-- Item B
-	- Nested item B.1
-	- Nested item B.2
+#### Heading Level 4
+Fourth-level headings are slightly smaller but still maintain hierarchy.
 
-1. Ordered item one
-2. Ordered item two
+##### Heading Level 5
+Fifth-level headings for deeply nested content.
+
+###### Heading Level 6
+The smallest heading level available.
 
 ---
 
-## Code blocks (TypeScript)
+## Text Formatting
+
+You can use **bold text** for emphasis, *italic text* for subtle emphasis, and ***bold italic*** for maximum emphasis. Use ~~strikethrough~~ for deleted text.
+
+Inline `code snippets` are styled with monospace font and background highlighting. You can also use <kbd>Cmd</kbd> + <kbd>K</kbd> to show keyboard shortcuts.
+
+This paragraph includes a [link to Next.js](https://nextjs.org/) and an external link with proper styling.
+
+---
+
+## Lists
+
+### Unordered Lists
+
+- First level item A
+- First level item B
+  - Second level item B.1
+  - Second level item B.2
+    - Third level item B.2.1
+    - Third level item B.2.2
+- First level item C
+
+### Ordered Lists
+
+1. First ordered item
+2. Second ordered item
+   1. Nested ordered item 2.1
+   2. Nested ordered item 2.2
+3. Third ordered item
+
+### Task Lists
+
+- [x] Completed task
+- [x] Another completed task
+- [ ] Incomplete task
+- [ ] Another incomplete task
+
+---
+
+## Blockquotes
+
+> This is a single-line blockquote.
+
+> This is a multi-line blockquote with multiple sentences.
+> 
+> It can span multiple paragraphs and includes proper spacing and styling to make quoted content stand out from the main text.
+
+> **Pro tip:** Blockquotes can contain **formatted text**, *italics*, and even `code snippets` for maximum flexibility.
+
+---
+
+## Code Blocks
+
+### TypeScript
 
 ```ts
+// Type definitions and interfaces
 type User = {
-	id: string
-	name: string
-	roles: ("admin" | "editor" | "viewer")[]
+  id: string
+  name: string
+  email: string
+  roles: ("admin" | "editor" | "viewer")[]
 }
 
-export function greet(user: User) {
-	const role = user.roles[0] ?? "viewer"
-	return `Hello, ${user.name}! Your role is ${role}.`
+interface ApiResponse<T> {
+  data: T
+  status: number
+  message?: string
 }
 
-console.log(greet({ id: "1", name: "Ada", roles: ["admin"] }))
+// Generics and utility functions
+export async function fetchUser(id: string): Promise<ApiResponse<User>> {
+  const response = await fetch(`/api/users/${id}`)
+  const data = await response.json()
+  
+  if (!response.ok) {
+    throw new Error(data.message ?? "Failed to fetch user")
+  }
+  
+  return {
+    data,
+    status: response.status,
+    message: "User fetched successfully"
+  }
+}
+
+// Using the function
+const result = await fetchUser("user-123")
+console.log(`Hello, ${result.data.name}!`)
 ```
 
-## Code blocks (TSX)
+### React/TSX
 
 ```tsx
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
-export default function Demo() {
-	return (
-		<div className="space-x-2">
-			<Button variant="default">Primary</Button>
-			<Button variant="outline">Outline</Button>
-		</div>
-	)
+interface CounterProps {
+  initialCount?: number
+  step?: number
+}
+
+export function Counter({ initialCount = 0, step = 1 }: CounterProps) {
+  const [count, setCount] = useState(initialCount)
+  
+  return (
+    <Card className="p-6 space-y-4">
+      <h2 className="text-2xl font-bold">Count: {count}</h2>
+      
+      <div className="flex gap-2">
+        <Button 
+          onClick={() => setCount(c => c + step)}
+          variant="default"
+        >
+          Increment
+        </Button>
+        
+        <Button 
+          onClick={() => setCount(c => c - step)}
+          variant="outline"
+        >
+          Decrement
+        </Button>
+        
+        <Button 
+          onClick={() => setCount(initialCount)}
+          variant="ghost"
+        >
+          Reset
+        </Button>
+      </div>
+    </Card>
+  )
 }
 ```
 
-## Code blocks (Bash)
+### JavaScript
 
-```bash
-pnpm add shiki
-pnpm run dev
+```js
+// Modern JavaScript features
+const users = [
+  { id: 1, name: "Alice", age: 30 },
+  { id: 2, name: "Bob", age: 25 },
+  { id: 3, name: "Charlie", age: 35 }
+]
+
+// Array methods and destructuring
+const adults = users
+  .filter(user => user.age >= 30)
+  .map(({ name, age }) => `${name} (${age})`)
+
+console.log(adults) // ["Alice (30)", "Charlie (35)"]
+
+// Async/await
+async function getData() {
+  try {
+    const response = await fetch('/api/data')
+    const json = await response.json()
+    return json
+  } catch (error) {
+    console.error('Error:', error)
+    throw error
+  }
+}
 ```
 
-## Code blocks (JSON)
+### Python
+
+```python
+# Python class and decorators
+from typing import List, Optional
+from dataclasses import dataclass
+
+@dataclass
+class User:
+    id: int
+    name: str
+    email: str
+    roles: List[str]
+
+def authenticate(func):
+    """Decorator for authentication"""
+    def wrapper(*args, **kwargs):
+        if not check_auth():
+            raise PermissionError("Not authenticated")
+        return func(*args, **kwargs)
+    return wrapper
+
+@authenticate
+def get_users() -> List[User]:
+    """Fetch all users from database"""
+    users = [
+        User(1, "Alice", "alice@example.com", ["admin"]),
+        User(2, "Bob", "bob@example.com", ["editor"]),
+    ]
+    return users
+
+# List comprehension
+admin_users = [u for u in get_users() if "admin" in u.roles]
+print(f"Found {len(admin_users)} admin users")
+```
+
+### Bash/Shell
+
+```bash
+#!/bin/bash
+
+# Environment setup
+export NODE_ENV=production
+export PORT=3000
+
+# Install dependencies
+pnpm install --frozen-lockfile
+
+# Build the application
+pnpm run build
+
+# Start the server
+echo "Starting server on port $PORT..."
+pnpm start
+
+# Health check
+curl -f http://localhost:$PORT/api/health || exit 1
+```
+
+### JSON
 
 ```json
 {
-	"name": "cyberdrew-dev",
-	"private": true,
-	"scripts": { "dev": "next dev --turbopack" }
+  "name": "cyberdrew-dev",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tailwindcss": "^4.0.0"
+  }
 }
 ```
 
-## Plaintext (no language)
+### CSS
+
+```css
+/* Modern CSS features */
+:root {
+  --primary: 210 100% 50%;
+  --secondary: 280 80% 60%;
+  --radius: 0.5rem;
+}
+
+.card {
+  background: hsl(var(--primary) / 0.1);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: all 200ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Container queries */
+@container (min-width: 700px) {
+  .card {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Modern selectors */
+.card:has(> img) {
+  padding: 0;
+}
+```
+
+### SQL
+
+```sql
+-- PostgreSQL query example
+SELECT 
+  u.id,
+  u.name,
+  u.email,
+  COUNT(p.id) as post_count,
+  MAX(p.created_at) as last_post_date
+FROM users u
+LEFT JOIN posts p ON u.id = p.author_id
+WHERE u.status = 'active'
+  AND p.published = true
+GROUP BY u.id, u.name, u.email
+HAVING COUNT(p.id) > 5
+ORDER BY post_count DESC
+LIMIT 10;
+
+-- Create table
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### YAML
+
+```yaml
+# Docker Compose example
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - db
+      - redis
+  
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+  
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+```
+
+### Diff
+
+```diff
+// Git diff example
+- const oldFunction = () => {
+-   console.log("Old implementation")
+- }
++ const newFunction = () => {
++   console.log("New implementation")
++   return true
++ }
+
+  function unchanged() {
+    return "This line stays the same"
+  }
+```
+
+---
+
+## Tables
+
+### Simple Table
+
+| Name    | Role      | Status |
+|---------|-----------|--------|
+| Alice   | Admin     | Active |
+| Bob     | Editor    | Active |
+| Charlie | Viewer    | Inactive |
+
+### Complex Table
+
+| Feature | Free | Pro | Enterprise |
+|---------|:----:|:---:|:----------:|
+| Users | 1 | 10 | Unlimited |
+| Storage | 1GB | 100GB | Custom |
+| Support | Email | Priority | 24/7 Phone |
+| Custom Domain | <XIcon /> | <CheckIcon /> | <CheckIcon /> |
+| API Access | <XIcon /> | Limited | Unlimited |
+
+---
+
+## Horizontal Rules
+
+Three or more dashes create a horizontal rule:
+
+---
+
+Three or more asterisks also work:
+
+***
+
+Three or more underscores as well:
+
+___
+
+---
+
+## Images
+
+![Avatar](/images/avatar.jpg)
+
+*Image caption: This is how images render with optional captions.*
+
+---
+
+## Plaintext Code Block
 
 ```
-This block has no language hint and should use a plaintext style.
+This is a plaintext code block without syntax highlighting.
+It's useful for showing raw output or simple text content.
+
+No colors, no formatting - just plain text.
+Perfect for command output or logs.
 ```
+
+---
+
+## Combinations
+
+You can combine multiple markdown elements:
+
+> **Important Note:**
+> 
+> When working with TypeScript, remember to:
+> 
+> 1. Define proper types for all function parameters
+> 2. Use interfaces for object shapes
+> 3. Leverage generics for reusable code
+> 
+> Example usage:
+> ```ts
+> interface Props {
+>   title: string
+>   count: number
+> }
+> ```
+
+---
+
+## Footnotes
+
+Here's a sentence with a footnote reference[^1].
+
+You can also use named footnotes[^note].
+
+[^1]: This is the first footnote with more detailed information.
+
+[^note]: Named footnotes are easier to maintain in long documents.
+
+---
+
+## HTML Elements
+
+You can also use HTML elements when needed:
+
+<div className="p-4 bg-accent rounded-lg my-4">
+  <strong>Custom HTML:</strong> This is a custom HTML element styled with Tailwind classes.
+</div>
+
+<details>
+  <summary>Click to expand</summary>
+  
+  Hidden content that reveals when you click the summary.
+  
+  - Can contain markdown
+  - Including lists
+  - And other elements
+</details>
+
+---
+
+## Icon Components
+
+MDX supports custom icon components for consistent styling across the site:
+
+### Status Icons
+
+- <CheckIcon /> Features that are available
+- <XIcon /> Features that are not available
+- <WarningIcon /> Features that need attention
+
+### Contextual Icons
+
+- <InfoIcon /> Helpful information and tips
+- <IdeaIcon /> Pro tips and best practices
+- <ZapIcon /> Performance and speed features
+- <RocketIcon /> New launches and releases
+- <LockIcon /> Security and private features
+- <ReturnIcon /> Return or continuation indicators
+
+### Icon Tables
+
+Icons work great in tables for feature comparison:
+
+| Icon | Name | Use Case |
+|:----:|------|----------|
+| <CheckIcon /> | Check | Success, completion, available |
+| <XIcon /> | Cross | Error, unavailable, denied |
+| <WarningIcon /> | Warning | Caution, deprecation |
+| <InfoIcon /> | Info | Helpful notes, documentation |
+| <IdeaIcon /> | Idea | Tips, insights |
+| <ZapIcon /> | Zap | Performance, speed |
+| <RocketIcon /> | Rocket | Launch, deployment |
+| <LockIcon /> | Lock | Security, privacy |
+
+---
+
+## Summary
+
+This page demonstrates all major markdown and typographic elements:
+
+- [x] Six levels of headings
+- [x] Text formatting (bold, italic, strikethrough)
+- [x] Lists (ordered, unordered, nested, tasks)
+- [x] Blockquotes with formatting
+- [x] Syntax highlighting (10+ languages)
+- [x] Tables (simple and complex)
+- [x] Horizontal rules
+- [x] Images with captions
+- [x] Code blocks (inline and fenced)
+- [x] HTML elements and details/summary
+- [x] Icon components for consistent styling
+- [x] Footnotes
+
+All elements are styled consistently with the **Newsreader** serif font for readability and **Geist Sans** for UI elements.
 

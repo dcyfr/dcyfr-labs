@@ -159,6 +159,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
     const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
     const listRef = React.useRef<HTMLUListElement>(null);
     const itemRefs = React.useRef<Map<string, HTMLLIElement>>(new Map());
+    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
     // Track active item for sliding indicator
     React.useEffect(() => {
@@ -166,6 +167,40 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
       setActiveIndex(index >= 0 ? index : null);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeId, headings]);
+
+    // Auto-scroll active item into view with smoother transition
+    React.useEffect(() => {
+      if (activeId && itemRefs.current.has(activeId)) {
+        const activeElement = itemRefs.current.get(activeId);
+        const scrollContainer = scrollContainerRef.current || activeElement?.closest('.overflow-y-auto');
+        
+        if (activeElement && scrollContainer instanceof HTMLElement) {
+          // Use requestAnimationFrame for smoother rendering
+          requestAnimationFrame(() => {
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const elementRect = activeElement.getBoundingClientRect();
+            
+            // Check if element is not fully visible
+            const isAboveView = elementRect.top < containerRect.top + 20; // 20px buffer
+            const isBelowView = elementRect.bottom > containerRect.bottom - 20; // 20px buffer
+            
+            if (isAboveView || isBelowView) {
+              // Calculate smooth scroll position
+              const elementTop = activeElement.offsetTop;
+              const containerHeight = scrollContainer.clientHeight;
+              const elementHeight = activeElement.clientHeight;
+              const scrollTo = elementTop - (containerHeight / 2) + (elementHeight / 2);
+              
+              scrollContainer.scrollTo({
+                top: scrollTo,
+                behavior: 'smooth',
+              });
+            }
+          });
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeId]);
 
     return (
       <ul ref={listRef} className="relative space-y-2 text-sm border-l-2 border-border">
@@ -197,13 +232,13 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
               ref={(el) => {
                 if (el) itemRefs.current.set(heading.id, el);
               }}
-              className={cn(isH3 && "ml-4")}
             >
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
                 className={cn(
-                  "flex items-center py-2 pl-4 border-l-2 -ml-[2px] transition-colors min-h-[44px] cursor-pointer",
+                  "flex items-center py-2 border-l-2 -ml-[2px] transition-colors min-h-[44px] cursor-pointer",
+                  isH3 ? "pl-8" : "pl-4",
                   isActive
                     ? "border-transparent text-primary font-medium"
                     : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
@@ -262,7 +297,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
 
       {/* Desktop TOC - Fixed Sidebar */}
       <nav
-        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-8rem)] overflow-y-auto z-40"
+        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-16rem)] z-40"
         aria-label="Table of contents"
       >
         <div className="space-y-2">
@@ -299,9 +334,13 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                style={{ overflow: "hidden" }}
+                className="relative"
               >
-                <TocList />
+                <div className="max-h-[calc(100vh-20rem)] overflow-y-auto scrollbar-hide">
+                  <TocList />
+                </div>
+                {/* Bottom gradient fade */}
+                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none" />
               </motion.div>
             )}
           </AnimatePresence>

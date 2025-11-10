@@ -39,7 +39,7 @@ Use standard Markdown syntax in the body of your post. The content supports:
 - Lists (ordered and unordered)
 - Code blocks with syntax highlighting
 - Links and images
-- Bold and italic text
+- Bold text
 - Blockquotes
 
 The reading time is automatically calculated based on word count.

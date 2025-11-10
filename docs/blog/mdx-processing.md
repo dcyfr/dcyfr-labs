@@ -522,13 +522,13 @@ p: (props) => (
 blockquote: (props) => (
   <blockquote 
     {...props} 
-    className="font-serif italic border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground"
+    className="font-serif border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground"
   />
 ),
 ```
 
 **Styling:**
-- Serif italic font
+- Serif font
 - Left border accent
 - Muted color for distinction
 - Generous vertical spacing
@@ -746,7 +746,7 @@ h2: (props) => (
 blockquote: (props) => (
   <blockquote 
     {...props} 
-    className="relative font-serif italic border-l-4 border-primary/30 pl-6 my-6 before:content-['"'] before:absolute before:left-2 before:text-4xl before:text-primary/20"
+    className="relative font-serif border-l-4 border-primary/30 pl-6 my-6 before:content-['"'] before:absolute before:left-2 before:text-4xl before:text-primary/20"
   />
 ),
 ```

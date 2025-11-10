@@ -48,7 +48,7 @@ Quick patterns and usage guide for the typography system.
 
 ### Blockquotes
 ```tsx
-<blockquote className="font-serif italic border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground">
+<blockquote className="font-serif border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground">
   Quoted text
 </blockquote>
 ```

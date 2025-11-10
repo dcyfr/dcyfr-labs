@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import "./print.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -32,7 +32,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({
+const newsreader = Newsreader({
   variable: "--font-serif",
   subsets: ["latin"],
   display: "swap",
@@ -97,7 +97,7 @@ export default async function RootLayout({
   
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
           <LoadingBar />
           <SiteHeader />

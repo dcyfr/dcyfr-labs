@@ -239,7 +239,7 @@ li: className="mt-2"
 ### Blockquotes
 
 ```tsx
-<blockquote className="mt-4 border-l-4 border-primary/30 pl-6 italic text-muted-foreground">
+<blockquote className="mt-4 border-l-4 border-primary/30 pl-6 text-muted-foreground">
   {children}
 </blockquote>
 ```

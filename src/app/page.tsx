@@ -174,7 +174,7 @@ export default async function Home() {
         {/* featured post hero */}
         {featuredPost && (
           <ScrollReveal animation="fade-up" delay={100}>
-            <section className="mt-10 md:mt-12">
+            <section className="mt-16 md:mt-24">
               <FeaturedPostHero post={featuredPost} />
             </section>
           </ScrollReveal>
@@ -182,9 +182,12 @@ export default async function Home() {
 
         {/* latest blog articles */}
         <ScrollReveal animation="fade-up" delay={200}>
-          <section className={`mt-10 md:mt-12 ${SPACING.content}`}>
-            <div className="flex items-center justify-between">
-              <h2 className={TYPOGRAPHY.h2.standard}>Latest articles</h2>
+          <section className={`mt-16 md:mt-24 ${SPACING.content}`}>
+            <div className="flex items-center justify-between mb-6 md:mb-8">
+              <h2 className={`${TYPOGRAPHY.h2.standard} relative`}>
+                Latest articles
+                <span className="absolute -bottom-2 left-0 h-1 w-12 bg-primary rounded-full" />
+              </h2>
               <Button variant="ghost" asChild>
                 <Link href="/blog">View all</Link>
               </Button>
@@ -200,9 +203,12 @@ export default async function Home() {
 
         {/* latest projects */}
         <ScrollReveal animation="fade-up" delay={300}>
-          <section className={`mt-10 md:mt-12 ${SPACING.content}`}>
-            <div className="flex items-center justify-between">
-              <h2 className={TYPOGRAPHY.h2.standard}>Projects</h2>
+          <section className={`mt-16 md:mt-24 ${SPACING.content}`}>
+            <div className="flex items-center justify-between mb-6 md:mb-8">
+              <h2 className={`${TYPOGRAPHY.h2.standard} relative`}>
+                Projects
+                <span className="absolute -bottom-2 left-0 h-1 w-12 bg-primary rounded-full" />
+              </h2>
               <Button variant="ghost" asChild>
                 <Link href="/projects">View all</Link>
               </Button>

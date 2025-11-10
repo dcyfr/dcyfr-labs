@@ -70,7 +70,7 @@ const sourceSerif = Source_Serif_4({
 blockquote: (props) => (
   <blockquote 
     {...props} 
-    className="font-serif italic border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground"
+    className="font-serif border-l-4 border-primary/30 pl-6 my-6 text-muted-foreground"
   />
 ),
 ```
