@@ -343,8 +343,6 @@ svg {
   /* Task lists - remove bullets, start with checkbox */
   :where([data-slot="card"] ul, .prose ul) li:has(> input[type="checkbox"]) {
     list-style-type: none;
-    padding-left: 0;
-    margin-left: 0;
   }
 
   :where([data-slot="card"] ul li, .prose ul li):has(> input[type="checkbox"])::marker {
@@ -371,6 +369,12 @@ svg {
 
   :where([data-slot="card"] ul li, .prose ul li):has(> svg:first-child)::marker {
     content: none;
+  }
+
+  /* Add spacing after SVG icons in list items */
+  :where([data-slot="card"] ul, .prose ul) li > svg:first-child {
+    margin-right: 0.5em;
+    vertical-align: middle;
   }
 
   /* Footnote styling - hide emoji, use icon instead */
