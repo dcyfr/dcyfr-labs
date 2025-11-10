@@ -24,6 +24,9 @@ import {
   TYPOGRAPHY, 
   SPACING 
 } from "@/lib/design-tokens";
+import { GitHubHeatmap } from "@/components/github-heatmap";
+import { HomepageStats } from "@/components/homepage-stats";
+import { projects } from "@/data/projects";
 
 // Optimized meta description for homepage (157 characters)
 const pageDescription = "Cybersecurity architect and developer building resilient security programs. Explore my blog on secure development, projects, and technical insights.";
@@ -171,20 +174,47 @@ export default async function Home() {
           </section>
         </ScrollReveal>
 
+        {/* stats section 
+        <ScrollReveal animation="fade-up" delay={75}>
+          <section className="mt-12 md:mt-16">
+            <HomepageStats
+              postsCount={posts.length}
+              projectsCount={projects.filter(p => !p.hidden).length}
+              yearsOfExperience={5}
+              technologiesCount={90}
+            />
+          </section>
+        </ScrollReveal>
+        */}
+
         {/* featured post hero */}
         {featuredPost && (
           <ScrollReveal animation="fade-up" delay={100}>
-            <section className="mt-16 md:mt-24">
+            <section className="mt-20 md:mt-32">
               <FeaturedPostHero post={featuredPost} />
             </section>
           </ScrollReveal>
         )}
 
+        {/* github contribution heatmap 
+        <ScrollReveal animation="fade-up" delay={150}>
+          <section className="mt-20 md:mt-32">
+            <div className="mb-8">
+              <h2 className={`${TYPOGRAPHY.h2.standard} text-center mb-2`}>
+                Development Activity
+              </h2>
+              <div className="w-16 h-0.5 bg-primary mx-auto rounded-full" />
+            </div>
+            <GitHubHeatmap username="dcyfr" />
+          </section>
+        </ScrollReveal>
+        */}
+
         {/* latest blog articles */}
         <ScrollReveal animation="fade-up" delay={200}>
-          <section className={`mt-16 md:mt-24 ${SPACING.content}`}>
-            <div className="flex items-center justify-between mb-6 md:mb-8">
-              <h2 className={`${TYPOGRAPHY.h2.standard} relative`}>
+          <section className={`mt-20 md:mt-32 ${SPACING.content}`}>
+            <div className="flex items-center justify-between mb-8 pb-2 border-b">
+              <h2 className={`${TYPOGRAPHY.h2.standard}`}>
                 Latest articles
               </h2>
               <Button variant="ghost" asChild>
@@ -202,9 +232,9 @@ export default async function Home() {
 
         {/* latest projects */}
         <ScrollReveal animation="fade-up" delay={300}>
-          <section className={`mt-16 md:mt-24 ${SPACING.content}`}>
-            <div className="flex items-center justify-between mb-6 md:mb-8">
-              <h2 className={`${TYPOGRAPHY.h2.standard} relative`}>
+          <section className={`mt-20 md:mt-32 ${SPACING.content}`}>
+            <div className="flex items-center justify-between mb-8 pb-2 border-b">
+              <h2 className={`${TYPOGRAPHY.h2.standard}`}>
                 Projects
               </h2>
               <Button variant="ghost" asChild>
