@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
+import { useShareTracking } from "@/hooks/use-share-tracking";
 
 /**
  * ShareButtons Component
@@ -50,38 +51,30 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  
+  // Use the proper share tracking hook with anti-spam protection
+  const { trackShare: trackShareAPI, shareCount: apiShareCount } = useShareTracking(postId);
   const [shareCount, setShareCount] = useState(initialShareCount);
+
+  // Update share count when API returns a value
+  useEffect(() => {
+    if (apiShareCount !== null) {
+      setShareCount(apiShareCount);
+    }
+  }, [apiShareCount]);
 
   /**
    * Increment share count in database
-   * Optimistically updates UI, falls back on error
+   * Uses the proper hook with sessionId and timeOnPage validation
    */
   const trackShare = async () => {
-    // Optimistically increment
-    const previousCount = shareCount;
-    setShareCount(prev => prev + 1);
-
     try {
-      const response = await fetch('/api/shares', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postId }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Update with actual count from server if available
-        if (typeof data.count === 'number') {
-          setShareCount(data.count);
-        }
-      } else {
-        // Revert on error
-        setShareCount(previousCount);
+      const result = await trackShareAPI();
+      if (result.success && result.count !== undefined && result.count !== null) {
+        setShareCount(result.count);
       }
     } catch (error) {
       console.error('Failed to track share:', error);
-      // Revert on error
-      setShareCount(previousCount);
     }
   };
 
