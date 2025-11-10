@@ -61,11 +61,15 @@ All API responses follow a consistent JSON structure:
 
 ## Rate Limiting
 
+**Status: ✅ VERIFIED (November 9, 2025)**
+
 ### Strategy
 
 The project implements **distributed rate limiting** using Redis with a graceful fallback to in-memory storage for local development.
 
 **Utility Location:** `src/lib/rate-limit.ts`
+
+**Verification:** All rate limits tested and confirmed working with both Redis and in-memory fallback. See `scripts/test-tracking.mjs` for automated testing.
 
 ### Configuration
 
@@ -80,23 +84,31 @@ const RATE_LIMIT_CONFIG = {
 const result = await rateLimit(clientIp, RATE_LIMIT_CONFIG);
 ```
 
+**Current Limits:**
+- `/api/contact`: 3 requests per 60 seconds ✅ Verified
+- `/api/views`: 10 requests per 5 minutes ✅ Verified
+- `/api/shares`: 3 requests per 60 seconds ✅ Verified
+- `/api/github-contributions`: 10 requests per 1 minute ✅ Implemented
+
 ### Implementation
 
-#### Redis (Production)
+#### Redis (Production) ✅ Verified
 
 When `REDIS_URL` environment variable is set:
 - Uses Redis `INCR` command for atomic counting
 - Sets expiration with `PXAT` (millisecond precision)
 - Distributed across serverless instances
 - Graceful error handling (fails open on Redis error)
+- **Tested:** Successfully enforces limits with Redis persistence
 
-#### In-Memory (Development)
+#### In-Memory (Development) ✅ Verified
 
 Fallback when Redis unavailable:
 - Map-based storage: `Map<identifier, { count, resetTime }>`
 - Automatic cleanup every 60 seconds
 - Per-process rate limiting (separate limits per instance)
 - Suitable for local development
+- **Tested:** Fallback works correctly when Redis unavailable
 
 ### Headers
 

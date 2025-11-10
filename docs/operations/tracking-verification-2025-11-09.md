@@ -14,7 +14,7 @@ Both view tracking and share tracking are incrementing correctly under normal co
 
 ## Test Results
 
-### View Tracking ✅
+### View Tracking ✅ (Redis Verified)
 
 | Test Case | Expected | Actual | Status |
 |-----------|----------|--------|--------|
@@ -22,13 +22,14 @@ Both view tracking and share tracking are incrementing correctly under normal co
 | Duplicate view (same session) | Rejected | Rejected with message | ✅ Pass |
 | Quick view (1s on page) | Rejected | Rejected (insufficient time) | ✅ Pass |
 | Multiple sessions (3 users) | All recorded | 3/3 recorded | ✅ Pass |
+| Redis persistence | Data persists | 4 views stored | ✅ Pass |
 
 **Configuration:**
 - Minimum time on page: 5 seconds
 - Session deduplication: 30 minutes
 - Rate limit: 10 views per 5 minutes per IP
 
-### Share Tracking ✅
+### Share Tracking ✅ (Redis Verified)
 
 | Test Case | Expected | Actual | Status |
 |-----------|----------|--------|--------|
@@ -36,6 +37,7 @@ Both view tracking and share tracking are incrementing correctly under normal co
 | Duplicate share (same session) | Rejected | Rejected with message | ✅ Pass |
 | Quick share (0.5s on page) | Rejected | Rejected (too fast) | ✅ Pass |
 | Multiple sessions (3 users) | Recorded | 1/3 recorded* | ⚠️ Rate limit triggered |
+| Redis persistence | Data persists | 2 shares stored | ✅ Pass |
 
 *Note: Rate limit (3 shares per 60 seconds) correctly triggered after first share in rapid succession test.
 
@@ -72,13 +74,24 @@ Both view tracking and share tracking are incrementing correctly under normal co
 - Blocks suspicious activity patterns
 - **Status:** Integrated and monitoring
 
-## Data Storage
+### Data Storage
 
-### With Redis
+### With Redis (Recommended - Verified ✅)
 - Views stored at: `views:post:{postId}`
 - Shares stored at: `shares:post:{postId}`
 - History tracked in sorted sets for 24h analytics
 - Persistence across deployments
+- Test script automatically connects and verifies data
+
+**Test Results with Redis:**
+```
+Final Counts:
+  Views: 4
+  Shares: 2
+
+✓ Redis key exists with value: 4
+✓ Redis key exists with value: 2
+```
 
 ### Without Redis (Fallback)
 - Rate limiting uses in-memory Map
@@ -170,7 +183,14 @@ if (result.success) {
 
 ### Test Script
 ```bash
+# Run with Redis (recommended)
 node scripts/test-tracking.mjs
+
+# Script automatically:
+# - Loads environment variables from .env.local and .env.development.local
+# - Connects to Redis if REDIS_URL is set
+# - Clears previous test data to avoid rate limit conflicts
+# - Verifies all tracking and anti-spam features
 ```
 
 ### Manual Testing
@@ -254,16 +274,25 @@ Consider tracking:
 
 ## Conclusion
 
-**Status: ✅ VERIFIED**
+**Status: ✅ VERIFIED WITH REDIS**
 
-Both view and share tracking are incrementing correctly under normal user conditions. All protection layers are functioning as designed, preventing spam while maintaining a smooth user experience. The system gracefully handles edge cases and provides clear feedback for all scenarios.
+Both view and share tracking are incrementing correctly under normal user conditions with full Redis persistence. All protection layers are functioning as designed, preventing spam while maintaining a smooth user experience. The system gracefully handles edge cases and provides clear feedback for all scenarios.
 
 The comprehensive test suite validates:
-- Correct counting behavior
-- Proper duplicate rejection
-- Time validation enforcement
-- Rate limiting protection
-- Graceful fallback handling
+- ✅ Correct counting behavior
+- ✅ Proper duplicate rejection
+- ✅ Time validation enforcement
+- ✅ Rate limiting protection
+- ✅ Redis data persistence
+- ✅ Graceful fallback handling
+- ✅ Anti-spam protection effectiveness
+
+**Test Environment:**
+- Redis: Connected and verified
+- Environment variables: Loaded from .env.local
+- Data persistence: Confirmed in Redis
+- Rate limiting: Working correctly
+- Session tracking: Functioning properly
 
 No issues found. System ready for production use.
 

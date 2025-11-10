@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 9, 2025
+**Last Updated:** November 10, 2025
 
 ---
 
@@ -22,7 +22,20 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 
 ## 📌 Recent Updates
 
-### � API Security Phase 1 Complete (Oct 26, 2025) ✅
+### 🔒 Security Monitoring Phase Complete (Nov 9-10, 2025) ✅
+**Status:** CSP violation monitoring live with Sentry
+- ✅ Tracking system verified (view/share counts, anti-spam, Redis persistence)
+- ✅ Sentry integrated for error tracking and CSP violation monitoring
+- ✅ Privacy-compliant implementation (no PII, anonymized URIs)
+- ✅ Rate limiting on CSP endpoint (10 violations/minute per IP)
+- ✅ Comprehensive documentation created (`/docs/security/csp/monitoring.md`)
+- ✅ Sentry monitoring enabled in production
+
+**Next Priority:** Privacy Policy Documentation (see Security section below)
+
+---
+
+### 🛡️ API Security Phase 1 Complete (Oct 26, 2025) ✅
 **Status:** All critical security vulnerabilities addressed
 - ✅ Analytics endpoint secured with 4-layer protection
 - ✅ Inngest webhook security verified (SDK handles automatically)
@@ -764,14 +777,16 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [x] **Vercel OG image generation** - Dynamic social preview images using Vercel's OG API (✅ Complete - see `/docs/features/og-image-generation.md`)
 
 ### Security (Post-Analysis, Oct 28)
-- [ ] **CSP Violation Monitoring** - Integrate Sentry for centralized CSP violation tracking and alerts (Effort: 1-2h) | [See security analysis](../security/FINDINGS_AND_ACTION_ITEMS.md#1-set-up-csp-violation-monitoring-medium-priority)
+- [x] **CSP Violation Monitoring** - ✅ COMPLETE (Nov 9, 2025) - Sentry integrated with `/api/csp-report` endpoint | [See implementation](../security/FINDINGS_AND_ACTION_ITEMS.md#1--implemented-csp-violation-monitoring)
 - [ ] **Privacy Policy Documentation** - Create GDPR/CCPA compliant privacy policy (Effort: 2-3h) | [See security analysis](../security/FINDINGS_AND_ACTION_ITEMS.md#2-create-privacy-policy--data-retention-documentation-medium-priority)
 - [ ] **Incident Response Plan** - Document security incident procedures and escalation paths (Effort: 1-2h) | [See security analysis](../security/FINDINGS_AND_ACTION_ITEMS.md#3-document-security-incident-response-plan-medium-priority)
 - [ ] **CSP Level 3 Implementation** - Add `'strict-dynamic'` support for next-generation CSP (Effort: 1h) [OPTIONAL]
 - [ ] **Security Monitoring Dashboard** - Create analytics dashboard for CSP violations and rate limiting (Effort: 2-3h) [OPTIONAL]
 
+**✅ CSP Monitoring Complete:** Sentry integration added with rate limiting, privacy protection, and full metadata capture. See `/docs/security/csp/monitoring.md` for details.
+
 ### Monitoring
-- [ ] **Error tracking** - Consider Sentry or similar for error monitoring (integrates with CSP monitoring above)
+- [x] **Error tracking** - ✅ Sentry integrated for error monitoring and CSP violations (Nov 9, 2025)
 - [ ] **Custom analytics events** - Track specific user interactions
 - [ ] **Performance monitoring** - Set up performance budgets and alerts
 - [ ] **Uptime monitoring** - Configure uptime monitoring service

@@ -10,7 +10,19 @@
  * 4. Time validation works
  * 5. Redis keys are properly formatted
  * 
+ * Requirements:
+ * - dotenv package (automatically loads .env.local and .env.development.local)
+ * - Redis connection (optional, will use in-memory fallback if unavailable)
+ * - Running dev server at http://localhost:3000
+ * 
  * Usage: node scripts/test-tracking.mjs
+ * 
+ * The script will:
+ * - Load environment variables from .env files
+ * - Clear previous test data from Redis to avoid rate limits
+ * - Run comprehensive tracking tests
+ * - Verify Redis persistence if connected
+ * - Report detailed results
  */
 
 import { createClient } from "redis";

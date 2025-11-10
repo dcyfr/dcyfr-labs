@@ -16,6 +16,8 @@
 | `NEXT_PUBLIC_FROM_EMAIL` | Optional | Override sender email address | Uses `no-reply@cyberdrew.dev` |
 | `GITHUB_TOKEN` | Recommended | GitHub API rate limits (60 → 5,000/hr) | Uses unauthenticated API (60 req/hr) |
 | `REDIS_URL` | Recommended | Blog analytics, view counts, rate limiting | Disables analytics, falls back to in-memory |
+| `SENTRY_DSN` | Recommended | Error tracking and CSP monitoring | No error tracking (production ready) |
+| `SENTRY_AUTH_TOKEN` | Build only | Source map uploads to Sentry | Source maps not uploaded |
 | `NEXT_PUBLIC_GISCUS_REPO` | Optional | Comments system - repository | Comments section hidden |
 | `NEXT_PUBLIC_GISCUS_REPO_ID` | Optional | Comments system - repo ID | Comments section hidden |
 | `NEXT_PUBLIC_GISCUS_CATEGORY` | Optional | Comments system - category | Comments section hidden |
@@ -376,6 +378,85 @@ npm run dev
 **Implementation:**
 - File: `src/lib/dev-only.ts`
 - Returns `false` for dev page visibility when flag is set
+
+---
+
+## Error Tracking & Monitoring (Sentry)
+
+### `SENTRY_DSN`
+
+- **Type:** String (Sentry Data Source Name)
+- **Required:** No (Recommended for production)
+- **Purpose:** Error tracking, performance monitoring, and CSP violation monitoring
+- **Format:** `https://[key]@[orgid].ingest.sentry.io/[projectid]`
+- **Get at:** [sentry.io](https://sentry.io)
+
+**Setup (Sentry.io):**
+1. Sign up at [sentry.io](https://sentry.io) (free tier available)
+2. Create a new Next.js project
+3. Copy the DSN from Project Settings → Client Keys (DSN)
+4. Add to environment variables
+
+**Behavior without Sentry:**
+- ✅ App works normally
+- ✅ Errors logged to console
+- ❌ No centralized error tracking
+- ❌ No CSP violation monitoring
+- ❌ No performance insights
+
+**Behavior with Sentry:**
+- ✅ Real-time error tracking
+- ✅ CSP violations centralized in Sentry dashboard
+- ✅ Performance monitoring (traces)
+- ✅ Session replay on errors (production only)
+- ✅ Email/Slack alerts on critical issues
+
+**Configuration:**
+- Server config: `sentry.server.config.ts`
+- Client config: `sentry.client.config.ts`
+- Edge config: `sentry.edge.config.ts`
+- CSP integration: `src/app/api/csp-report/route.ts`
+
+**Privacy Settings:**
+- `sendDefaultPii: false` - No PII sent to Sentry
+- `tracesSampleRate: 0.1` - 10% performance sampling in production
+- `replaysOnErrorSampleRate: 1.0` - Capture 100% of error sessions
+
+### `SENTRY_AUTH_TOKEN`
+
+- **Type:** String (Sentry auth token)
+- **Required:** No (Build-time only)
+- **Purpose:** Upload source maps to Sentry for better error debugging
+- **Format:** `sntrys_[token]`
+- **Get at:** Sentry → Settings → Account → Auth Tokens
+
+**Setup:**
+1. Go to Sentry → Settings → Auth Tokens
+2. Create token with `project:releases` scope
+3. Add to `.env.sentry-build-plugin` (auto-created by wizard)
+4. Token is used during `npm run build` only
+
+**Behavior without token:**
+- ✅ Sentry still works
+- ❌ Error stack traces show minified code
+- ❌ Harder to debug production issues
+
+**Behavior with token:**
+- ✅ Full source code context in errors
+- ✅ Original file names and line numbers
+- ✅ Better debugging experience
+
+**Security:**
+- Token stored in `.env.sentry-build-plugin`
+- Auto-added to `.gitignore`
+- Only needed for builds (CI/CD, Vercel)
+- For Vercel: Use [Sentry Vercel Integration](https://vercel.com/integrations/sentry)
+
+**Vercel Setup (Recommended):**
+1. Install [Sentry Vercel Integration](https://vercel.com/integrations/sentry)
+2. Link your Sentry project
+3. Auth token automatically managed
+4. Source maps uploaded on every deployment
 
 ---
 

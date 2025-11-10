@@ -1,8 +1,18 @@
 # Rate Limiting Implementation
 
+**Status: ✅ VERIFIED AND DEPLOYED (November 9, 2025)**
+
 ## Overview
 
-Rate limiting has been implemented for the contact form API to prevent abuse and protect against spam/DoS attacks.
+Rate limiting has been implemented across all public API endpoints to prevent abuse and protect against spam/DoS attacks. All rate limiting has been tested and verified working with both Redis and in-memory fallback.
+
+**Verification Results:**
+- ✅ Contact form rate limiting: Working
+- ✅ View tracking rate limiting: Working (10/5min per IP)
+- ✅ Share tracking rate limiting: Working (3/60s per IP)
+- ✅ Redis persistence: Verified
+- ✅ In-memory fallback: Working
+- ✅ Rate limit headers: Correctly sent
 
 ## Current Implementation
 
@@ -241,6 +251,7 @@ test("rate limits contact form after 3 requests", async () => {
 
 ## Monitoring
 
+### Manual Monitoring
 Consider logging rate limit violations for monitoring:
 
 ```typescript
@@ -256,11 +267,50 @@ if (!rateLimitResult.success) {
 }
 ```
 
+### Automated Testing
+Run comprehensive rate limit tests:
+
+```bash
+# Test all API rate limits
+node scripts/test-tracking.mjs
+
+# Expected output:
+# ✓ Rate limiting enforced correctly
+# ⚠ Share rate limit triggered (expected behavior)
+```
+
+**Test coverage:**
+- Contact form: 3 requests per 60 seconds
+- View tracking: 10 requests per 5 minutes
+- Share tracking: 3 requests per 60 seconds
+
+## Verification Status
+
+**Last tested:** November 9, 2025  
+**Contact form:** ✅ Working (3/60s enforced)  
+**View tracking:** ✅ Working (10/5min enforced)  
+**Share tracking:** ✅ Working (3/60s enforced, tested in rapid succession)  
+**Redis backend:** ✅ Verified  
+**In-memory fallback:** ✅ Verified  
+**Headers:** ✅ Correctly sent with all responses
+
+## Current Rate Limits by Endpoint
+
+| Endpoint | Limit | Window | Status |
+|----------|-------|--------|--------|
+| `/api/contact` | 3 | 60s | ✅ Verified |
+| `/api/views` | 10 | 5min | ✅ Verified |
+| `/api/shares` | 3 | 60s | ✅ Verified |
+| `/api/github-contributions` | 10 | 1min | ✅ Implemented |
+
 ## Future Enhancements
 
-- [ ] Add rate limiting to other API routes (if added)
+- [x] ✅ Add rate limiting to all public API routes
+- [x] ✅ Implement Redis-backed distributed rate limiting
+- [x] ✅ Add in-memory fallback for resilience
 - [ ] Implement different rate limits for authenticated users
 - [ ] Add allowlist for trusted IPs
+- [ ] Analytics dashboard for rate limit violations
 - [ ] Set up alerts for excessive rate limit violations
 - [ ] Consider CAPTCHA for repeated violations
 

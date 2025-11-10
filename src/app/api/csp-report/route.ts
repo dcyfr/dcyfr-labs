@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import * as Sentry from "@sentry/nextjs";
 
 /**
  * CSP Violation Reporting Endpoint
@@ -89,11 +90,33 @@ export async function POST(req: NextRequest) {
     // Log to console (will be captured by Vercel logs)
     console.warn("CSP Violation Report:", JSON.stringify(violationData, null, 2));
 
-    // TODO: In production, send to monitoring service
-    // Examples:
-    // - Sentry: Sentry.captureMessage('CSP Violation', { extra: violationData })
-    // - Datadog: datadogLogs.logger.warn('CSP Violation', violationData)
-    // - Custom endpoint: fetch('https://your-logging-service.com/csp', ...)
+    // Send to Sentry for centralized monitoring and alerting
+    try {
+      Sentry.captureMessage("CSP Violation", {
+        level: "warning",
+        tags: {
+          violatedDirective: violationData.violatedDirective,
+          effectiveDirective: violationData.effectiveDirective,
+          disposition: violationData.disposition,
+        },
+        extra: violationData,
+        contexts: {
+          csp: {
+            violated_directive: violationData.violatedDirective,
+            effective_directive: violationData.effectiveDirective,
+            blocked_uri: violationData.blockedUri,
+            document_uri: violationData.documentUri,
+            source_file: violationData.sourceFile,
+            line_number: violationData.lineNumber,
+            column_number: violationData.columnNumber,
+            disposition: violationData.disposition,
+          },
+        },
+      });
+    } catch (sentryError) {
+      // Sentry errors should never break CSP reporting
+      console.error("Failed to send CSP violation to Sentry:", sentryError);
+    }
 
     return NextResponse.json(
       { success: true },
