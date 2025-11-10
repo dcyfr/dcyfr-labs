@@ -15,6 +15,17 @@
 
 import { createClient } from "redis";
 import { randomUUID } from "crypto";
+import { config } from "dotenv";
+import { fileURLToPath } from "url";
+import path from "path";
+
+// Load environment variables from .env.local
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.join(__dirname, "..");
+
+// Try loading .env.local first, then .env.development.local
+config({ path: path.join(projectRoot, ".env.local") });
+config({ path: path.join(projectRoot, ".env.development.local") });
 
 // Configuration
 const BASE_URL = process.env.TEST_URL || "http://localhost:3000";
@@ -84,6 +95,52 @@ async function getRedisValue(key) {
   try {
     const value = await client.get(key);
     return value ? parseInt(value, 10) : 0;
+  } finally {
+    await client.quit();
+  }
+}
+
+/**
+ * Clear rate limit and abuse tracking for testing
+ * Only clears test-related keys to avoid affecting real data
+ */
+async function clearTestData() {
+  if (!REDIS_URL) return;
+  
+  const client = createClient({ url: REDIS_URL });
+  await client.connect();
+  
+  try {
+    logInfo("\nClearing previous test data and rate limits...");
+    
+    // Get all keys related to rate limiting and abuse tracking
+    const patterns = [
+      "view:*",           // View rate limits
+      "share:*",          // Share rate limits
+      "session:*",        // Session deduplication
+      "abuse:*",          // Abuse tracking
+      "timing:*",         // Timing checks
+      "ratelimit:*",      // Additional rate limit keys
+    ];
+    
+    let deletedCount = 0;
+    for (const pattern of patterns) {
+      const keys = await client.keys(pattern);
+      if (keys.length > 0) {
+        await client.del(keys);
+        deletedCount += keys.length;
+      }
+    }
+    
+    if (deletedCount > 0) {
+      logSuccess(`Cleared ${deletedCount} test-related keys from Redis`);
+      logInfo("Waiting 3 seconds for rate limits to fully reset...");
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    } else {
+      logInfo("No test data to clear");
+    }
+  } catch (error) {
+    logWarning(`Could not clear test data: ${error.message}`);
   } finally {
     await client.quit();
   }
@@ -325,9 +382,20 @@ async function runTests() {
   }
 
   try {
-    // Run tests
+    // Clear previous test data that might trigger rate limits
+    if (REDIS_URL) {
+      await clearTestData();
+    }
+
+    // Run tests with small delays to avoid triggering rate limits
     await testViewTracking();
+    logInfo("\nWaiting 2 seconds before next test...");
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     await testShareTracking();
+    logInfo("\nWaiting 2 seconds before next test...");
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     await testMultipleSessions();
 
     // Summary
