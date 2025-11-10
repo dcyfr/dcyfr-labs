@@ -106,7 +106,7 @@ export default async function AboutPage() {
       <section className={SPACING.content}>
         <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
         <p className="text-muted-foreground mb-4">
-          I bring {resume.experience.length}+ years of hands-on experience across security engineering, architecture, and leadership roles. 
+          I bring 5+ years of hands-on experience across security engineering, architecture, and leadership roles. 
           My career has spanned diverse industries including healthcare, finance, and technology, where I&apos;ve built and scaled security programs from the ground up.
         </p>
         <div className="flex items-center">
