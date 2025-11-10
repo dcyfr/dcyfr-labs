@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { resume } from "@/data/resume";
-import { ExternalLink, Award } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 /**
  * About Certifications Component
@@ -18,12 +18,14 @@ import { ExternalLink, Award } from "lucide-react";
 
 /**
  * Get Credly profile URL based on provider
- * Currently only GIAC has a direct Credly profile link
+ * GIAC, CompTIA, and ISC2 certifications are verified on Credly
  */
 function getCredlyUrl(provider: string): string | null {
   const credlyLinks: Record<string, string> = {
     "GIAC": "https://www.credly.com/users/dcyfr",
-    // CompTIA, Mile2, ISC2 certifications can be added here if Credly profiles exist
+    "CompTIA": "https://www.credly.com/users/dcyfr",
+    "ISC2": "https://www.credly.com/users/dcyfr",
+    // Mile2 certifications use a different verification system
   };
   
   return credlyLinks[provider] || null;
@@ -39,7 +41,6 @@ function CertificationCard({ provider, certifications }: { provider: string; cer
     <Card className="p-5 space-y-3">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Award className="h-5 w-5 text-primary flex-shrink-0" aria-hidden="true" />
           <div>
             <h3 className="font-medium text-lg">{provider}</h3>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -87,7 +88,7 @@ export function AboutCertifications() {
       <div className="space-y-2">
         <h2 className="text-xl md:text-2xl font-medium font-serif">Professional Certifications</h2>
         <p className="text-sm text-muted-foreground">
-          {totalCerts} industry certifications across leading providers
+          {totalCerts} industry certifications across leading providers.
         </p>
       </div>
       

@@ -101,6 +101,25 @@ export default async function AboutPage() {
           </p>
         </div>
       </section>
+      
+      {/* professional background */}
+      <section className={SPACING.content}>
+        <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
+        <p className="text-muted-foreground mb-4">
+          I bring {resume.experience.length}+ years of hands-on experience across security engineering, architecture, and leadership roles. 
+          My career has spanned diverse industries including healthcare, finance, and technology, where I&apos;ve built and scaled security programs from the ground up.
+        </p>
+        <div className="flex items-center">
+          <Link 
+            className={`inline-flex items-center gap-2 text-primary ${HOVER_EFFECTS.link}`}
+            href="/resume"
+          >
+            View full resume and work history
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+        
       {/* current role */}
       <section className={SPACING.content}>
         <h2 className={TYPOGRAPHY.h2.standard}>Currently at {currentRole.company}</h2>
@@ -115,23 +134,6 @@ export default async function AboutPage() {
             ))}
           </ul>
         </Card>
-      </section>
-      {/* professional background */}
-      <section className={SPACING.content}>
-        <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
-        <p className="text-muted-foreground mb-4">
-          I bring {resume.experience.length}+ years of hands-on experience across security engineering, architecture, and leadership roles. 
-          My career has spanned diverse industries including healthcare, finance, and technology, where I&apos;ve built and scaled security programs from the ground up.
-        </p>
-        <div className="text-center">
-          <Link 
-            className={`inline-flex items-center gap-2 text-primary ${HOVER_EFFECTS.link}`}
-            href="/resume"
-          >
-            View full resume and work history
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-          </Link>
-        </div>
       </section>
       
       {/* currently learning */}

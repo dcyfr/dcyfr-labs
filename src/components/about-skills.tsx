@@ -96,7 +96,7 @@ export function AboutSkills() {
       <div className="space-y-2">
         <h2 className="text-xl md:text-2xl font-medium font-serif">Skills & Expertise</h2>
         <p className="text-sm text-muted-foreground">
-          Technical competencies and frameworks I work with regularly
+          Technical competencies and frameworks I work with regularly.
         </p>
       </div>
       

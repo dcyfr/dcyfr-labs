@@ -186,7 +186,6 @@ export default async function Home() {
             <div className="flex items-center justify-between mb-6 md:mb-8">
               <h2 className={`${TYPOGRAPHY.h2.standard} relative`}>
                 Latest articles
-                <span className="absolute -bottom-2 left-0 h-1 w-12 bg-primary rounded-full" />
               </h2>
               <Button variant="ghost" asChild>
                 <Link href="/blog">View all</Link>
@@ -207,7 +206,6 @@ export default async function Home() {
             <div className="flex items-center justify-between mb-6 md:mb-8">
               <h2 className={`${TYPOGRAPHY.h2.standard} relative`}>
                 Projects
-                <span className="absolute -bottom-2 left-0 h-1 w-12 bg-primary rounded-full" />
               </h2>
               <Button variant="ghost" asChild>
                 <Link href="/projects">View all</Link>

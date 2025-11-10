@@ -132,12 +132,12 @@ export const resume: Resume = {
       certifications: ["CSIE", "CSAE", "CNVP", "CNSP", "CSAP", "CSIS", "CIOS", "SecurityX", "PenTest+", "CySA+", "Security+", "Network+", "A+", "ITF+"]
     },
     {
-      provider: "Mile2",
-      certifications: ["C)ISSO", "C)PTE", "C)DRE", "C)DFE"]
-    },
-    {
       provider: "ISC2",
       certifications: ["Candidate"]
+    },
+    {
+      provider: "Mile2",
+      certifications: ["C)ISSO", "C)PTE", "C)DRE", "C)DFE"]
     }
   ],
   skills: [

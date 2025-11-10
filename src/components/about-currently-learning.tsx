@@ -27,7 +27,6 @@ export function AboutCurrentlyLearning() {
   return (
     <section className="space-y-4">
       <div className="flex items-center gap-2">
-        <GraduationCap className="h-5 w-5 text-primary" aria-hidden="true" />
         <h2 className="text-xl md:text-2xl font-medium font-serif">Currently Learning</h2>
       </div>
       
@@ -57,7 +56,6 @@ export function AboutCurrentlyLearning() {
         {currentEducation.highlights && currentEducation.highlights.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
               <p className="text-sm font-medium">Current Focus Areas</p>
             </div>
             <ul className="space-y-2">
@@ -70,13 +68,6 @@ export function AboutCurrentlyLearning() {
             </ul>
           </div>
         )}
-
-        <div className="pt-2 text-sm text-muted-foreground border-t border-border/50">
-          <p>
-            Continuously expanding expertise in advanced security engineering, 
-            incident response methodologies, and strategic security leadership.
-          </p>
-        </div>
       </Card>
     </section>
   );
