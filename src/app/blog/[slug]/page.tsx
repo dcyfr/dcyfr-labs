@@ -13,7 +13,8 @@ import { CONTAINER_WIDTHS, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING, TYPOGR
 import { MDX } from "@/components/mdx";
 import { Badge } from "@/components/ui/badge";
 import { PostBadges } from "@/components/post-badges";
-import { getPostViews, incrementPostViews, getMultiplePostViews } from "@/lib/views";
+import { getPostViews, getMultiplePostViews } from "@/lib/views";
+import { getPostShares } from "@/lib/shares";
 import { ReadingProgress } from "@/components/reading-progress";
 import { BlogFABMenu } from "@/components/blog-fab-menu";
 import { extractHeadings } from "@/lib/toc";
@@ -26,6 +27,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { SeriesNavigation } from "@/components/series-navigation";
 import { SwipeableBlogPost } from "@/components/swipeable-blog-post";
 import { PostHeroImage } from "@/components/post-hero-image";
+import { ViewTracker } from "@/components/view-tracker";
 import {
   getArticleSchema,
   getBreadcrumbSchema,
@@ -119,15 +121,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   // Get nonce from middleware for CSP
   const nonce = (await headers()).get("x-nonce") || "";
 
-  // Increment views using post ID (stable identifier, not affected by slug changes)
-  const incrementedViews = await incrementPostViews(post.id);
+  // Get current view count (views are now tracked client-side for anti-spam protection)
+  // Client-side tracking happens via ViewTracker component
+  const viewCount = await getPostViews(post.id);
   
   // If this is an old slug, redirect to the current one
-  // Views are tracked before redirect so old URL accesses are counted
   if (needsRedirect) {
     redirect(`/blog/${canonicalSlug}`);
   }
-  const viewCount = incrementedViews ?? (await getPostViews(post.id));
+  
+  // Get share count for this post
+  const shareCount = await getPostShares(post.id);
   
   // Extract headings for table of contents
   const headings = extractHeadings(post.body);
@@ -187,6 +191,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <>
+      {/* Client-side view tracking with anti-spam protection */}
+      <ViewTracker postId={post.id} />
       <ReadingProgress />
       <BlogFABMenu headings={headings} />
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
@@ -274,7 +280,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <ShareButtons
           url={`${SITE_URL}/blog/${post.slug}`}
           title={post.title}
-          tags={post.tags}
+          postId={post.id}
+          initialShareCount={shareCount ?? 0}
         />
       </div>
       

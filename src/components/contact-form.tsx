@@ -23,6 +23,8 @@ export function ContactForm() {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       message: formData.get("message") as string,
+      // Honeypot field - should always be empty for real users
+      website: formData.get("website") as string,
     };
 
     try {
@@ -64,6 +66,19 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      {/* Honeypot field - hidden from real users, visible to bots */}
+      <div className="hidden" aria-hidden="true">
+        <Label htmlFor="website">Website (leave blank)</Label>
+        <Input
+          id="website"
+          name="website"
+          type="text"
+          autoComplete="off"
+          tabIndex={-1}
+          placeholder="https://example.com"
+        />
+      </div>
+      
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
         <Input

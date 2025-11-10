@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
  * - Twitter share with pre-filled text and hashtags
  * - LinkedIn share with URL
  * - Copy link to clipboard with visual feedback
+ * - Persistent share count tracking via Redis/KV database
  * - Responsive design - icon-only on mobile, text+icon on desktop
  * - Touch-friendly 44px button size on mobile
  * - Toast notifications for user feedback
@@ -25,28 +26,64 @@ import { cn } from "@/lib/utils";
  * 
  * @param props.url - The full URL to share (e.g., https://example.com/blog/post-slug)
  * @param props.title - The title of the content being shared
- * @param props.tags - Optional array of tags to include as Twitter hashtags
+ * @param props.postId - The permanent post ID for tracking shares
+ * @param props.initialShareCount - Initial share count from server (optional)
  * 
  * @example
  * ```tsx
  * <ShareButtons
  *   url="https://example.com/blog/my-post"
  *   title="My Awesome Blog Post"
- *   tags={["react", "nextjs"]}
+ *   postId="unique-post-id"
+ *   initialShareCount={42}
  * />
  * ```
  */
 interface ShareButtonsProps {
   url: string;
   title: string;
-  tags?: string[];
+  postId: string;
+  initialShareCount?: number;
 }
 
-export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
+export function ShareButtons({ url, title, postId, initialShareCount = 0 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
-  const [shareCount, setShareCount] = useState(0);
+  const [shareCount, setShareCount] = useState(initialShareCount);
+
+  /**
+   * Increment share count in database
+   * Optimistically updates UI, falls back on error
+   */
+  const trackShare = async () => {
+    // Optimistically increment
+    const previousCount = shareCount;
+    setShareCount(prev => prev + 1);
+
+    try {
+      const response = await fetch('/api/shares', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update with actual count from server if available
+        if (typeof data.count === 'number') {
+          setShareCount(data.count);
+        }
+      } else {
+        // Revert on error
+        setShareCount(previousCount);
+      }
+    } catch (error) {
+      console.error('Failed to track share:', error);
+      // Revert on error
+      setShareCount(previousCount);
+    }
+  };
 
   // Check if Web Share API is available (typically on mobile)
   useEffect(() => {
@@ -73,7 +110,7 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
           text: `Check out this post: ${title}`,
           url: url,
         });
-        setShareCount(prev => prev + 1);
+        await trackShare();
         toast.success("Shared successfully!");
       } catch (error) {
         // User cancelled the share dialog (AbortError) - don't show error toast
@@ -120,7 +157,7 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
       }
       
       setCopied(true);
-      setShareCount(prev => prev + 1);
+      await trackShare();
       toast.success("Link copied to clipboard!");
       
       // Reset copied state after 2 seconds
@@ -135,7 +172,7 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
    * Open share URL in a popup window for better UX
    * Falls back to new tab if popup is blocked
    */
-  const handleShare = (shareUrl: string, platform: string) => {
+  const handleShare = async (shareUrl: string, platform: string) => {
     try {
       const popup = window.open(
         shareUrl,
@@ -143,8 +180,8 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
         'width=600,height=400,toolbar=no,menubar=no,resizable=yes'
       );
       
-      // Increment share count on successful share
-      setShareCount(prev => prev + 1);
+      // Track share in database
+      await trackShare();
       
       // Fallback if popup is blocked
       if (!popup || popup.closed || typeof popup.closed === 'undefined') {
@@ -160,6 +197,8 @@ export function ShareButtons({ url, title, tags = [] }: ShareButtonsProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
+        {/* Share label - not a semantic heading */}
+        {/* eslint-disable-next-line no-restricted-syntax */}
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
           <Share2 className="h-4 w-4" aria-hidden="true" />
           <span>Share this post</span>

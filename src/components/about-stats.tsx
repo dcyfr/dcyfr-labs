@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { TrendingUp, Shield, Zap, Award, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 
 /**
  * About Stats Component
@@ -130,9 +131,12 @@ function StatCard({ stat }: { stat: Stat }) {
         <Icon className="h-5 w-5 text-primary flex-shrink-0" aria-hidden="true" />
       </div>
       <div className="space-y-1">
+        {/* Stats display uses custom sizing, not semantic heading typography */}
+        {/* eslint-disable-next-line no-restricted-syntax */}
         <p className="text-3xl font-bold tracking-tight">
           {displayValue}
         </p>
+        {/* eslint-disable-next-line no-restricted-syntax */}
         <p className="text-sm font-medium text-foreground">
           {stat.label}
         </p>
@@ -149,8 +153,8 @@ function StatCard({ stat }: { stat: Stat }) {
  */
 export function AboutStats() {
   return (
-    <section className="space-y-4">
-      <h2 className="text-xl md:text-2xl font-medium font-serif">By the Numbers</h2>
+    <section className={SPACING.content}>
+      <h2 className={TYPOGRAPHY.h2.standard}>By the Numbers</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat, idx) => (
           <StatCard key={idx} stat={stat} />

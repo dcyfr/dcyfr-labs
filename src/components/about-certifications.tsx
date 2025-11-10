@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { resume } from "@/data/resume";
 import { ExternalLink } from "lucide-react";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 
 /**
  * About Certifications Component
@@ -84,10 +85,10 @@ export function AboutCertifications() {
   const totalCerts = resume.certifications.reduce((sum, cat) => sum + cat.certifications.length, 0);
   
   return (
-    <section className="space-y-4">
+    <section className={SPACING.content}>
       <div className="space-y-2">
-        <h2 className="text-xl md:text-2xl font-medium font-serif">Professional Certifications</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className={TYPOGRAPHY.h2.standard}>Professional Certifications</h2>
+        <p className={TYPOGRAPHY.metadata}>
           {totalCerts} industry certifications across leading providers.
         </p>
       </div>

@@ -12,6 +12,7 @@ type ContactFormData = {
   name: string;
   email: string;
   message: string;
+  website?: string; // Honeypot field
 };
 
 function validateEmail(email: string): boolean {
@@ -46,7 +47,20 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, email, message } = body as ContactFormData;
+    const { name, email, message, website } = body as ContactFormData;
+
+    // Honeypot validation - if filled, it's likely a bot
+    if (website && website.trim() !== "") {
+      console.log("[Contact API] Honeypot triggered - likely bot submission");
+      // Return success to avoid revealing the honeypot
+      return NextResponse.json(
+        { 
+          success: true, 
+          message: "Message received. We'll get back to you soon!" 
+        },
+        { status: 200 }
+      );
+    }
 
     // Validate required fields
     if (!name || !email || !message) {

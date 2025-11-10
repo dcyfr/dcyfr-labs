@@ -13,6 +13,7 @@ This guide documents all environment variables used in the project, their purpos
 | `INNGEST_EVENT_KEY` | Production only | Inngest event sending | Functions work in dev mode only |
 | `INNGEST_SIGNING_KEY` | Production only | Inngest webhook verification | Functions work in dev mode only |
 | `RESEND_API_KEY` | Production only | Email delivery (contact form, milestones) | Logs submissions, shows warning |
+| `ADMIN_API_KEY` | Required for analytics | Secure analytics endpoint access | Endpoint disabled without key |
 | `GITHUB_TOKEN` | Recommended | GitHub API rate limits (60 → 5,000/hr) | Uses unauthenticated API (60 req/hr) |
 | `REDIS_URL` | Recommended | Blog analytics, view counts, rate limiting | Disables analytics, falls back to in-memory |
 | `NEXT_PUBLIC_GISCUS_REPO` | Optional | Comments system - repository | Comments section hidden |
@@ -202,6 +203,75 @@ This guide documents all environment variables used in the project, their purpos
 - File: `src/app/api/github-contributions/route.ts`
 - Conditional header: Only adds `Authorization` when token exists
 - No empty header sent when missing
+
+### Analytics Security
+
+#### `ADMIN_API_KEY`
+- **Type:** String (secure random key)
+- **Required:** Yes (to enable `/api/analytics` endpoint)
+- **Purpose:** Secure access to analytics dashboard data
+- **Security:** 4-layer protection (API key, environment check, rate limiting, audit logging)
+- **Setup:**
+  1. Generate a secure random key:
+     ```bash
+     # Generate a strong 32-character random key
+     openssl rand -base64 32
+     ```
+  2. Add to `.env.local`:
+     ```bash
+     ADMIN_API_KEY=your_generated_key_here
+     ```
+  3. Add to Vercel environment variables (preview/staging only)
+
+**Usage:**
+```bash
+# Local development
+curl http://localhost:3000/api/analytics \
+  -H "Authorization: Bearer YOUR_KEY_HERE"
+
+# Query specific date range
+curl http://localhost:3000/api/analytics?days=7 \
+  -H "Authorization: Bearer YOUR_KEY_HERE"
+```
+
+**Security Features:**
+1. **API Key Authentication**: Bearer token required in Authorization header
+2. **Environment Protection**: BLOCKED in production (Vercel production environment)
+3. **Rate Limiting**: 5 requests/minute per IP (Redis-backed)
+4. **Audit Logging**: All access attempts logged with IP, timestamp, user agent
+
+**Allowed Environments:**
+- ✅ Local development (`NODE_ENV=development`)
+- ✅ Vercel preview deployments (`VERCEL_ENV=preview`)
+- ✅ Test environment (`NODE_ENV=test`)
+- ❌ Production deployment (`VERCEL_ENV=production`) - HARD BLOCKED
+
+**Error Responses:**
+
+| Status | Reason | Response |
+|--------|--------|----------|
+| 403 | Production environment | Analytics not available in production |
+| 401 | Missing/invalid API key | Valid API key required |
+| 429 | Rate limit exceeded | Maximum 5 requests per minute |
+| 500 | Server error | Failed to fetch analytics |
+
+**Behavior without key:**
+- ❌ Endpoint completely disabled
+- ❌ Returns 401 Unauthorized for all requests
+- ⚠️  Server logs error: "ADMIN_API_KEY not configured"
+- ✅ Analytics data never exposed without authentication
+
+**Best Practices:**
+- 🔒 Never commit `ADMIN_API_KEY` to version control
+- 🔒 Use different keys for preview vs local development
+- 🔒 Rotate keys periodically
+- 🔒 Monitor access logs for suspicious activity
+- 🔒 Never enable in production environment
+
+**Implementation:**
+- File: `src/app/api/analytics/route.ts`
+- Protection: 4-layer security (environment, API key, rate limit, audit)
+- Documentation: `/docs/security/api-security-audit.md`
 
 ### Comments System (Giscus)
 

@@ -35,6 +35,8 @@ interface PostAnalytics {
   views: number;
   views24h: number;
   viewsRange: number;
+  shares: number;
+  shares24h: number;
   readingTime: {
     words: number;
     minutes: number;
@@ -51,15 +53,21 @@ interface AnalyticsData {
     totalViews: number;
     totalViews24h: number;
     totalViewsRange: number;
+    totalShares: number;
+    totalShares24h: number;
     averageViews: number;
     averageViews24h: number;
     averageViewsRange: number;
+    averageShares: number;
+    averageShares24h: number;
     topPost: {
       slug: string;
       title: string;
       views: number;
       views24h: number;
       viewsRange: number;
+      shares: number;
+      shares24h: number;
     } | null;
     topPost24h: {
       slug: string;
@@ -67,6 +75,8 @@ interface AnalyticsData {
       views: number;
       views24h: number;
       viewsRange: number;
+      shares: number;
+      shares24h: number;
     } | null;
     topPostRange: {
       slug: string;
@@ -74,18 +84,34 @@ interface AnalyticsData {
       views: number;
       views24h: number;
       viewsRange: number;
+      shares: number;
+      shares24h: number;
+    } | null;
+    mostSharedPost: {
+      slug: string;
+      title: string;
+      views: number;
+      shares: number;
+      shares24h: number;
+    } | null;
+    mostSharedPost24h: {
+      slug: string;
+      title: string;
+      views: number;
+      shares: number;
+      shares24h: number;
     } | null;
   };
   posts: PostAnalytics[];
   trending: PostAnalytics[];
 }
 
-type SortField = "title" | "views" | "views24h" | "publishedAt" | "viewsRange";
+type SortField = "title" | "views" | "views24h" | "publishedAt" | "viewsRange" | "shares" | "shares24h";
 type SortDirection = "asc" | "desc";
 type DateRange = "1" | "7" | "30" | "90" | "all";
 
 const DATE_RANGE_LABELS: Record<DateRange, string> = {
-  "1": "24 Hours",
+  "1": "1 Day",
   "7": "7 Days",
   "30": "30 Days",
   "90": "90 Days",
@@ -122,7 +148,7 @@ export default function AnalyticsDashboard() {
     
     // Sort
     const urlSortField = params.get("sortField");
-    if (urlSortField && ["title", "views", "views24h", "viewsRange", "publishedAt"].includes(urlSortField)) {
+    if (urlSortField && ["title", "views", "views24h", "viewsRange", "publishedAt", "shares", "shares24h"].includes(urlSortField)) {
       setSortField(urlSortField as SortField);
     }
     
@@ -294,9 +320,13 @@ export default function AnalyticsDashboard() {
     totalViews: number;
     totalViews24h: number;
     totalViewsRange: number;
+    totalShares: number;
+    totalShares24h: number;
     avgViews: number;
     avgViews24h: number;
     avgViewsRange: number;
+    avgShares: number;
+    avgShares24h: number;
     posts: PostAnalytics[];
   }>>((acc, post) => {
     // Skip drafts/archived if filters are active
@@ -310,9 +340,13 @@ export default function AnalyticsDashboard() {
           totalViews: 0,
           totalViews24h: 0,
           totalViewsRange: 0,
+          totalShares: 0,
+          totalShares24h: 0,
           avgViews: 0,
           avgViews24h: 0,
           avgViewsRange: 0,
+          avgShares: 0,
+          avgShares24h: 0,
           posts: [],
         };
       }
@@ -320,6 +354,8 @@ export default function AnalyticsDashboard() {
       acc[tag].totalViews += post.views;
       acc[tag].totalViews24h += post.views24h;
       acc[tag].totalViewsRange += post.viewsRange;
+      acc[tag].totalShares += post.shares;
+      acc[tag].totalShares24h += post.shares24h;
       acc[tag].posts.push(post);
     }
     return acc;
@@ -331,6 +367,8 @@ export default function AnalyticsDashboard() {
     stats.avgViews = Math.round(stats.totalViews / stats.postCount);
     stats.avgViews24h = Math.round(stats.totalViews24h / stats.postCount);
     stats.avgViewsRange = Math.round(stats.totalViewsRange / stats.postCount);
+    stats.avgShares = Math.round(stats.totalShares / stats.postCount);
+    stats.avgShares24h = Math.round(stats.totalShares24h / stats.postCount);
   });
 
   // Sort tags by total views (descending)
@@ -372,6 +410,12 @@ export default function AnalyticsDashboard() {
       case "viewsRange":
         comparison = a.viewsRange - b.viewsRange;
         break;
+      case "shares":
+        comparison = a.shares - b.shares;
+        break;
+      case "shares24h":
+        comparison = a.shares24h - b.shares24h;
+        break;
       case "publishedAt":
         comparison = new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
         break;
@@ -391,6 +435,8 @@ export default function AnalyticsDashboard() {
     totalPosts: filteredPosts.length,
     totalViews: filteredPosts.reduce((s, p) => s + p.views, 0),
     totalViews24h: filteredPosts.reduce((s, p) => s + p.views24h, 0),
+    totalShares: filteredPosts.reduce((s, p) => s + p.shares, 0),
+    totalShares24h: filteredPosts.reduce((s, p) => s + p.shares24h, 0),
     averageViews:
       filteredPosts.length > 0
         ? Math.round(filteredPosts.reduce((s, p) => s + p.views, 0) / filteredPosts.length)
@@ -398,6 +444,14 @@ export default function AnalyticsDashboard() {
     averageViews24h:
       filteredPosts.length > 0
         ? Math.round(filteredPosts.reduce((s, p) => s + p.views24h, 0) / filteredPosts.length)
+        : 0,
+    averageShares:
+      filteredPosts.length > 0
+        ? Math.round(filteredPosts.reduce((s, p) => s + p.shares, 0) / filteredPosts.length)
+        : 0,
+    averageShares24h:
+      filteredPosts.length > 0
+        ? Math.round(filteredPosts.reduce((s, p) => s + p.shares24h, 0) / filteredPosts.length)
         : 0,
     // Top post should always be based on highest views, regardless of current sort
     topPost:
@@ -407,6 +461,14 @@ export default function AnalyticsDashboard() {
     topPost24h:
       filteredPosts.length > 0
         ? [...filteredPosts].sort((a, b) => b.views24h - a.views24h)[0]
+        : null,
+    mostSharedPost:
+      filteredPosts.length > 0
+        ? [...filteredPosts].sort((a, b) => b.shares - a.shares)[0]
+        : null,
+    mostSharedPost24h:
+      filteredPosts.length > 0
+        ? [...filteredPosts].sort((a, b) => b.shares24h - a.shares24h)[0]
         : null,
   };
 
@@ -446,13 +508,15 @@ export default function AnalyticsDashboard() {
 
   // Export functions
   const exportToCSV = () => {
-    const headers = ["Title", "Slug", "Views (All)", `Views (${DATE_RANGE_LABELS[dateRange]})`, "Views (24h)", "Published", "Tags", "Archived", "Draft"];
+    const headers = ["Title", "Slug", "Views (All)", `Views (${DATE_RANGE_LABELS[dateRange]})`, "Views (24h)", "Shares (All)", "Shares (24h)", "Published", "Tags", "Archived", "Draft"];
     const rows = sortedPosts.map(post => [
       `"${post.title.replace(/"/g, '""')}"`,
       post.slug,
       post.views,
       post.viewsRange,
       post.views24h,
+      post.shares,
+      post.shares24h,
       post.publishedAt,
       `"${post.tags.join(", ")}"`,
       post.archived ? "Yes" : "No",
@@ -1070,6 +1134,24 @@ export default function AnalyticsDashboard() {
                       <SortIndicator field="views24h" />
                     </button>
                   </th>
+                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
+                    <button
+                      onClick={() => handleSort("shares")}
+                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
+                    >
+                      Shares (All)
+                      <SortIndicator field="shares" />
+                    </button>
+                  </th>
+                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
+                    <button
+                      onClick={() => handleSort("shares24h")}
+                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
+                    >
+                      Shares (24h)
+                      <SortIndicator field="shares24h" />
+                    </button>
+                  </th>
                   <th className="text-left py-2 px-3 font-semibold whitespace-nowrap hidden md:table-cell">
                     <button
                       onClick={() => handleSort("publishedAt")}
@@ -1111,6 +1193,12 @@ export default function AnalyticsDashboard() {
                         )}
                         <span className="font-medium tabular-nums">{post.views24h.toLocaleString()}</span>
                       </div>
+                    </td>
+                    <td className="text-right py-2 px-3 font-semibold tabular-nums">
+                      {post.shares.toLocaleString()}
+                    </td>
+                    <td className="text-right py-2 px-3 font-semibold tabular-nums">
+                      {post.shares24h.toLocaleString()}
                     </td>
                     <td className="py-2 px-3 text-muted-foreground hidden md:table-cell whitespace-nowrap">
                       {new Date(post.publishedAt).toLocaleDateString(undefined, {

@@ -297,7 +297,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
 
       {/* Desktop TOC - Fixed Sidebar */}
       <nav
-        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-16rem)] z-40"
+        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-12rem)] z-30"
         aria-label="Table of contents"
       >
         <div className="space-y-2">

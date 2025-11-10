@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 9, 2025
+**Last Updated:** October 26, 2025
 
 ---
 
@@ -16,14 +16,19 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 - **🟢 LOW** - Polish, nice-to-have improvements
 - **⚪ BACKLOG** - Future consideration, exploration
 
-**Current Focus:** ESLint quick wins complete (Nov 9) - High-traffic pages migrated to design tokens!
+**Current Focus:** API Security Phase 1 Complete (Oct 26) - Critical vulnerabilities addressed!
 
 ---
 
 ## 📌 Recent Updates
 
-### 🎯 ESLint Quick Wins Complete (Nov 9, 2025) ✅
-**Status:** High-traffic pages migrated to design tokens
+### � API Security Phase 1 Complete (Oct 26, 2025) ✅
+**Status:** All critical security vulnerabilities addressed
+- ✅ Analytics endpoint secured with 4-layer protection
+- ✅ Inngest webhook security verified (SDK handles automatically)
+- ✅ Contact form honeypot implemented (70-90% bot spam reduction)
+- ✅ Comprehensive security documentation created
+- **See:** `docs/operations/done.md` for full details
 
 **Actions Completed:**
 - ✅ **Blog post detail page** (`src/app/blog/[slug]/page.tsx`) - 3 warnings fixed
@@ -1167,7 +1172,56 @@ When prioritizing this work in the future:
 
 ---
 
-## � Completed Work
+## ⚪ BACKLOG - Security Infrastructure (Medium Priority)
+
+### API Security Audit - Phase 2 (Enhanced Protection)
+
+**Priority:** MEDIUM - Infrastructure improvements  
+**Estimated Effort:** 12-16 hours over 2-3 weeks
+
+#### Input Validation & Sanitization
+- [ ] Install sanitization library (DOMPurify or validator.js)
+- [ ] Sanitize all user inputs before storage/processing
+- [ ] Validate content against malicious patterns (XSS, SQL injection)
+- [ ] Create `src/lib/validation.ts` utility module
+- [ ] Update `/api/contact` with enhanced sanitization
+
+#### Standardize Error Handling
+- [ ] Create `src/lib/api-errors.ts` error response utility
+- [ ] Define error codes and messages (public vs internal)
+- [ ] Generic messages in production, detailed logs server-side
+- [ ] Include request ID in error responses
+- [ ] Document error codes in `docs/api/error-codes.md`
+
+#### API Middleware Layer
+- [ ] Create `src/middleware/api.ts` for API-specific middleware
+- [ ] Request ID generation (UUID per request)
+- [ ] Standardized logging with request context
+- [ ] CORS configuration (explicit, not default)
+- [ ] Rate limit header standardization
+- [ ] Request/response timing metrics
+
+#### API Monitoring & Security Events
+- [ ] Track rate limit violations per endpoint
+- [ ] Track error rates by endpoint and error type
+- [ ] Security event logging for suspicious patterns
+- [ ] Alert on coordinated attacks
+- [ ] Integration with monitoring service (Sentry, Datadog)
+
+#### Advanced Features (Future)
+- [ ] API versioning (`/api/v1/` namespace)
+- [ ] GraphQL API consideration
+- [ ] OAuth/JWT authentication for admin endpoints
+- [ ] IP reputation integration
+
+**See Also:**
+- `docs/security/anti-spam-implementation.md` - View/share protection
+- `docs/api/reference.md` - API endpoint documentation
+- `docs/security/anti-spam-summary.md` - Recent security improvements
+
+---
+
+## ✅ Completed Work
 
 All completed tasks have been moved to **`done.md`** for historical reference.
 

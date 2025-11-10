@@ -232,7 +232,250 @@ RESEND_API_KEY=re_xxxxx
 
 ---
 
-## Security Testing
+## Views Tracking API
+
+**Endpoint**: `POST /api/views`  
+**File**: `src/app/api/views/route.ts`
+
+### Overview
+
+Client-side view tracking with comprehensive anti-spam protection. Counts blog post views with 5 layers of security.
+
+### Protection Layers
+
+1. **IP Rate Limiting**: 10 views per 5 minutes per IP
+2. **Session Deduplication**: 1 view per session per post per 30 minutes
+3. **User-Agent Validation**: Blocks bots, requires valid user-agent
+4. **Timing Validation**: Minimum 5 seconds on page with page visible
+5. **Abuse Pattern Detection**: Tracks and blocks repeat offenders
+
+### Request
+
+```http
+POST /api/views
+Content-Type: application/json
+
+{
+  "postId": "permanent-post-id",
+  "sessionId": "client-generated-uuid",
+  "timeOnPage": 5234,
+  "isVisible": true
+}
+```
+
+**Fields**:
+- `postId` (required): Permanent post identifier
+- `sessionId` (required): Client-generated session ID (from sessionStorage)
+- `timeOnPage` (required): Milliseconds spent on page (must be >= 5000)
+- `isVisible` (required): Whether page is visible (from Visibility API)
+
+### Response
+
+**Success**:
+```json
+{
+  "count": 42,
+  "recorded": true
+}
+```
+
+**Duplicate (Not Counted)**:
+```json
+{
+  "recorded": false,
+  "count": null,
+  "message": "View already recorded for this session"
+}
+```
+
+**Rate Limited**:
+```json
+{
+  "error": "Rate limit exceeded",
+  "recorded": false
+}
+```
+
+**Headers**:
+```http
+X-RateLimit-Limit: 10
+X-RateLimit-Remaining: 7
+X-RateLimit-Reset: 1696348920000
+```
+
+### Client Usage
+
+```tsx
+import { ViewTracker } from "@/components/view-tracker";
+
+// Automatic tracking in blog posts
+<ViewTracker postId={post.id} />
+```
+
+Or with hook:
+```tsx
+import { useViewTracking } from "@/hooks/use-view-tracking";
+
+const { tracked, error } = useViewTracking(postId);
+```
+
+### Status Codes
+
+- `200 OK` - Request valid (check `recorded` field for count status)
+- `400 Bad Request` - Invalid request data
+- `429 Too Many Requests` - Rate limit exceeded
+- `500 Internal Server Error` - Server error
+
+---
+
+## Shares Tracking API
+
+**Endpoint**: `POST /api/shares`  
+**File**: `src/app/api/shares/route.ts`
+
+### Overview
+
+Client-side share tracking with comprehensive anti-spam protection. Counts blog post shares with 5 layers of security.
+
+### Protection Layers
+
+1. **IP Rate Limiting**: 3 shares per 60 seconds per IP
+2. **Session Deduplication**: 1 share per session per post per 5 minutes
+3. **User-Agent Validation**: Blocks bots, requires valid user-agent
+4. **Timing Validation**: Minimum 2 seconds since page load
+5. **Abuse Pattern Detection**: Tracks and blocks repeat offenders
+
+### Request
+
+```http
+POST /api/shares
+Content-Type: application/json
+
+{
+  "postId": "permanent-post-id",
+  "sessionId": "client-generated-uuid",
+  "timeOnPage": 3456
+}
+```
+
+**Fields**:
+- `postId` (required): Permanent post identifier
+- `sessionId` (required): Client-generated session ID (from sessionStorage)
+- `timeOnPage` (required): Milliseconds since page load (must be >= 2000)
+
+### Response
+
+**Success**:
+```json
+{
+  "count": 15,
+  "recorded": true
+}
+```
+
+**Duplicate (Not Counted)**:
+```json
+{
+  "recorded": false,
+  "count": null,
+  "message": "Share already recorded for this session"
+}
+```
+
+**Headers**:
+```http
+X-RateLimit-Limit: 3
+X-RateLimit-Remaining: 2
+X-RateLimit-Reset: 1696348920000
+```
+
+### Client Usage
+
+```tsx
+import { useShareTracking } from "@/hooks/use-share-tracking";
+
+const { trackShare, isSharing } = useShareTracking(postId);
+
+// Call when user clicks share button
+const result = await trackShare();
+if (result.success) {
+  toast.success("Thanks for sharing!");
+}
+```
+
+### Status Codes
+
+- `200 OK` - Request valid (check `recorded` field for count status)
+- `400 Bad Request` - Invalid request data
+- `429 Too Many Requests` - Rate limit exceeded
+- `500 Internal Server Error` - Server error
+
+---
+
+## Anti-Spam Implementation
+
+### Session Management
+
+Session IDs stored in `sessionStorage` (not `localStorage`):
+- Per-tab persistence only
+- Cleared on browser close
+- Privacy-friendly (no long-term tracking)
+- Validated format: alphanumeric + hyphens/underscores, 10-100 chars
+
+### Redis Keys
+
+```
+session:view:{postId}:{sessionId}   # View deduplication (TTL: 1800s)
+session:share:{postId}:{sessionId}  # Share deduplication (TTL: 300s)
+abuse:view:{ip}                      # Abuse tracking (TTL: 86400s)
+abuse:share:{ip}                     # Abuse tracking (TTL: 86400s)
+ratelimit:view:{ip}                  # Rate limiting (TTL: 300s)
+ratelimit:share:{ip}                 # Rate limiting (TTL: 60s)
+```
+
+### Abuse Reasons Logged
+
+- `missing_user_agent` - No user-agent header
+- `bot_detected` - Known bot pattern (curl, wget, scrapers)
+- `suspicious_user_agent` - Too short or malformed
+- `invalid_timing_data` - Missing or negative timing
+- `insufficient_time_on_page` - Less than 5s for views
+- `share_too_fast` - Less than 2s for shares
+- `rate_limit_exceeded` - IP rate limit hit
+- `abuse_pattern_detected` - >10 abuse attempts in 1 hour
+- `validation_failed` - General validation failure
+
+### Monitoring Abuse
+
+```bash
+# Redis CLI commands
+redis-cli -u $REDIS_URL
+
+# View abuse attempts for IP
+> ZRANGE abuse:view:123.45.67.89 0 -1 WITHSCORES
+
+# Count abuse in last hour
+> ZCOUNT abuse:view:123.45.67.89 <timestamp-1h-ago> <now>
+
+# Check rate limit status
+> GET ratelimit:view:123.45.67.89
+> TTL ratelimit:view:123.45.67.89
+```
+
+---
+
+## Contact Form API
+
+**Endpoint**: `POST /api/contact`  
+**File**: `src/app/api/contact/route.ts`
+
+### Overview
+
+Sends contact form emails with rate limiting and validation.
+
+### Request
+
+```http
 
 ### Test Rate Limiting
 
