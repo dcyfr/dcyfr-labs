@@ -193,7 +193,23 @@ export default function AnalyticsDashboard() {
     }
     
     try {
-      const response = await fetch(`/api/analytics?days=${dateRange}`);
+      // Get API key from environment (injected at build time via NEXT_PUBLIC_)
+      // For dev, you can set NEXT_PUBLIC_ADMIN_API_KEY in .env.local
+      const apiKey = process.env.NEXT_PUBLIC_ADMIN_API_KEY;
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Add Authorization header if API key is available
+      if (apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+      }
+      
+      const response = await fetch(`/api/analytics?days=${dateRange}`, {
+        headers,
+      });
+      
       if (!response.ok) {
         throw new Error("Failed to fetch analytics");
       }
