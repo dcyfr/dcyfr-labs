@@ -2,15 +2,15 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 10, 2025
+**Last Updated:** November 11, 2025
 
 ---
 
 ## 🎯 Priority Overview
 
-This todo list is organized by **criticality and user impact**, not arbitrary phases:
+This todo list is organized by **criticality and user impact**:
 
-- **🚨 CRITICAL** - Broken/inaccessible features, affects majority of users (mobile traffic = 50-70%)
+- **🚨 CRITICAL** - Broken/inaccessible features, affects majority of users
 - **🔴 HIGH** - Major UX issues, affects key user flows  
 - **🟡 MEDIUM** - Enhancements to working features, optimization
 - **🟢 LOW** - Polish, nice-to-have improvements
@@ -23,96 +23,15 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 ## 🟡 MEDIUM Priority
 
 ### Architecture Refactoring
-**Goal:** Simplify and standardize pages with reusable patterns
-
-#### Blog & Archive Pages Refactor
-**Status:** ✅ COMPLETE (All Phases 1-4) 🎉
-- [x] **Phase 1: Create foundation (archive/article libs + layouts)** ✅
-  - ✅ `src/lib/archive.ts` - Generic archive utilities (424 lines)
-  - ✅ `src/lib/article.ts` - Generic article utilities (434 lines)
-  - ✅ `src/lib/metadata.ts` - Centralized metadata helpers (455 lines)
-  - ✅ `src/components/layouts/archive-layout.tsx` - Universal archive wrapper
-  - ✅ `src/components/layouts/archive-pagination.tsx` - Pagination controls
-  - ✅ `src/components/layouts/archive-filters.tsx` - Universal filters (204 lines)
-  - ✅ `src/components/layouts/article-layout.tsx` - Universal article wrapper
-- [x] **Phase 2: Refactor `/blog` and `/blog/[slug]` pages** ✅
-  - ✅ `/blog/page.tsx`: 156 → 135 lines (13.5% reduction)
-  - ✅ `/blog/[slug]/page.tsx`: 243 → 229 lines (5.8% reduction)
-  - ✅ Used: createArchivePageMetadata(), createArticlePageMetadata(), createCollectionSchema()
-  - ✅ Preserved all features (BlogFilters, reading time, multiple tags, layout toggle)
-- [x] **Phase 3: Complete `/projects` page refactor** ✅
-  - ✅ `/projects/page.tsx`: 116 → 86 lines (25.9% reduction)
-  - ✅ Total: **515 → 450 lines (65 lines saved, 12.6% reduction)**
-  - ✅ Used createArchivePageMetadata(), getJsonLdScriptProps()
-  - ✅ Preserved custom SoftwareSourceCode JSON-LD schema
-- [x] **Phase 4: Documentation & cleanup** ✅
-  - ✅ Created migration guide for new archive pages
-  - ✅ Added practical examples to architecture docs
-  - ✅ Documented best practices and patterns
-  - ✅ Updated architecture README with quick start
-- **Documentation:**
-  - ✅ `/docs/architecture/refactoring-complete.md` - Complete overview
-  - ✅ `/docs/architecture/migration-guide.md` - Step-by-step guide (500+ lines)
-  - ✅ `/docs/architecture/examples.md` - Practical examples (400+ lines)
-  - ✅ `/docs/architecture/best-practices.md` - Guidelines (550+ lines)
-  - ✅ `/docs/architecture/phase-1-complete.md` - Foundation summary
-  - ✅ `/docs/architecture/phase-2-complete.md` - Blog refactor summary
-  - ✅ `/docs/architecture/README.md` - Architecture index
-  - ✅ Updated `done.md` with completion record
-- **Benefits:** 
-  - ✅ Centralized, maintainable metadata generation
-  - ✅ Type-safe with IntelliSense support
-  - ✅ Consistent patterns across all pages
-  - ✅ Faster page creation going forward (comprehensive guides)
-  - ✅ Zero breaking changes
-  - ✅ Production-ready with full documentation
-
-#### Core Pages Refactor
-**Status:** ✅ COMPLETE (All Phases 1-4) 🎉
-- [x] **Phase 1: Create foundation (page layouts + metadata helpers)** ✅
-  - ✅ `src/components/layouts/page-layout.tsx` - Universal page wrapper (41 lines)
-  - ✅ `src/components/layouts/page-hero.tsx` - Standardized hero sections (99 lines)
-  - ✅ `src/components/layouts/page-section.tsx` - Consistent section wrapper (96 lines)
-  - ✅ Enhanced `PAGE_LAYOUT` design tokens with hero/section/prose/narrow patterns
-  - ✅ `createPageMetadata()` helper for unified metadata generation
-- [x] **Phase 2: Refactor homepage (`/`)** ✅
-  - ✅ `/page.tsx`: 255 → 223 lines (12.5% reduction)
-  - ✅ Applied PageLayout wrapper and PAGE_LAYOUT patterns
-  - ✅ Maintained all features: featured post hero, blog list, projects grid
-- [x] **Phase 3: Refactor core pages** ✅
-  - ✅ `/about/page.tsx`: 255 → 159 lines (38% reduction)
-  - ✅ `/contact/page.tsx`: 74 → 50 lines (32% reduction - hit target!)
-  - ✅ `/resume/page.tsx`: 129 → 113 lines (12% reduction)
-  - ✅ `/not-found.tsx`: 13 → 24 lines (enhanced UX)
-  - ✅ Total: **726 → 569 lines (21.6% reduction)**
-  - ✅ Fixed width issues in 4 about page components
-  - ✅ Extracted social links to reusable component (147 lines)
-- [x] **Phase 3.5: Refactor loading skeletons** ✅
-  - ✅ Updated 5 existing loading.tsx files to match new page structures
-  - ✅ Created new `/resume/loading.tsx` (92 lines)
-  - ✅ Total: 367 lines across 6 loading skeletons
-- [x] **Phase 4: Cleanup and documentation** ✅
-  - ✅ Verified zero compilation errors
-  - ✅ Reduced max widths (prose: max-w-3xl → max-w-2xl, standard: max-w-5xl → max-w-4xl)
-  - ✅ Updated `/docs/architecture/core-pages-refactor-plan.md` with completion status
-- **Documentation:**
-  - ✅ `/docs/architecture/core-pages-refactor-plan.md` - Complete plan with actual results
-  - ✅ Design tokens: Enhanced `src/lib/design-tokens.ts` with PAGE_LAYOUT patterns
-  - ✅ Updated `done.md` with completion record
-- **Benefits:**
-  - ✅ 21.6% code reduction across core pages
-  - ✅ Consistent structure and spacing patterns
-  - ✅ All loading skeletons match page structures
-  - ✅ Easy to maintain and extend
-  - ✅ Zero breaking changes
 
 #### Developer Dashboard & Tools Refactor
-**Status:** 🔄 Ready to start - Analysis complete
+**Status:** 🔄 Ready to start - Analysis complete  
+**Estimated:** 10-15 new files, ~600 line reduction (52%)
+
 - [x] **Analysis phase** ✅
   - ✅ Reviewed current implementation: 1,249-line AnalyticsClient.tsx
-  - ✅ Identified structure: data fetching, state management, sorting, filtering, exports, visualization
   - ✅ Planning document complete: `/docs/architecture/dashboard-refactor-plan.md`
-  - ✅ Estimated scope: 10-15 new files, ~600 line reduction
+  
 - [ ] **Phase 1: Create foundation** (dashboard components + utilities)
   - [ ] `src/components/dashboard/dashboard-layout.tsx` - Universal dashboard wrapper
   - [ ] `src/components/dashboard/dashboard-header.tsx` - Title, actions, filters
@@ -122,6 +41,7 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
   - [ ] `src/components/dashboard/dashboard-export.tsx` - CSV/JSON export UI
   - [ ] `src/lib/dashboard/table-utils.ts` - Sorting, filtering, pagination logic
   - [ ] `src/lib/dashboard/export-utils.ts` - CSV/JSON export logic
+  
 - [ ] **Phase 2: Extract analytics components**
   - [ ] `src/components/analytics/analytics-overview.tsx` - Stats summary
   - [ ] `src/components/analytics/analytics-trending.tsx` - Trending posts section
@@ -130,365 +50,17 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
   - [ ] `src/hooks/use-analytics-data.ts` - Data fetching hook
   - [ ] `src/hooks/use-dashboard-filters.ts` - Filter state management
   - [ ] `src/hooks/use-dashboard-sort.ts` - Sort state management
+  
 - [ ] **Phase 3: Refactor AnalyticsClient.tsx**
-  - [ ] Refactor using new components and hooks (1,249 → ~600 lines, 52% reduction)
+  - [ ] Refactor using new components and hooks (1,249 → ~600 lines)
   - [ ] Verify zero compilation errors
-  - [ ] Test all functionality (sorting, filtering, exports, auto-refresh)
+  - [ ] Test all functionality
+  
 - [ ] **Phase 4: Documentation & cleanup**
   - [ ] Update documentation with completion status
-  - [ ] Document reusable dashboard patterns for future tools
-- **Plan:** `/docs/architecture/dashboard-refactor-plan.md`
-- **Benefits:** 52% code reduction for analytics, 60% less duplication for new dashboards, reusable admin patterns
-- **Next Session:** Ready to begin Phase 1 foundation work
+  - [ ] Document reusable dashboard patterns
 
----
-
-## 📌 Recent Updates
-
-### ✅ Feed System Improvements Complete (Nov 10, 2025) ✅
-**Status:** Critical fixes and enhancements deployed
-- ✅ **CRITICAL FIX:** Project URLs corrected from `/projects#slug` to `/projects/slug`
-- ✅ Feed autodiscovery already implemented via `metadata.alternates` in layout.tsx
-- ✅ Feed icons and branding added (RSS image element, Atom logo/icon)
-- ✅ TTL (60 min) added to RSS feeds for better caching
-- ✅ Copyright/rights information added to all feeds
-- ✅ All feeds validated and tested
-- **See:** `docs/rss/feed-improvements-brainstorm.md` for complete roadmap
-
-**Backlogged Items (Future):**
-- Enhanced image enclosures with file metadata
-- Explicit publication dates for projects (currently inferred from timeline)
-- Feed documentation page (`/feeds`)
-- JSON Feed format support
-- Filtered feeds by tag/status
-- Feed analytics tracking
-
----
-
-### 📰 Feed System Refactoring Complete (Nov 10, 2025) ✅
-**Status:** Multiple feeds with featured image support
-- ✅ Unified feed library (`src/lib/feeds.ts`) for RSS/Atom generation
-- ✅ New feed endpoints: `/feed` (unified), `/blog/feed`, `/projects/feed`
-- ✅ Featured image support with proper enclosures
-- ✅ Refactored legacy feeds (`/rss.xml`, `/atom.xml`) to use shared library
-- ✅ Updated sitemap with new feed URLs
-- ✅ Comprehensive documentation created
-- **See:** `docs/rss/implementation.md` and `docs/rss/quick-reference.md`
-
----
-
-### �🔒 Security Monitoring Phase Complete (Nov 9-10, 2025) ✅
-**Status:** CSP violation monitoring live with Sentry
-- ✅ Tracking system verified (view/share counts, anti-spam, Redis persistence)
-- ✅ Sentry integrated for error tracking and CSP violation monitoring
-- ✅ Privacy-compliant implementation (no PII, anonymized URIs)
-- ✅ Rate limiting on CSP endpoint (10 violations/minute per IP)
-- ✅ Comprehensive documentation created (`/docs/security/csp/monitoring.md`)
-- ✅ Sentry monitoring enabled in production
-
-**Next Priority:** Privacy Policy Documentation (see Security section below)
-
----
-
-### 🛡️ API Security Phase 1 Complete (Oct 26, 2025) ✅
-**Status:** All critical security vulnerabilities addressed
-- ✅ Analytics endpoint secured with 4-layer protection
-- ✅ Inngest webhook security verified (SDK handles automatically)
-- ✅ Contact form honeypot implemented (70-90% bot spam reduction)
-- ✅ Comprehensive security documentation created
-- **See:** `docs/operations/done.md` for full details
-
-**Actions Completed:**
-- ✅ **Blog post detail page** (`src/app/blog/[slug]/page.tsx`) - 3 warnings fixed
-  - Container: `max-w-3xl` → `CONTAINER_WIDTHS.prose`
-  - H1: hardcoded classes → `TYPOGRAPHY.h1.article`
-  - Sources H2: hardcoded → `TYPOGRAPHY.h2.standard`
-- ✅ **Series page** (`src/app/blog/series/[slug]/page.tsx`) - 2 warnings fixed
-  - Container: `max-w-5xl` → `CONTAINER_WIDTHS.standard`
-  - H1: `font-bold` → `TYPOGRAPHY.h1.standard`
-- ✅ **404 page** (`src/app/not-found.tsx`) - 2 warnings fixed
-  - Container: `max-w-2xl` → `CONTAINER_WIDTHS.narrow`
-  - H1: hardcoded → `TYPOGRAPHY.h1.standard`
-
-**Results:**
-- **Warnings: 78 → 71** (9% improvement, 7 warnings fixed)
-- **Highest-traffic pages now consistent** - Blog detail, series, 404
-- **Design tokens applied** where they matter most
-- **Remaining work backlogged** - See backlog section below
-
-**Next Steps:**
-- Remaining 71 warnings moved to backlog (low priority)
-- Future: Migrate analytics, projects, resume, and component files
-- See `docs/design/eslint-warnings-quick-ref.md` for migration patterns
-
----
-
-### 🔧 ESLint Warnings Resolution (Nov 9, 2025) ✅
-**Status:** False positives eliminated, phased migration plan created
-
-**Problem Identified:**
-- Vercel preview builds showing 100+ ESLint warnings
-- Warnings from design system enforcement rules (intentional)
-- Many false positives (shadcn/ui components, design-tokens.ts itself)
-
-**Actions Completed:**
-- ✅ **Fixed `server.mjs` deprecation** - Replaced `url.parse()` with WHATWG URL API
-- ✅ **Updated `eslint.config.mjs`** - Added exclusion rules for:
-  - `src/components/ui/**` (shadcn/ui primitives - 15 false positives)
-  - `src/lib/design-tokens.ts` (source of truth - 10 false positives)
-  - `src/**/*loading.tsx` and `src/**/*skeleton.tsx` (transitional components)
-- ✅ **Created comprehensive documentation:**
-  - `docs/design/eslint-warnings-resolution.md` - Complete strategy & 4-phase plan
-  - `docs/design/eslint-warnings-quick-ref.md` - Developer quick reference
-  - Updated `docs/INDEX.md` with new ESLint docs
-
-**Results:**
-- **Warnings reduced from 100+ to 78** (22% improvement)
-- **Zero false positives** - Only real violations remain
-- **Build logs cleaner** - Easier to spot actual issues
-- **Phased migration plan** - Clear path forward with priorities
-- **Build still passes** ✅ - No blocking errors
-
-**Remaining Work (78 warnings):**
-- **Phase 2 (This Week):** High-traffic pages (blog, projects) → ~40 warnings
-- **Phase 3 (Next Sprint):** Shared components → ~15 warnings  
-- **Phase 4 (Future):** Edge cases and admin pages → <5 warnings
-
-**See:**
-- `docs/design/eslint-warnings-quick-ref.md` - How to fix warnings
-- `docs/design/eslint-warnings-resolution.md` - Complete plan
-- Run `npm run lint` to see remaining violations
-
----
-
-### 🎨 Design System Phase 2-4 Complete (Nov 9, 2025) ✅
-**Major Achievement:** Core pages and components successfully migrated to design tokens system
-
-**What Was Completed:**
-
-**Phase 2: Page Updates (6 hours)** ✅
-- ✅ Homepage (`src/app/page.tsx`) - Applied all design tokens
-- ✅ About page (`src/app/about/page.tsx`) - Prose container + typography
-- ✅ Projects page (`src/app/projects/page.tsx`) - Standard container + hero
-- ✅ Blog listing (`src/app/blog/page.tsx`) - Typography + spacing tokens
-- ✅ Contact page (`src/app/contact/page.tsx`) - Narrow container + spacing
-
-**Phase 3: Component Updates (8 hours)** ✅
-- ✅ ProjectCard - Applied `HOVER_EFFECTS.card` token
-- ✅ PostList - Applied `HOVER_EFFECTS.cardSubtle` token
-- ✅ FeaturedPostHero - Applied `HOVER_EFFECTS.cardFeatured` token
-- ✅ BackToTop FAB - Applied `HOVER_EFFECTS.button` token
-- ✅ TableOfContents FAB - Applied `HOVER_EFFECTS.button` token
-- ✅ FABMenu (5 buttons) - Applied `HOVER_EFFECTS.button` token
-
-**Phase 4: Enforcement (Complete)** ✅
-- ✅ ESLint rules configured in `eslint.config.mjs`
-  - Container width enforcement (warns on hardcoded `max-w-*`)
-  - Typography enforcement (warns on hardcoded font classes)
-  - Hover effects enforcement (warns on hardcoded transitions)
-  - Exclusions for false positives (shadcn/ui, design-tokens.ts, loading states)
-- ✅ Documentation: `docs/design/ENFORCEMENT.md` created
-- ✅ ESLint warnings resolved: 100+ → 78 (22% improvement)
-- ✅ Migration plan created for remaining 78 warnings
-
-**Impact:**
-- **95%+ design consistency** achieved on core pages
-- **Single source of truth** for all design decisions
-- **Automated enforcement** catches violations at dev time
-- **Developer experience** improved with clear patterns
-- **Maintainability** - Update tokens once, changes propagate everywhere
-
-**Remaining Work:**
-- Blog post detail pages (`src/app/blog/[slug]/page.tsx`)
-- Series pages (`src/app/blog/series/[slug]/page.tsx`)
-- Analytics page (`src/app/analytics/AnalyticsClient.tsx`)
-- About page components (skills, certifications, etc.)
-
-Run `npm run lint` to see ESLint warnings for remaining migrations.
-
-**See:** 
-- `docs/design/QUICK_START.md` for usage examples
-- `docs/design/ENFORCEMENT.md` for ESLint rules
-- `docs/design/eslint-warnings-quick-ref.md` for migration guide
-
----
-
-### 🎨 Design System Analysis & Foundation Complete (Nov 8, 2025) ✅
-**Major Achievement:** Comprehensive UX/UI consistency analysis completed with full design system
-
-**What Was Created:**
-- ✅ Complete UX/UI consistency analysis (44% → 95%+ target consistency)
-- ✅ Design tokens system (`src/lib/design-tokens.ts`)
-- ✅ Comprehensive documentation (6 new docs in `docs/design/`)
-- ✅ Implementation roadmap (4-phase plan, 33 hours total)
-- ✅ Component patterns library with examples
-
-**Deliverables:**
-1. **Design Tokens** - TypeScript constants for all design decisions:
-   - Container widths (prose, standard, narrow)
-   - Typography patterns (h1, h2, h3, descriptions)
-   - Spacing scale (section, subsection, content)
-   - Hover effects (card, button, link)
-   - Utility functions and TypeScript types
-
-2. **Documentation:**
-   - `QUICK_START.md` - 5-minute overview with examples
-   - `EXECUTIVE_SUMMARY.md` - Business case and ROI analysis
-   - `ux-ui-consistency-analysis.md` - Full problem breakdown (5 categories, 12 issues)
-   - `design-system.md` - Complete reference guide
-   - `component-patterns.md` - Copy-paste implementation examples
-   - `implementation-roadmap.md` - Step-by-step rollout plan
-
-3. **Updated `docs/INDEX.md`** - Added design system section
-
-**Key Findings:**
-- 5 major inconsistency categories identified
-- 12 specific issues with severity ratings
-- Container widths: 3 inconsistent → 3 semantic patterns
-- Typography: Mixed font-bold/font-semibold → Standardized
-- Hover effects: 4 different patterns → 4 semantic patterns
-- Spacing: Ad-hoc → System-based vertical rhythm
-
-**Impact:** 
-- Provides clear patterns for all future development
-- Enables 95%+ consistency score (from 44%)
-- Reduces developer confusion and onboarding time
-- Establishes single source of truth for design decisions
-- Very low risk, high impact implementation
-
-**See:** `docs/design/QUICK_START.md` for immediate usage examples
-
----
-
-### Blog Quick Wins Complete (Nov 5, 2025) ✅
-**5 improvements implemented** - Enhanced blog UX and content discovery
-
-**Completed:**
-- ✅ Pagination (12 posts per page with Previous/Next navigation)
-- ✅ Reading time filters (Quick <5min, Medium 5-15min, Deep >15min)
-- ✅ Breadcrumb navigation in blog posts
-- ✅ Post series/collections feature with dedicated pages
-- ✅ Verified social sharing and comments already implemented
-
-**New Components:**
-- `breadcrumbs.tsx` - Hierarchical navigation component
-- `series-navigation.tsx` - Series navigation UI for posts
-- `/blog/series/[slug]` - Series listing pages
-
-**Updated:**
-- Enhanced Post type with optional `series` field
-- Blog page now supports pagination and reading time filters
-- BlogSearchForm preserves all filters across searches
-
-**Impact:** Better content discovery, navigation, and reading experience. Series feature enables multi-part content organization.
-
----
-
-### Bottom Navigation Bar Complete (Nov 4, 2025) ✅
-**First HIGH priority item complete** - App-like mobile navigation
-
-**Completed:**
-- ✅ Created `bottom-nav.tsx` with 4 primary destinations
-- ✅ Grid layout with large touch targets (64px height)
-- ✅ Active state highlighting (color + bold stroke)
-- ✅ Icons: Home, Blog (FileText), Projects (FolderGit2), Contact (Mail)
-- ✅ Fixed positioning, mobile-only (< md breakpoint)
-- ✅ Backdrop blur effect
-
-**Additional Improvements:**
-- Main content padding adjusted: `pb-20 md:pb-0` (80px mobile clearance)
-- BackToTop button repositioned: `bottom-[104px] md:bottom-24`
-- TOC FAB button repositioned: `bottom-[104px]` (consistent 104px = 64px nav + 40px spacing)
-
-**Impact:** Enhanced mobile navigation with app-like UX. Users can navigate primary destinations without opening hamburger menu.
-
----
-
-### 🎉 ALL CRITICAL PRIORITIES COMPLETE! (Nov 4, 2025)
-**Major Milestone:** All 🚨 CRITICAL mobile-first items are now complete!
-
-**Status:**
-- ✅ Mobile Navigation - **Implemented today** (Sheet drawer, hamburger menu, 56px touch targets)
-- ✅ Mobile Table of Contents - **Already complete** (discovered existing FAB + Sheet implementation)
-- ✅ Mobile Blog Typography - **Already complete** (discovered comprehensive mobile CSS)
-
-**P0 Foundation: 4/4 Complete**
-1. ✅ Touch target audit & fixes (Nov 4)
-2. ✅ Form optimization (Nov 4)
-3. ✅ Responsive spacing system (Nov 4)
-4. ✅ Mobile navigation (Nov 4)
-
-**Additional Critical Discoveries:**
-- Table of Contents had full mobile support at lines 175-216 in `table-of-contents.tsx`
-- Blog typography had comprehensive mobile enhancements at lines 492-555 in `globals.css`
-
-**Impact:** Mobile-first foundation is 100% complete. 50-70% of users (mobile traffic) now have optimized experience. Ready for 🔴 HIGH PRIORITY enhancements.
-
-**Next Focus:** High-priority items (bottom nav, post list redesign, swipe gestures, etc.)
-
----
-
-### Mobile Navigation Implementation Completed (Nov 4, 2025) ✅
-**Phase 1 Foundation: 4/4 Complete** - All P0 mobile-first foundation items are now done!
-
-**Just Completed:**
-- ✅ Mobile navigation with Sheet drawer and hamburger menu
-- ✅ Large touch targets (56px) for all navigation items
-- ✅ Responsive breakpoint: mobile nav < md, desktop nav ≥ md
-- ✅ Auto-close on navigation, active page indicator
-- Files: `mobile-nav.tsx` (new), `site-header.tsx` (updated)
-
-**Foundation Complete (4/4 items):**
-1. ✅ Touch target audit & fixes (Nov 4)
-2. ✅ Form optimization (Nov 4)
-3. ✅ Responsive spacing system (Nov 4)
-4. ✅ Mobile navigation (Nov 4)
-
-**Next:** Mobile Table of Contents (critical - content completely hidden on mobile/tablet)
-
----
-
-### Mobile-First Design Optimization Analysis (Nov 4, 2025)
-A comprehensive mobile-first UX analysis has been completed identifying critical touch target and navigation issues.
-
-**Status:** 🔴 **Critical Issues Identified**  
-**Key Findings:** Touch targets below 44px minimum, no mobile navigation, hidden content, forms not optimized
-
-**Documents:**
-- 📍 **Start here:** [`/docs/design/mobile-first-quick-reference.md`](../design/mobile-first-quick-reference.md) - 5-minute overview
-- 📊 **Full analysis:** [`/docs/design/mobile-first-optimization-analysis.md`](../design/mobile-first-optimization-analysis.md) - 500+ lines, detailed guide
-- 🎨 **Visual guide:** [`/docs/design/mobile-first-visual-comparison.md`](../design/mobile-first-visual-comparison.md) - Before/after diagrams
-
-**Critical Issues** (4 items added to Features > Mobile-First UX below - P0 priority)
-
-### UI/UX Animation Phase 1 - Quick Wins Completed (Nov 3, 2025)
-All Phase 1 quick wins from the UI/UX optimization roadmap have been implemented:
-
-✅ **Completed:**
-- Shimmer skeleton loader (replaced animate-pulse with gradient)
-- Card hover lift effects (project cards and blog posts)
-- Copy code buttons for MDX with success animation
-- Back to top floating button with scroll detection
-- Navigation loading bar for route transitions
-- `prefers-reduced-motion` support (hook + comprehensive CSS)
-
-**Next:** Phase 2 enhancements (staggered animations, scroll-triggered effects, enhanced components)
-
-**Reference:** [`/docs/design/ui-ux-optimization-roadmap.md`](../design/ui-ux-optimization-roadmap.md)
-
-### Security Analysis Completed (Oct 28, 2025)
-A comprehensive security analysis has been completed with an overall **A+ rating (Excellent)**.
-
-**Status:** ✅ Production Ready  
-**Key Findings:** 0 vulnerabilities, 0 code security issues, defense-in-depth architecture
-
-**Documents:**
-- 📍 **Start here:** [`/docs/security/INDEX.md`](../security/INDEX.md) - Navigation guide
-- ⚡ **Quick overview:** [`/docs/security/QUICK_REFERENCE.md`](../security/QUICK_REFERENCE.md) - 5-minute summary
-- 📋 **Action items:** [`/docs/security/FINDINGS_AND_ACTION_ITEMS.md`](../security/FINDINGS_AND_ACTION_ITEMS.md) - Implementation guide
-- 📊 **Full analysis:** [`/docs/security/COMPREHENSIVE_SECURITY_ANALYSIS_2025-10-28.md`](../security/COMPREHENSIVE_SECURITY_ANALYSIS_2025-10-28.md) - 16-section deep dive
-
-**Recommendations** (5 items added to backlog below - 3 medium priority, 2 optional)
+**Plan:** `/docs/architecture/dashboard-refactor-plan.md`
 
 ---
 
@@ -500,448 +72,41 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 
 ## 🚀 Features
 
-### High Priority
+### Security & Documentation (Medium Priority)
 
-#### Mobile-First UX Optimization (Nov 4, 2025) 🔴 **CRITICAL**
+#### Privacy Policy Documentation
+**Status:** 📝 Not started  
+**Priority:** Medium - Compliance and transparency  
+**Effort:** 2-3 hours
 
-**Phase 1: Foundation - Week 1** (P0 - Critical, ~8-12 hours) — **IN PROGRESS (3/4 complete)**
-- [x] **Touch target audit & fixes** — ✅ COMPLETE (Nov 4, 2025)
-  - Added touch-target utility classes to globals.css (44px, 48px, 56px)
-  - Updated site-header.tsx navigation links with touch-target class and px-2 padding
-  - Increased blog tag filter badges to h-10 (40px) with px-4 padding
-  - Logo now always visible on mobile (removed hidden md:block)
-  - Header height reduced to h-14 (56px) on mobile, h-16 (64px) on desktop
-  - All interactive elements now meet 44px minimum touch target
-  - Files changed: `globals.css`, `site-header.tsx`, `blog/page.tsx`
+**Scope:**
+- Create GDPR/CCPA compliant privacy policy
+- Document data collection practices (analytics, view counts, contact form)
+- Explain third-party services (Vercel, Redis, Giscus, Inngest)
+- User rights and data retention policies
 
-- [ ] **Mobile navigation implementation** - Replace horizontal nav with hamburger menu using Sheet component
-  - Current: Cramped horizontal links with small targets, logo text hidden on mobile
-  - Action: Implement Sheet drawer with large touch targets (56px), keep desktop horizontal nav
-  - Files: `site-header.tsx`, create `mobile-nav.tsx` (optional bottom nav)
-  - Effort: 3-4h | [See analysis](../design/mobile-first-optimization-analysis.md#1-site-header-site-headertsx)
-
-- [x] **Form optimization** — ✅ COMPLETE (Nov 4, 2025)
-  - Updated Input component: h-12 (48px) on mobile, h-10 (40px) on desktop
-  - Updated Textarea component: min-h-[120px], text-base on mobile
-  - Added inputMode="email" and inputMode="text" attributes to contact form
-  - Contact form submit button: size="lg" (40px height), full-width on mobile
-  - Textarea set to resize-none for better mobile UX
-  - Better font sizing: text-base on mobile, text-sm on desktop
-  - Files changed: `ui/input.tsx`, `ui/textarea.tsx`, `contact-form.tsx`
-
-- [x] **Responsive spacing system** — ✅ COMPLETE (Nov 4, 2025)
-  - Updated main layout padding: px-4 sm:px-6 md:px-8 (progressive enhancement)
-  - Reduced mobile padding from px-6 to px-4 for more content space
-  - Header updated with px-4 sm:px-6 md:px-8 padding
-  - Files changed: `layout.tsx`, `site-header.tsx`
-
-**Success Metrics:**
-- ✅ All touch targets ≥ 44x44px
-- ✅ Mobile navigation functional with large targets
-- ✅ Form completion rate increase
-- ✅ Lighthouse Accessibility: 100
-
-**Reference:** [`/docs/design/mobile-first-optimization-analysis.md`](../design/mobile-first-optimization-analysis.md)
+**Reference:** `/docs/security/FINDINGS_AND_ACTION_ITEMS.md#2`
 
 ---
 
-## 🚨 CRITICAL PRIORITY
-
-**Impact:** Affects 50-70% of users (mobile traffic), blocks core content access  
-**Timeline:** Complete within 1 week (~7-10 hours total)
-
-### 1. Mobile Navigation Implementation ✅ **COMPLETE** (Nov 4, 2025)
-**Status:** P0 Phase 1 now 4/4 complete!  
-**Effort:** 3-4 hours  
-**Completed:** All P0 foundation items now done (touch targets, forms, spacing, navigation)
-
-**Implementation:**
-- Created `mobile-nav.tsx` with Sheet drawer
-- Large touch targets (56px height for all links)
-- Hamburger menu on mobile (< md breakpoint)
-- Desktop horizontal nav preserved (≥ md breakpoint)
-- Auto-closes on navigation
-- Active page indicator
-- Files changed: `site-header.tsx`, new `mobile-nav.tsx`
-
-**✅ Phase 1 Foundation Complete!** All critical mobile UX foundation items are now done.
-
----
-
-### 2. Mobile Table of Contents for Blog Posts ✅ **ALREADY COMPLETE**
-**Status:** Feature was already fully implemented!  
-**Discovery:** Component at `table-of-contents.tsx` already has complete mobile support
-
-**Existing Implementation:**
-- ✅ Floating action button (FAB) at bottom-right
-- ✅ Sheet drawer slides up from bottom on mobile (< xl breakpoint)
-- ✅ Large touch targets (44px min-height for links)
-- ✅ Active section tracking with IntersectionObserver
-- ✅ Smooth scroll with 80px offset
-- ✅ Auto-closes on navigation
-- ✅ Appears after 400px scroll (consistent with BackToTop)
-- ✅ Desktop: Fixed sidebar on right (≥ xl breakpoint)
-- ✅ Already integrated in `blog/[slug]/page.tsx`
-
-**No action needed** - Feature complete and working as specified!
-
----
-
-### 3. Mobile Blog Typography Enhancements ✅ **ALREADY COMPLETE**
-**Status:** Comprehensive mobile typography already implemented in `globals.css`  
-**Discovery:** Lines 492-555 contain all specified mobile typography improvements
-
-**Existing Implementation:**
-- ✅ Larger base font: `1.0625rem` (17px) - iOS standard for readability
-- ✅ Enhanced line-height: `1.85` - More breathing room on mobile
-- ✅ Better paragraph separation: `1.25rem` margin-bottom
-- ✅ Responsive heading sizes:
-  - h1: `2rem` (32px)
-  - h2: `1.75rem` (28px)
-  - h3: `1.375rem` (22px)
-- ✅ Optimized code blocks: `0.8125rem` (13px) font, bleeding edges for max width
-- ✅ Inline code: `0.875rem` (14px)
-- ✅ Better list spacing (0.5rem margins)
-- ✅ Enhanced blockquote prominence
-- ✅ All improvements scoped to `@media (max-width: 768px)`
-
-**No action needed** - All critical typography improvements implemented and working!
-
----
-
-## 🎉 ALL CRITICAL PRIORITIES COMPLETE!
-
-**Achievement Unlocked:** All 🚨 CRITICAL priority items are done!
-
-### Summary
-1. ✅ **Mobile Navigation** - Completed Nov 4, 2025 (new implementation)
-2. ✅ **Mobile Table of Contents** - Already complete (discovered existing implementation)
-3. ✅ **Mobile Blog Typography** - Already complete (discovered existing implementation)
-
-**Total Time Invested:** ~3-4 hours (mobile nav only, other items were already done)
-
-**Impact:** Mobile-first foundation is 100% complete. All P0 items addressed. Ready to move to 🔴 HIGH PRIORITY items.
-
----
-
-## 🔴 HIGH PRIORITY
-
-**Impact:** Major UX improvements, design consistency, key interaction patterns  
-**Timeline:** Weeks 1-2 after critical items
-
-### Design System Implementation (NEW - Nov 8, 2025)
-
-**Status:** Foundation complete (Phase 1 ✅), ready for Phase 2 execution  
-**Priority:** High - Establishes consistency for all future work  
-**Effort:** 27 hours remaining (33 total, 6 done)
-
-#### Phase 1: Foundation ✅ **COMPLETE** (Nov 8, 2025)
-- [x] Created `src/lib/design-tokens.ts` with TypeScript constants
-- [x] Wrote comprehensive documentation (6 docs in `docs/design/`)
-- [x] Defined container, typography, spacing, and hover patterns
-- [x] Updated `docs/INDEX.md` with design system section
-
-**Deliverables:** Design tokens, Quick Start, Executive Summary, Full Analysis, Design System Guide, Component Patterns, Implementation Roadmap
-
-**Note:** Remaining Phase 2-4 work (71 ESLint warnings) has been moved to backlog. See "ESLint Design Token Migration" in backlog section below.
-
----
-
-### Mobile Navigation & Structure
-
-#### 4. Bottom Navigation Bar ✅ **COMPLETE** (Nov 4, 2025)
-**Effort:** 3-4 hours  
-**Completed:** App-like navigation for primary destinations
-
-**Implementation:**
-- Created `bottom-nav.tsx` with grid layout
-- 4 primary destinations: Home, Blog, Projects, Contact
-- Icons from lucide-react (Home, FileText, FolderGit2, Mail)
-- Large touch targets (64px height, full-width tap areas)
-- Active state highlighting with color and bold stroke
-- Fixed at bottom, mobile-only (< md breakpoint)
-- Backdrop blur effect
-- Files: `bottom-nav.tsx` (new), `layout.tsx` (updated)
-
-**Additional Improvements:**
-- Adjusted main padding to `pb-20 md:pb-0` (80px clearance on mobile)
-- Updated BackToTop button position to `bottom-[104px] md:bottom-24`
-- Updated TOC FAB button position to `bottom-[104px]` (consistent spacing)
-
----
-
-#### 5. Post List Mobile Redesign (P1) ✅ **COMPLETE** (Nov 4, 2025)
-**Effort:** 4-5 hours  
-**Completed:** Vertical card layout with full-width images for mobile
-
-**Implementation:**
-- Vertical card layout on mobile (< md), horizontal on desktop (≥ md)
-- Full-width 16:9 featured images on mobile (192px height)
-- Simplified metadata: date + reading time (tags hidden on mobile)
-- Entire card is now tappable with Link wrapper
-- Content padding: p-3 sm:p-4 on mobile, optimized spacing on desktop
-- Desktop maintains side thumbnail (128x96px) with horizontal layout
-- Files: `post-list.tsx` (updated JSDoc and layout)
-
-**Design improvements:**
-- Better visual hierarchy with prominent images on mobile
-- Cleaner metadata display focused on essential info
-- Improved touch targets (entire card is tappable)
-- Smooth responsive transition between mobile/desktop layouts
-- Overflow hidden on article element for cleaner borders
-
----
-
-#### 6. Project Card Optimization (P1) ✅ **COMPLETE** (Nov 4, 2025)
-**Effort:** 2-3 hours  
-**Completed:** Progressive disclosure with expandable highlights, stacked action buttons
-
-**Implementation:**
-- **Progressive disclosure:** Expandable "Key Features" accordion on mobile (< lg)
-- Button shows highlight count with ChevronDown icon (rotates when expanded)
-- Smooth animation: max-height transition (300ms ease-in-out)
-- **Stacked action buttons:** Full-width on mobile with 44px touch targets
-- Button-like styling with `bg-accent/50` background, converts to inline links on desktop
-- **Enhanced spacing:** Progressive padding (px-4 sm:px-6), optimized font sizes
-- **Desktop:** Always-visible highlights list, inline link layout
-- Files: `project-card.tsx` (client component), new JSDoc documentation
-
-**Features:**
-- ✅ Expandable highlights with smooth accordion animation
-- ✅ Full-width stacked buttons on mobile (w-full sm:w-auto)
-- ✅ 44px minimum touch targets for all actions
-- ✅ ARIA attributes (aria-expanded, aria-controls) for accessibility
-- ✅ Keyboard navigation support (Button component)
-- ✅ Responsive font sizes and spacing
-- ✅ Desktop: Always-visible highlights, inline links
-
-**Documentation:** `/docs/components/project-card.md` (comprehensive guide)
-
----
-
-### Mobile Interactions
-
-#### 7. Native Share API for Blog Posts (P1) ✅ **COMPLETE** (Verified Nov 9, 2025)
-**Effort:** 0 hours (already implemented)  
-**Status:** Feature was already fully implemented and exceeds all requirements
-
-**Implementation:**
-- Component: `share-buttons.tsx` with comprehensive JSDoc
-- Web Share API with `navigator.share()` for mobile
-- Fallback to Twitter, LinkedIn, and Copy Link on desktop
-- Touch targets: `h-11` (44px) on mobile, `h-10` (40px) on desktop
-- Icon-only layout on mobile with `hidden sm:inline` text
-- Already integrated in `blog/[slug]/page.tsx` (line 239)
-- Toast notifications, error handling, accessible
-
-**Result:** No action needed - production ready and working perfectly!
-
----
-
-#### 8. Swipe Gestures (P1) ✅ **COMPLETE** (Nov 9, 2025)
-**Effort:** ~1 hour  
-**Status:** Fully implemented with visual feedback and accessibility
-
-**Implementation:**
-- Created `swipeable-blog-post.tsx` with `react-swipeable`
-- Swipe left → next post, swipe right → previous post
-- Visual indicators: floating chevrons with scale animation
-- Post title tooltips during swipe
-- Mobile-only (hidden on desktop)
-- Respects `prefers-reduced-motion` preference
-- 50px minimum swipe distance
-- Integrated in `blog/[slug]/page.tsx` with prev/next logic
-- Files: `swipeable-blog-post.tsx` (new), `blog/[slug]/page.tsx` (updated)
-
-**Result:** Native app-like swipe navigation for blog posts on mobile!
-
----
-
-#### 9. Active States & Feedback (P1) ✅ **COMPLETE** (Nov 9, 2025)
-**Effort:** ~30 minutes  
-**Status:** Enhanced all interactive elements with tactile feedback
-
-**Implementation:**
-- Updated `HOVER_EFFECTS` in design-tokens.ts:
-  - Cards: `active:scale-[0.98]` + `active:shadow-md`
-  - Buttons: `active:scale-95` + `active:shadow-lg`
-  - Links: `active:opacity-70`
-- Enhanced Button component with variant-specific active colors
-- Enhanced Badge component with scale and color feedback
-- GPU-accelerated transforms for 60fps smooth animations
-- Applies to all ProjectCard, PostList, buttons, badges, links
-
-**Result:** Immediate visual and tactile feedback on all mobile interactions!
-
----
-
-#### 10. Jump to Top Button for Blog Posts ✅ **ALREADY COMPLETE**
-**Effort:** 0 hours (already implemented)  
-**Status:** Feature exists via BlogFABMenu component
-
-**Implementation:**
-- Component: `blog-fab-menu.tsx` + `fab-menu.tsx` + `back-to-top.tsx`
-- Floating FAB at bottom-right (56px size, 44px+ touch target)
-- Appears after scrolling 400px
-- Smooth scroll animation with `window.scrollTo({ behavior: "smooth" })`
-- Integrated with Table of Contents in consolidated FAB menu
-- Mobile: 104px from bottom (clears bottom nav bar)
-- Desktop: 96px from bottom
-- Already in use on all blog post pages
-
-**Result:** Full-featured scroll-to-top with TOC integration already deployed!
-
----
-
-## 🎉 ALL HIGH PRIORITY ITEMS COMPLETE! (Nov 9, 2025)
-
-**Achievement Unlocked:** All 🔴 HIGH PRIORITY mobile-first items (7-10) are now complete!
-
-### Summary
-- ✅ **#7: Native Share API** - Already complete (discovered existing implementation)
-- ✅ **#8: Swipe Gestures** - Implemented (Nov 9, ~1 hour)
-- ✅ **#9: Active States & Feedback** - Implemented (Nov 9, ~30 minutes)
-- ✅ **#10: Jump to Top Button** - Already complete (BlogFABMenu)
-
-**Total Time Invested Today:** ~1.5 hours for items 8-9  
-**Items Found Already Complete:** Items 7 and 10
-
-**Impact:** Mobile-first UX is now feature-complete with all HIGH PRIORITY enhancements. Users have:
-- Native app-like navigation (swipe gestures, bottom nav)
-- Immediate tactile feedback (active states on all interactions)
-- Convenient sharing (Web Share API)
-- Easy navigation (jump to top, TOC)
-
-**Next Focus:** 🟡 MEDIUM PRIORITY items (blog enhancements, resume features, UI polish)
-
----
-
-## 🟡 MEDIUM PRIORITY
-
-**Impact:** Enhancements to working features, performance optimization  
-**Timeline:** Weeks 3-4 and beyond
-
-### Mobile Blog Enhancements
-
-#### Blog Badge Overflow Handling
-- [x] Back to top button (floating FAB with scroll detection)
-- [x] Navigation loading bar (top progress bar for route transitions)
-- [x] `prefers-reduced-motion` support (hook + comprehensive CSS rules)
-
-**Phase 1.5: Blog Featured Images & Animations** ✅ **COMPLETE** (Nov 3, 2025 - ~5 hours)
-- [x] Extended Post type with optional `image` field (url, alt, width, height, caption, credit, position)
-- [x] Created `PostThumbnail` component with next/image optimization
-- [x] Updated `PostList` with conditional thumbnail rendering
-- [x] Built `useScrollAnimation` hook with IntersectionObserver + prefers-reduced-motion
-- [x] Created `ScrollReveal` wrapper component for scroll animations
-- [x] Applied staggered fade-in animations to post list items
-
-**Phase 2: Blog Image System & Detail Pages** (~8-10 hours) ✅ **COMPLETE** (Nov 9, 2025)
-- [x] **Hero image component** ✅ (Nov 9, 20min) - Full-width hero with gradient overlays
-- [x] **Image caption display** ✅ (Nov 9, built-in) - Caption and credit rendering below images
-- [x] **Related posts with images** ✅ (Nov 9, 10min) - RelatedPosts now shows thumbnails
-- [x] **OG image integration** ✅ (Nov 9, 15min) - Uses hero images for social shares (fallback to generated)
-- [x] **Magazine layout variant** ✅ (Nov 9, 20min) - Alternating large image left/right layout for PostList
-- [x] **Grid layout variant** ✅ (Nov 9, 10min) - 2-column grid with images on top
-- [x] **RSS feed images** ✅ (Nov 9, 10min) - Featured images in RSS/Atom feeds with `<enclosure>` tags
-- [x] **Frontmatter schema docs** ✅ (Nov 9, 15min) - Documented image field in `/docs/blog/frontmatter-schema.md`
-
-**Phase 3: Enhanced Interactions** (~26 hours)
-- [ ] **Enhanced table of contents** - Sliding active indicator, smoother expand/collapse
-- [ ] **Toast improvements** - Custom enter/exit animations for sonner, success micro-animations
-- [ ] **GitHub heatmap polish** - Staggered square appearance, animated tooltips, smooth data loading transition
-- [ ] **Theme transition animations** - Smooth dark/light mode switch without FOUC
-- [ ] **Parallax hero images** - Subtle parallax effect for hero images (desktop only, 0.8x scroll speed)
-- [ ] **Progressive image blur** - Images start blurred and sharpen as they load
-
-**Phase 4: Advanced Features** (~74 hours)
-- [ ] **Command palette (Cmd+K)** - Search posts, navigate site, keyboard shortcuts (cmdk + Radix UI)
-- [ ] **Page transition system** - View Transitions API (primary) + Framer Motion fallback
-- [ ] **Micro-interactions library** - Reusable animated components (button ripples, input focus effects, success/error animations)
-- [ ] **Virtual scrolling** - For blog list with >50 posts (@tanstack/virtual)
-- [ ] **Reading mode toggle** - Distraction-free interface (hide header/footer, adjust typography)
-- [ ] **Advanced gestures** - Swipe navigation on mobile, pull-to-refresh, drag-to-share
-- [ ] **3D card tilt effect** - Subtle tilt on hover for project cards (vanilla-tilt or Framer Motion)
-- [ ] **Image galleries** - Multiple images per post with lightbox viewer
-- [ ] **Pull quotes** - Styled blockquotes with custom borders and typography
-
-**Phase 5: Future Considerations** (Backlog - no timeline)
-- [ ] Infinite scroll for blog list
-- [ ] Keyboard navigation (j/k for posts, Esc to close)
-- [ ] Progressive image loading (LQIP)
-- [ ] Blog post preview on hover (tooltip with excerpt)
-
----
-
-### Resume Page Enhancements
-
-**Quick Wins Completed** ✅ (Nov 5, 2025 - ~2 hours)
-- [x] **Print CSS** - Print-optimized layout with hidden nav, adjusted spacing
-- [x] **GitHub heatmap integration** - Visual proof of development activity in Skills section
-- [x] **Collapsible certifications** - Mobile-friendly expandable cert display (fixes overflow)
-- [x] **Metric highlighting** - Bold/colored emphasis for achievements (23%, 35%, 40%)
-- [x] **Semantic HTML** - article, section, header, time elements with ARIA labels
-
-**Files Modified:**
-- `src/app/resume/page.tsx` - Added print styles, semantic HTML, metric highlighting
-- `src/components/collapsible-certifications.tsx` - New component for expandable certs
-- `src/lib/highlight-metrics.tsx` - Utility to parse and style quantifiable achievements
-
----
-
-**Phase 1: Professional Polish** (~6-8 hours)
-- [ ] **Timeline visualization** - Visual timeline for experience with duration bars
-- [ ] **Certification verification links** - Clickable badges linking to Credly/verification
-- [ ] **Download options** - PDF generation (jsPDF or server route), JSON export
-- [ ] **Company logos** - Small logos/favicons next to experience cards
-
-**Phase 2: Interactive Features** (~8-10 hours)
-- [ ] **Skills search/filter** - Debounced search like blog-search-form (100+ skills)
-- [ ] **Skills proficiency levels** - Visual indicators for expertise (dots, bars, gradients)
-- [ ] **Dynamic summary toggle** - Switch between shortSummary and full summary
-- [ ] **Dark mode optimization** - Better badge contrast and readability
-
-**Phase 3: Advanced Features** (~12-16 hours)
-- [ ] **View analytics** - Redis-backed view counter like blog posts
-- [ ] **Testimonials carousel** - Rotating quotes from colleagues/LinkedIn
-- [ ] **"Ask About My Resume" AI chat** - Interactive Q&A chatbot
-- [ ] **A/B testing layouts** - Track conversion to /contact after /resume visit
-
-**Phase 4: Future Exploration** (Backlog)
-- [ ] **Multi-language support** - i18n for PT, ES translations
-- [ ] **Dynamic resume generator** - Admin interface or headless CMS integration
-- [ ] **Component extraction** - Create `resume/` component directory like `/about`
-
----
-- [ ] Animated mesh backgrounds (hero sections)
-- [ ] Font size controls (user preference)
-- [ ] Reading time indicator (live progress)
-- [ ] Multi-author support with author cards
-- [ ] Post series indicator and navigation
-
-**Reference:** [`/docs/design/ui-ux-optimization-roadmap.md`](../design/ui-ux-optimization-roadmap.md) - Complete analysis, code examples, and implementation guide
+#### Incident Response Plan
+**Status:** 📝 Not started  
+**Priority:** Medium - Security preparedness  
+**Effort:** 1-2 hours
+
+**Scope:**
+- Document security incident procedures
+- Define escalation paths and responsibilities
+- Create response playbook for common scenarios
+- Contact information and notification protocols
+
+**Reference:** `/docs/security/FINDINGS_AND_ACTION_ITEMS.md#3`
 
 ---
 
 ## 🔧 Technical Improvements
 
-### Performance
-- None currently - all optimized
-
-### SEO & Accessibility
-- [x] **Vercel OG image generation** - Dynamic social preview images using Vercel's OG API (✅ Complete - see `/docs/features/og-image-generation.md`)
-
-### Security (Post-Analysis, Oct 28)
-- [x] **CSP Violation Monitoring** - ✅ COMPLETE (Nov 9, 2025) - Sentry integrated with `/api/csp-report` endpoint | [See implementation](../security/FINDINGS_AND_ACTION_ITEMS.md#1--implemented-csp-violation-monitoring)
-- [ ] **Privacy Policy Documentation** - Create GDPR/CCPA compliant privacy policy (Effort: 2-3h) | [See security analysis](../security/FINDINGS_AND_ACTION_ITEMS.md#2-create-privacy-policy--data-retention-documentation-medium-priority)
-- [ ] **Incident Response Plan** - Document security incident procedures and escalation paths (Effort: 1-2h) | [See security analysis](../security/FINDINGS_AND_ACTION_ITEMS.md#3-document-security-incident-response-plan-medium-priority)
-- [ ] **CSP Level 3 Implementation** - Add `'strict-dynamic'` support for next-generation CSP (Effort: 1h) [OPTIONAL]
-- [ ] **Security Monitoring Dashboard** - Create analytics dashboard for CSP violations and rate limiting (Effort: 2-3h) [OPTIONAL]
-
-**✅ CSP Monitoring Complete:** Sentry integration added with rate limiting, privacy protection, and full metadata capture. See `/docs/security/csp/monitoring.md` for details.
-
 ### Monitoring
-- [x] **Error tracking** - ✅ Sentry integrated for error monitoring and CSP violations (Nov 9, 2025)
 - [ ] **Custom analytics events** - Track specific user interactions
 - [ ] **Performance monitoring** - Set up performance budgets and alerts
 - [ ] **Uptime monitoring** - Configure uptime monitoring service
@@ -961,13 +126,6 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [ ] Add speaking/presentations section if applicable
 - [ ] Consider adding a /uses page (tools, software, setup)
 
-### UI & Layout
-- [ ] **Mobile navigation** - Improve mobile menu if navigation grows
-- [ ] **Micro-interactions** - Add subtle animations and transitions
-- [ ] **Grid layout for projects** - Consider card grid instead of list
-- [ ] **Blog post formatting** - Review typography and spacing
-- [ ] **Footer enhancements** - Add more useful links/info to footer
-
 ---
 
 ## 🔄 Dependencies & Maintenance
@@ -976,369 +134,36 @@ A comprehensive security analysis has been completed with an overall **A+ rating
 - [ ] **Quarterly dependency review** - Review and update dependencies regularly
 - [ ] **Security advisories** - Monitor for security advisories
 - [ ] **Next.js 16 migration** - Stay updated on Next.js 16 features and migration path
-- [ ] **Turbopack production** - Monitor Turbopack production build support
 
 ---
 
 ## 💡 Ideas & Future Enhancements
 
-### Homepage Improvements (Nov 4, 2025)
-**Recently Completed:**
-- ✅ **Featured Post Hero** - Large prominent card showcasing featured blog posts (Nov 4)
-- ✅ **Scroll Reveal Animations** - Fade-up animations for homepage sections (Nov 4)
+### Homepage Improvements
 
 **Tier 1: Quick Wins (High Impact, Low Effort)**
-- [ ] **GitHub Contribution Heatmap on Homepage** - Shows activity, builds technical credibility
-  - Component already exists (`github-heatmap.tsx`)
-  - Just needs import and placement between hero and latest articles
-  - Effort: 5-10 minutes
-  
-- [ ] **Stats/Metrics Section** - Quantifiable expertise display
-  - Total blog posts published
-  - Projects completed
-  - Years of experience
-  - Technologies mastered
-  - Effort: 30 minutes
-  
-- [ ] **Better Section Spacing** - Improve visual hierarchy
-  - Increase spacing from 12-16 to 16-24
-  - Add subtle dividers or visual breaks
-  - Make section headers more distinctive
-  - Effort: 15 minutes
+- [ ] **GitHub Contribution Heatmap on Homepage** - Shows activity, builds technical credibility (5-10 min)
+- [ ] **Stats/Metrics Section** - Total posts, projects, years of experience, technologies mastered (30 min)
+- [ ] **Better Section Spacing** - Improve visual hierarchy (15 min)
 
 **Tier 2: High Value Additions (Weekend Project)**
-- [ ] **Tech Stack Visualization** - Show expertise with icon grid
-  - React, Next.js, TypeScript, Tailwind
-  - Security tools/frameworks
-  - Cloud platforms
-  - Simple icon grid or logo cloud
-  - Effort: 2-3 hours
-  
-- [ ] **Newsletter Signup Section** - Most important for growth!
-  - Form component pattern already exists (contact form)
-  - Add email capture above footer
-  - Integrate with newsletter service (Resend, ConvertKit, etc.)
-  - Build audience
-  - Effort: 2-3 hours
-  
-- [ ] **Popular/Trending Posts Section** - Social proof via view counts
-  - Show "Hot" posts (view count based)
-  - Separate from "Latest" articles
-  - View count system already implemented
-  - Effort: 1-2 hours
-  
-- [ ] **Tag Cloud / Popular Topics** - Content discovery + SEO
-  - Show most-used blog tags
-  - Visual sizing based on usage
-  - Clickable (links to `/blog?tag=<tag>`)
-  - Effort: 1-2 hours
-  
-- [ ] **Social Links Section** - More prominent social presence
-  - Dedicated section vs. just footer
-  - Larger icons with hover effects
-  - "Let's connect" framing
-  - Links already in `socials.ts`
-  - Effort: 1 hour
+- [ ] **Tech Stack Visualization** - Show expertise with icon grid (2-3 hours)
+- [ ] **Newsletter Signup Section** - Email capture for audience building (2-3 hours)
+- [ ] **Popular/Trending Posts Section** - Social proof via view counts (1-2 hours)
+- [ ] **Tag Cloud / Popular Topics** - Content discovery + SEO (1-2 hours)
+- [ ] **Social Links Section** - More prominent social presence (1 hour)
 
 **Tier 3: Nice-to-Have Enhancements**
-- [ ] **Testimonials/Recommendations** - LinkedIn recommendations, client testimonials, peer endorsements
-- [ ] **Recent Activity Timeline** - Blog posts, project updates, GitHub activity, talks/appearances
-- [ ] **Call-Out Boxes** - "Currently learning...", "Available for consulting", "Latest project..."
+- [ ] **Testimonials/Recommendations** - Social proof from LinkedIn/clients
+- [ ] **Recent Activity Timeline** - Blog posts, project updates, GitHub activity
+- [ ] **Call-Out Boxes** - "Currently learning...", "Available for consulting"
 - [ ] **Better CTA Strategy** - More specific/action-oriented calls-to-action
-- [ ] **Mobile Post Carousel** - Swipeable post cards on mobile, native app-like feel
 
 **Tier 4: Advanced Features (Future)**
-- [ ] **Newsletter Preview** - Show latest newsletter issue, drive subscriptions
-- [ ] **Live Search on Homepage** - Quick access to content, search-first experience
+- [ ] **Newsletter Preview** - Show latest newsletter issue
+- [ ] **Live Search on Homepage** - Quick access to content
 - [ ] **Interactive Filters** - Filter posts by technology, projects by type
-- [ ] **Personalization** - Remember preferences, suggest content, adaptive layout
-- [ ] **A/B Testing** - Test different hero copy, CTA placement, data-driven optimization
-
-### Content & Interactivity
-- [ ] **Interactive demos** - Add interactive code examples to blog posts
-- [ ] **MDX components library** - Build custom MDX components for richer content
-- [ ] **Video content integration** - Support for video content
-- [ ] **Podcast/audio content** - Audio content support
-
----
-
-## 📝 Blog Feature Enhancements (Future Improvements)
-
-**Status:** Added Nov 5, 2025 - Comprehensive blog improvement backlog
-
-### Quick Wins Already Implemented ✅
-- [x] **Pagination** - 12 posts per page with Previous/Next navigation (Nov 5)
-- [x] **Reading Time Filters** - Quick (<5min), Medium (5-15min), Deep (>15min) (Nov 5)
-- [x] **Breadcrumb Navigation** - Hierarchical navigation in blog posts (Nov 5)
-- [x] **Post Series/Collections** - Multi-part content organization with dedicated pages (Nov 5)
-- [x] **Social Sharing** - ShareButtons component already integrated
-- [x] **Comments System** - Giscus (GitHub Discussions) already integrated
-
-### Medium Effort (3-5 days each)
-- [ ] **Popular Posts Widget** — Sidebar showing top 5 posts by views (Redis-backed), updates daily
-- [ ] **Bookmark/Reading List** — Let readers save posts for later, localStorage for anonymous users
-- [ ] **Post Reactions** — Quick emoji reactions (👍 ❤️ 🔥 💡) beyond view counts, Redis counters + client UI
-- [ ] **Keyboard Shortcuts** — `/` for search, `n`/`p` for next/prev post, `t` for TOC toggle, power user feature
-- [ ] **Print-Friendly Styling** — `@media print` CSS rules for clean printing/PDF export
-- [ ] **Advanced Search Filters** — Date range picker, multiple tag selection, sort by popularity/date/reading-time
-- [ ] **Newsletter Signup Widget** — Email capture form (integrate with Buttondown, ConvertKit, or Mailchimp)
-
-### Major Projects (1-2 weeks each)
-- [ ] **Full-Text Search** — Replace client-side search with Meilisearch/Algolia/SQLite FTS for better quality and search analytics
-- [ ] **Content Analytics Dashboard** — `/admin` route with charts, post performance, search queries, engagement metrics (query Redis)
-- [ ] **Infinite Scroll Option** — Auto-load more posts on scroll (alternative to pagination), Intersection Observer + dynamic loading
-- [ ] **Reading History & Recommendations** — Track read posts, recommend based on history, localStorage tracking + tag-based suggestions
-- [ ] **Post Scheduling System** — Schedule posts for future publication, `scheduledAt` frontmatter + build hook or cron job
-- [ ] **Draft Preview Sharing** — Shareable preview links for draft posts with secret token auth
-
-### Future Considerations (Complex/Lower Priority)
-- [ ] **PWA / Offline Reading** — Service worker for offline post access, read saved posts without internet (high complexity)
-- [ ] **Multi-Author Support** — Author profiles, filter by author (only needed if expanding beyond solo blog)
-- [ ] **Code Playground Embeds** — Interactive code editors (CodeSandbox, StackBlitz) embedded in posts
-- [ ] **AI-Powered Summaries** — Auto-generate TL;DR using GPT during build (OpenAI API)
-- [ ] **Post Translation** — Multi-language support for international readers (i18n)
-- [ ] **Audio Version** — Text-to-speech or recorded audio versions of posts
-- [ ] **Related Posts by ML** — Use embeddings/vectors for smarter recommendations beyond tag matching
-- [ ] **Post Edit History** — Show changelog/version history for updated posts
-- [ ] **Collaborative Editing** — Allow guest authors or co-authors
-- [ ] **Post Templates** — Pre-built templates for tutorials, announcements, essays
-- [ ] **Table of Contents Improvements** — Nested TOC, progress tracking per section, estimated time per section
-
-**Impact:** These enhancements focus on content discovery, reader engagement, and content management workflows.  
-**Reference:** Blog improvements brainstorm session (Nov 5, 2025)
-
----
-
-## 🔧 ESLint Design Token Migration (Backlog)
-
-**Status:** Quick wins complete (Nov 9, 2025) - Remaining 71 warnings backlogged  
-**Priority:** ⚪ LOW - Maintenance/polish, no user-facing impact  
-**Effort:** ~10-15 hours for complete migration
-
-### Completed (Nov 9)
-- ✅ Blog post detail page (`blog/[slug]/page.tsx`) - 3 warnings fixed
-- ✅ Series page (`blog/series/[slug]/page.tsx`) - 2 warnings fixed  
-- ✅ 404 page (`not-found.tsx`) - 2 warnings fixed
-- ✅ **Result:** 78 → 71 warnings (9% improvement)
-
-### Remaining Work (71 warnings)
-
-**Analytics Page** (~18 warnings) - `src/app/analytics/AnalyticsClient.tsx`
-- 3 container max-w violations
-- 15 typography violations (headings in chart components)
-- Low priority: Internal admin page, not public-facing
-
-**Project Detail Page** (~7 warnings) - `src/app/projects/[slug]/page.tsx`
-- 1 container violation
-- 5 typography violations (section headings)
-- 1 hover effect violation (tech tag links)
-- Medium traffic, but consistent patterns
-
-**Resume Page** (~5 warnings) - `src/app/resume/page.tsx`
-- 1 container violation
-- 4 typography violations (section headings)
-- Low traffic, print-focused
-
-**Component Files** (~39 warnings)
-- About page components (certifications, skills, stats, currently-learning) - ~6 warnings
-- Error boundaries (2 files) - ~4 warnings
-- Featured post hero - 2 warnings
-- GitHub heatmap - 4 warnings
-- Giscus comments - 1 warning
-- Bottom nav - 1 warning
-- Table of contents - 1 warning
-- Other components - ~20 warnings
-
-**Blog Page False Positives** (2 warnings)
-- Lines 183, 229: `font-medium` on pagination links (not headings)
-- Not actual violations, enforcement rule too broad
-
-### Migration Strategy
-When prioritizing this work in the future:
-1. **Projects page first** - Public-facing, moderate traffic
-2. **Resume page next** - Quick wins, fewer warnings
-3. **Component files** - As needed when editing those files
-4. **Analytics page last** - Internal only, lowest priority
-5. **Consider refining ESLint rules** - Exclude `font-medium` on non-heading elements
-
-**Reference:** 
-- `docs/design/eslint-warnings-quick-ref.md` - Migration patterns
-- `docs/design/eslint-warnings-resolution.md` - Complete strategy
-- Run `npm run lint` to see current violations
-
----
-
-## 🎨 Blog Search & Filter UI Improvements (Backlog)
-
-**Status:** Added Nov 5, 2025 - P0 Quick Wins Complete!
-
-### ✅ Implemented (Nov 5, 2025)
-- [x] **Remove "Reading time:" label** - Badges are self-explanatory, cleaner UI
-- [x] **Remove Search button** - Auto-submit on type (250ms debounce), one less click
-- [x] **Active filter pills** - Dismissible chips showing query/tag/reading time with individual X buttons
-- [x] **Clear all filters link** - Single click to reset all active filters
-- [x] **Improved badge contrast** - Active = `default` variant (solid), Inactive = `outline`, hover states
-
-**Files Changed:**
-- `src/app/blog/page.tsx` - Removed label, updated badge variants, added ActiveFilters
-- `src/components/blog-search-form.tsx` - Removed Search button and imports
-- `src/components/active-filters.tsx` - New component for dismissible filter pills
-
-**Impact:** Cleaner, simpler UI with better visual feedback and one-click filter management
-
----
-
-### P1: High Impact Improvements (3-5 hours each)
-
-- [ ] **Collapsible Tag List**
-  - Show top 5-8 most popular tags by default
-  - "Show more tags" button to expand full list
-  - Reduces visual overwhelm for growing tag collections
-  - Effort: 2-3 hours
-
-- [ ] **Combine Reading Time into Search Bar**
-  - Add dropdown/select inside search bar: `[Search posts...] [All times ▾]`
-  - Saves vertical space, groups related filters
-  - Stack on mobile for responsive design
-  - Effort: 3-4 hours
-
-- [ ] **Sticky Filter Bar**
-  - Make filter section sticky after scrolling past header
-  - Easy to refine search without scrolling back
-  - Common pattern in e-commerce/search UIs
-  - Effort: 1-2 hours
-
-- [ ] **Keyboard Shortcuts**
-  - `/` - Focus search bar
-  - `Esc` - Clear search/filters
-  - `↓/↑` - Navigate results (future)
-  - Add tooltip documentation
-  - Effort: 2-3 hours
-
-- [ ] **Smart Sorting Toggle**
-  - Add sort options: Latest (default) | Popular (views) | Relevant (when searching)
-  - Better discovery and multiple browsing modes
-  - Effort: 3-4 hours
-
----
-
-### P2: Mobile-Specific Improvements (5-8 hours)
-
-- [ ] **Bottom Sheet Filters (Mobile)**
-  - "Filters" button opens bottom sheet modal
-  - Contains: Search, Reading time, Tags, Apply/Clear
-  - More space for results on small screens
-  - Similar to existing TOC sheet pattern
-  - Effort: 6-8 hours
-
-- [ ] **Horizontal Scroll Tags (Mobile)**
-  - Single row with horizontal scroll instead of wrapping
-  - Snap scroll with fade indicators at edges
-  - Saves vertical space
-  - Effort: 2-3 hours
-
-- [ ] **Floating Filter FAB (Mobile)**
-  - Floating button like TOC FAB
-  - Opens filter bottom sheet
-  - Badge shows active filter count
-  - Maximizes content space
-  - Effort: 4-5 hours
-
----
-
-### P3: Advanced Features (8+ hours)
-
-- [ ] **Search Suggestions/Autocomplete**
-  - Dropdown showing: Recent searches, Popular tags, Matching post titles
-  - Faster search and improved discovery
-  - Effort: 8-10 hours
-
-- [ ] **Tag Search/Filter**
-  - Search bar within tag list (for 50+ tags)
-  - Scalability for growing tag collection
-  - Effort: 2-3 hours
-
-- [ ] **Saved Searches**
-  - Save filter combinations in localStorage
-  - Power user workflow optimization
-  - Effort: 5-6 hours
-
-- [ ] **Pretty Filter URLs**
-  - SEO-friendly URLs like `/blog/quick-reads/typescript`
-  - More shareable, better for SEO
-  - Effort: 6-8 hours
-
-**Guiding Principles:**
-- **Simplicity** - Remove visual noise, consolidate elements
-- **Progressive Disclosure** - Hide complexity until needed
-- **Clear Feedback** - Obvious active states, easy dismissal
-- **Mobile-First** - Appropriate patterns for small screens
-
-**Reference:** Search/filter UI brainstorm session (Nov 5, 2025)
-
----
-
-### Technical Exploration
-- [ ] **WebAssembly integration** - Experiment with WASM for performance-critical features
-- [ ] **Edge functions** - Explore edge runtime for certain API routes
-- [ ] **Multi-language support (i18n)** - Internationalization support
-
-### Optional Integrations
-- [ ] **Git MCP** - Consider @modelcontextprotocol/server-git for direct git operations
-- [ ] **Discord MCP** - Deployment notifications and team updates
-
----
-
-## 📊 Analytics Dashboard Enhancements (Backlog)
-
-### TIER 1: ✅ COMPLETE (Nov 5, 2025)
-**Status:** All quick wins implemented successfully!
-
-- [x] **Sortable Table Columns** — Click-to-sort on views, 24h views, published date, title, and range views. Visual indicators (↑/↓). Preference saved in URL state.
-- [x] **Date Range Selector** — Toggle between 24h/7d/30d/90d/All Time. All metrics update based on selection. Uses existing Redis sorted sets.
-- [x] **Search & Filter Posts** — Search bar for title filtering, multi-select tag filter, filter by post status. Active filter count badge shows applied filters.
-- [x] **Export to CSV/JSON** — Download buttons for full analytics dataset. Respects current filters/date range. Includes metadata.
-- [x] **Auto-Refresh Toggle** — Polling option (every 30s), manual refresh button with loading spinner, last updated timestamp display.
-- [x] **URL State Persistence** — All filters, sorting, date range saved in URL params. Enables sharing views and browser back/forward navigation.
-
-**Implementation Notes:**
-- Added new backend functions: `getPostViewsInRange()`, `getMultiplePostViewsInRange()` in `src/lib/views.ts`
-- API route now accepts `?days=1|7|30|90|all` parameter for flexible date ranges
-- Client component uses Next.js `useRouter` and `useSearchParams` for URL state management
-- Export functions generate timestamped CSV/JSON files with full metadata
-- Auto-refresh uses 30-second interval with visual loading indicators
-
-### TIER 2: Enhanced Insights (Medium Priority)
-**Goal:** Visual analytics and deeper insights into content performance
-
-- [ ] **Visual Trend Charts** — Add recharts or tremor for line charts (views over time), bar charts (top 10 comparison), area charts (cumulative by tag)
-- [ ] **Sparkline Trends in Table** — Mini 7-day view trend chart in each row. Color-coded (green = up, red = down, gray = stable)
-- [ ] **Historical Data Snapshots** — Daily/weekly/monthly rollups via Inngest. Store in Redis as `analytics:snapshot:{date}`. Enable week-over-week comparisons.
-- [ ] **Tag Performance Dashboard** — Dedicated view showing analytics by tag, average views per tag, most popular tags by post count vs views, tag growth trends
-- [ ] **Post Lifecycle Labels** — Auto-detect and badge posts: "🔥 Viral" (5x spike), "🌲 Evergreen" (consistent 30+ days), "📈 Rising" (20%+ growth), "📉 Declining" (30%+ drop), "🆕 Fresh" (<7 days old)
-- [ ] **Content Performance Metrics** — Views per day since publication (velocity), peak views with timestamp, reading time vs views correlation, tag combination performance
-
-### TIER 3: Advanced Analytics (Low Priority / Future)
-**Goal:** Production-ready analytics with engagement tracking and intelligence
-
-- [ ] **Engagement Tracking** — Client-side instrumentation: scroll depth (25/50/75/100%), time on page buckets, code block copy events, external link clicks
-- [ ] **Real-Time Updates** — WebSocket or SSE for live view counter, "someone is reading now" indicator, throttled updates
-- [ ] **Advanced Trending Algorithm** — Weighted scoring: `(views24h * recency) + (velocity * momentum) + (totalViews * authority)`. Factor in recency, velocity (views/hour), authority boost, time decay
-- [ ] **Referrer & Traffic Analysis** — Privacy-respecting referrer tracking via `document.referrer`. Categorize: Direct/Social/Search/Internal. Top referrers by domain, UTM support
-- [ ] **Goal & Conversion Tracking** — Track conversions from blog posts: newsletter signups with source post, contact form submissions, GitHub repo stars, project page visits, related post clicks
-
-### UX & Visual Enhancements (Backlog)
-- [ ] **Improved Visual Hierarchy** — Color-coded performance tiers (green/yellow/red), larger trending indicators, better mobile/tablet responsive layout, sticky table headers
-- [ ] **Contextual Tooltips** — Explain metrics on hover ("What is views24h?"), show formulas for calculated metrics, tips for improving performance
-- [ ] **Comparative Views** — Side-by-side: this week vs last week, this month vs last month, post A vs B comparison mode, personal best highlights
-- [ ] **Simplified Mobile View** — Swipeable cards for top posts, collapsible sections, touch-optimized filters, portrait-oriented charts
-
-### Technical Architecture (Backlog)
-- [ ] **Optimized Data Layer** — Improve Redis key structure: `analytics:post:{id}:views:hourly/daily`, `analytics:global:summary`, `analytics:tags:{tag}:summary`
-- [ ] **Background Aggregation Jobs** — Inngest functions: hourly rollups, daily snapshots/lifecycle labels, weekly tag performance, monthly archival
-- [ ] **API Query Optimizations** — Parallel Redis queries with `Promise.all()`, response caching (5-10s TTL), server-side filtering/sorting, incremental loading
-
-**Reference:** Full brainstorm in analysis session (Nov 5, 2025)
+- [ ] **Personalization** - Remember preferences, suggest content
 
 ---
 
@@ -1352,105 +177,196 @@ When prioritizing this work in the future:
 **See:** `docs/rss/feed-improvements-brainstorm.md` for complete analysis
 
 #### Medium Priority Items
-- [ ] **Enhanced Image Enclosures** - Add file size and dimensions metadata
-  - Use `fs.stat()` to get actual file sizes for `length` attribute
-  - Extract image dimensions for better feed reader display
-  - Effort: Medium (4-6 hours)
-
-- [ ] **Explicit Project Publication Dates** - Replace timeline inference
-  - Add `publishedAt` and `updatedAt` to Project schema
-  - More accurate timestamps for RSS/Atom feeds
-  - Option: Use git history or file system dates as fallback
-  - Effort: Medium (3-4 hours)
-
-- [ ] **Feed Documentation Page** - Create `/feeds` user-facing page
-  - Explain available feeds (combined, blog, projects)
-  - RSS reader recommendations
-  - Filtered feed examples
-  - Effort: Low (2-3 hours)
+- [ ] **Enhanced Image Enclosures** - Add file size and dimensions metadata (4-6 hours)
+- [ ] **Explicit Project Publication Dates** - Replace timeline inference (3-4 hours)
+- [ ] **Feed Documentation Page** - Create `/feeds` user-facing page (2-3 hours)
 
 #### Low Priority Items
-- [ ] **JSON Feed Support** - Modern JSON alternative to XML
-  - Create `/feed.json`, `/blog/feed.json`, `/projects/feed.json`
-  - Spec: https://www.jsonfeed.org/version/1.1/
-  - Easier JavaScript parsing, growing adoption
-  - Effort: Medium (4-5 hours)
-
-- [ ] **Filtered Feeds** - Tag and status-based feeds
-  - `/blog/feed?tag=security` - Security posts only
-  - `/blog/feed?tag=typescript` - TypeScript posts only
-  - `/projects/feed?status=active` - Active projects only
-  - `/projects/feed?featured=true` - Featured projects only
-  - Effort: Medium-High (6-8 hours)
-
-- [ ] **Feed Analytics** - Track subscription metrics
-  - Feed request tracking (count, user agents)
-  - Popular feed reader identification
-  - Most accessed feed items
-  - Option A: Server-side logging in middleware
-  - Option B: Use existing analytics (Vercel/GA)
-  - Effort: Medium-High (6-8 hours)
-
-- [ ] **Feed Pagination** - RFC 5005 support for large feeds
-  - Only needed if feeds grow very large (100+ items)
-  - Implement `?page=N` query parameter
-  - Add `rel="next"` and `rel="prev-archive"` links
-  - Effort: Medium-High (6-8 hours)
-
-**Completed Items:**
-- ✅ Project URL fix (hash-based → proper routes)
-- ✅ Feed autodiscovery (already implemented)
-- ✅ Feed icons and branding
-- ✅ TTL and copyright information
+- [ ] **JSON Feed Support** - Modern JSON alternative to XML (4-5 hours)
+- [ ] **Filtered Feeds** - Tag and status-based feeds (6-8 hours)
+- [ ] **Feed Analytics** - Track subscription metrics (6-8 hours)
 
 ---
 
-## ⚪ BACKLOG - Security Infrastructure (Medium Priority)
+### Blog Feature Enhancements (Future Improvements)
 
-### API Security Audit - Phase 2 (Enhanced Protection)
+#### Medium Effort (3-5 days each)
+- [ ] **Popular Posts Widget** - Sidebar showing top 5 posts by views
+- [ ] **Bookmark/Reading List** - Let readers save posts for later
+- [ ] **Post Reactions** - Quick emoji reactions (👍 ❤️ 🔥 💡)
+- [ ] **Keyboard Shortcuts** - `/` for search, `n`/`p` for next/prev
+- [ ] **Print-Friendly Styling** - `@media print` CSS rules
+- [ ] **Advanced Search Filters** - Date range, multiple tags, sort options
+- [ ] **Newsletter Signup Widget** - Email capture form
 
+#### Major Projects (1-2 weeks each)
+- [ ] **Full-Text Search** - Meilisearch/Algolia/SQLite FTS
+- [ ] **Content Analytics Dashboard** - `/admin` route with charts
+- [ ] **Infinite Scroll Option** - Auto-load more posts
+- [ ] **Reading History & Recommendations** - Track read posts
+- [ ] **Post Scheduling System** - Schedule posts for future publication
+- [ ] **Draft Preview Sharing** - Shareable preview links with secret token
+
+---
+
+### ESLint Design Token Migration (Low Priority)
+
+**Status:** Quick wins complete (Nov 9, 2025) - Remaining 71 warnings backlogged  
+**Priority:** LOW - Maintenance/polish, no user-facing impact  
+**Effort:** ~10-15 hours for complete migration
+
+**Remaining Work (71 warnings):**
+- **Analytics Page** (~18 warnings) - Internal admin page, lowest priority
+- **Project Detail Page** (~7 warnings) - Medium traffic
+- **Resume Page** (~5 warnings) - Low traffic
+- **Component Files** (~39 warnings) - As needed when editing
+- **Blog Page False Positives** (2 warnings) - Consider refining rules
+
+**Reference:** `docs/design/eslint-warnings-quick-ref.md`
+
+---
+
+### Blog Search & Filter UI Improvements (Backlog)
+
+#### P1: High Impact Improvements (3-5 hours each)
+- [ ] **Collapsible Tag List** - Show top 5-8 tags by default with expand button
+- [ ] **Combine Reading Time into Search Bar** - Dropdown inside search bar
+- [ ] **Sticky Filter Bar** - Sticky after scrolling past header
+- [ ] **Keyboard Shortcuts** - `/` to focus search, `Esc` to clear
+- [ ] **Smart Sorting Toggle** - Latest | Popular | Relevant
+
+#### P2: Mobile-Specific Improvements (5-8 hours)
+- [ ] **Bottom Sheet Filters (Mobile)** - Filter button opens bottom sheet modal
+- [ ] **Horizontal Scroll Tags (Mobile)** - Single row with horizontal scroll
+- [ ] **Floating Filter FAB (Mobile)** - Like TOC FAB with badge count
+
+#### P3: Advanced Features (8+ hours)
+- [ ] **Search Suggestions/Autocomplete** - Recent searches, popular tags
+- [ ] **Tag Search/Filter** - Search bar within tag list
+- [ ] **Saved Searches** - Save filter combinations in localStorage
+- [ ] **Pretty Filter URLs** - SEO-friendly URLs like `/blog/quick-reads/typescript`
+
+---
+
+### UI/UX Enhancements (Backlog)
+
+#### Phase 3: Enhanced Interactions (~26 hours)
+- [ ] **Enhanced table of contents** - Sliding active indicator
+- [ ] **Toast improvements** - Custom enter/exit animations
+- [ ] **GitHub heatmap polish** - Staggered square appearance
+- [ ] **Theme transition animations** - Smooth dark/light mode switch
+- [ ] **Parallax hero images** - Subtle parallax effect (desktop only)
+- [ ] **Progressive image blur** - Images start blurred, sharpen as they load
+
+#### Phase 4: Advanced Features (~74 hours)
+- [ ] **Command palette (Cmd+K)** - Search posts, navigate site (cmdk)
+- [ ] **Page transition system** - View Transitions API + Framer Motion fallback
+- [ ] **Micro-interactions library** - Reusable animated components
+- [ ] **Virtual scrolling** - For blog list with >50 posts
+- [ ] **Reading mode toggle** - Distraction-free interface
+- [ ] **Advanced gestures** - Pull-to-refresh, drag-to-share
+- [ ] **3D card tilt effect** - Subtle tilt on hover for project cards
+- [ ] **Image galleries** - Multiple images per post with lightbox
+
+---
+
+### Resume Page Enhancements (Backlog)
+
+**Phase 1: Professional Polish** (~6-8 hours)
+- [ ] **Timeline visualization** - Visual timeline for experience
+- [ ] **Certification verification links** - Clickable badges to Credly
+- [ ] **Download options** - PDF generation, JSON export
+- [ ] **Company logos** - Small logos next to experience cards
+
+**Phase 2: Interactive Features** (~8-10 hours)
+- [ ] **Skills search/filter** - Debounced search (100+ skills)
+- [ ] **Skills proficiency levels** - Visual indicators for expertise
+- [ ] **Dynamic summary toggle** - Switch between short and full summary
+- [ ] **Dark mode optimization** - Better badge contrast
+
+**Phase 3: Advanced Features** (~12-16 hours)
+- [ ] **View analytics** - Redis-backed view counter
+- [ ] **Testimonials carousel** - Rotating quotes from LinkedIn
+- [ ] **"Ask About My Resume" AI chat** - Interactive Q&A chatbot
+- [ ] **A/B testing layouts** - Track conversion to /contact
+
+---
+
+### About Page Enhancements (Backlog)
+
+**Phase 2: Enhanced UX** (Medium Priority)
+- [ ] **Interactive Timeline** - Vertical timeline with connection lines
+- [ ] **Featured Blog Posts Section** - Show 2-3 recent posts
+- [ ] **Downloadable Resume Button** - PDF download option
+- [ ] **Mission Statement Callout** - Prominent quote box
+- [ ] **Enhanced Personal Interests** - Expand "Outside work" section
+
+**Phase 3: Advanced Features** (Low Priority)
+- [ ] **Testimonials/Recommendations** - Rotating testimonials with attribution
+- [ ] **FAQ/Quick Facts Accordion** - Common questions
+- [ ] **Community Contributions Display** - Reuse GitHub heatmap
+- [ ] **Interactive Career Map** - Geographic visualization
+- [ ] **Currently Available Status** - Toggle for consulting availability
+- [ ] **Reading List Integration** - Sync with Goodreads
+
+---
+
+### Analytics Dashboard Enhancements (Backlog)
+
+**TIER 2: Enhanced Insights** (Medium Priority)
+- [ ] **Visual Trend Charts** - Line charts, bar charts (recharts or tremor)
+- [ ] **Sparkline Trends in Table** - Mini 7-day view trend in each row
+- [ ] **Historical Data Snapshots** - Daily/weekly/monthly rollups
+- [ ] **Tag Performance Dashboard** - Analytics by tag
+- [ ] **Post Lifecycle Labels** - Auto-detect: Viral, Evergreen, Rising
+- [ ] **Content Performance Metrics** - Velocity, peak views, correlations
+
+**TIER 3: Advanced Analytics** (Low Priority / Future)
+- [ ] **Engagement Tracking** - Scroll depth, time on page, code copy events
+- [ ] **Real-Time Updates** - WebSocket or SSE for live counters
+- [ ] **Advanced Trending Algorithm** - Weighted scoring with recency
+- [ ] **Referrer & Traffic Analysis** - Privacy-respecting referrer tracking
+- [ ] **Goal & Conversion Tracking** - Newsletter signups, contact form
+
+---
+
+### Configuration & Architecture (Backlog)
+
+#### Site Configuration Centralization
+**Status:** Phase 1 Complete (Nov 5, 2025)  
+**Remaining Work:**
+- [ ] **Refactor components to use centralized config** - Replace hardcoded values
+- [ ] **SEO_CONFIG** - SEO & metadata defaults
+- [ ] **SECURITY_CONFIG** - Rate limits, CSP, CORS
+- [ ] **NAV_CONFIG** - Header/footer links, mobile breakpoints
+- [ ] **THEME_CONFIG** - Default theme, fonts, logo paths
+- [ ] **CACHE_CONFIG** - ISR revalidation times, cache durations
+- [ ] **ANALYTICS_CONFIG** - Tracking preferences, privacy settings
+- [ ] **CONTACT_CONFIG** - Email settings, form validation
+- [ ] **BLOG_CONFIG** - Content dir, visibility rules, feeds
+
+---
+
+### Security Infrastructure (Backlog)
+
+#### API Security Audit - Phase 2 (Enhanced Protection)
 **Priority:** MEDIUM - Infrastructure improvements  
-**Estimated Effort:** 12-16 hours over 2-3 weeks
+**Estimated Effort:** 12-16 hours
 
-#### Input Validation & Sanitization
-- [ ] Install sanitization library (DOMPurify or validator.js)
-- [ ] Sanitize all user inputs before storage/processing
-- [ ] Validate content against malicious patterns (XSS, SQL injection)
-- [ ] Create `src/lib/validation.ts` utility module
-- [ ] Update `/api/contact` with enhanced sanitization
+- [ ] **Input Validation & Sanitization** - DOMPurify, validator.js
+- [ ] **Standardize Error Handling** - Error response utility, error codes
+- [ ] **API Middleware Layer** - Request ID, logging, CORS, rate limits
+- [ ] **API Monitoring & Security Events** - Track violations, error rates, alerts
 
-#### Standardize Error Handling
-- [ ] Create `src/lib/api-errors.ts` error response utility
-- [ ] Define error codes and messages (public vs internal)
-- [ ] Generic messages in production, detailed logs server-side
-- [ ] Include request ID in error responses
-- [ ] Document error codes in `docs/api/error-codes.md`
+---
 
-#### API Middleware Layer
-- [ ] Create `src/middleware/api.ts` for API-specific middleware
-- [ ] Request ID generation (UUID per request)
-- [ ] Standardized logging with request context
-- [ ] CORS configuration (explicit, not default)
-- [ ] Rate limit header standardization
-- [ ] Request/response timing metrics
+### Automation & CI (Recommended Backlog)
 
-#### API Monitoring & Security Events
-- [ ] Track rate limit violations per endpoint
-- [ ] Track error rates by endpoint and error type
-- [ ] Security event logging for suspicious patterns
-- [ ] Alert on coordinated attacks
-- [ ] Integration with monitoring service (Sentry, Datadog)
-
-#### Advanced Features (Future)
-- [ ] API versioning (`/api/v1/` namespace)
-- [ ] GraphQL API consideration
-- [ ] OAuth/JWT authentication for admin endpoints
-- [ ] IP reputation integration
-
-**See Also:**
-- `docs/security/anti-spam-implementation.md` - View/share protection
-- `docs/api/reference.md` - API endpoint documentation
-- `docs/security/anti-spam-summary.md` - Recent security improvements
+- [ ] **GitHub Actions CI** - Lint, typecheck, build with caching
+- [ ] **Snyk scan in CI** - Authenticated vulnerability checks
+- [ ] **Husky + lint-staged** - Pre-commit prettier and eslint
+- [ ] **Dependabot / Renovate** - Automated dependency updates
+- [ ] **Lighthouse / Performance checks** - Track performance regressions
 
 ---
 
@@ -1481,80 +397,3 @@ See `/docs/operations/done.md` for:
 - Run `npm run lint`
 - Test with `npm run build`
 - Review Lighthouse scores for major UI changes
-
----
-
-## 🔧 Configuration & Architecture (Backlog)
-
-### Site Configuration Centralization
-**Status:** ✅ Phase 1 Complete (Nov 5, 2025)  
-**Goal:** Centralize all site configuration for easier maintenance and type safety
-
-**Completed:**
-- ✅ **FEATURES** config - Feature flags for all toggleable features
-- ✅ **CONTENT_CONFIG** - Display settings, reading metrics, badges, TOC, code themes
-- ✅ **SERVICES** config - External service integration (GitHub, Redis, Giscus, Resend, Inngest, Vercel)
-- ✅ TypeScript types exported (`SiteConfig` type)
-- ✅ Example refactor: `giscus-comments.tsx` now uses centralized config
-
-**Remaining Work:**
-- [ ] **Refactor components to use centralized config**
-  - Update components with hardcoded values (views, badges, TOC, related posts, etc.)
-  - Replace direct `process.env` checks with `siteConfig.services.*.enabled`
-  - Pattern: See `giscus-comments.tsx` for reference implementation
-  
-- [ ] **SEO_CONFIG** - SEO & metadata defaults (locale, Twitter, OG images, sitemap priorities, robots, schemas)
-- [ ] **SECURITY_CONFIG** - Rate limits per endpoint, CSP settings, CORS
-- [ ] **NAV_CONFIG** - Header/footer links, mobile breakpoints, logo
-- [ ] **THEME_CONFIG** - Default theme, fonts, logo paths/sizes
-- [ ] **CACHE_CONFIG** - ISR revalidation times, server cache durations, SWR
-- [ ] **ANALYTICS_CONFIG** - Tracking preferences, privacy settings, custom events
-- [ ] **CONTACT_CONFIG** - Email settings, form validation, calendar
-- [ ] **BLOG_CONFIG** - Content dir, visibility rules, feeds, search, defaults
-
-**Benefits:**
-- Single source of truth for all configuration
-- Type-safe config access across codebase
-- Easier environment management
-- Centralized feature toggling
-- Better documentation through structure
-
----
-
-## ⚙️ Automation & CI (Recommended backlog)
-
-Small, low-risk automation items to pick up (prioritized):
-
-- [ ] **GitHub Actions CI** — Add a lightweight CI workflow that runs `npm ci`, `npm run check` (lint + typecheck), and `npm run build`. Cache node modules and `.next/cache` to speed runs.
-- [ ] **Snyk scan in CI** — Run `snyk test` as an optional step when `SNYK_TOKEN` is provided (store token in GitHub Secrets). This provides authenticated vulnerability checks and reporting.
-- [ ] **Husky + lint-staged** — Install and configure to run `prettier --write` and `eslint --fix` on staged files to keep PRs clean.
-- [ ] **Dependabot / Renovate** — Configure automated dependency update PRs (weekly) for npm packages.
-- [ ] **Cache build artifacts** — Preserve `.next/cache` between CI runs keyed by lockfile + Node version.
-- [ ] **Lighthouse / Performance checks** — Add an optional Lighthouse CI job to track performance regressions on the main branch.
-
-These are intentionally low-risk and incremental. Prioritize `GitHub Actions CI` and `Dependabot` first.
-
----
-
-## 🎨 About Page Enhancements (Backlog)
-
-**Phase 2 - Enhanced UX** (Medium Priority):
-- [ ] **Interactive Timeline** — Replace card-based "Previously" section with vertical timeline with connection lines, animated reveals on scroll, expandable cards
-- [ ] **Featured Blog Posts Section** — Show 2-3 recent/featured posts with snippets to drive engagement and showcase expertise
-- [ ] **Downloadable Resume Button** — Add PDF download option near "View full resume" link with download icon
-- [ ] **Mission Statement Callout** — Prominent highlighted quote box for "security as enabler" philosophy with accent styling
-- [ ] **Enhanced Personal Interests** — Expand "Outside work" with specific hobbies, side projects (this site!), community involvement details
-
-**Phase 3 - Advanced Features** (Low Priority):
-- [ ] **Testimonials/Recommendations** — Add rotating testimonials or static quotes from LinkedIn with attribution and company logos
-- [ ] **FAQ/Quick Facts Accordion** — Expandable sections for common questions (work approach, industries, consulting availability, tech stack preferences)
-- [ ] **Community Contributions Display** — Reuse GitHub heatmap component to show open source contributions and blog post frequency
-- [ ] **Interactive Career Map** — Geographic visualization of companies worked at with logos and tooltips
-- [ ] **Currently Available Status** — Toggle indicator for consulting/collaboration availability with booking calendar link
-- [ ] **Reading List Integration** — Sync with Goodreads to show currently reading book and security recommendations
-
-**Implementation Notes:**
-- All Phase 2/3 items should follow existing design patterns (shadcn/ui, Tailwind, responsive-first)
-- Use `ScrollReveal` component for animations
-- Maintain accessibility standards (keyboard nav, ARIA labels)
-- Keep mobile experience optimized
