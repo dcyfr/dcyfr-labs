@@ -16,7 +16,7 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 - **🟢 LOW** - Polish, nice-to-have improvements
 - **⚪ BACKLOG** - Future consideration, exploration
 
-**Current Focus:** Architecture refactoring - blog, archive, and core pages
+**Current Focus:** Developer dashboard refactoring (analytics, admin tools)
 
 ---
 
@@ -68,22 +68,78 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
   - ✅ Production-ready with full documentation
 
 #### Core Pages Refactor
-**Status:** Planning complete
-- [ ] Phase 1: Create foundation (page layouts + metadata helpers)
-- [ ] Phase 2: Refactor homepage (`/`)
-- [ ] Phase 3: Refactor `/about`, `/contact`, `/resume` pages
-- [ ] Phase 4: Cleanup and documentation
-- **Plan:** `/docs/architecture/core-pages-refactor-plan.md`
-- **Benefits:** Consistent layouts, centralized metadata, easier maintenance
+**Status:** ✅ COMPLETE (All Phases 1-4) 🎉
+- [x] **Phase 1: Create foundation (page layouts + metadata helpers)** ✅
+  - ✅ `src/components/layouts/page-layout.tsx` - Universal page wrapper (41 lines)
+  - ✅ `src/components/layouts/page-hero.tsx` - Standardized hero sections (99 lines)
+  - ✅ `src/components/layouts/page-section.tsx` - Consistent section wrapper (96 lines)
+  - ✅ Enhanced `PAGE_LAYOUT` design tokens with hero/section/prose/narrow patterns
+  - ✅ `createPageMetadata()` helper for unified metadata generation
+- [x] **Phase 2: Refactor homepage (`/`)** ✅
+  - ✅ `/page.tsx`: 255 → 223 lines (12.5% reduction)
+  - ✅ Applied PageLayout wrapper and PAGE_LAYOUT patterns
+  - ✅ Maintained all features: featured post hero, blog list, projects grid
+- [x] **Phase 3: Refactor core pages** ✅
+  - ✅ `/about/page.tsx`: 255 → 159 lines (38% reduction)
+  - ✅ `/contact/page.tsx`: 74 → 50 lines (32% reduction - hit target!)
+  - ✅ `/resume/page.tsx`: 129 → 113 lines (12% reduction)
+  - ✅ `/not-found.tsx`: 13 → 24 lines (enhanced UX)
+  - ✅ Total: **726 → 569 lines (21.6% reduction)**
+  - ✅ Fixed width issues in 4 about page components
+  - ✅ Extracted social links to reusable component (147 lines)
+- [x] **Phase 3.5: Refactor loading skeletons** ✅
+  - ✅ Updated 5 existing loading.tsx files to match new page structures
+  - ✅ Created new `/resume/loading.tsx` (92 lines)
+  - ✅ Total: 367 lines across 6 loading skeletons
+- [x] **Phase 4: Cleanup and documentation** ✅
+  - ✅ Verified zero compilation errors
+  - ✅ Reduced max widths (prose: max-w-3xl → max-w-2xl, standard: max-w-5xl → max-w-4xl)
+  - ✅ Updated `/docs/architecture/core-pages-refactor-plan.md` with completion status
+- **Documentation:**
+  - ✅ `/docs/architecture/core-pages-refactor-plan.md` - Complete plan with actual results
+  - ✅ Design tokens: Enhanced `src/lib/design-tokens.ts` with PAGE_LAYOUT patterns
+  - ✅ Updated `done.md` with completion record
+- **Benefits:**
+  - ✅ 21.6% code reduction across core pages
+  - ✅ Consistent structure and spacing patterns
+  - ✅ All loading skeletons match page structures
+  - ✅ Easy to maintain and extend
+  - ✅ Zero breaking changes
 
 #### Developer Dashboard & Tools Refactor
-**Status:** Planning complete
-- [ ] Phase 1: Create foundation (dashboard components + utilities)
-- [ ] Phase 2: Refactor `/analytics` dashboard
-- [ ] Phase 3: Create dashboard templates and patterns
-- [ ] Phase 4: Cleanup and documentation
+**Status:** 🔄 Ready to start - Analysis complete
+- [x] **Analysis phase** ✅
+  - ✅ Reviewed current implementation: 1,249-line AnalyticsClient.tsx
+  - ✅ Identified structure: data fetching, state management, sorting, filtering, exports, visualization
+  - ✅ Planning document complete: `/docs/architecture/dashboard-refactor-plan.md`
+  - ✅ Estimated scope: 10-15 new files, ~600 line reduction
+- [ ] **Phase 1: Create foundation** (dashboard components + utilities)
+  - [ ] `src/components/dashboard/dashboard-layout.tsx` - Universal dashboard wrapper
+  - [ ] `src/components/dashboard/dashboard-header.tsx` - Title, actions, filters
+  - [ ] `src/components/dashboard/dashboard-stats.tsx` - Stats cards grid
+  - [ ] `src/components/dashboard/dashboard-table.tsx` - Sortable, filterable table
+  - [ ] `src/components/dashboard/dashboard-filters.tsx` - Search, tags, dropdowns
+  - [ ] `src/components/dashboard/dashboard-export.tsx` - CSV/JSON export UI
+  - [ ] `src/lib/dashboard/table-utils.ts` - Sorting, filtering, pagination logic
+  - [ ] `src/lib/dashboard/export-utils.ts` - CSV/JSON export logic
+- [ ] **Phase 2: Extract analytics components**
+  - [ ] `src/components/analytics/analytics-overview.tsx` - Stats summary
+  - [ ] `src/components/analytics/analytics-trending.tsx` - Trending posts section
+  - [ ] `src/components/analytics/analytics-tags.tsx` - Tag analytics table
+  - [ ] `src/components/analytics/analytics-posts-table.tsx` - Main posts table
+  - [ ] `src/hooks/use-analytics-data.ts` - Data fetching hook
+  - [ ] `src/hooks/use-dashboard-filters.ts` - Filter state management
+  - [ ] `src/hooks/use-dashboard-sort.ts` - Sort state management
+- [ ] **Phase 3: Refactor AnalyticsClient.tsx**
+  - [ ] Refactor using new components and hooks (1,249 → ~600 lines, 52% reduction)
+  - [ ] Verify zero compilation errors
+  - [ ] Test all functionality (sorting, filtering, exports, auto-refresh)
+- [ ] **Phase 4: Documentation & cleanup**
+  - [ ] Update documentation with completion status
+  - [ ] Document reusable dashboard patterns for future tools
 - **Plan:** `/docs/architecture/dashboard-refactor-plan.md`
 - **Benefits:** 52% code reduction for analytics, 60% less duplication for new dashboards, reusable admin patterns
+- **Next Session:** Ready to begin Phase 1 foundation work
 
 ---
 

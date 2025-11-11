@@ -6,7 +6,137 @@ This document tracks completed projects, features, and improvements. Items are o
 
 ---
 
-## 🎯 Session Summary: November 10, 2025 (Latest) - Architecture Refactoring Complete
+## 🎯 Session Summary: November 10, 2025 (Latest) - Core Pages Architecture Refactor Complete
+
+### Core Pages Refactor (Phases 1-4) ✅
+**Completed**: November 10, 2025  
+**Effort**: Full session  
+**Priority**: 🟡 MEDIUM (Architecture)
+
+#### Overview
+Complete architecture refactoring of core pages (/, /about, /contact, /resume, /404) with reusable layout patterns. Created centralized page structure components, enhanced design tokens, and refactored all loading skeletons for consistency.
+
+**Total Impact**: 157 lines saved (21.6% reduction) + 383 lines of new reusable infrastructure.
+
+**What Was Implemented**:
+
+1. **Phase 1: Foundation Infrastructure** (383 lines new components)
+   - ✅ `src/components/layouts/page-layout.tsx` (41 lines) - Universal page wrapper
+   - ✅ `src/components/layouts/page-hero.tsx` (99 lines) - Standardized hero sections
+   - ✅ `src/components/layouts/page-section.tsx` (96 lines) - Consistent section wrapper
+   - ✅ `src/components/sections/social-links-grid.tsx` (147 lines) - Reusable social links
+   - ✅ Enhanced `src/lib/design-tokens.ts` with PAGE_LAYOUT patterns
+     - `PAGE_LAYOUT.hero`: Container + content patterns
+     - `PAGE_LAYOUT.section`: Standard section spacing
+     - `PAGE_LAYOUT.proseSection`: Reading-optimized sections
+     - `PAGE_LAYOUT.narrowSection`: Form-optimized sections
+   - ✅ `createPageMetadata()` helper in `src/lib/metadata.ts`
+
+2. **Phase 2: Homepage Refactoring**
+   - ✅ `/page.tsx` - 255 → 223 lines (32 saved, 12.5% reduction)
+     - Applied PageLayout wrapper
+     - Used PAGE_LAYOUT.hero and PAGE_LAYOUT.section patterns
+     - Maintained all features: featured post hero, blog list, projects grid
+     - Zero compilation errors
+
+3. **Phase 3: Core Pages Refactoring**
+   - ✅ `/about/page.tsx` - 255 → 159 lines (96 saved, 38% reduction)
+     - Applied PageLayout and PAGE_LAYOUT patterns
+     - Fixed width issues in 4 child components (removed double container wrapping)
+     - Extracted 80+ lines of inline social links to reusable SocialLinksGrid component
+     - Maintained all sections: stats, skills, certifications, currently learning
+   - ✅ `/contact/page.tsx` - 74 → 50 lines (24 saved, 32% reduction - perfect match to target!)
+     - Simplified with PageLayout and PAGE_LAYOUT.narrowSection
+     - Contact form wrapped in consistent section pattern
+   - ✅ `/resume/page.tsx` - 129 → 113 lines (16 saved, 12% reduction)
+     - Applied PAGE_LAYOUT.section patterns
+     - Consistent spacing for experience, education, skills sections
+   - ✅ `/not-found.tsx` - 13 → 24 lines (enhanced UX structure)
+     - Better structure with PageLayout and proper hero section
+     - More helpful 404 page with consistent design
+   - **Total Core Pages**: 726 → 569 lines (157 lines saved, 21.6% reduction)
+
+4. **Phase 3.5: Loading Skeletons Refactoring** (367 lines total)
+   - ✅ `src/app/loading.tsx` (68 lines) - Homepage skeleton
+   - ✅ `src/app/about/loading.tsx` (78 lines) - About page skeleton
+   - ✅ `src/app/contact/loading.tsx` (50 lines) - Contact form skeleton
+   - ✅ `src/app/resume/loading.tsx` (92 lines - NEW, didn't exist before)
+   - ✅ `src/app/blog/loading.tsx` (42 lines) - Blog archive skeleton
+   - ✅ `src/app/projects/loading.tsx` (37 lines) - Projects skeleton
+   - All skeletons now use PageLayout + PAGE_LAYOUT patterns
+   - Perfect match to page structures for seamless loading transitions
+
+5. **Phase 4: Cleanup & Documentation**
+   - ✅ Verified zero compilation errors
+   - ✅ Checked for unused imports (all necessary)
+   - ✅ Reduced max widths in design tokens:
+     - `prose`: max-w-3xl → max-w-2xl (768px → 672px)
+     - `standard`: max-w-5xl → max-w-4xl (1024px → 896px)
+     - `narrow`: max-w-2xl → max-w-xl (672px → 576px)
+   - ✅ Updated `docs/architecture/core-pages-refactor-plan.md` with completion status
+   - ✅ Updated `todo.md` and `done.md` with full details
+
+**Component Fixes** (Width Issues):
+- ✅ `src/components/about-stats.tsx` - Removed section wrapper (double container issue)
+- ✅ `src/components/about-currently-learning.tsx` - Changed section to div
+- ✅ `src/components/about-skills.tsx` - Removed section wrapper
+- ✅ `src/components/about-certifications.tsx` - Removed section wrapper
+- **Root Cause**: Components had their own container wrappers conflicting with page-level PAGE_LAYOUT.section.container
+- **Solution**: Components now presentational only; parent pages handle container/spacing
+
+**Lessons Learned**:
+1. **Component Responsibility Pattern**
+   - Components should be presentational only
+   - Container/spacing responsibility belongs to parent pages
+   - Prevents double-wrapping issues (e.g., about page width problems)
+
+2. **Loading Skeleton Consistency**
+   - Loading skeletons must match exact page structure
+   - Using same PAGE_LAYOUT patterns ensures seamless transitions
+   - Missing skeletons (resume) create poor UX - always create them
+
+3. **Design Token Value**
+   - Single-source-of-truth for layout patterns enables global changes
+   - Easy to reduce all page widths by updating one file
+   - Consistent spacing/typography across all pages
+
+4. **Metadata Pattern Success**
+   - `createPageMetadata()` eliminated 15+ lines per page
+   - Consistent OG/Twitter metadata generation
+   - Easy to maintain and update centrally
+
+**Benefits**:
+- ✅ 21.6% code reduction across core pages (726 → 569 lines)
+- ✅ Consistent structure and spacing patterns site-wide
+- ✅ All loading skeletons match page structures
+- ✅ Easy to maintain and extend with clear patterns
+- ✅ Zero breaking changes, all features preserved
+- ✅ Improved maintainability with reusable components
+- ✅ Better UX with complete loading skeleton coverage
+
+**Files Created**:
+- `src/components/layouts/page-layout.tsx` (41 lines)
+- `src/components/layouts/page-hero.tsx` (99 lines)
+- `src/components/layouts/page-section.tsx` (96 lines)
+- `src/components/sections/social-links-grid.tsx` (147 lines)
+- `src/app/resume/loading.tsx` (92 lines - NEW)
+
+**Files Modified**:
+- Core pages: `src/app/page.tsx`, `src/app/about/page.tsx`, `src/app/contact/page.tsx`, `src/app/resume/page.tsx`, `src/app/not-found.tsx`
+- Loading skeletons: 5 updated + 1 new
+- Components: 4 about page components (width fixes)
+- Design tokens: `src/lib/design-tokens.ts` (enhanced + reduced widths)
+
+**Documentation**:
+- ✅ `docs/architecture/core-pages-refactor-plan.md` - Complete plan with actual results
+- ✅ Enhanced design tokens with PAGE_LAYOUT patterns
+- ✅ Updated `todo.md` with completion status
+
+**Next Steps**: Dashboard & Tools Refactor or visual testing of all pages
+
+---
+
+## 🎯 Session Summary: November 10, 2025 - Blog & Archive Pages Architecture Refactor Complete
 
 ### Blog & Archive Pages Refactor (Phases 1-3) ✅
 **Completed**: November 10, 2025  
