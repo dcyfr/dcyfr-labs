@@ -87,7 +87,7 @@ export default async function AboutPage() {
       <AboutStats />
       
       {/* about me */}
-      <section className={`prose ${SPACING.content}`}>
+      <section className={`${SPACING.content}`}>
         <h2 className={TYPOGRAPHY.h2.standard}>What drives me</h2>
         <div className="space-y-3 text-muted-foreground">
           <p>
@@ -103,7 +103,7 @@ export default async function AboutPage() {
       </section>
       
       {/* professional background */}
-      <section className={SPACING.content}>
+      <section className={`${SPACING.content}`}>
         <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
         <p className="text-muted-foreground mb-4">
           I bring 5+ years of hands-on experience across security engineering, architecture, and leadership roles. 
@@ -121,7 +121,7 @@ export default async function AboutPage() {
       </section>
         
       {/* current role */}
-      <section className={SPACING.content}>
+      <section className={`${SPACING.content}`}>
         <h2 className={TYPOGRAPHY.h2.standard}>Currently at {currentRole.company}</h2>
         <Card className="p-5 space-y-3">
           <div className="space-y-1">
@@ -146,7 +146,7 @@ export default async function AboutPage() {
       <AboutCertifications />
       
       {/* call to action & socials */}
-      <section className={SPACING.content}>
+      <section className={`${SPACING.content}`}>
         <h2 className={TYPOGRAPHY.h2.standard}>Connect with me</h2>
         <p className="text-muted-foreground">
           I&apos;m open to connecting with fellow builders, sharing knowledge, and exploring new opportunities. Feel free to reach out through any of the platforms below!

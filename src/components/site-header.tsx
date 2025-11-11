@@ -11,7 +11,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8 h-14 md:h-16 flex items-center justify-between gap-2">
         {/* Logo - always visible */}
         <Link href="/" className="flex items-center gap-2 text-base sm:text-xl md:text-2xl font-semibold tracking-tight touch-target shrink-0">
-          Drew&apos;s Lab
+          <span className="font-serif italic sr-only">Drew&apos;s Lab</span>
           <Logo width={24} height={24} className="w-4 h-4 md:w-6 md:h-6" />
         </Link>
 
