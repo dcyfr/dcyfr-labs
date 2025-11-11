@@ -7,10 +7,24 @@ interface ContributionDay {
   count: number;
 }
 
+interface PinnedRepository {
+  name: string;
+  description: string | null;
+  url: string;
+  stargazerCount: number;
+  forkCount: number;
+  primaryLanguage: {
+    name: string;
+    color: string;
+  } | null;
+}
+
 interface ContributionResponse {
   contributions: ContributionDay[];
   source: string;
   totalContributions: number;
+  totalRepositories: number;
+  pinnedRepositories: PinnedRepository[];
   warning?: string;
 }
 
@@ -136,6 +150,24 @@ export async function GET(request: NextRequest) {
         query: `
           query($username: String!) {
             user(login: $username) {
+              repositories(ownerAffiliations: OWNER, privacy: PUBLIC) {
+                totalCount
+              }
+              pinnedItems(first: 6, types: REPOSITORY) {
+                nodes {
+                  ... on Repository {
+                    name
+                    description
+                    url
+                    stargazerCount
+                    forkCount
+                    primaryLanguage {
+                      name
+                      color
+                    }
+                  }
+                }
+              }
               contributionsCollection {
                 contributionCalendar {
                   totalContributions
@@ -176,6 +208,8 @@ export async function GET(request: NextRequest) {
     }
 
     const calendar = data.data.user.contributionsCollection.contributionCalendar;
+    const repositories = data.data.user.repositories;
+    const pinnedItems = data.data.user.pinnedItems;
     
     // Transform the data
     const contributions: ContributionDay[] = calendar.weeks.flatMap(
@@ -186,10 +220,31 @@ export async function GET(request: NextRequest) {
         }))
     );
 
+    const pinnedRepositories: PinnedRepository[] = pinnedItems?.nodes?.map((node: {
+      name: string;
+      description: string | null;
+      url: string;
+      stargazerCount: number;
+      forkCount: number;
+      primaryLanguage: { name: string; color: string } | null;
+    }) => ({
+      name: node.name,
+      description: node.description,
+      url: node.url,
+      stargazerCount: node.stargazerCount,
+      forkCount: node.forkCount,
+      primaryLanguage: node.primaryLanguage ? {
+        name: node.primaryLanguage.name,
+        color: node.primaryLanguage.color,
+      } : null,
+    })) || [];
+
     const result: ContributionResponse = {
       contributions,
       source: 'github-api',
       totalContributions: calendar.totalContributions,
+      totalRepositories: repositories?.totalCount || 0,
+      pinnedRepositories,
     };
 
     // Add warning if no token is used (rate limits apply)
@@ -223,6 +278,8 @@ export async function GET(request: NextRequest) {
       contributions: fallbackData,
       source: 'fallback',
       totalContributions: fallbackData.reduce((sum, day) => sum + day.count, 0),
+      totalRepositories: 0,
+      pinnedRepositories: [],
       warning: 'Unable to fetch live data.',
     };
 

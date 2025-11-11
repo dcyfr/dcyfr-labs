@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import CalendarHeatmap from "react-calendar-heatmap";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ExternalLink, Flame, TrendingUp, Calendar, Target } from "lucide-react";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ExternalLink, Flame, TrendingUp, Calendar, Target, FolderGit2, Star, GitFork } from "lucide-react";
 import { GitHubHeatmapSkeleton } from "@/components/github-heatmap-skeleton";
 import "react-calendar-heatmap/dist/styles.css";
 
@@ -22,16 +22,44 @@ interface ContributionDay {
 }
 
 /**
+ * Represents a pinned repository
+ * @typedef {Object} PinnedRepository
+ * @property {string} name - Repository name
+ * @property {string | null} description - Repository description
+ * @property {string} url - Repository URL
+ * @property {number} stargazerCount - Number of stars
+ * @property {number} forkCount - Number of forks
+ * @property {Object | null} primaryLanguage - Primary programming language
+ * @property {string} primaryLanguage.name - Language name
+ * @property {string} primaryLanguage.color - Language color hex code
+ */
+interface PinnedRepository {
+  name: string;
+  description: string | null;
+  url: string;
+  stargazerCount: number;
+  forkCount: number;
+  primaryLanguage: {
+    name: string;
+    color: string;
+  } | null;
+}
+
+/**
  * API response structure for GitHub contributions data
  * @typedef {Object} ContributionResponse
  * @property {ContributionDay[]} contributions - Array of contribution data for the past year
  * @property {number} [totalContributions] - Total contributions in the time period
+ * @property {number} [totalRepositories] - Total public repositories
+ * @property {PinnedRepository[]} [pinnedRepositories] - Pinned repositories
  * @property {string} [warning] - Optional warning message (e.g., "Using cached data")
  * @property {string} [source] - Data source indicator ("server-cache", "api", "fallback")
  */
 interface ContributionResponse {
   contributions: ContributionDay[];
   totalContributions?: number;
+  totalRepositories?: number;
+  pinnedRepositories?: PinnedRepository[];
   warning?: string;
   source?: string;
 }
@@ -201,6 +229,8 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalContributions, setTotalContributions] = useState<number>(0);
+  const [totalRepositories, setTotalRepositories] = useState<number>(0);
+  const [pinnedRepositories, setPinnedRepositories] = useState<PinnedRepository[]>([]);
   const [warning, setWarning] = useState<string | null>(null);
   const [source, setSource] = useState<string | null>(null);
 
@@ -217,6 +247,8 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
         
         setContributions(data.contributions || []);
         setTotalContributions(data.totalContributions || data.contributions?.length || 0);
+        setTotalRepositories(data.totalRepositories || 0);
+        setPinnedRepositories(data.pinnedRepositories || []);
         setWarning(data.warning || null);
         setSource(data.source || null);
       } catch (err) {
@@ -255,7 +287,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
         <Card className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <h3 className="text-lg font-semibold">GitHub Activity</h3>
+              <h3 className="text-lg font-semibold">GitHub</h3>
               <a
                 href={`https://github.com/${username}`}
                 target="_blank"
@@ -299,73 +331,61 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3"
+              className="grid grid-cols-2 md:grid-cols-5 gap-3"
             >
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors cursor-help">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Flame className="w-4 h-4 text-orange-500" aria-hidden="true" />
-                      <span className="text-xs text-muted-foreground">Current Streak</span>
-                    </div>
-                    <div className="text-2xl font-bold">{streaks.currentStreak}</div>
-                    <div className="text-xs text-muted-foreground">days</div>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Consecutive days with contributions</p>
-                </TooltipContent>
-              </Tooltip>
+              {/* Repositories Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <FolderGit2 className="w-4 h-4 text-cyan-500" aria-hidden="true" />
+                  <span className="text-xs text-muted-foreground">Repositories</span>
+                </div>
+                <div className="text-2xl font-bold">{totalRepositories}</div>
+                <div className="text-xs text-muted-foreground">public</div>
+              </div>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors cursor-help">
-                    <div className="flex items-center gap-2 mb-1">
-                      <TrendingUp className="w-4 h-4 text-green-500" aria-hidden="true" />
-                      <span className="text-xs text-muted-foreground">Longest Streak</span>
-                    </div>
-                    <div className="text-2xl font-bold">{streaks.longestStreak}</div>
-                    <div className="text-xs text-muted-foreground">days</div>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Your longest contribution streak this year</p>
-                </TooltipContent>
-              </Tooltip>
+              {/* Active Days Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <Calendar className="w-4 h-4 text-blue-500" aria-hidden="true" />
+                  <span className="text-xs text-muted-foreground">Active Days</span>
+                </div>
+                <div className="text-2xl font-bold">{activityStats.totalDaysActive}</div>
+                <div className="text-xs text-muted-foreground">days</div>
+              </div>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors cursor-help">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Calendar className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                      <span className="text-xs text-muted-foreground">Active Days</span>
-                    </div>
-                    <div className="text-2xl font-bold">{activityStats.totalDaysActive}</div>
-                    <div className="text-xs text-muted-foreground">days</div>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Total days with at least one contribution</p>
-                </TooltipContent>
-              </Tooltip>
+              {/* Daily Average Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp className="w-4 h-4 text-purple-500" aria-hidden="true" />
+                  <span className="text-xs text-muted-foreground">Daily Average</span>
+                </div>
+                <div className="text-2xl font-bold">{activityStats.averagePerDay}</div>
+                <div className="text-xs text-muted-foreground">contributions</div>
+              </div>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors cursor-help">
-                    <div className="flex items-center gap-2 mb-1">
-                      <TrendingUp className="w-4 h-4 text-purple-500" aria-hidden="true" />
-                      <span className="text-xs text-muted-foreground">Daily Average</span>
-                    </div>
-                    <div className="text-2xl font-bold">{activityStats.averagePerDay}</div>
-                    <div className="text-xs text-muted-foreground">contributions</div>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Average contributions per day</p>
-                </TooltipContent>
-              </Tooltip>
+              {/* Longest Streak Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp className="w-4 h-4 text-green-500" aria-hidden="true" />
+                  <span className="text-xs text-muted-foreground">Longest Streak</span>
+                </div>
+                <div className="text-2xl font-bold">{streaks.longestStreak}</div>
+                <div className="text-xs text-muted-foreground">days</div>
+              </div>
+
+              {/* Streaks and Stats Cards */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <Flame className="w-4 h-4 text-orange-500" aria-hidden="true" />
+                  <span className="text-xs text-muted-foreground">Current Streak</span>
+                </div>
+                <div className="text-2xl font-bold">{streaks.currentStreak}</div>
+                <div className="text-xs text-muted-foreground">days</div>
+              </div>
+
             </motion.div>
 
+            {/* Busiest Day */}
             {activityStats.busiestDay && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -381,6 +401,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
               </motion.div>
             )}
 
+            {/* Heatmap Grid */}
             <div className="space-y-4">
               <div className="overflow-x-auto">
                 <CalendarHeatmap
@@ -403,7 +424,8 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                     return "color-scale-4";
                   }}
                   showWeekdayLabels={false}
-                  showMonthLabels={false}
+                  showMonthLabels={true}
+                  monthLabels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']}
                   showOutOfRangeDays={true}
                   gutterSize={4}
                 />
@@ -457,6 +479,74 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                 </div>
               </div>
             </div>
+
+            {/* Pinned Repositories */}
+            {pinnedRepositories.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {pinnedRepositories.map((repo) => (
+                    <motion.a
+                      key={repo.name}
+                      href={repo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-muted/30 rounded-lg p-4 border border-border hover:border-primary/50 transition-colors group"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <FolderGit2 className="w-4 h-4 text-muted-foreground flex-shrink-0" aria-hidden="true" />
+                            <span className="font-medium text-sm truncate group-hover:text-primary transition-colors">
+                              {repo.name}
+                            </span>
+                          </div>
+                          <ExternalLink className="w-3 h-3 text-muted-foreground flex-shrink-0" aria-hidden="true" />
+                        </div>
+                        
+                        {repo.description && (
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {repo.description}
+                          </p>
+                        )}
+                        
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                          {repo.primaryLanguage && (
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                className="w-3 h-3 rounded-full border border-border"
+                                style={{ backgroundColor: repo.primaryLanguage.color }}
+                                aria-hidden="true"
+                              />
+                              <span>{repo.primaryLanguage.name}</span>
+                            </div>
+                          )}
+                          
+                          {repo.stargazerCount > 0 && (
+                            <div className="flex items-center gap-1">
+                              <Star className="w-3 h-3" aria-hidden="true" />
+                              <span>{repo.stargazerCount}</span>
+                            </div>
+                          )}
+                          
+                          {repo.forkCount > 0 && (
+                            <div className="flex items-center gap-1">
+                              <GitFork className="w-3 h-3" aria-hidden="true" />
+                              <span>{repo.forkCount}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </motion.a>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </div>
         </Card>
       </motion.div>

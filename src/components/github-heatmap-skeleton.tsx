@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  * 
  * Matches the structure of GitHubHeatmap component:
  * - Header with title and username link
- * - Statistics grid (4 stat cards)
+ * - Statistics grid (5 stat cards)
  * - Contribution heatmap grid
  * - Footer with total contributions and date range
  */
@@ -21,9 +21,9 @@ export function GitHubHeatmapSkeleton() {
           <Skeleton className="h-4 w-24" /> {/* @username link */}
         </div>
 
-        {/* Statistics Grid - 4 stat cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {Array.from({ length: 4 }).map((_, i) => (
+        {/* Statistics Grid - 5 stat cards */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="bg-muted/50 rounded-lg p-3 border border-border">
               <Skeleton className="h-4 w-20 mb-2" /> {/* Stat label */}
               <Skeleton className="h-8 w-12 mb-1" /> {/* Stat value */}
