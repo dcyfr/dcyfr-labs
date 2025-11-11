@@ -1,34 +1,42 @@
 import { PostListSkeleton } from "@/components/post-list-skeleton";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Loading state for blog listing page.
- * Shown during navigation to the blog page.
+ * Matches the structure of the blog archive page with search and filters.
  */
 export default function Loading() {
   return (
-    <div className="mx-auto max-w-5xl py-14 md:py-20">
-      <div className="space-y-4">
-        {/* Title skeleton */}
-        <div className="h-10 w-32 bg-muted rounded-md animate-pulse" />
-        
-        {/* Description skeleton */}
-        <div className="h-6 w-3/4 bg-muted rounded-md animate-pulse" />
-      </div>
+    <PageLayout>
+      {/* Hero Section Skeleton */}
+      <section className={PAGE_LAYOUT.hero.container}>
+        <div className={PAGE_LAYOUT.hero.content}>
+          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-6 w-3/4 max-w-2xl" />
+        </div>
+      </section>
 
-      {/* Search form skeleton */}
-      <div className="mt-6 h-10 bg-muted rounded-md animate-pulse" />
+      {/* Search and Filter Section */}
+      <section className={PAGE_LAYOUT.section.container}>
+        <div className={SPACING.content}>
+          {/* Search form skeleton */}
+          <Skeleton className="h-10 w-full rounded-md mb-4" />
 
-      {/* Tag filters skeleton */}
-      <div className="mt-4 flex gap-2">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-6 w-16 bg-muted rounded-full animate-pulse" />
-        ))}
-      </div>
+          {/* Tag filters skeleton */}
+          <div className="flex gap-2 flex-wrap">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-6 w-16 rounded-full" />
+            ))}
+          </div>
 
-      {/* Posts list skeleton */}
-      <div className="mt-8">
-        <PostListSkeleton count={5} />
-      </div>
-    </div>
+          {/* Posts list skeleton */}
+          <div className="mt-8">
+            <PostListSkeleton count={5} />
+          </div>
+        </div>
+      </section>
+    </PageLayout>
   );
 }

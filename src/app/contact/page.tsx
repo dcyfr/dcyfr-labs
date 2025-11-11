@@ -1,50 +1,20 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
 import { ContactFormErrorBoundary } from "@/components/contact-form-error-boundary";
-import {
-  SITE_TITLE,
-  SITE_URL,
-  getOgImageUrl,
-  getTwitterImageUrl,
-} from "@/lib/site-config";
 import { getContactPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
-import { 
-  getContainerClasses, 
-  TYPOGRAPHY, 
-  SPACING 
-} from "@/lib/design-tokens";
+import { TYPOGRAPHY, PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { createPageMetadata } from "@/lib/metadata";
 
 const pageTitle = "Contact";
-// Optimized meta description (143 characters)
 const pageDescription = "Get in touch for inquiries, collaborations, or feedback.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: pageTitle,
   description: pageDescription,
-  openGraph: {
-    title: `${pageTitle} — ${SITE_TITLE}`,
-    description: pageDescription,
-    url: `${SITE_URL}/contact`,
-    siteName: SITE_TITLE,
-    type: "website",
-    images: [
-      {
-        url: getOgImageUrl(pageTitle, pageDescription),
-        width: 1200,
-        height: 630,
-        type: "image/png",
-        alt: `${pageTitle} — ${SITE_TITLE}`,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${pageTitle} — ${SITE_TITLE}`,
-    description: pageDescription,
-    images: [getTwitterImageUrl(pageTitle, pageDescription)],
-  },
-};
+  path: "/contact",
+});
 
 export default async function ContactPage() {
   // Get nonce from middleware for CSP
@@ -54,21 +24,27 @@ export default async function ContactPage() {
   const jsonLd = getContactPageSchema(pageDescription);
 
   return (
-    <>
+    <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className={getContainerClasses('narrow')}>
-      {/* page hero */}
-      <div className={SPACING.proseHero}>
-        <h1 className={TYPOGRAPHY.h1.standard}>Contact Me</h1>
-        <p className={TYPOGRAPHY.description}>
-          Whether you have questions, feedback, or collaboration ideas, feel free to reach out using the form below.
-        </p>
-      </div>
-      {/* contact form */}
-      <ContactFormErrorBoundary>
-        <ContactForm />
-      </ContactFormErrorBoundary>
-    </div>
-    </>
+      
+      {/* Page Hero */}
+      <section className={PAGE_LAYOUT.hero.container}>
+        <div className={PAGE_LAYOUT.hero.content}>
+          <h1 className={TYPOGRAPHY.h1.standard}>Contact Me</h1>
+          <p className={TYPOGRAPHY.description}>
+            Whether you have questions, feedback, or collaboration ideas, feel free to reach out using the form below.
+          </p>
+        </div>
+      </section>
+      
+      {/* Contact Form */}
+      <section className={PAGE_LAYOUT.section.container}>
+        <div className={SPACING.content}>
+          <ContactFormErrorBoundary>
+            <ContactForm />
+          </ContactFormErrorBoundary>
+        </div>
+      </section>
+    </PageLayout>
   );
 }

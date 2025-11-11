@@ -1,41 +1,50 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
 
 /**
  * Loading state for contact page.
+ * Matches the structure of the refactored contact page with hero and form.
  */
 export default function Loading() {
   return (
-    <div className="mx-auto max-w-2xl py-14 md:py-20">
-      <div className="space-y-4">
-        {/* Title */}
-        <Skeleton className="h-10 w-48" />
-        
-        {/* Description */}
-        <div className="space-y-2">
-          <Skeleton className="h-6 w-full" />
-          <Skeleton className="h-6 w-4/5" />
+    <PageLayout>
+      {/* Hero Section Skeleton */}
+      <section className={PAGE_LAYOUT.hero.container}>
+        <div className={PAGE_LAYOUT.hero.content}>
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-6 w-full max-w-2xl" />
+          <Skeleton className="h-6 w-4/5 max-w-2xl" />
         </div>
-      </div>
+      </section>
 
-      {/* Contact Form Skeleton */}
-      <Card className="mt-8 p-6">
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-10 w-full" />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-16" />
-            <Skeleton className="h-32 w-full" />
-          </div>
-          <Skeleton className="h-10 w-32" />
+      {/* Contact Form Section */}
+      <section className={PAGE_LAYOUT.section.container}>
+        <div className={SPACING.content}>
+          <Card className="p-6">
+            <div className="space-y-6">
+              {/* Name field */}
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-12" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              {/* Email field */}
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-12" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              {/* Message field */}
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-32 w-full" />
+              </div>
+              {/* Submit button */}
+              <Skeleton className="h-10 w-32" />
+            </div>
+          </Card>
         </div>
-      </Card>
-    </div>
+      </section>
+    </PageLayout>
   );
 }

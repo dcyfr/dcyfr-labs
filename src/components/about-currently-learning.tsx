@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { resume } from "@/data/resume";
-import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * About Currently Learning Component
@@ -25,7 +25,7 @@ export function AboutCurrentlyLearning() {
   if (!currentEducation) return null;
 
   return (
-    <section className={SPACING.content}>
+    <div className="space-y-6">
       <h2 className={TYPOGRAPHY.h2.standard}>Currently Learning</h2>
       
       <Card className="p-6 space-y-4 border-primary/20 bg-primary/5">
@@ -65,6 +65,6 @@ export function AboutCurrentlyLearning() {
           </div>
         )}
       </Card>
-    </section>
+    </div>
   );
 }

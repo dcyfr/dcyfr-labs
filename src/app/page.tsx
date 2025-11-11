@@ -12,7 +12,6 @@ import {
   SITE_TITLE,
   AUTHOR_NAME,
   getOgImageUrl,
-  getTwitterImageUrl,
 } from "@/lib/site-config";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
@@ -20,42 +19,21 @@ import { FeaturedPostHero } from "@/components/featured-post-hero";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import Image from "next/image";
 import { 
-  getContainerClasses, 
   TYPOGRAPHY, 
-  SPACING 
+  SPACING,
+  PAGE_LAYOUT,
 } from "@/lib/design-tokens";
-import { GitHubHeatmap } from "@/components/github-heatmap";
-import { HomepageStats } from "@/components/homepage-stats";
-import { projects } from "@/data/projects";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 
 // Optimized meta description for homepage (157 characters)
 const pageDescription = "Cybersecurity architect and developer building resilient security programs. Explore my blog on secure development, projects, and technical insights.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
+  title: SITE_TITLE,
   description: pageDescription,
-  openGraph: {
-    title: SITE_TITLE,
-    description: pageDescription,
-    url: SITE_URL,
-    siteName: SITE_TITLE,
-    type: "website",
-    images: [
-      {
-        url: getOgImageUrl(),
-        width: 1200,
-        height: 630,
-        type: "image/png",
-        alt: SITE_TITLE,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SITE_TITLE,
-    description: pageDescription,
-    images: [getTwitterImageUrl()],
-  },
-};
+  path: "/",
+});
 
 export default async function Home() {
   // Get nonce from middleware for CSP
@@ -130,19 +108,15 @@ export default async function Home() {
   };
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        suppressHydrationWarning
-      />
-      <div className={getContainerClasses('standard')}>
-      {/* page hero */}
-        <ScrollReveal animation="fade-up">
-          <section className={`py-4 md:py-8 ${SPACING.content} text-center`}>
+    <PageLayout>
+      <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      
+      {/* Hero Section */}
+      <ScrollReveal animation="fade-up">
+        <section className={PAGE_LAYOUT.hero.container}>
+          <div className={`${PAGE_LAYOUT.hero.content} text-center`}>
             {/* Avatar */}
-            <div className="flex justify-center mb-4 md:mb-5">
+            <div className="flex justify-center">
               <div className="relative w-32 h-32 md:w-40 md:h-40">
                 <Image
                   src="/images/avatar.jpg"
@@ -154,12 +128,17 @@ export default async function Home() {
               </div>
             </div>
             
+            {/* Title */}
             <h1 className={`${TYPOGRAPHY.h1.hero} flex items-center gap-2 justify-center`}>
-              Hi, I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
+              Hi, I&apos;m Drew <Logo width={24} height={24} />
             </h1>
+            
+            {/* Description */}
             <p className={`max-w-2xl mx-auto ${TYPOGRAPHY.description}`}>
               Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
             </p>
+            
+            {/* Actions */}
             <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
               <Button asChild size="default">
                 <Link href="/about">Learn more</Link>
@@ -171,8 +150,9 @@ export default async function Home() {
                 <Link href="/projects">View Projects</Link>
               </Button>
             </div>
-          </section>
-        </ScrollReveal>
+          </div>
+        </section>
+      </ScrollReveal>
 
         {/* stats section 
         <ScrollReveal animation="fade-up" delay={75}>
@@ -190,65 +170,54 @@ export default async function Home() {
         {/* featured post hero */}
         {featuredPost && (
           <ScrollReveal animation="fade-up" delay={100}>
-            <section className="mt-20 md:mt-32">
+            <section className={PAGE_LAYOUT.section.container}>
               <FeaturedPostHero post={featuredPost} />
             </section>
           </ScrollReveal>
         )}
 
-        {/* github contribution heatmap 
-        <ScrollReveal animation="fade-up" delay={150}>
-          <section className="mt-20 md:mt-32">
-            <div className="mb-8">
-              <h2 className={`${TYPOGRAPHY.h2.standard} text-center mb-2`}>
-                Development Activity
-              </h2>
-              <div className="w-16 h-0.5 bg-primary mx-auto rounded-full" />
-            </div>
-            <GitHubHeatmap username="dcyfr" />
-          </section>
-        </ScrollReveal>
-        */}
-
         {/* latest blog articles */}
         <ScrollReveal animation="fade-up" delay={200}>
-          <section className={`mt-20 md:mt-32 ${SPACING.content}`}>
-            <div className="flex items-center justify-between mb-8 pb-2 border-b">
-              <h2 className={`${TYPOGRAPHY.h2.standard}`}>
-                Latest articles
-              </h2>
-              <Button variant="ghost" asChild>
-                <Link href="/blog">View all</Link>
-              </Button>
+          <section className={PAGE_LAYOUT.section.container}>
+            <div className={SPACING.content}>
+              <div className="flex items-center justify-between mb-8 pb-2 border-b">
+                <h2 className={TYPOGRAPHY.h2.standard}>
+                  Latest articles
+                </h2>
+                <Button variant="ghost" asChild>
+                  <Link href="/blog">View all</Link>
+                </Button>
+              </div>
+              <PostList 
+                posts={recentPosts}
+                latestSlug={latestSlug ?? undefined}
+                hottestSlug={hottestSlug ?? undefined}
+                titleLevel="h3"
+              />
             </div>
-            <PostList 
-              posts={recentPosts}
-              latestSlug={latestSlug ?? undefined}
-              hottestSlug={hottestSlug ?? undefined}
-              titleLevel="h3"
-            />
           </section>
         </ScrollReveal>
 
         {/* latest projects */}
         <ScrollReveal animation="fade-up" delay={300}>
-          <section className={`mt-20 md:mt-32 ${SPACING.content}`}>
-            <div className="flex items-center justify-between mb-8 pb-2 border-b">
-              <h2 className={`${TYPOGRAPHY.h2.standard}`}>
-                Projects
-              </h2>
-              <Button variant="ghost" asChild>
-                <Link href="/projects">View all</Link>
-              </Button>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {featuredProjects.slice(0, 2).map((p) => (
-                <ProjectCard key={p.title} project={p} />
-              ))}
+          <section className={PAGE_LAYOUT.section.container}>
+            <div className={SPACING.content}>
+              <div className="flex items-center justify-between mb-8 pb-2 border-b">
+                <h2 className={TYPOGRAPHY.h2.standard}>
+                  Projects
+                </h2>
+                <Button variant="ghost" asChild>
+                  <Link href="/projects">View all</Link>
+                </Button>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {featuredProjects.slice(0, 2).map((p) => (
+                  <ProjectCard key={p.title} project={p} />
+                ))}
+              </div>
             </div>
           </section>
         </ScrollReveal>
-      </div>
-    </>
+      </PageLayout>
   );
 }

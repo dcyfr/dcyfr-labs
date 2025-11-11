@@ -1,30 +1,37 @@
 import { ProjectListSkeleton } from "@/components/project-card-skeleton";
 import { GitHubHeatmapSkeleton } from "@/components/github-heatmap-skeleton";
+import { PageLayout } from "@/components/layouts/page-layout";
+import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Loading state for projects page.
- * Shown while project data and GitHub heatmap are loading.
+ * Matches the structure with hero, GitHub heatmap, and projects grid.
  */
 export default function Loading() {
   return (
-    <div className="mx-auto max-w-5xl py-14 md:py-20">
-      <div className="space-y-4">
-        {/* Title skeleton */}
-        <div className="h-10 w-40 bg-muted rounded-md animate-pulse" />
-        
-        {/* Description skeleton */}
-        <div className="h-6 w-3/4 bg-muted rounded-md animate-pulse" />
-      </div>
+    <PageLayout>
+      {/* Hero Section Skeleton */}
+      <section className={PAGE_LAYOUT.hero.container}>
+        <div className={PAGE_LAYOUT.hero.content}>
+          <Skeleton className="h-10 w-40" />
+          <Skeleton className="h-6 w-3/4 max-w-2xl" />
+        </div>
+      </section>
 
-      {/* GitHub heatmap skeleton */}
-      <div className="mt-10">
-        <GitHubHeatmapSkeleton />
-      </div>
+      {/* GitHub Heatmap Section */}
+      <section className={PAGE_LAYOUT.section.container}>
+        <div className={SPACING.content}>
+          <GitHubHeatmapSkeleton />
+        </div>
+      </section>
 
-      {/* Projects grid skeleton */}
-      <div className="mt-10">
-        <ProjectListSkeleton count={4} />
-      </div>
-    </div>
+      {/* Projects Grid Section */}
+      <section className={PAGE_LAYOUT.section.container}>
+        <div className={SPACING.content}>
+          <ProjectListSkeleton count={4} />
+        </div>
+      </section>
+    </PageLayout>
   );
 }

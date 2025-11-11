@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { resume, type SkillCategory } from "@/data/resume";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * About Skills Component
@@ -93,7 +93,7 @@ function SkillCategoryCard({ category, defaultExpanded = false }: SkillCategoryC
  */
 export function AboutSkills() {
   return (
-    <section className={SPACING.content}>
+    <div className="space-y-6">
       <div className="space-y-2">
         <h2 className={TYPOGRAPHY.h2.standard}>Skills & Expertise</h2>
         <p className={TYPOGRAPHY.metadata}>
@@ -111,6 +111,6 @@ export function AboutSkills() {
           />
         ))}
       </div>
-    </section>
+    </div>
   );
 }

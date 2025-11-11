@@ -23,13 +23,13 @@
  */
 export const CONTAINER_WIDTHS = {
   /** Long-form content optimized for reading (blog posts, about page) */
-  prose: "max-w-3xl",
+  prose: "max-w-2xl",
   
   /** Standard width for list/grid pages (blog listing, projects) */
-  standard: "max-w-5xl",
+  standard: "max-w-4xl",
   
   /** Narrow width for forms and focused content (contact page) */
-  narrow: "max-w-2xl",
+  narrow: "max-w-xl",
 } as const;
 
 /**
@@ -266,6 +266,85 @@ export const TOUCH_TARGET = {
   
   /** Standard button/link size */
   standard: "h-12 w-12",
+} as const;
+
+// ============================================================================
+// PAGE LAYOUT PATTERNS
+// ============================================================================
+
+/**
+ * Page-level layout patterns for core pages (/, /about, /contact, /resume)
+ * Ensures consistent structure and spacing across all main pages
+ * 
+ * @example
+ * ```tsx
+ * <div className={PAGE_LAYOUT.wrapper}>
+ *   <PageHero />
+ *   <PageSection>{content}</PageSection>
+ * </div>
+ * ```
+ */
+export const PAGE_LAYOUT = {
+  /** Root page wrapper - provides consistent vertical rhythm */
+  wrapper: "min-h-screen",
+  
+  /** Hero section spacing - larger than standard sections */
+  hero: {
+    /** Container for hero content */
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-14 pb-10 md:pt-20 md:pb-14`,
+    /** Hero title + description wrapper */
+    content: SPACING.proseHero,
+  },
+  
+  /** Standard page section spacing */
+  section: {
+    /** Section container */
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} py-10 md:py-14`,
+    /** Section content wrapper */
+    content: SPACING.subsection,
+  },
+  
+  /** Prose/reading-optimized section (about page, long-form content) */
+  proseSection: {
+    /** Container for prose content */
+    container: `mx-auto ${CONTAINER_WIDTHS.prose} ${CONTAINER_PADDING} py-10 md:py-14`,
+    /** Prose content wrapper */
+    content: SPACING.content,
+  },
+  
+  /** Narrow section for forms (contact page) */
+  narrowSection: {
+    /** Container for narrow content */
+    container: `mx-auto ${CONTAINER_WIDTHS.narrow} ${CONTAINER_PADDING} py-10 md:py-14`,
+    /** Content wrapper */
+    content: SPACING.content,
+  },
+} as const;
+
+/**
+ * Hero section variants for different page types
+ */
+export const HERO_VARIANTS = {
+  /** Standard hero (about, contact, projects) */
+  standard: {
+    title: TYPOGRAPHY.h1.standard,
+    description: TYPOGRAPHY.description,
+    spacing: SPACING.proseHero,
+  },
+  
+  /** Homepage hero (larger, more prominent) */
+  homepage: {
+    title: TYPOGRAPHY.h1.hero,
+    description: TYPOGRAPHY.description,
+    spacing: SPACING.proseHero,
+  },
+  
+  /** Article hero (blog posts) */
+  article: {
+    title: TYPOGRAPHY.h1.article,
+    description: TYPOGRAPHY.description,
+    spacing: SPACING.proseHero,
+  },
 } as const;
 
 // ============================================================================
