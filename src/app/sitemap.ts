@@ -98,5 +98,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
   
-  return [...pageEntries, ...blogPostEntries, ...projectEntries];
+  // Generate sitemap entries for feed URLs
+  const feedEntries = [
+    {
+      url: `${base}/feed`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${base}/blog/feed`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${base}/projects/feed`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    },
+  ];
+  
+  return [...pageEntries, ...blogPostEntries, ...projectEntries, ...feedEntries];
 }

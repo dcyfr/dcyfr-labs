@@ -8,11 +8,8 @@ export function SiteFooter() {
           &copy; {new Date().getFullYear()} Drew <Logo width={12} height={12} className="opacity-70" />
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-          <a href="/atom.xml" className="hover:underline underline-offset-4 will-change-auto whitespace-nowrap px-1.5 py-1">
-            Atom
-          </a>
-          <a href="/rss.xml" className="hover:underline underline-offset-4 will-change-auto whitespace-nowrap px-1.5 py-1">
-            RSS
+          <a href="/feed" className="hover:underline underline-offset-4 will-change-auto whitespace-nowrap px-1.5 py-1">
+            Feed
           </a>
           <a href="/sitemap.xml" className="hover:underline underline-offset-4 will-change-auto whitespace-nowrap px-1.5 py-1">
             Sitemap

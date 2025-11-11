@@ -81,8 +81,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
     types: {
-      "application/rss+xml": `${SITE_URL}/rss.xml`,
-      "application/atom+xml": `${SITE_URL}/atom.xml`,
+      "application/atom+xml": [
+        { url: `${SITE_URL}/feed`, title: `${SITE_TITLE} — All Content` },
+        { url: `${SITE_URL}/blog/feed`, title: `${SITE_TITLE} — Blog` },
+        { url: `${SITE_URL}/projects/feed`, title: `${SITE_TITLE} — Projects` },
+      ],
     },
   },
 };
