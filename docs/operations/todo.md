@@ -16,7 +16,41 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 - **🟢 LOW** - Polish, nice-to-have improvements
 - **⚪ BACKLOG** - Future consideration, exploration
 
-**Current Focus:** No critical items - project in good shape! Next focus areas available in backlog.
+**Current Focus:** Architecture refactoring - blog, archive, and core pages
+
+---
+
+## 🟡 MEDIUM Priority
+
+### Architecture Refactoring
+**Goal:** Simplify and standardize pages with reusable patterns
+
+#### Blog & Archive Pages Refactor
+**Status:** Planning complete
+- [ ] Phase 1: Create foundation (archive/article libs + layouts)
+- [ ] Phase 2: Refactor `/blog` and `/blog/[slug]` pages
+- [ ] Phase 3: Refactor `/projects` page with same patterns
+- [ ] Phase 4: Cleanup and documentation
+- **Plan:** `/docs/architecture/blog-refactor-plan.md`
+- **Benefits:** 50-67% code reduction, consistent patterns, easy to add new archives
+
+#### Core Pages Refactor
+**Status:** Planning complete
+- [ ] Phase 1: Create foundation (page layouts + metadata helpers)
+- [ ] Phase 2: Refactor homepage (`/`)
+- [ ] Phase 3: Refactor `/about`, `/contact`, `/resume` pages
+- [ ] Phase 4: Cleanup and documentation
+- **Plan:** `/docs/architecture/core-pages-refactor-plan.md`
+- **Benefits:** Consistent layouts, centralized metadata, easier maintenance
+
+#### Developer Dashboard & Tools Refactor
+**Status:** Planning complete
+- [ ] Phase 1: Create foundation (dashboard components + utilities)
+- [ ] Phase 2: Refactor `/analytics` dashboard
+- [ ] Phase 3: Create dashboard templates and patterns
+- [ ] Phase 4: Cleanup and documentation
+- **Plan:** `/docs/architecture/dashboard-refactor-plan.md`
+- **Benefits:** 52% code reduction for analytics, 60% less duplication for new dashboards, reusable admin patterns
 
 ---
 

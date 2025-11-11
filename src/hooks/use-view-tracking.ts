@@ -67,6 +67,14 @@ export function useViewTracking(postId: string, enabled = true) {
           }),
         });
 
+        // Check if response is JSON before parsing
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          console.error("API returned non-JSON response:", response.status);
+          setError("API error");
+          return;
+        }
+
         const data = await response.json();
 
         if (response.ok) {
@@ -163,6 +171,13 @@ export function useViewTracking(postId: string, enabled = true) {
           isVisible: !document.hidden,
         }),
       });
+
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error("API returned non-JSON response:", response.status);
+        return { success: false, message: "API error" };
+      }
 
       const data = await response.json();
 

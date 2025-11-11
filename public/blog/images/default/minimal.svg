@@ -1,121 +1,66 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Deep dark background with subtle gradient -->
+  <!-- Tech-themed gradient -->
   <defs>
-    <linearGradient id="dark-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    <linearGradient id="tech-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
     </linearGradient>
     
-    <!-- Refined dot pattern -->
-    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
-      <circle cx="1" cy="1" r="1" fill="#94a3b8" opacity="0.08"/>
+    <!-- Circuit pattern -->
+    <pattern id="circuit" width="100" height="100" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="2" fill="white" opacity="0.1"/>
+      <circle cx="90" cy="90" r="2" fill="white" opacity="0.1"/>
+      <path d="M 10 10 L 50 10 L 50 50 L 90 50 L 90 90" stroke="white" stroke-width="1" opacity="0.05"/>
     </pattern>
     
-    <!-- Grid lines for tech feel -->
-    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#94a3b8" stroke-width="0.5" opacity="0.05"/>
+    <!-- Code text pattern -->
+    <pattern id="code-bg" width="400" height="100" patternUnits="userSpaceOnUse">
+      <text x="10" y="30" fill="white" opacity="0.02" font-family="monospace" font-size="14">function build() {</text>
+      <text x="30" y="50" fill="white" opacity="0.02" font-family="monospace" font-size="14">return &lt;Component /&gt;;</text>
+      <text x="10" y="70" fill="white" opacity="0.02" font-family="monospace" font-size="14">}</text>
     </pattern>
-    
-    <!-- Accent gradient for code icon -->
-    <linearGradient id="code-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
-    </linearGradient>
   </defs>
   
   <!-- Background layers -->
-  <rect width="1200" height="630" fill="url(#dark-gradient)"/>
-  <rect width="1200" height="630" fill="url(#grid)"/>
-  <rect width="1200" height="630" fill="url(#dots)"/>
+  <rect width="1200" height="630" fill="url(#tech-gradient)"/>
+  <rect width="1200" height="630" fill="url(#circuit)"/>
+  <rect width="1200" height="630" fill="url(#code-bg)"/>
   
-  <!-- Accent glow in corners -->
-  <circle cx="100" cy="100" r="200" fill="#3b82f6" opacity="0.03"/>
-  <circle cx="1100" cy="530" r="200" fill="#8b5cf6" opacity="0.03"/>
+  <!-- Floating geometric elements -->
+  <g opacity="0.08">
+    <rect x="100" y="100" width="60" height="60" fill="white" transform="rotate(15 130 130)"/>
+    <circle cx="1050" cy="500" r="80" fill="white"/>
+    <polygon points="200,500 250,550 150,550" fill="white"/>
+  </g>
   
-  <!-- Content container -->
+  <!-- Grid overlay -->
+  <g stroke="white" stroke-width="0.5" opacity="0.05">
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+  </g>
+  
+  <!-- Center icon: code brackets -->
   <g transform="translate(600, 315)">
-    <!-- Code icon with modern design -->
-    <g transform="translate(0, -95)">
-      <!-- Icon background with glow -->
-      <circle cx="0" cy="0" r="58" fill="url(#code-gradient)" opacity="0.08"/>
-      <circle cx="0" cy="0" r="52" fill="url(#code-gradient)" opacity="0.05"/>
-      
-      <!-- Terminal/code brackets -->
-      <g stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <!-- Left bracket -->
-        <path d="M -25 -12 L -35 0 L -25 12" stroke="url(#code-gradient)"/>
-        <!-- Right bracket -->
-        <path d="M 25 -12 L 35 0 L 25 12" stroke="url(#code-gradient)"/>
-        <!-- Forward slash -->
-        <line x1="-8" y1="-18" x2="8" y2="18" stroke="#8b5cf6"/>
-      </g>
-      
-      <!-- Code cursor blink indicator -->
-      <rect x="38" y="-3" width="3" height="6" fill="#3b82f6" opacity="0.7"/>
+    <g opacity="0.3">
+      <path 
+        d="M -80 -30 L -100 0 L -80 30 M 80 -30 L 100 0 L 80 30" 
+        stroke="white" 
+        stroke-width="8" 
+        stroke-linecap="round" 
+        fill="none"
+      />
+      <path d="M -40 -35 L -20 35 M 20 -35 L 40 35" stroke="white" stroke-width="6" stroke-linecap="round"/>
     </g>
-    
-    <!-- Main heading -->
-    <text 
-      x="0" 
-      y="45" 
-      text-anchor="middle" 
-      fill="#f8fafc" 
-      font-family="'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace" 
-      font-size="54" 
-      font-weight="700"
-      letter-spacing="-1"
-    >
-      Technical Article
-    </text>
-    
-    <!-- Code-style subtitle -->
-    <text 
-      x="0" 
-      y="88" 
-      text-anchor="middle" 
-      fill="#94a3b8" 
-      font-family="'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace" 
-      font-size="16" 
-      font-weight="500"
-      letter-spacing="3"
-    >
-      CODE • ENGINEERING • SYSTEMS
-    </text>
-    
-    <!-- Decorative code comment -->
-    <text 
-      x="0" 
-      y="125" 
-      text-anchor="middle" 
-      fill="#475569" 
-      font-family="'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace" 
-      font-size="14" 
-      font-weight="400"
-      opacity="0.7"
-    >
-      // building better software
-    </text>
   </g>
   
-  <!-- Terminal-style corner indicators -->
-  <g fill="#3b82f6" opacity="0.15">
-    <!-- Top left corner -->
-    <rect x="35" y="35" width="4" height="60" rx="2"/>
-    <rect x="35" y="35" width="60" height="4" rx="2"/>
-    
-    <!-- Top right corner -->
-    <rect x="1161" y="35" width="4" height="60" rx="2"/>
-    <rect x="1101" y="35" width="60" height="4" rx="2"/>
-    
-    <!-- Bottom left corner -->
-    <rect x="35" y="535" width="4" height="60" rx="2"/>
-    <rect x="35" y="591" width="60" height="4" rx="2"/>
-    
-    <!-- Bottom right corner -->
-    <rect x="1161" y="535" width="4" height="60" rx="2"/>
-    <rect x="1101" y="591" width="60" height="4" rx="2"/>
+  <!-- Corner tech accents -->
+  <g stroke="white" stroke-width="3" opacity="0.15" fill="none">
+    <rect x="30" y="30" width="50" height="50"/>
+    <rect x="1120" y="550" width="50" height="50"/>
+    <circle cx="55" cy="575" r="25"/>
+    <circle cx="1145" cy="55" r="25"/>
   </g>
-  
-  <!-- Subtle scan line effect -->
-  <line x1="0" y1="315" x2="1200" y2="315" stroke="#3b82f6" stroke-width="1" opacity="0.05"/>
 </svg>

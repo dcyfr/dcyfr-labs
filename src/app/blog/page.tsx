@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { posts, postTagCounts } from "@/data/posts";
+import { posts, type Post } from "@/data/posts";
 import { PostList } from "@/components/post-list";
-import { BlogSearchForm } from "@/components/blog-search-form";
-import { ActiveFilters } from "@/components/active-filters";
 import { BlogFilters } from "@/components/blog-filters";
+import { ArchiveLayout } from "@/components/layouts/archive-layout";
+import { ArchivePagination } from "@/components/layouts/archive-pagination";
+import { getArchiveData } from "@/lib/archive";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import {
   SITE_TITLE,
@@ -14,15 +14,10 @@ import {
 } from "@/lib/site-config";
 import { getBlogCollectionSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
-import { 
-  getContainerClasses, 
-  TYPOGRAPHY, 
-  SPACING 
-} from "@/lib/design-tokens";
 
 const pageTitle = "Blog";
-// Optimized meta description (159 characters)
 const pageDescription = "Articles on web development, cybersecurity, artificial intelligence, and more.";
+const POSTS_PER_PAGE = 12;
 
 export const metadata: Metadata = {
   title: pageTitle,
@@ -51,197 +46,110 @@ export const metadata: Metadata = {
   },
 };
 
-const getParamValue = (value: string | string[] | undefined): string => {
-  if (Array.isArray(value)) {
-    return value[0] ?? "";
-  }
-  return value ?? "";
-};
-
-const buildTagHref = (tag: string, query: string, page?: number, readingTime?: string) => {
-  const params = new URLSearchParams();
-  if (tag) params.set("tag", tag);
-  if (query) params.set("q", query);
-  if (page && page > 1) params.set("page", page.toString());
-  if (readingTime) params.set("readingTime", readingTime);
-  const suffix = params.toString();
-  return suffix ? `/blog?${suffix}` : "/blog";
-};
-
-const POSTS_PER_PAGE = 12;
-
-export default async function BlogPage({
-  searchParams,
-}: {
+interface BlogPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}) {
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
   // Get nonce from middleware for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
-  // Resolve and parse search parameters
-  const resolvedSearchParams = (await searchParams) ?? {};
-  const tag = getParamValue(resolvedSearchParams.tag);
-  const query = getParamValue(resolvedSearchParams.q);
-  const readingTime = getParamValue(resolvedSearchParams.readingTime);
-  const pageParam = getParamValue(resolvedSearchParams.page);
-  const layoutParam = getParamValue(resolvedSearchParams.layout);
-  const currentPage = Math.max(1, parseInt(pageParam) || 1);
-  const normalizedQuery = query.trim().toLowerCase();
+  // Resolve search parameters
+  const resolvedParams = (await searchParams) ?? {};
+  const getParam = (key: string) => {
+    const value = resolvedParams[key];
+    return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+  };
   
-  // Validate layout parameter - default to "grid" for better visual presentation
-  const layout = (layoutParam === "magazine" || layoutParam === "default") 
-    ? layoutParam 
-    : "grid";
+  // Support multiple tags (comma-separated)
+  const tagParam = getParam("tag");
+  const selectedTags = tagParam ? tagParam.split(",").filter(Boolean) : [];
+  const query = getParam("q");
+  const readingTime = getParam("readingTime");
+  const layoutParam = getParam("layout");
+  const layout = (layoutParam === "magazine" || layoutParam === "default") ? layoutParam : "grid";
   
-  // Sort all posts by date (newest first)
-  const allPosts = [...posts].sort((a, b) => 
-    a.publishedAt < b.publishedAt ? 1 : -1
-  );
+  // Apply reading time filter (custom filter not in Archive pattern)
+  const postsWithReadingTimeFilter = readingTime
+    ? posts.filter((post) => {
+        const minutes = post.readingTime.minutes;
+        if (readingTime === "quick") return minutes <= 5;
+        if (readingTime === "medium") return minutes > 5 && minutes <= 15;
+        if (readingTime === "deep") return minutes > 15;
+        return true;
+      })
+    : posts;
   
-  // Generate tag list sorted by count
-  const tagList = Object.entries(postTagCounts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([name]) => name);
+  // Apply multiple tag filter manually before Archive pattern
+  const postsWithTagFilter = selectedTags.length > 0
+    ? postsWithReadingTimeFilter.filter((post) =>
+        selectedTags.every((tag) => post.tags.includes(tag))
+      )
+    : postsWithReadingTimeFilter;
   
-  // Filter posts based on tag and search query
-  const filteredPosts = allPosts.filter((post) => {
-    const matchesTag = !tag || post.tags.includes(tag);
-    if (!matchesTag) return false;
-    
-    // Reading time filter
-    if (readingTime) {
-      const minutes = post.readingTime.minutes;
-      if (readingTime === "quick" && minutes > 5) return false;
-      if (readingTime === "medium" && (minutes <= 5 || minutes > 15)) return false;
-      if (readingTime === "deep" && minutes <= 15) return false;
+  // Use Archive Pattern for filtering, sorting, pagination (without tag filter)
+  const archiveData = getArchiveData<Post>(
+    {
+      items: postsWithTagFilter,
+      searchFields: ["title", "summary", "body"],
+      tagField: "tags",
+      dateField: "publishedAt",
+      itemsPerPage: POSTS_PER_PAGE,
+    },
+    {
+      search: query,
+      page: getParam("page"),
     }
-    
-    if (!normalizedQuery) return true;
-    
-    const haystack = `${post.title} ${post.summary} ${post.tags.join(" ")} ${post.body}`.toLowerCase();
-    return haystack.includes(normalizedQuery);
-  });
-  
-  // Calculate pagination
-  const totalPosts = filteredPosts.length;
-  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-  const endIndex = startIndex + POSTS_PER_PAGE;
-  const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+  );
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
   
-  // JSON-LD structured data for blog collection
-  const collectionTitle = tag ? `Blog - ${tag}` : pageTitle;
-  const collectionDescription = tag 
-    ? `Articles tagged with "${tag}"` 
+  // JSON-LD structured data
+  const collectionTitle = selectedTags.length > 0 ? `Blog - ${selectedTags.join(", ")}` : pageTitle;
+  const collectionDescription = selectedTags.length > 0 
+    ? `Articles tagged with "${selectedTags.join('", "')}"` 
     : pageDescription;
-  const jsonLd = getBlogCollectionSchema(filteredPosts, collectionTitle, collectionDescription);
+  const jsonLd = getBlogCollectionSchema(
+    archiveData.allFilteredItems,
+    collectionTitle,
+    collectionDescription
+  );
   
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      <div className={getContainerClasses('standard')}>
-        {/* Page header */}
-        <header className={SPACING.proseHero}>
-          <h1 className={TYPOGRAPHY.h1.standard}>Blog</h1>
-          <p className={TYPOGRAPHY.description}>
-            {pageDescription}
-          </p>
-          {totalPages > 1 && (
-            <p className={TYPOGRAPHY.metadata}>
-              Page {currentPage} of {totalPages} ({totalPosts} total posts)
-            </p>
-          )}
-        </header>
-
-        {/* Search form */}
-        <BlogSearchForm query={query} tag={tag} readingTime={readingTime} />
-
-        {/* Dropdown filters */}
-        <BlogFilters 
-          tag={tag} 
-          readingTime={readingTime} 
-          tagList={tagList} 
-        />
-
-        {/* Active filters */}
-        <ActiveFilters tag={tag} query={query} readingTime={readingTime} />
-
-        {/* Blog posts list */}
-        <section className={`mt-6 ${SPACING.content}`}>
-          <PostList 
-            posts={paginatedPosts}
-            latestSlug={latestSlug ?? undefined}
-            hottestSlug={hottestSlug ?? undefined}
-            titleLevel="h2"
-            layout={layout}
-            emptyMessage="No posts found. Try adjusting your search or filters."
+      
+      <ArchiveLayout
+        title={pageTitle}
+        description={pageDescription}
+        itemCount={archiveData.totalItems}
+        filters={
+          <BlogFilters 
+            selectedTags={selectedTags}
+            readingTime={readingTime} 
+            tagList={archiveData.availableTags}
+            query={query}
           />
-        </section>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
-            {currentPage > 1 && (
-              <Link
-                href={buildTagHref(tag, query, currentPage - 1, readingTime)}
-                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors min-h-[44px]"
-                aria-label="Previous page"
-              >
-                ← Previous
-              </Link>
-            )}
-            
-            <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                // Show first page, last page, current page, and pages around current
-                const showPage = 
-                  page === 1 || 
-                  page === totalPages || 
-                  (page >= currentPage - 1 && page <= currentPage + 1);
-                
-                const showEllipsis = 
-                  (page === 2 && currentPage > 3) || 
-                  (page === totalPages - 1 && currentPage < totalPages - 2);
-                
-                if (showEllipsis) {
-                  return <span key={page} className="px-2 text-muted-foreground">…</span>;
-                }
-                
-                if (!showPage) return null;
-                
-                return (
-                  <Link
-                    key={page}
-                    href={buildTagHref(tag, query, page, readingTime)}
-                    className={`inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors min-h-[44px] min-w-[44px] ${
-                      page === currentPage
-                        ? "bg-primary text-primary-foreground"
-                        : "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
-                    }`}
-                    aria-label={`Page ${page}`}
-                    aria-current={page === currentPage ? "page" : undefined}
-                  >
-                    {page}
-                  </Link>
-                );
-              })}
-            </div>
-            
-            {currentPage < totalPages && (
-              <Link
-                href={buildTagHref(tag, query, currentPage + 1, readingTime)}
-                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors min-h-[44px]"
-                aria-label="Next page"
-              >
-                Next →
-              </Link>
-            )}
-          </nav>
-        )}
-      </div>
+        }
+        pagination={
+          <ArchivePagination
+            currentPage={archiveData.currentPage}
+            totalPages={archiveData.totalPages}
+            hasPrevPage={archiveData.currentPage > 1}
+            hasNextPage={archiveData.currentPage < archiveData.totalPages}
+          />
+        }
+      >
+        <PostList 
+          posts={archiveData.items}
+          latestSlug={latestSlug ?? undefined}
+          hottestSlug={hottestSlug ?? undefined}
+          titleLevel="h2"
+          layout={layout}
+          emptyMessage="No posts found. Try adjusting your search or filters."
+        />
+      </ArchiveLayout>
     </>
   );
 }

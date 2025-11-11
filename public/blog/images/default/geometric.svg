@@ -1,147 +1,67 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Modern geometric background with rich gradients -->
+  <!-- Design-themed gradient -->
   <defs>
-    <linearGradient id="geo-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    <linearGradient id="design-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
     </linearGradient>
     
-    <!-- Geometric pattern overlay -->
-    <pattern id="triangles" width="80" height="80" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
-      <path d="M 0 0 L 40 0 L 20 35 Z" fill="none" stroke="white" stroke-width="0.5" opacity="0.08"/>
-      <path d="M 40 40 L 80 40 L 60 75 Z" fill="none" stroke="white" stroke-width="0.5" opacity="0.08"/>
+    <!-- Geometric pattern -->
+    <pattern id="geo-pattern" width="120" height="120" patternUnits="userSpaceOnUse">
+      <circle cx="60" cy="60" r="2" fill="white" opacity="0.1"/>
+      <path d="M 60 20 L 100 60 L 60 100 L 20 60 Z" fill="none" stroke="white" stroke-width="1" opacity="0.05"/>
     </pattern>
-    
-    <!-- Hexagon pattern -->
-    <pattern id="hexagons" width="100" height="87" patternUnits="userSpaceOnUse">
-      <path d="M 50 0 L 93.3 25 L 93.3 62 L 50 87 L 6.7 62 L 6.7 25 Z" 
-            fill="none" stroke="white" stroke-width="0.5" opacity="0.06"/>
-    </pattern>
-    
-    <!-- Accent gradient for shapes -->
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
-    </linearGradient>
   </defs>
   
-  <!-- Background layers -->
-  <rect width="1200" height="630" fill="url(#geo-bg)"/>
-  <rect width="1200" height="630" fill="url(#triangles)"/>
-  <rect width="1200" height="630" fill="url(#hexagons)"/>
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#design-gradient)"/>
+  <rect width="1200" height="630" fill="url(#geo-pattern)"/>
   
-  <!-- Large decorative geometric shapes -->
-  <g opacity="0.08">
-    <!-- Top left circle -->
-    <circle cx="120" cy="120" r="120" fill="white"/>
-    <!-- Bottom right rotated square -->
-    <rect x="1020" y="450" width="180" height="180" fill="white" transform="rotate(25 1110 540)"/>
-    <!-- Mid-right triangle -->
-    <path d="M 1050 250 L 1180 350 L 1050 350 Z" fill="white"/>
+  <!-- Abstract shapes -->
+  <g opacity="0.1">
+    <circle cx="200" cy="150" r="100" fill="white"/>
+    <circle cx="1000" cy="480" r="120" fill="white"/>
+    <rect x="100" y="450" width="100" height="100" fill="white" transform="rotate(30 150 500)"/>
+    <polygon points="900,100 950,150 900,200 850,150" fill="white"/>
   </g>
   
-  <!-- Floating smaller shapes -->
-  <g opacity="0.12">
-    <circle cx="350" cy="150" r="30" fill="white"/>
-    <rect x="800" y="90" width="40" height="40" fill="white" transform="rotate(45 820 110)"/>
-    <path d="M 200 480 L 240 520 L 200 520 Z" fill="white"/>
+  <!-- Geometric accent lines -->
+  <g stroke="white" stroke-width="2" opacity="0.1">
+    <line x1="0" y1="315" x2="400" y2="315"/>
+    <line x1="800" y1="315" x2="1200" y2="315"/>
+    <line x1="600" y1="0" x2="600" y2="200"/>
+    <line x1="600" y1="430" x2="600" y2="630"/>
   </g>
   
-  <!-- Content -->
-  <g transform="translate(600, 315)">
-    <!-- Modern hexagon icon with layered effect -->
-    <g transform="translate(0, -100)">
-      <!-- Outer glow -->
-      <circle cx="0" cy="0" r="65" fill="white" opacity="0.05"/>
-      
-      <!-- Hexagon layers -->
-      <polygon 
-        points="0,-48 42,-24 42,24 0,48 -42,24 -42,-24" 
-        fill="none" 
-        stroke="white" 
-        stroke-width="2.5"
-        opacity="0.25"
-      />
-      <polygon 
-        points="0,-38 33,-19 33,19 0,38 -33,19 -33,-19" 
-        fill="white" 
-        opacity="0.12"
-      />
-      <polygon 
-        points="0,-28 24,-14 24,14 0,28 -24,14 -24,-14" 
-        fill="url(#accent)" 
-        opacity="0.3"
-      />
-      
-      <!-- Center dot -->
-      <circle cx="0" cy="0" r="6" fill="white" opacity="0.8"/>
-      
-      <!-- Connection lines -->
-      <line x1="0" y1="-28" x2="0" y2="-48" stroke="white" stroke-width="2" opacity="0.25"/>
-      <line x1="24" y1="-14" x2="42" y2="-24" stroke="white" stroke-width="2" opacity="0.25"/>
-      <line x1="24" y1="14" x2="42" y2="24" stroke="white" stroke-width="2" opacity="0.25"/>
+  <!-- Center design icon: pen tool -->
+  <g transform="translate(600, 315)" opacity="0.25">
+    <path 
+      d="M -40 -60 L -40 60 L 0 40 L 40 60 L 40 -60 L 0 -40 Z" 
+      stroke="white" 
+      stroke-width="6" 
+      fill="none"
+      stroke-linejoin="round"
+    />
+    <circle cx="0" cy="0" r="15" fill="white"/>
+  </g>
+  
+  <!-- Corner design elements -->
+  <g opacity="0.15">
+    <g transform="translate(60, 60)">
+      <circle cx="0" cy="0" r="30" stroke="white" stroke-width="3" fill="none"/>
+      <circle cx="0" cy="0" r="15" fill="white"/>
     </g>
-    
-    <!-- Main heading with geometric style -->
-    <text 
-      x="0" 
-      y="45" 
-      text-anchor="middle" 
-      fill="white" 
-      font-family="system-ui, -apple-system, sans-serif" 
-      font-size="56" 
-      font-weight="800"
-      letter-spacing="-2"
-    >
-      Design Article
-    </text>
-    
-    <!-- Subtitle -->
-    <text 
-      x="0" 
-      y="88" 
-      text-anchor="middle" 
-      fill="white" 
-      font-family="system-ui, -apple-system, sans-serif" 
-      font-size="18" 
-      font-weight="500"
-      opacity="0.85"
-      letter-spacing="4"
-    >
-      CREATIVE • VISUAL • MODERN
-    </text>
-    
-    <!-- Decorative geometric elements below text -->
-    <g transform="translate(0, 120)" opacity="0.2">
-      <circle cx="-60" cy="0" r="3" fill="white"/>
-      <circle cx="60" cy="0" r="3" fill="white"/>
-      <line x1="-50" y1="0" x2="50" y2="0" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <g transform="translate(1140, 570)">
+      <polygon points="0,-25 22,-8 14,20 -14,20 -22,-8" stroke="white" stroke-width="3" fill="none"/>
     </g>
   </g>
   
-  <!-- Corner geometric frames -->
-  <g stroke="white" stroke-width="2.5" fill="none" opacity="0.2">
-    <!-- Top left -->
-    <path d="M 50 50 L 50 100 M 50 50 L 100 50"/>
-    <circle cx="50" cy="50" r="8" stroke-width="2"/>
-    
-    <!-- Top right -->
-    <path d="M 1150 50 L 1150 100 M 1150 50 L 1100 50"/>
-    <circle cx="1150" cy="50" r="8" stroke-width="2"/>
-    
-    <!-- Bottom left -->
-    <path d="M 50 580 L 50 530 M 50 580 L 100 580"/>
-    <circle cx="50" cy="580" r="8" stroke-width="2"/>
-    
-    <!-- Bottom right -->
-    <path d="M 1150 580 L 1150 530 M 1150 580 L 1100 580"/>
-    <circle cx="1150" cy="580" r="8" stroke-width="2"/>
-  </g>
-  
-  <!-- Diagonal accent lines -->
-  <g stroke="white" stroke-width="1" opacity="0.08">
-    <line x1="0" y1="200" x2="300" y2="0"/>
-    <line x1="900" y1="630" x2="1200" y2="430"/>
+  <!-- Floating particles -->
+  <g fill="white" opacity="0.08">
+    <circle cx="300" cy="300" r="4"/>
+    <circle cx="900" cy="330" r="3"/>
+    <circle cx="450" cy="500" r="5"/>
+    <circle cx="750" cy="150" r="4"/>
   </g>
 </svg>

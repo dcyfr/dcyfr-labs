@@ -76,6 +76,8 @@ export function getAllPosts(): Post[] {
       body: content,
       sources: data.sources as PostSource[] | undefined,
       previousSlugs: (data.previousSlugs as string[]) || undefined,
+      image: data.image as Post["image"] | undefined,
+      series: data.series as Post["series"] | undefined,
       readingTime: calculateReadingTime(content),
     } satisfies Post;
   });
@@ -121,6 +123,8 @@ export function getPostBySlug(slug: string): Post | undefined {
     body: content,
     sources: data.sources as PostSource[] | undefined,
     previousSlugs: (data.previousSlugs as string[]) || undefined,
+    image: data.image as Post["image"] | undefined,
+    series: data.series as Post["series"] | undefined,
     readingTime: calculateReadingTime(content),
   };
 

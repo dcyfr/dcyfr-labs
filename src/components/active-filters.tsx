@@ -9,27 +9,27 @@ import { Badge } from "@/components/ui/badge";
  * individual remove buttons and a "Clear all" option.
  * 
  * Features:
- * - Shows active tag, reading time, and search query
- * - Individual dismiss buttons (X icon)
+ * - Shows active tags (multiple), reading time, and search query
+ * - Individual dismiss buttons (X icon) for each tag
  * - "Clear all" link when multiple filters active
  * - Mobile-responsive layout
  * - Accessible with proper ARIA labels
  * 
- * @param props.tag - Currently active tag filter
+ * @param props.selectedTags - Currently active tag filters (array)
  * @param props.query - Current search query
  * @param props.readingTime - Current reading time filter
  * 
  * @example
  * ```tsx
  * <ActiveFilters 
- *   tag="TypeScript" 
+ *   selectedTags={["TypeScript", "Next.js"]} 
  *   query="hooks"
  *   readingTime="quick"
  * />
  * ```
  */
 interface ActiveFiltersProps {
-  tag?: string;
+  selectedTags?: string[];
   query?: string;
   readingTime?: string;
 }
@@ -43,17 +43,25 @@ const getReadingTimeLabel = (value: string) => {
   }
 };
 
-export function ActiveFilters({ tag, query, readingTime }: ActiveFiltersProps) {
-  const hasFilters = Boolean(tag || query || readingTime);
+export function ActiveFilters({ selectedTags = [], query, readingTime }: ActiveFiltersProps) {
+  const hasFilters = Boolean(selectedTags.length > 0 || query || readingTime);
   
   if (!hasFilters) return null;
 
-  const buildClearHref = (removeType: "tag" | "query" | "readingTime" | "all") => {
+  const buildClearHref = (removeType: "tag" | "query" | "readingTime" | "all", tagToRemove?: string) => {
     const params = new URLSearchParams();
     
     if (removeType !== "all") {
       // Keep other filters when removing one
-      if (tag && removeType !== "tag") params.set("tag", tag);
+      if (selectedTags.length > 0 && removeType !== "tag") {
+        params.set("tag", selectedTags.join(","));
+      } else if (removeType === "tag" && tagToRemove) {
+        // Remove specific tag
+        const remainingTags = selectedTags.filter((t) => t !== tagToRemove);
+        if (remainingTags.length > 0) {
+          params.set("tag", remainingTags.join(","));
+        }
+      }
       if (query && removeType !== "query") params.set("q", query);
       if (readingTime && removeType !== "readingTime") params.set("readingTime", readingTime);
     }
@@ -62,7 +70,7 @@ export function ActiveFilters({ tag, query, readingTime }: ActiveFiltersProps) {
     return suffix ? `/blog?${suffix}` : "/blog";
   };
 
-  const filterCount = [tag, query, readingTime].filter(Boolean).length;
+  const filterCount = selectedTags.length + [query, readingTime].filter(Boolean).length;
 
   return (
     <div className="flex flex-wrap items-center gap-2 py-4 mt-4">
@@ -81,18 +89,18 @@ export function ActiveFilters({ tag, query, readingTime }: ActiveFiltersProps) {
         </Badge>
       )}
       
-      {tag && (
-        <Badge variant="secondary" className="gap-1.5 pr-1">
+      {selectedTags.map((tag) => (
+        <Badge key={tag} variant="secondary" className="gap-1.5 pr-1">
           <span>Tag: {tag}</span>
           <Link
-            href={buildClearHref("tag")}
+            href={buildClearHref("tag", tag)}
             className="ml-1 rounded-sm hover:bg-secondary-foreground/20 p-0.5"
-            aria-label="Remove tag filter"
+            aria-label={`Remove ${tag} tag filter`}
           >
             <X className="h-3 w-3" />
           </Link>
         </Badge>
-      )}
+      ))}
       
       {readingTime && (
         <Badge variant="secondary" className="gap-1.5 pr-1">
