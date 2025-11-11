@@ -5,12 +5,12 @@ export const DOMAIN_DEV = "localhost:3000";
 export const DOMAIN_PREVIEW = "cyberdrew.vercel.app";
 export const DOMAIN_PRODUCTION = "cyberdrew.dev";
 
-export const AUTHOR_NAME = "Drew (dcyfr)";
+export const AUTHOR_NAME = "Drew ✦";
 export const AUTHOR_EMAIL = "drew@cyberdrew.dev";
 
-export const SITE_TITLE = "Drew's Lab";
-export const SITE_SUBTITLE = "Cybersecurity, Tech, and More";
-export const SITE_DESCRIPTION = "Hi, I'm Drew, a security architect and tinkerer with over five years of experience in information security, risk management, and incident response.";
+export const SITE_TITLE = "Drew's Lab ✦";
+export const SITE_SUBTITLE = "Developer Portfolio & Tech Blog";
+export const SITE_DESCRIPTION = "I'm a security architect and tinkerer passionate about technology, coding, and cybersecurity. My lab is where I share my projects, insights, and experiences in the tech world.";
 
 /**
  * Feature Flags

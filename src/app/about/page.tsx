@@ -75,7 +75,7 @@ export default async function AboutPage() {
         <div className="flex items-center gap-4 md:gap-6">
           <AboutAvatar size="md" />
           <h1 className={`${TYPOGRAPHY.h1.standard} flex items-center gap-2`}>
-            I&apos;m Drew <Logo width={24} height={24} className="ml-2" />
+            I&apos;m Drew <Logo width={24} height={24} />
           </h1>
         </div>
         <p className={TYPOGRAPHY.description}>

@@ -153,11 +153,11 @@ export function projectToFeedItem(project: Project): FeedItem {
   const published = new Date(year, 0, 1);
   
   return {
-    id: absoluteUrl(`/projects#${project.slug}`),
+    id: absoluteUrl(`/projects/${project.slug}`),
     title: project.title,
     description: project.description,
     content: htmlContent,
-    link: absoluteUrl(`/projects#${project.slug}`),
+    link: absoluteUrl(`/projects/${project.slug}`),
     published,
     categories: project.tags || [],
     author: {
@@ -215,6 +215,15 @@ ${enclosure}
     })
     .join("\n");
   
+  // Feed icon/logo for RSS readers
+  const imageXml = `    <image>
+      <url>${escapeXml(`${SITE_URL}/icons/icon-512x512.png`)}</url>
+      <title>${escapeXml(config.title)}</title>
+      <link>${escapeXml(config.link)}</link>
+      <width>144</width>
+      <height>144</height>
+    </image>`;
+  
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" 
      xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -229,6 +238,8 @@ ${enclosure}
     <generator>${config.generator || "Next.js"}</generator>
 ${config.author ? `    <managingEditor>${escapeXml(config.author.email)} (${escapeXml(config.author.name)})</managingEditor>
     <webMaster>${escapeXml(config.author.email)} (${escapeXml(config.author.name)})</webMaster>` : ""}
+    <ttl>60</ttl>
+${imageXml}
 ${itemsXml}
   </channel>
 </rss>`;
@@ -284,11 +295,14 @@ ${categories || ""}
   <link href="${escapeXml(config.link)}" rel="alternate" type="text/html" />
   <updated>${updated.toISOString()}</updated>
   <id>${escapeXml(config.link)}</id>
+  <logo>${escapeXml(`${SITE_URL}/icons/icon-512x512.png`)}</logo>
+  <icon>${escapeXml(`${SITE_URL}/favicon.ico`)}</icon>
 ${config.author ? `  <author>
     <name>${escapeXml(config.author.name)}</name>
     <email>${escapeXml(config.author.email)}</email>
   </author>` : ""}
   <generator uri="https://nextjs.org/">${config.generator || "Next.js"}</generator>
+  <rights>© ${new Date().getFullYear()} ${escapeXml(config.author?.name || "Drew")}. All rights reserved.</rights>
 ${itemsXml}
 </feed>`;
 }

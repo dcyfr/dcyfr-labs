@@ -17,7 +17,7 @@ import { LOGO_CONFIG } from '@/lib/logo-config';
  * 
  * // Inline with text
  * <span className="flex items-center gap-2">
- *   <Logo width={20} height={20} />
+ *   <Logo width={24} height={24} />
  *   <span>Drew's Lab</span>
  * </span>
  * ```

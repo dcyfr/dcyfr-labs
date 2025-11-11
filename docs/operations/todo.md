@@ -22,7 +22,27 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 
 ## 📌 Recent Updates
 
-### � Feed System Refactoring Complete (Nov 10, 2025) ✅
+### ✅ Feed System Improvements Complete (Nov 10, 2025) ✅
+**Status:** Critical fixes and enhancements deployed
+- ✅ **CRITICAL FIX:** Project URLs corrected from `/projects#slug` to `/projects/slug`
+- ✅ Feed autodiscovery already implemented via `metadata.alternates` in layout.tsx
+- ✅ Feed icons and branding added (RSS image element, Atom logo/icon)
+- ✅ TTL (60 min) added to RSS feeds for better caching
+- ✅ Copyright/rights information added to all feeds
+- ✅ All feeds validated and tested
+- **See:** `docs/rss/feed-improvements-brainstorm.md` for complete roadmap
+
+**Backlogged Items (Future):**
+- Enhanced image enclosures with file metadata
+- Explicit publication dates for projects (currently inferred from timeline)
+- Feed documentation page (`/feeds`)
+- JSON Feed format support
+- Filtered feeds by tag/status
+- Feed analytics tracking
+
+---
+
+### 📰 Feed System Refactoring Complete (Nov 10, 2025) ✅
 **Status:** Multiple feeds with featured image support
 - ✅ Unified feed library (`src/lib/feeds.ts`) for RSS/Atom generation
 - ✅ New feed endpoints: `/feed` (unified), `/blog/feed`, `/projects/feed`
@@ -31,11 +51,6 @@ This todo list is organized by **criticality and user impact**, not arbitrary ph
 - ✅ Updated sitemap with new feed URLs
 - ✅ Comprehensive documentation created
 - **See:** `docs/rss/implementation.md` and `docs/rss/quick-reference.md`
-
-**Next Steps (Optional):**
-- Add feed discovery meta tags to site head
-- Consider JSON Feed support (`/feed.json`)
-- Consider tag-specific feeds
 
 ---
 
@@ -1201,6 +1216,69 @@ When prioritizing this work in the future:
 - [ ] **API Query Optimizations** — Parallel Redis queries with `Promise.all()`, response caching (5-10s TTL), server-side filtering/sorting, incremental loading
 
 **Reference:** Full brainstorm in analysis session (Nov 5, 2025)
+
+---
+
+## ⚪ BACKLOG - Content & Features
+
+### Feed System Enhancements (Future)
+
+**Priority:** LOW - Quality of life improvements  
+**Estimated Effort:** 8-12 hours
+
+**See:** `docs/rss/feed-improvements-brainstorm.md` for complete analysis
+
+#### Medium Priority Items
+- [ ] **Enhanced Image Enclosures** - Add file size and dimensions metadata
+  - Use `fs.stat()` to get actual file sizes for `length` attribute
+  - Extract image dimensions for better feed reader display
+  - Effort: Medium (4-6 hours)
+
+- [ ] **Explicit Project Publication Dates** - Replace timeline inference
+  - Add `publishedAt` and `updatedAt` to Project schema
+  - More accurate timestamps for RSS/Atom feeds
+  - Option: Use git history or file system dates as fallback
+  - Effort: Medium (3-4 hours)
+
+- [ ] **Feed Documentation Page** - Create `/feeds` user-facing page
+  - Explain available feeds (combined, blog, projects)
+  - RSS reader recommendations
+  - Filtered feed examples
+  - Effort: Low (2-3 hours)
+
+#### Low Priority Items
+- [ ] **JSON Feed Support** - Modern JSON alternative to XML
+  - Create `/feed.json`, `/blog/feed.json`, `/projects/feed.json`
+  - Spec: https://www.jsonfeed.org/version/1.1/
+  - Easier JavaScript parsing, growing adoption
+  - Effort: Medium (4-5 hours)
+
+- [ ] **Filtered Feeds** - Tag and status-based feeds
+  - `/blog/feed?tag=security` - Security posts only
+  - `/blog/feed?tag=typescript` - TypeScript posts only
+  - `/projects/feed?status=active` - Active projects only
+  - `/projects/feed?featured=true` - Featured projects only
+  - Effort: Medium-High (6-8 hours)
+
+- [ ] **Feed Analytics** - Track subscription metrics
+  - Feed request tracking (count, user agents)
+  - Popular feed reader identification
+  - Most accessed feed items
+  - Option A: Server-side logging in middleware
+  - Option B: Use existing analytics (Vercel/GA)
+  - Effort: Medium-High (6-8 hours)
+
+- [ ] **Feed Pagination** - RFC 5005 support for large feeds
+  - Only needed if feeds grow very large (100+ items)
+  - Implement `?page=N` query parameter
+  - Add `rel="next"` and `rel="prev-archive"` links
+  - Effort: Medium-High (6-8 hours)
+
+**Completed Items:**
+- ✅ Project URL fix (hash-based → proper routes)
+- ✅ Feed autodiscovery (already implemented)
+- ✅ Feed icons and branding
+- ✅ TTL and copyright information
 
 ---
 

@@ -10,9 +10,9 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b site-header">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8 h-14 md:h-16 flex items-center justify-between gap-2">
         {/* Logo - always visible */}
-        <Link href="/" className="flex items-center gap-2 font-serif text-base sm:text-lg md:text-xl font-semibold tracking-tight touch-target shrink-0">
-          <Logo width={20} height={20} className="sm:w-6 sm:h-6" />
-          <span className="whitespace-nowrap">Drew&apos;s Lab</span>
+        <Link href="/" className="flex items-center gap-2 text-base sm:text-xl md:text-2xl font-semibold tracking-tight touch-target shrink-0">
+          Drew&apos;s Lab
+          <Logo width={24} height={24} className="w-4 h-4 md:w-6 md:h-6" />
         </Link>
 
         {/* Desktop Navigation - hidden on mobile, visible md and up */}
