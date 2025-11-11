@@ -28,13 +28,26 @@ node scripts/run-with-dev.mjs
 Tests RSS and Atom feed generation.
 
 ```bash
+npm run test:feeds
+# or directly:
 node scripts/test-feeds.mjs
+```
+
+#### test-featured-images.mjs
+Tests blog post featured image configuration and loading.
+
+```bash
+npm run test:featured-images
+# or directly:
+node scripts/test-featured-images.mjs
 ```
 
 #### test-related-posts.mjs
 Tests the related posts algorithm.
 
 ```bash
+npm run test:related-posts
+# or directly:
 node scripts/test-related-posts.mjs
 ```
 
@@ -42,6 +55,8 @@ node scripts/test-related-posts.mjs
 Tests table of contents generation for blog posts.
 
 ```bash
+npm run test:toc
+# or directly:
 node scripts/test-toc.mjs
 ```
 
@@ -49,13 +64,26 @@ node scripts/test-toc.mjs
 Tests API rate limiting functionality.
 
 ```bash
+npm run test:rate-limit
+# or directly:
 node scripts/test-rate-limit.mjs
+```
+
+#### test-tracking.mjs
+Tests view and share tracking with Redis integration.
+
+```bash
+npm run test:tracking
+# or directly (requires dev server):
+node scripts/run-with-dev.mjs scripts/test-tracking.mjs
 ```
 
 #### test-csp-report.mjs
 Tests Content Security Policy reporting.
 
 ```bash
+npm run test:csp-report
+# or directly:
 node scripts/test-csp-report.mjs
 ```
 
@@ -63,6 +91,8 @@ node scripts/test-csp-report.mjs
 Tests Model Context Protocol (MCP) server configuration.
 
 ```bash
+npm run test:mcp-servers
+# or directly:
 node scripts/test-mcp-servers.mjs
 ```
 
@@ -70,6 +100,8 @@ node scripts/test-mcp-servers.mjs
 Tests development-only pages.
 
 ```bash
+npm run test:dev-pages
+# or directly:
 node scripts/test-dev-pages.mjs
 ```
 
@@ -77,6 +109,8 @@ node scripts/test-dev-pages.mjs
 Tests static generation of development pages.
 
 ```bash
+npm run test:dev-pages-static
+# or directly:
 node scripts/test-dev-pages-static.mjs
 ```
 
@@ -107,6 +141,8 @@ node scripts/check-headers.mjs
 Validates GitHub heatmap display and functionality.
 
 ```bash
+npm run test:heatmap
+# or directly:
 node scripts/check-heatmap-display.mjs
 ```
 
@@ -114,6 +150,8 @@ node scripts/check-heatmap-display.mjs
 Validates site URL configuration.
 
 ```bash
+npm run test:siteurl
+# or directly:
 node scripts/check-siteurl.js
 ```
 
@@ -121,6 +159,8 @@ node scripts/check-siteurl.js
 Validates analytics metrics and data integrity.
 
 ```bash
+npm run test:metrics
+# or directly:
 node scripts/validate-metrics.mjs
 ```
 

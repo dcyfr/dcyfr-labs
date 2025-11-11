@@ -39,6 +39,18 @@ Archive documents are **read-only snapshots** of:
 ### Component Implementations (Completed)
 - **`social-links-implementation-complete.md`** - Social links component extraction
 
+### Feature Implementations (`/implementations/`)
+- **`FEATURED_IMAGES_VERIFICATION.md`** - Blog featured images verification
+- **`REDIRECTS_IMPLEMENTATION.md`** - Blog slug redirects implementation
+
+### Bug Fixes & Patches (`/fixes/`)
+- **`DISPLAY_CACHE_FIX.md`** - GitHub heatmap display cache fix
+- **`METRICS_VALIDATION.md`** - Blog metrics validation implementation
+- **`STREAK_FIX_SUMMARY.md`** - GitHub contribution streak calculation fix
+
+### Historical Sessions (`/sessions/`)
+24 implementation session logs and development records from October 2025. See `/sessions/README.md` for complete index.
+
 ## Current Documentation
 
 For **active development**, refer to:
@@ -59,4 +71,4 @@ For **active development**, refer to:
 ---
 
 **Last Updated:** November 10, 2025  
-**Total Archived Docs:** 8
+**Total Archived Docs:** 40 (8 root + 2 implementations + 3 fixes + 24 sessions + 3 READMEs)
