@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { posts, postsBySeries } from "@/data/posts";
 import { getPostByAnySlug } from "@/lib/blog";
-import { SITE_URL, SITE_TITLE, getOgImageUrl, getTwitterImageUrl } from "@/lib/site-config";
+import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 import { MDX } from "@/components/mdx";
 import { PostBadges } from "@/components/post-badges";
 import { getPostViews, getMultiplePostViews } from "@/lib/views";
@@ -20,7 +20,12 @@ import { PostHeroImage } from "@/components/post-hero-image";
 import { ViewTracker } from "@/components/view-tracker";
 import { ArticleLayout, ArticleHeader, ArticleFooter } from "@/components/layouts";
 import { getArticleData } from "@/lib/article";
-import { getArticleSchema, getBreadcrumbSchema, getJsonLdScriptProps } from "@/lib/json-ld";
+import { 
+  createArticlePageMetadata,
+  createArticleSchema,
+  createBreadcrumbSchema,
+  getJsonLdScriptProps 
+} from "@/lib/metadata";
 
 // Enable Incremental Static Regeneration with 1 hour revalidation
 export const revalidate = 3600; // 1 hour in seconds
@@ -54,45 +59,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   const post = result.post;
   
-  // Use hero image for OG if available, otherwise use dynamic generator
-  const hasHeroImage = post.image?.url;
-  const ogImageUrl = hasHeroImage 
-    ? `${SITE_URL}${post.image?.url}`
-    : getOgImageUrl(post.title, post.summary);
-  const twitterImageUrl = hasHeroImage
-    ? `${SITE_URL}${post.image?.url}`
-    : getTwitterImageUrl(post.title, post.summary);
+  // Use hero image for OG if available
+  const heroImageUrl = post.image?.url ? `${SITE_URL}${post.image.url}` : undefined;
   
-  // Use hero image dimensions if provided, otherwise use default OG dimensions
-  const imageWidth = post.image?.width ?? 1200;
-  const imageHeight = post.image?.height ?? 630;
-  
-  return {
+  return createArticlePageMetadata({
     title: post.title,
     description: post.summary,
-    openGraph: {
-      title: post.title,
-      description: post.summary,
-      type: "article",
-      url: `${SITE_URL}/blog/${post.slug}`,
-      siteName: SITE_TITLE,
-      images: [
-        {
-          url: ogImageUrl,
-          width: imageWidth,
-          height: imageHeight,
-          type: hasHeroImage ? "image/jpeg" : "image/png",
-          alt: post.image?.alt ?? `${post.title} — ${SITE_TITLE}`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.summary,
-      images: [twitterImageUrl],
-    },
-  };
+    path: `/blog/${post.slug}`,
+    publishedAt: new Date(post.publishedAt),
+    modifiedAt: post.updatedAt ? new Date(post.updatedAt) : undefined,
+    author: AUTHOR_NAME,
+    keywords: post.tags,
+    image: heroImageUrl,
+    imageWidth: post.image?.width,
+    imageHeight: post.image?.height,
+    imageAlt: post.image?.alt,
+  });
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -148,14 +130,19 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   // Extract headings for table of contents
   const headings = extractHeadings(post.body);
   
-  // Enhanced JSON-LD structured data for SEO and AI assistants
-  const socialImage = getOgImageUrl(post.title, post.summary);
+  // JSON-LD structured data for SEO
+  const articleSchema = createArticleSchema({
+    title: post.title,
+    description: post.summary,
+    url: `${SITE_URL}/blog/${post.slug}`,
+    publishedAt: new Date(post.publishedAt),
+    modifiedAt: post.updatedAt ? new Date(post.updatedAt) : undefined,
+    author: AUTHOR_NAME,
+    image: post.image?.url ? `${SITE_URL}${post.image.url}` : undefined,
+    tags: post.tags,
+  });
   
-  // Article schema with all recommended properties
-  const articleSchema = getArticleSchema(post, viewCount ?? 0, socialImage);
-  
-  // Breadcrumb navigation for better SEO
-  const breadcrumbSchema = getBreadcrumbSchema([
+  const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: SITE_URL },
     { name: "Blog", url: `${SITE_URL}/blog` },
     { name: post.title, url: `${SITE_URL}/blog/${post.slug}` },

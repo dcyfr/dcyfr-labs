@@ -6,7 +6,82 @@ This document tracks completed projects, features, and improvements. Items are o
 
 ---
 
-## � Session Summary: November 10, 2025 (Latest) - Feed System Refactor
+## 🎯 Session Summary: November 10, 2025 (Latest) - Architecture Refactoring Complete
+
+### Blog & Archive Pages Refactor (Phases 1-3) ✅
+**Completed**: November 10, 2025  
+**Effort**: Multiple sessions  
+**Priority**: 🔴 HIGH (Architecture)
+
+#### Overview
+Complete architecture refactoring of blog and archive pages. Created centralized, type-safe infrastructure for all list/grid pages and individual content pages. Successfully refactored 3 major pages with improved maintainability and developer experience.
+
+**Total Impact**: 65 lines saved (12.6% reduction) + significantly improved maintainability.
+
+**What Was Implemented**:
+
+1. **Phase 1: Foundation Infrastructure** (1,313+ lines)
+   - ✅ `src/lib/archive.ts` (424 lines) - Generic archive utilities (filtering, sorting, pagination)
+   - ✅ `src/lib/article.ts` (434 lines) - Generic article utilities (navigation, related items)
+   - ✅ `src/lib/metadata.ts` (455 lines) - Centralized metadata generation (OG, Twitter, JSON-LD)
+   - ✅ `archive-layout.tsx` - Universal archive wrapper
+   - ✅ `archive-pagination.tsx` - Pagination controls
+   - ✅ `archive-filters.tsx` (204 lines) - Search & tag filters
+   - ✅ `article-layout.tsx` - Universal article wrapper
+
+2. **Phase 2: Blog Pages Refactoring**
+   - ✅ `/blog/page.tsx` - 156 → 135 lines (21 saved, 13.5% reduction)
+     - Replaced manual metadata with `createArchivePageMetadata()`
+     - Used `createCollectionSchema()` for JSON-LD
+     - Preserved custom BlogFilters (reading time, multiple tags)
+   - ✅ `/blog/[slug]/page.tsx` - 243 → 229 lines (14 saved, 5.8% reduction)
+     - Used `createArticlePageMetadata()` with hero image support
+     - Simplified with `createArticleSchema()` and `createBreadcrumbSchema()`
+     - Already using ArticleLayout pattern from Phase 1
+
+3. **Phase 3: Projects Page Refactoring**
+   - ✅ `/projects/page.tsx` - 116 → 86 lines (30 saved, 25.9% reduction)
+     - Replaced 28 lines of manual metadata with `createArchivePageMetadata()`
+     - Used `getJsonLdScriptProps()` for cleaner CSP-compliant scripts
+     - Preserved custom SoftwareSourceCode JSON-LD schema
+
+4. **Key Features**
+   - ✅ Type-safe metadata generation with IntelliSense
+   - ✅ Automatic OG/Twitter image fallbacks
+   - ✅ Consistent JSON-LD schemas (Collection, Article, Breadcrumb)
+   - ✅ CSP-compliant nonce support built-in
+   - ✅ Reusable layout patterns
+   - ✅ Zero breaking changes
+
+5. **Documentation**
+   - ✅ `docs/architecture/phase-1-complete.md` - Foundation summary
+   - ✅ `docs/architecture/phase-2-complete.md` - Blog refactor summary
+   - ✅ `docs/architecture/refactoring-complete.md` - Complete overview
+
+**Lessons Learned**:
+- Domain-specific features (BlogFilters) more valuable than forced generic solutions
+- Pages already using Phase 1 patterns prove infrastructure is intuitive
+- Metadata centralization = major maintainability win even with modest line savings
+- Original estimates (50-67% reduction) unrealistic when code already well-structured
+- Smaller reduction is actually GOOD - means the codebase was already healthy!
+
+**Benefits**:
+- ✅ One place to update metadata patterns for all pages
+- ✅ Type safety catches errors at build time
+- ✅ Faster page creation with proven patterns
+- ✅ Consistent architecture across site
+- ✅ All features preserved (search, filters, badges, TOC, etc.)
+
+**Files Created/Modified**:
+- Created: `src/lib/metadata.ts` (455 lines)
+- Modified: `src/app/blog/page.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/projects/page.tsx`
+- Documentation: 3 comprehensive guides
+
+**Next Steps**: Phase 4 (Documentation) or move to Core Pages Refactor
+
+---
+
+## 🎯 Session Summary: November 10, 2025 - Feed System Refactor
 
 ### RSS/Atom Feed Refactoring ✅
 **Completed**: November 10, 2025  

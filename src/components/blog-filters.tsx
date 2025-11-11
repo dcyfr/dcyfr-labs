@@ -170,9 +170,6 @@ export function BlogFilters({ selectedTags, readingTime, tagList, query }: BlogF
 
       {/* Tag Badges */}
       <div className="space-y-2">
-        <div className="text-sm text-muted-foreground">
-          Filter by tags:
-        </div>
         <div className="flex flex-wrap gap-2">
           {tagList.map((tag) => {
             const isSelected = selectedTags.includes(tag);

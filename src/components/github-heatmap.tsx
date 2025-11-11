@@ -287,7 +287,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
         <Card className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <h3 className="text-lg font-semibold">GitHub</h3>
+              <h3 className="text-lg font-semibold">GitHub Activity</h3>
               <a
                 href={`https://github.com/${username}`}
                 target="_blank"

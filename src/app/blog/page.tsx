@@ -6,45 +6,19 @@ import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import { getArchiveData } from "@/lib/archive";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
-import {
-  SITE_TITLE,
-  SITE_URL,
-  getOgImageUrl,
-  getTwitterImageUrl,
-} from "@/lib/site-config";
-import { getBlogCollectionSchema, getJsonLdScriptProps } from "@/lib/json-ld";
+import { createArchivePageMetadata, createCollectionSchema, getJsonLdScriptProps } from "@/lib/metadata";
+import { AUTHOR_NAME, SITE_URL } from "@/lib/site-config";
 import { headers } from "next/headers";
 
 const pageTitle = "Blog";
 const pageDescription = "Articles on web development, cybersecurity, artificial intelligence, and more.";
 const POSTS_PER_PAGE = 12;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createArchivePageMetadata({
   title: pageTitle,
   description: pageDescription,
-  openGraph: {
-    title: `${pageTitle} — ${SITE_TITLE}`,
-    description: pageDescription,
-    url: `${SITE_URL}/blog`,
-    siteName: SITE_TITLE,
-    type: "website",
-    images: [
-      {
-        url: getOgImageUrl(pageTitle, pageDescription),
-        width: 1200,
-        height: 630,
-        type: "image/png",
-        alt: `${pageTitle} — ${SITE_TITLE}`,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${pageTitle} — ${SITE_TITLE}`,
-    description: pageDescription,
-    images: [getTwitterImageUrl(pageTitle, pageDescription)],
-  },
-};
+  path: "/blog",
+});
 
 interface BlogPageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -110,11 +84,19 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const collectionDescription = selectedTags.length > 0 
     ? `Articles tagged with "${selectedTags.join('", "')}"` 
     : pageDescription;
-  const jsonLd = getBlogCollectionSchema(
-    archiveData.allFilteredItems,
-    collectionTitle,
-    collectionDescription
-  );
+  
+  const jsonLd = createCollectionSchema({
+    name: collectionTitle,
+    description: collectionDescription,
+    url: `${SITE_URL}/blog`,
+    items: archiveData.allFilteredItems.map(post => ({
+      name: post.title,
+      description: post.summary,
+      url: `${SITE_URL}/blog/${post.slug}`,
+      datePublished: new Date(post.publishedAt),
+      author: AUTHOR_NAME,
+    })),
+  });
   
   return (
     <>

@@ -3,60 +3,32 @@ import { visibleProjects } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
 import { GitHubHeatmap } from "@/components/github-heatmap";
 import { GitHubHeatmapErrorBoundary } from "@/components/github-heatmap-error-boundary";
-import {
-  SITE_URL,
-  AUTHOR_NAME,
-  SITE_TITLE,
-  getOgImageUrl,
-  getTwitterImageUrl,
-} from "@/lib/site-config";
+import { ArchiveLayout } from "@/components/layouts/archive-layout";
+import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
+import { createArchivePageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { headers } from "next/headers";
-import { 
-  getContainerClasses, 
-  TYPOGRAPHY, 
-  SPACING 
-} from "@/lib/design-tokens";
 
 const pageTitle = "Projects Archive";
-// Optimized meta description (155 characters)
 const pageDescription = "Browse my portfolio of development projects, open-source contributions, and published work.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createArchivePageMetadata({
   title: pageTitle,
   description: pageDescription,
-  openGraph: {
-    title: `${pageTitle} — ${SITE_TITLE}`,
-    description: pageDescription,
-    url: `${SITE_URL}/projects`,
-    siteName: SITE_TITLE,
-    type: "website",
-    images: [
-      {
-        url: getOgImageUrl(pageTitle, pageDescription),
-        width: 1200,
-        height: 630,
-        type: "image/png",
-        alt: `${pageTitle} — ${SITE_TITLE}`,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${pageTitle} — ${SITE_TITLE}`,
-    description: pageDescription,
-    images: [getTwitterImageUrl(pageTitle, pageDescription)],
-  },
-};
+  path: "/projects",
+  itemCount: visibleProjects.length,
+});
 
 export default async function ProjectsPage() {
   // Get nonce from middleware for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
   // JSON-LD structured data for projects collection
+  // Note: Using custom schema instead of createCollectionSchema() because
+  // projects have unique fields (SoftwareSourceCode, codeRepository, etc.)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Projects Archive",
+    name: pageTitle,
     description: pageDescription,
     url: `${SITE_URL}/projects`,
     author: {
@@ -88,33 +60,27 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        nonce={nonce}
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        suppressHydrationWarning
-      />
-      <div className={getContainerClasses('standard')}>
-        {/* hero section */}
-        <div className={SPACING.proseHero}>
-          <h1 className={TYPOGRAPHY.h1.standard}>Projects</h1>
-          <p className={TYPOGRAPHY.description}>
-            {pageDescription}
-          </p>
-        </div>
-        {/* github contribution heatmap */}
-        <div className="mt-10">
+      <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      
+      <ArchiveLayout
+        title="Projects"
+        description={pageDescription}
+        itemCount={visibleProjects.length}
+      >
+        {/* GitHub contribution heatmap */}
+        <div className="mb-8">
           <GitHubHeatmapErrorBoundary>
             <GitHubHeatmap username="dcyfr" />
           </GitHubHeatmapErrorBoundary>
         </div>
-        {/* projects */}
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        
+        {/* Projects grid */}
+        <div className="grid gap-5 sm:grid-cols-2">
           {visibleProjects.map((project) => (
             <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
-      </div>
+      </ArchiveLayout>
     </>
   );
 }
