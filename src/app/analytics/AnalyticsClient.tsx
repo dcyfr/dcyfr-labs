@@ -129,7 +129,7 @@ export default function AnalyticsDashboard() {
   const [hideArchived, setHideArchived] = useState(false);
   const [sortField, setSortField] = useState<SortField>("views");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
-  const [dateRange, setDateRange] = useState<DateRange>("1");
+  const [dateRange, setDateRange] = useState<DateRange>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(false);
@@ -174,7 +174,7 @@ export default function AnalyticsDashboard() {
   useEffect(() => {
     const params = new URLSearchParams();
     
-    if (dateRange !== "1") params.set("dateRange", dateRange);
+    if (dateRange !== "all") params.set("dateRange", dateRange);
     if (sortField !== "views") params.set("sortField", sortField);
     if (sortDirection !== "desc") params.set("sortDirection", sortDirection);
     if (hideDrafts) params.set("hideDrafts", "true");

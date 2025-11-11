@@ -39,9 +39,13 @@ import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit
 
 const redisUrl = process.env.REDIS_URL;
 
-// Rate limit: 5 requests per 60 seconds per IP
+// Rate limit configuration based on environment
+// Development/Preview: More generous for testing and development
+// Production: Stricter limits (though production access is blocked entirely)
+const isDevelopment = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
+
 const RATE_LIMIT_CONFIG = {
-  limit: 5,
+  limit: isDevelopment ? 60 : 10,  // 60/min in dev, 10/min otherwise
   windowInSeconds: 60,
 };
 
