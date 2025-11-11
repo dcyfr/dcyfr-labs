@@ -54,11 +54,73 @@ Additional tools available:
   - Client components only when needed for interactivity: add `"use client"` (e.g., `contact/page.tsx`, `theme-toggle.tsx`, `github-heatmap.tsx`).
   - Layout: `src/app/layout.tsx` wraps header/footer, theme provider, `Toaster`, and analytics.
   - API routes: `src/app/api/<name>/route.ts` with request handlers and rate limiting.
-    - `/api/contact` - Contact form submission
+    - `/api/contact` - Contact form submission (Inngest-powered)
     - `/api/github-contributions` - GitHub heatmap data (with server-side caching)
+    - `/api/inngest` - Inngest event handler and dev UI
   - Dynamic routes: `/blog/[slug]` for individual blog posts.
   - Metadata routes: `sitemap.ts`, `robots.ts`, `/atom.xml`, `/rss.xml` for SEO and feeds.
 - Static assets and data files live in `public/`.
+
+## Reusable Architecture Patterns
+
+The project uses a centralized architecture system for consistency and maintainability:
+
+### Layout Components (`src/components/layouts/`)
+- **`page-layout.tsx`** - Universal page wrapper with consistent spacing and width constraints
+- **`page-hero.tsx`** - Standardized hero sections with multiple style variants
+- **`page-section.tsx`** - Consistent section wrapper with semantic spacing patterns
+- **`archive-layout.tsx`** - List/archive pages (blog, projects) with filters and pagination
+- **`archive-filters.tsx`** - Universal filtering UI for archive pages
+- **`archive-pagination.tsx`** - Pagination controls with page numbers and navigation
+- **`article-layout.tsx`** - Individual content pages (blog posts) with consistent structure
+
+### Metadata Helpers (`src/lib/metadata.ts`)
+- **`createPageMetadata()`** - Generate metadata for standard pages
+- **`createArchivePageMetadata()`** - Generate metadata for list/archive pages
+- **`createArticlePageMetadata()`** - Generate metadata for blog posts and articles
+- **`createCollectionSchema()`** - Generate JSON-LD structured data for collections
+- **`getJsonLdScriptProps()`** - Helper for embedding JSON-LD scripts
+
+### Design Tokens (`src/lib/design-tokens.ts`)
+- **`PAGE_LAYOUT`** - Container widths, spacing, and semantic patterns
+  - `hero`, `section`, `proseSection`, `narrowSection` patterns
+- **`ARCHIVE_LAYOUT`** - Archive page spacing and grid patterns
+- **`ARTICLE_LAYOUT`** - Article page typography and content spacing
+
+### When to Use These Patterns
+1. **Creating a new page**: Use `PageLayout` wrapper + `PAGE_LAYOUT` design tokens
+2. **Creating an archive/list page**: Use `ArchiveLayout` + `createArchivePageMetadata()`
+3. **Creating a blog post or article**: Use `ArticleLayout` + `createArticlePageMetadata()`
+4. **Adding a hero section**: Use `PageHero` component with appropriate variant
+5. **Need consistent spacing**: Reference `PAGE_LAYOUT`, `ARCHIVE_LAYOUT`, or `ARTICLE_LAYOUT` tokens
+
+### Migration Guides
+- See `/docs/architecture/migration-guide.md` for step-by-step refactoring examples
+- See `/docs/architecture/examples.md` for practical copy-paste examples
+- See `/docs/architecture/best-practices.md` for architectural guidelines
+
+## Background Jobs (Inngest)
+
+The project uses Inngest for reliable background job processing:
+
+### Functions (`src/inngest/`)
+- **Contact form** (`contact-functions.ts`) - Send emails asynchronously with retries
+- **GitHub sync** (`github-functions.ts`) - Refresh contribution data every 5 minutes
+- **Blog analytics** (`blog-functions.ts`) - Track views, trending, milestones
+
+### Integration
+- Event handler at `/api/inngest/route.ts`
+- Dev UI at `http://localhost:3000/api/inngest`
+- All functions visible, testable, and monitorable in dev mode
+- Automatic retries, error handling, and event replay
+
+### When to Use Inngest
+- Any operation that takes >500ms (send email, external API calls)
+- Scheduled/recurring tasks (data refresh, daily summaries)
+- Operations that need retries or reliability guarantees
+- Tasks that should not block API responses
+
+See `/docs/features/inngest-integration.md` for complete guide.
 
 ## Conventions and patterns
 - Styling: Tailwind utilities; use `cn` from `src/lib/utils.ts` to merge classes. Avoid adding new CSS systems.
@@ -201,17 +263,29 @@ See `/docs/security/` directory for detailed documentation and implementation gu
 - `sitemap.ts` and `robots.ts` are typed metadata routes. Update the base URL consistently when changing domains/environments.
 
 ## Adding pages or components (examples)
-- New page: create `src/app/<slug>/page.tsx` and optionally `export const metadata = { title: "…" }` (see `about/page.tsx`, `projects/page.tsx`).
-- New blog post: create `src/content/blog/<slug>.mdx` with frontmatter (see `src/content/blog/README.md` for schema).
-- New card/listing: define a typed component (like `ProjectCard` or `PostList`) and drive it from a `src/data/*` array.
-- Interactivity: mark the component/page with `"use client"`, use shadcn/ui primitives, and handle state locally.
-- Error boundaries: wrap async components in error boundaries (pattern: `<ComponentName>ErrorBoundary`)
-- Loading states: provide skeleton loaders for components that fetch data (pattern: `<ComponentName>Skeleton`)
-- JSDoc comments: Add comprehensive JSDoc to complex components for IDE support and type documentation
+- **New standard page**: Use `PageLayout` wrapper with `createPageMetadata()` for metadata (see `about/page.tsx`, `contact/page.tsx`)
+- **New archive/list page**: Use `ArchiveLayout` with `createArchivePageMetadata()` and filters/pagination (see `blog/page.tsx`, `projects/page.tsx`)
+- **New article/post page**: Use `ArticleLayout` with `createArticlePageMetadata()` for structured content (see `blog/[slug]/page.tsx`)
+- **New blog post**: Create `src/content/blog/<slug>.mdx` with frontmatter (see `src/content/blog/README.md` for schema)
+- **New card/listing**: Define a typed component (like `ProjectCard` or `PostList`) and drive it from a `src/data/*` array
+- **Interactivity**: Mark the component/page with `"use client"`, use shadcn/ui primitives, and handle state locally
+- **Error boundaries**: Wrap async components in error boundaries (pattern: `<ComponentName>ErrorBoundary`)
+- **Loading states**: Provide skeleton loaders for components that fetch data (pattern: `<ComponentName>Skeleton`)
+- **JSDoc comments**: Add comprehensive JSDoc to complex components for IDE support and type documentation
+
+**Architecture guides**: See `/docs/architecture/migration-guide.md` and `/docs/architecture/examples.md` for detailed patterns and copy-paste examples.
 
 ## Documentation Structure
 
 All project documentation lives in `/docs` directory:
+
+- **`/docs/architecture/`** - Architecture patterns and refactoring guides
+  - `README.md` - Architecture overview and quick start
+  - `refactoring-complete.md` - Complete refactoring summary
+  - `migration-guide.md` - Step-by-step migration guide (500+ lines)
+  - `examples.md` - Practical code examples (400+ lines)
+  - `best-practices.md` - Architectural guidelines (550+ lines)
+  - Phase completion summaries for historical reference
 
 - **`/docs/blog/`** - Blog system architecture and guides
   - `architecture.md` - Blog system design and data flow
@@ -223,10 +297,12 @@ All project documentation lives in `/docs` directory:
 - **`/docs/components/`** - Component documentation with JSDoc
   - `github-heatmap.md` - Heatmap implementation and API integration
   - `blog-search-form.md` - Search component with debounce and URL state
-  - `table-of-contents.tsx` - TOC with IntersectionObserver
+  - `table-of-contents.md` - TOC with IntersectionObserver
   - `mdx.md` - MDX rendering and syntax highlighting
   - `reading-progress.md` - Reading progress indicator
   - `related-posts.md` - Related posts algorithm
+  - `about-page-components.md` - About page section components
+  - 15+ component docs total
 
 - **`/docs/api/`** - API documentation
   - `routes/overview.md` - API architecture, rate limiting, error handling
@@ -235,6 +311,8 @@ All project documentation lives in `/docs` directory:
   - `reference.md` - Quick API reference
 
 - **`/docs/features/`** - Feature guides
+  - `inngest-integration.md` - Complete Inngest background jobs guide (500+ lines)
+  - `inngest-testing.md` - Testing and debugging guide
   - `github-integration.md` - Complete GitHub integration guide with setup
 
 - **`/docs/security/`** - Security implementation
@@ -246,6 +324,11 @@ All project documentation lives in `/docs` directory:
   - `todo.md` - Active/pending work only
   - `done.md` - Completed projects and historical reference
   - `environment-variables.md` - Complete environment setup guide
+
+- **`/docs/platform/`** - Platform configuration
+  - `environment-variables.md` - Complete environment variable reference
+  - `site-config.md` - Domain and URL configuration
+  - `view-counts.md` - Blog analytics and Redis setup
 
 When adding documentation: keep it in `/docs`, use consistent markdown format, include examples, and cross-reference related docs.
 

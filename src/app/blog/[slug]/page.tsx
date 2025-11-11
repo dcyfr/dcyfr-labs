@@ -166,7 +166,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       {/* Table of Contents */}
       <TableOfContents headings={headings} />
       
-      <ArticleLayout>
+      <ArticleLayout useProseWidth={false}>
           <Breadcrumbs items={[
             { label: "Home", href: "/" },
             { label: "Blog", href: "/blog" },

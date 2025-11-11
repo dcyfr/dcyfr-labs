@@ -142,18 +142,25 @@ export const handleMilestone = inngest.createFunction(
       `);
     });
 
-    // Step 2: Could send email notification to author
+    // Step 2: Send email notification to author (optional feature)
     await step.run("notify-author", async () => {
-      // TODO: Implement email notification
+      // FUTURE ENHANCEMENT: Implement email notification for milestone achievements
+      // This would require:
+      // 1. Adding AUTHOR_EMAIL to environment variables
+      // 2. Creating a reusable email template for milestones
+      // 3. Implementing email send via Resend or similar service
+      //
+      // Example implementation:
       // await inngest.send({
       //   name: "contact/email.send",
       //   data: {
-      //     to: AUTHOR_EMAIL,
+      //     to: process.env.AUTHOR_EMAIL,
       //     subject: `🎉 "${title}" reached ${milestone} views!`,
-      //     ...
+      //     html: renderMilestoneEmail({ title, slug, milestone, totalViews }),
       //   },
       // });
-      console.log("Milestone notification (email integration pending)");
+      
+      console.log(`Milestone notification: ${title} reached ${milestone} views (email integration not yet implemented)`);
     });
 
     return {
