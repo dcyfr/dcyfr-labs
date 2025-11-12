@@ -1,7 +1,7 @@
 {
   "servers": {
     "Sentry": {
-      "url": "https://mcp.sentry.dev/mcp/dcyfr-labs/javascript-nextjs",
+      "url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/cyberdrew-dev",
       "type": "http"
     }
   }

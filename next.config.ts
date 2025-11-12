@@ -14,9 +14,9 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: "dcyfr-labs",
+  org: "dcyfr-labs-gj",
 
-  project: "javascript-nextjs",
+  project: "cyberdrew-dev",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
