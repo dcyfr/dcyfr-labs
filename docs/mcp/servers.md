@@ -6,25 +6,26 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ## Active MCP Servers
 
-### 1. **Context7** (`@upstash/context7-mcp@latest`)
+### 1. **Memory** (`@modelcontextprotocol/server-memory`)
 
-**Purpose**: Documentation and knowledge base lookup for libraries and frameworks
+**Purpose**: Maintains project context, decisions, and patterns across conversations
 
 **Use Cases**:
-- Fetch up-to-date documentation for Next.js, React, Tailwind CSS, and shadcn/ui
-- Get code examples and API references without leaving the editor
-- Verify library APIs before making assumptions in implementations
+- Track project decisions and architectural patterns
+- Build context about code conventions and project-specific idioms
+- Maintain continuity across multiple development sessions
+- Reference previously learned project quirks and best practices
 
 **How to Use**:
-- Ask about library-specific features: "How do I implement streaming in Next.js?"
-- Request documentation: "Show me the latest shadcn/ui Button component API"
-- Get code examples: "What's the pattern for using React hooks in Server Components?"
+- Store decisions: "Remember: We prefer Tailwind utilities over CSS classes"
+- Reference context: "What was our decision on error handling?"
+- Track patterns: "Add this to project patterns: Always use `cn()` for class merging"
 
 **Benefits**:
-- ✅ Always up-to-date documentation
-- ✅ No external web calls required
-- ✅ Faster than searching manually
-- ✅ Integrated directly into the coding workflow
+- ✅ No need to repeat context in every conversation
+- ✅ Consistent patterns across the project
+- ✅ Faster development with learned conventions
+- ✅ Better continuity when switching between tasks
 
 ---
 
@@ -52,26 +53,73 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
-### 3. **Memory** (`@modelcontextprotocol/server-memory`)
+### 3. **Context7** (`@upstash/context7-mcp@latest`)
 
-**Purpose**: Maintains project context, decisions, and patterns across conversations
+**Purpose**: Documentation and knowledge base lookup for libraries and frameworks
 
 **Use Cases**:
-- Track project decisions and architectural patterns
-- Build context about code conventions and project-specific idioms
-- Maintain continuity across multiple development sessions
-- Reference previously learned project quirks and best practices
+- Fetch up-to-date documentation for Next.js, React, Tailwind CSS, and shadcn/ui
+- Get code examples and API references without leaving the editor
+- Verify library APIs before making assumptions in implementations
 
 **How to Use**:
-- Store decisions: "Remember: We prefer Tailwind utilities over CSS classes"
-- Reference context: "What was our decision on error handling?"
-- Track patterns: "Add this to project patterns: Always use `cn()` for class merging"
+- Ask about library-specific features: "How do I implement streaming in Next.js?"
+- Request documentation: "Show me the latest shadcn/ui Button component API"
+- Get code examples: "What's the pattern for using React hooks in Server Components?"
 
 **Benefits**:
-- ✅ No need to repeat context in every conversation
-- ✅ Consistent patterns across the project
-- ✅ Faster development with learned conventions
-- ✅ Better continuity when switching between tasks
+- ✅ Always up-to-date documentation
+- ✅ No external web calls required
+- ✅ Faster than searching manually
+- ✅ Integrated directly into the coding workflow
+
+---
+
+### 4. **Sentry** (HTTP MCP)
+
+**Purpose**: Production error monitoring and issue management
+
+**Use Cases**:
+- Monitor production errors in real-time
+- Access detailed error traces and stack traces
+- Track error frequency and user impact
+- Manage issue status and assignment
+
+**How to Use**:
+- "Show me recent errors in production"
+- "Get details for error [error-id]"
+- "What's the impact of issue X?"
+- "Mark issue Y as resolved"
+
+**Benefits**:
+- ✅ Real-time production visibility
+- ✅ Detailed error context and traces
+- ✅ Direct integration with issue tracking
+- ✅ Faster incident response
+
+---
+
+### 5. **Linear** (Remote MCP)
+
+**Purpose**: Project management and issue tracking
+
+**Use Cases**:
+- Create and manage issues directly from the editor
+- Track project progress and sprint status
+- Link code changes to specific issues
+- Update issue status during development
+
+**How to Use**:
+- "Create an issue for this bug"
+- "Show me my assigned issues"
+- "Update issue status to in progress"
+- "What's the status of feature X?"
+
+**Benefits**:
+- ✅ Seamless project management workflow
+- ✅ Code and issues stay in sync
+- ✅ Faster issue creation and updates
+- ✅ Better visibility into project status
 
 ---
 
@@ -106,26 +154,38 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 ```
 
 ### Current Configuration
+
 ```json
 {
   "servers": {
-    "sequentialthinking": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-      "type": "stdio"
-    },
     "memory": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"],
-      "env": {
-        "MEMORY_FILE_PATH": "${input:memory_file_path}"
-      },
-      "type": "stdio"
+      "type": "stdio",
+      "disabled": false
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "type": "stdio",
+      "disabled": false
     },
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@latest"],
-      "type": "stdio"
+      "type": "stdio",
+      "disabled": false
+    },
+    "Sentry": {
+      "url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/cyberdrew-dev",
+      "type": "http",
+      "disabled": false
+    },
+    "linear": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.linear.app/sse"],
+      "type": "stdio",
+      "disabled": false
     }
   }
 }
@@ -154,11 +214,13 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 | Task | Server | Why |
 |------|--------|-----|
-| "How do I use X in Next.js?" | Context7 | Get authoritative, up-to-date docs |
-| "Debug this complex issue" | Sequential Thinking | Think through problems systematically |
 | "What's our pattern for X?" | Memory | Reference project conventions |
-| "Add security feature Y" | Snyk + MCP servers | Scan + research best practices |
-| "Manage/review a PR" | GitHub PRs | Integrated PR workflow |
+| "Debug this complex issue" | Sequential Thinking | Think through problems systematically |
+| "How do I use X in Next.js?" | Context7 | Get authoritative, up-to-date docs |
+| "Show me production errors" | Sentry | Monitor and debug production issues |
+| "Create issue for this bug" | Linear | Track work and manage projects |
+| "Add security feature Y" | Snyk Extension | Scan and research best practices |
+| "Manage/review a PR" | GitHub PRs Extension | Integrated PR workflow |
 
 ---
 
@@ -171,9 +233,11 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 4. Check the MCP extension logs
 
 ### Memory Not Persisting
-- Verify `MEMORY_FILE_PATH` is set correctly
-- Ensure the directory exists and is writable
-- Check file permissions
+
+- Check VS Code MCP extension logs
+- Ensure the Memory server is enabled in `mcp.json`
+- Restart VS Code to reinitialize the server
+- Verify `npx` can access the package
 
 ### Context7 Documentation Outdated
 - Context7 pulls from up-to-date sources

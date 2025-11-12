@@ -20,23 +20,24 @@ This repo is a full-featured developer blog and portfolio built with Next.js (Ap
 Active MCP servers configured for this session:
 
 ### Core MCPs
-- **Context7** (`@upstash/context7-mcp@latest`): Documentation lookup for Next.js, React, Tailwind, shadcn/ui, and other libraries.
-- **Sequential Thinking** (`@modelcontextprotocol/server-sequential-thinking`): Complex problem-solving, planning, and multi-step task breakdown.
 - **Memory** (`@modelcontextprotocol/server-memory`): Maintains project context, decisions, and patterns across the conversation.
+- **Sequential Thinking** (`@modelcontextprotocol/server-sequential-thinking`): Complex problem-solving, planning, and multi-step task breakdown.
+- **Context7** (`@upstash/context7-mcp@latest`): Documentation lookup for Next.js, React, Tailwind, shadcn/ui, and other libraries.
 
-### Project Workflow MCPs
-- **Filesystem** (`@modelcontextprotocol/server-filesystem`): Safe file operations, navigation, and bulk edits across the project workspace.
-- **GitHub** (`ghcr.io/github/github-mcp-server`): GitHub integration for repository management, issues, PRs, CI/CD, and code analysis.
+### Integration MCPs
+- **Sentry** (HTTP MCP): Production error monitoring, issue tracking, and detailed error traces.
+- **Linear** (Remote MCP): Project management, issue tracking, and sprint planning.
 
 Additional tools available:
 - **Snyk Extension**: Security scanning and vulnerability analysis.
 - **GitHub Pull Requests Extension**: PR management and review.
 
 **Usage guidelines:**
-- Use Context7 to fetch up-to-date library documentation before making assumptions about APIs or patterns.
-- Use Sequential Thinking for architectural decisions, debugging complex issues, or planning multi-step refactors.
 - Use Memory to track project decisions, learned patterns, and context to avoid repetition.
-- Use Filesystem MCP for project-wide file operations, refactoring, and navigation (safer than terminal operations).
+- Use Sequential Thinking for architectural decisions, debugging complex issues, or planning multi-step refactors.
+- Use Context7 to fetch up-to-date library documentation before making assumptions about APIs or patterns.
+- Use Sentry for production monitoring and error analysis.
+- Use Linear for issue tracking and project management.
 - Prefer MCP servers for local/secure integrations instead of making direct network calls.
 - Security: Never exfiltrate secrets. Keep all credentials within MCP boundaries; do not print tokens or environment details. Prefer server-side routes for any third‑party calls (see `src/app/api/*`).
 - Offline-friendly: When network is restricted, rely on MCP-backed indexes and local workspace context.

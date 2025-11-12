@@ -31,13 +31,15 @@ Review the specific test that failed and see troubleshooting below.
 | Component | Tests | Status |
 |-----------|-------|--------|
 | `mcp.json` Configuration | 5 | ✅ |
-| Context7 Server | 3 | ✅ |
-| Sequential Thinking | 3 | ✅ |
 | Memory Server | 3 | ✅ |
+| Sequential Thinking | 3 | ✅ |
+| Context7 Server | 3 | ✅ |
+| Sentry (HTTP) | 2 | ✅ |
+| Linear (Remote) | 2 | ✅ |
 | npm/npx Availability | 2 | ✅ |
 | Documentation | 3 | ✅ |
 | Project Scripts | 2 | ✅ |
-| **Total** | **33** | **✅** |
+| **Total** | **25** | **✅** |
 
 ---
 
@@ -72,9 +74,11 @@ npm run test:mcp-servers
 
 ## MCP Servers Validated
 
-1. **Context7** — Documentation lookup
+1. **Memory** — Project context and decisions
 2. **Sequential Thinking** — Problem solving
-3. **Memory** — Project context
+3. **Context7** — Documentation lookup
+4. **Sentry** — Production error monitoring (HTTP MCP)
+5. **Linear** — Issue tracking and project management (Remote MCP)
 
 All ✅ configured and accessible
 

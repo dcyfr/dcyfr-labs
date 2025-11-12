@@ -376,9 +376,9 @@ AI is transformative, but only when used thoughtfully. This series shares patter
 4. **Model Context Protocol (MCP)** (400 words)
    - What is MCP? (standardized communication between AI and tools)
    - Why it matters: security, local-first, extensibility
-   - Available servers: Context7, Sequential Thinking, Memory, Filesystem, GitHub
+   - Available servers: Memory, Sequential Thinking, Context7, Sentry, Linear
    - Configuration in VS Code
-   - MCP example: Filesystem MCP for safe bulk edits
+   - MCP example: Sentry MCP for production error monitoring
 
 5. **AI Code Review & Quality Gates** (350 words)
    - Using GitHub Copilot for code review
