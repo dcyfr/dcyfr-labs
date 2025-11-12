@@ -17,6 +17,8 @@
 
 import { TYPOGRAPHY, SPACING } from '@/lib/design-tokens';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 export interface ArticleFooterProps<T = Record<string, unknown>> {
   /** Share URL (enables share section) */
@@ -27,6 +29,12 @@ export interface ArticleFooterProps<T = Record<string, unknown>> {
   
   /** Custom share component */
   shareComponent?: React.ReactNode;
+  
+  /** Tags/keywords (optional) */
+  tags?: string[];
+  
+  /** Function to generate tag URLs (returns URL string) */
+  onTagClick?: (tag: string) => string;
   
   /** Sources/references links (optional) */
   sources?: Array<{
@@ -53,6 +61,8 @@ export interface ArticleFooterProps<T = Record<string, unknown>> {
 export function ArticleFooter<T>({
   shareUrl,
   shareComponent,
+  tags = [],
+  onTagClick,
   sources,
   relatedItems = [],
   renderRelatedItem,
@@ -61,9 +71,10 @@ export function ArticleFooter<T>({
   className,
 }: ArticleFooterProps<T>) {
   const hasShare = shareUrl || shareComponent;
+  const hasTags = tags.length > 0;
   const hasSources = sources && sources.length > 0;
   const hasRelated = relatedItems.length > 0 && renderRelatedItem;
-  const hasContent = hasShare || hasSources || hasRelated || children;
+  const hasContent = hasShare || hasTags || hasSources || hasRelated || children;
 
   if (!hasContent) {
     return null;
@@ -71,6 +82,37 @@ export function ArticleFooter<T>({
 
   return (
     <div className={cn(SPACING.section, className)}>
+      {/* Tags Section */}
+      {hasTags && (
+        <section className={SPACING.subsection}>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              Tagged:
+            </span>
+            {tags.map((tag) => {
+              const tagUrl = onTagClick?.(tag);
+              const badgeContent = (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className={cn(
+                    tagUrl && "cursor-pointer hover:bg-secondary/80 transition-colors"
+                  )}
+                >
+                  {tag}
+                </Badge>
+              );
+              
+              return tagUrl ? (
+                <Link key={tag} href={tagUrl}>
+                  {badgeContent}
+                </Link>
+              ) : badgeContent;
+            })}
+          </div>
+        </section>
+      )}
+
       {/* Share Section */}
       {hasShare && (
         <section className={SPACING.subsection}>

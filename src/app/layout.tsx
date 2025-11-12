@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import "./print.css";
+import "katex/dist/katex.min.css"; // KaTeX styles for math rendering
 import { ThemeProvider } from "@/components/theme-provider";
 import {
   SITE_URL,

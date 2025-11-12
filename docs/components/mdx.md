@@ -3,16 +3,21 @@
 **Component:** `MDX`  
 **Location:** `src/components/mdx.tsx`  
 **Type:** Server Component  
-**Purpose:** Core blog content renderer
+**Purpose:** Core blog content renderer with diagram and math support
 
 **Status:** ✅ Production  
-**Last Updated:** October 23, 2025
+**Last Updated:** November 11, 2025
 
 ---
 
 ## Summary
 
-The `MDX` component is the heart of the blog rendering system. It transforms MDX (Markdown + JSX) content into fully-styled, interactive HTML with syntax highlighting, auto-linking, and custom component mappings.
+The `MDX` component is the heart of the blog rendering system. It transforms MDX (Markdown + JSX) content into fully-styled, interactive HTML with:
+- Syntax highlighting via Shiki
+- Auto-linking and slugs for headings
+- **Mermaid diagram rendering** - Flowcharts, sequence diagrams, class diagrams, and more
+- **LaTeX math rendering** - Inline and block mathematical equations via KaTeX
+- Custom component mappings for consistent styling
 
 ---
 
@@ -278,7 +283,9 @@ const isExternal = href.startsWith('http://') || href.startsWith('https://');
 ### Remark Plugins (Markdown → MDAST)
 
 #### `remark-gfm`
+
 Adds GitHub-Flavored Markdown support:
+
 - Tables
 - Task lists (`- [ ]`, `- [x]`)
 - Strikethrough (`~~text~~`)
@@ -286,13 +293,28 @@ Adds GitHub-Flavored Markdown support:
 - Footnotes
 
 **Usage:**
+
 ```typescript
 remarkPlugins: [remarkGfm]
+```
+
+#### `remark-math`
+
+Parses LaTeX math notation in Markdown:
+
+- Inline math: `$E = mc^2$`
+- Block math: `$$...$$`
+
+**Usage:**
+
+```typescript
+remarkPlugins: [remarkGfm, remarkMath]
 ```
 
 ### Rehype Plugins (MDAST → HTML)
 
 #### `rehype-slug`
+
 Automatically adds `id` attributes to headings:
 
 ```html
@@ -302,9 +324,11 @@ Automatically adds `id` attributes to headings:
 ```
 
 #### `rehype-pretty-code` (Shiki)
+
 Syntax highlighting for code blocks:
 
 **Features:**
+
 - Dual theme support (light/dark)
 - Line highlighting
 - Character highlighting
@@ -312,6 +336,7 @@ Syntax highlighting for code blocks:
 - Custom styling hooks
 
 **Configuration:**
+
 ```typescript
 [rehypePrettyCode, {
   theme: {
@@ -323,7 +348,24 @@ Syntax highlighting for code blocks:
 }]
 ```
 
+#### `rehype-katex`
+
+Renders mathematical equations using KaTeX:
+
+- Fast, server-side rendering
+- No client-side JavaScript overhead
+- Supports extensive LaTeX commands
+
+**Usage:**
+
+```typescript
+rehypePlugins: [rehypeKatex]
+```
+
+**Styling:** KaTeX CSS imported in `src/app/layout.tsx`
+
 #### `rehype-autolink-headings`
+
 Wraps headings in anchor links:
 
 ```typescript
@@ -336,6 +378,61 @@ Wraps headings in anchor links:
 ```
 
 **Result:** Clickable headings for direct linking
+
+---
+
+## Diagram and Math Support
+
+### Mermaid Diagrams
+
+The MDX component automatically renders Mermaid diagrams when you use a code fence with the `mermaid` language:
+
+````markdown
+```mermaid
+graph TD
+    A[Start] --> B[Process]
+    B --> C[End]
+```
+````
+
+**Supported diagram types:**
+
+- Flowcharts
+- Sequence diagrams
+- Class diagrams
+- State diagrams
+- Entity relationship diagrams
+- Gantt charts
+- Pie charts
+- Git graphs
+
+**See:** [Diagram and Math Guide](/docs/content/diagrams-and-math.md) for complete examples
+
+### LaTeX Math Equations
+
+**Inline math** (within text):
+
+```markdown
+Einstein's equation is $E = mc^2$.
+```
+
+**Block math** (centered, standalone):
+
+```markdown
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+```
+
+**Common use cases:**
+
+- Mathematical formulas
+- Statistical equations
+- Algorithm complexity notation
+- Physics equations
+- Financial calculations
+
+**See:** [Diagram and Math Guide](/docs/content/diagrams-and-math.md) for syntax examples
 
 ---
 

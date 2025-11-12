@@ -1,12 +1,15 @@
 import * as React from "react";
 import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
+import rehypeKatex from "rehype-katex";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
 import { CopyCodeButton } from "@/components/copy-code-button";
 import { HorizontalRule } from "@/components/horizontal-rule";
+import { Mermaid } from "@/components/mermaid";
 import { 
   Check, 
   X, 
@@ -157,16 +160,54 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     return <code {...props} />;
   },
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => {
-    // Extract the code content for the copy button
+    // Extract the code content for the copy button and diagram detection
     const codeContent = React.Children.toArray(props.children)
       .map((child) => {
         if (React.isValidElement(child)) {
-          const childProps = child.props as { children?: React.ReactNode };
+          const childProps = child.props as { 
+            children?: React.ReactNode;
+            "data-language"?: string;
+          };
+          
+          // Check if this is a Mermaid diagram
+          const language = childProps["data-language"];
+          if (language === "mermaid") {
+            const diagramCode = extractTextFromChildren(childProps.children);
+            return <Mermaid chart={diagramCode} key="mermaid-diagram" />;
+          }
+          
           return extractTextFromChildren(childProps.children);
         }
         return "";
       })
+      .filter(item => typeof item === "string")
       .join("");
+
+    // Check if we rendered a Mermaid diagram
+    const hasMermaid = React.Children.toArray(props.children).some((child) => {
+      if (React.isValidElement(child)) {
+        const childProps = child.props as { "data-language"?: string };
+        return childProps["data-language"] === "mermaid";
+      }
+      return false;
+    });
+
+    // If Mermaid, return just the diagram component
+    if (hasMermaid) {
+      const child = React.Children.toArray(props.children).find((child) => {
+        if (React.isValidElement(child)) {
+          const childProps = child.props as { "data-language"?: string };
+          return childProps["data-language"] === "mermaid";
+        }
+        return false;
+      });
+      
+      if (React.isValidElement(child)) {
+        const childProps = child.props as { children?: React.ReactNode };
+        const diagramCode = extractTextFromChildren(childProps.children);
+        return <Mermaid chart={diagramCode} />;
+      }
+    }
 
     return (
       <div className="relative group">
@@ -297,10 +338,14 @@ export function MDX({ source }: { source: string }) {
       source={source}
       options={{
         mdxOptions: {
-          remarkPlugins: [remarkGfm],
+          remarkPlugins: [
+            remarkGfm,
+            remarkMath, // Parse math notation
+          ],
           rehypePlugins: [
             rehypeSlug,
             [rehypePrettyCode, rehypePrettyCodeOptions],
+            rehypeKatex, // Render math with KaTeX
             [
               rehypeAutolinkHeadings, 
               { 

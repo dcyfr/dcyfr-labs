@@ -38,7 +38,7 @@
 			"disabled": false
         },
         "Sentry": {
-			"url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/cyberdrew-dev",
+			"url": "https://mcp.sentry.dev/mcp/YOUR_ORG/YOUR_PROJECT",
 			"type": "http",
 			"disabled": false
 		},
@@ -64,7 +64,7 @@
 			"type": "stdio",
 			"disabled": false,
 			"env": {
-				"BRAVE_API_KEY": "BSAI0IiOGSDDgMn4qXNj_xc1qmV4_XW"
+				"BRAVE_API_KEY": "YOUR_BRAVE_API_KEY_HERE"
 			}
 		}
 	}

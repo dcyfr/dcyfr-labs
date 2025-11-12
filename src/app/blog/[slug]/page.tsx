@@ -4,7 +4,6 @@ import { posts, postsBySeries } from "@/data/posts";
 import { getPostByAnySlug } from "@/lib/blog";
 import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 import { MDX } from "@/components/mdx";
-import { PostBadges } from "@/components/post-badges";
 import { getPostViews, getMultiplePostViews } from "@/lib/views";
 import { getPostShares } from "@/lib/shares";
 import { ReadingProgress } from "@/components/reading-progress";
@@ -189,15 +188,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <ArticleHeader
             title={post.title}
             date={new Date(post.publishedAt)}
-            tags={post.tags}
-            onTagClick={(tag) => `/blog?tag=${encodeURIComponent(tag)}`}
-            badges={
-              <PostBadges
-                post={post}
-                isLatestPost={latestPost?.slug === post.slug}
-                isHotPost={hottestSlug === post.slug && maxViews > 0}
-              />
-            }
             metadata={`${post.readingTime.text}${typeof viewCount === "number" ? ` · ${viewCount.toLocaleString()} ${viewCount === 1 ? "view" : "views"}` : ""}`}
           />
           
@@ -229,6 +219,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               />
             }
             sources={post.sources?.map(s => ({ title: s.label, url: s.href }))}
+            tags={post.tags}
+            onTagClick={(tag) => `/blog?tag=${encodeURIComponent(tag)}`}
           >
             {/* Related posts section */}
             <RelatedPosts posts={articleData.relatedItems} currentSlug={post.slug} />

@@ -1,0 +1,176 @@
+---
+title: "Mermaid Diagrams & LaTeX"
+summary: "A comprehensive test of diagram and mathematical equation rendering capabilities"
+publishedAt: "2025-11-11"
+tags: ["Test", "Diagrams", "Math"]
+draft: true
+image:
+  url: "/blog/images/default/minimal.svg"
+  alt: "Testing diagrams and math rendering"
+  width: 1200
+  height: 630
+---
+
+This post demonstrates Mermaid diagram and LaTeX math rendering capabilities.
+
+## Flowchart Example
+
+Here's a simple architecture diagram:
+
+```mermaid
+graph TD
+    A[User] --> B{Authentication}
+    B -->|Valid| C[Dashboard]
+    B -->|Invalid| D[Login Page]
+    C --> E[API Calls]
+    E --> F[Database]
+```
+
+## Sequence Diagram
+
+API interaction flow:
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant Cache
+    participant DB
+    
+    Client->>API: GET /users/1
+    API->>Cache: Check cache
+    
+    alt Cache hit
+        Cache-->>API: User data
+    else Cache miss
+        API->>DB: Query user
+        DB-->>API: User data
+        API->>Cache: Store in cache
+    end
+    
+    API-->>Client: 200 OK
+```
+
+## Inline Math
+
+Einstein's famous equation is $E = mc^2$, where $m$ is mass and $c$ is the speed of light.
+
+The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
+
+## Block Math
+
+The Gaussian integral:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+
+Euler's identity (often called the most beautiful equation):
+
+$$
+e^{i\pi} + 1 = 0
+$$
+
+A system of equations:
+
+$$
+\begin{aligned}
+x + y &= 5 \\
+2x - y &= 1
+\end{aligned}
+$$
+
+## State Diagram
+
+Feature deployment workflow:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Development
+    Development --> CodeReview
+    CodeReview --> Testing
+    Testing --> Staging
+    Staging --> Production
+    
+    Testing --> Development : Failed
+    Staging --> Testing : Rollback
+    Production --> [*] : Deployed
+```
+
+## Matrix Example
+
+A simple transformation matrix:
+
+$$
+\begin{bmatrix}
+\cos\theta & -\sin\theta \\
+\sin\theta & \cos\theta
+\end{bmatrix}
+$$
+
+## Summation and Products
+
+Sum of first n natural numbers:
+
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
+
+Product notation:
+
+$$
+\prod_{i=1}^{n} i = n!
+$$
+
+## Class Diagram
+
+Object-oriented design example:
+
+```mermaid
+classDiagram
+    class User {
+        +String id
+        +String name
+        +String email
+        +login()
+        +logout()
+    }
+    
+    class Post {
+        +String id
+        +String title
+        +String content
+        +User author
+        +publish()
+        +archive()
+    }
+    
+    class Comment {
+        +String id
+        +String content
+        +User author
+        +submit()
+    }
+    
+    User "1" --> "*" Post : creates
+    User "1" --> "*" Comment : writes
+    Post "1" --> "*" Comment : has
+```
+
+## Calculus
+
+Derivative of a function:
+
+$$
+\frac{d}{dx}(x^n) = nx^{n-1}
+$$
+
+Integral:
+
+$$
+\int x^n \, dx = \frac{x^{n+1}}{n+1} + C, \quad n \neq -1
+$$
+
+## Conclusion
+
+Both Mermaid diagrams and LaTeX math rendering work beautifully! 🎉
