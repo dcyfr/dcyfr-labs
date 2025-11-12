@@ -30,6 +30,9 @@ export const CONTAINER_WIDTHS = {
   
   /** Narrow width for forms and focused content (contact page) */
   narrow: "max-w-xl",
+  
+  /** Wide width for data-heavy pages (dashboards, analytics, tables) */
+  dashboard: "max-w-6xl",
 } as const;
 
 /**

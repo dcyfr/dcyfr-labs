@@ -32,17 +32,17 @@ export type Resume = {
 };
 
 export const resume: Resume = {
-  shortSummary: "I'm a cybersecurity architect leading global organizations in cyber risk management, operational security, and incident response. Sometimes I write about tech and personal development on my blog. When I'm not working, I enjoy hiking, photography, and exploring new and innovative technologies.",
-  summary: "I'm a cybersecurity architect with five years of experience leading global teams in cyber risk management, information security, and incident response. My skills include application development, cloud security, vulnerability management, and automating security operations. I have built and led security programs, implemented frameworks, and delivered technical solutions at scale, with a focus on fostering security awareness and ongoing improvement.",
+  shortSummary: "Cybersecurity architect with 5+ years leading security programs, incident response, and secure development practices for global organizations.",
+  summary: "I'm a cybersecurity architect with over 5 years of experience leading security programs, incident response, and building secure development practices for global organizations. I specialize in cyber risk management, vulnerability management, and automating operational security. I'm passionate about mentoring the next generation of cyber professionals and sharing my knowledge through writing and community engagement.",
   experience: [
     {
       title: "Principal Security Engineer",
       company: "Monks",
       duration: "Jul 2023 → Present",
       responsibilities: [
-        "Led technical audits to certify multiple sites for ISO 27001, SOC2, TISAX, and TPN, ensuring compliance and security standards.",
-        "Implemented technical controls that successfully reduced global vulnerabilities by 23%, enhancing overall security posture.",
-        "Directed teams to streamline incident response processes, achieving a 35% reduction in global response times."
+        "Led audits to certify offices for ISO 27001, SOC2, TISAX, and TPN, ensuring standards and compliance.",
+        "Implemented technical controls, reducing global vulnerabilities by 23%, enhancing security posture.",
+        "Streamlined incident response processes, achieving a 35% reduction in global response times."
       ]
     },
     {
@@ -50,9 +50,9 @@ export const resume: Resume = {
       company: "Monks",
       duration: "Jul 2022 → Jul 2023",
       responsibilities: [
-        "Developed comprehensive policies and procedures for mergers and acquisitions to enhance security integration.",
-        "Spearheaded threat hunting and vulnerability management initiatives to address security risks proactively.",
-        "Established global security operations and incident response programs to ensure swift and effective responses to incidents."
+        "Enhanced operations and incident response programs, ensuring swift and effective response times.",
+        "Developed policies and procedures for mergers and acquisitions, securing incoming integrations.",
+        "Led threat hunting and vulnerability management projects to address security risks proactively."
       ]
     },
     {
@@ -60,19 +60,19 @@ export const resume: Resume = {
       company: "Monks",
       duration: "Jul 2021 → Jul 2022",
       responsibilities: [
-        "Conducted comprehensive technical audits to identify vulnerabilities, prioritizing future security initiatives.",
-        "Developed foundational global security operations and engineering programs to enhance organizational security posture.",
+        "Developed security operations and engineering programs to enhance organizational security posture.",
+        "Conducted technical audits, identifying vulnerabilities and prioritizing future security initiatives.",
         "Served as a Subject Matter Expert, providing insights and recommendations directly to the CISO."
       ]
     },
     {
-      title: "Co-founder & Vice President",
+      title: "Co-founder, VP, CTO, CISO",
       company: "Information Security Network, Inc.",
       duration: "Sep 2019 → Sep 2021",
       responsibilities: [
-        "Co-founded Information Security Network, focusing on aligning IT and security objectives with nonprofit strategies.",
-        "Led virtual seminars and training events, including BSides and Hack Pensacola, to enhance community engagement.",
-        "Collaborated with DC850 to promote security awareness and education initiatives."
+        "Served as VP on the Board of Directors, aligning  IT and security objectives with nonprofit strategies.",
+        "Lead seminars and training events at BSides and Hack Pensacola, enhancing community engagement.",
+        "Collaborated with local groups like DC850 to promote security awareness and education initiatives."
       ]
     },
     {
@@ -80,7 +80,7 @@ export const resume: Resume = {
       company: "Creative Breakthroughs, Inc.",
       duration: "Dec 2020 → Jul 2021",
       responsibilities: [
-        "Triaged and validated level one escalations, leading incident response for over 20 contracts.",
+        "Triaged and validated level one escalations, leading incident response for over 20 client contracts.",
         "Collaborated with engineering teams to resolve operational issues and enhance procedures.",
         "Developed tailored playbooks and documentation for diverse client environments."
       ]
@@ -90,10 +90,9 @@ export const resume: Resume = {
       company: "Escambia County Commissioners Office",
       duration: "Mar 2020 → Dec 2020",
       responsibilities: [
-        "Developed and implemented a comprehensive security awareness program, enhancing phishing detection by over 40%.",
-        "Managed triage of alerts and conducted forensics and incident response for over 1k CJIS-certified systems.",
+        "Developed a comprehensive security awareness program, enhancing phishing detection by over 40%.",
+        "Triaged alerts and conducted forensics and incident response for over 1k CJIS-certified systems.",
         "Applied CIS and NIST controls to bolster security for public and emergency support systems."
-
       ]
     }
   ],
@@ -103,9 +102,9 @@ export const resume: Resume = {
       institution: "SANS Technology Institute",
       duration: "Jan 2024 → Present",
       highlights: [
-        "Defensible Security Architecture & Engineering",
+        "Defensible Security Architecture",
         "Hacking Techniques & Incident Response",
-        "IT Security Planning, Policy, & Leadership",
+        "IT Security Planning, Policy, and Leadership",
         "Security Essentials"
       ]
     },
@@ -118,7 +117,7 @@ export const resume: Resume = {
         "Cyber Defense Club Training Officer",
         "Capture the Flag Competition Lead",
         "National Technical Honors Society",
-        "Three-time National Cyber League Gold Bracket Finalist"
+        "3x National Cyber League Gold Bracket Finalist"
       ]
     }
   ],
@@ -162,7 +161,7 @@ export const resume: Resume = {
     {
       category: "Technologies & Tools",
       skills: [
-        "AWS", "Cloudflare", "Snyk", "Google Cloud", "Claude", "CrowdStrike", "Visual Studio Code", "Tenable", "Vercel", "Qualys", "ChatGPT", "Zscaler", "macOS", "Splunk", "Axiom", "Nessus", "Palo Alto", "Proofpoint", "VMware", "Wireshark", "Perplexity", "GitHub", "Carbon Black", "Burp Suite", "Google Gemini", "Metasploit", "Windows", "Google Workspace", "Postman", "Kali Linux", "Linux", "Microsoft Office 365", "Azure"
+        "AWS", "Azure", "GCP", "Cloudflare", "Snyk", "Google Cloud", "Claude", "CrowdStrike", "Visual Studio Code", "Tenable", "Vercel", "Qualys", "ChatGPT", "Zscaler", "macOS", "Splunk", "Axiom", "Nessus", "Palo Alto", "Proofpoint", "VMware", "Wireshark", "Perplexity", "GitHub", "Carbon Black", "Burp Suite", "Google Gemini", "Metasploit", "Windows", "Google Workspace", "Postman", "Kali Linux", "Linux", "Microsoft Office 365", "Jira", "Slack"
       ]
     },
     {

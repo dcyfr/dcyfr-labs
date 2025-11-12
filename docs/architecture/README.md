@@ -56,6 +56,30 @@ This directory contains comprehensive architectural plans and documentation for 
 
 ---
 
+#### [Developer Dashboard Refactor](./dashboard-refactor-plan.md)
+**Status:** ✅ Phase 3 Complete  
+**Completed:** November 11, 2025  
+**Goal:** Simplify analytics dashboard and create reusable dashboard patterns
+
+**Achievements:**
+- Reduced AnalyticsClient.tsx from 1,249 → 583 lines (53% reduction)
+- Created modular analytics components and custom hooks
+- Maintained 100% feature parity with zero breaking changes
+- Improved code organization and testability
+
+**Key Infrastructure Created:**
+- `src/components/dashboard/` - Dashboard layout and stats components
+- `src/components/analytics/` - Analytics-specific components
+- `src/hooks/` - Custom hooks for data fetching, filtering, sorting
+- `src/lib/dashboard/` - Table and export utilities
+
+**Documentation:**
+- **[Dashboard Refactor Plan](./dashboard-refactor-plan.md)** - Complete plan with phases
+- **[Phase 3 Complete](../../operations/dashboard-refactor-phase-3-complete.md)** - Technical summary
+- **[Analytics Architecture Decision](./analytics-architecture-decision.md)** - Vercel Analytics evaluation
+
+---
+
 ### 📋 Planning Phase
 
 #### [Blog Refactor Plan](./blog-refactor-plan.md)
