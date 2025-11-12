@@ -2,295 +2,329 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 11, 2025
+**Last Updated:** November 11, 2025 (Revised with priority framework)
 
 ---
 
 ## 🎯 Priority Overview
 
-This todo list is organized by **criticality and user impact**:
+This todo list is organized by **criticality, impact, and ROI**:
 
-- **🚨 CRITICAL** - Broken/inaccessible features, affects majority of users
-- **🔴 HIGH** - Major UX issues, affects key user flows  
-- **🟡 MEDIUM** - Enhancements to working features, optimization
-- **🟢 LOW** - Polish, nice-to-have improvements
-- **⚪ BACKLOG** - Future consideration, exploration
+- **🚨 CRITICAL** - Compliance, accessibility, legal risk - address immediately
+- **🔴 HIGH** - Infrastructure, security, reliability - this month
+- **🟡 MEDIUM** - Performance, SEO, content strategy - next month
+- **🟢 LOW** - Polish, enhancements, nice-to-have - ongoing/data-driven
+- **⚪ BACKLOG** - Future consideration, deferred until validated need
 
-**Current Focus:** All major refactoring complete - focusing on features and content
+**Current Focus:** Foundation & reliability (Phase 1) - infrastructure before features
 
----
-
-## 🐛 Bugs
-
-- None currently tracked
-
----
-
-## 🚀 Features
-
-- None currently tracked
+**Priority Framework:**
+- **Phase 1** (Weeks 1-2): Foundation & Reliability (16-20 hours)
+- **Phase 2** (Weeks 3-4): Performance & Visibility (15-19 hours)
+- **Phase 3** (Ongoing): Enhancement & Polish (data-driven)
 
 ---
 
-## 🔧 Technical Improvements
+## � CRITICAL - Address Immediately
 
-### Monitoring
-- [x] **Custom analytics events** - Track specific user interactions ✅ Completed Nov 11, 2025
-- [ ] **Performance monitoring** - Set up performance budgets and alerts
-- [ ] **Uptime monitoring** - Configure uptime monitoring service
-
-
----
-
-## 🔄 Dependencies & Maintenance
-
-- [ ] **Automated dependency updates** - Set up Dependabot or Renovate
-- [ ] **Quarterly dependency review** - Review and update dependencies regularly
-- [ ] **Security advisories** - Monitor for security advisories
-- [ ] **Next.js 16 migration** - Stay updated on Next.js 16 features and migration path
----
-
-## 📝 Content & Design
-
-### Blog Posts
-- [ ] Write about security best practices for Next.js apps
-- [ ] Write about implementing GitHub contributions heatmap
-- [ ] Write about MDX setup and customization
-- [ ] Write about Sentry integration and configuration
-- [ ] Write about implementing Sentry for error tracking
-- [ ] Write about automated dependency management with Dependabot/Renovate
-
-### Pages
-- [ ] Add speaking/presentations section if applicable
-- [ ] Consider adding a /uses page (tools, software, setup)
+### Accessibility
+- [ ] **Accessibility audit follow-up** (4-6 hours)
+  - **Why**: Audit completed Oct 26, 2025 - no action items tracked
+  - **Risk**: Legal/compliance exposure, excludes users with disabilities
+  - **Action**: Review `docs/accessibility/audit-2025-10-26.md` and create remediation tasks
+  - **Priority**: Fundamental quality and legal requirement
 
 ---
 
-## 💡 Ideas & Future Enhancements
+## � HIGH - This Month (Phase 1: Foundation)
 
-### Homepage Improvements
+### Infrastructure & Reliability
+- [ ] **Uptime monitoring setup** (30 min)
+  - **Tool**: UptimeRobot free tier (5-minute checks, 50 monitors)
+  - **Impact**: Immediate operational visibility, can't fix what you don't know is broken
+  - **ROI**: ⭐⭐⭐⭐⭐ (30 min investment for 24/7 peace of mind)
 
-**Tier 1: Quick Wins (High Impact, Low Effort)**
-- [ ] **Stats/Metrics Section** - Total posts, projects, years of experience, technologies mastered (30 min)
-- [ ] **Better Section Spacing** - Improve visual hierarchy (15 min)
+- [ ] **Security advisory monitoring** (1 hour)
+  - **Tool**: GitHub Dependabot security alerts (free, built-in)
+  - **Setup**: Enable in repo settings, configure email notifications
+  - **Impact**: Proactive vulnerability detection and patching
+  - **ROI**: ⭐⭐⭐⭐⭐ (Risk mitigation)
 
-**Tier 2: High Value Additions (Weekend Project)**
-- [ ] **Tech Stack Visualization** - Show expertise with icon grid (2-3 hours)
-- [ ] **Popular/Trending Posts Section** - Social proof via view counts (1-2 hours)
-- [ ] **Tag Cloud / Popular Topics** - Content discovery + SEO (1-2 hours)
-- [ ] **Social Links Section** - More prominent social presence (1 hour)
+- [ ] **Automated dependency updates** (4-6 hours)
+  - **Tool**: Dependabot or Renovate bot
+  - **Impact**: Security updates, reduces manual maintenance by 4-8 hours/month
+  - **Config**: Auto-merge minor/patch, manual review for major versions
+  - **ROI**: ⭐⭐⭐⭐⭐ (6-hour setup saves 4-8 hours/month ongoing)
 
-**Tier 3: Nice-to-Have Enhancements**
-- [ ] **Testimonials/Recommendations** - Social proof from LinkedIn/clients
-- [ ] **Recent Activity Timeline** - Blog posts, project updates, GitHub activity
-- [ ] **Call-Out Boxes** - "Currently learning...", "Available for consulting"
-- [ ] **Better CTA Strategy** - More specific/action-oriented calls-to-action
+### Testing Infrastructure
+- [ ] **Basic testing infrastructure** (8-12 hours)
+  - **Unit tests** for critical utilities:
+    - `src/lib/blog.ts` - Post parsing, reading time, sorting
+    - `src/lib/metadata.ts` - SEO metadata generation
+    - `src/lib/analytics.ts` - Event tracking (new)
+    - `src/lib/utils.ts` - Helper functions
+  - **E2E tests** for key flows:
+    - Blog search and filtering
+    - Contact form submission
+    - RSS/Atom feed generation
+    - GitHub heatmap display
+  - **Setup**: Vitest + Testing Library + Playwright
+  - **Target**: 60%+ coverage on critical paths
+  - **Impact**: Code quality, prevents regressions, enables confident refactoring
 
-**Tier 4: Advanced Features (Future)**
-- [ ] **Live Search on Homepage** - Quick access to content
-- [ ] **Interactive Filters** - Filter posts by technology, projects by type
+### Data & Recovery
+- [ ] **Backup & disaster recovery plan** (2 hours)
+  - **Redis data**: View count backup strategy (export/import scripts)
+  - **Vercel config**: Project settings backup documentation
+  - **Recovery runbook**: Step-by-step restoration procedures
+  - **Test**: Validate recovery process in staging
+  - **Impact**: Business continuity, data loss prevention
 
----
-
-## ⚪ BACKLOG - Content & Features
-
-### Feed System Enhancements (Future)
-
-**Priority:** LOW - Quality of life improvements  
-**Estimated Effort:** 8-12 hours
-
-**See:** `docs/rss/feed-improvements-brainstorm.md` for complete analysis
-
-#### Medium Priority Items
-- [ ] **Enhanced Image Enclosures** - Add file size and dimensions metadata (4-6 hours)
-- [ ] **Explicit Project Publication Dates** - Replace timeline inference (3-4 hours)
-- [ ] **Feed Documentation Page** - Create `/feeds` user-facing page (2-3 hours)
-
-#### Low Priority Items
-- [ ] **JSON Feed Support** - Modern JSON alternative to XML (4-5 hours)
-- [ ] **Filtered Feeds** - Tag and status-based feeds (6-8 hours)
-- [ ] **Feed Analytics** - Track subscription metrics (6-8 hours)
-
----
-
-### Blog Feature Enhancements (Future Improvements)
-
-#### Medium Effort (3-5 days each)
-- [ ] **Popular Posts Widget** - Sidebar showing top 5 posts by views
-- [ ] **Bookmark/Reading List** - Let readers save posts for later
-- [ ] **Post Reactions** - Quick emoji reactions (👍 ❤️ 🔥 💡)
-- [ ] **Keyboard Shortcuts** - `/` for search, `n`/`p` for next/prev
-- [ ] **Print-Friendly Styling** - `@media print` CSS rules
-- [ ] **Advanced Search Filters** - Date range, multiple tags, sort options
-
-#### Major Projects (1-2 weeks each)
-- [ ] **Full-Text Search** - Meilisearch/Algolia/SQLite FTS
-- [ ] **Content Analytics Dashboard** - `/admin` route with charts
-- [ ] **Infinite Scroll Option** - Auto-load more posts
-- [ ] **Reading History & Recommendations** - Track read posts
-- [ ] **Post Scheduling System** - Schedule posts for future publication
-- [ ] **Draft Preview Sharing** - Shareable preview links with secret token
+- [ ] **Error monitoring strategy** (2 hours)
+  - **Sentry dashboard**: Weekly review cadence
+  - **Error patterns**: Document common issues and resolutions
+  - **SLAs**: Define response times by severity (Critical: 24h, High: 72h, etc.)
+  - **Alerts**: Configure for critical errors (5xx, unhandled exceptions)
+  - **Impact**: Proactive issue detection and faster resolution
 
 ---
 
-### ESLint Design Token Migration (Low Priority)
+## 🟡 MEDIUM - Next Month (Phase 2: Performance & Visibility)
+## 🟡 MEDIUM - Next Month (Phase 2: Performance & Visibility)
 
-**Status:** Quick wins complete (Nov 9, 2025) - Remaining 71 warnings backlogged  
-**Priority:** LOW - Maintenance/polish, no user-facing impact  
-**Effort:** ~10-15 hours for complete migration
+### Performance Optimization
+- [ ] **Performance monitoring with budgets** (3-4 hours)
+  - **Core Web Vitals targets**:
+    - LCP (Largest Contentful Paint): < 2.5s
+    - FID (First Input Delay): < 100ms
+    - CLS (Cumulative Layout Shift): < 0.1
+  - **Bundle size limits**: Track and alert on increases
+  - **Tools**: Vercel Speed Insights, web-vitals library
+  - **Impact**: SEO ranking, user experience, complements custom analytics
 
-**Remaining Work (71 warnings):**
-- **Analytics Page** (~18 warnings) - Internal admin page, lowest priority
-- **Project Detail Page** (~7 warnings) - Medium traffic
-- **Resume Page** (~5 warnings) - Low traffic
-- **Component Files** (~39 warnings) - As needed when editing
-- **Blog Page False Positives** (2 warnings) - Consider refining rules
+- [ ] **Lighthouse CI integration** (2 hours)
+  - **Setup**: GitHub Actions workflow for PR checks
+  - **Budgets**: Performance score > 90, Accessibility > 95
+  - **Impact**: Prevents performance regressions, automated quality gates
+  - **Fail PR on**: Performance drop > 5 points, accessibility violations
 
-**Reference:** `docs/design/eslint-warnings-quick-ref.md`
+### SEO & Content Strategy
+- [ ] **SEO enhancement package** (6-8 hours)
+  - **Google Search Console**: Setup and verify property
+  - **Keyword research**: Target keywords for 6 planned blog posts
+  - **Structured data validation**: Test with Google Rich Results
+  - **Canonical URL audit**: Ensure consistency across site
+  - **Internal linking**: Audit and improve content discoverability
+  - **Impact**: Organic traffic growth (20-40% in 3-6 months)
 
----
+- [ ] **Content calendar & promotion strategy** (2-3 hours)
+  - **Editorial calendar**: 6-12 month roadmap for blog posts
+  - **Target keywords**: Assign to each post idea
+  - **Promotion checklist**:
+    - LinkedIn article syndication
+    - Dev.to/Hashnode cross-posting
+    - Social media distribution plan
+    - Newsletter strategy (if pursuing)
+  - **Performance review**: Monthly content analytics review
+  - **Impact**: Structured content production, increased reach
 
-### Blog Search & Filter UI Improvements (Backlog)
+### Data Management
+- [ ] **Analytics data governance** (1 hour documentation)
+  - **Retention policy**: How long to keep view counts and analytics
+  - **Test data cleanup**: Process for removing dev/test events
+  - **Export strategy**: Regular backups of insights and trends
+  - **Privacy compliance**: Review against GDPR/CCPA requirements
+  - **Impact**: Sustainable analytics, privacy compliance
 
-#### P1: High Impact Improvements (3-5 hours each)
-- [ ] **Collapsible Tag List** - Show top 5-8 tags by default with expand button
-- [ ] **Combine Reading Time into Search Bar** - Dropdown inside search bar
-- [ ] **Sticky Filter Bar** - Sticky after scrolling past header
-- [ ] **Keyboard Shortcuts** - `/` to focus search, `Esc` to clear
-- [ ] **Smart Sorting Toggle** - Latest | Popular | Relevant
-
-#### P2: Mobile-Specific Improvements (5-8 hours)
-- [ ] **Bottom Sheet Filters (Mobile)** - Filter button opens bottom sheet modal
-- [ ] **Horizontal Scroll Tags (Mobile)** - Single row with horizontal scroll
-- [ ] **Floating Filter FAB (Mobile)** - Like TOC FAB with badge count
-
-#### P3: Advanced Features (8+ hours)
-- [ ] **Search Suggestions/Autocomplete** - Recent searches, popular tags
-- [ ] **Tag Search/Filter** - Search bar within tag list
-- [ ] **Saved Searches** - Save filter combinations in localStorage
-- [ ] **Pretty Filter URLs** - SEO-friendly URLs like `/blog/quick-reads/typescript`
-
----
-
-### UI/UX Enhancements (Backlog)
-
-#### Phase 3: Enhanced Interactions (~26 hours)
-- [ ] **Enhanced table of contents** - Sliding active indicator
-- [ ] **Toast improvements** - Custom enter/exit animations
-- [ ] **GitHub heatmap polish** - Staggered square appearance
-- [ ] **Theme transition animations** - Smooth dark/light mode switch
-- [ ] **Parallax hero images** - Subtle parallax effect (desktop only)
-- [ ] **Progressive image blur** - Images start blurred, sharpen as they load
-
-#### Phase 4: Advanced Features (~74 hours)
-- [ ] **Command palette (Cmd+K)** - Search posts, navigate site (cmdk)
-- [ ] **Page transition system** - View Transitions API + Framer Motion fallback
-- [ ] **Micro-interactions library** - Reusable animated components
-- [ ] **Virtual scrolling** - For blog list with >50 posts
-- [ ] **Reading mode toggle** - Distraction-free interface
-- [ ] **Advanced gestures** - Pull-to-refresh, drag-to-share
-- [ ] **3D card tilt effect** - Subtle tilt on hover for project cards
-- [ ] **Image galleries** - Multiple images per post with lightbox
+### Business Strategy
+- [ ] **Conversion goal tracking** (2 hours)
+  - **Define success metrics**: Consulting leads, job inquiries, newsletter signups
+  - **Goal funnels**: Track user journeys to conversion
+  - **A/B test CTAs**: Experiment with different calls-to-action
+  - **Dashboard**: Create conversion tracking view in Vercel Analytics
+  - **Impact**: Measure business impact, optimize for objectives
 
 ---
 
-### Resume Page Enhancements (Backlog)
+## 🟢 LOW - Ongoing & Data-Driven (Phase 3: Enhancement)
 
-**Phase 1: Professional Polish** (~6-8 hours)
-- [ ] **Timeline visualization** - Visual timeline for experience
-- [ ] **Certification verification links** - Clickable badges to Credly
-- [ ] **Download options** - PDF generation, JSON export
-- [ ] **Company logos** - Small logos next to experience cards
+### Quick Wins (30 min - 2 hours each)
+- [ ] **Homepage stats section** (30 min)
+  - Total blog posts, projects, years of experience, technologies mastered
+  - Simple, impactful addition - already in Tier 1
 
-**Phase 2: Interactive Features** (~8-10 hours)
-- [ ] **Skills search/filter** - Debounced search (100+ skills)
-- [ ] **Skills proficiency levels** - Visual indicators for expertise
-- [ ] **Dynamic summary toggle** - Switch between short and full summary
-- [ ] **Dark mode optimization** - Better badge contrast
+- [ ] **Popular posts widget** (2-3 hours)
+  - Leverage new custom analytics view counts
+  - Show top 5 posts on homepage or blog sidebar
+  - Auto-updates based on 7-day or 30-day trends
 
-**Phase 3: Advanced Features** (~12-16 hours)
-- [ ] **View analytics** - Redis-backed view counter
-- [ ] **Testimonials carousel** - Rotating quotes from LinkedIn
-- [ ] **"Ask About My Resume" AI chat** - Interactive Q&A chatbot
-- [ ] **A/B testing layouts** - Track conversion to /contact
+- [ ] **Keyboard shortcuts for blog** (2-3 hours)
+  - `/` to focus search, `Esc` to clear filters
+  - `n`/`p` for next/previous post navigation
+  - Accessibility win, power user feature
 
----
+### Content Creation (2-4 hours each)
+- [ ] Write: Security best practices for Next.js apps
+- [ ] Write: Implementing GitHub contributions heatmap
+- [ ] Write: MDX setup and customization
+- [ ] Write: Sentry integration and error tracking
+- [ ] Write: Custom analytics with Vercel Analytics
+- [ ] Write: Automated dependency management
 
-### About Page Enhancements (Backlog)
+### Maintenance (Quarterly/As Needed)
+- [ ] **Documentation review cycle** (Quarterly, 2-4 hours)
+  - 100+ markdown files in `/docs` directory
+  - Risk of docs becoming stale or inaccurate
+  - Review, update, archive outdated content
 
-**Phase 2: Enhanced UX** (Medium Priority)
-- [ ] **Interactive Timeline** - Vertical timeline with connection lines
-- [ ] **Featured Blog Posts Section** - Show 2-3 recent posts
-- [ ] **Downloadable Resume Button** - PDF download option
-- [ ] **Mission Statement Callout** - Prominent quote box
-- [ ] **Enhanced Personal Interests** - Expand "Outside work" section
+- [ ] **Dependency audit** (Quarterly, 2-3 hours)
+  - Review major version updates
+  - Test breaking changes in staging
+  - Update documentation for new APIs
 
-**Phase 3: Advanced Features** (Low Priority)
-- [ ] **Testimonials/Recommendations** - Rotating testimonials with attribution
-- [ ] **FAQ/Quick Facts Accordion** - Common questions
-- [ ] **Community Contributions Display** - Reuse GitHub heatmap
-- [ ] **Interactive Career Map** - Geographic visualization
-- [ ] **Currently Available Status** - Toggle for consulting availability
-- [ ] **Reading List Integration** - Sync with Goodreads
-
----
-
-### Analytics Dashboard Enhancements (Backlog)
-
-**TIER 2: Enhanced Insights** (Medium Priority)
-- [ ] **Visual Trend Charts** - Line charts, bar charts (recharts or tremor)
-- [ ] **Sparkline Trends in Table** - Mini 7-day view trend in each row
-- [ ] **Historical Data Snapshots** - Daily/weekly/monthly rollups
-- [ ] **Tag Performance Dashboard** - Analytics by tag
-- [ ] **Post Lifecycle Labels** - Auto-detect: Viral, Evergreen, Rising
-- [ ] **Content Performance Metrics** - Velocity, peak views, correlations
-
-**TIER 3: Advanced Analytics** (Low Priority / Future)
-- [ ] **Engagement Tracking** - Scroll depth, time on page, code copy events
-- [ ] **Real-Time Updates** - WebSocket or SSE for live counters
-- [ ] **Advanced Trending Algorithm** - Weighted scoring with recency
-- [ ] **Referrer & Traffic Analysis** - Privacy-respecting referrer tracking
-- [ ] **Goal & Conversion Tracking** - Newsletter signups, contact form
+- [ ] **Next.js 16 migration** (As needed when released)
+  - Stay updated on Next.js 16 features and breaking changes
+  - Plan migration timeline
+  - Test in staging before production
 
 ---
 
-### Configuration & Architecture (Backlog)
+---
 
-#### Site Configuration Centralization
-**Status:** Phase 1 Complete (Nov 5, 2025)  
-**Remaining Work:**
-- [ ] **Refactor components to use centralized config** - Replace hardcoded values
-- [ ] **SEO_CONFIG** - SEO & metadata defaults
-- [ ] **SECURITY_CONFIG** - Rate limits, CSP, CORS
-- [ ] **NAV_CONFIG** - Header/footer links, mobile breakpoints
-- [ ] **THEME_CONFIG** - Default theme, fonts, logo paths
-- [ ] **CACHE_CONFIG** - ISR revalidation times, cache durations
-- [ ] **ANALYTICS_CONFIG** - Tracking preferences, privacy settings
-- [ ] **CONTACT_CONFIG** - Email settings, form validation
-- [ ] **BLOG_CONFIG** - Content dir, visibility rules, feeds
+## ⚪ BACKLOG - Future Consideration
+
+**Note**: These items are deferred until Phase 1 & 2 complete, or until data validates the need. Many items have been consolidated or removed to reduce decision paralysis.
+
+### Homepage Enhancements (Consolidated)
+**Status**: Tier 1 items promoted to LOW priority, others deferred
+- [ ] Tech stack visualization - Icon grid showing expertise (2-3 hours)
+- [ ] Social links section - More prominent social presence (1 hour)
+- [ ] Tag cloud / popular topics - Content discovery (1-2 hours)
+
+**Deferred until Tier 1 proves valuable:**
+- Testimonials, activity timeline, call-out boxes, advanced filters, live search
+
+### Resume Page (Phase 1 Only)
+**Status**: Phase 1 promoted to LOW priority, Phases 2-3 deferred
+- [ ] Timeline visualization - Visual timeline for experience (3-4 hours)
+- [ ] Certification verification links - Clickable badges to Credly (1 hour)
+- [ ] Company logos - Small logos next to experience cards (2 hours)
+- [ ] Download options - PDF generation (4-6 hours)
+
+**Deferred**: Skills search, proficiency levels, testimonials carousel, A/B testing, AI chat
+
+### About Page Enhancements
+- [ ] Featured blog posts section - Show 2-3 recent posts (2 hours)
+- [ ] Downloadable resume button - PDF download (1 hour)
+- [ ] Enhanced personal interests - Expand "Outside work" section (1-2 hours)
+
+**Deferred**: Interactive timeline, testimonials, FAQ, career map, reading list integration
+
+### Blog Feature Enhancements
+**Medium Effort (3-5 days each):**
+- [ ] Bookmark/reading list - Let readers save posts for later
+- [ ] Post reactions - Quick emoji reactions (👍 ❤️ 🔥 💡)
+- [ ] Print-friendly styling - `@media print` CSS rules
+- [ ] Advanced search filters - Date range, multiple tags, sort options
+
+**Deferred Major Projects (1-2 weeks each):**
+- Full-text search, content analytics dashboard, infinite scroll, reading history, post scheduling, draft preview sharing
+
+### Feed System Enhancements
+**See**: `docs/rss/feed-improvements-brainstorm.md` for complete analysis
+- [ ] Enhanced image enclosures - Add file size and dimensions (4-6 hours)
+- [ ] Explicit project publication dates - Replace timeline inference (3-4 hours)
+- [ ] Feed documentation page - User-facing `/feeds` page (2-3 hours)
+
+**Deferred**: JSON Feed, filtered feeds, feed analytics
+
+### UI/UX Polish (Data-Driven Only)
+**Phase 3 items - only implement if analytics show user friction:**
+- [ ] Enhanced table of contents - Sliding active indicator
+- [ ] Toast improvements - Custom enter/exit animations
+- [ ] GitHub heatmap polish - Staggered square appearance
+- [ ] Theme transition animations - Smooth dark/light mode switch
+
+**Removed from consideration** (over-engineering, no validated need):
+- ❌ Command palette (Cmd+K) - 20+ hours, not essential for portfolio
+- ❌ Virtual scrolling - Only needed for >50 posts
+- ❌ 3D card tilt effect - Pure aesthetic, potential performance cost
+- ❌ Reading mode toggle - Solving non-problem
+- ❌ Advanced gestures - Over-engineering
+- ❌ Page transitions system - High maintenance burden
+- ❌ Parallax effects, progressive image blur, image galleries
+
+### Blog Search UI Improvements
+**Deferred until user feedback indicates friction:**
+- Collapsible tag list, sticky filter bar, keyboard shortcuts (duplicate), bottom sheet filters (mobile), tag search/filter
+
+### Configuration & Architecture
+**Status**: Phase 1 complete (Nov 5, 2025) - remaining work deferred
+- [ ] Refactor components to use centralized config (as needed when editing)
+- [ ] SEO_CONFIG, SECURITY_CONFIG, NAV_CONFIG, THEME_CONFIG (as needed)
+
+### Security & Automation (Low Priority)
+- [ ] API security audit - Phase 2 (input validation, middleware, monitoring)
+- [ ] GitHub Actions CI - Lint, typecheck, build with caching
+- [ ] Snyk scan in CI - Authenticated vulnerability checks
+- [ ] Husky + lint-staged - Pre-commit prettier and eslint
+
+### Analytics Dashboard Enhancements
+**Deferred until Phase 2 SEO/content work validates need:**
+- Visual trend charts, sparklines, historical snapshots, tag performance, lifecycle labels, engagement tracking
+
+### ESLint Design Token Migration
+**Status**: Quick wins complete (Nov 9, 2025) - 71 warnings backlogged
+**Priority**: LOW - Maintenance/polish, no user-facing impact
+- [ ] Fix remaining 71 warnings (as time permits when editing files)
+- **Reference**: `docs/design/eslint-warnings-quick-ref.md`
 
 ---
 
-### Security Infrastructure (Backlog)
+## 🎯 Recommended Action Plan
 
-#### API Security Audit - Phase 2 (Enhanced Protection)
-**Priority:** MEDIUM - Infrastructure improvements  
-**Estimated Effort:** 12-16 hours
+### **Phase 1: Foundation & Reliability** (Weeks 1-2, 16-20 hours)
+Focus: Infrastructure that prevents problems
 
-- [ ] **Input Validation & Sanitization** - DOMPurify, validator.js
-- [ ] **Standardize Error Handling** - Error response utility, error codes
-- [ ] **API Middleware Layer** - Request ID, logging, CORS, rate limits
-- [ ] **API Monitoring & Security Events** - Track violations, error rates, alerts
+1. ✅ Accessibility audit follow-up (4-6 hours)
+2. ✅ Uptime monitoring (30 min)
+3. ✅ Security advisory monitoring (1 hour)
+4. ✅ Automated dependency updates (4-6 hours)
+5. ✅ Basic testing infrastructure (8-12 hours)
 
----
+**Expected Outcomes:**
+- 24/7 uptime visibility
+- Automated security updates
+- WCAG 2.1 AA compliance
+- 60%+ test coverage on critical paths
+- **4-8 hours/month saved** on manual maintenance
 
-### Automation & CI (Recommended Backlog)
+### **Phase 2: Performance & Visibility** (Weeks 3-4, 15-19 hours)
+Focus: User experience and discoverability
 
-- [ ] **GitHub Actions CI** - Lint, typecheck, build with caching
-- [ ] **Snyk scan in CI** - Authenticated vulnerability checks
-- [ ] **Husky + lint-staged** - Pre-commit prettier and eslint
-- [ ] **Dependabot / Renovate** - Automated dependency updates
-- [ ] **Lighthouse / Performance checks** - Track performance regressions
+1. ✅ Performance monitoring + budgets (3-4 hours)
+2. ✅ Lighthouse CI integration (2 hours)
+3. ✅ SEO enhancement package (6-8 hours)
+4. ✅ Content calendar & strategy (2-3 hours)
+5. ✅ Analytics data governance (1 hour)
+6. ✅ Conversion goal tracking (2 hours)
+
+**Expected Outcomes:**
+- Core Web Vitals targets met
+- Organic search traffic tracking
+- 6-12 month content roadmap
+- **20-40% organic traffic growth** (3-6 months)
+
+### **Phase 3: Enhancement & Polish** (Ongoing)
+Focus: Data-driven improvements
+
+1. ✅ Homepage stats section (30 min)
+2. ✅ Popular posts widget (2-3 hours)
+3. ✅ Keyboard shortcuts (2-3 hours)
+4. ✅ Documentation review (quarterly, 2-4 hours)
+5. ✅ Selected enhancements based on analytics
+
+**Approach**: One item per sprint, validate with data before next enhancement
 
 ---
 
@@ -305,19 +339,93 @@ See `/docs/operations/done.md` for:
 - Documentation coverage tracking
 - Key achievements and milestones
 
+**Recent Completions:**
+- ✅ Custom analytics events (Nov 11, 2025) - 19 event types, comprehensive tracking
+- ✅ Sitemap enhancement (Nov 11, 2025) - Dynamic lastmod, priority optimization
+- ✅ Blog architecture refactoring (Nov 9-10, 2025) - Centralized layouts, metadata helpers
+
 ---
 
 ## 📋 Quick Reference
 
-### Project Conventions
-- Documentation: `/docs` directory
-- Imports: Use `@/*` alias consistently
-- Components: Server-first, add `"use client"` when needed
-- Styling: Tailwind utilities only
-- Types: TypeScript strict mode
+### Getting Started
+1. **Check Phase 1 tasks** - Foundation items should be completed first
+2. **One item at a time** - Avoid context switching between priorities
+3. **Validate before moving on** - Test, document, commit before next item
+4. **Update done.md** - Move completed items with date and learnings
+
+### Priority Decision Framework
+Ask these questions before adding new items:
+
+1. **Is it critical?** (compliance, security, accessibility) → 🚨 CRITICAL
+2. **Does it prevent problems?** (monitoring, backups, testing) → 🔴 HIGH  
+3. **Does it drive growth?** (SEO, performance, content) → 🟡 MEDIUM
+4. **Is it data-validated?** (analytics show user need) → 🟢 LOW
+5. **Is it speculative?** (no user request, no data) → ⚪ BACKLOG or REMOVE
+
+### Before Starting Work
+- [ ] Check accessibility impact (WCAG 2.1 AA)
+- [ ] Estimate effort realistically (add 25% buffer)
+- [ ] Consider test coverage needs
+- [ ] Plan documentation updates
+- [ ] Review related components/systems
 
 ### Before Committing
-- Update `updatedAt` in blog post frontmatter for content changes
-- Run `npm run lint`
-- Test with `npm run build`
-- Review Lighthouse scores for major UI changes
+- [ ] Run `npm run lint` and fix errors
+- [ ] Test with `npm run build` (catches type errors)
+- [ ] Update blog post `updatedAt` for content changes
+- [ ] Test in multiple browsers if UI changes
+- [ ] Review Lighthouse scores for major UI changes
+- [ ] Update documentation if behavior changes
+- [ ] Move completed item to `done.md` with date
+
+### Effort Estimates
+- **30 min - 2 hours**: Quick wins, config changes, simple components
+- **3-6 hours**: New features, API integrations, moderate refactoring  
+- **8-12 hours**: Complex features, testing infrastructure, large refactors
+- **2+ weeks**: Major projects - break down into smaller milestones
+
+### ROI Indicators
+- ⭐⭐⭐⭐⭐ **Must do** - High impact, prevents problems, saves time
+- ⭐⭐⭐⭐ **Should do** - Clear value, improves key metrics
+- ⭐⭐⭐ **Nice to have** - Positive impact but not urgent
+- ⭐⭐ **Low priority** - Marginal benefit, do when time permits
+- ⭐ **Questionable** - Consider removing or deferring
+
+---
+
+## 📊 Summary Statistics
+
+**Current Todo List:**
+- 🚨 CRITICAL: 1 item (accessibility audit follow-up)
+- 🔴 HIGH: 7 items (16-20 hours total) - **Phase 1 Focus**
+- 🟡 MEDIUM: 6 items (15-19 hours total) - **Phase 2 Focus**  
+- 🟢 LOW: 8 items (ongoing, data-driven) - **Phase 3 Focus**
+- ⚪ BACKLOG: 50+ items (consolidated from 100+)
+
+**Removed from Consideration:** 40+ speculative/over-engineering items
+
+**Key Changes from Previous Version:**
+- ✅ Added missing critical items (accessibility, testing, backups)
+- ✅ Promoted 5 items from backlog to HIGH priority
+- ✅ Consolidated 100+ backlog items to ~50 focused items
+- ✅ Removed 40+ low-ROI speculative enhancements
+- ✅ Added 3-phase action plan with clear outcomes
+- ✅ Added effort estimates and ROI indicators throughout
+- ✅ Created decision framework for new items
+
+---
+
+## 🔗 Related Documentation
+
+- **Architecture**: `/docs/architecture/` - Patterns, best practices, examples
+- **Blog System**: `/docs/blog/` - Content creation, MDX processing
+- **Components**: `/docs/components/` - Component documentation with JSDoc
+- **Features**: `/docs/features/` - Feature guides (Inngest, analytics, GitHub)
+- **Security**: `/docs/security/` - CSP, rate limiting, security implementation
+- **Operations**: `/docs/operations/done.md` - Completed work archive
+
+---
+
+**Last Updated:** November 11, 2025  
+**Next Review:** After Phase 1 completion (2-3 weeks)
