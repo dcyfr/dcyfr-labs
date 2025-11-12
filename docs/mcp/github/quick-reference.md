@@ -1,47 +1,61 @@
 # GitHub MCP Quick Reference
 
-**Status**: ✅ Installed and Ready  
-**Version**: GitHub MCP Server v0.18.0+  
-**Date**: October 18, 2025
+**Status**: ✅ Installed and Ready (HTTP MCP)  
+**Version**: GitHub Copilot HTTP MCP  
+**Updated**: November 11, 2025
 
-## ⚡ Quick Start (5 minutes)
+## ⚡ Quick Start (1 minute)
 
-### 1. Create GitHub Token
-- Go to: https://github.com/settings/personal-access-tokens/new
-- Name: `cyberdrew-dev-mcp`
-- Permissions: Select what you need (repo, read:org, workflow, etc.)
-- Generate and copy token
+### 1. Configuration
+The GitHub MCP is now configured as an HTTP server that uses your existing VS Code GitHub authentication:
 
-### 2. First Use in VS Code
-- GitHub MCP will prompt for token when activated
-- Enter token when prompted
-- GitHub tools become available immediately
+```json
+{
+  "github": {
+    "type": "http",
+    "url": "https://api.githubcopilot.com/mcp/"
+  }
+}
+```
+
+**No additional token setup required!** The server uses your VS Code GitHub credentials automatically.
+
+### 2. Activate the Server
+1. Reload VS Code window: `Cmd+Shift+P` → "Developer: Reload Window"
+2. GitHub MCP tools become available immediately
 
 ### 3. Start Using
 ```
-"Search for the rate limiting code in this repo"
-"Create an issue to track the new feature"
-"Show recent pull requests"
+"Create a new branch for this feature"
+"Update the README in the remote repository"
+"Fork this repository to my account"
+"Get my team members"
+"Assign Copilot to issue #123"
 ```
 
 ## 🛠️ Configuration Files
 
-### Primary: VS Code Global Config
+### VS Code Workspace Config
 ```
-~/Library/Application Support/Code/User/mcp.json
+.vscode/mcp.json
 ```
 
 Contains:
-- GitHub server configuration (Docker-based)
-- Input prompts for secure token entry
-- Token environment variable binding
+- GitHub HTTP MCP server configuration
+- Uses VS Code's existing GitHub authentication
+- No token management required
 
-### Reference: Project Config
+**Configuration**:
+```json
+{
+  "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}
 ```
-./mcp.json
-```
-
-Contains same configuration for workspace sharing
 
 ## 📦 Available Toolsets
 

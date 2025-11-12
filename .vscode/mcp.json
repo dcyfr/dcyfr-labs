@@ -27,6 +27,10 @@
 			"type": "stdio",
 			"disabled": false
 		},
+		"github": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/"
+		},
         "Vercel": {
             "url": "https://mcp.vercel.com",
             "type": "http"

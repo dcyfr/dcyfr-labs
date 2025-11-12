@@ -75,7 +75,42 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
-### 4. **Sentry** (HTTP MCP)
+### 4. **GitHub** (HTTP MCP)
+
+**Purpose**: GitHub repository management and operations directly from VS Code
+
+**Use Cases**:
+- Repository management (create, fork, branches)
+- File operations (create, update, delete files in remote repos)
+- Issue tracking and management (with activation)
+- Pull request creation and review (with activation)
+- Code search across repositories (with activation)
+- Team and label management
+- Assign Copilot to issues for automated fixes
+
+**How to Use**:
+- "Create a new branch for this feature"
+- "Update the README in the remote repository"
+- "Fork this repository to my account"
+- "Get my team members"
+- "Assign Copilot to issue #123"
+
+**Benefits**:
+- ✅ Seamless GitHub operations without leaving the editor
+- ✅ Direct file manipulation in remote repositories
+- ✅ Integrated authentication using VS Code credentials
+- ✅ On-demand tool activation for extended capabilities
+- ✅ Automated issue resolution via Copilot assignment
+
+**Tool Categories** (activated on-demand):
+- **Issue Management**: Create, read, update issues, add comments, manage labels
+- **Pull Request Management**: Create, update, merge PRs, add review comments
+- **File Management**: Get file contents, push multiple files, list branches/commits
+- **Search Tools**: Search code, issues, PRs, repositories, and users
+
+---
+
+### 5. **Sentry** (HTTP MCP)
 
 **Purpose**: Production error monitoring and issue management
 
@@ -99,7 +134,7 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
-### 5. **Vercel** (HTTP MCP)
+### 6. **Vercel** (HTTP MCP)
 
 **Purpose**: Deployment management and platform integration
 
@@ -124,7 +159,7 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
-### 6. **Linear** (Remote MCP)
+### 7. **Linear** (Remote MCP)
 
 **Purpose**: Project management and issue tracking
 
@@ -183,34 +218,38 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 ```json
 {
   "servers": {
-    "memory": {
+    "Memory": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"],
       "type": "stdio",
       "disabled": false
     },
-    "sequentialthinking": {
+    "Thinking": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "type": "stdio",
       "disabled": false
     },
-    "context7": {
+    "Context": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@latest"],
       "type": "stdio",
       "disabled": false
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
     },
     "Sentry": {
       "url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/cyberdrew-dev",
       "type": "http",
       "disabled": false
     },
-    "vercel": {
+    "Vercel": {
       "url": "https://mcp.vercel.com",
       "type": "http"
     },
-    "linear": {
+    "Linear": {
       "command": "npx",
       "args": ["mcp-remote", "https://mcp.linear.app/sse"],
       "type": "stdio",
@@ -246,6 +285,9 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 | "What's our pattern for X?" | Memory | Reference project conventions |
 | "Debug this complex issue" | Sequential Thinking | Think through problems systematically |
 | "How do I use X in Next.js?" | Context7 | Get authoritative, up-to-date docs |
+| "Create a new branch" | GitHub | Repository and file management |
+| "Update remote file" | GitHub | Direct file operations on GitHub |
+| "Assign Copilot to issue" | GitHub | Automated issue resolution |
 | "Show me production errors" | Sentry | Monitor and debug production issues |
 | "Check deployment status" | Vercel | View deployments and logs |
 | "Create issue for this bug" | Linear | Track work and manage projects |
