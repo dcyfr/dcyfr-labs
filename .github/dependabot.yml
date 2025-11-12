@@ -105,10 +105,9 @@ updates:
       - "automated"
     
     # Ignore specific packages (if needed)
-    ignore:
-      # Example: Pin to specific version
-      # - dependency-name: "package-name"
-      #   versions: ["x.x.x"]
+    # ignore:
+    #   - dependency-name: "package-name"
+    #     versions: ["x.x.x"]
     
     # Pull request reviewers (optional - add your GitHub username)
     # reviewers:
