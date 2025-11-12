@@ -376,7 +376,7 @@ AI is transformative, but only when used thoughtfully. This series shares patter
 4. **Model Context Protocol (MCP)** (400 words)
    - What is MCP? (standardized communication between AI and tools)
    - Why it matters: security, local-first, extensibility
-   - Available servers: Memory, Sequential Thinking, Context7, Sentry, Vercel, Linear
+   - Available servers: Memory, Sequential Thinking, Context7, Sentry, Vercel
    - Configuration in VS Code
    - MCP example: Vercel MCP for deployment management
 

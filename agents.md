@@ -27,7 +27,6 @@ Active MCP servers configured for this session:
 ### Integration MCPs
 - **Sentry** (HTTP MCP): Production error monitoring, issue tracking, and detailed error traces.
 - **Vercel** (HTTP MCP): Deployment management, build logs, and platform integration.
-- **Linear** (Remote MCP): Project management, issue tracking, and sprint planning.
 
 Additional tools available:
 - **Snyk Extension**: Security scanning and vulnerability analysis.
@@ -39,7 +38,6 @@ Additional tools available:
 - Use Context7 to fetch up-to-date library documentation before making assumptions about APIs or patterns.
 - Use Sentry for production monitoring and error analysis.
 - Use Vercel for deployment management, build logs, and platform operations.
-- Use Linear for issue tracking and project management.
 - Prefer MCP servers for local/secure integrations instead of making direct network calls.
 - Security: Never exfiltrate secrets. Keep all credentials within MCP boundaries; do not print tokens or environment details. Prefer server-side routes for any third‑party calls (see `src/app/api/*`).
 - Offline-friendly: When network is restricted, rely on MCP-backed indexes and local workspace context.

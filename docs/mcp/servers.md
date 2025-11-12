@@ -159,30 +159,6 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
-### 7. **Linear** (Remote MCP)
-
-**Purpose**: Project management and issue tracking
-
-**Use Cases**:
-- Create and manage issues directly from the editor
-- Track project progress and sprint status
-- Link code changes to specific issues
-- Update issue status during development
-
-**How to Use**:
-- "Create an issue for this bug"
-- "Show me my assigned issues"
-- "Update issue status to in progress"
-- "What's the status of feature X?"
-
-**Benefits**:
-- ✅ Seamless project management workflow
-- ✅ Code and issues stay in sync
-- ✅ Faster issue creation and updates
-- ✅ Better visibility into project status
-
----
-
 ## Additional Tools
 
 ### Snyk Extension
@@ -248,12 +224,6 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
     "Vercel": {
       "url": "https://mcp.vercel.com",
       "type": "http"
-    },
-    "Linear": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://mcp.linear.app/sse"],
-      "type": "stdio",
-      "disabled": false
     }
   }
 }
@@ -290,7 +260,6 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 | "Assign Copilot to issue" | GitHub | Automated issue resolution |
 | "Show me production errors" | Sentry | Monitor and debug production issues |
 | "Check deployment status" | Vercel | View deployments and logs |
-| "Create issue for this bug" | Linear | Track work and manage projects |
 | "Add security feature Y" | Snyk Extension | Scan and research best practices |
 | "Manage/review a PR" | GitHub PRs Extension | Integrated PR workflow |
 

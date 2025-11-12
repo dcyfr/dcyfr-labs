@@ -55,10 +55,13 @@ This todo list is organized by **criticality, impact, and ROI**:
 ## 🔴 HIGH - This Month (Phase 1: Foundation)
 
 ### Infrastructure & Reliability
-- [ ] **Uptime monitoring setup** (30 min)
-  - **Tool**: UptimeRobot free tier (5-minute checks, 50 monitors)
-  - **Impact**: Immediate operational visibility, can't fix what you don't know is broken
-  - **ROI**: ⭐⭐⭐⭐⭐ (30 min investment for 24/7 peace of mind)
+- [x] **Uptime monitoring setup** (30 min) ✅ **COMPLETED** (Nov 11, 2025)
+  - ✅ Chose Sentry over UptimeRobot (already integrated, more comprehensive)
+  - ✅ Created `/api/health` endpoint with Sentry check-in integration
+  - ✅ Configured Vercel cron job (runs every 5 minutes)
+  - ✅ Comprehensive documentation in `docs/operations/uptime-monitoring-sentry.md`
+  - **Status**: Ready for deployment, alerts need configuration post-deploy
+  - **Next**: Deploy to Vercel, configure Sentry email alerts
 
 - [ ] **Security advisory monitoring** (1 hour)
   - **Tool**: GitHub Dependabot security alerts (free, built-in)
@@ -105,7 +108,6 @@ This todo list is organized by **criticality, impact, and ROI**:
 
 ---
 
-## 🟡 MEDIUM - Next Month (Phase 2: Performance & Visibility)
 ## 🟡 MEDIUM - Next Month (Phase 2: Performance & Visibility)
 
 ### Performance Optimization

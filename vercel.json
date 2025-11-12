@@ -4,6 +4,12 @@
   "github": {
     "silent": true
   },
+  "crons": [
+    {
+      "path": "/api/health",
+      "schedule": "*/5 * * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/_next/static/(.*)",

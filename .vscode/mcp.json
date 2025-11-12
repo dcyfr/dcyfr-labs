@@ -27,26 +27,19 @@
 			"type": "stdio",
 			"disabled": false
 		},
-		"github": {
+		"GitHub": {
 			"type": "http",
-			"url": "https://api.githubcopilot.com/mcp/"
+			"url": "https://api.githubcopilot.com/mcp/",
+			"disabled": false
 		},
         "Vercel": {
             "url": "https://mcp.vercel.com",
-            "type": "http"
+            "type": "http",
+			"disabled": false
         },
         "Sentry": {
 			"url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/cyberdrew-dev",
 			"type": "http",
-			"disabled": false
-		},
-		"Linear": {
-			"command": "npx",
-			"args": [
-				"mcp-remote",
-				"https://mcp.linear.app/sse"
-			],
-			"type": "stdio",
 			"disabled": false
 		}
 	}

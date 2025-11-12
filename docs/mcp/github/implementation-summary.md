@@ -25,7 +25,7 @@
 1. **Workspace Config**: `.vscode/mcp.json`
    - Added GitHub HTTP MCP server
    - No token management required
-   - Now 7 active MCPs total (Memory, Thinking, Context, GitHub, Sentry, Vercel, Linear)
+   - Now 6 active MCPs total (Memory, Thinking, Context, GitHub, Sentry, Vercel)
 
 2. **Project Instructions**: `.github/copilot-instructions.md`
    - Updated MCP list to include GitHub HTTP MCP
