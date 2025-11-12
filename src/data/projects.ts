@@ -70,6 +70,11 @@ const projectDrafts: Project[] = [
       { label: "Website", href: `https://x64.onl`, type: "demo" }
     ],
     featured: true,
+    image: {
+      url: "/projects/default/design.svg",
+      alt: "X64 Publication - Cybersecurity and technology publication",
+      position: "center",
+    },
     highlights: [
       "Founded and manage X64, an indie cyber publication delivering high-quality articles on cybersecurity and technology trends.",
       "Write and edit articles, curate content, and engage with a growing community of readers and contributors.",
@@ -89,6 +94,11 @@ const projectDrafts: Project[] = [
       { label: "Code", href: `https://github.com/dcyfr/cyberdrew-dev`, type: "github" }
     ],
     featured: true,
+    image: {
+      url: "/projects/default/tech.svg",
+      alt: "Drew's Lab - Personal portfolio and blog",
+      position: "center",
+    },
     highlights: [
       "Designed and developed a responsive and accessible personal portfolio website using Next.js and Tailwind CSS.",
       "Implemented a blog section with MDX support for easy content creation and management.",
@@ -105,6 +115,11 @@ const projectDrafts: Project[] = [
     tags: ["Non-profit", "Cybersecurity", "Community"],
     links: [],
     featured: false,
+    image: {
+      url: "/projects/default/general.svg",
+      alt: "Information Security Network - Non-profit cybersecurity organization",
+      position: "center",
+    },
     highlights: [
       "Co-founded and managed a non-profit organization focused on information security awareness and education.",
       "Organized events, workshops, and training sessions to educate individuals and organizations on cybersecurity best practices.",

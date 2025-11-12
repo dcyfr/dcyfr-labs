@@ -233,14 +233,6 @@ npm run test:mcp-servers     # MCP server integration
 - **Global metadata**: `src/app/layout.tsx`
 - **SEO routes**: `src/app/sitemap.ts`, `src/app/robots.ts`
 
-## 🤝 Contributing
-
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for contribution guidelines.
-
-## 📄 License
-
-MIT - See [`LICENSE`](./LICENSE) for details.
-
 ---
 
 **Built with:** Next.js 15, TypeScript, Tailwind CSS v4, shadcn/ui, Inngest, Redis, and ❤️

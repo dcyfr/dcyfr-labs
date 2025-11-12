@@ -189,8 +189,14 @@ export function generateRssFeed(items: FeedItem[], config: FeedConfig): string {
         ?.map((cat) => `      <category>${escapeXml(cat)}</category>`)
         .join("\n");
       
+      // Standard RSS enclosure for image
       const enclosure = item.image
         ? `      <enclosure url="${escapeXml(item.image.url)}" type="${escapeXml(item.image.type)}" ${item.image.length ? `length="${item.image.length}" ` : ""}/>`
+        : "";
+      
+      // Media RSS tags for better reader support (podcasts, rich media)
+      const mediaContent = item.image
+        ? `      <media:content url="${escapeXml(item.image.url)}" type="${escapeXml(item.image.type)}" medium="image" />`
         : "";
       
       const author = item.author
@@ -211,6 +217,7 @@ ${author}
 ${content}
 ${categories || ""}
 ${enclosure}
+${mediaContent}
     </item>`;
     })
     .join("\n");
@@ -227,7 +234,8 @@ ${enclosure}
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" 
      xmlns:content="http://purl.org/rss/1.0/modules/content/"
-     xmlns:atom="http://www.w3.org/2005/Atom">
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>${escapeXml(config.title)}</title>
     <link>${escapeXml(config.link)}</link>
@@ -257,8 +265,14 @@ export function generateAtomFeed(items: FeedItem[], config: FeedConfig): string 
         ?.map((cat) => `    <category term="${escapeXml(cat)}" label="${escapeXml(cat)}" />`)
         .join("\n");
       
+      // Standard Atom enclosure link for image
       const imageLink = item.image
-        ? `    <link rel="enclosure" type="${escapeXml(item.image.type)}" href="${escapeXml(item.image.url)}" ${item.image.length ? `length="${item.image.length}" ` : ""}/>`
+        ? `    <link rel="enclosure" type="${escapeXml(item.image.type)}" href="${escapeXml(item.image.url)}" ${item.image.length ? `length="${item.image.length}"` : ""} />`
+        : "";
+      
+      // Alternative representation as media:content for better reader support
+      const mediaContent = item.image
+        ? `    <media:content url="${escapeXml(item.image.url)}" type="${escapeXml(item.image.type)}" medium="image" xmlns:media="http://search.yahoo.com/mrss/" />`
         : "";
       
       const author = item.author
@@ -276,6 +290,7 @@ export function generateAtomFeed(items: FeedItem[], config: FeedConfig): string 
     <title type="text">${escapeXml(item.title)}</title>
     <link href="${escapeXml(item.link)}" rel="alternate" type="text/html" />
 ${imageLink}
+${mediaContent}
     <id>${escapeXml(item.id)}</id>
     <published>${item.published.toISOString()}</published>
     <updated>${(item.updated || item.published).toISOString()}</updated>
