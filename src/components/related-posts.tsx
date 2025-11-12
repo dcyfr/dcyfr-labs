@@ -1,17 +1,22 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import type { Post } from "@/data/posts";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { trackRelatedPostClick } from "@/lib/analytics";
 
 /**
  * Props for the RelatedPosts component
  * @typedef {Object} RelatedPostsProps
  * @property {Post[]} posts - Array of related blog posts to display
+ * @property {string} [currentSlug] - Optional: Current post slug for analytics tracking
  */
 type RelatedPostsProps = {
   posts: Post[];
+  currentSlug?: string;
 };
 
 /**
@@ -64,19 +69,26 @@ type RelatedPostsProps = {
  * Called from blog post template in src/app/blog/[slug]/page.tsx
  * Related posts are calculated in src/lib/related-posts.ts by matching tags
  */
-export function RelatedPosts({ posts }: RelatedPostsProps) {
+export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
   if (posts.length === 0) {
     return null;
   }
+  
+  const handleClick = (toSlug: string, position: number) => {
+    if (currentSlug) {
+      trackRelatedPostClick(currentSlug, toSlug, position);
+    }
+  };
 
   return (
     <aside className="mt-12 border-t pt-6">
       <h2 className={`${TYPOGRAPHY.h2.standard} mb-4`}>Related Posts</h2>
       <div className="grid gap-5 sm:grid-cols-2">
-        {posts.map((post) => (
+        {posts.map((post, index) => (
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
+            onClick={() => handleClick(post.slug, index)}
             className="group block rounded-lg border bg-card overflow-hidden transition-colors hover:bg-accent"
           >
             {/* Optional thumbnail image */}

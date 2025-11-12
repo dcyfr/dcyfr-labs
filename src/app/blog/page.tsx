@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { posts, type Post } from "@/data/posts";
 import { PostList } from "@/components/post-list";
 import { BlogFilters } from "@/components/blog-filters";
+import { BlogSearchAnalytics } from "@/components/blog-search-analytics";
 import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import { getArchiveData } from "@/lib/archive";
@@ -101,6 +102,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      
+      {/* Track search and filter analytics */}
+      <BlogSearchAnalytics 
+        query={query}
+        tags={selectedTags}
+        resultsCount={archiveData.totalItems}
+      />
       
       <ArchiveLayout
         title={pageTitle}

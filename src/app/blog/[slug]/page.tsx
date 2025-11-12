@@ -18,6 +18,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { SeriesNavigation } from "@/components/series-navigation";
 import { PostHeroImage } from "@/components/post-hero-image";
 import { ViewTracker } from "@/components/view-tracker";
+import { BlogAnalyticsTracker } from "@/components/blog-analytics-tracker";
 import { ArticleLayout, ArticleHeader, ArticleFooter } from "@/components/layouts";
 import { getArticleData } from "@/lib/article";
 import { 
@@ -158,13 +159,25 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     <>
       {/* Client-side view tracking with anti-spam protection */}
       <ViewTracker postId={post.id} />
+      
+      {/* Vercel Analytics custom events tracking */}
+      <BlogAnalyticsTracker 
+        post={{
+          id: post.id,
+          slug: post.slug,
+          title: post.title,
+          tags: post.tags,
+          readingTime: post.readingTime.minutes,
+        }}
+      />
+      
       <ReadingProgress />
       {/* FAB menu disabled */}
       {/* <BlogFABMenu headings={headings} /> */}
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       
       {/* Table of Contents */}
-      <TableOfContents headings={headings} />
+      <TableOfContents headings={headings} slug={post.slug} />
       
       <ArticleLayout useProseWidth={false}>
           <Breadcrumbs items={[
@@ -218,7 +231,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             sources={post.sources?.map(s => ({ title: s.label, url: s.href }))}
           >
             {/* Related posts section */}
-            <RelatedPosts posts={articleData.relatedItems} />
+            <RelatedPosts posts={articleData.relatedItems} currentSlug={post.slug} />
           </ArticleFooter>
           
           {/* Comments section - hidden for draft posts */}

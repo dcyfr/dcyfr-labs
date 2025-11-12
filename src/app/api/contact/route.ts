@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
 import { inngest } from "@/inngest/client";
+import { trackContactFormSubmission } from "@/lib/analytics";
 
 // Rate limit: 3 requests per 60 seconds per IP
 const RATE_LIMIT_CONFIG = {
@@ -113,6 +114,13 @@ export async function POST(request: Request) {
           ip: clientIp,
         },
       });
+      
+      // Track analytics (async, don't wait)
+      trackContactFormSubmission(
+        sanitizedData.message.length,
+        false, // We don't track if they have GitHub for privacy
+        false  // We don't track if they have LinkedIn for privacy
+      ).catch(err => console.warn("Analytics tracking failed:", err));
 
       // Log submission (anonymized)
       console.log("Contact form submission queued:", {

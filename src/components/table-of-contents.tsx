@@ -5,6 +5,7 @@ import { List } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
+import { trackToCClick } from "@/lib/analytics";
 import {
   Sheet,
   SheetContent,
@@ -19,12 +20,14 @@ import { HOVER_EFFECTS } from "@/lib/design-tokens";
  * Props for the TableOfContents component
  * @typedef {Object} TableOfContentsProps
  * @property {TocHeading[]} headings - Array of headings (h2/h3) to render in TOC
+ * @property {string} [slug] - Optional: Blog post slug for analytics tracking
  * @property {boolean} [hideFAB] - Optional: Hide the FAB button (for external control)
  * @property {boolean} [externalOpen] - Optional: Control sheet open state externally
  * @property {(open: boolean) => void} [onOpenChange] - Optional: Callback when sheet state changes
  */
 type TableOfContentsProps = {
   headings: TocHeading[];
+  slug?: string;
   hideFAB?: boolean;
   externalOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -80,7 +83,7 @@ type TableOfContentsProps = {
  * - Cleanup on unmount prevents memory leaks from observer
  * - Sheet auto-closes on navigation for better mobile UX
  */
-export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpenChange }: TableOfContentsProps) {
+export function TableOfContents({ headings, slug, hideFAB = false, externalOpen, onOpenChange }: TableOfContentsProps) {
   const [activeId, setActiveId] = React.useState<string>("");
   const [isExpanded, setIsExpanded] = React.useState(true); // Open by default on desktop
   const [internalOpen, setInternalOpen] = React.useState(false);
@@ -142,8 +145,14 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
     return null;
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string, heading: TocHeading) => {
     e.preventDefault();
+    
+    // Track analytics if slug is provided
+    if (slug) {
+      trackToCClick(slug, heading.text, heading.level);
+    }
+    
     const element = document.getElementById(id);
     if (element) {
       const top = element.getBoundingClientRect().top + window.scrollY - 80;
@@ -235,7 +244,7 @@ export function TableOfContents({ headings, hideFAB = false, externalOpen, onOpe
             >
               <a
                 href={`#${heading.id}`}
-                onClick={(e) => handleClick(e, heading.id)}
+                onClick={(e) => handleClick(e, heading.id, heading)}
                 className={cn(
                   "flex items-center py-2 border-l-2 -ml-[2px] transition-colors min-h-[44px] cursor-pointer",
                   isH3 ? "pl-8" : "pl-4",
