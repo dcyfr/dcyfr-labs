@@ -195,11 +195,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </Card>
         
         {/* Project Details */}
-        <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div className="max-w-none">
           {/* Tech Stack */}
           {project.tech && project.tech.length > 0 && (
             <Card className="mb-8">
-              <CardContent className="pt-6">
+              <CardContent>
                 <h2 className="text-xl font-semibold mb-4 mt-0">Tech Stack</h2>
                 <div className="flex flex-wrap gap-2">
                   {project.tech.map((tech) => (
@@ -215,7 +215,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {/* Project Tags */}
           {project.tags && project.tags.length > 0 && (
             <Card className="mb-8">
-              <CardContent className="pt-6">
+              <CardContent>
                 <h2 className="text-xl font-semibold mb-4 mt-0">Categories</h2>
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
@@ -231,7 +231,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {/* Key Highlights */}
           {project.highlights && project.highlights.length > 0 && (
             <Card className="mb-8">
-              <CardContent className="pt-6">
+              <CardContent>
                 <h2 className="text-xl font-semibold mb-4 mt-0">Key Highlights</h2>
                 <ul className="space-y-3 list-disc pl-5 mb-0">
                   {project.highlights.map((highlight, index) => (

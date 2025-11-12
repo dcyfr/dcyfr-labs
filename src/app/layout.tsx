@@ -102,6 +102,12 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg"
+          >
+            Skip to main content
+          </a>
           <LoadingBar />
           <SiteHeader />
           <main id="main-content" className="min-h-[calc(100dvh-128px)] px-4 sm:px-6 md:px-8 pb-20 md:pb-8">{children}</main>
