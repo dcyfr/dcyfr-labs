@@ -1,0 +1,313 @@
+# MCP Implementation Plans - Overview
+
+This directory contains detailed implementation plans for MCP servers that enhance your development workflow for the cyberdrew-dev blog/portfolio project.
+
+---
+
+## Implementation Status
+
+| MCP Server | Status | Priority | Complexity | Setup Time | Cost | Key Benefit |
+|------------|--------|----------|------------|------------|------|-------------|
+| [Filesystem](./filesystem-mcp.md) | ✅ **Implemented** | **Tier 1** | ⭐ Easy | 10 min | $0 | MDX content management |
+| [Brave Search](./brave-search-mcp.md) | ✅ **Implemented** | **Tier 1** | ⭐⭐ Medium | 15 min | $0* | Content research & validation |
+| [Fetch](./fetch-mcp.md) | ❌ **Removed** | **Tier 2** | ⭐ Easy | 5 min | $0 | Link validation & API testing |
+| [Time](./time-mcp.md) | ⏸️ **Deferred** | **Tier 2** | ⭐ Easy | 15 min | $0 | Publishing schedules & timezones |
+| [Puppeteer](./puppeteer-mcp.md) | 📋 **Backlog** | **Tier 1** | ⭐⭐ Medium | 20 min | $0 | Screenshots & OG images |
+
+*Brave Search has a free tier (2,000 queries/month)
+
+---
+
+## Current Implementation
+
+### ✅ Active MCP Servers (8 total)
+
+**Core MCPs**:
+1. **Memory** - Project context and decisions
+2. **Sequential Thinking** - Problem solving and planning
+3. **Context7** - Library documentation lookup
+
+**Integration MCPs**:
+4. **GitHub** - Repository and PR management
+5. **Sentry** - Production error monitoring
+6. **Vercel** - Deployment management
+
+**New Additions** (Nov 11, 2025):
+7. **Filesystem** - MDX content and file management
+8. **Brave Search** - Web research and content validation
+
+### 📋 Backlog
+
+- **Puppeteer MCP** - Browser automation, screenshots, OG images (planned for future)
+
+### ⏸️ Deferred
+
+- **Fetch MCP** - HTTP requests and link validation (removed, use browser or curl instead)
+- **Time MCP** - Scheduling and timezone utilities (low priority, can use AI directly)
+
+---
+
+## Quick Start Guide
+
+### Step 1: Verify Installation
+
+The three new MCPs have been added to `.vscode/mcp.json`. To activate them:
+
+1. **Get Brave Search API Key** (required):
+   - Go to <https://brave.com/search/api/>
+   - Sign up for free account (2,000 queries/month)
+   - Create API key
+   - Copy the key (format: `BSA...`)
+
+2. **Add API Key to Environment**:
+   ```bash
+   # Create .env.local file
+   cp .env.local.example .env.local
+   
+   # Edit .env.local and add your key:
+   BRAVE_API_KEY=BSAyour_actual_key_here
+   ```
+
+3. **Restart VS Code**:
+   - Completely quit VS Code
+   - Reopen the project
+   - MCPs will load automatically
+
+### Step 2: Test Each MCP
+
+**Test Filesystem MCP**:
+```
+Prompt: "List all MDX files in the blog content directory"
+Expected: List of all blog post files
+```
+
+**Test Brave Search MCP** (requires API key):
+```
+Prompt: "Search for Next.js 15 new features"
+Expected: Recent articles and documentation about Next.js 15
+```
+
+---
+
+## Integration Synergies
+
+### Content Creation Workflow
+
+```
+Research Phase:
+├─ Brave Search MCP: Find trending topics
+├─ Fetch MCP: Validate sources and documentation
+└─ Memory MCP: Remember research findings
+
+Planning Phase:
+├─ Time MCP: Schedule publication dates
+├─ Filesystem MCP: Create post from template
+└─ Memory MCP: Update content calendar
+
+Writing Phase:
+├─ Context7 MCP: Get library documentation
+├─ Brave Search MCP: Verify technical accuracy
+└─ Filesystem MCP: Manage drafts and assets
+
+Publishing Phase:
+├─ Puppeteer MCP: Generate OG image
+├─ Fetch MCP: Validate all external links
+├─ Filesystem MCP: Update frontmatter
+└─ Puppeteer MCP: Screenshot for social media
+
+Post-Publish:
+├─ Fetch MCP: Verify live site
+├─ Puppeteer MCP: Accessibility audit
+└─ Memory MCP: Document learnings
+```
+
+### Combined Power Examples
+
+**Example 1: Complete Post Creation**
+```
+"Research Next.js 15 features (Brave Search)
+→ Create blog post template (Filesystem)
+→ Get official Next.js docs (Context7)
+→ Generate OG image (Puppeteer)
+→ Validate external links (Fetch)
+→ Schedule for Tuesday 9 AM PST (Time)
+→ Remember this topic for follow-up post (Memory)"
+```
+
+**Example 2: Content Maintenance**
+```
+"Find all posts with tag 'react' (Filesystem)
+→ Check which links are broken (Fetch)
+→ Search for updated information (Brave Search)
+→ Update posts with new content (Filesystem)
+→ Regenerate OG images (Puppeteer)
+→ Update timestamps (Time)"
+```
+
+**Example 3: Quality Assurance**
+```
+"Screenshot all blog posts (Puppeteer)
+→ Run accessibility audits (Puppeteer)
+→ Validate RSS feeds (Fetch)
+→ Check external links (Fetch)
+→ Generate quality report (Filesystem)
+→ Remember issues to fix (Memory)"
+```
+
+---
+
+## Getting Started
+
+### Step 1: Choose Your Starting Point
+
+**If you want immediate productivity gains**:
+→ Start with [Filesystem MCP](./filesystem-mcp.md)
+
+**If content quality is priority**:
+→ Start with [Brave Search MCP](./brave-search-mcp.md)
+
+**If you need visual automation**:
+→ Start with [Puppeteer MCP](./puppeteer-mcp.md)
+
+### Step 2: Read the Implementation Plan
+
+Each plan includes:
+- Prerequisites and requirements
+- Step-by-step installation
+- Security considerations
+- Detailed use cases specific to this project
+- Example commands
+- Troubleshooting guide
+- Integration patterns
+
+### Step 3: Install and Test
+
+1. Add configuration to `.vscode/mcp.json`
+2. Restart VS Code
+3. Run the verification test from the plan
+4. Try 2-3 example commands
+5. Document your workflow
+
+### Step 4: Integrate Into Workflow
+
+1. Update your content creation process
+2. Add to project documentation
+3. Share patterns with team (if applicable)
+4. Iterate and optimize
+
+---
+
+## Support & Resources
+
+### Documentation
+
+Each implementation plan links to:
+- Related project documentation
+- MCP server official docs
+- Architecture guides
+- Best practices
+
+### Troubleshooting
+
+Common issues covered:
+- Installation problems
+- Configuration errors
+- Performance optimization
+- Security considerations
+
+### Getting Help
+
+1. Check the specific implementation plan's troubleshooting section
+2. Review [MCP Servers Overview](../servers.md)
+3. Check [MCP Quick Reference](../quick-reference.md)
+4. Consult official MCP documentation
+
+---
+
+## Expected Outcomes
+
+### Immediate Benefits (Week 1)
+
+**With Filesystem + Brave Search**:
+- ✅ Faster content creation (templates, research)
+- ✅ Higher content quality (validation, citations)
+- ✅ Better organization (bulk operations)
+
+**Time Savings**: ~2 hours per blog post
+
+### Medium-term Benefits (Month 1)
+
+**With All 5 MCPs**:
+- ✅ Automated OG image generation
+- ✅ Comprehensive link validation
+- ✅ Scheduled publishing workflow
+- ✅ Accessibility testing automation
+- ✅ Visual regression testing
+
+**Time Savings**: ~5 hours per week
+
+### Long-term Benefits (Quarter 1)
+
+**Systemic Improvements**:
+- ✅ Consistent content quality
+- ✅ Reliable publishing schedule
+- ✅ Comprehensive testing coverage
+- ✅ Efficient content maintenance
+- ✅ Data-driven content strategy
+
+**ROI**: High - significantly improved productivity and quality
+
+---
+
+## Success Metrics
+
+Track these to measure MCP implementation success:
+
+### Productivity Metrics
+- Time to create blog post (target: 50% reduction)
+- Time to update existing content (target: 70% reduction)
+- Number of posts published per month (target: +50%)
+
+### Quality Metrics
+- External link validation rate (target: 100%)
+- Accessibility score (target: 95+)
+- Content accuracy (fewer corrections needed)
+- SEO optimization (consistent metadata)
+
+### Workflow Metrics
+- Research time per post (target: 30 min → 10 min)
+- OG image generation (target: manual → automated)
+- Publishing schedule adherence (target: 100%)
+
+---
+
+## Next Steps
+
+1. **Review all five plans** to understand the full picture
+2. **Choose your starting MCP** based on priorities
+3. **Follow the implementation plan** step by step
+4. **Test thoroughly** before relying on automation
+5. **Document your workflow** for consistency
+6. **Iterate and optimize** based on experience
+
+---
+
+## Related Documentation
+
+- [MCP Servers Overview](../servers.md)
+- [MCP Quick Reference](../quick-reference.md)
+- [Blog System Architecture](../../blog/architecture.md)
+- [Content Creation Guide](../../blog/content-creation.md)
+- [Content Strategy](../../operations/content-strategy.md)
+
+---
+
+**Questions or Issues?**
+
+Refer to the individual implementation plans for detailed troubleshooting, or consult the project's main MCP documentation.
+
+---
+
+**Last Updated**: November 11, 2025  
+**Project**: cyberdrew-dev  
+**Status**: Ready for implementation

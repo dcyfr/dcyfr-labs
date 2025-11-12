@@ -18,7 +18,7 @@
 			"type": "stdio",
 			"disabled": false
 		},
-		"Context": {
+		"Context7": {
 			"command": "npx",
 			"args": [
 				"-y",
@@ -41,6 +41,31 @@
 			"url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/cyberdrew-dev",
 			"type": "http",
 			"disabled": false
+		},
+		"Filesystem": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-filesystem",
+				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/content/blog",
+				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/public/blog/images",
+				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/docs",
+				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/data"
+			],
+			"type": "stdio",
+			"disabled": false
+		},
+		"BraveSearch": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-brave-search"
+			],
+			"type": "stdio",
+			"disabled": false,
+			"env": {
+				"BRAVE_API_KEY": "${BRAVE_API_KEY}"
+			}
 		}
 	}
 }

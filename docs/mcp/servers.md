@@ -159,6 +159,90 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
+### 7. **Filesystem** (Official MCP) 🆕
+
+**Purpose**: Secure file system operations for content management
+
+**Use Cases**:
+- Manage MDX blog posts (create, update, organize)
+- Bulk operations on content files
+- Template-based post creation
+- Content organization and migration
+- Documentation maintenance
+- Asset management
+
+**How to Use**:
+- "List all MDX files in the blog directory"
+- "Create a new blog post from template"
+- "Find all posts with tag 'react'"
+- "Update frontmatter for all draft posts"
+
+**Benefits**:
+- ✅ Automated content management
+- ✅ Sandboxed access to specific directories only
+- ✅ Bulk operations save time
+- ✅ Template-based workflows
+
+**Documentation**: [Filesystem MCP Implementation Guide](./implementation-plans/filesystem-mcp.md)
+
+---
+
+### 8. **Fetch** (Official MCP) 🆕
+
+**Purpose**: HTTP requests for link validation and API testing
+
+**Use Cases**:
+- Validate external links in blog posts
+- Test API endpoints
+- Check RSS feed validity
+- Verify deployment status
+- Research public web content
+
+**How to Use**:
+- "Fetch https://example.com and show the title"
+- "Validate all external links in this post"
+- "Check if my RSS feed is working"
+- "Test the GitHub API endpoint"
+
+**Benefits**:
+- ✅ Automated link checking
+- ✅ API validation during development
+- ✅ RSS feed testing
+- ✅ No external dependencies
+
+**Documentation**: [Fetch MCP Implementation Guide](./implementation-plans/fetch-mcp.md)
+
+---
+
+### 9. **Brave Search** (Official MCP) 🆕
+
+**Purpose**: Web search for content research and validation
+
+**Use Cases**:
+- Research topics before writing
+- Find authoritative sources and citations
+- Verify technical accuracy
+- Competitive content analysis
+- SEO keyword research
+
+**How to Use**:
+- "Search for Next.js 15 new features"
+- "Find official documentation for Vercel deployment"
+- "What are developers writing about React 19?"
+- "Search for trending web development topics"
+
+**Benefits**:
+- ✅ Privacy-focused search (no tracking)
+- ✅ Research without leaving editor
+- ✅ Authoritative source discovery
+- ✅ Free tier: 2,000 queries/month
+
+**Setup Required**: Brave Search API key (free at https://brave.com/search/api/)
+
+**Documentation**: [Brave Search MCP Implementation Guide](./implementation-plans/brave-search-mcp.md)
+
+---
+
 ## Additional Tools
 
 ### Snyk Extension
