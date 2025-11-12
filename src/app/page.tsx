@@ -12,6 +12,7 @@ import {
   SITE_TITLE,
   AUTHOR_NAME,
   getOgImageUrl,
+  SITE_TITLE_PLAIN,
 } from "@/lib/site-config";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
@@ -27,10 +28,10 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 
 // Optimized meta description for homepage (157 characters)
-const pageDescription = "Cybersecurity architect and developer building resilient security programs. Explore my blog on secure development, projects, and technical insights.";
+const pageDescription = "Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.";
 
 export const metadata: Metadata = createPageMetadata({
-  title: SITE_TITLE,
+  title: SITE_TITLE_PLAIN,
   description: pageDescription,
   path: "/",
 });

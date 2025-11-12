@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import {
   SITE_URL,
   SITE_TITLE,
+  SITE_TITLE_PLAIN,
   SITE_DOMAIN,
   SITE_DESCRIPTION,
   getOgImageUrl,
@@ -43,14 +44,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_TITLE,
-    template: "%s — " + SITE_TITLE,
+    template: "%s — " + SITE_TITLE_PLAIN, // Use plain title for meta tags
   },
   description: SITE_DESCRIPTION,
   openGraph: {
-    title: SITE_TITLE,
+    title: SITE_TITLE_PLAIN,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
-    siteName: SITE_TITLE,
+    siteName: SITE_TITLE_PLAIN,
     locale: "en_US",
     type: "website",
     images: [
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_TITLE,
+    title: SITE_TITLE_PLAIN,
     description: SITE_DESCRIPTION,
     images: [getTwitterImageUrl()],
   },

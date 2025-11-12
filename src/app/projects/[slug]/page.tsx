@@ -7,7 +7,7 @@ import { visibleProjects } from "@/data/projects";
 import type { Project } from "@/data/projects";
 import {
   SITE_URL,
-  SITE_TITLE,
+  SITE_TITLE_PLAIN,
   AUTHOR_NAME,
   getOgImageUrl,
   getTwitterImageUrl,
@@ -43,24 +43,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: pageTitle,
     description: pageDescription,
     openGraph: {
-      title: `${pageTitle} — ${SITE_TITLE}`,
+      title: `${pageTitle} — ${SITE_TITLE_PLAIN}`,
       description: pageDescription,
       type: "article",
       url: `${SITE_URL}/projects/${project.slug}`,
-      siteName: SITE_TITLE,
+      siteName: SITE_TITLE_PLAIN,
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 630,
           type: "image/png",
-          alt: `${pageTitle} — ${SITE_TITLE}`,
+          alt: `${pageTitle} — ${SITE_TITLE_PLAIN}`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${pageTitle} — ${SITE_TITLE}`,
+      title: `${pageTitle} — ${SITE_TITLE_PLAIN}`,
       description: pageDescription,
       images: [getTwitterImageUrl(pageTitle, pageDescription)],
     },

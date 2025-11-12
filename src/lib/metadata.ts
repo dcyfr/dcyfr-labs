@@ -35,7 +35,7 @@
  */
 
 import type { Metadata } from 'next';
-import { SITE_URL, SITE_TITLE, getOgImageUrl, getTwitterImageUrl } from './site-config';
+import { SITE_URL, SITE_TITLE_PLAIN, getOgImageUrl, getTwitterImageUrl } from './site-config';
 
 /**
  * Base metadata options shared across all page types
@@ -98,10 +98,10 @@ export function createPageMetadata(options: BaseMetadataOptions): Metadata {
     description,
     keywords,
     openGraph: {
-      title: `${title} — ${SITE_TITLE}`,
+      title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,
       url: fullUrl,
-      siteName: SITE_TITLE,
+      siteName: SITE_TITLE_PLAIN,
       type: 'website',
       images: [
         {
@@ -109,13 +109,13 @@ export function createPageMetadata(options: BaseMetadataOptions): Metadata {
           width: imageWidth,
           height: imageHeight,
           type: imageType,
-          alt: imageAlt || `${title} — ${SITE_TITLE}`,
+          alt: imageAlt || `${title} — ${SITE_TITLE_PLAIN}`,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} — ${SITE_TITLE}`,
+      title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,
       images: [twitterImageUrl],
     },
@@ -273,10 +273,10 @@ export function createArticlePageMetadata(options: ArticleMetadataOptions): Meta
     keywords,
     authors: authorObjects,
     openGraph: {
-      title: `${title} — ${SITE_TITLE}`,
+      title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,
       url: fullUrl,
-      siteName: SITE_TITLE,
+      siteName: SITE_TITLE_PLAIN,
       type,
       publishedTime: publishedAt?.toISOString(),
       modifiedTime: modifiedAt?.toISOString() || publishedAt?.toISOString(),
@@ -288,13 +288,13 @@ export function createArticlePageMetadata(options: ArticleMetadataOptions): Meta
           width: imageWidth,
           height: imageHeight,
           type: imageType,
-          alt: imageAlt || `${title} — ${SITE_TITLE}`,
+          alt: imageAlt || `${title} — ${SITE_TITLE_PLAIN}`,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} — ${SITE_TITLE}`,
+      title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,
       images: [twitterImageUrl],
     },

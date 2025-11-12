@@ -5,7 +5,7 @@ import { postsBySeries, allSeriesNames } from "@/data/posts";
 import { Badge } from "@/components/ui/badge";
 import { PostList } from "@/components/post-list";
 import { BookOpen } from "lucide-react";
-import { SITE_TITLE, SITE_URL, getOgImageUrl, getTwitterImageUrl } from "@/lib/site-config";
+import { SITE_TITLE_PLAIN, SITE_URL, getOgImageUrl, getTwitterImageUrl } from "@/lib/site-config";
 import { CONTAINER_WIDTHS, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING, TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
@@ -39,10 +39,10 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
-      title: `${title} — ${SITE_TITLE}`,
+      title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,
       url: `${SITE_URL}/blog/series/${slug}`,
-      siteName: SITE_TITLE,
+      siteName: SITE_TITLE_PLAIN,
       type: "website",
       images: [
         {
@@ -50,13 +50,13 @@ export async function generateMetadata({
           width: 1200,
           height: 630,
           type: "image/png",
-          alt: `${title} — ${SITE_TITLE}`,
+          alt: `${title} — ${SITE_TITLE_PLAIN}`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} — ${SITE_TITLE}`,
+      title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,
       images: [getTwitterImageUrl(title, description)],
     },
