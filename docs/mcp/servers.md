@@ -99,7 +99,32 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
-### 5. **Linear** (Remote MCP)
+### 5. **Vercel** (HTTP MCP)
+
+**Purpose**: Deployment management and platform integration
+
+**Use Cases**:
+- Check deployment status and logs
+- Manage projects and environments
+- Access build and runtime information
+- Monitor deployment performance
+- Configure domains and environment variables
+
+**How to Use**:
+- "Show me recent deployments"
+- "Get logs for deployment [id]"
+- "What's the status of the production deployment?"
+- "List all projects in my Vercel account"
+
+**Benefits**:
+- ✅ Direct deployment visibility from the editor
+- ✅ Quick access to logs and build information
+- ✅ Seamless platform integration
+- ✅ Faster debugging of deployment issues
+
+---
+
+### 6. **Linear** (Remote MCP)
 
 **Purpose**: Project management and issue tracking
 
@@ -181,6 +206,10 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
       "type": "http",
       "disabled": false
     },
+    "vercel": {
+      "url": "https://mcp.vercel.com",
+      "type": "http"
+    },
     "linear": {
       "command": "npx",
       "args": ["mcp-remote", "https://mcp.linear.app/sse"],
@@ -218,6 +247,7 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 | "Debug this complex issue" | Sequential Thinking | Think through problems systematically |
 | "How do I use X in Next.js?" | Context7 | Get authoritative, up-to-date docs |
 | "Show me production errors" | Sentry | Monitor and debug production issues |
+| "Check deployment status" | Vercel | View deployments and logs |
 | "Create issue for this bug" | Linear | Track work and manage projects |
 | "Add security feature Y" | Snyk Extension | Scan and research best practices |
 | "Manage/review a PR" | GitHub PRs Extension | Integrated PR workflow |
