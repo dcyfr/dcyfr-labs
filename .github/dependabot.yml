@@ -1,0 +1,132 @@
+# Dependabot Configuration
+# Automated dependency updates and security alerts
+# Documentation: https://docs.github.com/en/code-security/dependabot
+
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    
+    # Open PRs for security updates immediately
+    open-pull-requests-limit: 10
+    
+    # Grouping strategy - reduces PR noise
+    groups:
+      # Group all Next.js and React core packages together
+      nextjs:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@next/*"
+          - "@vercel/analytics"
+          - "@vercel/speed-insights"
+      
+      # Group all development dependencies
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      
+      # Group all TypeScript-related packages
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+          - "ts-node"
+      
+      # Group all testing packages
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "playwright"
+          - "@playwright/*"
+      
+      # Group all linting/formatting packages
+      code-quality:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "prettier"
+          - "@typescript-eslint/*"
+      
+      # Group Tailwind and UI packages
+      ui-packages:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "tailwindcss-animate"
+          - "@radix-ui/*"
+          - "class-variance-authority"
+          - "clsx"
+          - "tailwind-merge"
+      
+      # Group MDX and content processing packages
+      content:
+        patterns:
+          - "next-mdx-remote"
+          - "gray-matter"
+          - "shiki"
+          - "rehype-*"
+          - "remark-*"
+          - "unified"
+          - "unist-*"
+          - "hast-*"
+      
+      # Group Sentry monitoring packages
+      monitoring:
+        patterns:
+          - "@sentry/*"
+      
+      # Group Inngest background job packages
+      background-jobs:
+        patterns:
+          - "inngest"
+    
+    # Commit message prefix
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
+    
+    # Add labels to PRs
+    labels:
+      - "dependencies"
+      - "automated"
+    
+    # Ignore specific packages (if needed)
+    ignore:
+      # Example: Pin to specific version
+      # - dependency-name: "package-name"
+      #   versions: ["x.x.x"]
+    
+    # Pull request reviewers (optional - add your GitHub username)
+    # reviewers:
+    #   - "dcyfr"
+    
+    # Auto-merge rules can be set up via GitHub Actions
+    # See: docs/operations/dependabot-setup.md for auto-merge configuration
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "github-actions"
+      - "automated"

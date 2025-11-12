@@ -63,17 +63,19 @@ This todo list is organized by **criticality, impact, and ROI**:
   - **Status**: Ready for deployment, alerts need configuration post-deploy
   - **Next**: Deploy to Vercel, configure Sentry email alerts
 
-- [ ] **Security advisory monitoring** (1 hour)
-  - **Tool**: GitHub Dependabot security alerts (free, built-in)
-  - **Setup**: Enable in repo settings, configure email notifications
-  - **Impact**: Proactive vulnerability detection and patching
-  - **ROI**: ⭐⭐⭐⭐⭐ (Risk mitigation)
-
-- [ ] **Automated dependency updates** (4-6 hours)
-  - **Tool**: Dependabot or Renovate bot
-  - **Impact**: Security updates, reduces manual maintenance by 4-8 hours/month
-  - **Config**: Auto-merge minor/patch, manual review for major versions
-  - **ROI**: ⭐⭐⭐⭐⭐ (6-hour setup saves 4-8 hours/month ongoing)
+- [x] **Security advisory monitoring & automated dependency updates** (1 hour) ✅ **COMPLETED** (Nov 11, 2025)
+  - ✅ Created `.github/dependabot.yml` configuration
+  - ✅ Configured weekly updates with intelligent package grouping
+  - ✅ Set up security alerts for immediate vulnerability detection
+  - ✅ Created auto-merge workflow for patch updates (optional)
+  - ✅ Comprehensive documentation in `docs/operations/dependabot-setup.md`
+  - **Status**: Ready to enable in GitHub repo settings
+  - **Next Steps**: 
+    1. Enable Dependabot alerts in repo settings
+    2. Enable Dependabot security updates
+    3. Configure email notifications
+  - **Impact**: Proactive security monitoring, 4-8 hours/month saved on manual updates
+  - **ROI**: ⭐⭐⭐⭐⭐ (Risk mitigation + time savings)
 
 ### Testing Infrastructure
 - [ ] **Basic testing infrastructure** (8-12 hours)
