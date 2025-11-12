@@ -133,7 +133,7 @@ export function ArchiveFilters({
       <div className="flex flex-col sm:flex-row gap-3">
         {showSearch && (
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
             <Input
               type="search"
               placeholder={searchPlaceholder}
@@ -141,6 +141,7 @@ export function ArchiveFilters({
               onChange={(e) => handleSearch(e.target.value)}
               className="pl-9"
               disabled={isPending}
+              aria-label="Search"
             />
           </div>
         )}
@@ -166,18 +167,28 @@ export function ArchiveFilters({
             Filter by tag:
           </span>
           {availableTags.map((tag) => (
-            <Badge
+            <button
               key={tag}
-              variant={tag === activeTag ? 'default' : 'outline'}
-              className={cn(
-                "cursor-pointer transition-colors",
-                tag === activeTag && "bg-primary text-primary-foreground",
-                isPending && "opacity-50"
-              )}
               onClick={() => handleTagClick(tag)}
+              disabled={isPending}
+              className={cn(
+                // Badge base styles
+                "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+                "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+                // Cursor and hover
+                "cursor-pointer hover:opacity-80",
+                // Variant styles
+                tag === activeTag
+                  ? "border-transparent bg-primary text-primary-foreground shadow"
+                  : "border-border bg-background text-foreground",
+                // Disabled state
+                isPending && "opacity-50 cursor-not-allowed"
+              )}
+              aria-label={`Filter by ${tag}`}
+              aria-pressed={tag === activeTag}
             >
               {tag}
-            </Badge>
+            </button>
           ))}
         </div>
       )}

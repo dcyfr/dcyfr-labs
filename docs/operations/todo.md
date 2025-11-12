@@ -25,18 +25,30 @@ This todo list is organized by **criticality, impact, and ROI**:
 
 ---
 
-## � CRITICAL - Address Immediately
+## 🚨 CRITICAL - Address Immediately
 
 ### Accessibility
-- [ ] **Accessibility audit follow-up** (4-6 hours)
-  - **Why**: Audit completed Oct 26, 2025 - no action items tracked
-  - **Risk**: Legal/compliance exposure, excludes users with disabilities
-  - **Action**: Review `docs/accessibility/audit-2025-10-26.md` and create remediation tasks
-  - **Priority**: Fundamental quality and legal requirement
+- [x] **Priority 1 accessibility fixes completed** (Nov 11, 2025)
+  - ✅ Fixed tag filter badges - converted to proper buttons with keyboard support
+  - ✅ Added aria-label to search input in archive-filters
+  - ✅ Added id="main-content" to main element for skip link support
+  
+- [ ] **Priority 2: Skip-to-content link** (30 min)
+  - **Status**: Quick win, foundation for improved keyboard navigation
+  - **Action**: Add skip link before header in layout.tsx
+  - **Code**: Already documented in audit (see `docs/accessibility/audit-2025-10-26.md`)
+  - **Impact**: Keyboard users can bypass navigation on every page
+
+- [ ] **Accessibility testing & validation** (2-3 hours)
+  - **Action**: Test with real screen readers (VoiceOver on macOS, NVDA on Windows)
+  - **Tool**: Run automated tests (Lighthouse, axe DevTools browser extension)
+  - **Verify**: All Priority 1 fixes working as expected
+  - **Document**: Create testing report with findings
+  - **Priority**: Validate all accessibility improvements
 
 ---
 
-## � HIGH - This Month (Phase 1: Foundation)
+## 🔴 HIGH - This Month (Phase 1: Foundation)
 
 ### Infrastructure & Reliability
 - [ ] **Uptime monitoring setup** (30 min)
