@@ -99,11 +99,6 @@ updates:
       prefix-development: "chore(deps-dev)"
       include: "scope"
     
-    # Add labels to PRs
-    labels:
-      - "dependencies"
-      - "automated"
-    
     # Ignore specific packages (if needed)
     # ignore:
     #   - dependency-name: "package-name"
@@ -126,6 +121,3 @@ updates:
       timezone: "America/Los_Angeles"
     commit-message:
       prefix: "chore(ci)"
-    labels:
-      - "github-actions"
-      - "automated"

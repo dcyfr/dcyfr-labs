@@ -138,14 +138,14 @@ async function fetchGitHubContributions(): Promise<ContributionResponse | null> 
  * - Better handling of rate limits
  * - Proactive error detection
  * 
- * Cron schedule: every 5 minutes
+ * Cron schedule: daily at midnight UTC
  */
 export const refreshGitHubData = inngest.createFunction(
   { 
     id: "refresh-github-data",
     retries: 2,
   },
-  { cron: "*/5 * * * *" }, // Every 5 minutes
+  { cron: "0 0 * * *" }, // Daily at midnight UTC
   async ({ step }) => {
     // Step 1: Fetch fresh data from GitHub
     const freshData = await step.run("fetch-github-data", async () => {
