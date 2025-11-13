@@ -87,7 +87,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
   
-  // Get nonce from middleware for CSP
+  // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
   // Always ensure we have an image (custom or default)

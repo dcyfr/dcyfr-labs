@@ -34,7 +34,7 @@ export const metadata: Metadata = createPageMetadata({
 export default async function AboutPage() {
   const currentRole = resume.experience[0];
   
-  // Get nonce from middleware for CSP
+  // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
   // JSON-LD structured data for about page

@@ -19,7 +19,7 @@ export const metadata: Metadata = createArchivePageMetadata({
 });
 
 export default async function ProjectsPage() {
-  // Get nonce from middleware for CSP
+  // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
   // JSON-LD structured data for projects collection

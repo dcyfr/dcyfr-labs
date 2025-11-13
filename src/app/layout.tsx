@@ -97,7 +97,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Get nonce from middleware for CSP-compliant theme injection
+  // Get nonce from proxy for CSP-compliant theme injection
   const nonce = (await headers()).get("x-nonce") || undefined;
   
   return (
