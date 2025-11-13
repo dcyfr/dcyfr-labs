@@ -31,12 +31,33 @@ import { cn } from "@/lib/utils";
  */
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
   const pathname = usePathname();
+
+  // Prevent hydration mismatch by only rendering after mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close sheet when navigating
   React.useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  // Don't render on server to avoid Radix ID mismatch
+  if (!mounted) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="touch-target"
+        aria-label="Open navigation menu"
+        disabled
+      >
+        <MenuIcon className="h-5 w-5" />
+      </Button>
+    );
+  }
 
   const navItems = [
     { href: "/", label: "Home" },

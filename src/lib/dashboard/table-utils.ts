@@ -9,7 +9,7 @@
  * @module dashboard/table-utils
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 /**
  * Generic sort direction type

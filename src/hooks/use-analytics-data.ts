@@ -105,10 +105,12 @@ export function useAnalyticsData({
     await fetchAnalytics(true);
   }, [fetchAnalytics]);
 
-  // Initial fetch
+  // Initial fetch and dateRange changes
   useEffect(() => {
+    setLoading(true);
     fetchAnalytics();
-  }, [fetchAnalytics]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateRange]); // Only depend on dateRange, not fetchAnalytics (to avoid infinite loop)
 
   // Auto-refresh effect
   useEffect(() => {
