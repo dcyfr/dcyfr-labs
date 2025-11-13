@@ -1,0 +1,11 @@
+{
+  "vitest.enable": true,
+  "vitest.commandLine": "npm run test --",
+  "playwright.reuseBrowser": true,
+  "testing.automaticallyOpenPeekView": "failureInVisibleDocument",
+  "recommendations": [
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "usernamehw.errorlens"
+  ]
+}

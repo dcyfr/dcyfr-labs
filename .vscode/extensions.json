@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "usernamehw.errorlens",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ]
+}
