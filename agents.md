@@ -237,7 +237,7 @@ See `/docs/components/` for detailed component documentation including examples 
 The project implements comprehensive security hardening:
 
 ### Content Security Policy (CSP)
-- ✅ Nonce-based CSP in middleware (`src/middleware.ts`)
+- ✅ Nonce-based CSP in proxy (`src/proxy.ts`)
 - ✅ Dynamic nonce generation per request
 - ✅ Replaces `unsafe-inline` with cryptographic nonces for script-src and style-src
 - ✅ Zero breaking changes, all features work perfectly
@@ -342,4 +342,4 @@ When adding documentation: keep it in `/docs`, use consistent markdown format, i
 - Don't remove error boundaries or skeleton loaders from async components.
 - Don't disable CSP or security headers without discussion.
 
-Key files for reference: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/blog/[slug]/page.tsx`, `src/lib/blog.ts`, `src/data/posts.ts`, `src/components/post-list.tsx`, `src/components/mdx.tsx`, `src/lib/utils.ts`, `src/middleware.ts`.
+Key files for reference: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/blog/[slug]/page.tsx`, `src/lib/blog.ts`, `src/data/posts.ts`, `src/components/post-list.tsx`, `src/components/mdx.tsx`, `src/lib/utils.ts`, `src/proxy.ts`.

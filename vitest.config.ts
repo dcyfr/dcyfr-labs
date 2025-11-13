@@ -17,7 +17,7 @@ export default defineConfig({
         'src/types/**',
         'src/app/**/*.tsx', // Exclude Next.js pages/layouts (integration tested)
         'src/instrumentation*.ts',
-        'src/middleware.ts', // Tested separately with E2E
+        'src/proxy.ts', // Tested separately with E2E
       ],
       thresholds: {
         lines: 80,

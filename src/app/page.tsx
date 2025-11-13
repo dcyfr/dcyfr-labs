@@ -37,7 +37,7 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default async function Home() {
-  // Get nonce from middleware for CSP
+  // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
   // Get featured post for hero section

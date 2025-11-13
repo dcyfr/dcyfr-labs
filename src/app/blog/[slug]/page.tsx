@@ -92,7 +92,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     redirect(`/blog/${canonicalSlug}`);
   }
   
-  // Get nonce from middleware for CSP
+  // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
   
   // Use Article Pattern for navigation and related posts
