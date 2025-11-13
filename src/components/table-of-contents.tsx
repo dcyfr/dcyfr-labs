@@ -37,8 +37,8 @@ type TableOfContentsProps = {
  * TableOfContents Component
  *
  * A responsive table of contents for blog posts that adapts to screen size:
- * - Mobile/Tablet (< XL): Floating action button that opens a bottom sheet drawer
- * - Desktop (≥ XL): Fixed sidebar on the right side of the viewport
+ * - Mobile/Tablet (< 2XL): Floating action button that opens a bottom sheet drawer
+ * - Desktop (≥ 2XL): Fixed sidebar on the right side of the viewport
  *
  * Features:
  * - Automatically highlights the currently visible heading as the user scrolls
@@ -68,7 +68,8 @@ type TableOfContentsProps = {
  * - rootMargin="-80px 0px -80% 0px" activates heading when near top
  * - Smooth scrolls to heading with 80px offset (accounting for fixed header)
  * - Mobile: Sheet component with large touch targets (min 48px)
- * - Desktop: Fixed position sidebar, collapsible
+ * - Desktop: Fixed position sidebar at 2xl+ breakpoint (1536px+), collapsible
+ * - Breakpoint ensures no overlap: content (672px) + gap (64px) + TOC (256px) + margins (64px) = 1056px minimum
  *
  * @accessibility
  * - nav has aria-label="Table of contents"
@@ -265,7 +266,7 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
   return (
     <>
       {/* Mobile TOC - Floating Action Button with Sheet */}
-      <div className="xl:hidden">
+      <div className="2xl:hidden">
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           {!hideFAB && (
             <SheetTrigger asChild>
@@ -306,7 +307,7 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
 
       {/* Desktop TOC - Fixed Sidebar */}
       <nav
-        className="fixed top-24 right-8 hidden xl:block w-64 max-h-[calc(100vh-12rem)] z-30"
+        className="fixed top-24 right-8 hidden 2xl:block w-64 max-h-[calc(100vh-12rem)] z-30"
         aria-label="Table of contents"
       >
         <div className="space-y-2">

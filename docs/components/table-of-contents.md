@@ -2,15 +2,17 @@
 
 **Status:** ✅ Implemented (Enhanced with Mobile Support - Nov 4, 2025)  
 **Location:** `src/components/table-of-contents.tsx`  
-**Date:** October 21, 2025 (Updated November 4, 2025)
+**Date:** October 21, 2025 (Updated November 12, 2025)
 
 ---
 
 ## Overview
 
-Automatically generates a responsive table of contents for blog posts by extracting H2 and H3 headings from MDX content. On mobile/tablet (< XL), displays as a floating action button with a sheet drawer. On desktop (≥ XL), shows as a fixed collapsible sidebar with smooth scrolling, active section tracking, and full keyboard accessibility.
+Automatically generates a responsive table of contents for blog posts by extracting H2 and H3 headings from MDX content. On mobile/tablet (< 2XL), displays as a floating action button with a sheet drawer. On desktop (≥ 2XL), shows as a fixed collapsible sidebar with smooth scrolling, active section tracking, and full keyboard accessibility.
 
 **Mobile Update (Nov 4, 2025):** Enhanced with Sheet component for mobile navigation, replacing the previous desktop-only implementation.
+
+**Breakpoint Update (Nov 12, 2025):** Changed desktop breakpoint from XL (1280px) to 2XL (1536px) to prevent TOC from overlapping centered content when scaling or at intermediate viewport widths.
 
 ---
 
@@ -29,13 +31,14 @@ const headings = extractHeadings(post.body);
 ### Features
 
 - **Auto-generated:** Extracts headings from MDX at build time
-- **Responsive:** Mobile FAB + Sheet drawer (< XL) | Fixed sidebar (≥ XL) **[NEW]**
-- **Mobile-friendly:** 44px touch targets, 80vh sheet height **[NEW]**
-- **Collapsible:** Toggle with "On this page" button (desktop, expanded by default) or tap FAB (mobile) **[UPDATED]**
+- **Responsive:** Mobile FAB + Sheet drawer (< 2XL) | Fixed sidebar (≥ 2XL) **[UPDATED]**
+- **Mobile-friendly:** 44px touch targets, 80vh sheet height
+- **Collapsible:** Toggle with "On this page" button (desktop, expanded by default) or tap FAB (mobile)
 - **Active tracking:** Highlights current section via IntersectionObserver
 - **Smooth scroll:** Animated navigation to clicked heading with 80px offset
-- **Auto-close:** Sheet automatically closes after navigation on mobile **[NEW]**
+- **Auto-close:** Sheet automatically closes after navigation on mobile
 - **Accessible:** Full keyboard navigation and screen reader support
+- **No overlap:** Breakpoint ensures TOC never covers content during scaling **[NEW]**
 
 ### Supported Headings
 
@@ -307,20 +310,29 @@ Content...
 
 ## Responsive Behavior
 
-### Desktop (XL+, ≥1280px)
-- TOC displays as fixed sidebar
+### Desktop (2XL+, ≥1536px)
+
+- TOC displays as fixed sidebar on the right
 - Always visible (if expanded)
 - Stays accessible while scrolling
-- Full width layout
+- Full width layout with no content overlap
+- Minimum viewport calculation: content (672px) + gap (64px) + TOC (256px) + margins (64px) = 1056px
 
-### Tablet (≥768px, <1280px)
-- TOC hidden (via `hidden xl:block`)
+### Tablet/Small Desktop (768px - 1535px)
+
+- TOC hidden (via `hidden 2xl:block`)
+- FAB button available (< 768px shows sheet drawer)
 - Full content width
 - Clean, uncluttered layout
+- Prevents overlap with centered prose content
 
 ### Mobile (<768px)
-- TOC completely hidden
-- Single column layout
+
+- Floating Action Button (FAB) appears after scrolling 400px
+- Tap FAB to open sheet drawer from bottom
+- Sheet covers 80vh of screen
+- Touch-friendly 44px minimum tap targets
+- Auto-closes after navigation
 - Optimal for small screens
 
 ### CSS Classes
