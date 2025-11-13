@@ -23,7 +23,7 @@ import type { NextRequest } from "next/server";
  * - Vercel Analytics (inherits from script context)
  */
 
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   // Generate unique nonce for this request
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   

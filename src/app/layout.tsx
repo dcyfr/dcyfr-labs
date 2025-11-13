@@ -71,14 +71,8 @@ export const metadata: Metadata = {
     images: [getTwitterImageUrl()],
   },
   icons: {
-    icon: [
-      { url: "/icon/light", media: "(prefers-color-scheme: light)" },
-      { url: "/icon/dark", media: "(prefers-color-scheme: dark)" },
-    ],
-    apple: [
-      { url: "/apple-icon/light", media: "(prefers-color-scheme: light)" },
-      { url: "/apple-icon/dark", media: "(prefers-color-scheme: dark)" },
-    ],
+    icon: "/icon",
+    apple: "/apple-icon",
   },
   alternates: {
     canonical: SITE_URL,
