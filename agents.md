@@ -1,3 +1,8 @@
+<!--
+  NOTE: This file is auto-synced from .github/copilot-instructions.md.
+  Edit the source file instead: .github/copilot-instructions.md
+-->
+
 # AI contributor guide for this repo
 
 Full-stack developer portfolio with Next.js 15 App Router, TypeScript, Tailwind v4, shadcn/ui, MDX blog, GitHub integration, and Redis analytics. Optimized for server-first rendering, type safety, and maintainable architecture.

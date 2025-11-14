@@ -2,12 +2,14 @@
 
 This directory contains utility scripts for development, testing, and maintenance tasks.
 
+> **Note:** On November 14, 2025, obsolete ad-hoc test scripts were archived to `archive/legacy-tests/` and replaced with modern testing infrastructure (Vitest, Playwright, Lighthouse CI). See [npm-scripts-cleanup-2025-11-14.md](/docs/operations/npm-scripts-cleanup-2025-11-14.md) for details.
+
 ## Active Scripts
 
-### Development Utilities
+### Core Utilities
 
 #### sync-agents.mjs
-Syncs `.github/copilot-instructions.md` to `agents.md` in the root directory.
+Syncs `.github/copilot-instructions.md` to `agents.md` and `mcp.json` in the root directory. Runs automatically before `dev`, `dev:https`, and `build`.
 
 ```bash
 npm run sync:agents
@@ -16,155 +18,62 @@ node scripts/sync-agents.mjs
 ```
 
 #### run-with-dev.mjs
-Helper script for running Next.js dev server with special configurations.
+Helper script for running tasks with Next.js dev server. Used by accessibility test scripts.
 
 ```bash
-node scripts/run-with-dev.mjs
+node scripts/run-with-dev.mjs <script-path>
 ```
-
-### Testing & Validation
-
-#### test-feeds.mjs
-Tests RSS and Atom feed generation.
-
-```bash
-npm run test:feeds
-# or directly:
-node scripts/test-feeds.mjs
-```
-
-#### test-featured-images.mjs
-Tests blog post featured image configuration and loading.
-
-```bash
-npm run test:featured-images
-# or directly:
-node scripts/test-featured-images.mjs
-```
-
-#### test-related-posts.mjs
-Tests the related posts algorithm.
-
-```bash
-npm run test:related-posts
-# or directly:
-node scripts/test-related-posts.mjs
-```
-
-#### test-toc.mjs
-Tests table of contents generation for blog posts.
-
-```bash
-npm run test:toc
-# or directly:
-node scripts/test-toc.mjs
-```
-
-#### test-rate-limit.mjs
-Tests API rate limiting functionality.
-
-```bash
-npm run test:rate-limit
-# or directly:
-node scripts/test-rate-limit.mjs
-```
-
-#### test-tracking.mjs
-Tests view and share tracking with Redis integration.
-
-```bash
-npm run test:tracking
-# or directly (requires dev server):
-node scripts/run-with-dev.mjs scripts/test-tracking.mjs
-```
-
-#### test-csp-report.mjs
-Tests Content Security Policy reporting.
-
-```bash
-npm run test:csp-report
-# or directly:
-node scripts/test-csp-report.mjs
-```
-
-#### test-mcp-servers.mjs
-Tests Model Context Protocol (MCP) server configuration.
-
-```bash
-npm run test:mcp-servers
-# or directly:
-node scripts/test-mcp-servers.mjs
-```
-
-#### test-dev-pages.mjs
-Tests development-only pages.
-
-```bash
-npm run test:dev-pages
-# or directly:
-node scripts/test-dev-pages.mjs
-```
-
-#### test-dev-pages-static.mjs
-Tests static generation of development pages.
-
-```bash
-npm run test:dev-pages-static
-# or directly:
-node scripts/test-dev-pages-static.mjs
-```
-
-#### test-print.mjs
-Tests print stylesheet functionality.
-
-```bash
-node scripts/test-print.mjs
-```
-
-#### test-streak-calculation.mjs
-Tests GitHub contribution streak calculation.
-
-```bash
-node scripts/test-streak-calculation.mjs
-```
-
-### Monitoring & Validation
 
 #### check-headers.mjs
-Validates HTTP security headers.
+Validates HTTP security headers (standalone utility, no npm script).
 
 ```bash
 node scripts/check-headers.mjs
 ```
 
-#### check-heatmap-display.mjs
-Validates GitHub heatmap display and functionality.
+### Accessibility Testing
+
+#### test-accessibility.mjs
+Automated accessibility testing suite for HTML structure validation.
 
 ```bash
-npm run test:heatmap
-# or directly:
-node scripts/check-heatmap-display.mjs
+node scripts/test-accessibility.mjs
 ```
 
-#### check-siteurl.js
-Validates site URL configuration.
+#### test-accessibility-manual.mjs
+Manual accessibility testing checklist for keyboard and screen reader verification.
 
 ```bash
-npm run test:siteurl
-# or directly:
-node scripts/check-siteurl.js
+node scripts/test-accessibility-manual.mjs
 ```
 
-#### validate-metrics.mjs
-Validates analytics metrics and data integrity.
+#### test-skip-link.mjs
+Tests skip-to-content link implementation across pages.
 
 ```bash
-npm run test:metrics
-# or directly:
-node scripts/validate-metrics.mjs
+node scripts/test-skip-link.mjs
+```
+
+#### test-skip-link-structure.mjs
+Validates skip link HTML structure and focus behavior.
+
+```bash
+node scripts/test-skip-link-structure.mjs
 ```
 
 ## Archived Scripts
+
+### Legacy Test Scripts (archived November 14, 2025)
+
+One-off development test scripts moved to `scripts/archive/legacy-tests/`. These have been superseded by proper testing infrastructure:
+
+- **Vitest** (`npm run test`) for unit and integration tests
+- **Playwright** (`npm run test:e2e`) for E2E tests  
+- **Lighthouse CI** (`npm run lighthouse:ci`) for performance and accessibility validation
+
+See `scripts/archive/legacy-tests/README.md` for complete list and migration guidance.
+
+### Historical Scripts
 
 One-time debug and migration scripts are in `scripts/archive/`. See `scripts/archive/README.md` for details.
 
