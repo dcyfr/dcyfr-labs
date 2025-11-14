@@ -95,25 +95,47 @@ This todo list is organized by **criticality, impact, and ROI**:
   - **Impact**: ⭐⭐⭐⭐⭐ Code quality foundation, prevents regressions
 
 ### Data & Recovery
-- [ ] **Backup & disaster recovery plan** (2 hours)
+
+- [ ] **Backup & disaster recovery plan** (2 hours) ⚪ **BACKLOG** (Nov 13, 2025)
   - **Redis data**: View count backup strategy (export/import scripts)
   - **Vercel config**: Project settings backup documentation
   - **Recovery runbook**: Step-by-step restoration procedures
   - **Test**: Validate recovery process in staging
   - **Impact**: Business continuity, data loss prevention
+  - **Note**: Defer until infrastructure more critical
 
-- [ ] **Error monitoring strategy** (2 hours)
+- [ ] **Error monitoring strategy** (2 hours) ⚪ **BACKLOG** (Nov 13, 2025)
   - **Sentry dashboard**: Weekly review cadence
   - **Error patterns**: Document common issues and resolutions
   - **SLAs**: Define response times by severity (Critical: 24h, High: 72h, etc.)
   - **Alerts**: Configure for critical errors (5xx, unhandled exceptions)
   - **Impact**: Proactive issue detection and faster resolution
+  - **Note**: Defer until baseline metrics established
 
 ---
 
-## 🟡 MEDIUM - Next Month (Phase 2: Performance & Visibility)
+## � HIGH - Phase 2: Performance & Visibility (Starting Now)
 
 ### Performance Optimization
+
+- [x] **Lighthouse CI integration** (2 hours) ✅ **COMPLETED** (Nov 13, 2025)
+  - ✅ Installed `@lhci/cli` (188 packages added)
+  - ✅ Created `lighthouserc.json` with budgets: Performance ≥ 90%, Accessibility ≥ 95%
+  - ✅ Created `lighthouse-config.json` for extended settings
+  - ✅ Created `.github/workflows/lighthouse-ci.yml` for automated PR checks
+  - ✅ Added 5 npm scripts: `lhci:collect`, `lhci:validate`, `lhci:upload`, `lhci:autorun`, `lighthouse:ci`
+  - ✅ Created comprehensive documentation: `docs/performance/lighthouse-ci.md`
+  - ✅ Updated `.gitignore` to exclude lighthouse reports
+  - **Impact**: Automated quality gates prevent performance regressions and accessibility violations
+  - **Architecture**: Runs on every PR to main/preview branches, comments results, fails on threshold violations
+  - **Next**: Deploy and monitor on first PR
+
+---
+
+## 🟡 MEDIUM - Next Month (Phase 2: Performance & Visibility Continued)
+
+### Performance Optimization
+
 - [ ] **Performance monitoring with budgets** (3-4 hours)
   - **Core Web Vitals targets**:
     - LCP (Largest Contentful Paint): < 2.5s
@@ -122,12 +144,6 @@ This todo list is organized by **criticality, impact, and ROI**:
   - **Bundle size limits**: Track and alert on increases
   - **Tools**: Vercel Speed Insights, web-vitals library
   - **Impact**: SEO ranking, user experience, complements custom analytics
-
-- [ ] **Lighthouse CI integration** (2 hours)
-  - **Setup**: GitHub Actions workflow for PR checks
-  - **Budgets**: Performance score > 90, Accessibility > 95
-  - **Impact**: Prevents performance regressions, automated quality gates
-  - **Fail PR on**: Performance drop > 5 points, accessibility violations
 
 ### SEO & Content Strategy
 - [ ] **SEO enhancement package** (6-8 hours)
