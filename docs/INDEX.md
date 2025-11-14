@@ -1,28 +1,53 @@
 # Documentation Index
 
-**Last Updated:** November 10, 2025  
-**Status:** Project cleanup complete - README, AI instructions, and documentation structure updated ✅
+**Last Updated:** November 14, 2025  
+**Status:** Documentation structure refactored - 21→16 directories, improved organization ✅
 
 ---
 
-## 🎉 **LATEST: Project Documentation Cleanup (Nov 10, 2025)**
+## 📊 Current Structure
 
-Comprehensive cleanup and update of project documentation:
+The documentation is organized into **16 focused directories**:
 
-### What Was Updated
-- ✅ **README.md**: Complete rewrite with modern feature list, better structure, comprehensive quick start
-- ✅ **AI Instructions**: Added architecture patterns (PageLayout, ArchiveLayout, ArticleLayout), Inngest integration
-- ✅ **docs/archive/**: Added README explaining historical documentation purpose
-- ✅ **docs/README.md**: Updated with architecture section, reorganized for clarity
-- ✅ **agents.md**: Auto-synced with latest AI instructions
+### 📁 Core Documentation (9 directories)
+1. **`architecture/`** - Architecture patterns and refactoring guides
+2. **`blog/`** - Blog system documentation + content strategy + RSS feeds
+3. **`components/`** - Component documentation (23 files)
+4. **`api/`** - API integration references
+5. **`features/`** - Feature guides (Inngest, GitHub, MCP, analytics)
+6. **`design/`** - Design system and UX (organized by topic)
+7. **`security/`** - Security implementation (CSP, rate limiting)
+8. **`platform/`** - Platform configuration (env vars, site config)
+9. **`operations/`** - Project management (todo, done, deployment)
 
-**Architecture Highlights:**
-- Reusable layout components: PageLayout, ArchiveLayout, ArticleLayout
-- Centralized metadata helpers: createPageMetadata(), createArchivePageMetadata(), createArticlePageMetadata()
-- Design token system: PAGE_LAYOUT, ARCHIVE_LAYOUT, ARTICLE_LAYOUT
-- Background jobs with Inngest for reliable async processing
+### 🔧 Development & Optimization (2 directories)
+10. **`development/`** - Testing + performance optimization
+11. **`optimization/`** - SEO + accessibility + analytics
 
-**See [done.md](./operations/done.md) for complete project history.**
+### 📦 Reference & Archive (3 directories)
+12. **`archive/`** - Historical documentation
+13. **`ai/`** - AI discovery research
+14. **Root files** - `README.md`, `QUICK_START.md`, this `INDEX.md`
+
+---
+
+## 🎉 **LATEST: Documentation Refactoring (Nov 14, 2025)**
+
+### What Changed
+- ✅ **Consolidated 21 → 16 directories** (24% reduction)
+- ✅ **Archived `/fixes`** → `archive/fixes-2025/`
+- ✅ **Created `/optimization`** ← merged seo + accessibility + analytics
+- ✅ **Created `/development`** ← merged testing + performance
+- ✅ **Moved `/mcp`** → `features/mcp/`
+- ✅ **Organized `/design`** → typography/, mobile/, print/, spacing/, ui-patterns/
+- ✅ **Merged `/rss`** → `blog/feeds/`
+- ✅ **Merged `/content`** → `blog/`
+
+### Benefits
+- 🎯 **Clearer organization** - Related docs are together
+- 📚 **Easier navigation** - Fewer top-level directories
+- 🔍 **Better discoverability** - Logical groupings
+- 🧹 **Cleaner structure** - No more scattered small directories
 
 ---
 
@@ -37,12 +62,6 @@ Complete architecture overhaul with reusable patterns:
 - **Resume Page**: 129 → 113 lines (12% reduction)
 - **Total**: 726 → 569 lines (21.6% reduction)
 
-### Blog & Archive Pages Refactor (Phases 1-4) ✅
-- **Blog Archive**: 156 → 135 lines (13.5% reduction)
-- **Blog Post**: 243 → 229 lines (5.8% reduction)
-- **Projects Archive**: 116 → 86 lines (25.9% reduction)
-- **Total**: 515 → 450 lines (12.6% reduction)
-
 ### New Infrastructure
 - ✅ 8 layout components (540+ lines)
 - ✅ Centralized metadata helpers (455 lines)
@@ -53,380 +72,123 @@ Complete architecture overhaul with reusable patterns:
 
 ---
 
-### Key Metrics
-- **128 total files** | 1.4 MB | 43,000 lines
-- **16 directories** | Well-organized by topic
-- **Identified issues:** Quick-ref duplication (18 files), operations/ bloat (39 files), scattered component docs
-- **Optimization potential:** 25-30% file reduction while improving discoverability
+## 🚀 Quick Navigation
+
+### Getting Started
+- **[README.md](./README.md)** - Directory overview and quick links
+- **[QUICK_START.md](./QUICK_START.md)** - Single-page navigation hub
+
+### Architecture & Code
+- **[architecture/README.md](./architecture/README.md)** - Architecture overview
+- **[architecture/migration-guide.md](./architecture/migration-guide.md)** - Step-by-step migration
+- **[components/](./components/)** - 23 component docs
+
+### Blog System
+- **[blog/architecture.md](./blog/architecture.md)** - Complete blog architecture
+- **[blog/quick-reference.md](./blog/quick-reference.md)** - Common patterns
+- **[blog/feeds/](./blog/feeds/)** - RSS/Atom feed documentation
+
+### Features
+- **[features/inngest-integration.md](./features/inngest-integration.md)** - Background jobs
+- **[features/github-integration.md](./features/github-integration.md)** - GitHub API
+- **[features/mcp/](./features/mcp/)** - Model Context Protocol
+
+### Design System
+- **[design/typography/](./design/typography/)** - Typography system
+- **[design/mobile/](./design/mobile/)** - Mobile-first design
+- **[design/spacing/](./design/spacing/)** - Spacing standards
+
+### Development
+- **[development/](./development/)** - Testing + performance guides
+- **[optimization/](./optimization/)** - SEO + accessibility + analytics
+
+### Configuration
+- **[platform/environment-variables.md](./platform/environment-variables.md)** - Complete env setup
+- **[security/](./security/)** - CSP, rate limiting, security guides
+- **[api/routes/overview.md](./api/routes/overview.md)** - API architecture
+
+### Operations
+- **[operations/todo.md](./operations/todo.md)** - Active tasks
+- **[operations/done.md](./operations/done.md)** - Completed work
 
 ---
 
-## 📚 Analysis Documents Created
+## 📈 Structure Metrics
 
-Four comprehensive analysis documents have been created to guide implementation:
+### Before Refactoring
+- **21 top-level directories**
+- Scattered small directories (seo, accessibility, analytics, testing, performance)
+- Fixes in active docs
+- RSS/content separate from blog
+- MCP outside features
+- Flat design/ directory (32 files)
 
-### 1. 🎯 **`CLEANUP_QUICK_REF.md`** (START HERE – 5 min read)
-**One-page quick reference** with TL;DR, file movements, and success metrics
-
-**Read this to:**
-- Get a 5-minute overview
-- Find the complete file movement list
-- See before/after metrics
-- Understand time requirements
-
----
-
-### 2. 📊 **`CLEANUP_ROADMAP.md`** (10-15 min read)
-**Visual guide with roadmap** including phase breakdown, quick wins, and checklists
-
-**Read this to:**
-- See visual diagrams of current state
-- Understand 3-phase approach
-- Get week-by-week execution plan
-- Track progress with checklists
+### After Refactoring
+- **16 top-level directories** (24% reduction)
+- Consolidated optimization/ and development/
+- Fixes archived
+- RSS and content merged into blog/
+- MCP properly organized under features/
+- Design/ organized into subdirectories
 
 ---
 
-### 3. 🔧 **`CONSOLIDATION_PLAN.md`** (Reference guide)
-**Detailed file-by-file consolidation guide** for specific moves and merges
+## 🎯 Directory Purposes
 
-**Read this to:**
-- Execute specific component consolidations
-- Understand security/design/mcp restructuring
-- Get 5-round execution sequence
-- Validate completion with detailed checklist
+### `architecture/`
+Architecture patterns, refactoring guides, migration docs, best practices
 
----
+### `blog/`
+Blog system architecture, content creation, MDX processing, frontmatter schema, RSS feeds, content strategy
 
-### 4. 📝 **`ANALYSIS_2025-10-27.md`** (Deep dive – 40+ min read)
-**Comprehensive analysis document** with findings, root causes, strategy, and full file tracker
+### `components/`
+23 component docs covering UI components, error boundaries, loading states, and advanced features
 
-**Read this to:**
-- Understand detailed findings
-- See root cause analysis
-- Review implementation strategy
-- Get complete file movement tracker
-- Present to stakeholders
+### `api/`
+API integration references, route documentation, rate limiting, error handling
 
----
+### `features/`
+Feature guides for Inngest, GitHub integration, MCP servers, analytics, OG images
 
-## 🎯 Quick Start (Choose Your Path)
+### `design/`
+Design system organized by topic:
+- `typography/` - Font system and rendering
+- `mobile/` - Mobile-first optimization
+- `print/` - Print stylesheet
+- `spacing/` - Spacing standards
+- `ui-patterns/` - Component patterns
 
-### For Executives/Stakeholders (5 minutes)
-1. Read: `CLEANUP_QUICK_REF.md`
-2. Skim: "Before & After" metrics section
-3. Ask questions based on impact/effort
+### `security/`
+Security implementation guides for CSP, rate limiting, and security best practices
 
-### For Project Managers (15 minutes)
-1. Read: `CLEANUP_ROADMAP.md`
-2. Review: Three-phase breakdown and timeline
-3. Copy: Implementation checklist for tracking
+### `platform/`
+Platform configuration: environment variables, site config, view counts, deployment
 
-### For Developers Executing (Full depth)
-1. Read: `CLEANUP_QUICK_REF.md` (5 min overview)
-2. Read: `CLEANUP_ROADMAP.md` (visual plan)
-3. Ref: `CONSOLIDATION_PLAN.md` (step-by-step)
-4. Execute: Phase 1 first (safest, highest impact)
+### `operations/`
+Project management: todo lists, completed work, deployment guides, automation
 
----
+### `development/`
+Testing and performance: Lighthouse CI, bundle analysis, INP optimization, ISR
 
-## 🎬 What to Do Next
+### `optimization/`
+SEO, accessibility, and analytics: meta tags, alt text, JSON-LD, tag analytics
 
-### Option A: Execute Immediately
-```bash
-# These 4 tasks take 2-3 hours, have huge impact:
-1. Create /docs/QUICK_START.md (entry point)
-2. Move 9 component docs to /docs/components/
-3. Move 2 config docs to /docs/platform/
-4. Archive ~20 completed implementations
+### `archive/`
+Historical documentation retained for reference
 
-Result: operations/ 39 → 15 files ✅
-```
-
-### Option B: Review & Plan
-```bash
-# Before executing:
-1. Read the analysis documents (30-45 min)
-2. Discuss with team (30 min)
-3. Prioritize phases (10 min)
-4. Schedule execution (1-2 weeks)
-5. Execute Phase 1 first (lowest risk)
-```
-
-### Option C: Detailed Research
-```bash
-# Deep dive understanding:
-1. Read ANALYSIS_2025-10-27.md (40 min)
-2. Review CONSOLIDATION_PLAN.md (20 min)
-3. Understand each move in detail
-4. Plan custom strategy
-5. Execute with full context
-```
+### `ai/`
+AI discovery research and documentation
 
 ---
 
-## 📈 Expected Outcomes
+## 📝 Maintenance Guidelines
 
-After implementing all phases:
-
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Total files | 128 | ~95-100 | **-25%** |
-| operations/ folder | 39 | 8-10 | **-75%** |
-| Quick-reference files | 18 | 8-10 | **-50%** |
-| Archive utilization | 7 | 25+ | **+257%** |
-| Entry point | None ❌ | QUICK_START.md ✅ | **New** |
-| Discoverability | Poor ⚠️ | Good ✅ | **Major improvement** |
+- Keep documentation in appropriate topical folders
+- Use subdirectories when a category grows beyond 10-12 files
+- Archive completed implementations to `archive/`
+- Update this INDEX and README when structure changes
+- Cross-reference related docs with relative links
 
 ---
 
-## 🎯 High-Priority Items (Do These First)
-
-These 3 items have the best ROI:
-
-### 1. Create `/docs/QUICK_START.md` (30 min) ⚡
-- Single entry point for all quick-references
-- Reduces "where do I find X?" questions
-- Improves user experience immediately
-
-### 2. Move Component Docs (1 hour) 📁
-- 9 files from operations/ → components/
-- Fixes folder organization
-- Makes operations/ folder cleaner
-
-### 3. Archive Completed Implementations (45 min) 📦
-- 15+ files from operations/ → archive/
-- Clarifies what's active work
-- Reduces operations/ from 39 → 15 files
-
-**Total: ~2 hours for visible 50% improvement**
-
----
-
-## ✅ Implementation Phases
-
-### Phase 1: Reorganization (1-2 hours) 🟢 SAFEST
-- Move 9 component docs to `/docs/components/`
-- Move 2 config docs to `/docs/platform/`
-- Create `/docs/QUICK_START.md`
-- Update references
-
-**Risk:** Very low (just moving files)  
-**Effort:** 1-2 hours  
-**Impact:** High (immediate clarity)
-
-### Phase 2: Archival (1-2 hours) 🟡 MEDIUM
-- Archive ~20 implementation-complete files
-- Consolidate session notes
-- Add deprecation notices
-
-**Risk:** Low (all files in git)  
-**Effort:** 1-2 hours  
-**Impact:** High (operations/ much cleaner)
-
-### Phase 3: Consolidation (2-3 hours) 🟡 MEDIUM
-- Merge overlapping quick-references
-- Consolidate security/design/mcp docs
-
-**Risk:** Medium (requires careful merging)  
-**Effort:** 2-3 hours  
-**Impact:** Medium (fewer total files)
-
----
-
-## 🚀 Get Started
-
-### If you have 5 minutes:
-→ Read `CLEANUP_QUICK_REF.md`
-
-### If you have 15 minutes:
-→ Read `CLEANUP_ROADMAP.md` + quick-ref
-
-### If you have 45 minutes:
-→ Read all analysis docs in sequence
-
-### If you're implementing today:
-→ Start with Phase 1 (2 hours)
-→ Reference `CONSOLIDATION_PLAN.md` for specifics
-
----
-
-## 📋 Complete File Movement Reference
-
-**To `/docs/components/` (9 files):**
-```
-error-boundaries-quick-reference.md
-error-boundaries-implementation.md
-loading-states-quick-reference.md
-loading-states-implementation.md
-post-list-quick-reference.md
-post-badges-quick-reference.md
-related-posts-quick-reference.md
-syntax-highlighting-quick-reference.md
-table-of-contents-quick-reference.md
-```
-
-**To `/docs/platform/` (2 files):**
-```
-environment-variables.md
-environment-variables-quick-reference.md
-```
-
-**To `/docs/archive/` (~25 files):**
-```
-All implementation-complete files
-All session notes (consolidated)
-All analysis files (consolidated)
-```
-
-**To Create (1 file):**
-```
-/docs/QUICK_START.md (entry point for all quick-refs)
-```
-
----
-
-## ✨ Why This Matters
-
-### Problem
-Users navigate 128 files with unclear purpose  
-Quick-reference files scattered across 9 directories  
-operations/ folder bloated with wrong content types  
-~20 completed implementations still listed as active  
-
-### Solution
-Clear navigation with QUICK_START.md  
-Files organized by function/folder  
-operations/ focused on actual operations  
-Completed work clearly archived  
-
-### Impact
-✅ Better discoverability  
-✅ Easier maintenance  
-✅ Clearer information architecture  
-✅ Better developer experience  
-
----
-
-## 📞 Questions Answered
-
-**Q: Will this break anything?**  
-A: No. All content stays in git history. We're just reorganizing.
-
-**Q: Do I need to do all 3 phases?**  
-A: Start with Phase 1 (safest). Phases 2-3 are optimization.
-
-**Q: How long will this take?**  
-A: 5-8 hours spread over 3 weeks. Start with Phase 1 (2 hours).
-
-**Q: What if I break a link?**  
-A: Check after each phase: `grep -r "]\(/docs/" docs/`
-
-**Q: Can I do this incrementally?**  
-A: Yes! Recommend Phase 1 → Phase 2 → Phase 3 over 3 weeks.
-
----
-
-## 🎓 Key Takeaways
-
-1. **Documentation is healthy** – Well-organized by topic
-2. **Optimization is straightforward** – Mostly reorganization, no rewrites
-3. **Impact is high** – 25% file reduction, 75% operations/ cleanup
-4. **Risk is low** – All changes reversible (git)
-5. **Effort is manageable** – 5-8 hours over 3 weeks
-
----
-
-## 📍 Document Locations
-
-All analysis files are in `/docs/`:
-
-```
-/docs/
-├── CLEANUP_QUICK_REF.md          ← Start here (5 min)
-├── CLEANUP_ROADMAP.md            ← Visual guide (15 min)
-├── CONSOLIDATION_PLAN.md         ← Execution details (reference)
-└── ANALYSIS_2025-10-27.md        ← Deep dive (40+ min)
-```
-
----
-
-## ⏱️ Time Investment vs. Impact
-
-```
-Investment    | Impact      | Recommendation
-5 min read    | Quick overview    | All users
-15 min read   | Full plan         | Project managers
-30 min read   | Decision-making   | Stakeholders
-1-2 hours     | Phase 1 execution | Development team
-5-8 hours     | Full implementation | Maintenance improvement
-```
-
----
-
-## 🎬 Next Steps
-
-**Today:**
-1. Share this document with team
-2. Read `CLEANUP_QUICK_REF.md` (5 min)
-3. Decide: Execute today or schedule?
-
-**If executing today:**
-1. Read `CONSOLIDATION_PLAN.md` Phase 1 section
-2. Start moving files
-3. Test links after each batch
-
-**If scheduling:**
-1. Choose implementation date
-2. Block 2-3 hours for Phase 1
-3. Follow with Phases 2-3 next weeks
-
----
-
-## 📊 Success Metrics
-
-After cleanup, verify:
-- ✅ operations/ has ≤10 files
-- ✅ QUICK_START.md links all working
-- ✅ No broken cross-references
-- ✅ All archived files have deprecation headers
-- ✅ Total files reduced to 95-100
-
----
-
-## 💬 Ready to Get Started?
-
-### For a quick overview (5 minutes):
-```bash
-open /docs/CLEANUP_QUICK_REF.md
-```
-
-### For the full roadmap (15 minutes):
-```bash
-open /docs/CLEANUP_ROADMAP.md
-```
-
-### For detailed implementation (as reference):
-```bash
-open /docs/CONSOLIDATION_PLAN.md
-```
-
-### For complete analysis (40+ minutes):
-```bash
-open /docs/ANALYSIS_2025-10-27.md
-```
-
----
-
-**Status:** ✅ Analysis complete, ready for implementation  
-**Estimated effort:** 5-8 hours over 3 weeks  
-**Priority level:** 🟡 Medium-high  
-**Impact level:** 🟢 Very high  
-
-**Start with Phase 1 this week. You'll see immediate improvements.**
-
----
-
-_Analysis created: October 27, 2025_  
-_Ready for implementation: Yes_  
-_All documents in `/docs/` directory_
+_Last updated: November 14, 2025. Major refactoring: 21→16 directories, improved organization._

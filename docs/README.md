@@ -11,6 +11,8 @@ This directory is the knowledge base for the portfolio. Content is organized by 
 
 ## Directory Overview
 
+**Core Documentation (9 directories):**
+
 - **`architecture/`** – Architecture patterns and refactoring guides
   - [`README.md`](./architecture/README.md) - Architecture overview
   - [`refactoring-complete.md`](./architecture/refactoring-complete.md) - Complete refactoring summary
@@ -18,18 +20,18 @@ This directory is the knowledge base for the portfolio. Content is organized by 
   - [`examples.md`](./architecture/examples.md) - Practical code examples (400+ lines)
   - [`best-practices.md`](./architecture/best-practices.md) - Architectural guidelines (550+ lines)
   
-- **`blog/`** – Blog system documentation:
+- **`blog/`** – Blog system documentation + content strategy + RSS feeds:
   - [`architecture.md`](./blog/architecture.md) - Complete blog system architecture and data flow
   - [`quick-reference.md`](./blog/quick-reference.md) - Quick patterns and common tasks
   - [`content-creation.md`](./blog/content-creation.md) - Post authoring guide
   - [`mdx-processing.md`](./blog/mdx-processing.md) - MDX pipeline and plugins
   - [`frontmatter-schema.md`](./blog/frontmatter-schema.md) - Post metadata reference
+  - `feeds/` - RSS/Atom feed documentation (merged from `/rss`)
 
-- **`components/`** – Component documentation (15+ files):
+- **`components/`** – Component documentation (23 files):
   - **Quick References:** [`post-badges.md`](./components/post-badges.md) · [`error-boundaries.md`](./components/error-boundaries.md) · [`loading-states.md`](./components/loading-states.md)
   - **Advanced Components:** [`related-posts.md`](./components/related-posts.md) · [`table-of-contents.md`](./components/table-of-contents.md) · [`syntax-highlighting.md`](./components/syntax-highlighting.md)
   - **Core Components:** [`mdx.md`](./components/mdx.md) · [`post-list.md`](./components/post-list.md) · [`blog-search-form.md`](./components/blog-search-form.md)
-  - **Additional:** [`reading-progress.md`](./components/reading-progress.md) · [`github-heatmap.md`](./components/github-heatmap.md) · [`giscus-comments.md`](./components/giscus-comments.md) · [`share-buttons.md`](./components/share-buttons.md) · [`logo.md`](./components/logo.md) · [`blog-post-skeleton.md`](./components/blog-post-skeleton.md) · [`about-page-components.md`](./components/about-page-components.md)
 
 - **`api/`** – API integration references:
   - [`routes/overview.md`](./api/routes/overview.md) - API architecture, rate limiting, error handling
@@ -41,15 +43,15 @@ This directory is the knowledge base for the portfolio. Content is organized by 
   - [`inngest-integration.md`](./features/inngest-integration.md) - Complete Inngest background jobs guide (500+ lines)
   - [`inngest-testing.md`](./features/inngest-testing.md) - Testing and debugging guide
   - [`github-integration.md`](./features/github-integration.md) - GitHub API integration
+  - `mcp/` - Model Context Protocol documentation (moved from `/mcp`)
 
-- **`design/`** – Design system and UX documentation:
-  - [`typography.md`](./design/typography.md) - Typography system (Geist Sans, Source Serif 4, Geist Mono)
-  - [`print-stylesheet.md`](./design/print-stylesheet.md) - Print stylesheet implementation
-  - [`color-contrast-improvements.md`](./design/color-contrast-improvements.md) - Accessibility improvements
-  - **Mobile-First Design:**
-    - [`mobile-first-optimization-analysis.md`](./design/mobile-first-optimization-analysis.md) - Mobile UX analysis (500+ lines)
-    - [`mobile-first-quick-reference.md`](./design/mobile-first-quick-reference.md) - Quick wins
-    - [`mobile-first-visual-comparison.md`](./design/mobile-first-visual-comparison.md) - Before/after visual guide
+- **`design/`** – Design system and UX (organized into subdirectories):
+  - `typography/` - Typography system (Geist Sans, Source Serif 4, Geist Mono)
+  - `mobile/` - Mobile-first optimization and analysis
+  - `print/` - Print stylesheet implementation
+  - `spacing/` - Spacing standards and audit
+  - `ui-patterns/` - Component patterns and UI consistency
+  - [`design-system.md`](./design/design-system.md) - Overall design system
   - [`ui-ux-optimization-roadmap.md`](./design/ui-ux-optimization-roadmap.md) - Animation roadmap
 
 - **`security/`** – Security implementation:
@@ -57,32 +59,36 @@ This directory is the knowledge base for the portfolio. Content is organized by 
   - `rate-limiting/` - Rate limiting guides and flows
   - [`security-findings-resolution.md`](./security/security-findings-resolution.md)
 
-- **`operations/`** – Project management:
-  - [`todo.md`](./operations/todo.md) - Active tasks and priorities
-  - [`done.md`](./operations/done.md) - Completed projects archive
-  
 - **`platform/`** – Platform configuration:
   - [`environment-variables.md`](./platform/environment-variables.md) - Complete environment setup
   - [`site-config.md`](./platform/site-config.md) - Domain and URL configuration
   - [`view-counts.md`](./platform/view-counts.md) - Blog analytics and Redis setup
 
-- **`performance/`** – Site performance:
-  - [`inp-optimization.md`](./performance/inp-optimization.md) - INP optimization
-  - [`isr-implementation.md`](./performance/isr-implementation.md) - ISR setup
+- **`operations/`** – Project management:
+  - [`todo.md`](./operations/todo.md) - Active tasks and priorities
+  - [`done.md`](./operations/done.md) - Completed projects archive
 
-- **`mcp/`** – Model Context Protocol documentation:
-  - [`servers.md`](./mcp/servers.md) and [`quick-reference.md`](./mcp/quick-reference.md)
-  - Subdirectories for specific MCP implementations
+**Development & Optimization (2 directories):**
 
-- **`rss/`** – RSS/Atom feed documentation:
-  - [`improvements.md`](./rss/improvements.md) · [`quick-reference.md`](./rss/quick-reference.md)
+- **`development/`** – Testing + performance (merged from `/testing` and `/performance`):
+  - [`lighthouse-ci.md`](./development/lighthouse-ci.md) - Lighthouse CI setup
+  - [`inp-optimization.md`](./development/inp-optimization.md) - INP optimization
+  - [`isr-implementation.md`](./development/isr-implementation.md) - ISR setup
+  - [`bundle-analysis.md`](./development/bundle-analysis.md) - Bundle optimization
 
-- **`ai/discovery/`** – AI discovery research:
-  - [`overview.md`](./ai/discovery/overview.md) · [`summary.md`](./ai/discovery/summary.md) · [`quick-reference.md`](./ai/discovery/quick-reference.md)
+- **`optimization/`** – SEO + accessibility + analytics (merged from `/seo`, `/accessibility`, `/analytics`):
+  - [`json-ld-implementation.md`](./optimization/json-ld-implementation.md) - Structured data
+  - [`alt-text-guide.md`](./optimization/alt-text-guide.md) - Accessibility
+  - [`tag-analytics.md`](./optimization/tag-analytics.md) - Tag analytics
+
+**Reference & Archive (2 directories):**
+
+- **`ai/`** – AI discovery research:
+  - `discovery/` - AI discovery documentation
 
 - **`archive/`** – Historical documentation (read-only):
   - See [`archive/README.md`](./archive/README.md) for complete archive index
-  - Superseded documentation retained for reference
+  - `fixes-2025/` - Archived bug fixes
 
 ## Quick Links
 
@@ -90,24 +96,28 @@ This directory is the knowledge base for the portfolio. Content is organized by 
 |-------|--------------------|
 | **Getting Started** | **[`QUICK_START.md`](./QUICK_START.md) - Navigation hub** |
 | **Architecture** | **[`architecture/README.md`](./architecture/README.md) · [`architecture/migration-guide.md`](./architecture/migration-guide.md)** |
-| AI Discovery | [`overview.md`](./ai/discovery/overview.md) · [`summary.md`](./ai/discovery/summary.md) |
+| AI Discovery | [`ai/discovery/overview.md`](./ai/discovery/overview.md) |
 | APIs | [`api/reference.md`](./api/reference.md) · [`api/routes/overview.md`](./api/routes/overview.md) |
-| Blog System | [`blog/architecture.md`](./blog/architecture.md) · [`blog/content-creation.md`](./blog/content-creation.md) · [`blog/quick-reference.md`](./blog/quick-reference.md) |
-| Components | [`components/post-badges.md`](./components/post-badges.md) · [`components/error-boundaries.md`](./components/error-boundaries.md) · [`components/mdx.md`](./components/mdx.md) |
-| Component List | *15+ components documented* – [See components/](./components/) |
-| Design System | [`design/typography.md`](./design/typography.md) · [`design/print-stylesheet.md`](./design/print-stylesheet.md) |
-| **Mobile-First UX** | **[`design/mobile-first-optimization-analysis.md`](./design/mobile-first-optimization-analysis.md) · [`design/mobile-first-quick-reference.md`](./design/mobile-first-quick-reference.md)** |
+| Blog System | [`blog/architecture.md`](./blog/architecture.md) · [`blog/quick-reference.md`](./blog/quick-reference.md) |
+| Blog Feeds | [`blog/feeds/improvements.md`](./blog/feeds/improvements.md) |
+| Components | [`components/post-badges.md`](./components/post-badges.md) · [`components/mdx.md`](./components/mdx.md) |
+| Design System | [`design/design-system.md`](./design/design-system.md) |
+| Typography | [`design/typography/typography.md`](./design/typography/typography.md) |
+| **Mobile-First UX** | **[`design/mobile/mobile-first-optimization-analysis.md`](./design/mobile/mobile-first-optimization-analysis.md)** |
+| Print Styles | [`design/print/print-stylesheet.md`](./design/print/print-stylesheet.md) |
+| Spacing System | [`design/spacing/spacing-system.md`](./design/spacing/spacing-system.md) |
 | UI/UX Roadmap | [`design/ui-ux-optimization-roadmap.md`](./design/ui-ux-optimization-roadmap.md) |
-| **Background Jobs** | **[`features/inngest-integration.md`](./features/inngest-integration.md) · [`features/inngest-testing.md`](./features/inngest-testing.md)** |
+| **Background Jobs** | **[`features/inngest-integration.md`](./features/inngest-integration.md)** |
 | GitHub Integration | [`features/github-integration.md`](./features/github-integration.md) |
-| MCP (Core) | [`mcp/servers.md`](./mcp/servers.md) · [`mcp/quick-reference.md`](./mcp/quick-reference.md) |
+| MCP Servers | [`features/mcp/servers.md`](./features/mcp/servers.md) |
 | **Operations** | **[`operations/todo.md`](./operations/todo.md) · [`operations/done.md`](./operations/done.md)** |
-| Performance | [`performance/inp-optimization.md`](./performance/inp-optimization.md) · [`performance/isr-implementation.md`](./performance/isr-implementation.md) |
+| Testing & Performance | [`development/lighthouse-ci.md`](./development/lighthouse-ci.md) · [`development/inp-optimization.md`](./development/inp-optimization.md) |
+| SEO & Accessibility | [`optimization/json-ld-implementation.md`](./optimization/json-ld-implementation.md) · [`optimization/alt-text-guide.md`](./optimization/alt-text-guide.md) |
+| Analytics | [`optimization/tag-analytics.md`](./optimization/tag-analytics.md) |
 | Security – CSP | [`security/csp/nonce-implementation.md`](./security/csp/nonce-implementation.md) |
 | Security – Rate Limiting | [`security/rate-limiting/guide.md`](./security/rate-limiting/guide.md) |
 | **Environment Setup** | **[`platform/environment-variables.md`](./platform/environment-variables.md)** |
 | Platform Config | [`platform/site-config.md`](./platform/site-config.md) · [`platform/view-counts.md`](./platform/view-counts.md) |
-| RSS/Feeds | [`rss/improvements.md`](./rss/improvements.md) |
 | **Archive** | **[`archive/README.md`](./archive/README.md) - Historical docs** |
 
 ## Maintenance Guidelines
@@ -123,4 +133,4 @@ This directory is the knowledge base for the portfolio. Content is organized by 
 - `agents.md` – Auto-synced instructions consumed by agents.
 - Project root `README.md` – High-level overview and developer quick start.
 
-_Last updated: November 10, 2025. Comprehensive cleanup and architecture documentation update._
+_Last updated: November 14, 2025. Documentation structure refactored: 21→16 directories, improved organization._

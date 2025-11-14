@@ -17,7 +17,7 @@ A modern, full-featured developer blog and portfolio built with Next.js (App Rou
 
 ## 🛠️ Tech Stack
 
-- **Framework:** Next.js 15 (App Router) + React 19
+- **Framework:** Next.js 16 (App Router) + React 19
 - **Language:** TypeScript (strict mode)
 - **Styling:** Tailwind CSS v4
 - **UI Components:** shadcn/ui (Radix UI + CVA)
