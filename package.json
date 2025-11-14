@@ -41,7 +41,12 @@
     "prebuild": "npm run sync:agents",
     "test:siteurl": "node ./scripts/run-with-dev.mjs ./scripts/check-siteurl.js",
     "test:dev-pages": "node ./scripts/run-with-dev.mjs ./scripts/test-dev-pages.mjs",
-    "test:dev-pages-static": "node ./scripts/run-with-dev.mjs ./scripts/test-dev-pages-static.mjs"
+    "test:dev-pages-static": "node ./scripts/run-with-dev.mjs ./scripts/test-dev-pages-static.mjs",
+    "lhci:collect": "lhci collect",
+    "lhci:validate": "lhci validate",
+    "lhci:upload": "lhci upload",
+    "lhci:autorun": "lhci autorun",
+    "lighthouse:ci": "npm run build && lhci autorun"
   },
   "dependencies": {
     "@giscus/react": "^3.1.0",
@@ -90,7 +95,6 @@
   "devDependencies": {
     "@axe-core/cli": "^4.11.0",
     "@eslint/eslintrc": "^3",
-    "@lhci/cli": "^0.15.1",
     "@next/bundle-analyzer": "^16.0.2",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4.1.17",
