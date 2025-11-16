@@ -242,7 +242,7 @@ Based on automated testing:
         allIssues.get(audit.id).pages.push(result.name);
       }
     });
-  }
+  });
 
   if (allIssues.size > 0) {
     allIssues.forEach((issue) => {
