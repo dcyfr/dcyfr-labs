@@ -1,7 +1,7 @@
 # Documentation Index
 
-**Last Updated:** November 14, 2025  
-**Status:** Documentation structure refactored - 21→16 directories, improved organization ✅
+**Last Updated:** November 15, 2025  
+**Status:** Test coverage roadmap created - 3-phase plan to reach 80% coverage ✅
 
 ---
 
@@ -31,7 +31,28 @@ The documentation is organized into **16 focused directories**:
 
 ---
 
-## 🎉 **LATEST: Documentation Refactoring (Nov 14, 2025)**
+## 🎉 **LATEST: Test Coverage Roadmap (Nov 15, 2025)**
+
+### What's New
+- ✅ **Coverage analysis complete** - Current: 0.63%, Target: 80%
+- ✅ **3-phase roadmap created** - 6-8 weeks to reach coverage goals
+- ✅ **Prioritized testing plan** - Critical business logic first (metadata, rate-limit, feeds)
+- ✅ **Comprehensive documentation** - Testing guide, quick reference, roadmap
+- ✅ **Established milestones** - Phase 1: 25%, Phase 2: 50%, Phase 3: 80%
+
+### Testing Documentation
+- **[testing/README.md](./testing/README.md)** - Testing overview and setup
+- **[testing/coverage-roadmap.md](./testing/coverage-roadmap.md)** - Detailed 3-phase plan
+- **[testing/quick-reference.md](./testing/quick-reference.md)** - Commands and patterns
+
+### Next Steps
+1. Lower coverage thresholds temporarily (~10%) to unblock CI
+2. Start Phase 1: Test critical business logic (14-18 hours)
+3. Progress through phases incrementally over 6-8 weeks
+
+---
+
+## 📖 **Documentation Refactoring (Nov 14, 2025)**
 
 ### What Changed
 - ✅ **Consolidated 21 → 16 directories** (24% reduction)
@@ -99,7 +120,10 @@ Complete architecture overhaul with reusable patterns:
 - **[design/spacing/](./design/spacing/)** - Spacing standards
 
 ### Development
-- **[development/](./development/)** - Testing + performance guides
+- **[testing/README.md](./testing/README.md)** - Testing overview ⭐ NEW
+- **[testing/coverage-roadmap.md](./testing/coverage-roadmap.md)** - 3-phase coverage plan ⭐ NEW
+- **[testing/quick-reference.md](./testing/quick-reference.md)** - Testing commands & patterns ⭐ NEW
+- **[development/](./development/)** - Performance optimization guides
 - **[optimization/](./optimization/)** - SEO + accessibility + analytics
 
 ### Configuration
@@ -170,6 +194,12 @@ Project management: todo lists, completed work, deployment guides, automation
 ### `development/`
 Testing and performance: Lighthouse CI, bundle analysis, INP optimization, ISR
 
+**Testing subdirectory** (`testing/`):
+- Test infrastructure setup (Vitest, Playwright, Testing Library)
+- 3-phase coverage roadmap (0.63% → 80% coverage)
+- Quick reference for commands and patterns
+- Mocking strategies and best practices
+
 ### `optimization/`
 SEO, accessibility, and analytics: meta tags, alt text, JSON-LD, tag analytics
 
@@ -191,4 +221,4 @@ AI discovery research and documentation
 
 ---
 
-_Last updated: November 14, 2025. Major refactoring: 21→16 directories, improved organization._
+_Last updated: November 15, 2025. Latest: Test coverage roadmap created - 3-phase plan to 80% coverage._
