@@ -16,7 +16,7 @@
  */
 
 import { TYPOGRAPHY, SPACING } from '@/lib/design-tokens';
-import { cn } from '@/lib/utils';
+import { cn, sanitizeUrl } from '@/lib/utils';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
