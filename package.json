@@ -106,6 +106,8 @@
     "vitest": "^4.0.8"
   },
   "overrides": {
-    "serialize-error-cjs": "0.2.0"
+    "serialize-error-cjs": "0.2.0",
+    "js-yaml": "^4.1.0",
+    "tmp": "^0.2.3"
   }
 }
