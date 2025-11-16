@@ -15,6 +15,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
 import matter from "gray-matter";
+import yaml from "js-yaml";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, "..");
@@ -55,7 +56,11 @@ function readPostMappings() {
   for (const file of files) {
     const filePath = path.join(CONTENT_DIR, file);
     const content = fs.readFileSync(filePath, "utf-8");
-    const { data } = matter(content);
+    const { data } = matter(content, {
+      engines: {
+        yaml: (s) => yaml.load(s, { schema: yaml.JSON_SCHEMA }),
+      },
+    });
 
     const canonicalSlug = file.replace(/\.mdx$/, "");
     const previousSlugs = data.previousSlugs || [];

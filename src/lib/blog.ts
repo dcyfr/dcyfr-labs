@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import yaml from "js-yaml";
 import crypto from "crypto";
 import type { Post, PostSource } from "@/data/posts";
 
@@ -55,7 +56,11 @@ export function getAllPosts(): Post[] {
     const slug = filename.replace(/\.mdx$/, "");
     const filePath = path.join(CONTENT_DIR, filename);
     const fileContents = fs.readFileSync(filePath, "utf8");
-    const { data, content } = matter(fileContents);
+    const { data, content } = matter(fileContents, {
+      engines: {
+        yaml: (s) => yaml.load(s, { schema: yaml.JSON_SCHEMA }) as object,
+      },
+    });
 
     const publishedAt = data.publishedAt as string;
     
@@ -104,7 +109,11 @@ export function getPostBySlug(slug: string): Post | undefined {
   }
 
   const fileContents = fs.readFileSync(filePath, "utf8");
-  const { data, content } = matter(fileContents);
+  const { data, content } = matter(fileContents, {
+    engines: {
+      yaml: (s) => yaml.load(s, { schema: yaml.JSON_SCHEMA }) as object,
+    },
+  });
 
   const publishedAt = data.publishedAt as string;
   const id = (data.id as string | undefined) || generatePostId(publishedAt, slug);
