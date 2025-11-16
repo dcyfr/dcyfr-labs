@@ -28,14 +28,20 @@ interface UseBlogAnalyticsProps {
 
 export function useBlogAnalytics({ slug, enabled = true }: UseBlogAnalyticsProps) {
   const [hasTrackedCompletion, setHasTrackedCompletion] = useState(false);
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const maxScrollDepthRef = useRef<number>(0);
   const visibilityTimeRef = useRef<number>(0);
-  const lastVisibilityChangeRef = useRef<number>(Date.now());
+  const lastVisibilityChangeRef = useRef<number>(0);
 
   useEffect(() => {
     if (!enabled || typeof window === "undefined") {
       return;
+    }
+
+    // Initialize time values on mount
+    if (startTimeRef.current === 0) {
+      startTimeRef.current = Date.now();
+      lastVisibilityChangeRef.current = Date.now();
     }
 
     // Reset on slug change
@@ -43,6 +49,7 @@ export function useBlogAnalytics({ slug, enabled = true }: UseBlogAnalyticsProps
     maxScrollDepthRef.current = 0;
     visibilityTimeRef.current = 0;
     lastVisibilityChangeRef.current = Date.now();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset state on slug change
     setHasTrackedCompletion(false);
 
     // Calculate scroll depth

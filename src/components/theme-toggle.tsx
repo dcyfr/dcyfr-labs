@@ -9,6 +9,7 @@ export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydration-safe pattern
   useEffect(() => setMounted(true), []);
 
   const isDark = (mounted ? resolvedTheme : theme) === "dark";

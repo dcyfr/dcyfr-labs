@@ -68,6 +68,7 @@ export function BlogSearchForm({ query, tag, readingTime }: BlogSearchFormProps)
   const [, startTransition] = useTransition();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync with URL params
     setValue(query);
   }, [query, tag, readingTime]);
 

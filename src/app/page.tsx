@@ -3,6 +3,7 @@ import { ProjectCard } from "@/components/project-card";
 import { PostList } from "@/components/post-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { SectionHeader } from "@/components/section-header";
 import { posts, featuredPosts } from "@/data/posts";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { Logo } from "@/components/logo";
@@ -181,14 +182,10 @@ export default async function Home() {
         <ScrollReveal animation="fade-up" delay={200}>
           <section className={PAGE_LAYOUT.section.container}>
             <div className={SPACING.content}>
-              <div className="flex items-center justify-between mb-8 pb-2 border-b">
-                <h2 className={TYPOGRAPHY.h2.standard}>
-                  Latest articles
-                </h2>
-                <Button variant="ghost" asChild>
-                  <Link href="/blog">View all</Link>
-                </Button>
-              </div>
+              <SectionHeader
+                title="Latest articles"
+                actionHref="/blog"
+              />
               <PostList 
                 posts={recentPosts}
                 latestSlug={latestSlug ?? undefined}
@@ -203,14 +200,10 @@ export default async function Home() {
         <ScrollReveal animation="fade-up" delay={300}>
           <section className={PAGE_LAYOUT.section.container}>
             <div className={SPACING.content}>
-              <div className="flex items-center justify-between mb-8 pb-2 border-b">
-                <h2 className={TYPOGRAPHY.h2.standard}>
-                  Projects
-                </h2>
-                <Button variant="ghost" asChild>
-                  <Link href="/projects">View all</Link>
-                </Button>
-              </div>
+              <SectionHeader
+                title="Projects"
+                actionHref="/projects"
+              />
               <div className="grid gap-4 sm:grid-cols-2">
                 {featuredProjects.slice(0, 2).map((p) => (
                   <ProjectCard key={p.title} project={p} />

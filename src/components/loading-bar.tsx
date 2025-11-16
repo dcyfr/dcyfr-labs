@@ -14,6 +14,7 @@ export function LoadingBar() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Loading state management
     setIsLoading(true);
     const timeout = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timeout);

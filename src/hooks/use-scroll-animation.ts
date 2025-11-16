@@ -124,6 +124,7 @@ export function useScrollAnimation({
   // Check for prefers-reduced-motion on mount
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync with media query
     setPrefersReducedMotion(mediaQuery.matches);
 
     // Listen for changes to motion preference

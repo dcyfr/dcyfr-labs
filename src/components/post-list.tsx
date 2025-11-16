@@ -182,7 +182,7 @@ export function PostList({
                       <PostThumbnail 
                         image={featuredImage} 
                         size="lg"
-                        className="w-full h-64 md:h-80 object-cover"
+                        className="w-full aspect-video md:aspect-3/2 object-cover"
                       />
                     </div>
                     
@@ -255,7 +255,7 @@ export function PostList({
                     <PostThumbnail 
                       image={featuredImage} 
                       size="md"
-                      className="w-full h-48 object-cover"
+                      className="w-full aspect-video object-cover"
                     />
                   </div>
                   
@@ -310,7 +310,7 @@ export function PostList({
 
   // Default layout: compact horizontal cards
   return (
-    <div data-testid="post-list">
+    <div className="space-y-4" data-testid="post-list">
       {posts.map((p, index) => {
         // Ensure every post has an image (use default if none specified)
         const featuredImage = ensurePostImage(p.image, {
@@ -335,7 +335,7 @@ export function PostList({
                     <PostThumbnail 
                       image={featuredImage} 
                       size="sm"
-                      className="rounded-none md:rounded-md w-full h-48 md:w-32 md:h-24 object-cover"
+                      className="rounded-none md:rounded-md w-full aspect-video md:w-32 md:aspect-4/3 object-cover"
                     />
                   </div>
                   

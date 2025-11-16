@@ -21,13 +21,20 @@ import { generateSessionId } from "@/lib/anti-spam-client";
 export function useViewTracking(postId: string, enabled = true) {
   const [tracked, setTracked] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const hasTrackedRef = useRef(false);
   const visibilityTimeRef = useRef<number>(0);
   const lastVisibleRef = useRef<boolean>(true);
 
   useEffect(() => {
-    if (!enabled || hasTrackedRef.current) return;
+    // Initialize start time on mount
+    if (startTimeRef.current === 0) {
+      startTimeRef.current = Date.now();
+    }
+
+    if (!enabled || hasTrackedRef.current) {
+      return;
+    }
 
     // Get or create session ID
     let sessionId = sessionStorage.getItem("viewTrackingSessionId");

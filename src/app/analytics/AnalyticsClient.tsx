@@ -48,6 +48,24 @@ import { useDashboardSort } from "@/hooks/use-dashboard-sort";
 // Components
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { AnalyticsOverview } from "@/components/analytics/analytics-overview";
+
+// Sort indicator component - moved outside to avoid creating during render
+type SortIndicatorProps = {
+  field: string;
+  sortField: string | null;
+  sortDirection: "asc" | "desc";
+};
+
+function SortIndicator({ field, sortField, sortDirection }: SortIndicatorProps) {
+  if (sortField !== field) {
+    return <ArrowUpDown className="h-3 w-3 opacity-30" />;
+  }
+  return sortDirection === "desc" ? (
+    <ArrowDown className="h-3 w-3 text-primary" />
+  ) : (
+    <ArrowUp className="h-3 w-3 text-primary" />
+  );
+}
 import { AnalyticsTrending } from "@/components/analytics/analytics-trending";
 
 // Types
@@ -213,18 +231,6 @@ export default function AnalyticsDashboard() {
     a.download = `analytics-${dateRange}-${new Date().toISOString().split("T")[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
-  };
-
-  // Sort indicator component
-  const SortIndicator = ({ field }: { field: SortField }) => {
-    if (sortField !== field) {
-      return <ArrowUpDown className="h-3 w-3 opacity-30" />;
-    }
-    return sortDirection === "desc" ? (
-      <ArrowDown className="h-3 w-3 text-primary" />
-    ) : (
-      <ArrowUp className="h-3 w-3 text-primary" />
-    );
   };
 
   // Get all unique tags for filter
@@ -470,7 +476,7 @@ export default function AnalyticsDashboard() {
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer"
                     >
                       Title
-                      <SortIndicator field="title" />
+                      <SortIndicator field="title" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
@@ -479,7 +485,7 @@ export default function AnalyticsDashboard() {
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                     >
                       Views (All)
-                      <SortIndicator field="views" />
+                      <SortIndicator field="views" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   {dateRange !== "all" && (
@@ -489,7 +495,7 @@ export default function AnalyticsDashboard() {
                         className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                       >
                         {DATE_RANGE_LABELS[dateRange]}
-                        <SortIndicator field="viewsRange" />
+                        <SortIndicator field="viewsRange" sortField={sortField} sortDirection={sortDirection} />
                       </button>
                     </th>
                   )}
@@ -499,7 +505,7 @@ export default function AnalyticsDashboard() {
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                     >
                       Views (24h)
-                      <SortIndicator field="views24h" />
+                      <SortIndicator field="views24h" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
@@ -508,7 +514,7 @@ export default function AnalyticsDashboard() {
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                     >
                       Shares (All)
-                      <SortIndicator field="shares" />
+                      <SortIndicator field="shares" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
@@ -517,7 +523,7 @@ export default function AnalyticsDashboard() {
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                     >
                       Shares (24h)
-                      <SortIndicator field="shares24h" />
+                      <SortIndicator field="shares24h" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   <th className="text-left py-2 px-3 font-semibold whitespace-nowrap hidden md:table-cell">
@@ -526,7 +532,7 @@ export default function AnalyticsDashboard() {
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer"
                     >
                       Published
-                      <SortIndicator field="publishedAt" />
+                      <SortIndicator field="publishedAt" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   <th className="text-left py-2 px-3 font-semibold hidden lg:table-cell">Tags</th>

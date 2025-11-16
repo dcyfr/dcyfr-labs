@@ -116,6 +116,7 @@ function StatCard({ stat }: { stat: Stat }) {
   const animatedValue = useCounter(stat.animateNumber || 0, 1500);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydration-safe pattern
     setMounted(true);
   }, []);
 
