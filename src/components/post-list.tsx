@@ -158,7 +158,7 @@ export function PostList({
   // Magazine layout: alternating large images
   if (layout === "magazine") {
     return (
-      <div className="space-y-12">
+      <div className="space-y-12" data-testid="post-list">
         {posts.map((p, index) => {
           const featuredImage = ensurePostImage(p.image, {
             title: p.title,
@@ -234,7 +234,7 @@ export function PostList({
   // Grid layout: 2-column grid with images on top
   if (layout === "grid") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6" data-testid="post-list">
         {posts.map((p, index) => {
           const featuredImage = ensurePostImage(p.image, {
             title: p.title,
@@ -310,7 +310,7 @@ export function PostList({
 
   // Default layout: compact horizontal cards
   return (
-    <>
+    <div data-testid="post-list">
       {posts.map((p, index) => {
         // Ensure every post has an image (use default if none specified)
         const featuredImage = ensurePostImage(p.image, {
@@ -383,6 +383,6 @@ export function PostList({
           </ScrollReveal>
         );
       })}
-    </>
+    </div>
   );
 }
