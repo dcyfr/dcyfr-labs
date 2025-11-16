@@ -157,7 +157,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.links.length > 0 && (
             <div className="flex flex-wrap gap-3 pt-2">
               {project.links.map((link) => {
-                const isExternal = /^(?:https?:)?/\//.test(link.href);
+                const isExternal = /^(?:https?:)?\/\//.test(link.href);
                 return isExternal ? (
                   <Button key={link.href} asChild variant="default" size="default">
                     <a href={sanitizeUrl(link.href)} target="_blank" rel="noreferrer">
