@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ExternalLink, Flame, TrendingUp, Calendar, Target, FolderGit2, Star, GitFork } from "lucide-react";
 import { GitHubHeatmapSkeleton } from "@/components/github-heatmap-skeleton";
+import { sanitizeUrl } from "@/lib/utils";
 import "react-calendar-heatmap/dist/styles.css";
 
 /**
@@ -491,7 +492,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                   {pinnedRepositories.map((repo) => (
                     <motion.a
                       key={repo.name}
-                      href={repo.url}
+                      href={sanitizeUrl(repo.url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-muted/30 rounded-lg p-4 border border-border hover:border-primary/50 transition-colors group"

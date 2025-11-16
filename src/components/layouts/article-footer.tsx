@@ -139,7 +139,7 @@ export function ArticleFooter<T>({
             {sources.map((source, index) => (
               <li key={index}>
                 <a
-                  href={source.url}
+                  href={sanitizeUrl(source.url)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline inline-flex items-center gap-1"

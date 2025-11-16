@@ -15,7 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, sanitizeUrl } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
 import { headers } from "next/headers";
 
@@ -157,10 +157,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.links.length > 0 && (
             <div className="flex flex-wrap gap-3 pt-2">
               {project.links.map((link) => {
-                const isExternal = /^(?:https?:)?\/\//.test(link.href);
+                const isExternal = /^(?:https?:)?/\//.test(link.href);
                 return isExternal ? (
                   <Button key={link.href} asChild variant="default" size="default">
-                    <a href={link.href} target="_blank" rel="noreferrer">
+                    <a href={sanitizeUrl(link.href)} target="_blank" rel="noreferrer">
                       <span>{link.label}</span>
                       <ExternalLink className="h-4 w-4 ml-2" />
                     </a>

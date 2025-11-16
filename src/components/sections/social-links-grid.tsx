@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { sanitizeUrl } from "@/lib/utils";
 import { socialLinks } from "@/data/socials";
 import {
   Github,
@@ -110,7 +111,7 @@ export function SocialLinksGrid() {
         return (
           <a
             key={social.platform}
-            href={social.url}
+            href={sanitizeUrl(social.url)}
             target="_blank"
             rel="noopener noreferrer"
             className="group"

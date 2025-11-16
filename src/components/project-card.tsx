@@ -6,7 +6,7 @@ import { ExternalLink } from "lucide-react";
 import { Project, ProjectStatus } from "@/data/projects";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, sanitizeUrl } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
 import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
@@ -177,7 +177,7 @@ export function ProjectCard({
                 <a
                   key={`${project.slug}-${link.href}`}
                   className={linkClassName}
-                  href={link.href}
+                  href={sanitizeUrl(link.href)}
                   target="_blank"
                   rel="noreferrer"
                 >
