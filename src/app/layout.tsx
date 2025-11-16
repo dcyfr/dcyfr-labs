@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import "./print.css";
-import "katex/dist/katex.min.css"; // KaTeX styles for math rendering
 import { ThemeProvider } from "@/components/theme-provider";
 import {
   SITE_URL,
@@ -26,18 +25,24 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const newsreader = Newsreader({
   variable: "--font-serif",
   subsets: ["latin"],
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -96,6 +101,10 @@ export default async function RootLayout({
   
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
           <a

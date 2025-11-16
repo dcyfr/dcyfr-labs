@@ -15,9 +15,19 @@ export function ThemeToggle() {
   const isDark = (mounted ? resolvedTheme : theme) === "dark";
 
   const handleToggle = () => {
-    startTransition(() => {
-      setTheme(isDark ? "light" : "dark");
-    });
+    // Use View Transitions API if available for smoother theme changes
+    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+      (document as Document & { startViewTransition: (callback: () => void) => void }).startViewTransition(() => {
+        startTransition(() => {
+          setTheme(isDark ? "light" : "dark");
+        });
+      });
+    } else {
+      // Fallback to regular transition
+      startTransition(() => {
+        setTheme(isDark ? "light" : "dark");
+      });
+    }
   };
 
   // Avoid hydration mismatch by rendering a stable placeholder until mounted.

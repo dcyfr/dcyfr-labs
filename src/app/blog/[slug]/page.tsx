@@ -4,6 +4,7 @@ import { posts, postsBySeries } from "@/data/posts";
 import { getPostByAnySlug } from "@/lib/blog";
 import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 import { MDX } from "@/components/mdx";
+import "katex/dist/katex.min.css"; // KaTeX styles for math rendering in blog posts
 import { getPostViews, getMultiplePostViews } from "@/lib/views";
 import { getPostShares } from "@/lib/shares";
 import { ReadingProgress } from "@/components/reading-progress";

@@ -193,6 +193,50 @@ svg {
   * {
     @apply border-border outline-ring/50;
   }
+  
+  /* ===================================================================
+     Smooth Theme Transitions
+     ================================================================ */
+  
+  /**
+   * Smooth theme transitions using View Transitions API with CSS fallback.
+   * 
+   * Strategy:
+   * 1. View Transitions API (modern browsers) - Handles everything automatically
+   * 2. CSS transitions (fallback) - Selective transitions on key elements only
+   * 
+   * This prevents flickering while providing smooth theme changes.
+   */
+  
+  /* View Transitions API support (if available) */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 300ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* CSS fallback for browsers without View Transitions API */
+  html:not(.view-transitions-supported) {
+    /* Main background transition */
+    body {
+      @apply bg-background text-foreground;
+      transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Card and surface transitions */
+    [class*="card"],
+    [class*="popover"],
+    header,
+    footer,
+    aside,
+    nav {
+      transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+  
   body {
     @apply bg-background text-foreground;
   }

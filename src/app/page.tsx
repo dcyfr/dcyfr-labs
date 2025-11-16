@@ -37,6 +37,9 @@ export const metadata: Metadata = createPageMetadata({
   path: "/",
 });
 
+// Enable Incremental Static Regeneration for homepage
+export const revalidate = 3600; // 1 hour
+
 export default async function Home() {
   // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";

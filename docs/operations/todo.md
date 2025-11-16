@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 11, 2025 (Revised with priority framework)
+**Last Updated:** November 15, 2025 (Added performance optimizations)
 
 ---
 
@@ -135,6 +135,33 @@ This todo list is organized by **criticality, impact, and ROI**:
 ## 🟡 MEDIUM - Next Month (Phase 2: Performance & Visibility Continued)
 
 ### Performance Optimization
+
+- [x] **Initial load optimization for first-time visitors** (1.5 hours) ✅ **COMPLETED** (Nov 15, 2025)
+  - ✅ Font loading: Added preload, adjustFontFallback, dns-prefetch, preconnect
+  - ✅ CSS scoping: Moved katex.min.css from global to blog posts only
+  - ✅ Bundle optimization: Added optimizePackageImports and removeConsole
+  - ✅ Homepage ISR: Added revalidate = 3600 for static generation
+  - **Impact**: Faster FCP, reduced initial bundle, improved Core Web Vitals
+  - **Backlogged**: Lazy loading, PPR, image blur placeholders, ScrollReveal optimization
+
+- [ ] **Lazy load below-fold components** (2-3 hours) ⚪ **BACKLOG**
+  - Dynamic imports for FeaturedPostHero and heavy components
+  - Add loading skeletons for perceived performance
+  - **Impact**: Faster TTI, reduced initial JS execution
+
+- [ ] **Optimize ScrollReveal usage** (3-4 hours) ⚪ **BACKLOG**
+  - Replace with CSS-only animations or lazy load
+  - Reduces client-side JS requirements
+  - **Impact**: Less JavaScript execution time
+
+- [ ] **Add image blur placeholders** (2-3 hours) ⚪ **BACKLOG**
+  - Generate blurDataURL for priority images
+  - **Impact**: Better visual loading, reduced CLS
+
+- [ ] **Implement Partial Prerendering (PPR)** (4-6 hours) ⚪ **BACKLOG**
+  - Enable experimental PPR in Next.js config
+  - Add strategic Suspense boundaries
+  - **Impact**: Hybrid static/dynamic rendering
 
 - [ ] **Performance monitoring with budgets** (3-4 hours)
   - **Core Web Vitals targets**:
