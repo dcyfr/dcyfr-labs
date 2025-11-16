@@ -102,4 +102,4 @@ jobs:
 
       - name: Fail if performance regressed
         if: always()
-        run: npm run lhci:validate
+        run: npm run lhci:assert
