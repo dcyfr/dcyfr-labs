@@ -6,8 +6,7 @@
 				"-y",
 				"@modelcontextprotocol/server-memory"
 			],
-			"type": "stdio",
-			"disabled": false
+			"type": "stdio"
 		},
 		"Thinking": {
 			"command": "npx",
@@ -15,8 +14,7 @@
 				"-y",
 				"@modelcontextprotocol/server-sequential-thinking"
 			],
-			"type": "stdio",
-			"disabled": false
+			"type": "stdio"
 		},
 		"Context7": {
 			"command": "npx",
@@ -24,23 +22,19 @@
 				"-y",
 				"@upstash/context7-mcp@latest"
 			],
-			"type": "stdio",
-			"disabled": false
+			"type": "stdio"
 		},
 		"GitHub": {
 			"type": "http",
-			"url": "https://api.githubcopilot.com/mcp/",
-			"disabled": false
+			"url": "https://api.githubcopilot.com/mcp/"
 		},
         "Vercel": {
             "url": "https://mcp.vercel.com",
-            "type": "http",
-			"disabled": false
+            "type": "http"
         },
         "Sentry": {
 			"url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/cyberdrew-dev",
-			"type": "http",
-			"disabled": false
+			"type": "http"
 		},
 		"Filesystem": {
 			"command": "npx",
@@ -52,8 +46,7 @@
 				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/docs",
 				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/data"
 			],
-			"type": "stdio",
-			"disabled": false
+			"type": "stdio"
 		},
 		"BraveSearch": {
 			"command": "npx",
@@ -62,7 +55,6 @@
 				"@modelcontextprotocol/server-brave-search"
 			],
 			"type": "stdio",
-			"disabled": false,
 			"env": {
 				"BRAVE_API_KEY": "BSAI0IiOGSDDgMn4qXNj_xc1qmV4_XW"
 			}

@@ -8,7 +8,32 @@ This directory contains utility scripts for development, testing, and maintenanc
 
 ### Core Utilities
 
+#### check-security-alert.mjs
+
+Checks the status of GitHub security code scanning alerts using the GitHub API.
+
+```bash
+# Check by alert number (defaults to dcyfr/cyberdrew-dev)
+node scripts/check-security-alert.mjs 2
+
+# Check by full URL
+node scripts/check-security-alert.mjs https://github.com/dcyfr/cyberdrew-dev/security/code-scanning/2
+```
+
+**Features:**
+
+- Accepts alert number or full GitHub security URL
+- Shows alert state (open/fixed/dismissed)
+- Displays rule ID, severity, and location
+- Returns appropriate exit codes for CI/CD
+
+**Exit Codes:**
+
+- `0` - Alert is fixed, dismissed, or not found (resolved)
+- `1` - Alert is still open or error occurred
+
 #### sync-agents.mjs
+
 Syncs `.github/copilot-instructions.md` to `agents.md` and `mcp.json` in the root directory. Runs automatically before `dev`, `dev:https`, and `build`.
 
 ```bash

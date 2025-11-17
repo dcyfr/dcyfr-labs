@@ -10,6 +10,46 @@ Full-stack developer portfolio with Next.js 15 App Router, TypeScript, Tailwind 
 
 Both tools share these instructions but optimize differently: CLI focuses on actionable patterns and validation; Chat emphasizes architectural context and learning resources.
 
+## GitHub Security Code Scanning Alerts
+
+When asked to check or verify GitHub security code scanning alerts (URLs like `https://github.com/{owner}/{repo}/security/code-scanning/{alert_number}`):
+
+**Approach**: Use GitHub API directly via terminal since the GitHub MCP server doesn't have dedicated code scanning tools.
+
+**Available API Endpoints**:
+- `GET /repos/{owner}/{repo}/code-scanning/alerts` — List all alerts
+- `GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}` — Get specific alert
+- `PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}` — Update alert (dismiss/reopen)
+
+**Verification Workflow**:
+1. Extract owner, repo, and alert number from URL
+2. Use `gh api` command to fetch alert details:
+   ```bash
+   gh api /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}
+   ```
+3. Check `state` field: `open`, `closed`, `dismissed`, or `fixed`
+4. If alert returns 404, it has been deleted/resolved
+5. Validate with `npm audit` for dependency-related alerts
+
+**Example Commands**:
+```bash
+# Get specific alert
+gh api /repos/dcyfr/cyberdrew-dev/code-scanning/alerts/2
+
+# List all alerts (with state filter)
+gh api /repos/dcyfr/cyberdrew-dev/code-scanning/alerts --jq '.[] | {number, state, rule: .rule.id}'
+
+# Check if dependency exists
+npm ls @package/name
+```
+
+**Key Response Fields**:
+- `number` — Alert ID
+- `state` — Current status (open/closed/dismissed/fixed)
+- `rule.id` — Vulnerability identifier
+- `most_recent_instance.location` — File/line where issue exists
+- `dismissed_reason` — Why alert was dismissed (if applicable)
+
 ## Stack & Commands
 
 **Core**: Next.js 16 + React 19 + TypeScript (strict) + Tailwind v4 + shadcn/ui + MDX
