@@ -16,8 +16,9 @@ const WORDS_PER_MINUTE = 225;
  * @param publishedAt ISO date string (e.g., "2025-10-05")
  * @param slug Blog post slug (used as additional entropy)
  * @returns Stable post ID (e.g., "post-20251005-abc123")
+ * @internal Exported for testing purposes only
  */
-function generatePostId(publishedAt: string, slug: string): string {
+export function generatePostId(publishedAt: string, slug: string): string {
   // Create deterministic hash from published date and slug
   const input = `${publishedAt}:${slug}`;
   const hash = crypto
@@ -31,7 +32,11 @@ function generatePostId(publishedAt: string, slug: string): string {
   return `post-${date}-${hash}`;
 }
 
-function calculateReadingTime(body: string): Post["readingTime"] {
+/**
+ * Calculate reading time for blog post content
+ * @internal Exported for testing purposes only
+ */
+export function calculateReadingTime(body: string): Post["readingTime"] {
   const words = body
     .replace(/```[\s\S]*?```/g, " ")
     .replace(/<[^>]*>/g, " ")
