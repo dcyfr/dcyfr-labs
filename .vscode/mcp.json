@@ -47,17 +47,6 @@
 				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/data"
 			],
 			"type": "stdio"
-		},
-		"BraveSearch": {
-			"command": "npx",
-			"args": [
-				"-y",
-				"@modelcontextprotocol/server-brave-search"
-			],
-			"type": "stdio",
-			"env": {
-				"BRAVE_API_KEY": "BSAI0IiOGSDDgMn4qXNj_xc1qmV4_XW"
-			}
 		}
 	}
 }

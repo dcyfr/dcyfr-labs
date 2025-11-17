@@ -355,7 +355,6 @@ npx -y @modelcontextprotocol/server-filesystem --version
 2. **Create content templates** for common post types
 3. **Set up quality checks** for frontmatter validation
 4. **Document custom workflows** specific to your needs
-5. **Integrate with other MCPs** (e.g., Brave Search for content research)
 
 ---
 

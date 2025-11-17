@@ -37,7 +37,6 @@ Review the specific test that failed and see troubleshooting below.
 | Sentry (HTTP) | 2 | ✅ |
 | Vercel (HTTP) | 2 | ✅ |
 | Filesystem Server | - | 🆕 |
-| Brave Search | - | 🆕 |
 | npm/npx Availability | 2 | ✅ |
 | Documentation | 3 | ✅ |
 | Project Scripts | 2 | ✅ |
@@ -82,7 +81,6 @@ npm run test:mcp-servers
 4. **Sentry** — Production error monitoring (HTTP MCP)
 5. **Vercel** — Deployment management and platform integration (HTTP MCP)
 6. **Filesystem** — File and content management 🆕
-7. **Brave Search** — Web research and content validation 🆕
 
 All ✅ configured and accessible
 

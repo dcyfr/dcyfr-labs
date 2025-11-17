@@ -9,18 +9,16 @@ This directory contains detailed implementation plans for MCP servers that enhan
 | MCP Server | Status | Priority | Complexity | Setup Time | Cost | Key Benefit |
 |------------|--------|----------|------------|------------|------|-------------|
 | [Filesystem](./filesystem-mcp.md) | ✅ **Implemented** | **Tier 1** | ⭐ Easy | 10 min | $0 | MDX content management |
-| [Brave Search](./brave-search-mcp.md) | ✅ **Implemented** | **Tier 1** | ⭐⭐ Medium | 15 min | $0* | Content research & validation |
+| [Brave Search](./archive/brave-search-mcp.md) | ❌ **Removed** | **Tier 1** | ⭐⭐ Medium | 15 min | $0* | Content research & validation |
 | [Fetch](./fetch-mcp.md) | ❌ **Removed** | **Tier 2** | ⭐ Easy | 5 min | $0 | Link validation & API testing |
 | [Time](./time-mcp.md) | ⏸️ **Deferred** | **Tier 2** | ⭐ Easy | 15 min | $0 | Publishing schedules & timezones |
 | [Puppeteer](./puppeteer-mcp.md) | 📋 **Backlog** | **Tier 1** | ⭐⭐ Medium | 20 min | $0 | Screenshots & OG images |
-
-*Brave Search has a free tier (2,000 queries/month)
 
 ---
 
 ## Current Implementation
 
-### ✅ Active MCP Servers (8 total)
+### ✅ Active MCP Servers (7 total)
 
 **Core MCPs**:
 1. **Memory** - Project context and decisions
@@ -34,7 +32,6 @@ This directory contains detailed implementation plans for MCP servers that enhan
 
 **New Additions** (Nov 11, 2025):
 7. **Filesystem** - MDX content and file management
-8. **Brave Search** - Web research and content validation
 
 ### 📋 Backlog
 
@@ -42,6 +39,7 @@ This directory contains detailed implementation plans for MCP servers that enhan
 
 ### ⏸️ Deferred
 
+- **Brave Search MCP** - Web research and content validation (removed, use browser search instead)
 - **Fetch MCP** - HTTP requests and link validation (removed, use browser or curl instead)
 - **Time MCP** - Scheduling and timezone utilities (low priority, can use AI directly)
 
@@ -51,22 +49,7 @@ This directory contains detailed implementation plans for MCP servers that enhan
 
 ### Step 1: Verify Installation
 
-The three new MCPs have been added to `.vscode/mcp.json`. To activate them:
-
-1. **Get Brave Search API Key** (required):
-   - Go to <https://brave.com/search/api/>
-   - Sign up for free account (2,000 queries/month)
-   - Create API key
-   - Copy the key (format: `BSA...`)
-
-2. **Add API Key to Environment**:
-   ```bash
-   # Create .env.local file
-   cp .env.local.example .env.local
-   
-   # Edit .env.local and add your key:
-   BRAVE_API_KEY=BSAyour_actual_key_here
-   ```
+The new MCPs have been added to `.vscode/mcp.json`. To activate them:
 
 3. **Restart VS Code**:
    - Completely quit VS Code
@@ -81,12 +64,6 @@ Prompt: "List all MDX files in the blog content directory"
 Expected: List of all blog post files
 ```
 
-**Test Brave Search MCP** (requires API key):
-```
-Prompt: "Search for Next.js 15 new features"
-Expected: Recent articles and documentation about Next.js 15
-```
-
 ---
 
 ## Integration Synergies
@@ -95,7 +72,6 @@ Expected: Recent articles and documentation about Next.js 15
 
 ```
 Research Phase:
-├─ Brave Search MCP: Find trending topics
 ├─ Fetch MCP: Validate sources and documentation
 └─ Memory MCP: Remember research findings
 
@@ -106,7 +82,6 @@ Planning Phase:
 
 Writing Phase:
 ├─ Context7 MCP: Get library documentation
-├─ Brave Search MCP: Verify technical accuracy
 └─ Filesystem MCP: Manage drafts and assets
 
 Publishing Phase:
@@ -125,8 +100,7 @@ Post-Publish:
 
 **Example 1: Complete Post Creation**
 ```
-"Research Next.js 15 features (Brave Search)
-→ Create blog post template (Filesystem)
+"Create blog post template (Filesystem)
 → Get official Next.js docs (Context7)
 → Generate OG image (Puppeteer)
 → Validate external links (Fetch)
@@ -138,7 +112,6 @@ Post-Publish:
 ```
 "Find all posts with tag 'react' (Filesystem)
 → Check which links are broken (Fetch)
-→ Search for updated information (Brave Search)
 → Update posts with new content (Filesystem)
 → Regenerate OG images (Puppeteer)
 → Update timestamps (Time)"
@@ -162,9 +135,6 @@ Post-Publish:
 
 **If you want immediate productivity gains**:
 → Start with [Filesystem MCP](./filesystem-mcp.md)
-
-**If content quality is priority**:
-→ Start with [Brave Search MCP](./brave-search-mcp.md)
 
 **If you need visual automation**:
 → Start with [Puppeteer MCP](./puppeteer-mcp.md)
@@ -228,12 +198,12 @@ Common issues covered:
 
 ### Immediate Benefits (Week 1)
 
-**With Filesystem + Brave Search**:
-- ✅ Faster content creation (templates, research)
-- ✅ Higher content quality (validation, citations)
+**With Filesystem**:
+- ✅ Faster content creation (templates)
 - ✅ Better organization (bulk operations)
+- ✅ Streamlined file management
 
-**Time Savings**: ~2 hours per blog post
+**Time Savings**: ~1 hour per blog post
 
 ### Medium-term Benefits (Month 1)
 

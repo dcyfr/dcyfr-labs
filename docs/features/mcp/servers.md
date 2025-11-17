@@ -214,35 +214,6 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
 
 ---
 
-### 9. **Brave Search** (Official MCP) 🆕
-
-**Purpose**: Web search for content research and validation
-
-**Use Cases**:
-- Research topics before writing
-- Find authoritative sources and citations
-- Verify technical accuracy
-- Competitive content analysis
-- SEO keyword research
-
-**How to Use**:
-- "Search for Next.js 15 new features"
-- "Find official documentation for Vercel deployment"
-- "What are developers writing about React 19?"
-- "Search for trending web development topics"
-
-**Benefits**:
-- ✅ Privacy-focused search (no tracking)
-- ✅ Research without leaving editor
-- ✅ Authoritative source discovery
-- ✅ Free tier: 2,000 queries/month
-
-**Setup Required**: Brave Search API key (free at https://brave.com/search/api/)
-
-**Documentation**: [Brave Search MCP Implementation Guide](./implementation-plans/brave-search-mcp.md)
-
----
-
 ## Additional Tools
 
 ### Snyk Extension

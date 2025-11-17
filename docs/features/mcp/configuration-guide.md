@@ -17,7 +17,6 @@ This project uses Model Context Protocol (MCP) servers to enhance AI-assisted de
 | Vercel | http | Deployment management |
 | Sentry | http | Error monitoring |
 | Filesystem | stdio | Local file access |
-| BraveSearch | stdio | Web search |
 
 ## Configuration
 
@@ -37,11 +36,6 @@ This project uses Model Context Protocol (MCP) servers to enhance AI-assisted de
    ```json
    {
      "servers": {
-       "BraveSearch": {
-         "env": {
-           "BRAVE_API_KEY": "YOUR_ACTUAL_KEY_HERE"
-         }
-       },
        "Sentry": {
          "url": "https://mcp.sentry.dev/mcp/YOUR_ORG/YOUR_PROJECT"
        }
@@ -66,10 +60,7 @@ MCP servers run in the VS Code/Copilot environment, **not in your Next.js app**.
 
 If you want to use environment variables instead of hardcoded values:
 
-1. **Add to your shell config** (`~/.zshrc` or `~/.bashrc`):
-   ```bash
-   export BRAVE_API_KEY="your_key_here"
-   ```
+1. **Add to your shell config** (`~/.zshrc` or `~/.bashrc`)
 
 2. **Reload your shell**:
    ```bash
@@ -78,12 +69,7 @@ If you want to use environment variables instead of hardcoded values:
 
 3. **Restart VS Code completely** (quit and relaunch, not just reload window)
 
-4. **Use variable syntax in mcp.json**:
-   ```json
-   "env": {
-     "BRAVE_API_KEY": "${BRAVE_API_KEY}"
-   }
-   ```
+4. **Use variable syntax in mcp.json**
 
 **Note**: This only works if VS Code inherits the shell environment, which may not happen if launched from Finder or Dock.
 
@@ -103,7 +89,6 @@ If you want to use environment variables instead of hardcoded values:
 **Symptom**: `Rate limit exceeded` errors
 
 **Solutions**:
-- **Brave Search**: Free tier has limits; upgrade for higher quota
 - **GitHub**: Add `GITHUB_TOKEN` to increase from 60 to 5,000 req/hour
 - **Sentry**: Check your organization's plan limits
 
@@ -161,7 +146,6 @@ npx -y @modelcontextprotocol/server-memory
 
 | Service | URL | Notes |
 |---------|-----|-------|
-| Brave Search | [brave.com/search/api](https://brave.com/search/api/) | Free tier available |
 | GitHub | [github.com/settings/tokens](https://github.com/settings/tokens) | Personal access token |
 | Sentry | Project settings → Auth Tokens | Organization-level token |
 | Vercel | Automatically configured via Copilot | No manual setup needed |
@@ -170,7 +154,6 @@ npx -y @modelcontextprotocol/server-memory
 
 - **GitHub**: `repo`, `read:org` (read-only recommended)
 - **Sentry**: `project:read`, `org:read`
-- **Brave**: No permission scopes (API key only)
 
 ## Testing MCP Configuration
 
@@ -187,7 +170,6 @@ Use GitHub Copilot Chat in VS Code:
 ```
 Use the Memory MCP to store a test entity
 Use Context7 to lookup Next.js documentation
-Use Brave Search to find recent articles about MCP
 ```
 
 ### Check Logs
@@ -197,7 +179,7 @@ MCP server logs appear in:
 - **Terminal**: Run servers manually for debugging
 
 ```bash
-npx -y @modelcontextprotocol/server-brave-search
+npx -y @modelcontextprotocol/server-memory
 ```
 
 ## Updating MCP Servers

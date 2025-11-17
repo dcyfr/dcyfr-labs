@@ -396,14 +396,6 @@ Prompt: "Fetch /sitemap.xml and verify each URL returns 200"
 
 ## Integration with Other MCPs
 
-### With Brave Search MCP
-```
-Workflow:
-1. "Search for Next.js tutorials"
-2. "Fetch the top 3 results"
-3. "Analyze their content structure"
-```
-
 ### With Memory MCP
 ```
 Workflow:

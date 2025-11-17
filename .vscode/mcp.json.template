@@ -54,18 +54,6 @@
 			],
 			"type": "stdio",
 			"disabled": false
-		},
-		"BraveSearch": {
-			"command": "npx",
-			"args": [
-				"-y",
-				"@modelcontextprotocol/server-brave-search"
-			],
-			"type": "stdio",
-			"disabled": false,
-			"env": {
-				"BRAVE_API_KEY": "YOUR_BRAVE_API_KEY_HERE"
-			}
 		}
 	}
 }
