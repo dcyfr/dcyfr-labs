@@ -5,12 +5,23 @@ name: "CodeQL Analysis"
 
 on:
   push:
-    branches: ["main", "preview"]
+    branches: ["main"]  # Only on main to reduce PR overhead
   pull_request:
     branches: ["main"]
+    paths:  # Only run if code changes, not docs
+      - '**.ts'
+      - '**.tsx'
+      - '**.js'
+      - '**.jsx'
+      - 'package*.json'
   schedule:
     # Run at 06:00 UTC every day
     - cron: '0 6 * * *'
+
+# Cancel in-progress runs for same branch
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
