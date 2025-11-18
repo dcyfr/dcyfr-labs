@@ -24,8 +24,8 @@ The Filesystem MCP provides secure, sandboxed file system operations within VS C
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/content/blog",
-        "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/public"
+        "src/content/blog",
+        "public"
       ],
       "type": "stdio",
       "disabled": false
@@ -57,10 +57,10 @@ Filesystem MCP uses **allowlist-only access**. Only specify directories you want
 "args": [
   "-y",
   "@modelcontextprotocol/server-filesystem",
-  "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/content/blog",      // Blog posts
-  "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/public/blog/images",    // Blog images
-  "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/docs",                  // Documentation
-  "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/data"               // Data files
+  "src/content/blog",      // Blog posts
+  "public/blog/images",    // Blog images
+  "docs",                  // Documentation
+  "src/data"               // Data files
 ]
 ```
 

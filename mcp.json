@@ -32,34 +32,16 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev"
+        "."
       ],
       "disabled": false,
       "alwaysAllow": []
     },
     "github": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "GITHUB_PERSONAL_ACCESS_TOKEN",
-        "ghcr.io/github/github-mcp-server"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}"
-      },
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
       "disabled": false,
       "alwaysAllow": []
     }
-  },
-  "inputs": [
-    {
-      "type": "promptString",
-      "id": "github_token",
-      "description": "GitHub Personal Access Token (create at https://github.com/settings/personal-access-tokens/new)",
-      "password": true
-    }
-  ]
+  }
 }

@@ -47,10 +47,10 @@
 			"args": [
 				"-y",
 				"@modelcontextprotocol/server-filesystem",
-				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/content/blog",
-				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/public/blog/images",
-				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/docs",
-				"/Users/drew/Desktop/dcyfr/code/cyberdrew-dev/src/data"
+				"src/content/blog",
+				"public/blog/images",
+				"docs",
+				"src/data"
 			],
 			"type": "stdio",
 			"disabled": false
