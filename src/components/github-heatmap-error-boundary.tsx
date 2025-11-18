@@ -5,6 +5,7 @@ import { ErrorBoundary, type ErrorFallbackProps } from "./error-boundary";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AlertCircle, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
  * Error fallback specifically for the GitHub heatmap component.
