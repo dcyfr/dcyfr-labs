@@ -81,7 +81,7 @@ Removed deprecated files:
 │  Transparent    │
 │  ┌───────────┐  │
 │  │ Light bg  │  │
-│  │   ✦ Dark  │  │
+│  │   - Dark  │  │
 │  │           │  │
 │  └───────────┘  │
 │                 │
@@ -94,7 +94,7 @@ Removed deprecated files:
 │  Transparent    │
 │  ┌───────────┐  │
 │  │ Dark bg   │  │
-│  │  ✦ Light  │  │
+│  │  - Light  │  │
 │  │           │  │
 │  └───────────┘  │
 │                 │

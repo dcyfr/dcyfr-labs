@@ -2,7 +2,7 @@
 
 ## Overview
 
-The site uses a unified logo system based on a sparkle/star SVG (✦) that's consistently applied across all branding touchpoints.
+The site uses a unified logo system based on a sparkle/star SVG that's consistently applied across all branding touchpoints.
 
 ## Architecture
 

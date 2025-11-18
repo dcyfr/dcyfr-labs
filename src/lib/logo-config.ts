@@ -7,7 +7,7 @@
  */
 
 /**
- * The SVG path data for the sparkle/star logo (✦)
+ * The SVG path data for the sparkle/star logo
  * 
  * This path is used across:
  * - Logo component (/src/components/logo.tsx)

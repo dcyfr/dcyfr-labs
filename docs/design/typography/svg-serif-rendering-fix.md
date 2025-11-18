@@ -135,7 +135,7 @@ Added inline `shapeRendering` for maximum compatibility:
 
 - [x] Logo appears smooth in header
 - [x] Logo appears smooth in footer
-- [x] Homepage title "Hi, I'm Drew ✦" is crisp
+- [x] Homepage title "Hi, I'm Drew" is crisp
 - [x] Blog post titles render smoothly
 - [x] Related posts section title is smooth
 - [x] Logo scales well at different sizes

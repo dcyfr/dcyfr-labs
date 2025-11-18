@@ -5,11 +5,11 @@ export const DOMAIN_DEV = "localhost:3000";
 export const DOMAIN_PREVIEW = "cyberdrew.vercel.app";
 export const DOMAIN_PRODUCTION = "cyberdrew.dev";
 
-export const AUTHOR_NAME = "Drew ✦";
+export const AUTHOR_NAME = "Drew";
 export const AUTHOR_EMAIL = "drew@cyberdrew.dev";
 
 // For display in UI (with sparkle character)
-export const SITE_TITLE = "Drew's Lab ✦";
+export const SITE_TITLE = "Drew's Lab";
 export const SITE_TITLE_PLAIN = "Drew's Lab"; // For meta tags (without special characters)
 export const SITE_SUBTITLE = "Developer Portfolio & Tech Blog";
 export const SITE_DESCRIPTION = "Personal portfolio and blog of Drew, a cybersecurity architect and developer sharing insights on coding, security, and tech trends.";

@@ -26,9 +26,9 @@ import type { Project } from '@/data/projects';
 // Mock dependencies
 vi.mock('@/lib/site-config', () => ({
   SITE_URL: 'https://cyberdrew.dev',
-  AUTHOR_NAME: 'Drew ✦',
+  AUTHOR_NAME: 'Drew',
   AUTHOR_EMAIL: 'drew@cyberdrew.dev',
-  SITE_TITLE: "Drew's Lab ✦",
+  SITE_TITLE: "Drew's Lab",
   SITE_DESCRIPTION: 'Portfolio and blog',
 }));
 
@@ -82,7 +82,7 @@ describe('feeds.ts', () => {
       expect(item.published).toEqual(new Date('2024-01-15'));
       expect(item.categories).toEqual(['test', 'blog']);
       expect(item.author).toEqual({
-        name: 'Drew ✦',
+        name: 'Drew',
         email: 'drew@cyberdrew.dev',
       });
     });
@@ -204,7 +204,7 @@ describe('feeds.ts', () => {
       expect(item.description).toBe('A test project');
       expect(item.link).toBe('https://cyberdrew.dev/projects/test-project');
       expect(item.author).toEqual({
-        name: 'Drew ✦',
+        name: 'Drew',
         email: 'drew@cyberdrew.dev',
       });
     });
@@ -678,7 +678,7 @@ describe('feeds.ts', () => {
       const xml = await buildBlogFeed(testPosts);
 
       // Apostrophe is escaped in XML element text
-      expect(xml).toContain("Drew&apos;s Lab ✦ - Blog");
+      expect(xml).toContain("Drew&apos;s Lab - Blog");
       expect(xml).toContain('/blog');
     });
   });
@@ -746,7 +746,7 @@ describe('feeds.ts', () => {
       const xml = await buildProjectsFeed(testProjects);
 
       // Apostrophe is escaped in XML element text
-      expect(xml).toContain("Drew&apos;s Lab ✦ - Projects");
+      expect(xml).toContain("Drew&apos;s Lab - Projects");
       expect(xml).toContain('/projects');
     });
   });
@@ -858,7 +858,7 @@ describe('feeds.ts', () => {
       const xml = await buildCombinedFeed(testPosts, testProjects);
 
       // Apostrophe is escaped in XML element text
-      expect(xml).toContain("Drew&apos;s Lab ✦");
+      expect(xml).toContain("Drew&apos;s Lab");
       expect(xml).toContain('Portfolio and blog');
       expect(xml).toContain('https://cyberdrew.dev/feed');
     });

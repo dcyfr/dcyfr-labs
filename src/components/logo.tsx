@@ -4,7 +4,7 @@ import { LOGO_CONFIG } from '@/lib/logo-config';
 /**
  * Logo Component - Sparkle/Star SVG
  * 
- * A reusable SVG logo component that displays a decorative sparkle/star symbol (✦).
+ * A reusable SVG logo component that displays a decorative sparkle/star symbol.
  * Supports customizable size, color, and styling through props.
  * 
  * @example
