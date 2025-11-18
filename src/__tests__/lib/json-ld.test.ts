@@ -403,7 +403,7 @@ describe('json-ld.ts', () => {
 
     it('should include AboutPage schema', () => {
       const schema = getAboutPageSchema('About page description');
-      const aboutPage = schema['@graph'][0];
+      const aboutPage = schema['@graph'][0] as any;
 
       expect(aboutPage['@type']).toBe('AboutPage');
       expect(aboutPage.url).toBe('https://example.com/about');
@@ -430,7 +430,7 @@ describe('json-ld.ts', () => {
 
     it('should link AboutPage to Person', () => {
       const schema = getAboutPageSchema('About page description');
-      const aboutPage = schema['@graph'][0];
+      const aboutPage = schema['@graph'][0] as any;
 
       expect(aboutPage.about).toEqual({
         '@id': 'https://example.com/#person',
@@ -439,7 +439,7 @@ describe('json-ld.ts', () => {
 
     it('should link ProfilePage to Person', () => {
       const schema = getAboutPageSchema('About page description');
-      const profilePage = schema['@graph'][1];
+      const profilePage = schema['@graph'][1] as any;
 
       expect(profilePage.mainEntity).toEqual({
         '@id': 'https://example.com/#person',
@@ -448,7 +448,7 @@ describe('json-ld.ts', () => {
 
     it('should include social image when provided', () => {
       const schema = getAboutPageSchema('About page description', 'https://example.com/profile.jpg');
-      const personSchema = schema['@graph'][2];
+      const personSchema = schema['@graph'][2] as any;
 
       expect(personSchema.image).toBe('https://example.com/profile.jpg');
     });

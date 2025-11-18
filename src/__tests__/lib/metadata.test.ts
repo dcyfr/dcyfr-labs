@@ -61,7 +61,7 @@ describe('metadata.ts', () => {
       expect(metadata.openGraph?.description).toBe('Learn more about us');
       expect(metadata.openGraph?.url).toBe('https://cyberdrew.dev/about');
       expect(metadata.openGraph?.siteName).toBe("Drew's Lab");
-      expect(metadata.openGraph?.type).toBe('website');
+      expect((metadata.openGraph as any)?.type).toBe('website');
     });
 
     it('should include keywords when provided', () => {
@@ -87,11 +87,12 @@ describe('metadata.ts', () => {
       const metadata = createPageMetadata(options);
 
       expect(metadata.openGraph?.images).toHaveLength(1);
-      expect(metadata.openGraph?.images?.[0].url).toContain('/opengraph-image');
-      expect(metadata.openGraph?.images?.[0].url).toContain('title=Test+Page');
-      expect(metadata.openGraph?.images?.[0].width).toBe(1200);
-      expect(metadata.openGraph?.images?.[0].height).toBe(630);
-      expect(metadata.openGraph?.images?.[0].type).toBe('image/png');
+      const ogImage = (metadata.openGraph?.images as any)?.[0];
+      expect(ogImage.url).toContain('/opengraph-image');
+      expect(ogImage.url).toContain('title=Test+Page');
+      expect(ogImage.width).toBe(1200);
+      expect(ogImage.height).toBe(630);
+      expect(ogImage.type).toBe('image/png');
     });
 
     it('should use custom image when provided', () => {
@@ -107,11 +108,12 @@ describe('metadata.ts', () => {
 
       const metadata = createPageMetadata(options);
 
-      expect(metadata.openGraph?.images?.[0].url).toBe('https://example.com/custom.jpg');
-      expect(metadata.openGraph?.images?.[0].width).toBe(1920);
-      expect(metadata.openGraph?.images?.[0].height).toBe(1080);
-      expect(metadata.openGraph?.images?.[0].type).toBe('image/jpeg');
-      expect(metadata.openGraph?.images?.[0].alt).toBe('Custom alt text');
+      const ogImage = (metadata.openGraph?.images as any)?.[0];
+      expect(ogImage.url).toBe('https://example.com/custom.jpg');
+      expect(ogImage.width).toBe(1920);
+      expect(ogImage.height).toBe(1080);
+      expect(ogImage.type).toBe('image/jpeg');
+      expect(ogImage.alt).toBe('Custom alt text');
     });
 
     it('should generate Twitter card metadata', () => {
@@ -123,11 +125,11 @@ describe('metadata.ts', () => {
 
       const metadata = createPageMetadata(options);
 
-      expect(metadata.twitter?.card).toBe('summary_large_image');
+      expect((metadata.twitter as any)?.card).toBe('summary_large_image');
       expect(metadata.twitter?.title).toBe("Twitter Test — Drew's Lab");
       expect(metadata.twitter?.description).toBe('Twitter card test');
       expect(metadata.twitter?.images).toHaveLength(1);
-      expect(metadata.twitter?.images?.[0]).toContain('/twitter-image');
+      expect((metadata.twitter?.images as any)?.[0]).toContain('/twitter-image');
     });
 
     it('should default image alt to title when not provided', () => {
@@ -139,7 +141,7 @@ describe('metadata.ts', () => {
 
       const metadata = createPageMetadata(options);
 
-      expect(metadata.openGraph?.images?.[0].alt).toBe("Default Alt — Drew's Lab");
+      expect((metadata.openGraph?.images as any)?.[0].alt).toBe("Default Alt — Drew's Lab");
     });
   });
 
@@ -257,8 +259,8 @@ describe('metadata.ts', () => {
 
       expect(metadata.title).toBe('My Blog Post');
       expect(metadata.description).toBe('A great blog post');
-      expect(metadata.openGraph?.type).toBe('article');
-      expect(metadata.openGraph?.publishedTime).toBe(baseDate.toISOString());
+      expect((metadata.openGraph as any)?.type).toBe('article');
+      expect((metadata.openGraph as any)?.publishedTime).toBe(baseDate.toISOString());
     });
 
     it('should normalize single author to array', () => {
@@ -272,7 +274,7 @@ describe('metadata.ts', () => {
       const metadata = createArticlePageMetadata(options);
 
       expect(metadata.authors).toEqual([{ name: 'Drew Cypher' }]);
-      expect(metadata.openGraph?.authors).toEqual(['Drew Cypher']);
+      expect((metadata.openGraph as any)?.authors).toEqual(['Drew Cypher']);
     });
 
     it('should handle multiple authors', () => {
@@ -290,7 +292,7 @@ describe('metadata.ts', () => {
         { name: 'Jane Doe' },
         { name: 'John Smith' },
       ]);
-      expect(metadata.openGraph?.authors).toEqual(['Drew Cypher', 'Jane Doe', 'John Smith']);
+      expect((metadata.openGraph as any)?.authors).toEqual(['Drew Cypher', 'Jane Doe', 'John Smith']);
     });
 
     it('should handle missing author', () => {
@@ -303,7 +305,7 @@ describe('metadata.ts', () => {
       const metadata = createArticlePageMetadata(options);
 
       expect(metadata.authors).toBeUndefined();
-      expect(metadata.openGraph?.authors).toBeUndefined();
+      expect((metadata.openGraph as any)?.authors).toBeUndefined();
     });
 
     it('should set modifiedTime when provided', () => {
@@ -317,8 +319,8 @@ describe('metadata.ts', () => {
 
       const metadata = createArticlePageMetadata(options);
 
-      expect(metadata.openGraph?.publishedTime).toBe(baseDate.toISOString());
-      expect(metadata.openGraph?.modifiedTime).toBe(modifiedDate.toISOString());
+      expect((metadata.openGraph as any)?.publishedTime).toBe(baseDate.toISOString());
+      expect((metadata.openGraph as any)?.modifiedTime).toBe(modifiedDate.toISOString());
     });
 
     it('should use publishedAt for modifiedTime when not provided', () => {
@@ -331,7 +333,7 @@ describe('metadata.ts', () => {
 
       const metadata = createArticlePageMetadata(options);
 
-      expect(metadata.openGraph?.modifiedTime).toBe(baseDate.toISOString());
+      expect((metadata.openGraph as any)?.modifiedTime).toBe(baseDate.toISOString());
     });
 
     it('should include keywords in Open Graph tags', () => {
@@ -345,7 +347,7 @@ describe('metadata.ts', () => {
       const metadata = createArticlePageMetadata(options);
 
       expect(metadata.keywords).toEqual(['react', 'typescript', 'nextjs']);
-      expect(metadata.openGraph?.tags).toEqual(['react', 'typescript', 'nextjs']);
+      expect((metadata.openGraph as any)?.tags).toEqual(['react', 'typescript', 'nextjs']);
     });
 
     it('should use custom hero image when provided', () => {
@@ -361,11 +363,12 @@ describe('metadata.ts', () => {
 
       const metadata = createArticlePageMetadata(options);
 
-      expect(metadata.openGraph?.images?.[0].url).toBe('https://cyberdrew.dev/images/hero.jpg');
-      expect(metadata.openGraph?.images?.[0].width).toBe(1920);
-      expect(metadata.openGraph?.images?.[0].height).toBe(1080);
-      expect(metadata.openGraph?.images?.[0].type).toBe('image/jpeg');
-      expect(metadata.openGraph?.images?.[0].alt).toBe('Hero image');
+      const ogImage = (metadata.openGraph?.images as any)?.[0];
+      expect(ogImage.url).toBe('https://cyberdrew.dev/images/hero.jpg');
+      expect(ogImage.width).toBe(1920);
+      expect(ogImage.height).toBe(1080);
+      expect(ogImage.type).toBe('image/jpeg');
+      expect(ogImage.alt).toBe('Hero image');
     });
 
     it('should fall back to dynamic OG image generator', () => {
@@ -377,8 +380,9 @@ describe('metadata.ts', () => {
 
       const metadata = createArticlePageMetadata(options);
 
-      expect(metadata.openGraph?.images?.[0].url).toContain('/opengraph-image');
-      expect(metadata.openGraph?.images?.[0].type).toBe('image/png');
+      const ogImage = (metadata.openGraph?.images as any)?.[0];
+      expect(ogImage.url).toContain('/opengraph-image');
+      expect(ogImage.type).toBe('image/png');
     });
 
     it('should support website type instead of article', () => {
@@ -391,7 +395,7 @@ describe('metadata.ts', () => {
 
       const metadata = createArticlePageMetadata(options);
 
-      expect(metadata.openGraph?.type).toBe('website');
+      expect((metadata.openGraph as any)?.type).toBe('website');
     });
 
     it('should default to article type', () => {
@@ -403,7 +407,7 @@ describe('metadata.ts', () => {
 
       const metadata = createArticlePageMetadata(options);
 
-      expect(metadata.openGraph?.type).toBe('article');
+      expect((metadata.openGraph as any)?.type).toBe('article');
     });
   });
 
