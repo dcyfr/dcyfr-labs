@@ -37,15 +37,19 @@ npm run check
 - `npm run check` is an alias for running a strict lint (`npm run lint:ci`) followed by `tsc` type-checking. It is safe to run locally and is a canonical pre-merge gate used in CI.
 - To auto-fix fixable lint issues for staged files, use `npm run lint:fix` or set up `lint-staged` (not configured by default).
 
-## Snyk (optional)
+## Security Scanning
 
-This repo can run a Snyk scan in CI if you add a `SNYK_TOKEN` secret to your repository. Locally you can run:
+This repo uses GitHub CodeQL for automated security scanning. CodeQL runs automatically on:
 
-```bash
-npx snyk test
+- Every push to `main` and `preview` branches
+- Every pull request to `main`
+- Daily at 06:00 UTC
+
+You can also run dependency checks locally:
+
+```sh
+npm audit
 ```
-
-If you don't have a token, Snyk can still run in unauthenticated mode but the authenticated token gives better vulnerability DB access and monitoring.
 
 ## Pre-commit / pre-push hooks (recommended)
 

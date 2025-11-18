@@ -191,5 +191,5 @@ All docs in `/docs/` organized by domain:
 
 **VS Code Copilot Chat**: Available MCP servers for extended capabilities:
 - Memory (context preservation), Sequential Thinking (complex planning), Context7 (library docs)
-- Sentry (error monitoring), Vercel (deployments), Snyk (security), GitHub PRs
+- Sentry (error monitoring), Vercel (deployments), GitHub PRs
 Use these tools when relevant to the task at hand.

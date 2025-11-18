@@ -75,8 +75,8 @@ This project implements comprehensive security controls:
 
 - ✅ Security headers (A+ rating)
 - ✅ No hardcoded secrets or API keys
-- ✅ Dependency scanning (Snyk SCA)
-- ✅ Code security scanning (Snyk Code + CodeQL)
+- ✅ Dependency scanning (npm audit + Dependabot)
+- ✅ Code security scanning (GitHub CodeQL)
 - ✅ Automated security updates via Dependabot
 
 ### Monitoring & Error Tracking
@@ -101,8 +101,8 @@ This project implements comprehensive security controls:
 
 We continuously monitor security through:
 
-- **Dependency Scanning:** Snyk SCA (daily)
-- **Code Security:** Snyk Code + GitHub CodeQL
+- **Dependency Scanning:** Dependabot (daily) + npm audit
+- **Code Security:** GitHub CodeQL (on push, PR, and daily schedule)
 - **Secret Scanning:** GitHub Secret Scanning
 - **Security Headers:** Automated header validation
 
