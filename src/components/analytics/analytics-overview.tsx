@@ -6,7 +6,7 @@
  */
 
 import { Card, CardTitle } from "@/components/ui/card";
-import { Eye, FileText, Flame, TrendingUp, ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
+import { Eye, FileText, Flame, TrendingUp, ArrowUpRight, ArrowDownRight, Minus, MessageSquare, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DashboardStats, DashboardStat, DashboardFeaturedStats, DashboardFeaturedStat } from "@/components/dashboard";
 import { AnalyticsSummary } from "@/types/analytics";
@@ -56,10 +56,41 @@ export function AnalyticsOverview({
         />
         
         <DashboardStat
+          label="Total Shares"
+          value={summary.totalShares.toLocaleString()}
+          secondaryValue={`${summary.totalShares24h.toLocaleString()} in 24h`}
+          icon={Share2}
+        />
+        
+        <DashboardStat
+          label="Total Comments"
+          value={summary.totalComments.toLocaleString()}
+          secondaryValue={`${summary.totalComments24h.toLocaleString()} in 24h`}
+          icon={MessageSquare}
+        />
+      </DashboardStats>
+
+      {/* Average Stats */}
+      <DashboardStats columns={4} className="mb-6">
+        <DashboardStat
           label="Average Views"
           value={summary.averageViews.toLocaleString()}
           secondaryValue={`${summary.averageViews24h.toLocaleString()} in 24h`}
-          icon={TrendingUp}
+          icon={Eye}
+        />
+        
+        <DashboardStat
+          label="Average Shares"
+          value={summary.averageShares.toLocaleString()}
+          secondaryValue={`${summary.averageShares24h.toLocaleString()} in 24h`}
+          icon={Share2}
+        />
+        
+        <DashboardStat
+          label="Average Comments"
+          value={summary.averageComments.toLocaleString()}
+          secondaryValue={`${summary.averageComments24h.toLocaleString()} in 24h`}
+          icon={MessageSquare}
         />
         
         <Card className="overflow-hidden hover:shadow-md transition-shadow p-3">
@@ -139,6 +170,108 @@ export function AnalyticsOverview({
               </p>
               <p className="text-xs text-muted-foreground">
                 {summary.topPost24h.views.toLocaleString()} total views
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No data</p>
+          )}
+        </DashboardFeaturedStat>
+      </DashboardFeaturedStats>
+
+      {/* Most Shared Posts */}
+      <DashboardFeaturedStats className="mb-6">
+        <DashboardFeaturedStat
+          title="Most Shared (All-time)"
+          description="Most shared post overall"
+        >
+          {summary.mostSharedPost ? (
+            <div>
+              <Link 
+                href={`/blog/${summary.mostSharedPost.slug}`}
+                className="font-medium text-sm sm:text-base line-clamp-2 mb-3 hover:underline"
+              >
+                {summary.mostSharedPost.title}
+              </Link>
+              <p className="text-2xl font-bold mb-2">
+                {summary.mostSharedPost.shares.toLocaleString()} shares
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {summary.mostSharedPost.shares24h.toLocaleString()} shares in 24h
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No data</p>
+          )}
+        </DashboardFeaturedStat>
+
+        <DashboardFeaturedStat
+          title="Most Shared (24h)"
+          description="Most shared post in last 24 hours"
+        >
+          {summary.mostSharedPost24h ? (
+            <div>
+              <Link 
+                href={`/blog/${summary.mostSharedPost24h.slug}`}
+                className="font-medium text-sm sm:text-base line-clamp-2 mb-3 hover:underline"
+              >
+                {summary.mostSharedPost24h.title}
+              </Link>
+              <p className="text-2xl font-bold mb-2">
+                {summary.mostSharedPost24h.shares24h.toLocaleString()} shares
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {summary.mostSharedPost24h.shares.toLocaleString()} total shares
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No data</p>
+          )}
+        </DashboardFeaturedStat>
+      </DashboardFeaturedStats>
+
+      {/* Most Commented Posts */}
+      <DashboardFeaturedStats className="mb-6">
+        <DashboardFeaturedStat
+          title="Most Commented (All-time)"
+          description="Most commented post overall"
+        >
+          {summary.mostCommentedPost ? (
+            <div>
+              <Link 
+                href={`/blog/${summary.mostCommentedPost.slug}`}
+                className="font-medium text-sm sm:text-base line-clamp-2 mb-3 hover:underline"
+              >
+                {summary.mostCommentedPost.title}
+              </Link>
+              <p className="text-2xl font-bold mb-2">
+                {summary.mostCommentedPost.comments.toLocaleString()} comments
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {summary.mostCommentedPost.comments24h.toLocaleString()} comments in 24h
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No data</p>
+          )}
+        </DashboardFeaturedStat>
+
+        <DashboardFeaturedStat
+          title="Most Commented (24h)"
+          description="Most commented post in last 24 hours"
+        >
+          {summary.mostCommentedPost24h ? (
+            <div>
+              <Link 
+                href={`/blog/${summary.mostCommentedPost24h.slug}`}
+                className="font-medium text-sm sm:text-base line-clamp-2 mb-3 hover:underline"
+              >
+                {summary.mostCommentedPost24h.title}
+              </Link>
+              <p className="text-2xl font-bold mb-2">
+                {summary.mostCommentedPost24h.comments24h.toLocaleString()} comments
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {summary.mostCommentedPost24h.comments.toLocaleString()} total comments
               </p>
             </div>
           ) : (

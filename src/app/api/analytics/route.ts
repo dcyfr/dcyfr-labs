@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMultiplePostViews, getMultiplePostViews24h, getMultiplePostViewsInRange } from "@/lib/views";
 import { getPostSharesBulk, getPostShares24hBulk } from "@/lib/shares";
+import { getPostCommentsBulk, getPostComments24hBulk } from "@/lib/comments";
 import { posts } from "@/data/posts";
 import { createClient } from "redis";
 import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
@@ -208,6 +209,11 @@ export async function GET(request: Request) {
     const shareMap = await getPostSharesBulk(postIds);
     const shares24hMap = await getPostShares24hBulk(postIds);
 
+    // Get comment counts for all posts (by slug)
+    const postSlugs = posts.map((p) => p.slug);
+    const commentMap = await getPostCommentsBulk(postSlugs);
+    const comments24hMap = await getPostComments24hBulk(postSlugs);
+
     // Combine with post data
     const postsWithViews = posts
       .map((post) => ({
@@ -223,6 +229,8 @@ export async function GET(request: Request) {
         viewsRange: viewsRangeMap.get(post.id) || 0,
         shares: shareMap[post.id] || 0,
         shares24h: shares24hMap[post.id] || 0,
+        comments: commentMap[post.slug] || 0,
+        comments24h: comments24hMap[post.slug] || 0,
         readingTime: post.readingTime,
       }))
       .sort((a, b) => b.views - a.views);
@@ -233,6 +241,8 @@ export async function GET(request: Request) {
     const totalViewsRange = postsWithViews.reduce((sum, post) => sum + post.viewsRange, 0);
     const totalShares = postsWithViews.reduce((sum, post) => sum + post.shares, 0);
     const totalShares24h = postsWithViews.reduce((sum, post) => sum + post.shares24h, 0);
+    const totalComments = postsWithViews.reduce((sum, post) => sum + post.comments, 0);
+    const totalComments24h = postsWithViews.reduce((sum, post) => sum + post.comments24h, 0);
     
     const averageViews =
       postsWithViews.length > 0 ? totalViews / postsWithViews.length : 0;
@@ -244,6 +254,10 @@ export async function GET(request: Request) {
       postsWithViews.length > 0 ? totalShares / postsWithViews.length : 0;
     const averageShares24h =
       postsWithViews.length > 0 ? totalShares24h / postsWithViews.length : 0;
+    const averageComments =
+      postsWithViews.length > 0 ? totalComments / postsWithViews.length : 0;
+    const averageComments24h =
+      postsWithViews.length > 0 ? totalComments24h / postsWithViews.length : 0;
     
     const topPost = postsWithViews[0];
     
@@ -256,6 +270,10 @@ export async function GET(request: Request) {
     // Get most shared posts
     const mostSharedPost = [...postsWithViews].sort((a, b) => b.shares - a.shares)[0];
     const mostSharedPost24h = [...postsWithViews].sort((a, b) => b.shares24h - a.shares24h)[0];
+    
+    // Get most commented posts
+    const mostCommentedPost = [...postsWithViews].sort((a, b) => b.comments - a.comments)[0];
+    const mostCommentedPost24h = [...postsWithViews].sort((a, b) => b.comments24h - a.comments24h)[0];
     
     const trendingPosts = postsWithViews.slice(0, 5);
     
@@ -285,11 +303,15 @@ export async function GET(request: Request) {
         totalViewsRange,
         totalShares,
         totalShares24h,
+        totalComments,
+        totalComments24h,
         averageViews: Math.round(averageViews),
         averageViews24h: Math.round(averageViews24h),
         averageViewsRange: Math.round(averageViewsRange),
         averageShares: Math.round(averageShares),
         averageShares24h: Math.round(averageShares24h),
+        averageComments: Math.round(averageComments),
+        averageComments24h: Math.round(averageComments24h),
         topPost: topPost
           ? {
               slug: topPost.slug,
@@ -299,6 +321,8 @@ export async function GET(request: Request) {
               viewsRange: topPost.viewsRange,
               shares: topPost.shares,
               shares24h: topPost.shares24h,
+              comments: topPost.comments,
+              comments24h: topPost.comments24h,
             }
           : null,
         topPost24h: topPost24h
@@ -310,6 +334,8 @@ export async function GET(request: Request) {
               viewsRange: topPost24h.viewsRange,
               shares: topPost24h.shares,
               shares24h: topPost24h.shares24h,
+              comments: topPost24h.comments,
+              comments24h: topPost24h.comments24h,
             }
           : null,
         topPostRange: topPostRange
@@ -321,6 +347,8 @@ export async function GET(request: Request) {
               viewsRange: topPostRange.viewsRange,
               shares: topPostRange.shares,
               shares24h: topPostRange.shares24h,
+              comments: topPostRange.comments,
+              comments24h: topPostRange.comments24h,
             }
           : null,
         mostSharedPost: mostSharedPost
@@ -330,6 +358,8 @@ export async function GET(request: Request) {
               views: mostSharedPost.views,
               shares: mostSharedPost.shares,
               shares24h: mostSharedPost.shares24h,
+              comments: mostSharedPost.comments,
+              comments24h: mostSharedPost.comments24h,
             }
           : null,
         mostSharedPost24h: mostSharedPost24h
@@ -339,6 +369,30 @@ export async function GET(request: Request) {
               views: mostSharedPost24h.views,
               shares: mostSharedPost24h.shares,
               shares24h: mostSharedPost24h.shares24h,
+              comments: mostSharedPost24h.comments,
+              comments24h: mostSharedPost24h.comments24h,
+            }
+          : null,
+        mostCommentedPost: mostCommentedPost
+          ? {
+              slug: mostCommentedPost.slug,
+              title: mostCommentedPost.title,
+              views: mostCommentedPost.views,
+              shares: mostCommentedPost.shares,
+              shares24h: mostCommentedPost.shares24h,
+              comments: mostCommentedPost.comments,
+              comments24h: mostCommentedPost.comments24h,
+            }
+          : null,
+        mostCommentedPost24h: mostCommentedPost24h
+          ? {
+              slug: mostCommentedPost24h.slug,
+              title: mostCommentedPost24h.title,
+              views: mostCommentedPost24h.views,
+              shares: mostCommentedPost24h.shares,
+              shares24h: mostCommentedPost24h.shares24h,
+              comments: mostCommentedPost24h.comments,
+              comments24h: mostCommentedPost24h.comments24h,
             }
           : null,
       },

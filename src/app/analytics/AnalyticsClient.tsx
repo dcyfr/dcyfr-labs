@@ -48,6 +48,7 @@ import { useDashboardSort } from "@/hooks/use-dashboard-sort";
 // Components
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { AnalyticsOverview } from "@/components/analytics/analytics-overview";
+import { AnalyticsCharts } from "@/components/analytics/analytics-charts";
 
 // Sort indicator component - moved outside to avoid creating during render
 type SortIndicatorProps = {
@@ -72,10 +73,10 @@ import { AnalyticsTrending } from "@/components/analytics/analytics-trending";
 import { PostAnalytics, DateRange, DATE_RANGE_LABELS } from "@/types/analytics";
 
 // Utils
-import { sortData, filterBySearch, filterByTags, filterByFlags, getUniqueValues } from "@/lib/dashboard/table-utils";
+import { sortData, filterBySearch, filterByTags, filterByFlags, getUniqueValues, calculateEngagementRate, getEngagementTier } from "@/lib/dashboard/table-utils";
 import { exportData } from "@/lib/dashboard/export-utils";
 
-type SortField = "title" | "views" | "views24h" | "publishedAt" | "viewsRange" | "shares" | "shares24h";
+type SortField = "title" | "views" | "views24h" | "publishedAt" | "viewsRange" | "shares" | "shares24h" | "comments" | "comments24h" | "engagementRate";
 
 export default function AnalyticsDashboard() {
   // State
@@ -102,7 +103,7 @@ export default function AnalyticsDashboard() {
   const { sortField, sortDirection, handleSort } = useDashboardSort({
     initialField: "views" as keyof PostAnalytics,
     initialDirection: "desc",
-    validFields: ["title", "views", "views24h", "viewsRange", "publishedAt", "shares", "shares24h"],
+    validFields: ["title", "views", "views24h", "viewsRange", "publishedAt", "shares", "shares24h", "comments", "comments24h"],
   });
 
   // Derived data - apply filters and sorting
@@ -119,16 +120,22 @@ export default function AnalyticsDashboard() {
           totalViewsRange: 0,
           totalShares: 0,
           totalShares24h: 0,
+          totalComments: 0,
+          totalComments24h: 0,
           averageViews: 0,
           averageViews24h: 0,
           averageViewsRange: 0,
           averageShares: 0,
           averageShares24h: 0,
+          averageComments: 0,
+          averageComments24h: 0,
           topPost: null,
           topPost24h: null,
           topPostRange: null,
           mostSharedPost: null,
           mostSharedPost24h: null,
+          mostCommentedPost: null,
+          mostCommentedPost24h: null,
         },
         trendStats: { totalViewsTrend24h: 0, totalTrendPercent: 0 },
       };
@@ -141,8 +148,17 @@ export default function AnalyticsDashboard() {
     filtered = filterBySearch(filtered, searchQuery, ["title", "summary", "tags"]);
     filtered = filterByTags(filtered, selectedTags, "tags");
 
-    // Apply sorting
-    const sorted = sortData(filtered, sortField as keyof PostAnalytics, sortDirection);
+    // Apply sorting (handle engagement rate specially)
+    let sorted: PostAnalytics[];
+    if (sortField === "engagementRate") {
+      sorted = [...filtered].sort((a, b) => {
+        const rateA = calculateEngagementRate(a.views, a.shares, a.comments);
+        const rateB = calculateEngagementRate(b.views, b.shares, b.comments);
+        return sortDirection === "desc" ? rateB - rateA : rateA - rateB;
+      });
+    } else {
+      sorted = sortData(filtered, sortField as keyof PostAnalytics, sortDirection);
+    }
 
     // Filter trending
     const trending = filterByFlags(data.trending || [], { draft: hideDrafts, archived: hideArchived });
@@ -155,16 +171,22 @@ export default function AnalyticsDashboard() {
       totalViewsRange: filtered.reduce((s, p) => s + p.viewsRange, 0),
       totalShares: filtered.reduce((s, p) => s + p.shares, 0),
       totalShares24h: filtered.reduce((s, p) => s + p.shares24h, 0),
+      totalComments: filtered.reduce((s, p) => s + p.comments, 0),
+      totalComments24h: filtered.reduce((s, p) => s + p.comments24h, 0),
       averageViews: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.views, 0) / filtered.length) : 0,
       averageViews24h: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.views24h, 0) / filtered.length) : 0,
       averageViewsRange: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.viewsRange, 0) / filtered.length) : 0,
       averageShares: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.shares, 0) / filtered.length) : 0,
       averageShares24h: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.shares24h, 0) / filtered.length) : 0,
+      averageComments: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.comments, 0) / filtered.length) : 0,
+      averageComments24h: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.comments24h, 0) / filtered.length) : 0,
       topPost: filtered.length > 0 ? [...filtered].sort((a, b) => b.views - a.views)[0] : null,
       topPost24h: filtered.length > 0 ? [...filtered].sort((a, b) => b.views24h - a.views24h)[0] : null,
       topPostRange: filtered.length > 0 ? [...filtered].sort((a, b) => b.viewsRange - a.viewsRange)[0] : null,
       mostSharedPost: filtered.length > 0 ? [...filtered].sort((a, b) => b.shares - a.shares)[0] : null,
       mostSharedPost24h: filtered.length > 0 ? [...filtered].sort((a, b) => b.shares24h - a.shares24h)[0] : null,
+      mostCommentedPost: filtered.length > 0 ? [...filtered].sort((a, b) => b.comments - a.comments)[0] : null,
+      mostCommentedPost24h: filtered.length > 0 ? [...filtered].sort((a, b) => b.comments24h - a.comments24h)[0] : null,
     };
 
     // Calculate trend indicators
@@ -194,6 +216,8 @@ export default function AnalyticsDashboard() {
       "views24h",
       "shares",
       "shares24h",
+      "comments",
+      "comments24h",
       "publishedAt",
       "tags",
     ];
@@ -445,6 +469,9 @@ export default function AnalyticsDashboard() {
         totalTrendPercent={trendStats.totalTrendPercent}
       />
 
+      {/* Time-Series Charts */}
+      <AnalyticsCharts posts={sortedPosts} dateRange={dateRange} />
+
       {/* Trending Posts */}
       <AnalyticsTrending trending={filteredTrending} limit={3} />
 
@@ -526,6 +553,34 @@ export default function AnalyticsDashboard() {
                       <SortIndicator field="shares24h" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
+                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
+                    <button
+                      onClick={() => handleSort("comments" as keyof PostAnalytics)}
+                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
+                    >
+                      Comments (All)
+                      <SortIndicator field="comments" sortField={sortField} sortDirection={sortDirection} />
+                    </button>
+                  </th>
+                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
+                    <button
+                      onClick={() => handleSort("comments24h" as keyof PostAnalytics)}
+                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
+                    >
+                      Comments (24h)
+                      <SortIndicator field="comments24h" sortField={sortField} sortDirection={sortDirection} />
+                    </button>
+                  </th>
+                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
+                    <button
+                      onClick={() => handleSort("engagementRate" as SortField)}
+                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
+                      title="Engagement rate = (shares + comments) / views × 100"
+                    >
+                      Engagement
+                      <SortIndicator field="engagementRate" sortField={sortField} sortDirection={sortDirection} />
+                    </button>
+                  </th>
                   <th className="text-left py-2 px-3 font-semibold whitespace-nowrap hidden md:table-cell">
                     <button
                       onClick={() => handleSort("publishedAt" as keyof PostAnalytics)}
@@ -560,6 +615,24 @@ export default function AnalyticsDashboard() {
                     <td className="text-right py-2 px-3 tabular-nums">{post.views24h.toLocaleString()}</td>
                     <td className="text-right py-2 px-3 tabular-nums">{post.shares.toLocaleString()}</td>
                     <td className="text-right py-2 px-3 tabular-nums">{post.shares24h.toLocaleString()}</td>
+                    <td className="text-right py-2 px-3 tabular-nums">{post.comments.toLocaleString()}</td>
+                    <td className="text-right py-2 px-3 tabular-nums">{post.comments24h.toLocaleString()}</td>
+                    <td className="text-right py-2 px-3">
+                      {(() => {
+                        const rate = calculateEngagementRate(post.views, post.shares, post.comments);
+                        const tier = getEngagementTier(rate);
+                        return (
+                          <span className={cn(
+                            "inline-flex items-center gap-1 text-xs font-semibold",
+                            tier === "high" && "text-green-600",
+                            tier === "medium" && "text-yellow-600",
+                            tier === "low" && "text-muted-foreground"
+                          )}>
+                            {rate.toFixed(1)}%
+                          </span>
+                        );
+                      })()}
+                    </td>
                     <td className="py-2 px-3 hidden md:table-cell">
                       {new Date(post.publishedAt).toLocaleDateString()}
                     </td>

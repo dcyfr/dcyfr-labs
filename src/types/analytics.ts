@@ -18,6 +18,8 @@ export interface PostAnalytics {
   viewsRange: number;
   shares: number;
   shares24h: number;
+  comments: number;
+  comments24h: number;
   readingTime: {
     words: number;
     minutes: number;
@@ -33,6 +35,8 @@ export interface TopPost {
   viewsRange: number;
   shares: number;
   shares24h: number;
+  comments: number;
+  comments24h: number;
 }
 
 export interface MostSharedPost {
@@ -41,6 +45,8 @@ export interface MostSharedPost {
   views: number;
   shares: number;
   shares24h: number;
+  comments: number;
+  comments24h: number;
 }
 
 export interface AnalyticsSummary {
@@ -50,16 +56,22 @@ export interface AnalyticsSummary {
   totalViewsRange: number;
   totalShares: number;
   totalShares24h: number;
+  totalComments: number;
+  totalComments24h: number;
   averageViews: number;
   averageViews24h: number;
   averageViewsRange: number;
   averageShares: number;
   averageShares24h: number;
+  averageComments: number;
+  averageComments24h: number;
   topPost: TopPost | null;
   topPost24h: TopPost | null;
   topPostRange: TopPost | null;
   mostSharedPost: MostSharedPost | null;
   mostSharedPost24h: MostSharedPost | null;
+  mostCommentedPost: MostSharedPost | null;
+  mostCommentedPost24h: MostSharedPost | null;
 }
 
 export interface AnalyticsData {

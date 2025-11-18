@@ -286,3 +286,33 @@ export function isSortActive<T>(
 ): boolean {
   return sortConfig?.field === field;
 }
+
+/**
+ * Calculate engagement rate for a post
+ * Engagement rate = (shares + comments) / views × 100
+ * 
+ * @param views - Total views
+ * @param shares - Total shares
+ * @param comments - Total comments
+ * @returns Engagement rate as percentage (0-100+)
+ */
+export function calculateEngagementRate(
+  views: number,
+  shares: number,
+  comments: number
+): number {
+  if (views === 0) return 0;
+  return ((shares + comments) / views) * 100;
+}
+
+/**
+ * Get engagement tier based on rate
+ * 
+ * @param rate - Engagement rate percentage
+ * @returns Tier label
+ */
+export function getEngagementTier(rate: number): "high" | "medium" | "low" {
+  if (rate >= 5) return "high"; // 5%+ is excellent
+  if (rate >= 2) return "medium"; // 2-5% is good
+  return "low"; // <2% needs improvement
+}

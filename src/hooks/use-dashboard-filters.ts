@@ -46,8 +46,8 @@ interface UseDashboardFiltersReturn extends DashboardFilters {
 const DEFAULT_FILTERS: DashboardFilters = {
   searchQuery: "",
   selectedTags: [],
-  hideDrafts: false,
-  hideArchived: false,
+  hideDrafts: true,
+  hideArchived: true,
 };
 
 /**

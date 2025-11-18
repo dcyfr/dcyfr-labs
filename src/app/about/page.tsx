@@ -73,13 +73,13 @@ export default async function AboutPage() {
           <h2 className={TYPOGRAPHY.h2.standard}>What drives me</h2>
           <div className="space-y-3 text-muted-foreground">
             <p>
-              My passion lies in helping organizations build resilient security programs that empower teams to move fast and stay secure. I believe security must be an enabler, not a bottleneck, and I strive to create solutions that balance risk management with business agility.
+              My passion for cybersecurity stems from a deep-seated curiosity about technology and a commitment to making the digital world a safer place. I thrive on solving complex problems, staying ahead of emerging threats, and continuously learning in this ever-evolving field.
             </p>
             <p>
-              Throughout my career, I have dedicated myself to fostering a culture of security awareness and continuous improvement. I enjoy collaborating with cross-functional teams to identify vulnerabilities, implement robust security frameworks, and deliver technical solutions that scale.
+              Beyond the technical aspects, I believe that effective cybersecurity is about people—educating users, fostering a security-first culture, and collaborating across teams to build resilient systems. I&apos;m dedicated to empowering organizations to protect their assets while enabling innovation and growth.
             </p>
             <p>
-              Outside of work, I consider myself an avid tinkerer who loves exploring new technologies and staying up-to-date with the latest trends in cybersecurity. I am always eager to learn, grow, and share my experience with others.
+              When I&apos;m not immersed in security challenges, you can find me exploring the latest tech trends, contributing to open-source projects, or sharing insights through writing and speaking engagements. I&apos;m always eager to connect with fellow professionals and enthusiasts who share my passion for cybersecurity.
             </p>
           </div>
         </div>
@@ -90,15 +90,14 @@ export default async function AboutPage() {
         <div className={SPACING.content}>
           <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
           <p className="text-muted-foreground mb-4">
-            I bring 5+ years of hands-on experience across security engineering, architecture, and leadership roles. 
-            My career has spanned diverse industries including healthcare, finance, and technology, where I&apos;ve built and scaled security programs from the ground up.
+            With over 5 years of experience in the cybersecurity industry, I have had the privilege of working with diverse organizations ranging from startups to established enterprises. My journey has equipped me with a comprehensive understanding of security frameworks, risk management, and incident response strategies.
           </p>
           <div className="flex items-center">
             <Link 
               className={`inline-flex items-center gap-2 text-primary ${HOVER_EFFECTS.link}`}
               href="/resume"
             >
-              View full resume and work history
+              View full resume
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           </div>
