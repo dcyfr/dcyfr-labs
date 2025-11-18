@@ -76,6 +76,12 @@ export function ArticleFooter<T>({
   const hasRelated = relatedItems.length > 0 && renderRelatedItem;
   const hasContent = hasShare || hasTags || hasSources || hasRelated || children;
 
+  // Sanitize source URLs upfront to avoid serialization issues in RSC
+  const sanitizedSources = sources?.map(source => ({
+    ...source,
+    url: sanitizeUrl(source.url)
+  }));
+
   if (!hasContent) {
     return null;
   }
@@ -136,10 +142,10 @@ export function ArticleFooter<T>({
             Sources & References
           </h2>
           <ul className="space-y-2">
-            {sources.map((source, index) => (
+            {sanitizedSources!.map((source, index) => (
               <li key={index}>
                 <a
-                  href={sanitizeUrl(source.url)}
+                  href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline inline-flex items-center gap-1"
