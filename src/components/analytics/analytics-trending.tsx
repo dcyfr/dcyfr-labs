@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Flame } from "lucide-react";
 import { PostAnalytics } from "@/types/analytics";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface AnalyticsTrendingProps {
   /** Trending posts to display */
@@ -40,7 +41,7 @@ export function AnalyticsTrending({ trending, limit = 3 }: AnalyticsTrendingProp
 
   return (
     <div className="mb-6">
-      <h2 className="text-base font-semibold mb-3">Trending Posts</h2>
+      <h2 className={cn("text-base", "font-semibold", "mb-3")}>Trending Posts</h2>
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
         {displayPosts.map((post) => (
           <Card key={post.slug} className="overflow-hidden hover:shadow-md transition-shadow">

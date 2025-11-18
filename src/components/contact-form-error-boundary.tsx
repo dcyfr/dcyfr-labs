@@ -4,6 +4,7 @@ import React from "react";
 import { ErrorBoundary, type ErrorFallbackProps } from "./error-boundary";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 /**
  * Error fallback for the contact form.
@@ -13,7 +14,7 @@ function ContactFormErrorFallback({ error, resetError }: ErrorFallbackProps) {
     <Card className="p-6 border-destructive/50">
       <div className="space-y-4">
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold text-destructive">Contact form error</h2>
+          <h2 className={cn("text-lg", "font-semibold", "text-destructive")}>Contact form error</h2>
           <p className="text-sm text-muted-foreground">
             We encountered an issue with the contact form. You can try again or reach out via
             alternative methods listed below.
@@ -21,7 +22,7 @@ function ContactFormErrorFallback({ error, resetError }: ErrorFallbackProps) {
         </div>
 
         <div className="space-y-2">
-          <p className="text-sm font-medium">Alternative contact methods:</p>
+          <p className={cn("text-sm", "font-medium")}>Alternative contact methods:</p>
           <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
             <li>GitHub: Check the footer for links</li>
             <li>LinkedIn: Available in the footer</li>

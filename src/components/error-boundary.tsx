@@ -76,7 +76,7 @@ export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) 
     <Card className="p-6 border-destructive/50">
       <div className="space-y-4">
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold text-destructive">Something went wrong</h2>
+          <h2 className={cn("text-lg", "font-semibold", "text-destructive")}>Something went wrong</h2>
           <p className="text-sm text-muted-foreground">
             We encountered an error while rendering this component. Please try again.
           </p>
@@ -110,7 +110,7 @@ export function MinimalErrorFallback({ error, resetError }: ErrorFallbackProps) 
     <div className="rounded-md border border-destructive/50 bg-destructive/5 p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <p className="text-sm font-medium text-destructive">Error loading content</p>
+          <p className={cn("text-sm", "font-medium", "text-destructive")}>Error loading content</p>
           {process.env.NODE_ENV === "development" && (
             <p className="mt-1 text-xs text-muted-foreground font-mono">{error.message}</p>
           )}

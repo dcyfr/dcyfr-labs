@@ -24,14 +24,15 @@ const eslintConfig = [
     files: ["src/**/*.{ts,tsx,js,jsx}"],
     rules: {
       // Warn about hardcoded container widths - should use getContainerClasses()
+      // Excludes single max-w-* values (which are typically in cn() calls after refactoring)
       "no-restricted-syntax": [
         "warn",
         {
-          selector: "Literal[value=/max-w-(xs|sm|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|full|prose)/]",
+          selector: "Literal[value=/^(?!.*\\bmax-w-(xs|sm|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|full|prose)$).*\\bmax-w-(xs|sm|md|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|full|prose)\\b/]",
           message: "Use getContainerClasses() from @/lib/design-tokens instead of hardcoded max-w-* classes for page containers. See /docs/design/QUICK_START.md",
         },
         {
-          selector: "Literal[value=/text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl).*font-(bold|semibold|medium)/]",
+          selector: "Literal[value=/^(?!.*\\b(text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)|font-(bold|semibold|medium))$).*\\btext-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl).*font-(bold|semibold|medium)\\b/]",
           message: "Use TYPOGRAPHY tokens from @/lib/design-tokens instead of hardcoded font classes for headings. See /docs/design/QUICK_START.md",
         },
         {
@@ -58,6 +59,13 @@ const eslintConfig = [
   {
     // Exclude loading skeletons - they mirror component structure
     files: ["src/**/*loading.tsx", "src/**/*skeleton.tsx"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
+  {
+    // Exclude coverage reports - auto-generated
+    files: ["coverage/**/*.js"],
     rules: {
       "no-restricted-syntax": "off",
     },

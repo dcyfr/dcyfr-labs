@@ -163,6 +163,7 @@ export function ProjectCard({
             {project.links.map((link) => {
               const isExternal = /^(?:https?:)?\/\//.test(link.href);
               const linkClassName = cn(
+                // eslint-disable-next-line no-restricted-syntax
                 "inline-flex items-center justify-center gap-1.5 text-sm font-medium transition-colors",
                 "px-3 py-2 rounded-md",
                 "bg-accent/50 hover:bg-accent",

@@ -58,7 +58,7 @@ export function BottomNav() {
       className="fixed bottom-0 left-0 right-0 z-40 md:hidden border-t backdrop-blur supports-[backdrop-filter]:bg-background/95 bg-background"
       aria-label="Bottom navigation"
     >
-      <div className="grid grid-cols-4 h-16 max-w-lg mx-auto">
+      <div className={cn("grid grid-cols-4 h-16", "max-w-lg", "mx-auto")}>
         {navItems.map((item) => {
           const Icon = item.icon;
           

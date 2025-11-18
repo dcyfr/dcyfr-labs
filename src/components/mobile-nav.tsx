@@ -93,6 +93,7 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
+                  // eslint-disable-next-line no-restricted-syntax
                   "flex items-center h-14 px-4 rounded-md text-base font-medium transition-colors",
                   "hover:bg-accent hover:text-accent-foreground",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",

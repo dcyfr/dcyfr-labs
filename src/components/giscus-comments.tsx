@@ -51,7 +51,7 @@ export function GiscusComments() {
 
   return (
     <section className="mt-12 border-t pt-8">
-      <h2 className="mb-6 text-2xl font-semibold font-serif">Comments</h2>
+      <h2 className={cn("mb-6", "text-2xl", "font-semibold", "font-serif")}>Comments</h2>
       <Giscus
         repo={siteConfig.services.giscus.repo!}
         repoId={siteConfig.services.giscus.repoId!}

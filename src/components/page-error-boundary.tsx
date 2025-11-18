@@ -3,16 +3,18 @@
 import React from "react";
 import { ErrorBoundary, type ErrorFallbackProps } from "./error-boundary";
 import { Button } from "@/components/ui/button";
+import { CONTAINER_WIDTHS } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 /**
  * Error fallback for page-level errors.
  */
 function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
   return (
-    <div className="mx-auto max-w-2xl py-14 md:py-20">
+    <div className={`mx-auto ${CONTAINER_WIDTHS.prose} py-14 md:py-20`}>
       <div className="space-y-6">
         <div className="space-y-3">
-          <h1 className="text-3xl md:text-4xl font-bold text-destructive">
+          <h1 className={cn("text-3xl", "md:text-4xl", "font-bold", "text-destructive")}>
             Oops! Something went wrong
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -22,7 +24,7 @@ function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
         </div>
 
         <div className="space-y-3">
-          <p className="text-sm font-medium">What you can do:</p>
+          <p className={cn("text-sm", "font-medium")}>What you can do:</p>
           <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
             <li>Try refreshing the page</li>
             <li>Go back to the homepage</li>
@@ -38,12 +40,12 @@ function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
             </summary>
             <div className="mt-3 space-y-2">
               <div>
-                <p className="text-xs font-semibold text-muted-foreground">Error Message:</p>
+                <p className={cn("text-xs", "font-semibold", "text-muted-foreground")}>Error Message:</p>
                 <p className="mt-1 text-xs font-mono">{error.message}</p>
               </div>
               {error.stack && (
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground">Stack Trace:</p>
+                  <p className={cn("text-xs", "font-semibold", "text-muted-foreground")}>Stack Trace:</p>
                   <pre className="mt-1 overflow-auto rounded bg-muted p-2 text-xs">
                     {error.stack}
                   </pre>

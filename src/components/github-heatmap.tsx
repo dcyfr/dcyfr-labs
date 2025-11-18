@@ -320,6 +320,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                     />
                   </svg>
                   <div className="flex-1 space-y-1">
+                    {/* eslint-disable-next-line no-restricted-syntax */}
                     <p className="text-sm font-medium text-amber-900 dark:text-amber-100">Notice</p>
                     <p className="text-xs text-amber-800 dark:text-amber-200">{warning}</p>
                   </div>

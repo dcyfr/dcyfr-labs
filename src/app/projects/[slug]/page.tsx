@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, sanitizeUrl } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
+import { getContainerClasses, TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
 import { headers } from "next/headers";
 
 // Enable Incremental Static Regeneration with 1 hour revalidation
@@ -125,7 +126,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         suppressHydrationWarning
       />
-      <div className="mx-auto max-w-4xl py-14 md:py-20 px-4 sm:px-6 md:px-8">
+      <div className={getContainerClasses('standard')}>
         {/* Back to Projects */}
         <Link
           href="/projects"
@@ -145,7 +146,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             {project.timeline && <span>{project.timeline}</span>}
           </div>
           
-          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold">
+          <h1 className={TYPOGRAPHY.h1.article}>
             {project.title}
           </h1>
           
@@ -200,7 +201,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.tech && project.tech.length > 0 && (
             <Card className="mb-8">
               <CardContent>
-                <h2 className="text-xl font-semibold mb-4 mt-0">Tech Stack</h2>
+                <h2 className={`${TYPOGRAPHY.h2.standard} mb-4 mt-0`}>Tech Stack</h2>
                 <div className="flex flex-wrap gap-2">
                   {project.tech.map((tech) => (
                     <Badge key={tech} variant="secondary" className="text-sm">
@@ -216,7 +217,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.tags && project.tags.length > 0 && (
             <Card className="mb-8">
               <CardContent>
-                <h2 className="text-xl font-semibold mb-4 mt-0">Categories</h2>
+                <h2 className={`${TYPOGRAPHY.h2.standard} mb-4 mt-0`}>Categories</h2>
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <Badge key={tag} variant="outline" className="text-sm">
@@ -232,7 +233,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.highlights && project.highlights.length > 0 && (
             <Card className="mb-8">
               <CardContent>
-                <h2 className="text-xl font-semibold mb-4 mt-0">Key Highlights</h2>
+                <h2 className={`${TYPOGRAPHY.h2.standard} mb-4 mt-0`}>Key Highlights</h2>
                 <ul className="space-y-3 list-disc pl-5 mb-0">
                   {project.highlights.map((highlight, index) => (
                     <li key={index} className="text-base leading-relaxed">
@@ -247,7 +248,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         
         {/* Other Projects */}
         <div className="mt-12 pt-8 border-t">
-          <h2 className="text-2xl font-semibold mb-6">Other Projects</h2>
+          <h2 className={`${TYPOGRAPHY.h2.standard} mb-6`}>Other Projects</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {visibleProjects
               .filter((p) => p.slug !== project.slug)
@@ -263,7 +264,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     href={`/projects/${otherProject.slug}`}
                     className="group block"
                   >
-                    <Card className="h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden">
+                    <Card className={`h-full overflow-hidden ${HOVER_EFFECTS.card}`}>
                       <div className="relative aspect-video w-full">
                         <Image
                           src={otherImage.url}
@@ -277,7 +278,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                         />
                       </div>
                       <CardContent className="pt-4">
-                        <h3 className="font-semibold text-lg mb-2">
+                        <h3 className={`${TYPOGRAPHY.h3.standard} mb-2`}>
                           {otherProject.title}
                         </h3>
                         <p className="text-sm text-muted-foreground line-clamp-2">

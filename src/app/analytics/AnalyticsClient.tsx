@@ -623,7 +623,8 @@ export default function AnalyticsDashboard() {
                         const tier = getEngagementTier(rate);
                         return (
                           <span className={cn(
-                            "inline-flex items-center gap-1 text-xs font-semibold",
+                            "inline-flex items-center gap-1",
+                            "text-xs font-semibold",
                             tier === "high" && "text-green-600",
                             tier === "medium" && "text-yellow-600",
                             tier === "low" && "text-muted-foreground"

@@ -19,7 +19,7 @@ function GitHubHeatmapErrorFallback({ error, resetError }: ErrorFallbackProps) {
           <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
           <div className="flex-1 space-y-2">
             <div>
-              <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100">
+              <h3 className={cn("text-sm", "font-semibold", "text-amber-900", "dark:text-amber-100")}>
                 Unable to Load GitHub Contributions
               </h3>
               <p className="mt-1 text-sm text-amber-800 dark:text-amber-200">

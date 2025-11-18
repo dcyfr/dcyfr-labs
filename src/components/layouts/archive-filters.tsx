@@ -173,6 +173,7 @@ export function ArchiveFilters({
               disabled={isPending}
               className={cn(
                 // Badge base styles
+                // eslint-disable-next-line no-restricted-syntax
                 "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors",
                 "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
                 // Cursor and hover

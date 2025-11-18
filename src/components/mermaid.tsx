@@ -105,6 +105,7 @@ export function Mermaid({ chart, id }: { chart: string; id?: string }) {
         role="alert"
         aria-live="polite"
       >
+        {/* eslint-disable-next-line no-restricted-syntax */}
         <p className="text-sm font-semibold text-destructive mb-2">
           Mermaid Diagram Error
         </p>

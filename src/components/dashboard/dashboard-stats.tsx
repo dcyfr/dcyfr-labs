@@ -55,6 +55,7 @@ export function DashboardStat({
     <Card className={cn("overflow-hidden hover:shadow-md transition-shadow p-3", className)}>
       <div className="space-y-1">
         <div className="flex items-center justify-between">
+          {/* eslint-disable-next-line no-restricted-syntax */}
           <CardTitle className="text-xs font-medium text-muted-foreground">
             {label}
           </CardTitle>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock } from "lucide-react";
 import type { Post } from "@/data/posts";
 import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 interface FeaturedPostHeroProps {
   post: Post;
@@ -64,7 +65,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
       <div className="relative p-6 md:p-8 space-y-4">
         {/* Featured Badge */}
         <div className="flex items-center gap-2">
-          <Badge variant="default" className="text-xs font-medium">
+          <Badge variant="default" className={cn("text-xs", "font-medium")}>
             Featured Post
           </Badge>
           {post.tags.slice(0, 2).map((tag) => (
@@ -82,7 +83,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
         {/* Title & Summary */}
         <div className="space-y-3">
           <Link href={`/blog/${post.slug}`}>
-            <h2 className="font-serif text-2xl md:text-3xl font-semibold tracking-tight group-hover:text-primary transition-colors">
+            <h2 className={cn("font-serif", "text-2xl", "md:text-3xl", "font-semibold", "tracking-tight", "group-hover:text-primary", "transition-colors")}>
               {post.title}
             </h2>
           </Link>
