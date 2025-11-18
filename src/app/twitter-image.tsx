@@ -24,6 +24,9 @@ export default function TwitterImage({
   const title = toStringParam(searchParams?.title) || SITE_TITLE;
   const description = toStringParam(searchParams?.description) || SITE_DESCRIPTION;
 
+  // Remove sparkle character (✦) from title for OG images to avoid font download issues
+  const cleanTitle = title.replace(/✦/g, '').trim();
+
   return new ImageResponse(
     (
       <div
@@ -48,7 +51,7 @@ export default function TwitterImage({
             maxWidth: "920px",
           }}
         >
-          {title}
+          {cleanTitle}
         </div>
         <div
           style={{

@@ -24,6 +24,10 @@ export default function OpenGraphImage({
   const title = toStringParam(searchParams?.title) || SITE_TITLE;
   const description = toStringParam(searchParams?.description) || SITE_DESCRIPTION;
 
+  // Remove sparkle character (✦) from title for OG images to avoid font download issues
+  // The @vercel/og library tries to dynamically load fonts for Unicode characters not in system fonts
+  const cleanTitle = title.replace(/✦/g, '').trim();
+
   return new ImageResponse(
       (
         <div
@@ -48,7 +52,7 @@ export default function OpenGraphImage({
               maxWidth: "920px",
             }}
           >
-            {title}
+            {cleanTitle}
           </div>
           <div
             style={{
