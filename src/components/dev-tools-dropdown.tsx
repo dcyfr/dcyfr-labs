@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Wrench } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ChevronDown } from "lucide-react";
 
 export default function DevToolsDropdown() {
   const [open, setOpen] = useState(false);
@@ -22,16 +22,24 @@ export default function DevToolsDropdown() {
 
   return (
     <div ref={ref} className="relative">
-      <Button
-        variant="ghost"
-        size="icon"
+      <Badge
+        variant="destructive"
+        className="cursor-pointer hover:bg-destructive/80 transition-colors gap-1 px-2.5"
+        onClick={() => setOpen((s) => !s)}
+        role="button"
         aria-haspopup="menu"
         aria-expanded={open}
-        onClick={() => setOpen((s) => !s)}
-        title="Developer tools"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((s) => !s);
+          }
+        }}
       >
-        <Wrench className="h-4 w-4" />
-      </Button>
+        Dev Tools
+        <ChevronDown className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} />
+      </Badge>
 
       {open && (
         <div className="absolute right-0 mt-2 w-48 rounded-md border bg-card p-2 shadow-lg z-50">
@@ -44,7 +52,14 @@ export default function DevToolsDropdown() {
             >
               Analytics Dashboard
             </Link>
-            {/* Placeholder for more dev links in future */}
+            <Link
+              href="/drafts"
+              className="px-3 py-2 text-sm hover:bg-muted rounded"
+              onClick={() => setOpen(false)}
+              prefetch={false}
+            >
+              Drafts
+            </Link>
           </nav>
         </div>
       )}

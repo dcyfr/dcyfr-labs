@@ -115,7 +115,7 @@ export default async function RootLayout({
           </a>
           <LoadingBar />
           <SiteHeader />
-          <main id="main-content" className="min-h-[calc(100dvh-128px)] px-4 sm:px-6 md:px-8 pb-20 md:pb-8">{children}</main>
+          <main id="main-content" className="min-h-[calc(100dvh-128px)] pb-20 md:pb-8">{children}</main>
           <SiteFooter />
           <BottomNav />
           <Toaster richColors position="top-center" />

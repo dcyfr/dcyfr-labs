@@ -15,7 +15,7 @@
  * ```
  */
 
-import { CONTAINER_WIDTHS, SPACING, CONTAINER_VERTICAL_PADDING } from '@/lib/design-tokens';
+import { CONTAINER_WIDTHS, SPACING, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING } from '@/lib/design-tokens';
 import { cn } from '@/lib/utils';
 
 export interface ArticleLayoutProps {
@@ -49,7 +49,7 @@ export function ArticleLayout({
   const containerWidth = useProseWidth ? CONTAINER_WIDTHS.prose : CONTAINER_WIDTHS.standard;
 
   return (
-    <article className={cn(containerWidth, "mx-auto px-4 sm:px-6 md:px-8", CONTAINER_VERTICAL_PADDING, className)}>
+    <article className={cn(containerWidth, "mx-auto", CONTAINER_PADDING, CONTAINER_VERTICAL_PADDING, className)}>
       {/* Header */}
       {header && (
         <header className="mb-8 md:mb-10">

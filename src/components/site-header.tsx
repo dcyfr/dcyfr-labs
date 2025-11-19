@@ -5,11 +5,12 @@ import { MobileNav } from "@/components/mobile-nav";
 import DevToolsDropdown from "@/components/dev-tools-dropdown";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { CONTAINER_WIDTHS } from "@/lib/design-tokens";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b site-header">
-      <div className={cn("mx-auto", "max-w-5xl", "px-4", "sm:px-6", "md:px-8", "h-14", "md:h-16", "flex", "items-center", "justify-between", "gap-2")}>
+    <header className="sticky top-0 z-40 backdrop-blur supports-backdrop-filter:bg-background/60 border-b site-header">
+      <div className={cn("mx-auto", CONTAINER_WIDTHS.dashboard, "px-4", "sm:px-6", "md:px-8", "h-14", "md:h-16", "flex", "items-center", "justify-between", "gap-2")}>
         {/* Logo - always visible */}
         <Link href="/" className={cn("flex", "items-center", "gap-2", "text-base", "sm:text-xl", "md:text-2xl", "font-semibold", "tracking-tight", "touch-target", "shrink-0")}>
           <span className="font-serif italic sr-only">Drew&apos;s Lab</span>
@@ -41,19 +42,6 @@ export function SiteHeader() {
           </Link>
           <ThemeToggle />
           {process.env.NODE_ENV === "development" && <DevToolsDropdown />}
-          {/* Environment badge - show only when NOT production (server-rendered) - hide on mobile */}
-          {process.env.NODE_ENV !== "production" && (
-            <Badge
-              variant={
-                process.env.NODE_ENV === "development"
-                  ? "destructive"
-                  : "secondary"
-              }
-              className="hidden lg:inline-flex"
-            >
-              {process.env.NODE_ENV ?? "unknown"}
-            </Badge>
-          )}
         </nav>
 
         {/* Mobile Navigation - visible on mobile, hidden md and up */}

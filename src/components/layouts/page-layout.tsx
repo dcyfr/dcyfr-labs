@@ -19,22 +19,33 @@
  *   {children}
  * </PageLayout>
  * ```
+ * 
+ * @example With draft mode
+ * ```tsx
+ * <PageLayout isDraft>
+ *   {children}
+ * </PageLayout>
+ * ```
  */
 
 import { ReactNode } from 'react'
 import { PAGE_LAYOUT } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
+import { DraftBanner } from '@/components/draft-banner'
 
 interface PageLayoutProps {
   /** Page content */
   children: ReactNode
   /** Additional CSS classes */
   className?: string
+  /** Whether this is a draft page (shows banner in development) */
+  isDraft?: boolean
 }
 
-export function PageLayout({ children, className }: PageLayoutProps) {
+export function PageLayout({ children, className, isDraft = false }: PageLayoutProps) {
   return (
     <div className={cn(PAGE_LAYOUT.wrapper, className)}>
+      {isDraft && process.env.NODE_ENV === 'development' && <DraftBanner />}
       {children}
     </div>
   )

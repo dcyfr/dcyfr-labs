@@ -24,6 +24,7 @@ import {
   TYPOGRAPHY, 
   SPACING,
   PAGE_LAYOUT,
+  CONTAINER_WIDTHS,
 } from "@/lib/design-tokens";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
@@ -139,7 +140,7 @@ export default async function Home() {
             </h1>
             
             {/* Description */}
-            <p className={`max-w-2xl mx-auto ${TYPOGRAPHY.description}`}>
+            <p className={`${CONTAINER_WIDTHS.prose} mx-auto ${TYPOGRAPHY.description}`}>
               Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
             </p>
             

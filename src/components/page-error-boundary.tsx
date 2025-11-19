@@ -3,7 +3,7 @@
 import React from "react";
 import { ErrorBoundary, type ErrorFallbackProps } from "./error-boundary";
 import { Button } from "@/components/ui/button";
-import { CONTAINER_WIDTHS } from "@/lib/design-tokens";
+import { CONTAINER_WIDTHS, CONTAINER_VERTICAL_PADDING } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 /**
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
  */
 function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
   return (
-    <div className={`mx-auto ${CONTAINER_WIDTHS.prose} py-14 md:py-20`}>
+    <div className={`mx-auto ${CONTAINER_WIDTHS.prose} ${CONTAINER_VERTICAL_PADDING}`}>
       <div className="space-y-6">
         <div className="space-y-3">
           <h1 className={cn("text-3xl", "md:text-4xl", "font-bold", "text-destructive")}>

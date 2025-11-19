@@ -17,7 +17,7 @@
  * ```
  */
 
-import { CONTAINER_WIDTHS, TYPOGRAPHY, SPACING, CONTAINER_VERTICAL_PADDING } from '@/lib/design-tokens';
+import { CONTAINER_WIDTHS, TYPOGRAPHY, SPACING, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING } from '@/lib/design-tokens';
 import { cn } from '@/lib/utils';
 
 export interface ArchiveLayoutProps {
@@ -57,7 +57,7 @@ export function ArchiveLayout({
   contentClassName,
 }: ArchiveLayoutProps) {
   return (
-    <div className={cn("mx-auto", CONTAINER_WIDTHS.standard, "px-4 sm:px-6 md:px-8", CONTAINER_VERTICAL_PADDING, SPACING.section, className)}>
+    <div className={cn("mx-auto", CONTAINER_WIDTHS.standard, CONTAINER_PADDING, CONTAINER_VERTICAL_PADDING, SPACING.section, className)}>
       {/* Header */}
       <header className={SPACING.subsection}>
         <h1 className={TYPOGRAPHY.h1.standard}>
