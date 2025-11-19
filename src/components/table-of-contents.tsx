@@ -181,7 +181,7 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
     React.useEffect(() => {
       if (activeId && itemRefs.current.has(activeId)) {
         const activeElement = itemRefs.current.get(activeId);
-        const scrollContainer = scrollContainerRef.current || activeElement?.closest('.overflow-y-auto');
+        const scrollContainer = scrollContainerRef?.current || activeElement?.closest('.overflow-y-auto');
         
         if (activeElement && scrollContainer instanceof HTMLElement) {
           // Use requestAnimationFrame for smoother rendering
