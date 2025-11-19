@@ -23,13 +23,13 @@
  */
 export const CONTAINER_WIDTHS = {
   /** Long-form content optimized for reading (blog posts, about page) */
-  prose: "max-w-2xl",
+  prose: "max-w-4xl",
   
   /** Standard width for list/grid pages (blog listing, projects) */
   standard: "max-w-4xl",
   
   /** Narrow width for forms and focused content (contact page) */
-  narrow: "max-w-xl",
+  narrow: "max-w-2xl",
   
   /** Wide width for data-heavy pages (dashboards, analytics, tables) */
   dashboard: "max-w-6xl",
@@ -83,7 +83,7 @@ export const TYPOGRAPHY = {
   /** H1 heading variants for different contexts */
   h1: {
     /** Standard page titles (about, projects, contact, blog listing) */
-    standard: "font-serif text-3xl md:text-4xl font-semibold tracking-tight",
+    standard: "text-3xl md:text-4xl font-semibold tracking-tight",
     
     /** Homepage hero section */
     hero: "font-serif text-3xl md:text-4xl font-semibold tracking-tight",
@@ -95,13 +95,13 @@ export const TYPOGRAPHY = {
   /** H2 heading variants */
   h2: {
     /** Standard section headings */
-    standard: "font-serif text-xl md:text-2xl font-medium",
+    standard: "text-xl md:text-2xl font-medium",
   },
   
   /** H3 heading variants */
   h3: {
     /** Standard subsection headings */
-    standard: "font-serif text-lg md:text-xl font-medium",
+    standard: "text-lg md:text-xl font-medium",
   },
   
   /** Lead text / page descriptions */
@@ -347,6 +347,56 @@ export const HERO_VARIANTS = {
     title: TYPOGRAPHY.h1.article,
     description: TYPOGRAPHY.description,
     spacing: SPACING.proseHero,
+  },
+} as const;
+
+// ============================================================================
+// SCROLL BEHAVIOR
+// ============================================================================
+
+/**
+ * Scroll behavior and navigation settings
+ * 
+ * @example
+ * ```tsx
+ * // Smooth scroll with offset for fixed header
+ * window.scrollTo({
+ *   top: targetY - SCROLL_BEHAVIOR.offset.standard,
+ *   behavior: SCROLL_BEHAVIOR.behavior.smooth
+ * });
+ * ```
+ */
+export const SCROLL_BEHAVIOR = {
+  /** Scroll behavior modes */
+  behavior: {
+    smooth: "smooth" as const,
+    instant: "auto" as const,
+  },
+  
+  /** Standard scroll offsets for fixed headers */
+  offset: {
+    /** Standard header height (80px) */
+    standard: 80,
+    /** Tall header or with announcement bar (100px) */
+    tall: 100,
+    /** Mobile with bottom nav (104px from bottom + header) */
+    mobile: 104,
+  },
+  
+  /** Scroll thresholds for UI elements */
+  threshold: {
+    /** Show back-to-top button after ~1.5 viewports */
+    backToTop: 400,
+    /** Show floating elements after minimal scroll */
+    floating: 200,
+  },
+  
+  /** Scroll snap settings */
+  snap: {
+    /** Scroll snap type for section navigation */
+    type: "scroll-snap-y scroll-snap-mandatory" as const,
+    /** Scroll snap alignment */
+    align: "scroll-snap-start" as const,
   },
 } as const;
 

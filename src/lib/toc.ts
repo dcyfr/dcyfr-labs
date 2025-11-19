@@ -45,19 +45,35 @@ function stripMarkdown(text: string): string {
 /**
  * Extract headings from MDX content for table of contents
  * Matches h2 and h3 headings (## and ###)
+ * Skips headings inside code blocks (between triple backticks)
  */
 export function extractHeadings(content: string): TocHeading[] {
   const headings: TocHeading[] = [];
-  const headingRegex = /^(#{2,3})\s+(.+)$/gm;
+  const lines = content.split('\n');
+  let inCodeBlock = false;
   
-  let match;
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = match[1].length; // 2 for ##, 3 for ###
-    const rawText = match[2].trim();
-    const text = stripMarkdown(rawText); // Strip markdown formatting for display
-    const id = generateSlug(rawText); // Use raw text for ID to match rehype-slug
+  for (const line of lines) {
+    // Toggle code block state when encountering triple backticks
+    if (line.trim().startsWith('```')) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
     
-    headings.push({ id, text, level });
+    // Skip headings inside code blocks
+    if (inCodeBlock) {
+      continue;
+    }
+    
+    // Match h2 and h3 headings
+    const headingMatch = line.match(/^(#{2,3})\s+(.+)$/);
+    if (headingMatch) {
+      const level = headingMatch[1].length; // 2 for ##, 3 for ###
+      const rawText = headingMatch[2].trim();
+      const text = stripMarkdown(rawText); // Strip markdown formatting for display
+      const id = generateSlug(rawText); // Use raw text for ID to match rehype-slug
+      
+      headings.push({ id, text, level });
+    }
   }
   
   return headings;

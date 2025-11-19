@@ -3,6 +3,7 @@
  * 
  * Universal wrapper for list/grid pages (blog, projects, archives).
  * Provides consistent structure with header, filters, content, and pagination.
+ * Now uses PageHero component internally for consistent hero sections.
  * 
  * @example
  * ```tsx
@@ -17,7 +18,8 @@
  * ```
  */
 
-import { CONTAINER_WIDTHS, TYPOGRAPHY, SPACING, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING } from '@/lib/design-tokens';
+import { CONTAINER_WIDTHS, SPACING, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING } from '@/lib/design-tokens';
+import { PageHero } from '@/components/layouts/page-hero';
 import { cn } from '@/lib/utils';
 
 export interface ArchiveLayoutProps {
@@ -57,43 +59,34 @@ export function ArchiveLayout({
   contentClassName,
 }: ArchiveLayoutProps) {
   return (
-    <div className={cn("mx-auto", CONTAINER_WIDTHS.standard, CONTAINER_PADDING, CONTAINER_VERTICAL_PADDING, SPACING.section, className)}>
-      {/* Header */}
-      <header className={SPACING.subsection}>
-        <h1 className={TYPOGRAPHY.h1.standard}>
-          {title}
-        </h1>
-        
-        {description && (
-          <p className={cn(TYPOGRAPHY.description, "mt-4")}>
-            {description}
-            {itemCount !== undefined && (
-              <span className="text-muted-foreground">
-                {' '}({itemCount} {itemCount === 1 ? 'item' : 'items'})
-              </span>
-            )}
-          </p>
+    <>
+      {/* Header using PageHero for consistency */}
+      <PageHero
+        title={title}
+        description={description}
+        itemCount={itemCount}
+      />
+      
+      <div className={cn("mx-auto", CONTAINER_WIDTHS.standard, CONTAINER_PADDING, "pb-14 md:pb-20", className)}>
+        {/* Filters */}
+        {filters && (
+          <div className="mb-8">
+            {filters}
+          </div>
         )}
-      </header>
 
-      {/* Filters */}
-      {filters && (
-        <div className="mb-8">
-          {filters}
+        {/* Content */}
+        <div className={cn(SPACING.content, contentClassName)}>
+          {children}
         </div>
-      )}
 
-      {/* Content */}
-      <div className={cn(SPACING.content, contentClassName)}>
-        {children}
+        {/* Pagination */}
+        {pagination && (
+          <div className="mt-12">
+            {pagination}
+          </div>
+        )}
       </div>
-
-      {/* Pagination */}
-      {pagination && (
-        <div className="mt-12">
-          {pagination}
-        </div>
-      )}
-    </div>
+    </>
   );
 }

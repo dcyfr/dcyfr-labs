@@ -83,7 +83,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
         {/* Title & Summary */}
         <div className="space-y-3">
           <Link href={`/blog/${post.slug}`}>
-            <h2 className={cn("font-serif", "text-2xl", "md:text-3xl", "font-semibold", "tracking-tight", "group-hover:text-primary", "transition-colors")}>
+            <h2 className={cn("text-2xl", "md:text-3xl", "font-semibold", "tracking-tight", "group-hover:text-primary", "transition-colors")}>
               {post.title}
             </h2>
           </Link>

@@ -154,13 +154,10 @@ function StatCard({ stat }: { stat: Stat }) {
  */
 export function AboutStats() {
   return (
-    <div className="space-y-6">
-      <h2 className={TYPOGRAPHY.h2.standard}>By the Numbers</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {stats.map((stat, idx) => (
-          <StatCard key={idx} stat={stat} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {stats.map((stat, idx) => (
+        <StatCard key={idx} stat={stat} />
+      ))}
     </div>
   );
 }

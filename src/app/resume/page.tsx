@@ -6,6 +6,7 @@ import { CollapsibleCertifications } from "@/components/collapsible-certificatio
 import { highlightMetrics } from "@/lib/highlight-metrics";
 import { TYPOGRAPHY, PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHero } from "@/components/layouts/page-hero";
 import { createPageMetadata } from "@/lib/metadata";
 
 const pageTitle = "Resume";
@@ -20,92 +21,87 @@ export const metadata: Metadata = createPageMetadata({
 export default function ResumePage() {
   return (
     <PageLayout>
-      {/* Hero Section */}
-      <section className={PAGE_LAYOUT.hero.container}>
-        <div className={PAGE_LAYOUT.hero.content}>
-          <h1 className={TYPOGRAPHY.h1.standard}>Drew&apos;s Resume</h1>
-          <p className={TYPOGRAPHY.description}>
-            {resume.summary}
-          </p>
-        </div>
-      </section>
+      <PageHero
+        title="Drew's Resume"
+        description={resume.summary}
+      />
 
       {/* Experience */}
       <section className={PAGE_LAYOUT.section.container} aria-labelledby="experience-heading">
-        <div className={SPACING.content}>
-          <h2 id="experience-heading" className={TYPOGRAPHY.h2.standard}>Experience</h2>
-          <div className="space-y-4">
-            {resume.experience.map((exp, index) => (
-              <Card key={index} className="p-5">
-                <article>
-                  <header className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                    <h3 className="font-medium text-lg">{exp.title} at {exp.company}</h3>
-                    <time className="text-sm text-muted-foreground mt-1 md:mt-0">{exp.duration}</time>
-                  </header>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                    {exp.responsibilities.map((resp, idx) => (
-                      <li key={idx}>{highlightMetrics(resp)}</li>
-                    ))}
-                  </ul>
-                </article>
-              </Card>
-            ))}
+          <div className={SPACING.content}>
+            <h2 id="experience-heading" className={TYPOGRAPHY.h2.standard}>Experience</h2>
+            <div className="space-y-4">
+              {resume.experience.map((exp, index) => (
+                <Card key={index} className="p-5">
+                  <article>
+                    <header className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
+                      <h3 className="font-medium text-lg">{exp.title} at {exp.company}</h3>
+                      <time className="text-sm text-muted-foreground mt-1 md:mt-0">{exp.duration}</time>
+                    </header>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                      {exp.responsibilities.map((resp, idx) => (
+                        <li key={idx}>{highlightMetrics(resp)}</li>
+                      ))}
+                    </ul>
+                  </article>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
       </section>
 
       {/* Education & Certifications */}
       <section className={PAGE_LAYOUT.section.container} aria-labelledby="education-heading">
         <div className={SPACING.content}>
           <h2 id="education-heading" className={TYPOGRAPHY.h2.standard}>Education &amp; Certifications</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card className="p-5">
-              <div className="space-y-3">
-                {resume.education.map((edu, index) => (
-                  <div key={index} className="space-y-1">
-                    <p className="font-medium">{edu.degree}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {edu.institution}
-                      {edu.duration ? ` • ${edu.duration}` : ""}
-                    </p>
-                    {edu.highlights && (
-                      <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                        {edu.highlights.map((highlight, idx) => (
-                          <li key={idx}>{highlight}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </Card>
-            <Card className="p-5">
-              <CollapsibleCertifications certifications={resume.certifications} />
-            </Card>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card className="p-5">
+                <div className="space-y-3">
+                  {resume.education.map((edu, index) => (
+                    <div key={index} className="space-y-1">
+                      <p className="font-medium">{edu.degree}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {edu.institution}
+                        {edu.duration ? ` • ${edu.duration}` : ""}
+                      </p>
+                      {edu.highlights && (
+                        <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                          {edu.highlights.map((highlight, idx) => (
+                            <li key={idx}>{highlight}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+              <Card className="p-5">
+                <CollapsibleCertifications certifications={resume.certifications} />
+              </Card>
+            </div>
           </div>
-        </div>
       </section>
 
       {/* Skills */}
       <section className={PAGE_LAYOUT.section.container} aria-labelledby="skills-heading">
         <div className={SPACING.content}>
           <h2 id="skills-heading" className={TYPOGRAPHY.h2.standard}>Skills</h2>
-          <div className="space-y-3">
-            {resume.skills.map((skillCategory, index) => (
-              <div key={index} className="space-y-1">
-                <p className="text-muted-foreground font-medium text-sm">
-                  {skillCategory.category}
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {skillCategory.skills.map((skill, idx) => (
-                    <Badge key={idx} variant="outline" className="text-xs">
-                      {skill}
-                    </Badge>
-                  ))}
+            <div className="space-y-3">
+              {resume.skills.map((skillCategory, index) => (
+                <div key={index} className="space-y-1">
+                  <p className="text-muted-foreground font-medium text-sm">
+                    {skillCategory.category}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {skillCategory.skills.map((skill, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
         </div>
       </section>
     </PageLayout>

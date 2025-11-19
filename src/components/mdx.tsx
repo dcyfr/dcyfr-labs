@@ -94,11 +94,11 @@ function extractTextFromChildren(children: React.ReactNode): string {
 const components: NonNullable<MDXRemoteProps["components"]> = {
   // eslint-disable-next-line no-restricted-syntax
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 {...props} className="font-serif text-3xl md:text-4xl font-semibold tracking-tight mt-8 first:mt-0 scroll-mt-20" />
+    <h1 {...props} className="text-3xl md:text-4xl font-semibold tracking-tight mt-8 first:mt-0 scroll-mt-20" />
   ),
   // eslint-disable-next-line no-restricted-syntax
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 {...props} className="font-serif text-2xl md:text-3xl font-semibold tracking-tight mt-8 scroll-mt-20" />
+    <h2 {...props} className="text-2xl md:text-3xl font-semibold tracking-tight mt-8 scroll-mt-20" />
   ),
   // eslint-disable-next-line no-restricted-syntax
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -122,7 +122,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote 
       {...props} 
-      className="font-serif border-l-4 border-primary/30 pl-8 pr-4 my-8 text-muted-foreground text-xl leading-relaxed"
+      className="border-l-4 border-primary/30 pl-8 pr-4 my-8 text-muted-foreground text-xl leading-relaxed"
     />
   ),
   table: (props: React.HTMLAttributes<HTMLTableElement>) => (

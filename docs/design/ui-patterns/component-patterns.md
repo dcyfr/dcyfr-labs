@@ -426,7 +426,7 @@ export default function ProjectsPage() {
     <PageContainer width="standard">
       {/* Hero */}
       <PageHero
-        title="Projects Archive"
+        title="Projects"
         description="Browse my portfolio of development projects, open-source contributions, and published work."
       />
       

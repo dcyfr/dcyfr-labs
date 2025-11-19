@@ -48,6 +48,8 @@ export const Logo: React.FC<LogoProps> = ({
     <svg
         className={className}
         style={{
+          display: 'inline-block',
+          verticalAlign: 'middle',
           shapeRendering: 'geometricPrecision',
           ...style
         }}

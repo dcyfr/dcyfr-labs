@@ -12,6 +12,15 @@
  * />
  * ```
  * 
+ * @example Centered hero
+ * ```tsx
+ * <PageHero 
+ *   title="Welcome"
+ *   description="Explore my work and ideas"
+ *   align="center"
+ * />
+ * ```
+ * 
  * @example Homepage hero with actions
  * ```tsx
  * <PageHero 
@@ -42,14 +51,17 @@ import { PAGE_LAYOUT, HERO_VARIANTS } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
 
 type HeroVariant = keyof typeof HERO_VARIANTS
+type HeroAlign = 'left' | 'center'
 
 interface PageHeroProps {
-  /** Hero title (H1) */
-  title: string
+  /** Hero title (H1) - can be string or ReactNode for custom content */
+  title: string | ReactNode
   /** Hero description/tagline */
-  description?: string
+  description?: string | ReactNode
   /** Hero variant (determines size and styling) */
   variant?: HeroVariant
+  /** Text alignment */
+  align?: HeroAlign
   /** Optional image/avatar element */
   image?: ReactNode
   /** Optional action buttons/links */
@@ -58,25 +70,31 @@ interface PageHeroProps {
   className?: string
   /** Additional CSS classes for the content wrapper */
   contentClassName?: string
+  /** Item count for archive pages (e.g., "5 items") */
+  itemCount?: number
 }
 
 export function PageHero({
   title,
   description,
   variant = 'standard',
+  align = 'left',
   image,
   actions,
   className,
   contentClassName,
+  itemCount,
 }: PageHeroProps) {
   const styles = HERO_VARIANTS[variant]
+  const alignmentClasses = align === 'center' ? 'text-center' : ''
+  const imageJustify = align === 'center' ? 'justify-center' : 'justify-center md:justify-start'
 
   return (
     <section className={cn(PAGE_LAYOUT.hero.container, className)}>
-      <div className={cn(PAGE_LAYOUT.hero.content, contentClassName)}>
+      <div className={cn(PAGE_LAYOUT.hero.content, alignmentClasses, contentClassName)}>
         {/* Optional image/avatar */}
         {image && (
-          <div className="flex justify-center md:justify-start">
+          <div className={cn('flex', imageJustify)}>
             {image}
           </div>
         )}
@@ -86,12 +104,19 @@ export function PageHero({
 
         {/* Description */}
         {description && (
-          <p className={styles.description}>{description}</p>
+          <p className={styles.description}>
+            {description}
+            {itemCount !== undefined && (
+              <span className="text-muted-foreground">
+                {' '}({itemCount} {itemCount === 1 ? 'item' : 'items'})
+              </span>
+            )}
+          </p>
         )}
 
         {/* Actions */}
         {actions && (
-          <div className="pt-2">{actions}</div>
+          <div className={cn('pt-2', align === 'center' && 'flex justify-center')}>{actions}</div>
         )}
       </div>
     </section>

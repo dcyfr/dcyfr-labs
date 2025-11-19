@@ -103,7 +103,7 @@ export default async function SeriesPage({
         <div className="flex items-start gap-4">
           <BookOpen className="h-8 w-8 mt-1 text-primary flex-shrink-0" />
           <div className="flex-1">
-            <h1 className={TYPOGRAPHY.h1.standard}>
+            <h1 className={TYPOGRAPHY.h1.hero}>
               {seriesName}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mt-2">

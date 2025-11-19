@@ -3,8 +3,9 @@ import { ContactForm } from "@/components/contact-form";
 import { ContactFormErrorBoundary } from "@/components/contact-form-error-boundary";
 import { getContactPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
-import { TYPOGRAPHY, PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
+import { SPACING, PAGE_LAYOUT } from "@/lib/design-tokens";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHero } from "@/components/layouts/page-hero";
 import { createPageMetadata } from "@/lib/metadata";
 
 const pageTitle = "Contact";
@@ -27,15 +28,10 @@ export default async function ContactPage() {
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       
-      {/* Page Hero */}
-      <section className={PAGE_LAYOUT.hero.container}>
-        <div className={PAGE_LAYOUT.hero.content}>
-          <h1 className={TYPOGRAPHY.h1.standard}>Contact Me</h1>
-          <p className={TYPOGRAPHY.description}>
-            Whether you have questions, feedback, or collaboration ideas, feel free to reach out using the form below.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        title="Contact Me"
+        description="Whether you have questions, feedback, or collaboration ideas, feel free to reach out using the form below."
+      />
       
       {/* Contact Form */}
       <section className={PAGE_LAYOUT.section.container}>

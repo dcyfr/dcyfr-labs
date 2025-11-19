@@ -26,6 +26,8 @@ sources:
 
 AI coding assistants are everywhere now, but there's a critical gap: **how do they access your actual development context?** Your database schema, API routes, recent commits, production errors—all the things you need to write real code. This is the problem Model Context Protocol (MCP) was designed to solve.
 
+---
+
 ## What is Model Context Protocol?
 
 [Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) is an open standard introduced by Anthropic that enables AI assistants to securely connect with external data sources and tools. According to Anthropic's announcement, "Instead of maintaining separate connectors for each data source, developers can now build against a standard protocol."
@@ -49,6 +51,8 @@ graph LR
 - **Standardization**: One protocol for many tools
 - **Composability**: Mix and match servers for your workflow
 - **Local-first**: Servers run on your machine, not in the cloud
+
+---
 
 ## Real-World Example: This Portfolio
 
@@ -118,6 +122,8 @@ const logs = await mcp_vercel_get_deployment_build_logs({
 });
 ```
 
+---
+
 ## Building Your Own MCP Server
 
 MCP servers are surprisingly simple. Here's a minimal example:
@@ -171,6 +177,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 const transport = new StdioServerTransport();
 await server.connect(transport);
 ```
+
+---
 
 ## Patterns I've Learned
 
@@ -228,6 +236,8 @@ const config = await mcp_filesystem_read_file({
 
 The file contents stay on your machine.
 
+---
+
 ## The Developer Experience
 
 Here's what a typical workflow looks like:
@@ -250,6 +260,8 @@ Here's what a typical workflow looks like:
 
 The difference is dramatic. **The AI works with your actual project state**, not a text summary you typed.
 
+---
+
 ## Security Considerations
 
 MCP is designed with security in mind, but you still need to be careful:
@@ -262,6 +274,8 @@ MCP is designed with security in mind, but you still need to be careful:
 From the [MCP security guidelines](https://www.anthropic.com/news/model-context-protocol):
 
 > "MCP servers run with the same permissions as your user account. Only install servers from trusted sources."
+
+---
 
 ## Getting Started
 
@@ -307,6 +321,8 @@ Add to `.vscode/settings.json` or user settings:
 "Use Memory to recall our authentication architecture"
 ```
 
+---
+
 ## What's Next for MCP?
 
 The protocol is still evolving, but the direction is clear:
@@ -315,6 +331,8 @@ The protocol is still evolving, but the direction is clear:
 - **Better discovery**: Marketplace for MCP servers
 - **Cross-editor support**: Beyond VS Code (JetBrains, Cursor, etc.)
 - **Enterprise features**: Team-shared servers, permission management
+
+---
 
 ## Closing Thoughts
 

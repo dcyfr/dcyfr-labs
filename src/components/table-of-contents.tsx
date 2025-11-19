@@ -165,11 +165,10 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
   };
 
   // Shared TOC list component
-  const TocList = () => {
+  const TocList = ({ scrollContainerRef }: { scrollContainerRef?: React.RefObject<HTMLDivElement> }) => {
     const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
     const listRef = React.useRef<HTMLUListElement>(null);
     const itemRefs = React.useRef<Map<string, HTMLLIElement>>(new Map());
-    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
     // Track active item for sliding indicator
     React.useEffect(() => {
@@ -263,49 +262,11 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
     );
   };
 
-  return (
-    <>
-      {/* Mobile TOC - Floating Action Button with Sheet */}
-      <div className="2xl:hidden">
-        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-          {!hideFAB && (
-            <SheetTrigger asChild>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={
-                  isVisible
-                    ? { opacity: 1, scale: 1 }
-                    : { opacity: 0, scale: 0.8 }
-                }
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="md:hidden fixed bottom-[176px] right-4 sm:right-6 z-40"
-              >
-                <Button
-                  size="icon"
-                  className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
-                  aria-label="Open table of contents"
-                  style={{ pointerEvents: isVisible ? "auto" : "none" }}
-                >
-                  <List className="h-6 w-6" />
-                </Button>
-              </motion.div>
-            </SheetTrigger>
-          )}
-          <SheetContent side="bottom" className="h-[80vh]">
-            <SheetHeader>
-              <SheetTitle>Table of Contents</SheetTitle>
-            </SheetHeader>
-            <nav
-              className="mt-6 overflow-y-auto h-[calc(80vh-5rem)]"
-              aria-label="Table of contents"
-            >
-              <TocList />
-            </nav>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      {/* Desktop TOC - Fixed Sidebar */}
+  // Desktop ToC component with ref
+  const DesktopToC = ({ isExpanded, setIsExpanded }: { isExpanded: boolean; setIsExpanded: (v: boolean) => void }) => {
+    const desktopScrollRef = React.useRef<HTMLDivElement>(null);
+    
+    return (
       <nav
         className="fixed top-24 right-8 hidden 2xl:block w-64 max-h-[calc(100vh-12rem)] z-30"
         aria-label="Table of contents"
@@ -346,8 +307,8 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="relative"
               >
-                <div className="max-h-[calc(100vh-20rem)] overflow-y-auto scrollbar-hide">
-                  <TocList />
+                <div ref={desktopScrollRef} className="max-h-[calc(100vh-20rem)] overflow-y-auto scrollbar-hide">
+                  <TocList scrollContainerRef={desktopScrollRef} />
                 </div>
                 {/* Bottom gradient fade */}
                 <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none" />
@@ -356,6 +317,53 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
           </AnimatePresence>
         </div>
       </nav>
+    );
+  };
+
+  return (
+    <>
+      {/* Mobile TOC - Floating Action Button with Sheet */}
+      <div className="2xl:hidden">
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          {!hideFAB && (
+            <SheetTrigger asChild>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={
+                  isVisible
+                    ? { opacity: 1, scale: 1 }
+                    : { opacity: 0, scale: 0.8 }
+                }
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="md:hidden fixed bottom-[176px] right-4 sm:right-6 z-40"
+              >
+                <Button
+                  size="icon"
+                  className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
+                  aria-label="Open table of contents"
+                  style={{ pointerEvents: isVisible ? "auto" : "none" }}
+                >
+                  <List className="h-6 w-6" />
+                </Button>
+              </motion.div>
+            </SheetTrigger>
+          )}
+          <SheetContent side="bottom" className="h-[80vh]">
+            <SheetHeader>
+              <SheetTitle>Table of Contents</SheetTitle>
+            </SheetHeader>
+            <nav
+              className="mt-6 overflow-y-auto h-[calc(80vh-5rem)]"
+              aria-label="Table of contents"
+            >
+              <TocList scrollContainerRef={undefined} />
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop TOC - Fixed Sidebar */}
+      <DesktopToC isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
     </>
   );
 }

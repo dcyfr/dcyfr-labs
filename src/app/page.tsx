@@ -19,14 +19,17 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { FeaturedPostHero } from "@/components/featured-post-hero";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { SectionNavigator, Section } from "@/components/section-navigator";
 import Image from "next/image";
 import { 
   TYPOGRAPHY, 
   SPACING,
   PAGE_LAYOUT,
   CONTAINER_WIDTHS,
+  SCROLL_BEHAVIOR,
 } from "@/lib/design-tokens";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHero } from "@/components/layouts/page-hero";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 
 // Optimized meta description for homepage (157 characters)
@@ -117,74 +120,72 @@ export default async function Home() {
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       
-      {/* Hero Section */}
-      <ScrollReveal animation="fade-up">
-        <section className={PAGE_LAYOUT.hero.container}>
-          <div className={`${PAGE_LAYOUT.hero.content} text-center`}>
-            {/* Avatar */}
-            <div className="flex justify-center">
-              <div className="relative w-32 h-32 md:w-40 md:h-40">
-                <Image
-                  src="/images/avatar.jpg"
-                  alt="Drew's profile picture"
-                  fill
-                  className="rounded-full object-cover ring-4 ring-border shadow-lg"
-                  priority
-                />
-              </div>
-            </div>
-            
-            {/* Title */}
-            <h1 className={`${TYPOGRAPHY.h1.hero} flex items-center gap-2 justify-center`}>
-              Hi, I&apos;m Drew <Logo width={24} height={24} />
-            </h1>
-            
-            {/* Description */}
-            <p className={`${CONTAINER_WIDTHS.prose} mx-auto ${TYPOGRAPHY.description}`}>
-              Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.
-            </p>
-            
-            {/* Actions */}
-            <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
-              <Button asChild size="default">
-                <Link href="/about">Learn more</Link>
-              </Button>
-              <Button variant="outline" asChild size="default">
-                <Link href="/blog">Read my blog</Link>
-              </Button>
-              <Button variant="outline" className="hidden sm:inline-flex" asChild size="default">
-                <Link href="/projects">View Projects</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-      </ScrollReveal>
+      <SectionNavigator scrollOffset={SCROLL_BEHAVIOR.offset.standard}>
+        {/* Hero Section */}
+        <Section>
+          <ScrollReveal animation="fade-up">
+            <PageHero
+              variant="homepage"
+              align="center"
+              title={
+                <span className="flex items-center gap-2 justify-center">
+                  Hi, I&apos;m Drew <Logo className="pb-2" width={32} height={32} />
+                </span>
+              }
+              description="Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure."
+              image={
+                <div className="relative w-32 h-32 md:w-40 md:h-40">
+                  <Image
+                    src="/images/avatar.jpg"
+                    alt="Drew's profile picture"
+                    fill
+                    className="rounded-full object-cover ring-4 ring-border shadow-lg"
+                    priority
+                  />
+                </div>
+              }
+              actions={
+                <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
+                  <Button asChild size="default">
+                    <Link href="/about">Learn more</Link>
+                  </Button>
+                  <Button variant="outline" asChild size="default">
+                    <Link href="/blog">Read my blog</Link>
+                  </Button>
+                  <Button variant="outline" className="hidden sm:inline-flex" asChild size="default">
+                    <Link href="/projects">View Projects</Link>
+                  </Button>
+                </div>
+              }
+            />
+          </ScrollReveal>
+        </Section>
 
         {/* stats section 
-        <ScrollReveal animation="fade-up" delay={75}>
-          <section className="mt-12 md:mt-16">
+        <Section className="mt-12 md:mt-16">
+          <ScrollReveal animation="fade-up" delay={75}>
             <HomepageStats
               postsCount={posts.length}
               projectsCount={projects.filter(p => !p.hidden).length}
               yearsOfExperience={5}
               technologiesCount={90}
             />
-          </section>
-        </ScrollReveal>
+          </ScrollReveal>
+        </Section>
         */}
 
         {/* featured post hero */}
         {featuredPost && (
-          <ScrollReveal animation="fade-up" delay={100}>
-            <section className={PAGE_LAYOUT.section.container}>
+          <Section className={PAGE_LAYOUT.section.container}>
+            <ScrollReveal animation="fade-up" delay={100}>
               <FeaturedPostHero post={featuredPost} />
-            </section>
-          </ScrollReveal>
+            </ScrollReveal>
+          </Section>
         )}
 
         {/* latest blog articles */}
-        <ScrollReveal animation="fade-up" delay={200}>
-          <section className={PAGE_LAYOUT.section.container}>
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={200}>
             <div className={SPACING.content}>
               <SectionHeader
                 title="Latest articles"
@@ -197,12 +198,12 @@ export default async function Home() {
                 titleLevel="h3"
               />
             </div>
-          </section>
-        </ScrollReveal>
+          </ScrollReveal>
+        </Section>
 
         {/* latest projects */}
-        <ScrollReveal animation="fade-up" delay={300}>
-          <section className={PAGE_LAYOUT.section.container}>
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={300}>
             <div className={SPACING.content}>
               <SectionHeader
                 title="Projects"
@@ -214,8 +215,9 @@ export default async function Home() {
                 ))}
               </div>
             </div>
-          </section>
-        </ScrollReveal>
-      </PageLayout>
+          </ScrollReveal>
+        </Section>
+      </SectionNavigator>
+    </PageLayout>
   );
 }

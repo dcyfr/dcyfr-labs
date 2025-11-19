@@ -8,7 +8,7 @@ import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 import { createArchivePageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { headers } from "next/headers";
 
-const pageTitle = "Projects Archive";
+const pageTitle = "Projects";
 const pageDescription = "Browse my portfolio of development projects, open-source contributions, and published work.";
 
 export const metadata: Metadata = createArchivePageMetadata({
@@ -63,7 +63,7 @@ export default async function ProjectsPage() {
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       
       <ArchiveLayout
-        title="Projects"
+        title={pageTitle}
         description={pageDescription}
         itemCount={visibleProjects.length}
       >

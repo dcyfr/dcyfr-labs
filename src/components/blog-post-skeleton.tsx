@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  * - article: mx-auto, max-w-3xl, py-14 md:py-20
  * - header section:
  *   - Date/updated info (text-xs, text-muted-foreground)
- *   - Title (h1, text-3xl md:text-4xl, font-serif)
+ *   - Title (h1, text-3xl md:text-4xl)
  *   - Summary (text-lg md:text-xl, text-muted-foreground)
  *   - Badges/tags section (flex-wrap, gap-2)
  * - prose content: mt-8, space-y-4 (8 paragraph blocks)

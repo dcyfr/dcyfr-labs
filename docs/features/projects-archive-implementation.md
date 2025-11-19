@@ -46,7 +46,6 @@ Transformed the `/projects` page into an archive with individual project detail 
 
 ### 3. Projects Archive Page (`src/app/projects/page.tsx`)
 **Changes:**
-- ✅ Updated title: "Projects" → "Projects Archive"
 - ✅ Enhanced description for better SEO
 - ✅ Updated JSON-LD structured data
 - ✅ Updated project URLs in schema from `#anchor` to `/projects/[slug]`
