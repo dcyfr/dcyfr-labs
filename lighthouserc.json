@@ -12,7 +12,8 @@
       ],
       "settings": {
         "chromeFlags": "--no-sandbox --headless",
-        "configPath": "./lighthouse-config.json"
+        "configPath": "./lighthouse-config.json",
+        "extraHeaders": "{\"x-vercel-protection-bypass\": \"${VERCEL_AUTOMATION_BYPASS_SECRET}\", \"x-vercel-set-bypass-cookie\": \"samesitenone\"}"
       }
     },
     "upload": {

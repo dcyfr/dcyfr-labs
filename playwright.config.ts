@@ -37,6 +37,14 @@ export default defineConfig({
     
     /* Video on failure */
     video: 'retain-on-failure',
+
+    /* Vercel Protection Bypass for Automation */
+    extraHTTPHeaders: process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+      ? {
+          'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+          'x-vercel-set-bypass-cookie': 'samesitenone',
+        }
+      : {},
   },
 
   /* Configure projects for major browsers */

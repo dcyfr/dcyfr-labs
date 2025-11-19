@@ -39,7 +39,8 @@ async function runLighthouse(url, name) {
   return new Promise((resolve, reject) => {
     console.log(`📊 Testing: ${name} (${url})`);
     
-    const lighthouse = spawn('npx', [
+    // Build Lighthouse CLI arguments
+    const args = [
       'lighthouse',
       `${BASE_URL}${url}`,
       '--only-categories=accessibility',
@@ -47,7 +48,14 @@ async function runLighthouse(url, name) {
       '--output-path=stdout',
       '--quiet',
       '--chrome-flags="--headless"'
-    ], {
+    ];
+
+    // Add Vercel protection bypass headers if secret is available
+    if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
+      args.push(`--extra-headers={"x-vercel-protection-bypass":"${process.env.VERCEL_AUTOMATION_BYPASS_SECRET}","x-vercel-set-bypass-cookie":"samesitenone"}`);
+    }
+
+    const lighthouse = spawn('npx', args, {
       stdio: ['ignore', 'pipe', 'pipe']
     });
 

@@ -45,6 +45,17 @@ function parseInput(input) {
 
 function checkAlert(owner, repo, alertNumber) {
 	try {
+		// Validate inputs to prevent command injection
+		if (!/^\d+$/.test(alertNumber)) {
+			throw new Error('Alert number must be numeric');
+		}
+		if (!/^[\w-]+$/.test(owner)) {
+			throw new Error('Invalid owner format (alphanumeric and hyphens only)');
+		}
+		if (!/^[\w-]+$/.test(repo)) {
+			throw new Error('Invalid repo format (alphanumeric and hyphens only)');
+		}
+
 		console.log(
 			`\n🔍 Checking alert #${alertNumber} in ${owner}/${repo}...\n`
 		);

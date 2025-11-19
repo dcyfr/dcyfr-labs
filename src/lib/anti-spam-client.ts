@@ -17,6 +17,8 @@ export function generateSessionId(): string {
   }
   
   // Fallback for older browsers
+  // Note: Math.random() is acceptable here - session IDs are for analytics tracking only,
+  // not authentication or security-sensitive operations. CodeQL alert can be dismissed.
   return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
 }
 

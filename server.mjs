@@ -27,7 +27,9 @@ app.prepare().then(() => {
       const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
       await handle(req, res, parsedUrl);
     } catch (err) {
-      console.error('Error occurred handling', req.url, err);
+      // Sanitize URL to prevent log injection (remove newlines)
+      const sanitizedUrl = req.url?.replace(/[\r\n]/g, '') || 'unknown';
+      console.error('Error occurred handling', sanitizedUrl, err);
       res.statusCode = 500;
       res.end('internal server error');
     }
