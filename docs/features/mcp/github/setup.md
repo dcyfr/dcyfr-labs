@@ -113,7 +113,7 @@ Status: Downloaded newer image for ghcr.io/github/github-mcp-server:latest
 ### A. Open VS Code
 
 ```bash
-code /Users/drew/Desktop/dcyfr/code/cyberdrew-dev
+code project-folder/
 ```
 
 ### B. Toggle Agent Mode

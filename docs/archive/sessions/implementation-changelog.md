@@ -279,12 +279,12 @@ Successfully integrated Filesystem and Git MCPs into the cyberdrew-dev project. 
 {
   "filesystem": {
     "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev"],
+    "args": ["-y", "@modelcontextprotocol/server-filesystem", "/project-folder"],
     "type": "stdio"
   },
   "git": {
     "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-git", "/Users/drew/Desktop/dcyfr/code/cyberdrew-dev"],
+    "args": ["-y", "@modelcontextprotocol/server-git", "/project-folder"],
     "type": "stdio"
   }
 }

@@ -61,7 +61,6 @@ npm run test:mcp-servers
 ============================================================
 
 ✅ mcp.json exists
-   Location: /Users/drew/Library/Application Support/Code/User/mcp.json
 ✅ mcp.json is valid JSON
 
 ============================================================

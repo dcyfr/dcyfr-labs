@@ -227,7 +227,7 @@ For detailed guides, see:
 ### Filesystem MCP Not Working
 ```bash
 # Check if directory is correct
-ls /Users/drew/Desktop/dcyfr/code/cyberdrew-dev
+ls /project-folder  # replace with your project path
 
 # Verify in mcp.json
 cat ~/Library/Application\ Support/Code/User/mcp.json | grep filesystem
@@ -236,7 +236,7 @@ cat ~/Library/Application\ Support/Code/User/mcp.json | grep filesystem
 ### Git MCP Not Working
 ```bash
 # Check if we're in a git repo
-cd /Users/drew/Desktop/dcyfr/code/cyberdrew-dev
+cd /project-folder  # replace with your project path
 git status
 
 # Verify git is installed

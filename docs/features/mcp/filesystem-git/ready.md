@@ -15,7 +15,7 @@ Successfully integrated Filesystem and Git MCPs into your development workflow.
 ### 1. Filesystem MCP
 - **Package**: `@modelcontextprotocol/server-filesystem`
 - **Purpose**: Safe file operations, navigation, and bulk edits
-- **Scope**: Project root directory (`/Users/drew/Desktop/dcyfr/code/cyberdrew-dev`)
+- **Scope**: Project root directory
 
 ### 2. Git MCP  
 - **Package**: `@modelcontextprotocol/server-git`

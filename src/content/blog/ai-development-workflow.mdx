@@ -2,6 +2,7 @@
 title: "Building with AI: How Model Context Protocol is Changing Development Workflows"
 summary: "Exploring the Model Context Protocol (MCP) and how it's enabling new patterns for AI-assisted development with practical examples from real projects."
 publishedAt: "2025-11-11"
+updatedAt: "2025-11-18"
 tags: ["AI", "MCP", "Developer Tools", "Productivity", "Architecture"]
 featured: true
 image:
@@ -221,7 +222,7 @@ Never upload credentials or sensitive files. MCP filesystem servers let AI read 
 ```typescript
 // AI reads local files securely
 const config = await mcp_filesystem_read_file({
-  path: "/Users/drew/project/.env.local"
+  path: "./.env.local"
 });
 ```
 
