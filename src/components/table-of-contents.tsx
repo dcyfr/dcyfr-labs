@@ -165,7 +165,7 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
   };
 
   // Shared TOC list component
-  const TocList = ({ scrollContainerRef }: { scrollContainerRef?: React.RefObject<HTMLDivElement> }) => {
+  const TocList = ({ scrollContainerRef }: { scrollContainerRef?: React.RefObject<HTMLDivElement | null> }) => {
     const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
     const listRef = React.useRef<HTMLUListElement>(null);
     const itemRefs = React.useRef<Map<string, HTMLLIElement>>(new Map());
