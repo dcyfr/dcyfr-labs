@@ -278,24 +278,24 @@ This todo list is organized by **criticality, impact, and ROI**:
   - **Impact**: ⭐⭐⭐⭐⭐ Complete monitoring stack, proactive performance management
   - **Next Steps**: Deploy and establish baseline metrics, configure Vercel alerts
 
-- [x] **Bot detection with Vercel BotD** (2 hours) ✅ **COMPLETED** (Nov 19, 2025)
+- [x] **Bot detection with Vercel BotID** (3 hours) ✅ **COMPLETED** (Nov 19, 2025)
   - ✅ Installed botid v1.5.10 library
-  - ✅ Modified proxy middleware to detect bots on every request
-  - ✅ Created comprehensive utility library in src/lib/bot-detection.ts
-  - ✅ Implemented helper functions: isBot(), isGoodBot(), isSearchEngine(), getBotName(), getBotDetection()
-  - ✅ Bot results passed via x-botd header (JSON) to all routes
-  - ✅ Response includes x-botd-bot header for monitoring
+  - ✅ Added initBotId() to instrumentation-client.ts with protected routes configuration
+  - ✅ Wrapped next.config.ts with withBotId() for proxy rewrites
+  - ✅ Created convenience re-export in src/lib/bot-detection.ts
+  - ✅ Protected /api/contact (POST) route from bot traffic
   - ✅ Created comprehensive documentation in docs/security/bot-detection.md
   - ✅ Created quick reference in docs/security/bot-detection-quick-ref.md
+  - ✅ Corrected initial proxy middleware approach to proper client + server implementation
   - **Use Cases**:
-    - Skip analytics for bots (accurate metrics)
-    - Exempt good bots from rate limiting (SEO friendly)
-    - Optimize content for search engines (full SSR)
-    - Block bad bots (security)
-  - **Bot Types**: good-bot, search-engine, social-media, monitoring, bad-bot, unknown
-  - **Performance**: ~1-2ms overhead per request in Edge runtime
-  - **Impact**: ⭐⭐⭐⭐⭐ Better analytics accuracy, SEO optimization, security enhancement
-  - **Next Steps**: Deploy and monitor bot traffic patterns, integrate with rate limiting for good bot exemptions
+    - Block bots from form submissions (contact, checkout)
+    - Conditional rate limiting (stricter for bots)
+    - Protect Server Actions from automation
+  - **How It Works**: Client-side initBotId() runs JavaScript challenge, server-side checkBotId() verifies requests
+  - **Limitations**: Only works on configured protected routes, development returns isBot: false
+  - **Performance**: ~5-10ms client challenge, <1ms server verification
+  - **Impact**: ⭐⭐⭐⭐ API route protection from automated abuse
+  - **Next Steps**: Deploy to production, add more protected routes, monitor via Vercel Firewall
 
 ### SEO & Content Strategy
 - [ ] **SEO enhancement package** (6-8 hours)
