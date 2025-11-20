@@ -159,16 +159,22 @@ export function PageHero({
         {/* Title */}
         {title && <h1 className={styles.title}>{title}</h1>}
 
-        {/* Description */}
+        {/* Description - use div for ReactNode, p for string to avoid hydration errors */}
         {description && (
-          <p className={styles.description}>
-            {description}
-            {itemCount !== undefined && (
-              <span className="text-muted-foreground">
-                {' '}({itemCount} {itemCount === 1 ? 'item' : 'items'})
-              </span>
-            )}
-          </p>
+          typeof description === 'string' ? (
+            <p className={styles.description}>
+              {description}
+              {itemCount !== undefined && (
+                <span className="text-muted-foreground">
+                  {' '}({itemCount} {itemCount === 1 ? 'item' : 'items'})
+                </span>
+              )}
+            </p>
+          ) : (
+            <div className={styles.description}>
+              {description}
+            </div>
+          )
         )}
 
         {/* Actions */}
