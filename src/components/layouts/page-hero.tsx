@@ -4,11 +4,24 @@
  * Provides consistent hero sections with title, description, and optional actions.
  * Automatically handles responsive spacing, typography, and layout based on variant.
  * 
+ * **Loading State Support:**
+ * Pass `loading={true}` to render skeleton version automatically, ensuring
+ * loading states always match the actual structure.
+ * 
  * @example Standard hero
  * ```tsx
  * <PageHero 
  *   title="About Me" 
  *   description="Full-stack developer passionate about building great experiences"
+ * />
+ * ```
+ * 
+ * @example Loading state
+ * ```tsx
+ * <PageHero 
+ *   loading
+ *   variant="homepage"
+ *   align="center"
  * />
  * ```
  * 
@@ -48,6 +61,7 @@
 
 import { ReactNode } from 'react'
 import { PAGE_LAYOUT, HERO_VARIANTS } from '@/lib/design-tokens'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
 type HeroVariant = keyof typeof HERO_VARIANTS
@@ -55,7 +69,7 @@ type HeroAlign = 'left' | 'center'
 
 interface PageHeroProps {
   /** Hero title (H1) - can be string or ReactNode for custom content */
-  title: string | ReactNode
+  title?: string | ReactNode
   /** Hero description/tagline */
   description?: string | ReactNode
   /** Hero variant (determines size and styling) */
@@ -72,6 +86,8 @@ interface PageHeroProps {
   contentClassName?: string
   /** Item count for archive pages (e.g., "5 items") */
   itemCount?: number
+  /** Loading state - renders skeleton version */
+  loading?: boolean
 }
 
 export function PageHero({
@@ -84,11 +100,52 @@ export function PageHero({
   className,
   contentClassName,
   itemCount,
+  loading = false,
 }: PageHeroProps) {
   const styles = HERO_VARIANTS[variant]
   const alignmentClasses = align === 'center' ? 'text-center' : ''
   const imageJustify = align === 'center' ? 'justify-center' : 'justify-center md:justify-start'
 
+  // Loading state - render skeleton version
+  if (loading) {
+    const titleWidth = variant === 'homepage' ? 'w-64' : 'w-48'
+    const imageSize = variant === 'homepage' 
+      ? 'h-32 w-32 md:h-40 md:w-40' 
+      : 'h-20 w-20 md:h-24 md:w-24'
+    
+    return (
+      <section className={cn(PAGE_LAYOUT.hero.container, className)}>
+        <div className={cn(PAGE_LAYOUT.hero.content, alignmentClasses, contentClassName)}>
+          {/* Image skeleton */}
+          {(variant === 'homepage' || image !== undefined) && (
+            <div className={cn('flex', imageJustify)}>
+              <Skeleton className={cn(imageSize, 'rounded-full')} />
+            </div>
+          )}
+
+          {/* Title skeleton */}
+          <Skeleton className={cn('h-10 md:h-12', titleWidth, align === 'center' && 'mx-auto')} />
+
+          {/* Description skeleton */}
+          <div className="space-y-2">
+            <Skeleton className={cn('h-6 w-full max-w-2xl', align === 'center' && 'mx-auto')} />
+            <Skeleton className={cn('h-6 w-3/4 max-w-2xl', align === 'center' && 'mx-auto')} />
+          </div>
+
+          {/* Actions skeleton */}
+          {(variant === 'homepage' || actions !== undefined) && (
+            <div className={cn('pt-2 flex gap-3', align === 'center' && 'justify-center')}>
+              <Skeleton className="h-10 w-28" />
+              <Skeleton className="h-10 w-32" />
+              {variant === 'homepage' && <Skeleton className="h-10 w-36 hidden sm:inline-flex" />}
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  // Normal render
   return (
     <section className={cn(PAGE_LAYOUT.hero.container, className)}>
       <div className={cn(PAGE_LAYOUT.hero.content, alignmentClasses, contentClassName)}>
@@ -100,7 +157,7 @@ export function PageHero({
         )}
 
         {/* Title */}
-        <h1 className={styles.title}>{title}</h1>
+        {title && <h1 className={styles.title}>{title}</h1>}
 
         {/* Description */}
         {description && (

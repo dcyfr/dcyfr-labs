@@ -1,23 +1,28 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHero } from "@/components/layouts/page-hero";
 import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
 
 /**
  * Loading state for resume page.
- * Matches the structure of the refactored resume page with experience, education, and skills sections.
+ * Uses PageHero component to match actual page structure.
+ * 
+ * @see src/app/resume/page.tsx - Must match structure
  */
 export default function Loading() {
   return (
     <PageLayout>
-      {/* Hero Section Skeleton */}
-      <section className={PAGE_LAYOUT.hero.container}>
-        <div className={PAGE_LAYOUT.hero.content}>
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-6 w-full max-w-3xl" />
-          <Skeleton className="h-6 w-4/5 max-w-3xl" />
-        </div>
-      </section>
+      {/* Hero Section - Uses PageHero component */}
+      <PageHero
+        title={<Skeleton className="h-10 w-64" />}
+        description={
+          <>
+            <Skeleton className="h-6 w-full max-w-3xl" />
+            <Skeleton className="h-6 w-4/5 max-w-3xl" />
+          </>
+        }
+      />
 
       {/* Experience Section */}
       <section className={PAGE_LAYOUT.section.container}>
