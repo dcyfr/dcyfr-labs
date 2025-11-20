@@ -99,17 +99,17 @@ jobs:
           gh issue create \
             --title "⚠️ Preview branch sync failed - merge conflict" \
             --body "The automatic sync of the \`preview\` branch with \`main\` failed due to merge conflicts.
-
-**Action required:**
-\`\`\`bash
-git checkout preview
-git pull origin main
-# Resolve conflicts
-git push origin preview
-\`\`\`
-
-**Triggered by:** ${{ github.event_name }}
-**Commit:** ${{ github.sha }}" \
+          
+          **Action required:**
+          \`\`\`bash
+          git checkout preview
+          git pull origin main
+          # Resolve conflicts
+          git push origin preview
+          \`\`\`
+          
+          **Triggered by:** ${{ github.event_name }}
+          **Commit:** ${{ github.sha }}" \
             --label "automation" \
             --label "preview-branch"
         env:
