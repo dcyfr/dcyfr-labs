@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { SITE_DOMAIN } from "@/lib/site-config";
 import type { NextRequest } from "next/server";
+import { botid } from "botid";
 
 /**
- * Content Security Policy (CSP) Proxy (Next.js 16+)
+ * Content Security Policy (CSP) + Bot Detection Proxy (Next.js 16+)
  * 
  * Adds CSP headers with nonce-based protection against XSS attacks.
+ * Implements Vercel BotD for automated traffic detection and protection.
  * 
  * Note: This file was renamed from `middleware.ts` to `proxy.ts` for Next.js 16 compatibility.
  * Next.js 16 deprecated the "middleware" naming convention in favor of "proxy".
@@ -17,15 +19,23 @@ import type { NextRequest } from "next/server";
  * - Passes nonce via x-nonce header for use in components
  * - Compatible with Vercel Analytics, next-themes, and JSON-LD scripts
  * 
+ * Bot Detection (BotD):
+ * - Detects automated traffic using @botid library
+ * - Adds x-botd header with detection results
+ * - Can be used for rate limiting, analytics filtering, or blocking
+ * 
  * Nonce support verified for:
  * - next-themes ThemeProvider (via nonce prop)
  * - JSON-LD structured data scripts (via nonce attribute)
  * - Vercel Analytics (inherits from script context)
  */
 
-export default function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   // Generate unique nonce for this request
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  
+  // Detect bots using BotD
+  const botDetection = await botid(request);
   
   // Detect development environment
   const isDevelopment = process.env.NODE_ENV === "development";
@@ -103,6 +113,9 @@ export default function proxy(request: NextRequest) {
   
   // Pass nonce to components via custom header
   requestHeaders.set("x-nonce", nonce);
+  
+  // Pass bot detection results via custom header
+  requestHeaders.set("x-botd", JSON.stringify(botDetection));
 
   const response = NextResponse.next({
     request: {
@@ -112,6 +125,9 @@ export default function proxy(request: NextRequest) {
 
   // Set CSP header with nonce
   response.headers.set("Content-Security-Policy", cspHeader);
+  
+  // Add bot detection header to response (for debugging/monitoring)
+  response.headers.set("x-botd-bot", botDetection.isBot ? "true" : "false");
 
   return response;
 }

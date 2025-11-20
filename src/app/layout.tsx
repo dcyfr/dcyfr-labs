@@ -17,6 +17,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { BottomNav } from "@/components/bottom-nav";
 import { Toaster } from "@/components/ui/sonner";
 import { LoadingBar } from "@/components/loading-bar";
+import { WebVitalsReporter } from "@/components/web-vitals-reporter";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { headers } from "next/headers";
@@ -122,6 +123,8 @@ export default async function RootLayout({
           {/* Vercel Analytics & Speed Insights */}
           <Analytics />
           <SpeedInsights />
+          {/* Web Vitals Tracking */}
+          <WebVitalsReporter />
         </ThemeProvider>
       </body>
     </html>
