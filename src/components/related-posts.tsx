@@ -125,7 +125,7 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
               </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground pt-1">
                 <time dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString(undefined, {
+                  {new Date(post.publishedAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",

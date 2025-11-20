@@ -192,7 +192,7 @@ export function PostList({
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-3">
                         <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                         <time dateTime={p.publishedAt}>
-                          {new Date(p.publishedAt).toLocaleDateString(undefined, { 
+                          {new Date(p.publishedAt).toLocaleDateString("en-US", { 
                             year: "numeric", 
                             month: "short", 
                             day: "numeric" 
@@ -265,7 +265,7 @@ export function PostList({
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-2">
                       <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                       <time dateTime={p.publishedAt}>
-                        {new Date(p.publishedAt).toLocaleDateString(undefined, { 
+                        {new Date(p.publishedAt).toLocaleDateString("en-US", { 
                           year: "numeric", 
                           month: "short", 
                           day: "numeric" 
@@ -348,7 +348,7 @@ export function PostList({
                       <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                       {/* Published date */}
                       <time dateTime={p.publishedAt}>
-                        {new Date(p.publishedAt).toLocaleDateString(undefined, { 
+                        {new Date(p.publishedAt).toLocaleDateString("en-US", { 
                           year: "numeric", 
                           month: "short", 
                           day: "numeric" 
