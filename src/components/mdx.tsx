@@ -21,6 +21,7 @@ import {
   Lock,
   Rocket
 } from "lucide-react";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * Configuration for the rehype-pretty-code plugin
@@ -92,29 +93,23 @@ function extractTextFromChildren(children: React.ReactNode): string {
  */
 // Map a few elements to tailwind-styled components
 const components: NonNullable<MDXRemoteProps["components"]> = {
-  // eslint-disable-next-line no-restricted-syntax
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 {...props} className="text-3xl md:text-4xl font-semibold tracking-tight mt-8 first:mt-0 scroll-mt-20" />
+    <h1 {...props} className={`${TYPOGRAPHY.h1.mdx} mt-8 first:mt-0 scroll-mt-20`} />
   ),
-  // eslint-disable-next-line no-restricted-syntax
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 {...props} className="text-2xl md:text-3xl font-semibold tracking-tight mt-8 scroll-mt-20" />
+    <h2 {...props} className={`${TYPOGRAPHY.h2.mdx} mt-8 scroll-mt-20`} />
   ),
-  // eslint-disable-next-line no-restricted-syntax
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 {...props} className="font-sans text-lg md:text-xl font-bold tracking-tight mt-6 scroll-mt-20" />
+    <h3 {...props} className={`${TYPOGRAPHY.h3.mdx} mt-6 scroll-mt-20`} />
   ),
-  // eslint-disable-next-line no-restricted-syntax
   h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h4 {...props} className="font-sans text-base md:text-lg font-bold italic tracking-tight mt-5 scroll-mt-20" />
+    <h4 {...props} className={`${TYPOGRAPHY.h4.mdx} mt-5 scroll-mt-20`} />
   ),
-  // eslint-disable-next-line no-restricted-syntax
   h5: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h5 {...props} className="font-sans text-sm md:text-base font-semibold tracking-tight mt-4 scroll-mt-20" />
+    <h5 {...props} className={`${TYPOGRAPHY.h5.mdx} mt-4 scroll-mt-20`} />
   ),
-  // eslint-disable-next-line no-restricted-syntax
   h6: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h6 {...props} className="font-sans text-sm font-semibold italic tracking-tight mt-4 scroll-mt-20" />
+    <h6 {...props} className={`${TYPOGRAPHY.h6.mdx} mt-4 scroll-mt-20`} />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p {...props} className="leading-7 [&:not(:first-child)]:mt-4" />

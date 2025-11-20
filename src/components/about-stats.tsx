@@ -132,12 +132,9 @@ function StatCard({ stat }: { stat: Stat }) {
         <Icon className="h-5 w-5 text-primary flex-shrink-0" aria-hidden="true" />
       </div>
       <div className="space-y-1">
-        {/* Stats display uses custom sizing, not semantic heading typography */}
-        {/* eslint-disable-next-line no-restricted-syntax */}
-        <p className="text-3xl font-bold tracking-tight">
+        <p className={TYPOGRAPHY.display.stat}>
           {displayValue}
         </p>
-        {/* eslint-disable-next-line no-restricted-syntax */}
         <p className="text-sm font-medium text-foreground">
           {stat.label}
         </p>

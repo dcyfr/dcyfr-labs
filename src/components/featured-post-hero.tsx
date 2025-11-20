@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock } from "lucide-react";
 import type { Post } from "@/data/posts";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 interface FeaturedPostHeroProps {
@@ -83,7 +83,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
         {/* Title & Summary */}
         <div className="space-y-3">
           <Link href={`/blog/${post.slug}`}>
-            <h2 className={cn("text-2xl", "md:text-3xl", "font-semibold", "tracking-tight", "group-hover:text-primary", "transition-colors")}>
+            <h2 className={cn(TYPOGRAPHY.h2.featured, "group-hover:text-primary", "transition-colors")}>
               {post.title}
             </h2>
           </Link>

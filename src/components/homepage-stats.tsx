@@ -24,6 +24,7 @@
  */
 
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 type StatItemProps = {
   value: string | number;
@@ -34,13 +35,10 @@ type StatItemProps = {
 function StatItem({ value, label, suffix }: StatItemProps) {
   return (
     <div className="flex flex-col items-center p-6 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
-      {/* Stats display uses custom sizing, not semantic heading typography */}
-      {/* eslint-disable-next-line no-restricted-syntax */}
-      <div className="text-4xl md:text-5xl font-bold mb-2">
+      <div className={`${TYPOGRAPHY.display.statLarge} mb-2`}>
         {value}
         {suffix && <span className="text-muted-foreground">{suffix}</span>}
       </div>
-      {/* eslint-disable-next-line no-restricted-syntax */}
       <div className="text-sm md:text-base text-muted-foreground font-medium">
         {label}
       </div>

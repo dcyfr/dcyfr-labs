@@ -90,18 +90,60 @@ export const TYPOGRAPHY = {
     
     /** Blog post titles (larger, more prominent) */
     article: "font-serif text-3xl md:text-5xl font-semibold tracking-tight leading-tight",
+    
+    /** MDX content headings */
+    mdx: "text-3xl md:text-4xl font-semibold tracking-tight",
   },
   
   /** H2 heading variants */
   h2: {
     /** Standard section headings */
     standard: "text-xl md:text-2xl font-medium",
+    
+    /** Featured content headings (blog post cards, featured sections) */
+    featured: "text-2xl md:text-3xl font-semibold tracking-tight",
+    
+    /** MDX content headings */
+    mdx: "text-2xl md:text-3xl font-semibold tracking-tight",
   },
   
   /** H3 heading variants */
   h3: {
     /** Standard subsection headings */
     standard: "text-lg md:text-xl font-medium",
+    
+    /** MDX content headings */
+    mdx: "font-sans text-lg md:text-xl font-bold tracking-tight",
+  },
+  
+  /** H4 heading variants */
+  h4: {
+    /** MDX content headings */
+    mdx: "font-sans text-base md:text-lg font-bold italic tracking-tight",
+  },
+  
+  /** H5 heading variants */
+  h5: {
+    /** MDX content headings */
+    mdx: "font-sans text-sm md:text-base font-semibold tracking-tight",
+  },
+  
+  /** H6 heading variants */
+  h6: {
+    /** MDX content headings */
+    mdx: "font-sans text-sm font-semibold italic tracking-tight",
+  },
+  
+  /** Special display text (stats, error titles, large numbers) */
+  display: {
+    /** Error page titles */
+    error: "text-3xl md:text-4xl font-bold",
+    
+    /** Large statistics/metrics display */
+    stat: "text-3xl font-bold tracking-tight",
+    
+    /** Extra large statistics display (homepage stats) */
+    statLarge: "text-4xl md:text-5xl font-bold",
   },
   
   /** Lead text / page descriptions */
