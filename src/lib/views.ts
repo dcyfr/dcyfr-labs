@@ -179,27 +179,22 @@ export async function getMultiplePostViews24h(postIds: string[]): Promise<Map<st
     const now = Date.now();
     const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
     
-    // Get counts for all posts in parallel
-    const counts = await Promise.all(
-      postIds.map(async (postId) => {
-        try {
-          const count = await client.zCount(
-            formatHistoryKey(postId),
-            twentyFourHoursAgo,
-            now
-          );
-          return { postId, count };
-        } catch {
-          return { postId, count: 0 };
-        }
-      })
-    );
-    
-    counts.forEach(({ postId, count }) => {
-      if (Number.isFinite(count)) {
-        viewMap.set(postId, count);
-      }
+    // Use Redis pipeline to batch all zCount operations into a single round-trip
+    const pipeline = client.multi();
+    postIds.forEach((postId) => {
+      pipeline.zCount(formatHistoryKey(postId), twentyFourHoursAgo, now);
     });
+    
+    const results = await pipeline.exec();
+    
+    if (results) {
+      results.forEach((result, index) => {
+        const count = typeof result === 'number' ? result : 0;
+        if (Number.isFinite(count)) {
+          viewMap.set(postIds[index], count);
+        }
+      });
+    }
   } catch {
     // Return empty map on error
   }
@@ -228,27 +223,22 @@ export async function getMultiplePostViewsInRange(postIds: string[], days: numbe
     const now = Date.now();
     const rangeStart = now - (days * 24 * 60 * 60 * 1000);
     
-    // Get counts for all posts in parallel
-    const counts = await Promise.all(
-      postIds.map(async (postId) => {
-        try {
-          const count = await client.zCount(
-            formatHistoryKey(postId),
-            rangeStart,
-            now
-          );
-          return { postId, count };
-        } catch {
-          return { postId, count: 0 };
-        }
-      })
-    );
-    
-    counts.forEach(({ postId, count }) => {
-      if (Number.isFinite(count)) {
-        viewMap.set(postId, count);
-      }
+    // Use Redis pipeline to batch all zCount operations into a single round-trip
+    const pipeline = client.multi();
+    postIds.forEach((postId) => {
+      pipeline.zCount(formatHistoryKey(postId), rangeStart, now);
     });
+    
+    const results = await pipeline.exec();
+    
+    if (results) {
+      results.forEach((result, index) => {
+        const count = typeof result === 'number' ? result : 0;
+        if (Number.isFinite(count)) {
+          viewMap.set(postIds[index], count);
+        }
+      });
+    }
   } catch {
     // Return empty map on error
   }

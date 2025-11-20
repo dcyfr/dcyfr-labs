@@ -146,23 +146,21 @@ export async function getPostShares24hBulk(postIds: string[]): Promise<Record<st
     const now = Date.now();
     const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
     
-    const result: Record<string, number> = {};
+    // Use Redis pipeline to batch all zCount operations into a single round-trip
+    const pipeline = client.multi();
+    postIds.forEach((postId) => {
+      pipeline.zCount(formatHistoryKey(postId), twentyFourHoursAgo, now);
+    });
     
-    // Process in parallel for better performance
-    await Promise.all(
-      postIds.map(async (postId) => {
-        try {
-          const count = await client.zCount(
-            formatHistoryKey(postId),
-            twentyFourHoursAgo,
-            now
-          );
-          result[postId] = count;
-        } catch {
-          result[postId] = 0;
-        }
-      })
-    );
+    const results = await pipeline.exec();
+    
+    const result: Record<string, number> = {};
+    if (results) {
+      results.forEach((count, index) => {
+        const shareCount = typeof count === 'number' ? count : 0;
+        result[postIds[index]] = Number.isFinite(shareCount) ? shareCount : 0;
+      });
+    }
     
     return result;
   } catch {

@@ -65,7 +65,6 @@ export default async function ProjectsPage() {
       <ArchiveLayout
         title={pageTitle}
         description={pageDescription}
-        itemCount={visibleProjects.length}
       >
         {/* GitHub contribution heatmap */}
         <div className="mb-8">

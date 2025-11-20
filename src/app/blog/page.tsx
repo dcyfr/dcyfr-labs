@@ -113,7 +113,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <ArchiveLayout
         title={pageTitle}
         description={pageDescription}
-        itemCount={archiveData.totalItems}
         filters={
           <BlogFilters 
             selectedTags={selectedTags}
