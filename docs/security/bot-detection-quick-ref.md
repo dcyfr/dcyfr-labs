@@ -5,147 +5,140 @@
 
 ## Quick Start
 
-### Import
+### 1. Configure Protected Routes
 
 ```typescript
-import { getBotDetection, isBot, isGoodBot, isSearchEngine } from '@/lib/bot-detection';
+// src/instrumentation-client.ts
+import { initBotId } from "botid/client/core";
+
+initBotId({
+  protect: [
+    { path: "/api/contact", method: "POST" },
+    { path: "/api/checkout", method: "POST" },
+  ],
+});
+```
+
+### 2. Verify in API Routes
+
+```typescript
+// src/app/api/contact/route.ts
+import { checkBotId } from "@/lib/bot-detection";
+
+export async function POST(request: NextRequest) {
+  const verification = await checkBotId();
+  
+  if (verification.isBot) {
+    return new Response("Bot detected", { status: 403 });
+  }
+  
+  // Process request
+}
 ```
 
 ## Common Patterns
 
-### Skip Analytics for Bots
+### Block Bots
 
 ```typescript
-const botRequest = await isBot();
-
-return (
-  <>
-    <Content />
-    {!botRequest && <Analytics />}
-  </>
-);
-```
-
-### Exempt Good Bots from Rate Limiting
-
-```typescript
-const goodBot = await isGoodBot();
-
-if (!goodBot) {
-  const rateLimitResult = await rateLimit(ip, { limit: 10, windowInSeconds: 60 });
-  if (!rateLimitResult.success) {
-    return new Response('Too many requests', { status: 429 });
-  }
+const verification = await checkBotId();
+if (verification.isBot) {
+  return NextResponse.json({ error: "Access denied" }, { status: 403 });
 }
 ```
 
-### Optimize for Search Engines
+### Conditional Rate Limiting
 
 ```typescript
-const searchBot = await isSearchEngine();
+const verification = await checkBotId();
+const limit = verification.isBot ? 5 : 10;
 
-if (searchBot) {
-  return <FullSSRContent />;
-}
-
-return <InteractiveContent />;
+await rateLimit(ip, { limit, windowInSeconds: 60 });
 ```
 
-### Block Bad Bots
+### Log Bot Activity
 
 ```typescript
-const detection = await getBotDetection();
-
-if (detection?.type === 'bad-bot') {
-  return new Response('Forbidden', { status: 403 });
+const verification = await checkBotId();
+if (verification.isBot) {
+  console.log("[Bot] Request blocked from", ip);
 }
 ```
 
 ## API
 
-| Function | Returns | Use Case |
-|----------|---------|----------|
-| `isBot()` | `boolean` | Any bot check |
-| `isGoodBot()` | `boolean` | Verified good bot (SEO, social) |
-| `isSearchEngine()` | `boolean` | Search engine crawler |
-| `getBotName()` | `string \| null` | Bot identifier |
-| `getBotDetection()` | `BotDetectionResult` | Full details |
+| Function | Location | Use Case |
+|----------|----------|----------|
+| `initBotId()` | `instrumentation-client.ts` | Initialize client-side protection |
+| `checkBotId()` | API routes/Server Actions | Verify if request is from bot |
 
-## Bot Types
+## Configuration Files
 
-| Type | Examples | Action |
-|------|----------|--------|
-| `good-bot` | Search engines, social media | ✅ Allow |
-| `search-engine` | Googlebot, Bingbot | ✅ Optimize for SEO |
-| `social-media` | Facebook, Twitter | ✅ Allow previews |
-| `monitoring` | UptimeRobot, Pingdom | ✅ Allow health checks |
-| `bad-bot` | Scrapers, spam | ❌ Block or challenge |
-
-## Performance
-
-- **Detection Time:** ~1-2ms per request
-- **Location:** Proxy middleware (Edge runtime)
-- **Overhead:** Minimal
-- **Caching:** Results via `x-botd` header
+| File | Purpose |
+|------|---------|
+| `src/instrumentation-client.ts` | Client-side BotID initialization |
+| `next.config.ts` | Wrapped with `withBotId()` |
+| `src/lib/bot-detection.ts` | Re-export `checkBotId` for convenience |
 
 ## Testing
 
-### Simulate Bots Locally
+### In Browser (Works)
 
-```bash
-# Googlebot
-curl -H "User-Agent: Mozilla/5.0 (compatible; Googlebot/2.1)" http://localhost:3000
+```typescript
+'use client';
 
-# Facebook
-curl -H "User-Agent: facebookexternalhit/1.1" http://localhost:3000
+async function testAPI() {
+  const res = await fetch('/api/contact', {
+    method: 'POST',
+    body: JSON.stringify({ email: 'test@example.com' }),
+  });
+  console.log(res.status); // 200 (allowed)
+}
 ```
 
-### Check Response
+### With curl (Blocked)
 
 ```bash
-curl -I https://cyberdrew.dev | grep x-botd-bot
-# x-botd-bot: true (if bot)
-# x-botd-bot: false (if human)
+curl -X POST https://app.vercel.app/api/contact
+# Returns 403 - Bot detected (no JavaScript)
 ```
 
-## Best Practices
+## Performance
 
-✅ **DO:**
-
-- Allow good bots (search engines, social media)
-- Exclude bots from analytics
-- Give search engines full SSR content
-- Use different rate limits for different bot types
-
-❌ **DON'T:**
-
-- Block all bots (breaks SEO)
-- Rate limit search engines
-- Serve broken content to crawlers
-- Forget to test with real bot User-Agents
-
-## Common Bots
-
-**Search Engines:** Googlebot, Bingbot, DuckDuckBot, Baiduspider, YandexBot
-
-**Social Media:** facebookexternalhit, Twitterbot, LinkedInBot, Slackbot
-
-**Monitoring:** uptimerobot, pingdom, StatusCake
+- **Client**: ~5-10ms challenge execution
+- **Server**: <1ms verification
+- **Bundle**: ~15KB gzipped
 
 ## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| Bot not detected | Check User-Agent, report to Vercel |
-| False positive | Whitelist IP, use multiple signals |
-| Performance slow | Check proxy middleware, monitor Edge cold starts |
+| `checkBotId()` fails | Add route to `initBotId({ protect: [...] })` |
+| All requests blocked | Ensure client-side JavaScript runs |
+| Not working in dev | Expected - BotID returns `isBot: false` in development |
 
-## Files
+## Best Practices
 
-- **Proxy:** `src/proxy.ts` (detection runs here)
-- **Utilities:** `src/lib/bot-detection.ts` (helper functions)
-- **Docs:** `docs/security/bot-detection.md` (full guide)
+✅ **DO:**
+- Protect sensitive endpoints (forms, checkout)
+- Test in production environment
+- Handle gracefully (return 403 with message)
+- Combine with rate limiting
+
+❌ **DON'T:**
+- Use in Server Components (API routes only)
+- Forget to configure protected routes
+- Block search engines (if you need SEO)
+- Use for public read-only endpoints
+
+## Important Notes
+
+⚠️ **Protected Routes Required**: Routes MUST be in `initBotId({ protect: [...] })` or `checkBotId()` will fail
+
+⚠️ **API Routes Only**: `checkBotId()` works in API routes and Server Actions, NOT Server Components
+
+⚠️ **Development Behavior**: Returns `isBot: false` in development by default
 
 ---
 
-**Need Help?** See [bot-detection.md](./bot-detection.md) for detailed examples and use cases.
+**Need Help?** See [bot-detection.md](./bot-detection.md) for detailed examples and architecture.

@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import { initBotId } from "botid/client/core";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -28,6 +29,24 @@ Sentry.init({
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
+});
+
+// Initialize BotID for bot detection and protection
+// Protects API routes that are configured in the protect array
+// See: https://vercel.com/docs/botid/get-started
+initBotId({
+  protect: [
+    {
+      path: "/api/contact",
+      method: "POST",
+    },
+    // Add more protected routes as needed
+    // Example:
+    // {
+    //   path: "/api/user/*",
+    //   method: "POST",
+    // },
+  ],
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
