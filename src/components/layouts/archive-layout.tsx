@@ -60,9 +60,6 @@ export interface ArchiveLayoutProps {
   
   /** Loading state - renders skeleton version */
   loading?: boolean;
-  
-  /** Hero variant for loading state */
-  variant?: 'standard' | 'compact';
 }
 
 export function ArchiveLayout({
@@ -75,8 +72,9 @@ export function ArchiveLayout({
   className,
   contentClassName,
   loading = false,
-  variant = 'standard',
 }: ArchiveLayoutProps) {
+  // Archive pages always use standard variant
+  const variant = 'standard';
   return (
     <>
       {/* Header using PageHero for consistency */}
