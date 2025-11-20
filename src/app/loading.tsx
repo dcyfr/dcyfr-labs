@@ -2,35 +2,39 @@ import { PostListSkeleton } from "@/components/post-list-skeleton";
 import { ProjectCardSkeleton } from "@/components/project-card-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHero } from "@/components/layouts/page-hero";
 import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
 
 /**
  * Loading state for home page.
- * Matches the structure of the refactored homepage with PageLayout patterns.
+ * Uses actual layout components (PageHero, PageLayout) with skeleton children
+ * to ensure structure matches the actual page.
+ * 
+ * @see src/app/page.tsx - Must match structure
  */
 export default function Loading() {
   return (
     <PageLayout>
-      {/* Hero Section Skeleton */}
-      <section className={PAGE_LAYOUT.hero.container}>
-        <div className={`${PAGE_LAYOUT.hero.content} text-center space-y-4`}>
-          {/* Avatar */}
-          <div className="flex justify-center">
-            <Skeleton className="h-32 w-32 md:h-40 md:w-40 rounded-full" />
-          </div>
-          {/* Title */}
-          <Skeleton className="h-12 w-64 mx-auto" />
-          {/* Description */}
-          <Skeleton className="h-6 w-full max-w-2xl mx-auto" />
-          <Skeleton className="h-6 w-3/4 max-w-2xl mx-auto" />
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-2 justify-center">
+      {/* Hero Section - Uses PageHero component */}
+      <PageHero
+        variant="homepage"
+        align="center"
+        title={<Skeleton className="h-12 w-64 mx-auto" />}
+        description={
+          <>
+            <Skeleton className="h-6 w-full max-w-2xl mx-auto" />
+            <Skeleton className="h-6 w-3/4 max-w-2xl mx-auto" />
+          </>
+        }
+        image={<Skeleton className="h-32 w-32 md:h-40 md:w-40 rounded-full" />}
+        actions={
+          <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
             <Skeleton className="h-10 w-28" />
             <Skeleton className="h-10 w-32" />
-            <Skeleton className="h-10 w-36" />
+            <Skeleton className="h-10 w-36 hidden sm:inline-flex" />
           </div>
-        </div>
-      </section>
+        }
+      />
 
       {/* Featured Post Section */}
       <section className={PAGE_LAYOUT.section.container}>

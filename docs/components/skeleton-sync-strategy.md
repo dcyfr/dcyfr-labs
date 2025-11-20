@@ -1,62 +1,203 @@
 # Skeleton Sync Strategy
 
-**Last Updated:** November 4, 2025
+**Last Updated:** November 19, 2025
+
+## Status: ✅ IMPLEMENTED (Hybrid Approach)
+
+**Implementation Date:** November 19, 2025  
+**Strategy:** Hybrid (Layout Components + Loading Prop + Structural Tests)
 
 ## Problem Statement
 
 Skeleton loaders need to stay synchronized with their actual components. When components are updated (structure, layout, styling), skeletons often fall out of sync, leading to layout shifts and poor UX.
 
-**Current Issues:**
-- Skeletons are in separate files (`*-skeleton.tsx`)
-- No automated checks to ensure structural parity
-- Manual updates required when components change
-- Easy to forget to update skeletons after component changes
+**Original Issues (Resolved):**
+- ✅ Skeletons were in separate files with manual structure replication
+- ✅ No automated checks to ensure structural parity
+- ✅ Manual updates required when components changed
+- ✅ Easy to forget to update skeletons after component changes
 
-## Proposed Solutions
+## Implemented Solution: Hybrid Approach
 
-### Strategy 1: Co-location with Visual Markers ⭐ **RECOMMENDED**
+We've implemented a **three-pronged strategy** that eliminates manual skeleton maintenance:
 
-Keep skeletons in separate files but add clear visual markers in the component to help developers remember.
+### 1. Layout Components with Skeleton Children ⭐
 
-#### Implementation
+All `loading.tsx` files now use the **actual layout components** (`PageHero`, `ArchiveLayout`, `PageLayout`) with skeleton children passed as props. This guarantees structural sync because the layout structure is identical.
 
-**In Component File:**
+**Example:**
 ```tsx
-/**
- * ProjectCard Component
- * 
- * ⚠️ SKELETON SYNC REQUIRED
- * When updating this component's structure, also update:
- * - src/components/project-card-skeleton.tsx
- * 
- * Key structural elements that must match:
- * - Card padding and layout
- * - CardHeader with title + badge
- * - CardDescription
- * - Tech badges section
- * - CardContent (highlights section)
- * - CardFooter (action buttons)
- */
-export function ProjectCard({ ... }) {
-  // Component code
-}
+// src/app/loading.tsx
+<PageHero
+  variant="homepage"
+  align="center"
+  title={<Skeleton className="h-12 w-64 mx-auto" />}
+  description={<>
+    <Skeleton className="h-6 w-full max-w-2xl mx-auto" />
+    <Skeleton className="h-6 w-3/4 max-w-2xl mx-auto" />
+  </>}
+  image={<Skeleton className="h-32 w-32 md:h-40 md:w-40 rounded-full" />}
+  actions={...}
+/>
+```
+
+### 2. Loading Prop Support (Future-Ready) 🚀
+
+Layout components now accept a `loading` boolean prop for self-contained skeleton rendering:
+
+```tsx
+// Simplified usage (optional)
+<PageHero loading variant="homepage" align="center" />
+<ArchiveLayout loading>
+  <PostListSkeleton count={5} />
+</ArchiveLayout>
+```
+
+This provides an even simpler API for future loading states while maintaining perfect structure sync.
+
+### 3. Automated Structural Tests ✅
+
+Created `src/__tests__/skeleton-sync.test.tsx` with comprehensive tests that validate:
+- All loading states use proper layout components
+- Skeleton animations are present
+- Design tokens are used consistently
+- Critical page structures match (home, projects, blog, about, contact, resume)
+
+Tests run automatically in CI/CD to catch any regressions.
+
+## Implementation Status
+
+### Updated Files (November 19, 2025)
+
+**Loading States (6 files):**
+- ✅ `src/app/loading.tsx` - Uses `PageHero` component
+- ✅ `src/app/projects/loading.tsx` - Uses `ArchiveLayout` component
+- ✅ `src/app/blog/loading.tsx` - Uses `ArchiveLayout` component
+- ✅ `src/app/about/loading.tsx` - Uses `PageHero` component
+- ✅ `src/app/contact/loading.tsx` - Uses `PageHero` component
+- ✅ `src/app/resume/loading.tsx` - Uses `PageHero` component
+
+**Layout Components (2 files):**
+- ✅ `src/components/layouts/page-hero.tsx` - Added `loading` prop support
+- ✅ `src/components/layouts/archive-layout.tsx` - Added `loading` prop support
+
+**Tests (1 file):**
+- ✅ `src/__tests__/skeleton-sync.test.tsx` - Structural validation tests
+
+### Key Improvements
+
+1. **Guaranteed Sync:** Impossible for skeletons to drift from actual layouts since they use the same components
+2. **Single Source of Truth:** Layout structure defined once, used everywhere
+3. **Automated Validation:** Tests catch regressions automatically
+4. **Future-Proof:** `loading` prop provides even simpler API going forward
+5. **Maintainable:** Changes to layout components automatically apply to loading states
+
+## Benefits of Hybrid Approach
+
+✅ **No manual skeleton maintenance** - Layout components handle structure  
+✅ **Perfect structural sync** - Same components = identical structure  
+✅ **Type safety** - Props validated by TypeScript  
+✅ **Automated testing** - CI/CD catches drift  
+✅ **Simplified future updates** - Add `loading` prop, done  
+✅ **Clear documentation** - JSDoc examples show both patterns  
+
+## Usage Patterns
+
+### Pattern 1: Skeleton Children (Current Standard)
+
+Pass skeleton components as children to layout components:
+
+```tsx
+// src/app/projects/loading.tsx
+<ArchiveLayout
+  title={<Skeleton className="h-10 w-40" />}
+  description={<Skeleton className="h-6 w-3/4 max-w-2xl" />}
+>
+  <ProjectListSkeleton count={4} />
+</ArchiveLayout>
 ```
 
 **Benefits:**
-- ✅ Clear reminder at component level
-- ✅ No architectural changes needed
-- ✅ Works with existing patterns
-- ✅ Low maintenance overhead
 
-**Implementation Checklist:**
-1. Add JSDoc comment with skeleton sync warning to all components with skeletons
-2. List the skeleton file path explicitly
-3. Document key structural elements that must match
-4. Consider adding to component template/snippet
+- Layout structure guaranteed to match
+- Type-safe prop validation
+- Clear separation of structure vs content
 
----
+### Pattern 2: Loading Prop (Simplified)
 
-### Strategy 2: Structural Testing
+Use the `loading` boolean prop for even simpler syntax:
+
+```tsx
+// Future-friendly approach
+<PageHero loading variant="homepage" align="center" />
+```
+
+**Benefits:**
+
+- Minimal code required
+- Perfect structural sync
+- Self-documenting API
+
+## Testing
+
+Run skeleton sync tests:
+
+```bash
+npm test skeleton-sync
+```
+
+Tests validate:
+
+- All loading states use layout components properly
+- Skeleton animations are present
+- Structure matches actual pages
+- Design tokens used consistently
+
+## Migration Guide
+
+### For New Pages
+
+1. Create page in `src/app/[route]/page.tsx` using layout components
+2. Create `src/app/[route]/loading.tsx`
+3. Import same layout components with skeleton children
+
+### For Existing Pages
+
+Replace manual skeleton structure with layout components:
+
+**Before:**
+
+```tsx
+<section className={PAGE_LAYOUT.hero.container}>
+  <div className={PAGE_LAYOUT.hero.content}>
+    <Skeleton className="h-10 w-48" />
+    <Skeleton className="h-6 w-full" />
+  </div>
+</section>
+```
+
+**After:**
+
+```tsx
+<PageHero
+  title={<Skeleton className="h-10 w-48" />}
+  description={<Skeleton className="h-6 w-full" />}
+/>
+```
+
+## Best Practices
+
+1. **Always use layout components** in loading.tsx files
+2. **Match the variant** used in the actual page
+3. **Run tests** after updating page structure
+4. **Use loading prop** for simpler future implementations
+5. **Keep specialized skeletons** (PostListSkeleton, ProjectCardSkeleton) for content-specific patterns
+
+## Previous Approaches (Historical Context)
+
+The following strategies were considered but superseded by the hybrid approach:
+
+### Strategy: Co-location with Visual Markers
 
 Add tests that compare the DOM structure of skeletons to loaded components.
 

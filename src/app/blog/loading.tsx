@@ -1,26 +1,20 @@
 import { PostListSkeleton } from "@/components/post-list-skeleton";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
+import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Loading state for blog listing page.
- * Matches the structure of the blog archive page with search and filters.
+ * Uses ArchiveLayout component to match actual page structure.
+ * 
+ * @see src/app/blog/page.tsx - Must match structure
  */
 export default function Loading() {
   return (
-    <PageLayout>
-      {/* Hero Section Skeleton */}
-      <section className={PAGE_LAYOUT.hero.container}>
-        <div className={PAGE_LAYOUT.hero.content}>
-          <Skeleton className="h-10 w-32" />
-          <Skeleton className="h-6 w-3/4 max-w-2xl" />
-        </div>
-      </section>
-
-      {/* Search and Filter Section */}
-      <section className={PAGE_LAYOUT.section.container}>
-        <div className={SPACING.content}>
+    <ArchiveLayout
+      title={<Skeleton className="h-10 w-32" />}
+      description={<Skeleton className="h-6 w-3/4 max-w-2xl" />}
+      filters={
+        <>
           {/* Search form skeleton */}
           <Skeleton className="h-10 w-full rounded-md mb-4" />
 
@@ -30,13 +24,10 @@ export default function Loading() {
               <Skeleton key={i} className="h-6 w-16 rounded-full" />
             ))}
           </div>
-
-          {/* Posts list skeleton */}
-          <div className="mt-8">
-            <PostListSkeleton count={5} />
-          </div>
-        </div>
-      </section>
-    </PageLayout>
+        </>
+      }
+    >
+      <PostListSkeleton count={5} />
+    </ArchiveLayout>
   );
 }

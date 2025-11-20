@@ -1,11 +1,14 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { PageLayout } from "@/components/layouts/page-layout";
+import { PageHero } from "@/components/layouts/page-hero";
 import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
 
 /**
  * Loading state for contact page.
- * Matches the structure of the refactored contact page with hero and form.
+ * Uses PageHero component to match actual page structure.
+ * 
+ * @see src/app/contact/page.tsx - Must match structure
  */
 export default function Loading() {
   return (

@@ -5,7 +5,11 @@
  * Provides consistent structure with header, filters, content, and pagination.
  * Now uses PageHero component internally for consistent hero sections.
  * 
- * @example
+ * **Loading State Support:**
+ * Pass `loading={true}` to render skeleton version automatically, ensuring
+ * loading states always match the actual structure.
+ * 
+ * @example Standard usage
  * ```tsx
  * <ArchiveLayout
  *   title="Blog Posts"
@@ -16,6 +20,13 @@
  *   <PostList posts={posts} />
  * </ArchiveLayout>
  * ```
+ * 
+ * @example Loading state
+ * ```tsx
+ * <ArchiveLayout loading>
+ *   <PostListSkeleton count={5} />
+ * </ArchiveLayout>
+ * ```
  */
 
 import { CONTAINER_WIDTHS, SPACING, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING } from '@/lib/design-tokens';
@@ -24,10 +35,10 @@ import { cn } from '@/lib/utils';
 
 export interface ArchiveLayoutProps {
   /** Page title */
-  title: string;
+  title?: string | React.ReactNode;
   
   /** Page description (optional) */
-  description?: string;
+  description?: string | React.ReactNode;
   
   /** Filter controls (optional) */
   filters?: React.ReactNode;
@@ -46,6 +57,12 @@ export interface ArchiveLayoutProps {
   
   /** Custom className for content section */
   contentClassName?: string;
+  
+  /** Loading state - renders skeleton version */
+  loading?: boolean;
+  
+  /** Hero variant for loading state */
+  variant?: 'standard' | 'compact';
 }
 
 export function ArchiveLayout({
@@ -57,6 +74,8 @@ export function ArchiveLayout({
   itemCount,
   className,
   contentClassName,
+  loading = false,
+  variant = 'standard',
 }: ArchiveLayoutProps) {
   return (
     <>
@@ -65,6 +84,8 @@ export function ArchiveLayout({
         title={title}
         description={description}
         itemCount={itemCount}
+        loading={loading}
+        variant={variant}
       />
       
       <div className={cn("mx-auto", CONTAINER_WIDTHS.standard, CONTAINER_PADDING, "pb-14 md:pb-20", className)}>
