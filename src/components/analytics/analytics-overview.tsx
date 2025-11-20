@@ -97,7 +97,7 @@ export function AnalyticsOverview({
         
         <Card className="overflow-hidden hover:shadow-md transition-shadow p-3">
           <div className="space-y-1">
-            {/* eslint-disable-next-line no-restricted-syntax */}
+            { }
             <CardTitle className="text-xs font-medium text-muted-foreground">24h Trend</CardTitle>
             <div>
               <div className="flex items-center gap-2">

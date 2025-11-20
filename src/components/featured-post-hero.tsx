@@ -60,7 +60,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
   return (
     <Card className={`group relative overflow-hidden border-2 ${HOVER_EFFECTS.cardFeatured}`}>
       {/* Optional: Gradient accent border */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
       
       <div className="relative p-6 md:p-8 space-y-4">
         {/* Featured Badge */}

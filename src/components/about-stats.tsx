@@ -129,12 +129,14 @@ function StatCard({ stat }: { stat: Stat }) {
   return (
     <Card className="p-6 space-y-3 hover:border-primary transition-colors">
       <div className="flex items-start justify-between">
-        <Icon className="h-5 w-5 text-primary flex-shrink-0" aria-hidden="true" />
+        <Icon className="h-5 w-5 text-primary shrink-0" aria-hidden="true" />
       </div>
       <div className="space-y-1">
         <p className={TYPOGRAPHY.display.stat}>
           {displayValue}
         </p>
+        {/* Label text, not a semantic heading - uses standard text styles */}
+        {/* eslint-disable-next-line no-restricted-syntax */}
         <p className="text-sm font-medium text-foreground">
           {stat.label}
         </p>

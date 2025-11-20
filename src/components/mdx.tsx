@@ -112,7 +112,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     <h6 {...props} className={`${TYPOGRAPHY.h6.mdx} mt-4 scroll-mt-20`} />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p {...props} className="leading-7 [&:not(:first-child)]:mt-4" />
+    <p {...props} className="leading-7 not-first:mt-4" />
   ),
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote 

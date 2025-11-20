@@ -308,7 +308,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
               >
                 <div className="flex items-start gap-2">
                   <svg
-                    className="w-4 h-4 text-amber-600 dark:text-amber-500 mt-0.5 flex-shrink-0"
+                    className="w-4 h-4 text-amber-600 dark:text-amber-500 mt-0.5 shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     aria-hidden="true"
@@ -503,12 +503,12 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
-                            <FolderGit2 className="w-4 h-4 text-muted-foreground flex-shrink-0" aria-hidden="true" />
+                            <FolderGit2 className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
                             <span className="font-medium text-sm truncate group-hover:text-primary transition-colors">
                               {repo.name}
                             </span>
                           </div>
-                          <ExternalLink className="w-3 h-3 text-muted-foreground flex-shrink-0" aria-hidden="true" />
+                          <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" aria-hidden="true" />
                         </div>
                         
                         {repo.description && (
