@@ -5,6 +5,7 @@ import { getPostCommentsBulk, getPostComments24hBulk } from "@/lib/comments";
 import { posts } from "@/data/posts";
 import { createClient } from "redis";
 import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
+import { handleApiError } from "@/lib/error-handler";
 
 /**
  * Security Configuration for Analytics API
@@ -400,10 +401,19 @@ export async function GET(request: Request) {
       trending: trendingFromRedis || trendingPosts,
     });
   } catch (error) {
-    console.error("Analytics API error:", error);
+    const errorInfo = handleApiError(error, {
+      route: "/api/analytics",
+      method: "GET",
+    });
+
+    // For connection errors, return minimal response
+    if (errorInfo.isConnectionError) {
+      return new Response(null, { status: errorInfo.statusCode });
+    }
+
     return NextResponse.json(
       { error: "Failed to fetch analytics" },
-      { status: 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }

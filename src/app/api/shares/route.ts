@@ -10,6 +10,7 @@ import {
   validateTiming,
   isValidSessionId,
 } from "@/lib/anti-spam";
+import { handleApiError } from "@/lib/error-handler";
 
 /**
  * POST /api/shares
@@ -43,9 +44,11 @@ import {
  * - 500: Server error
  */
 export async function POST(request: NextRequest) {
+  let body: { postId?: string; sessionId?: string; timeOnPage?: number } | undefined;
+  
   try {
-    const body = await request.json();
-    const { postId, sessionId, timeOnPage } = body;
+    body = await request.json();
+    const { postId, sessionId, timeOnPage } = body || {};
 
     // Validate required fields
     if (!postId || typeof postId !== "string") {
@@ -64,6 +67,10 @@ export async function POST(request: NextRequest) {
 
     // Get client IP for rate limiting
     const clientIp = getClientIp(request);
+
+    // TypeScript: After validation, we know these are strings
+    const validPostId = postId as string;
+    const validSessionId = sessionId as string;
 
     // Layer 1: Validate request (user-agent, bot detection)
     const validation = validateRequest(request);
@@ -119,8 +126,8 @@ export async function POST(request: NextRequest) {
     // Layer 5: Session deduplication (1 share per session per post per 5 minutes)
     const isDuplicate = await checkSessionDuplication(
       "share",
-      postId,
-      sessionId,
+      validPostId,
+      validSessionId,
       300 // 5 minutes
     );
 
@@ -137,7 +144,7 @@ export async function POST(request: NextRequest) {
     }
 
     // All checks passed - increment the share count
-    const count = await incrementPostShares(postId);
+    const count = await incrementPostShares(validPostId);
 
     return NextResponse.json(
       { count, recorded: true },
@@ -150,10 +157,20 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error("Error incrementing share count:", error);
+    const errorInfo = handleApiError(error, {
+      route: "/api/shares",
+      method: "POST",
+      additionalData: body ? { postId: body.postId } : {},
+    });
+
+    // For connection errors, return minimal response
+    if (errorInfo.isConnectionError) {
+      return new Response(null, { status: errorInfo.statusCode });
+    }
+
     return NextResponse.json(
       { error: "Failed to increment share count", recorded: false },
-      { status: 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }

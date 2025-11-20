@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
 import { inngest } from "@/inngest/client";
 import { trackContactFormSubmission } from "@/lib/analytics";
+import { handleApiError } from "@/lib/error-handler";
 
 // Rate limit: 3 requests per 60 seconds per IP
 const RATE_LIMIT_CONFIG = {
@@ -26,6 +27,8 @@ function sanitizeInput(input: string): string {
 }
 
 export async function POST(request: Request) {
+  let body: ContactFormData | undefined;
+  
   try {
     // Apply rate limiting
     const clientIp = getClientIp(request);
@@ -47,8 +50,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
-    const { name, email, message, website } = body as ContactFormData;
+    body = await request.json();
+    const { name, email, message, website } = body || {};
 
     // Honeypot validation - if filled, it's likely a bot
     if (website && website.trim() !== "") {
@@ -148,10 +151,20 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
-    console.error("Contact form error:", error);
+    const errorInfo = handleApiError(error, {
+      route: "/api/contact",
+      method: "POST",
+      additionalData: body ? { emailDomain: body.email?.split('@')[1] } : {},
+    });
+
+    // For connection errors, return minimal response
+    if (errorInfo.isConnectionError) {
+      return new Response(null, { status: errorInfo.statusCode });
+    }
+
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }

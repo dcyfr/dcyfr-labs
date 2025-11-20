@@ -10,6 +10,7 @@ import {
   validateTiming,
   isValidSessionId,
 } from "@/lib/anti-spam";
+import { handleApiError } from "@/lib/error-handler";
 
 /**
  * POST /api/views
@@ -43,9 +44,11 @@ import {
  * - 500: Server error
  */
 export async function POST(request: NextRequest) {
+  let body: { postId?: string; sessionId?: string; timeOnPage?: number; isVisible?: boolean } | undefined;
+  
   try {
-    const body = await request.json();
-    const { postId, sessionId, timeOnPage, isVisible } = body;
+    body = await request.json();
+    const { postId, sessionId, timeOnPage, isVisible } = body || {};
 
     // Validate required fields
     if (!postId || typeof postId !== "string") {
@@ -76,6 +79,10 @@ export async function POST(request: NextRequest) {
 
     // Get client IP for rate limiting
     const clientIp = getClientIp(request);
+
+    // TypeScript: After validation, we know these are strings
+    const validPostId = postId as string;
+    const validSessionId = sessionId as string;
 
     // Layer 1: Validate request (user-agent, bot detection)
     const validation = validateRequest(request);
@@ -135,8 +142,8 @@ export async function POST(request: NextRequest) {
     // Layer 5: Session deduplication (1 view per session per post per 30 minutes)
     const isDuplicate = await checkSessionDuplication(
       "view",
-      postId,
-      sessionId,
+      validPostId,
+      validSessionId,
       1800 // 30 minutes
     );
 
@@ -153,7 +160,7 @@ export async function POST(request: NextRequest) {
     }
 
     // All checks passed - increment the view count
-    const count = await incrementPostViews(postId);
+    const count = await incrementPostViews(validPostId);
 
     return NextResponse.json(
       { count, recorded: true },
@@ -166,10 +173,20 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error("Error recording view:", error);
+    const errorInfo = handleApiError(error, {
+      route: "/api/views",
+      method: "POST",
+      additionalData: body ? { postId: body.postId } : {},
+    });
+
+    // For connection errors, return minimal response
+    if (errorInfo.isConnectionError) {
+      return new Response(null, { status: errorInfo.statusCode });
+    }
+
     return NextResponse.json(
       { error: "Failed to record view", recorded: false },
-      { status: 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }
