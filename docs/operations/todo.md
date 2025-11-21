@@ -157,13 +157,13 @@ This todo list is organized by **criticality, impact, and ROI**:
   - **Target**: 80% coverage (from 50%)
   - **Timeframe**: Weeks 5-8
   - **Focus**: Integration tests, API routes, edge cases
-  - **Current Stats**: 976 tests (913 passing, 62 failing, 1 skipped) - 93.6% pass rate
-  - **Progress**: 3/8 areas completed (37.5%)
+  - **Current Stats**: 1007 tests (944 passing, 62 failing, 1 skipped) - 93.8% pass rate
+  - **Progress**: 4/8 areas completed (50%)
   - **Areas to test**:
     1. ✅ API route integration - Contact API (17 tests, all passing)
     2. ✅ API route integration - Views API (20 tests, all passing)
     3. ✅ API route integration - Analytics API (29 tests, all passing)
-    4. [ ] API route integration - GitHub contributions API (15-20 tests)
+    4. ✅ API route integration - GitHub contributions API (31 tests, all passing)
     5. [ ] Blog system integration (full lifecycle) - 3-4h
     6. [ ] Authentication & security (CSP, rate limiting) - 2-3h
     7. [ ] Error scenarios (network failures, missing data) - 3-4h
@@ -197,6 +197,17 @@ This todo list is organized by **criticality, impact, and ROI**:
        - Response format (timestamp, dateRange, metadata)
        - Error handling (Redis failures, graceful degradation)
        - Security flow integration (layer order, early exit)
+    4. ✅ `src/__tests__/integration/api-github-contributions.test.ts` - 31 tests (all passing)
+       - Input validation (required username, format checks, special chars, length limits)
+       - Security whitelist (only allows 'dcyfr', rejects all other users)
+       - Rate limiting (10 req/min, 429 responses, retry-after headers)
+       - GitHub GraphQL API integration (POST requests, query structure, variables)
+       - Authentication (optional GITHUB_TOKEN, Bearer header, unauthenticated fallback)
+       - Response transformation (contributions array, summary stats, pinned repos)
+       - Server-side caching (5min duration, HIT/MISS/FALLBACK status)
+       - Error handling (network failures, HTTP errors, GraphQL errors, invalid responses)
+       - Fallback data generation (realistic synthetic data, date formats)
+       - Complete security flow (validation → auth → rate limit → fetch)
 
 ### Monitoring & Error Tracking
 
