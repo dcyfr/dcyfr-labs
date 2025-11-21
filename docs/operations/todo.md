@@ -157,14 +157,14 @@ This todo list is organized by **criticality, impact, and ROI**:
   - **Target**: 80% coverage (from 50%)
   - **Timeframe**: Weeks 5-8
   - **Focus**: Integration tests, API routes, edge cases
-  - **Current Stats**: 1007 tests (944 passing, 62 failing, 1 skipped) - 93.8% pass rate
-  - **Progress**: 4/8 areas completed (50%)
+  - **Current Stats**: 1049 tests (986 passing, 62 failing, 1 skipped) - 94.0% pass rate
+  - **Progress**: 5/8 areas completed (62.5%)
   - **Areas to test**:
     1. ✅ API route integration - Contact API (17 tests, all passing)
     2. ✅ API route integration - Views API (20 tests, all passing)
     3. ✅ API route integration - Analytics API (29 tests, all passing)
     4. ✅ API route integration - GitHub contributions API (31 tests, all passing)
-    5. [ ] Blog system integration (full lifecycle) - 3-4h
+    5. ✅ Blog system integration (42 tests, all passing)
     6. [ ] Authentication & security (CSP, rate limiting) - 2-3h
     7. [ ] Error scenarios (network failures, missing data) - 3-4h
     8. [ ] Performance benchmarks - 2-3h
@@ -208,6 +208,29 @@ This todo list is organized by **criticality, impact, and ROI**:
        - Error handling (network failures, HTTP errors, GraphQL errors, invalid responses)
        - Fallback data generation (realistic synthetic data, date formats)
        - Complete security flow (validation → auth → rate limit → fetch)
+    5. ✅ `src/__tests__/integration/blog-system.test.ts` - 42 tests (all passing)
+       - Post loading & validation (6 tests: file system, required fields, stable IDs, reading time, draft filtering)
+       - Post retrieval (4 tests: current slug, previous slugs with redirect, not found, data exports)
+       - Tag system (3 tests: aggregation, uniqueness, counts)
+       - Series system (4 tests: grouping, sorting by order, unique names, valid order numbers)
+       - Related posts (4 tests: tag-based matching, max results limit, relevance sorting, archived exclusion)
+       - Table of contents (4 tests: heading extraction, URL-safe slugs, nested levels, empty content)
+       - Post badge metadata (3 tests: latest post, hottest by views, exclusions)
+       - Post metadata & SEO (8 tests: valid dates, tags required, summary length, URL-safe slugs, unique IDs/slugs, image validation, series structure)
+       - Post sorting & filtering (4 tests: date sorting, tag filter, featured filter, archived filter)
+       - Complete blog lifecycle (2 tests: full flow integration, graceful error handling)
+    6. ✅ `src/__tests__/integration/security.test.ts` - 36 tests (all passing)
+       - CSP Implementation (12 tests: unique nonce generation, CSP directive validation, script-src with nonce, style-src unsafe-inline, img-src external domains, font-src, connect-src, frame-src, worker-src, object-src, base-uri, form-action, upgrade-insecure-requests, block-mixed-content, report-uri, external domains for Vercel/GitHub/Giscus)
+       - Developer-Only Protection (4 tests: /analytics blocked in production, subpath blocking, development access allowed, other paths not blocked)
+       - Proxy Matcher Config (2 tests: static assets excluded from processing, prefetch requests excluded)
+       - Rate Limiting Integration (4 tests: enforces limits across routes, provides metadata, sets standard RFC headers, window expiry)
+       - IP Address Extraction (6 tests: x-forwarded-for parsing, x-real-ip fallback, priority order, multiple IPs handling, fallback to connection, sanitization)
+       - Cross-Route Security Patterns (3 tests: consistent rate limits, nonce availability on all routes, CSP applied everywhere)
+       - Security Error Handling (3 tests: rate limiter fails open, CSP always present, nonce generation never fails)
+       - Headers Consistency (2 tests: valid CSP format, RFC standard rate limit headers)
+  - **Progress**: 6 of 8 major areas complete (75%)
+  - **Test Count**: ~1,085 tests total, ~1,022 passing (94.2% pass rate)
+  - **Next**: Error scenario testing (25-30 tests), then performance benchmarks (15-20 tests)
 
 ### Monitoring & Error Tracking
 
