@@ -123,8 +123,8 @@ This todo list is organized by **criticality, impact, and ROI**:
 
 - [ ] **Phase 2: Test coverage - Components & hooks** (14-18 hours) 🟡 **IN PROGRESS** (Started Nov 20, 2025)
   - **Target**: 50% coverage (from 7.37%)
-  - **Current Progress**: 5/9 areas completed
-  - **Tests Added**: 193 new tests (583 total, 536 passing)
+  - **Current Progress**: 9/12 areas completed (~75%)
+  - **Tests Added**: 324 new tests (797 total, 750 passing)
   - **Files completed**:
     1. ✅ `components/mdx.tsx` - 26 tests - Component mappings, custom elements, accessibility
     2. ✅ `components/mermaid.tsx` - 26 tests (1 skipped) - Theme detection, rendering, error handling
@@ -134,14 +134,18 @@ This todo list is organized by **criticality, impact, and ROI**:
     6. ✅ `components/layouts/page-hero.tsx` - 27 tests - Variants, alignment, loading states, accessibility
     7. ✅ `components/layouts/archive-layout.tsx` - 34 tests - Filters, pagination, itemCount, integration
     8. ✅ `components/layouts/article-layout.tsx` - 26 tests - Header/footer, prose width, semantic structure
+    9. ✅ `components/blog-analytics-tracker.tsx` - 23 tests - Hook integration, lifecycle, error handling
+    10. ✅ `components/view-tracker.tsx` - 30 tests - Hook integration, enabled state, unmount behavior
+    11. ✅ `components/web-vitals-reporter.tsx` - 24 tests - Initialization, multiple instances, performance
+    12. ✅ `data/projects.ts` - 41 tests - Structure, status, links, images, tech/tags, filtered collections
+    13. ✅ `data/resume.ts` - 51 tests - Experience, education, certifications, skills, content quality
+    14. ✅ `data/socials.ts` - 45 tests - Social links, platform types, URLs, helper functions, handles
   - **Remaining areas**:
-    9. ⏳ Analytics components (blog-analytics-tracker, view-tracker, web-vitals-reporter) - 2-3h
-    10. ⏳ Custom hooks (view tracking, analytics, animations) - 3-4h
-    11. ⏳ Data layer (projects, resume, socials) - 2-3h
-    12. ⏳ Remaining lib files (anti-spam, shares, views) - 1-2h
-  - **Estimated time remaining**: 8-12 hours
-  - **Impact**: ⭐⭐⭐⭐ Component reliability, hook behavior validated
-  - **Next**: Analytics components, then custom hooks
+    15. ⏳ Custom hooks (view tracking, analytics, animations) - 3-4h
+    16. ⏳ Remaining lib files (anti-spam, shares, views) - 1-2h
+  - **Estimated time remaining**: 4-6 hours
+  - **Impact**: ⭐⭐⭐⭐ Component reliability, data validation, hook behavior validated
+  - **Next**: Custom hooks, then remaining lib utilities
 
 - [ ] **Phase 3: Test coverage - Integration & edge cases** (18-22 hours) 🟢 **LOW PRIORITY**
   - **Target**: 80% coverage (from 50%)
