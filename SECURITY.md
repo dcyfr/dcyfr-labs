@@ -2,7 +2,7 @@
 
 ## 🔒 Reporting Security Vulnerabilities
 
-We take the security of cyberdrew-dev seriously. If you discover a security vulnerability, please report it responsibly.
+If you discover a security vulnerability, please report it responsibly.
 
 ### How to Report
 
@@ -172,4 +172,4 @@ We thank the following security researchers for their responsible disclosure:
 
 ---
 
-**Note:** This security policy applies to the cyberdrew-dev project and its deployed instances. For questions about this policy, please reach out via the contact methods listed above.
+**Note:** This security policy applies to the and its deployed instances. For questions about this policy, please reach out via the contact methods listed above.

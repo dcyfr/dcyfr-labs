@@ -1,6 +1,6 @@
 # Testing Documentation
 
-Comprehensive testing setup for the cyberdrew-dev portfolio application.
+Comprehensive testing setup for the application.
 
 **Current Status** (Nov 15, 2025):
 

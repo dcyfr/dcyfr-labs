@@ -1,0 +1,124 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { GET as analyticsGET } from '@/app/api/analytics/route'
+import { getMultiplePostViews, getMultiplePostViews24h, getMultiplePostViewsInRange } from '@/lib/views'
+import { getPostSharesBulk, getPostShares24hBulk } from '@/lib/shares'
+import { createClient } from 'redis'
+
+// Mock posts data import
+import { posts } from '@/data/posts'
+
+// Prepare mocks
+vi.mock('@/lib/views', () => ({
+  getMultiplePostViews: vi.fn(),
+  getMultiplePostViews24h: vi.fn(),
+  getMultiplePostViewsInRange: vi.fn(),
+}))
+
+vi.mock('@/lib/shares', () => ({
+  getPostSharesBulk: vi.fn(),
+  getPostShares24hBulk: vi.fn(),
+}))
+
+vi.mock('redis', () => ({
+  createClient: vi.fn(),
+}))
+
+describe('Error Scenario Integration Tests', () => {
+  const originalEnv = process.env
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    process.env = { ...originalEnv }
+    // Default environment to development so analytics is allowed
+    process.env.NODE_ENV = 'development'
+    delete process.env.VERCEL_ENV
+    delete process.env.ADMIN_API_KEY
+
+    // Default behavior: return zero maps
+    vi.mocked(getMultiplePostViews).mockResolvedValue(new Map())
+    vi.mocked(getMultiplePostViews24h).mockResolvedValue(new Map())
+    vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(new Map())
+    vi.mocked(getPostSharesBulk).mockResolvedValue({})
+    vi.mocked(getPostShares24hBulk).mockResolvedValue({})
+
+    // Mock redis client createClient to return a client with get/quit
+    vi.mocked(createClient).mockImplementation(() => {
+      return {
+        isOpen: true,
+        connect: vi.fn().mockResolvedValue(undefined),
+        get: vi.fn().mockResolvedValue(null),
+        quit: vi.fn().mockResolvedValue(undefined),
+      }
+    })
+  })
+
+  afterEach(() => {
+    process.env = originalEnv
+  })
+
+  it('blocks analytics in production environment (403)', async () => {
+    process.env.VERCEL_ENV = 'production'
+
+    const request = new Request('http://localhost:3000/api/analytics')
+    const response = await analyticsGET(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(403)
+    expect(data.error).toContain('Analytics not available in production')
+  })
+
+  it('returns 401 when ADMIN_API_KEY missing', async () => {
+    // Ensure environment allows analytics
+    process.env.NODE_ENV = 'development'
+    delete process.env.VERCEL_ENV
+
+    const request = new Request('http://localhost:3000/api/analytics')
+    const response = await analyticsGET(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(401)
+    expect(data.error).toBe('Unauthorized')
+  })
+
+  it('continues when redis trending get throws (graceful fallback)', async () => {
+    // Provide admin key so we bypass auth
+    process.env.ADMIN_API_KEY = 'test-key'
+
+    // Make createClient return a client whose get throws
+    vi.mocked(createClient).mockImplementation(() => ({
+      isOpen: true,
+      connect: vi.fn().mockResolvedValue(undefined),
+      get: vi.fn().mockRejectedValue(new Error('Redis get failed')),
+      quit: vi.fn().mockResolvedValue(undefined),
+    }))
+
+    const request = new Request('http://localhost:3000/api/analytics', {
+      headers: { Authorization: 'Bearer test-key' },
+    })
+
+    const response = await analyticsGET(request)
+    const data = await response.json()
+
+    // Should still return success and include posts
+    expect(response.status).toBe(200)
+    expect(data.success).toBe(true)
+    expect(Array.isArray(data.posts)).toBe(true)
+  })
+
+  it('returns 500 when core data fetching fails', async () => {
+    process.env.ADMIN_API_KEY = 'test-key'
+
+    // Make getMultiplePostViews throw to simulate DB/Redis layer failure
+    vi.mocked(getMultiplePostViews).mockRejectedValue(new Error('Views DB error'))
+
+    const request = new Request('http://localhost:3000/api/analytics', {
+      headers: { Authorization: 'Bearer test-key' },
+    })
+
+    const response = await analyticsGET(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(500)
+    expect(data.error).toBe('Failed to fetch analytics')
+  })
+})
