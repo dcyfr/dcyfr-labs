@@ -52,14 +52,6 @@ export default function DevToolsDropdown() {
             >
               Analytics Dashboard
             </Link>
-            <Link
-              href="/drafts"
-              className="px-3 py-2 text-sm hover:bg-muted rounded"
-              onClick={() => setOpen(false)}
-              prefetch={false}
-            >
-              Drafts
-            </Link>
           </nav>
         </div>
       )}
