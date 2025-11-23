@@ -8,7 +8,7 @@
 
 ## 📖 Documentation Overview
 
-This directory contains comprehensive documentation for GitHub MCP (Model Context Protocol) integration in the cyberdrew-dev project.
+This directory contains comprehensive documentation for GitHub MCP (Model Context Protocol) integration in the.
 
 ### Document Selection Guide
 

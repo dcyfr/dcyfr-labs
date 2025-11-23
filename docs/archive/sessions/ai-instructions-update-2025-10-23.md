@@ -2,7 +2,7 @@
 
 ## Summary
 
-Updated AI contributor instructions to accurately reflect the current state of the cyberdrew-dev project, which has evolved from a minimal portfolio into a full-featured blog and portfolio site.
+Updated AI contributor instructions to accurately reflect the current state of the, which has evolved from a minimal portfolio into a full-featured blog and portfolio site.
 
 ## Changes Made
 
