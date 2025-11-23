@@ -136,6 +136,7 @@ export function BlogSearchForm({ query, tag, readingTime }: BlogSearchFormProps)
           value={value}
           onChange={(event) => setValue(event.target.value)}
           className="w-full"
+          autoFocus
         />
         {tag && <input type="hidden" name="tag" value={tag} />}
       </div>

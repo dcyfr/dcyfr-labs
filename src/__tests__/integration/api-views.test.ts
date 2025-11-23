@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { NextRequest } from 'next/server'
 import { POST } from '@/app/api/views/route'
 import { rateLimit } from '@/lib/rate-limit'
 import {
@@ -53,7 +54,7 @@ describe('Views API Integration', () => {
   describe('POST /api/views', () => {
     describe('Input Validation', () => {
       it('rejects missing postId', async () => {
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             sessionId: 'test-session-123',
@@ -71,7 +72,7 @@ describe('Views API Integration', () => {
       })
 
       it('rejects non-string postId', async () => {
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 12345, // Number instead of string
@@ -91,7 +92,7 @@ describe('Views API Integration', () => {
       it('rejects invalid sessionId', async () => {
         vi.mocked(isValidSessionId).mockReturnValue(false)
 
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 'test-post',
@@ -110,7 +111,7 @@ describe('Views API Integration', () => {
       })
 
       it('does not count view when page not visible', async () => {
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 'test-post',
@@ -139,7 +140,7 @@ describe('Views API Integration', () => {
             reason: 'invalid_user_agent',
           })
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -168,7 +169,7 @@ describe('Views API Integration', () => {
             reason: 'bot_detected',
           })
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -197,7 +198,7 @@ describe('Views API Integration', () => {
             reason: 'insufficient_time',
           })
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -224,7 +225,7 @@ describe('Views API Integration', () => {
         it('accepts valid time on page', async () => {
           vi.mocked(validateTiming).mockReturnValue({ valid: true })
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -245,7 +246,7 @@ describe('Views API Integration', () => {
         it('rejects requests from known abusers', async () => {
           vi.mocked(detectAbusePattern).mockResolvedValue(true)
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -278,7 +279,7 @@ describe('Views API Integration', () => {
             reset: Date.now() + 30000,
           })
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -311,7 +312,7 @@ describe('Views API Integration', () => {
             reset: resetTime,
           })
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -330,7 +331,7 @@ describe('Views API Integration', () => {
         })
 
         it('calls rateLimit with correct parameters', async () => {
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -353,7 +354,7 @@ describe('Views API Integration', () => {
         it('does not increment for duplicate sessions', async () => {
           vi.mocked(checkSessionDuplication).mockResolvedValue(true)
 
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post',
@@ -375,7 +376,7 @@ describe('Views API Integration', () => {
         })
 
         it('calls checkSessionDuplication with correct parameters', async () => {
-          const request = new Request('http://localhost:3000/api/views', {
+          const request = new NextRequest('http://localhost:3000/api/views', {
             method: 'POST',
             body: JSON.stringify({
               postId: 'test-post-123',
@@ -399,7 +400,7 @@ describe('Views API Integration', () => {
 
     describe('Successful View Recording', () => {
       it('increments view count when all checks pass', async () => {
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 'test-post',
@@ -421,7 +422,7 @@ describe('Views API Integration', () => {
       it('returns updated count with rate limit headers', async () => {
         vi.mocked(incrementPostViews).mockResolvedValue(100)
 
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 'popular-post',
@@ -443,7 +444,7 @@ describe('Views API Integration', () => {
 
     describe('Error Handling', () => {
       it('handles invalid JSON gracefully', async () => {
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: 'not valid json',
         })
@@ -459,7 +460,7 @@ describe('Views API Integration', () => {
       it('handles incrementPostViews failure', async () => {
         vi.mocked(incrementPostViews).mockRejectedValue(new Error('Redis error'))
 
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 'test-post',
@@ -480,7 +481,7 @@ describe('Views API Integration', () => {
 
     describe('Complete Flow Integration', () => {
       it('executes all validation layers in correct order', async () => {
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 'test-post',
@@ -511,7 +512,7 @@ describe('Views API Integration', () => {
           reason: 'bot_detected',
         })
 
-        const request = new Request('http://localhost:3000/api/views', {
+        const request = new NextRequest('http://localhost:3000/api/views', {
           method: 'POST',
           body: JSON.stringify({
             postId: 'test-post',

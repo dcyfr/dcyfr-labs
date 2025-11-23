@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { NextRequest } from 'next/server'
 import { GET as analyticsGET } from '@/app/api/analytics/route'
 import { getMultiplePostViews, getMultiplePostViews24h, getMultiplePostViewsInRange } from '@/lib/views'
 import { getPostSharesBulk, getPostShares24hBulk } from '@/lib/shares'
@@ -30,7 +31,7 @@ describe('Error Scenario Integration Tests', () => {
     vi.clearAllMocks()
     process.env = { ...originalEnv }
     // Default environment to development so analytics is allowed
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     delete process.env.VERCEL_ENV
     delete process.env.ADMIN_API_KEY
 
@@ -48,7 +49,7 @@ describe('Error Scenario Integration Tests', () => {
         connect: vi.fn().mockResolvedValue(undefined),
         get: vi.fn().mockResolvedValue(null),
         quit: vi.fn().mockResolvedValue(undefined),
-      }
+      } as any
     })
   })
 
@@ -59,7 +60,7 @@ describe('Error Scenario Integration Tests', () => {
   it('blocks analytics in production environment (403)', async () => {
     process.env.VERCEL_ENV = 'production'
 
-    const request = new Request('http://localhost:3000/api/analytics')
+    const request = new NextRequest('http://localhost:3000/api/analytics')
     const response = await analyticsGET(request)
     const data = await response.json()
 
@@ -69,10 +70,10 @@ describe('Error Scenario Integration Tests', () => {
 
   it('returns 401 when ADMIN_API_KEY missing', async () => {
     // Ensure environment allows analytics
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     delete process.env.VERCEL_ENV
 
-    const request = new Request('http://localhost:3000/api/analytics')
+    const request = new NextRequest('http://localhost:3000/api/analytics')
     const response = await analyticsGET(request)
     const data = await response.json()
 
@@ -90,9 +91,9 @@ describe('Error Scenario Integration Tests', () => {
       connect: vi.fn().mockResolvedValue(undefined),
       get: vi.fn().mockRejectedValue(new Error('Redis get failed')),
       quit: vi.fn().mockResolvedValue(undefined),
-    }))
+    }) as any)
 
-    const request = new Request('http://localhost:3000/api/analytics', {
+    const request = new NextRequest('http://localhost:3000/api/analytics', {
       headers: { Authorization: 'Bearer test-key' },
     })
 

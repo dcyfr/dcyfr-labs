@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/lib/toast";
+import { Loader2 } from "lucide-react";
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -118,6 +119,7 @@ export function ContactForm() {
         />
       </div>
       <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
+        {isSubmitting && <Loader2 className="animate-spin" />}
         {isSubmitting ? "Sending..." : "Send Message"}
       </Button>
     </form>

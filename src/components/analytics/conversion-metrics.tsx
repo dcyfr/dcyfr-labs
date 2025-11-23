@@ -86,13 +86,13 @@ export function ConversionMetrics({
       </Card>
 
       {/* Primary Conversion Metrics */}
-      <DashboardStats columns={3}>
+      <DashboardStats columns={4}>
         <DashboardStat
           label="Consulting Leads"
           value={targets.consultingLeads.current}
           secondaryValue={`Target: ${targets.consultingLeads.target}/month`}
           icon={Mail}
-          trend="neutral"
+          trend={{ value: "0", direction: "neutral" }}
         />
         
         <DashboardStat
@@ -100,7 +100,7 @@ export function ConversionMetrics({
           value={targets.linkedInConnections.current}
           secondaryValue={`Target: ${targets.linkedInConnections.target}/month`}
           icon={Linkedin}
-          trend="neutral"
+          trend={{ value: "0", direction: "neutral" }}
         />
         
         <DashboardStat
@@ -108,7 +108,7 @@ export function ConversionMetrics({
           value={`${completionRate}%`}
           secondaryValue={`Target: ${targets.blogEngagement.target}%`}
           icon={Eye}
-          trend={completionRate >= targets.blogEngagement.target ? "up" : "neutral"}
+          trend={{ value: `${completionRate}%`, direction: completionRate >= targets.blogEngagement.target ? "up" : "neutral" }}
         />
       </DashboardStats>
 

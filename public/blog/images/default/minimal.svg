@@ -42,7 +42,7 @@
     <line x1="800" y1="0" x2="800" y2="630"/>
   </g>
   
-  <!-- Center icon: code brackets -->
+  <!-- Center icon: code brackets 
   <g transform="translate(600, 315)">
     <g opacity="0.3">
       <path 
@@ -54,7 +54,7 @@
       />
       <path d="M -40 -35 L -20 35 M 20 -35 L 40 35" stroke="white" stroke-width="6" stroke-linecap="round"/>
     </g>
-  </g>
+  </g> -->
   
   <!-- Corner tech accents -->
   <g stroke="white" stroke-width="3" opacity="0.15" fill="none">

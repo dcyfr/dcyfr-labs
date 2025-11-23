@@ -17,8 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, sanitizeUrl } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
-import { getContainerClasses, TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
+import { getContainerClasses, TYPOGRAPHY } from "@/lib/design-tokens";
 import { headers } from "next/headers";
+import { OtherProjectCard } from "@/components/other-project-card";
+import { ArticleHeader } from "@/components/layouts";
 
 // Enable Incremental Static Regeneration with 1 hour revalidation
 export const revalidate = 3600; // 1 hour in seconds
@@ -69,8 +71,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const STATUS_VARIANT: Record<Project["status"], "secondary" | "default" | "outline"> = {
-  "active": "secondary",
-  "in-progress": "default",
+  "active": "outline",
+  "in-progress": "outline",
   "archived": "outline",
 };
 
@@ -136,64 +138,49 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <span>Back to Projects</span>
         </Link>
         
-        {/* Project Header */}
-        <div className="space-y-4 mb-8">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        {/* Project Header with Background Image */}
+        <ArticleHeader
+          title={project.title}
+          metadata={project.timeline || undefined}
+          badges={
             <Badge variant={STATUS_VARIANT[project.status]}>
               {STATUS_LABEL[project.status]}
             </Badge>
-            {project.timeline && <span>•</span>}
-            {project.timeline && <span>{project.timeline}</span>}
-          </div>
-          
-          <h1 className={TYPOGRAPHY.h1.article}>
-            {project.title}
-          </h1>
-          
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            {project.description}
-          </p>
-          
-          {/* Project Links */}
-          {project.links.length > 0 && (
-            <div className="flex flex-wrap gap-3 pt-2">
-              {project.links.map((link) => {
-                const isExternal = /^(?:https?:)?\/\//.test(link.href);
-                return isExternal ? (
-                  <Button key={link.href} asChild variant="default" size="default">
-                    <a href={sanitizeUrl(link.href)} target="_blank" rel="noreferrer">
-                      <span>{link.label}</span>
-                      <ExternalLink className="h-4 w-4 ml-2" />
-                    </a>
-                  </Button>
-                ) : (
-                  <Button key={link.href} asChild variant="default" size="default">
-                    <Link href={link.href}>
-                      <span>{link.label}</span>
-                    </Link>
-                  </Button>
-                );
-              })}
-            </div>
-          )}
-        </div>
+          }
+          backgroundImage={{
+            url: image.url,
+            alt: image.alt,
+            position: image.position as 'center' | 'top' | 'bottom' | 'left' | 'right' | undefined,
+          }}
+        />
         
-        {/* Featured Image */}
-        <Card className="overflow-hidden mb-8">
-          <div className="relative aspect-video w-full">
-            <Image
-              src={image.url}
-              alt={image.alt}
-              fill
-              className={cn(
-                "object-cover",
-                image.position && `object-${image.position}`
-              )}
-              priority
-              sizes="(max-width: 1024px) 100vw, 896px"
-            />
+        {/* Project Description */}
+        <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
+          {project.description}
+        </p>
+        
+        {/* Project Links */}
+        {project.links.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-8">
+            {project.links.map((link) => {
+              const isExternal = /^(?:https?:)?\/\//.test(link.href);
+              return isExternal ? (
+                <Button key={link.href} asChild variant="default" size="default">
+                  <a href={sanitizeUrl(link.href)} target="_blank" rel="noreferrer">
+                    <span>{link.label}</span>
+                    <ExternalLink className="h-4 w-4 ml-2" />
+                  </a>
+                </Button>
+              ) : (
+                <Button key={link.href} asChild variant="default" size="default">
+                  <Link href={link.href}>
+                    <span>{link.label}</span>
+                  </Link>
+                </Button>
+              );
+            })}
           </div>
-        </Card>
+        )}
         
         {/* Project Details */}
         <div className="max-w-none">
@@ -254,42 +241,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             {visibleProjects
               .filter((p) => p.slug !== project.slug)
               .slice(0, 2)
-              .map((otherProject) => {
-                const otherImage = ensureProjectImage(otherProject.image, {
-                  tags: otherProject.tags,
-                  tech: otherProject.tech,
-                });
-                return (
-                  <Link
-                    key={otherProject.slug}
-                    href={`/projects/${otherProject.slug}`}
-                    className="group block"
-                  >
-                    <Card className={`h-full overflow-hidden ${HOVER_EFFECTS.card}`}>
-                      <div className="relative aspect-video w-full">
-                        <Image
-                          src={otherImage.url}
-                          alt={otherImage.alt}
-                          fill
-                          className={cn(
-                            "object-cover group-hover:scale-105 transition-transform duration-300",
-                            otherImage.position && `object-${otherImage.position}`
-                          )}
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                      </div>
-                      <CardContent className="pt-4">
-                        <h3 className={`${TYPOGRAPHY.h3.standard} mb-2`}>
-                          {otherProject.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {otherProject.description}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                );
-              })}
+              .map((otherProject) => (
+                <OtherProjectCard 
+                  key={otherProject.slug} 
+                  project={otherProject} 
+                />
+              ))}
           </div>
         </div>
       </div>

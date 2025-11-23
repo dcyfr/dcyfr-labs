@@ -11,8 +11,8 @@ import { ensureProjectImage } from "@/lib/default-project-images";
 import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
 const STATUS_VARIANT: Record<ProjectStatus, "secondary" | "default" | "outline"> = {
-  "active": "secondary",
-  "in-progress": "default",
+  "active": "outline",
+  "in-progress": "outline",
   "archived": "outline",
 };
 
@@ -109,7 +109,7 @@ export function ProjectCard({
         }
       }}
     >
-      <Card className={cn("flex h-full flex-col overflow-hidden relative", HOVER_EFFECTS.card)}>
+      <Card className={cn("flex h-full flex-col overflow-hidden relative holo-card holo-card-3d", HOVER_EFFECTS.card)}>
         {/* Background Image - always present now (custom or default) */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -117,15 +117,18 @@ export function ProjectCard({
             alt={image.alt}
             fill
             className={cn(
-              "object-cover opacity-20 dark:opacity-10 transition-opacity duration-300 group-hover:opacity-30",
+              "object-cover holo-image-shift",
               image.position && `object-${image.position}`
             )}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             loading="lazy"
           />
           {/* Gradient overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background/95" />
+          <div className="absolute inset-0 holo-gradient-dark group-hover:holo-gradient-dark-hover transition-all duration-300" />
         </div>
+        
+        {/* Subtle shine effect */}
+        <div className="holo-shine" />
 
         {/* Content - positioned above background */}
         <CardHeader className="space-y-1.5 relative z-10 px-4 sm:px-6 py-4 sm:py-5">
@@ -150,7 +153,7 @@ export function ProjectCard({
                 </Badge>
               ))}
               {project.tech.length > 3 && (
-                <Badge variant="outline" className="font-normal text-xs sm:text-sm text-muted-foreground">
+                <Badge variant="outline" className="font-normal text-xs sm:text-sm">
                   +{project.tech.length - 3}
                 </Badge>
               )}
@@ -167,7 +170,7 @@ export function ProjectCard({
                 // eslint-disable-next-line no-restricted-syntax
                 "inline-flex items-center justify-center gap-1.5 text-sm font-medium transition-colors",
                 "px-3 py-2 rounded-md",
-                "bg-accent/50 hover:bg-accent",
+                "bg-background/70 hover:bg-accent hover:text-accent-foreground border border-border/80 backdrop-blur-sm",
                 "touch-target"
               );
               

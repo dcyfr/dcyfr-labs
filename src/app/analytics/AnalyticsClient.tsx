@@ -481,8 +481,8 @@ export default function AnalyticsDashboard() {
 
       {/* Conversion Goals & Metrics */}
       <ConversionMetrics
-        completionRate={filteredSummary.avgReadingCompletion}
-        avgScrollDepth={filteredSummary.avgScrollDepth}
+        completionRate={0}
+        avgScrollDepth={0}
         totalPostsViewed={filteredSummary.totalViews}
       />
 

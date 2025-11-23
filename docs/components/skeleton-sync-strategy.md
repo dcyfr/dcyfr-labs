@@ -1,10 +1,11 @@
 # Skeleton Sync Strategy
 
-**Last Updated:** November 19, 2025
+**Last Updated:** November 22, 2025
 
-## Status: ✅ IMPLEMENTED (Hybrid Approach)
+## Status: ✅ IMPLEMENTED & ENFORCED (Hybrid Approach + Automated Tests)
 
 **Implementation Date:** November 19, 2025  
+**Last Sync Audit:** November 22, 2025  
 **Strategy:** Hybrid (Layout Components + Loading Prop + Structural Tests)
 
 ## Problem Statement
@@ -16,6 +17,18 @@ Skeleton loaders need to stay synchronized with their actual components. When co
 - ✅ No automated checks to ensure structural parity
 - ✅ Manual updates required when components changed
 - ✅ Easy to forget to update skeletons after component changes
+
+## Latest Audit Results (November 22, 2025)
+
+**Issues Fixed:**
+1. ✅ `PostListSkeleton` - Updated to match PostList's new structure with background images, gradient overlays, and proper padding (space-y-4 container, p-3 sm:p-4 content)
+2. ✅ `ProjectListSkeleton` - Fixed grid gap from `gap-6` to `gap-4` to match actual projects page
+3. ✅ `src/app/projects/loading.tsx` - Fixed grid gap from `gap-5` to `gap-4`
+4. ✅ Skeleton tests - Updated from deprecated `animate-pulse` to `skeleton-shimmer` class
+5. ✅ Skeleton tests - Fixed outdated selectors (Card uses `data-slot="card"` not `rounded-lg` class)
+6. ✅ Skeleton tests - Fixed PageLayout expectations (uses `min-h-screen` div, not `<main>` tag)
+
+**All 21 skeleton sync tests now passing** ✅
 
 ## Implemented Solution: Hybrid Approach
 
@@ -633,6 +646,114 @@ compare screenshots/skeleton.png screenshots/loaded.png screenshots/diff.png
 - **PR review time** for skeleton updates < 5 minutes
 
 ---
+
+## Enforcement & Maintenance Guide
+
+### Critical Patterns to Maintain
+
+**1. PostList & PostListSkeleton Sync:**
+
+```tsx
+// ✅ CORRECT: PostListSkeleton matches PostList structure
+<div className="space-y-4">  // Match container spacing
+  <article className="group rounded-lg border overflow-hidden relative">
+    <div className="absolute inset-0 z-0 bg-muted/20">  // Background
+      <div className="absolute inset-0 bg-linear-to-b from-background/60..." />  // Gradient
+    </div>
+    <div className="relative z-10 p-3 sm:p-4">  // Content wrapper
+      {/* Metadata, title, summary */}
+    </div>
+  </article>
+</div>
+
+// ❌ WRONG: Missing structural elements
+<div className="space-y-6">  // Wrong spacing
+  <article className="space-y-3">  // Missing border, background, z-index
+    <Skeleton className="h-7 w-3/4" />
+  </article>
+</div>
+```
+
+**2. ProjectCard & ProjectCardSkeleton Sync:**
+
+```tsx
+// ✅ CORRECT: Grid gap must match
+<div className="grid gap-4 sm:grid-cols-2">  // gap-4 not gap-5 or gap-6
+  <ProjectCardSkeleton />
+</div>
+
+// ❌ WRONG: Mismatched grid gap
+<div className="grid gap-6 md:grid-cols-2">  // Wrong gap and breakpoint
+```
+
+**3. Skeleton Component Class Usage:**
+
+```tsx
+// ✅ CORRECT: Use skeleton-shimmer class (current)
+container.querySelectorAll('.skeleton-shimmer')
+
+// ❌ WRONG: Don't use animate-pulse (deprecated)
+container.querySelectorAll('[class*="animate-pulse"]')
+```
+
+**4. Card Component Selectors:**
+
+```tsx
+// ✅ CORRECT: Use data-slot attribute
+container.querySelector('[data-slot="card"]')
+
+// ❌ WRONG: Don't rely on class names
+container.querySelector('[class*="rounded-lg"]')
+// Card uses rounded-xl, not rounded-lg
+```
+
+**5. PageLayout Testing:**
+
+```tsx
+// ✅ CORRECT: PageLayout uses div with min-h-screen
+container.querySelector('[class*="min-h-screen"]')
+
+// ❌ WRONG: PageLayout doesn't render <main>
+container.querySelector('main')
+// <main> is in root layout, not PageLayout
+```
+
+### When Making Changes
+
+**Before modifying any component:**
+
+1. Check if it has a corresponding skeleton file
+2. If yes, update both files with identical structure changes
+3. Run `npm test skeleton-sync` to verify
+
+**Common scenarios:**
+
+- **Changing card padding:** Update both component and skeleton (e.g., `p-4` → `p-5`)
+- **Changing grid gaps:** Update both component and skeleton (e.g., `gap-4` → `gap-6`)
+- **Adding/removing elements:** Mirror changes in skeleton
+- **Changing container spacing:** Update both (e.g., `space-y-4` → `space-y-6`)
+
+### Quick Checklist
+
+Before committing changes to components with skeletons:
+
+- [ ] Updated skeleton file with same structural changes
+- [ ] Verified spacing values match (padding, gaps, margins)
+- [ ] Ran `npm test skeleton-sync` - all tests pass
+- [ ] Visually tested loading state matches actual component
+- [ ] Updated JSDoc comments if structure changed significantly
+
+### CI/CD Integration
+
+Skeleton sync tests run automatically in CI/CD pipeline:
+
+```yaml
+# .github/workflows/test.yml
+- name: Run skeleton sync tests
+  run: npm test skeleton-sync
+```
+
+Any failures block PR merges, ensuring skeletons stay in sync.
 
 ## Future Enhancements
 

@@ -25,8 +25,8 @@ import { createPageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 import { AvailabilityBanner } from "@/components/cta";
 
-const pageTitle = "About";
-const pageDescription = "Learn about Drew, a cybersecurity architect with 5+ years leading security programs, incident response, and building secure development practices.";
+const pageTitle = "About Drew";
+const pageDescription = "Learn more about Drew, his professional background, skills, and how to connect.";
 
 export const metadata: Metadata = createPageMetadata({
   title: pageTitle,
@@ -92,32 +92,35 @@ export default async function AboutPage() {
         <Section className={PAGE_LAYOUT.section.container}>
           <div className={SPACING.content}>
             <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
+
             <p className="text-muted-foreground mb-6">
               With over 5 years of experience in the cybersecurity industry, I have had the privilege of working with diverse organizations ranging from startups to established enterprises. My journey has equipped me with a comprehensive understanding of security frameworks, risk management, and incident response strategies.
             </p>
-    
-            {/* By the Numbers */}
-            <div className="mb-6">
-              <AboutStats />
-            </div>
             
             {/* Availability Banner */}
             {/* <AvailabilityBanner className="mb-6" /> */}
-            
+
+            {/* By the Numbers */}
+            <div className="mb-12">
+              <AboutStats />
+            </div>
+
             {/* Current Role */}
-            <div className="space-y-3">
-              <h3 className={TYPOGRAPHY.h3.standard}>Currently at {currentRole.company}</h3>
-              <Card className="p-5 space-y-3">
-                <div className="space-y-1">
-                  <p className="font-medium text-lg">{currentRole.title}</p>
-                  <p className="text-sm text-muted-foreground">{currentRole.duration}</p>
-                </div>
-                <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-                  {currentRole.responsibilities.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </ul>
-              </Card>
+            <div className="mb-6">
+              <div className="space-y-3">
+                <h3 className={TYPOGRAPHY.h3.standard}>Currently at {currentRole.company}</h3>
+                <Card className="p-5 space-y-3">
+                  <div className="space-y-1">
+                    <p className="font-medium text-lg">{currentRole.title}</p>
+                    <p className="text-sm text-muted-foreground">{currentRole.duration}</p>
+                  </div>
+                  <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+                    {currentRole.responsibilities.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                </Card>
+              </div>
             </div>
             
             <div className="flex items-center mt-6">
@@ -131,7 +134,7 @@ export default async function AboutPage() {
           </div>
         </Section>
         
-        {/* About My Team */}
+        {/* Meet the Team */}
         <Section className={PAGE_LAYOUT.section.container}>
           <div className={SPACING.content}>
             <AboutTeam />

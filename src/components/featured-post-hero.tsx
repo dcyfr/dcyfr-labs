@@ -59,10 +59,13 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
 
   return (
     <Card className={`group relative overflow-hidden border-2 ${HOVER_EFFECTS.cardFeatured}`}>
-      {/* Optional: Gradient accent border */}
-      <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+      {/* Background Image with gradient overlay - matches project card style */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-primary/10 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-b from-background/60 via-background/70 to-background/80 transition-opacity duration-300 group-hover:from-background/50 group-hover:via-background/60 group-hover:to-background/70" />
+      </div>
       
-      <div className="relative p-6 md:p-8 space-y-4">
+      <div className="relative z-10 p-5 space-y-4">
         {/* Featured Badge */}
         <div className="flex items-center gap-2">
           <Badge variant="default" className={cn("text-xs", "font-medium")}>
@@ -71,8 +74,8 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
           {post.tags.slice(0, 2).map((tag) => (
             <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
               <Badge 
-                variant="secondary" 
-                className="text-xs hover:bg-secondary/80 transition-colors cursor-pointer"
+                variant="outline" 
+                className="text-xs hover:bg-accent transition-colors cursor-pointer"
               >
                 {tag}
               </Badge>
