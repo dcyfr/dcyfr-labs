@@ -126,8 +126,8 @@ const browser = await puppeteer.launch({
 
 **Auto-generate Blog Post OG Images**
 ```
-Prompt: "Create an Open Graph image for my blog post about Next.js 15 with:
-- Title: 'Next.js 15: What's New'
+Prompt: "Create an Open Graph image for my blog post about Next.js 16 with:
+- Title: 'Next.js 16: What's New'
 - Dark gradient background
 - Code snippet overlay
 - 1200x630 dimensions"

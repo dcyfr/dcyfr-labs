@@ -7,7 +7,7 @@ This guide covers deploying the cyberdrew-dev portfolio to production and managi
 ## Overview
 
 - **Primary Hosting:** Vercel (optimized, zero-config)
-- **Build System:** Next.js 15 with Turbopack
+- **Build System:** Next.js 16 with Turbopack
 - **Environment Management:** Automatic (dev/preview/production)
 - **Optional Services:** GitHub API (public data), Resend (email), Redis (view counts)
 

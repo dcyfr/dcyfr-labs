@@ -266,7 +266,7 @@ Comprehensive analysis of cyberdrew-dev portfolio project reveals a mature, well
 2. **Documentation Culture:** Strong documentation practices, gaps identified and addressed proactively
 3. **Error Handling:** Comprehensive error boundaries and loading states throughout
 4. **Security Mindset:** Proactive security implementation and ongoing hardening
-5. **Modern Stack:** Next.js 15, React 19, TypeScript, Tailwind v4, shadcn/ui all current
+5. **Modern Stack:** Next.js 16, React 19, TypeScript, Tailwind v4, shadcn/ui all current
 6. **MCP Integration:** Full suite of productivity MCPs configured and documented
 7. **Blog System:** Production-ready with advanced features (TOC, related posts, syntax highlighting)
 

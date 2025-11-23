@@ -29,7 +29,7 @@ The site currently has solid fundamentals (server-first rendering, GPU-accelerat
    - RequestAnimationFrame for smooth scroll updates
 
 2. **Rendering Strategy**
-   - Server-first with Next.js 15 App Router
+   - Server-first with Next.js 16 App Router
    - Client components only when needed
    - Proper Suspense boundaries (implied by skeletons)
    - Static generation for blog posts

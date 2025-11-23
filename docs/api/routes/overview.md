@@ -2,7 +2,7 @@
 
 **Location:** `src/app/api/`
 
-**Framework:** Next.js 15 App Router (Route Handlers)
+**Framework:** Next.js 16 App Router (Route Handlers)
 
 ## Overview
 

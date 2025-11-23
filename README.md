@@ -235,4 +235,4 @@ npm run test:mcp-servers     # MCP server integration
 
 ---
 
-**Built with:** Next.js 15, TypeScript, Tailwind CSS v4, shadcn/ui, Inngest, Redis, and ❤️
+**Built with:** Next.js 16, TypeScript, Tailwind CSS v4, shadcn/ui, Inngest, Redis, and ❤️

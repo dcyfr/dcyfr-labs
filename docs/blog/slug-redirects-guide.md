@@ -297,8 +297,8 @@ Posts moved to new section (change URL structure):
 
 ```yaml
 ---
-title: "Next.js 15: New Features"
-summary: "What's new in Next.js 15..."
+title: "Next.js 16: New Features"
+summary: "What's new in Next.js 16..."
 publishedAt: "2025-07-01"
 tags: ["nextjs", "framework"]
 

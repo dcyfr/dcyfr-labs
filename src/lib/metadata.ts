@@ -97,6 +97,9 @@ export function createPageMetadata(options: BaseMetadataOptions): Metadata {
     title,
     description,
     keywords,
+    alternates: {
+      canonical: fullUrl,
+    },
     openGraph: {
       title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,
@@ -272,6 +275,9 @@ export function createArticlePageMetadata(options: ArticleMetadataOptions): Meta
     description,
     keywords,
     authors: authorObjects,
+    alternates: {
+      canonical: fullUrl,
+    },
     openGraph: {
       title: `${title} — ${SITE_TITLE_PLAIN}`,
       description,

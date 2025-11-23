@@ -132,7 +132,7 @@ tags: ["tag1", "tag2"]
 ---
 # Required
 title: "Complete Guide to Next.js App Router"
-summary: "Learn how to build modern web apps with Next.js 15 App Router, server components, and streaming."
+summary: "Learn how to build modern web apps with Next.js 16 App Router, server components, and streaming."
 publishedAt: "2025-10-24"
 tags: ["Next.js", "React", "Tutorial"]
 
@@ -180,7 +180,7 @@ title: "How I Optimized My Site to Load in Under 1 Second"
 
 **Examples:**
 ```yaml
-summary: "Learn how to build a modern blog with Next.js 15 App Router, MDX for content, and Tailwind CSS for styling. Includes full source code."
+summary: "Learn how to build a modern blog with Next.js 16 App Router, MDX for content, and Tailwind CSS for styling. Includes full source code."
 
 summary: "A deep dive into TypeScript generics with practical examples, common patterns, and advanced techniques for type-safe code."
 ```
@@ -729,7 +729,7 @@ the-ultimate-guide-to-using-nextjs-app-router-in-2025.mdx  # Too long
 
 **Example Update Notice:**
 ```mdx
-> **Update (Oct 2025):** This post has been updated to reflect Next.js 15 and React 19 changes. The original concepts still apply.
+> **Update (Oct 2025):** This post has been updated to reflect Next.js 16 and React 19 changes. The original concepts still apply.
 ```
 
 ---
