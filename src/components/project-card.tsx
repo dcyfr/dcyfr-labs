@@ -11,8 +11,8 @@ import { ensureProjectImage } from "@/lib/default-project-images";
 import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
 const STATUS_VARIANT: Record<ProjectStatus, "secondary" | "default" | "outline"> = {
-  "active": "outline",
-  "in-progress": "outline",
+  "active": "default",
+  "in-progress": "default",
   "archived": "outline",
 };
 

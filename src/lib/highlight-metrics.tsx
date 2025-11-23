@@ -2,12 +2,12 @@
  * Utility to highlight quantifiable achievements in text
  * 
  * Parses text for metrics (percentages, numbers with context) and wraps them
- * in styled spans for visual emphasis.
+ * in styled spans for visual emphasis. Percentages are made particularly prominent.
  * 
  * Examples:
- * - "reduced by 23%" → "reduced by <span>23%</span>"
- * - "over 1k systems" → "over <span>1k</span> systems"
- * - "5-minute cache" → "<span>5-minute</span> cache"
+ * - "reduced by 23%" → "reduced by <strong>23%</strong>"
+ * - "over 1k systems" → "over <strong>1k</strong> systems"
+ * - "5-minute cache" → "<strong>5-minute</strong> cache"
  */
 export function highlightMetrics(text: string): React.ReactNode {
   // Pattern matches: percentages, numbers with units (k, min, etc), standalone numbers
@@ -17,10 +17,11 @@ export function highlightMetrics(text: string): React.ReactNode {
   
   return parts.map((part, index) => {
     if (metricPattern.test(part)) {
+      // Use strong tag for percentages and metrics
       return (
-        <span key={index} className="font-semibold text-foreground">
+        <strong key={index} className="font-bold text-foreground">
           {part}
-        </span>
+        </strong>
       );
     }
     return part;

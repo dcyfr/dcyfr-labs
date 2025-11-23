@@ -1,4 +1,4 @@
-import { featuredProjects } from "@/data/projects";
+import { featuredProjects, projects } from "@/data/projects";
 import { ProjectCard } from "@/components/project-card";
 import { PostList } from "@/components/post-list";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SectionHeader } from "@/components/section-header";
 import { posts, featuredPosts } from "@/data/posts";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
+import { getMultiplePostViews } from "@/lib/views";
 import { Logo } from "@/components/logo";
 import { getSocialUrls } from "@/data/socials";
 import {
@@ -20,6 +21,13 @@ import type { Metadata } from "next";
 import { FeaturedPostHero } from "@/components/featured-post-hero";
 import dynamic from "next/dynamic";
 import { SectionNavigator, Section } from "@/components/section-navigator";
+import { WhatIDo } from "@/components/what-i-do";
+import { GitHubHeatmap } from "@/components/github-heatmap";
+import { HomepageStats } from "@/components/homepage-stats";
+import { TechStack } from "@/components/tech-stack";
+import { SocialProof } from "@/components/social-proof";
+import { TrendingPosts } from "@/components/trending-posts";
+import { RecentActivity } from "@/components/recent-activity";
 
 const ScrollReveal = dynamic(() => import("@/components/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
@@ -65,6 +73,9 @@ export default async function Home() {
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
+  
+  // Get view counts for trending posts
+  const viewCounts = await getMultiplePostViews(posts.map(p => p.id));
   
   const socialImage = getOgImageUrl();
   // JSON-LD structured data for home page
@@ -126,7 +137,7 @@ export default async function Home() {
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       
-      <SectionNavigator scrollOffset={SCROLL_BEHAVIOR.offset.standard}>
+      <SectionNavigator scrollOffset={SCROLL_BEHAVIOR.offset.standard} className="space-y-10 md:space-y-14">
         {/* Hero Section */}
         <Section>
           <ScrollReveal animation="fade-up">
@@ -141,19 +152,19 @@ export default async function Home() {
               }
               description="Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure."
               image={
-                <div className="relative w-32 h-32 md:w-40 md:h-40">
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40">
                   <Image
                     src="/images/avatar.jpg"
                     alt="Drew's profile picture"
                     fill
-                    sizes="(max-width: 768px) 128px, 160px"
+                    sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
                     className="rounded-full object-cover ring-4 ring-border shadow-lg"
                     priority
                   />
                 </div>
               }
               actions={
-                <div className="flex flex-wrap gap-2 sm:gap-3 pt-2 justify-center">
+                <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 sm:pt-2 justify-center">
                   <Button asChild size="default">
                     <Link href="/about">Learn more</Link>
                   </Button>
@@ -169,9 +180,77 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* stats section 
-        <Section className="mt-12 md:mt-16">
+        {/* featured post hero */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={50}>
+            <FeaturedPostHero post={featuredPost} />
+          </ScrollReveal>
+        </Section>
+
+        {/* featured projects */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={200}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Featured Projects"
+                actionHref="/projects"
+              />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+                {featuredProjects.slice(0, 2).map((p) => (
+                  <ProjectCard key={p.title} project={p} />
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* featured articles */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={190}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Featured Articles"
+                actionHref="/blog"
+              />
+              <PostList 
+                posts={featuredPosts.slice(0, 3)}
+                latestSlug={latestSlug ?? undefined}
+                hottestSlug={hottestSlug ?? undefined}
+                titleLevel="h3"
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* Recent Activity */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={215}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Recent Activity"
+              />
+              <RecentActivity 
+                posts={recentPosts}
+                projects={[...featuredProjects]}
+                limit={5}
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* What I Do - Core Pillars 
+        <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={75}>
+            <div className={SPACING.content}>
+              <SectionHeader title="What I do" />
+              <WhatIDo />
+            </div>
+          </ScrollReveal>
+        </Section> */}
+
+        {/* Homepage Stats 
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={100}>
             <HomepageStats
               postsCount={posts.length}
               projectsCount={projects.filter(p => !p.hidden).length}
@@ -179,21 +258,11 @@ export default async function Home() {
               technologiesCount={90}
             />
           </ScrollReveal>
-        </Section>
-        */}
+        </Section> */}
 
-        {/* featured post hero */}
-        {featuredPost && (
-          <Section className={PAGE_LAYOUT.section.container}>
-            <ScrollReveal animation="fade-up" delay={100}>
-              <FeaturedPostHero post={featuredPost} />
-            </ScrollReveal>
-          </Section>
-        )}
-
-        {/* latest blog articles */}
+        {/* latest blog articles 
         <Section className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={200}>
+          <ScrollReveal animation="fade-up" delay={175}>
             <div className={SPACING.content}>
               <SectionHeader
                 title="Latest articles"
@@ -207,25 +276,32 @@ export default async function Home() {
               />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
 
-        {/* latest projects */}
+        {/* GitHub Activity 
         <Section className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={300}>
+          <ScrollReveal animation="fade-up" delay={125}>
             <div className={SPACING.content}>
               <SectionHeader
-                title="Projects"
-                actionHref="/projects"
+                title="GitHub Activity"
+                actionHref="https://github.com/dcyfr"
+                actionLabel="View Profile"
               />
-              <div className="grid gap-4 sm:grid-cols-2">
-                {featuredProjects.slice(0, 2).map((p) => (
-                  <ProjectCard key={p.title} project={p} />
-                ))}
-              </div>
+              <GitHubHeatmap username="dcyfr" />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
+
+        {/* Tech Stack & Social Proof 
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={225}>
+            <div className="grid gap-4 lg:grid-cols-2">
+              <TechStack />
+              <SocialProof />
+            </div>
+          </ScrollReveal>
+        </Section> */}
       </SectionNavigator>
-    </PageLayout>
+    </PageLayout> 
   );
 }

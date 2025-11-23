@@ -25,11 +25,23 @@ function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
 
         <div className="space-y-3">
           <p className={cn("text-sm", "font-medium")}>What you can do:</p>
-          <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
-            <li>Try refreshing the page</li>
-            <li>Go back to the homepage</li>
-            <li>Check your internet connection</li>
-            <li>Contact us if the problem persists</li>
+          <ul className="text-sm text-muted-foreground space-y-2">
+            <li className="flex gap-2 items-start">
+              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <span className="flex-1">Try refreshing the page</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <span className="flex-1">Go back to the homepage</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <span className="flex-1">Check your internet connection</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <span className="flex-1">Contact us if the problem persists</span>
+            </li>
           </ul>
         </div>
 

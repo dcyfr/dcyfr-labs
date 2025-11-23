@@ -90,7 +90,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
               {post.title}
             </h2>
           </Link>
-          <p className="text-base md:text-lg text-muted-foreground line-clamp-2 md:line-clamp-3">
+          <p className="text-base md:text-lg text-muted-foreground line-clamp-3">
             {post.summary}
           </p>
         </div>

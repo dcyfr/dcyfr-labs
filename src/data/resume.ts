@@ -143,13 +143,13 @@ export const resume: Resume = {
     {
       category: "Critical Skills",
       skills: [
-        "Leadership", "Communication", "Analytical Skills", "Collaboration", "Customer Service", "Problem Solving", "Critical Thinking", "Adaptability", "Time Management", "Project Management", "Mentoring & Training"
+        "Leadership", "Communication", "Analytical Skills", "Collaboration", "Customer Service", "Problem Solving", "Critical Thinking", "Adaptability", "Time Management", "Project Management", "Mentoring & Training", "Documentation", "Risk Assessment", "Policy Development"
       ]
     },
     {
       category: "Security Knowledge",
       skills: [
-        "Risk Management", "Vulnerability Management", "Incident Response", "Threat Hunting", "Security Operations", "Cloud Security", "Application Security", "Network Security", "Identity & Access Management", "Data Protection"
+        "Risk Management", "Vulnerability Management", "Incident Response", "Threat Hunting", "Security Operations", "Cloud Security", "Application Security", "Network Security", "Identity & Access Management", "Data Protection", "Forensics", "Penetration Testing", "DevSecOps", "Compliance & Auditing", "Threat Analysis", "Security Auditing", "Security Awareness Training"
       ]
     },
     {
@@ -161,16 +161,44 @@ export const resume: Resume = {
     {
       category: "Technologies & Tools",
       skills: [
-        "AWS", "Azure", "GCP", "Cloudflare", "Snyk", "Google Cloud", "Claude", "CrowdStrike", "Visual Studio Code", "Tenable", "Vercel", "Qualys", "ChatGPT", "Zscaler", "macOS", "Splunk", "Axiom", "Nessus", "Palo Alto", "Proofpoint", "VMware", "Wireshark", "Perplexity", "GitHub", "Carbon Black", "Burp Suite", "Google Gemini", "Metasploit", "Windows", "Google Workspace", "Postman", "Kali Linux", "Linux", "Microsoft Office 365", "Jira", "Slack"
+        "Cloudflare", "Snyk", "Claude", "CrowdStrike", "Visual Studio Code", "Tenable", "Vercel", "Qualys", "ChatGPT", "Zscaler", "macOS", "Splunk", "Axiom", "AWS", "Nessus", "Palo Alto", "Azure", "Proofpoint", "Kali Linux", "VMware", "Wireshark", "SIEM", "Perplexity", "GitHub", "Carbon Black", "Burp Suite", "Unix", "Google Gemini", "Metasploit", "GCP", "Windows", "Google Workspace", "Postman", "Linux", "Microsoft Office 365", "Jira", "Slack", "Confluence", "Docker", "Terraform", "Kubernetes", "Ansible", "Jenkins", "Git", "CI/CD", "REST API"
       ]
     },
     {
       category: "Programming & Automation",
       skills: [
-        "Python", "Next.js", "Bash", "PowerShell", "Git", "Node.js", "CI/CD", "TypeScript", "Terraform", "YAML", "Docker", "Kubernetes", "REST API", "SQL", "Ansible", "React", "JavaScript", "JSON", "Go", "Java", "HTML/CSS", "C/C++"
+        "Python", "Next.js", "Bash", "PowerShell", "Git", "Node.js", "TypeScript", "Terraform", "YAML", "Docker", "Kubernetes", "SQL", "Ansible", "React", "JavaScript", "JSON", "Go", "Java", "HTML/CSS", "C/C++", "PHP"
       ]
     }
   ]
 };
+
+/**
+ * Calculate years of experience from the earliest experience entry
+ * @returns Number of years in cybersecurity
+ */
+export function getYearsOfExperience(): number {
+  const firstExperience = resume.experience[resume.experience.length - 1];
+  const startYear = parseInt(firstExperience.duration.match(/\d{4}/)?.[0] || "2021");
+  return new Date().getFullYear() - startYear;
+}
+
+/**
+ * Get the short summary with current years of experience
+ * @returns Dynamic short summary string
+ */
+export function getShortSummary(): string {
+  const years = getYearsOfExperience();
+  return `Cybersecurity architect with ${years}+ years leading security programs, incident response, and secure development practices for global organizations.`;
+}
+
+/**
+ * Get the full summary with current years of experience
+ * @returns Dynamic full summary string
+ */
+export function getSummary(): string {
+  const years = getYearsOfExperience();
+  return `I'm a cybersecurity architect with over ${years} years of experience leading security programs, incident response, and building secure development practices for global organizations. I specialize in cyber risk management, vulnerability management, and automating operational security. I'm passionate about mentoring the next generation of cyber professionals and sharing my knowledge through writing and community engagement.`;
+}
 
 export default resume;

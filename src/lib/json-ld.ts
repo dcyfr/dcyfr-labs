@@ -230,6 +230,53 @@ export function getContactPageSchema(description: string) {
 }
 
 /**
+ * ResumePage schema with Person and work experience
+ * Provides rich structured data for resume/CV pages
+ * 
+ * @param description - Resume page description
+ * @param experience - Array of work experience objects
+ */
+export function getResumePageSchema(
+  description: string,
+  experience?: Array<{ title: string; company: string; duration: string }>
+) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        "@id": `${SITE_URL}/resume#page`,
+        url: `${SITE_URL}/resume`,
+        name: "Resume",
+        description,
+        isPartOf: {
+          "@id": `${SITE_URL}/#website`,
+        },
+        mainEntity: {
+          "@id": `${SITE_URL}/#person`,
+        },
+        inLanguage: "en-US",
+      },
+      {
+        ...getPersonSchema(),
+        ...(experience && experience.length > 0 && {
+          workExperience: experience.map((exp) => ({
+            "@type": "EmploymentHistory",
+            name: exp.title,
+            employmentType: "FULL_TIME",
+            employer: {
+              "@type": "Organization",
+              name: exp.company,
+            },
+            description: exp.duration,
+          })),
+        }),
+      },
+    ],
+  };
+}
+
+/**
  * Generate complete JSON-LD script tag content
  * Handles nonce for CSP and proper JSON stringification
  * 

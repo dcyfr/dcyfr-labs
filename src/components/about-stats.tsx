@@ -1,9 +1,18 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { TrendingUp, Shield, Zap, Award, CheckCircle2 } from "lucide-react";
+import { TrendingUp, Shield, Zap, Award, CheckCircle2, FileText, Folder } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { resume, getYearsOfExperience } from "@/data/resume";
+
+/**
+ * Calculate years of experience in cybersecurity from resume data
+ * Re-exported for convenience
+ * 
+ * @returns Number of years of experience
+ */
+export const calculateYearsOfExperience = getYearsOfExperience;
 
 /**
  * About Stats Component
@@ -14,7 +23,7 @@ import { TYPOGRAPHY } from "@/lib/design-tokens";
  * @component
  * @example
  * ```tsx
- * <AboutStats />
+ * <AboutStats blogCount={15} projectCount={5} />
  * ```
  */
 
@@ -27,48 +36,81 @@ type Stat = {
   suffix?: string; // Optional suffix for animated numbers
 };
 
-const stats: Stat[] = [
-  {
-    label: "Years in Cybersecurity",
-    value: "5+",
-    icon: TrendingUp,
-    description: "Leading security programs",
-    animateNumber: 5,
-    suffix: "+",
-  },
-  {
-    label: "Vulnerability Reduction",
-    value: "23%",
-    icon: Shield,
-    description: "Global security improvements",
-    animateNumber: 23,
-    suffix: "%",
-  },
-  {
-    label: "Faster Incident Response",
-    value: "35%",
-    icon: Zap,
-    description: "Response time optimization",
-    animateNumber: 35,
-    suffix: "%",
-  },
-  {
-    label: "Professional Certifications",
-    value: "20+",
-    icon: Award,
-    description: "GIAC, CompTIA, Mile2, ISC2",
-    animateNumber: 20,
-    suffix: "+",
-  },
-  {
-    label: "Compliance Frameworks",
-    value: "4+",
-    icon: CheckCircle2,
-    description: "ISO 27001, SOC2, TISAX, TPN",
-    animateNumber: 4,
-    suffix: "+",
-  },
-];
+interface AboutStatsProps {
+  blogCount?: number;
+  projectCount?: number;
+}
+
+function getStats(blogCount?: number, projectCount?: number): Stat[] {
+  // Calculate certifications count from resume data
+  const totalCertifications = resume.certifications.reduce(
+    (sum, category) => sum + category.certifications.length,
+    0
+  );
+
+  // Calculate compliance frameworks from skills
+  const frameworksCategory = resume.skills.find(
+    (cat) => cat.category === "Frameworks & Standards"
+  );
+  const complianceFrameworks = frameworksCategory?.skills.filter((skill) =>
+    /ISO|SOC|TISAX|TPN|GDPR|CCPA|CJIS|NIST|CSF/.test(skill)
+  ).length || 0;
+
+  // Calculate years in cybersecurity using shared utility
+  const yearsInCyber = calculateYearsOfExperience();
+
+  const baseStats: Stat[] = [
+    {
+      label: "Years in Cybersecurity",
+      value: `${yearsInCyber}+`,
+      icon: TrendingUp,
+      description: "Leading security programs",
+      animateNumber: yearsInCyber,
+      suffix: "+",
+    },
+    {
+      label: "Professional Certifications",
+      value: `${totalCertifications}+`,
+      icon: Award,
+      description: "GIAC, CompTIA, Mile2, ISC2",
+      animateNumber: totalCertifications,
+      suffix: "+",
+    },
+    {
+      label: "Compliance Frameworks",
+      value: `${complianceFrameworks}+`,
+      icon: CheckCircle2,
+      description: "ISO 27001, SOC2, TISAX, TPN",
+      animateNumber: complianceFrameworks,
+      suffix: "+",
+    },
+  ];
+
+  // Add optional blog and project stats if provided
+  if (blogCount !== undefined && blogCount > 0) {
+    baseStats.push({
+      label: "Blog Posts Published",
+      value: `${blogCount}`,
+      icon: FileText,
+      description: "Sharing knowledge & insights",
+      animateNumber: blogCount,
+      suffix: "",
+    });
+  }
+
+  if (projectCount !== undefined && projectCount > 0) {
+    baseStats.push({
+      label: "Projects Shipped",
+      value: `${projectCount}`,
+      icon: Folder,
+      description: "Open source & production",
+      animateNumber: projectCount,
+      suffix: "",
+    });
+  }
+
+  return baseStats;
+}
 
 /**
  * Animated counter hook
@@ -151,7 +193,9 @@ function StatCard({ stat }: { stat: Stat }) {
 /**
  * Main stats grid component
  */
-export function AboutStats() {
+export function AboutStats({ blogCount, projectCount }: AboutStatsProps) {
+  const stats = getStats(blogCount, projectCount);
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {stats.map((stat, idx) => (

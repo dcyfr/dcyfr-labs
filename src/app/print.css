@@ -444,6 +444,66 @@
     page-break-inside: avoid;
   }
 
+  /* Resume stats - make compact for print */
+  .resume-stats,
+  [data-component="resume-stats"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.3cm !important;
+    margin-bottom: 0.5cm !important;
+    page-break-inside: avoid;
+  }
+
+  /* Timeline - simplify for print */
+  .timeline,
+  [data-component="timeline"] {
+    position: relative;
+  }
+
+  /* Hide timeline decorative elements */
+  .timeline::before,
+  [data-component="timeline"]::before,
+  .timeline-dot,
+  .timeline-line {
+    display: none !important;
+  }
+
+  /* Experience cards in timeline */
+  .timeline article,
+  .timeline [data-slot="card"] {
+    margin-left: 0 !important;
+    margin-bottom: 0.4cm;
+    padding: 0.3cm;
+    border: 1pt solid #ccc;
+    page-break-inside: avoid;
+  }
+
+  /* Company links in resume */
+  article a[target="_blank"]:after {
+    content: "" !important; /* Don't show URLs for company links */
+  }
+
+  /* Certification badges */
+  .certifications [class*="badge"] {
+    display: inline-block;
+    margin: 0 0.1cm 0.1cm 0;
+    font-size: 7pt;
+  }
+
+  /* Skills section - compact layout */
+  .skills [class*="badge"] {
+    display: inline-block;
+    margin: 0 0.1cm 0.1cm 0;
+    font-size: 7pt;
+  }
+
+  /* Download button - hide in print */
+  [aria-label*="Download"],
+  [class*="download"],
+  button[onclick*="print"] {
+    display: none !important;
+  }
+
   /* Hide video embeds, iframes, and interactive content */
   iframe,
   video,

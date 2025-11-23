@@ -7,6 +7,12 @@ import { SPACING, PAGE_LAYOUT } from "@/lib/design-tokens";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
 import { createPageMetadata } from "@/lib/metadata";
+import dynamic from "next/dynamic";
+
+const ScrollReveal = dynamic(() => import("@/components/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
+  loading: () => <div className="contents" />,
+  ssr: true,
+});
 
 const pageTitle = "Contact";
 const pageDescription = "Get in touch for inquiries, collaborations, or feedback.";
@@ -27,7 +33,7 @@ export default async function ContactPage() {
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      
+      <div className="space-y-10 md:space-y-14">
       <PageHero
         title="Contact Me"
         description="Whether you have questions, feedback, or collaboration ideas, feel free to reach out using the form below."
@@ -35,12 +41,15 @@ export default async function ContactPage() {
       
       {/* Contact Form */}
       <section className={PAGE_LAYOUT.section.container}>
-        <div className={SPACING.content}>
-          <ContactFormErrorBoundary>
-            <ContactForm />
-          </ContactFormErrorBoundary>
-        </div>
+        <ScrollReveal animation="fade-up" delay={0}>
+          <div className={SPACING.content}>
+            <ContactFormErrorBoundary>
+              <ContactForm />
+            </ContactFormErrorBoundary>
+          </div>
+        </ScrollReveal>
       </section>
+      </div>
     </PageLayout>
   );
 }
