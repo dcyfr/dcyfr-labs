@@ -252,7 +252,7 @@ Brief description of the post content. Used for SEO and previews.
 
 **Example:**
 ```yaml
-summary: "Learn how to build a modern blog with Next.js 15, MDX for content, and Tailwind CSS for styling. Includes full source code and deployment guide."
+summary: "Learn how to build a modern blog with Next.js 16, MDX for content, and Tailwind CSS for styling. Includes full source code and deployment guide."
 
 summary: "A comprehensive guide to TypeScript generics covering basic concepts, advanced patterns, and real-world use cases with practical examples."
 ```
@@ -266,7 +266,7 @@ summary: "Step-by-step tutorial for migrating from Pages Router to App Router in
 summary: "A post about Next.js."
 
 # Avoid - too long (truncated in search results)
-summary: "This is an extremely comprehensive and detailed guide that will teach you absolutely everything you need to know about building modern web applications using Next.js 15, React 19, and TypeScript with all the latest features and best practices."
+summary: "This is an extremely comprehensive and detailed guide that will teach you absolutely everything you need to know about building modern web applications using Next.js 16, React 19, and TypeScript with all the latest features and best practices."
 ```
 
 ---
@@ -1189,7 +1189,7 @@ This is my first post!
 ```yaml
 ---
 title: "Complete Guide to Next.js App Router"
-summary: "Learn how to build modern web applications with Next.js 15 App Router, server components, and streaming. Includes practical examples and best practices."
+summary: "Learn how to build modern web applications with Next.js 16 App Router, server components, and streaming. Includes practical examples and best practices."
 publishedAt: "2025-09-15"
 updatedAt: "2025-10-24"
 tags: ["Next.js", "React", "Tutorial", "App Router"]
@@ -1205,7 +1205,7 @@ sources:
     href: "https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration"
 ---
 
-> **Update (Oct 2025):** This guide has been updated for Next.js 15 and React 19.
+> **Update (Oct 2025):** This guide has been updated for Next.js 16 and React 19.
 
 ## Introduction
 

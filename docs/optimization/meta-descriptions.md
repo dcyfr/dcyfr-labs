@@ -196,7 +196,7 @@ Get in touch with me for questions, project ideas, or collaborations.
 
 ### Next.js Metadata API
 
-All pages use Next.js 15's Metadata API:
+All pages use Next.js 16's Metadata API:
 
 ```typescript
 import type { Metadata } from "next";

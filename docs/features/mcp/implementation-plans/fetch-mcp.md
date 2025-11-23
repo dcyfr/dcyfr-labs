@@ -290,7 +290,7 @@ Prompt: "Fetch these APIs and report status:
 
 Research public content:
 ```
-Prompt: "Fetch top 5 articles about Next.js 15 and extract:
+Prompt: "Fetch top 5 articles about Next.js 16 and extract:
 - Main topics covered
 - Code examples used
 - Common patterns"

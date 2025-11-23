@@ -1,6 +1,6 @@
 # Testing Infrastructure
 
-This project uses a modern, comprehensive testing setup optimized for Next.js 15, TypeScript, Vercel, and VS Code.
+This project uses a modern, comprehensive testing setup optimized for Next.js 16, TypeScript, Vercel, and VS Code.
 
 ## Quick Start
 

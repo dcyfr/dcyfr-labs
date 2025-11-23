@@ -84,7 +84,7 @@ After adding the configuration and environment variable, restart VS Code.
 
 ### Step 3: Verify Installation
 
-Ask Copilot: "Search for Next.js 15 new features"
+Ask Copilot: "Search for Next.js 16 new features"
 
 ---
 
@@ -127,7 +127,7 @@ Prompt: "Search for correct usage of React 19 useActionState hook"
 
 **Check API Changes**
 ```
-Prompt: "Search for breaking changes in Next.js 15"
+Prompt: "Search for breaking changes in Next.js 16 release notes"
 ```
 
 **Expected Result**:
@@ -246,7 +246,7 @@ Prompt: "Find discussions about MDX blog setup"
 ### Effective Search Queries
 
 **✅ Good Queries**:
-- "Next.js 15 App Router data fetching patterns"
+- "Next.js 16 App Router data fetching patterns"
 - "React Server Components performance benchmarks"
 - "Tailwind CSS v4 migration guide official"
 - "MDX blog setup 2025 best practices"
@@ -390,7 +390,7 @@ During writing:
 **Cause**: Query ambiguity
 
 **Solution**:
-- Be more specific: "Next.js 15" not "Next"
+- Be more specific: "Next.js 16" not "Next"
 - Add context: "React Server Components tutorial"
 - Use site modifiers: "site:nextjs.org"
 
@@ -425,7 +425,7 @@ Brave Search is **privacy-focused**:
 
 ### Test 1: Basic Search
 ```
-Prompt: "Search for Next.js 15 release notes"
+Prompt: "Search for Next.js 16 release notes"
 Expected: Recent articles and official announcements
 ```
 

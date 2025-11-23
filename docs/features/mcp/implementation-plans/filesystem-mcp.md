@@ -78,7 +78,7 @@ Filesystem MCP uses **allowlist-only access**. Only specify directories you want
 
 **Create Post from Template**
 ```
-Prompt: "Create a new blog post about Next.js 15 features using our standard template"
+Prompt: "Create a new blog post about Next.js 16 features using our standard template"
 ```
 
 **Expected Result**:

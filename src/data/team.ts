@@ -84,7 +84,7 @@ export const teamHighlights: TeamHighlight[] = [
   {
     emoji: "📚",
     title: "Favorite Tech Stack",
-    description: "Next.js 15 + TypeScript + Tailwind v4 + shadcn/ui for the perfect balance of performance and developer experience.",
+    description: "Next.js 16 + TypeScript + Tailwind v4 + shadcn/ui for the perfect balance of performance and developer experience.",
   },
   {
     emoji: "🎯",
