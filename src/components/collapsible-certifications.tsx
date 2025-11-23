@@ -1,20 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { HOVER_EFFECTS } from "@/lib/design-tokens";
 import type { CertificationCategory } from "@/data/resume";
 
 interface CollapsibleCertificationsProps {
   certifications: CertificationCategory[];
 }
 
+// Certification provider URLs for verification
+const providerUrls: Record<string, string> = {
+  "GIAC": "https://www.giac.org/certifications",
+  "CompTIA": "https://www.comptia.org/certifications",
+  "ISC2": "https://www.isc2.org/Certifications",
+  "Mile2": "https://mile2.com/certifications",
+};
+
 /**
  * CollapsibleCertifications component
  * 
  * Displays certification badges with expand/collapse functionality for mobile optimization.
  * Shows first 4 certifications by default, with "Show more" button to reveal all.
+ * Provider names link to official certification pages.
  * 
  * @param certifications - Array of certification categories from resume data
  */
@@ -33,9 +44,20 @@ export function CollapsibleCertifications({ certifications }: CollapsibleCertifi
 
         return (
           <div key={index} className="space-y-1">
-            <p className="text-muted-foreground font-medium text-sm">
-              {certCategory.provider}
-            </p>
+            {providerUrls[certCategory.provider] ? (
+              <Link
+                href={providerUrls[certCategory.provider]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-muted-foreground font-medium text-sm inline-flex items-center gap-1 ${HOVER_EFFECTS.link}`}
+              >
+                {certCategory.provider}
+              </Link>
+            ) : (
+              <p className="text-muted-foreground font-medium text-sm">
+                {certCategory.provider}
+              </p>
+            )}
             <div className="flex flex-wrap gap-1">
               {certsToShow.map((cert, idx) => (
                 <Badge key={idx} variant="outline" className="text-xs">

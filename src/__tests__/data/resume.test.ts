@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
   resume,
+  getYearsOfExperience,
+  getShortSummary,
+  getSummary,
   type Resume,
   type Experience,
   type Education,
@@ -362,6 +365,48 @@ describe('Resume Data', () => {
       const uniqueInstitutions = new Set(institutions)
       // May have duplicate institutions (multiple degrees)
       expect(uniqueInstitutions.size).toBeGreaterThan(0)
+    })
+  })
+
+  describe('Dynamic Helper Functions', () => {
+    it('getYearsOfExperience returns a positive number', () => {
+      const years = getYearsOfExperience()
+      expect(typeof years).toBe('number')
+      expect(years).toBeGreaterThan(0)
+      expect(years).toBeLessThan(50) // Sanity check
+    })
+
+    it('getYearsOfExperience calculates from earliest experience', () => {
+      const years = getYearsOfExperience()
+      const currentYear = new Date().getFullYear()
+      const firstExperience = resume.experience[resume.experience.length - 1]
+      const startYear = parseInt(firstExperience.duration.match(/\d{4}/)?.[0] || "2021")
+      expect(years).toBe(currentYear - startYear)
+    })
+
+    it('getShortSummary includes calculated years', () => {
+      const summary = getShortSummary()
+      const years = getYearsOfExperience()
+      expect(summary).toContain(`${years}+`)
+      expect(summary).toContain('Cybersecurity architect')
+      expect(summary.length).toBeGreaterThan(50)
+    })
+
+    it('getSummary includes calculated years', () => {
+      const summary = getSummary()
+      const years = getYearsOfExperience()
+      expect(summary).toContain(`${years}`)
+      expect(summary).toContain('cybersecurity architect')
+      expect(summary.length).toBeGreaterThan(100)
+    })
+
+    it('getShortSummary is shorter than getSummary', () => {
+      expect(getShortSummary().length).toBeLessThan(getSummary().length)
+    })
+
+    it('both summaries contain years reference', () => {
+      expect(getShortSummary()).toMatch(/\d+\+?\s+years?/i)
+      expect(getSummary()).toMatch(/\d+\+?\s+years?/i)
     })
   })
 })

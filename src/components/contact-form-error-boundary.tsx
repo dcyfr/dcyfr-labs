@@ -23,10 +23,19 @@ function ContactFormErrorFallback({ error, resetError }: ErrorFallbackProps) {
 
         <div className="space-y-2">
           <p className={cn("text-sm", "font-medium")}>Alternative contact methods:</p>
-          <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-            <li>GitHub: Check the footer for links</li>
-            <li>LinkedIn: Available in the footer</li>
-            <li>Email: Direct contact available in footer</li>
+          <ul className="text-sm text-muted-foreground space-y-1">
+            <li className="flex gap-2 items-start">
+              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <span className="flex-1">GitHub: Check the footer for links</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <span className="flex-1">LinkedIn: Available in the footer</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <span className="flex-1">Email: Direct contact available in footer</span>
+            </li>
           </ul>
         </div>
 

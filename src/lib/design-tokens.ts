@@ -335,16 +335,16 @@ export const PAGE_LAYOUT = {
   
   /** Hero section spacing - larger than standard sections */
   hero: {
-    /** Container for hero content */
-    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-14 pb-10 md:pt-20 md:pb-14`,
+    /** Container for hero content - top padding accounts for sticky header */
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-20 md:pt-20`,
     /** Hero title + description wrapper */
     content: SPACING.proseHero,
   },
   
   /** Standard page section spacing */
   section: {
-    /** Section container */
-    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} py-10 md:py-14`,
+    /** Section container - no vertical padding (handled by parent gap) */
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING}`,
     /** Section content wrapper */
     content: SPACING.subsection,
   },

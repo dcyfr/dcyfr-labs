@@ -18,6 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn, sanitizeUrl } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
 import { getContainerClasses, TYPOGRAPHY } from "@/lib/design-tokens";
+import { Logo } from "@/components/logo";
 import { headers } from "next/headers";
 import { OtherProjectCard } from "@/components/other-project-card";
 import { ArticleHeader } from "@/components/layouts";
@@ -222,10 +223,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.highlights && project.highlights.length > 0 && (
             <Card className="mb-8">
               <CardContent>
-                <ul className="space-y-3 list-disc pl-5 mb-0">
+                <ul className="space-y-3 mb-0">
                   {project.highlights.map((highlight, index) => (
-                    <li key={index} className="text-base leading-relaxed">
-                      {highlight}
+                    <li key={index} className="flex gap-2 items-start text-base leading-relaxed">
+                      <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+                      <span className="flex-1">{highlight}</span>
                     </li>
                   ))}
                 </ul>
