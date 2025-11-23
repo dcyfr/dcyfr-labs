@@ -70,10 +70,10 @@ export function Mermaid({ chart, id }: { chart: string; id?: string }) {
     const useDarkTheme = dataTheme === 'dark' || (dataTheme !== 'light' && isDark);
 
     // Initialize Mermaid with theme configuration
-    // Use built-in themes instead of CSS variables (which Mermaid doesn't support)
+    // Use neutral theme for light mode, dark theme for dark mode
     mermaid.initialize({
       startOnLoad: false,
-      theme: useDarkTheme ? "dark" : "default",
+      theme: useDarkTheme ? "dark" : "neutral",
       fontFamily: "ui-sans-serif, system-ui, sans-serif",
       fontSize: 14,
     });

@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import type { Post } from "@/data/posts";
 import { PostBadges } from "@/components/post-badges";
+import { Badge } from "@/components/ui/badge";
 import { PostThumbnail } from "@/components/post-thumbnail";
 import dynamic from "next/dynamic";
 import { ensurePostImage } from "@/lib/default-images";
@@ -152,7 +154,7 @@ export function PostList({
 }: PostListProps) {
   if (posts.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+      <div className="rounded-lg border border-dashed p-5 text-center text-sm text-muted-foreground">
         {emptyMessage}
       </div>
     );
@@ -163,7 +165,7 @@ export function PostList({
   // Magazine layout: alternating large images
   if (layout === "magazine") {
     return (
-      <div className="space-y-12" data-testid="post-list">
+      <div className="space-y-10" data-testid="post-list">
         {posts.map((p, index) => {
           const featuredImage = ensurePostImage(p.image, {
             title: p.title,
@@ -178,21 +180,26 @@ export function PostList({
               delay={index * 100}
               duration={600}
             >
-              <article className={`group rounded-lg border overflow-hidden ${HOVER_EFFECTS.cardSubtle}`}>
-                <Link href={`/blog/${p.slug}`} className="block">
-                  {/* Alternating layout: even = image left, odd = image right */}
-                  <div className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                    {/* Large featured image */}
-                    <div className="shrink-0 md:w-1/2">
-                      <PostThumbnail 
-                        image={featuredImage} 
-                        size="lg"
-                        className="w-full aspect-video md:aspect-3/2 object-cover"
-                      />
-                    </div>
-                    
-                    {/* Post content */}
-                    <div className="flex-1 min-w-0 p-6 md:p-8 flex flex-col justify-center">
+              <article className={`group rounded-lg border overflow-hidden relative holo-card holo-card-3d ${HOVER_EFFECTS.cardSubtle}`}>
+                {/* Background Image with gradient overlay */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src={featuredImage.url}
+                    alt={featuredImage.alt}
+                    fill
+                    className="object-cover holo-image-shift"
+                    sizes="(max-width: 768px) 100vw, 800px"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 holo-gradient-dark group-hover:holo-gradient-dark-hover transition-all duration-300" />
+                </div>
+                
+                {/* Subtle shine effect */}
+                <div className="holo-shine" />
+
+                <Link href={`/blog/${p.slug}`} className="block relative z-10">
+                  {/* Post content */}
+                  <div className="p-5 flex flex-col justify-center">
                       {/* Badges and metadata */}
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-3">
                         <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
@@ -219,14 +226,13 @@ export function PostList({
                       {p.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                           {p.tags.slice(0, 5).map(tag => (
-                            <span key={tag} className="text-xs px-2 py-1 rounded-md bg-secondary text-secondary-foreground">
+                            <Badge key={tag} variant="outline" className="text-xs">
                               {tag}
-                            </span>
+                            </Badge>
                           ))}
                         </div>
                       )}
                     </div>
-                  </div>
                 </Link>
               </article>
             </ScrollReveal>
@@ -253,17 +259,24 @@ export function PostList({
               delay={index * 50}
               duration={600}
             >
-              <article className={`group rounded-lg border overflow-hidden ${HOVER_EFFECTS.cardSubtle} flex flex-col h-full`}>
-                <Link href={`/blog/${p.slug}`} className="flex flex-col h-full">
-                  {/* Image on top */}
-                  <div className="shrink-0">
-                    <PostThumbnail 
-                      image={featuredImage} 
-                      size="md"
-                      className="w-full aspect-video object-cover"
-                    />
-                  </div>
-                  
+              <article className={`group rounded-lg border overflow-hidden relative holo-card holo-card-3d ${HOVER_EFFECTS.cardSubtle} flex flex-col h-full`}>
+                {/* Background Image with gradient overlay */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src={featuredImage.url}
+                    alt={featuredImage.alt}
+                    fill
+                    className="object-cover holo-image-shift"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 holo-gradient-dark group-hover:holo-gradient-dark-hover transition-all duration-300" />
+                </div>
+                
+                {/* Subtle shine effect */}
+                <div className="holo-shine" />
+
+                <Link href={`/blog/${p.slug}`} className="flex flex-col h-full relative z-10">
                   {/* Post content */}
                   <div className="flex-1 p-4 flex flex-col">
                     {/* Badges and metadata */}
@@ -292,14 +305,14 @@ export function PostList({
                     {p.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-3">
                         {p.tags.slice(0, 3).map(tag => (
-                          <span key={tag} className="text-xs px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground">
+                          <Badge key={tag} variant="outline" className="text-xs">
                             {tag}
-                          </span>
+                          </Badge>
                         ))}
                         {p.tags.length > 3 && (
-                          <span className="text-xs px-2 py-0.5 text-muted-foreground">
+                          <Badge variant="outline" className="text-xs">
                             +{p.tags.length - 3}
-                          </span>
+                          </Badge>
                         )}
                       </div>
                     )}
@@ -330,22 +343,26 @@ export function PostList({
             delay={index * 100}
             duration={600}
           >
-            <article className={`group rounded-lg border overflow-hidden ${HOVER_EFFECTS.cardSubtle}`}>
-              <Link href={`/blog/${p.slug}`} className="block">
-                {/* Mobile: Vertical card layout with full-width image */}
-                {/* Desktop: Horizontal layout with side thumbnail */}
-                <div className="flex flex-col md:flex-row">
-                  {/* Featured image - full-width on mobile, side thumbnail on desktop */}
-                  <div className="shrink-0 md:p-3">
-                    <PostThumbnail 
-                      image={featuredImage} 
-                      size="sm"
-                      className="rounded-none md:rounded-md w-full aspect-video md:w-32 md:aspect-4/3 object-cover"
-                    />
-                  </div>
-                  
-                  {/* Post content */}
-                  <div className="flex-1 min-w-0 p-3 sm:p-4 md:py-3 md:pr-3">
+            <article className={`group rounded-lg border overflow-hidden relative holo-card holo-card-3d ${HOVER_EFFECTS.cardSubtle}`}>
+              {/* Background Image with gradient overlay */}
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src={featuredImage.url}
+                  alt={featuredImage.alt}
+                  fill
+                  className="object-cover holo-image-shift"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 holo-gradient-dark group-hover:holo-gradient-dark-hover transition-all duration-300" />
+              </div>
+              
+              {/* Subtle shine effect */}
+              <div className="holo-shine" />
+
+              <Link href={`/blog/${p.slug}`} className="block relative z-10">
+                {/* Post content */}
+                <div className="p-3 sm:p-4">
                     {/* Badges and metadata */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-2">
                       
@@ -382,7 +399,6 @@ export function PostList({
                     {/* Summary */}
                     <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{p.summary}</p>
                   </div>
-                </div>
               </Link>
             </article>
           </ScrollReveal>

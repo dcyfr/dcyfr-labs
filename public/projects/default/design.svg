@@ -26,15 +26,15 @@
     <polygon points="900,100 950,150 900,200 850,150" fill="white"/>
   </g>
   
-  <!-- Geometric accent lines -->
+  <!-- Geometric accent lines 
   <g stroke="white" stroke-width="2" opacity="0.1">
     <line x1="0" y1="315" x2="400" y2="315"/>
     <line x1="800" y1="315" x2="1200" y2="315"/>
     <line x1="600" y1="0" x2="600" y2="200"/>
     <line x1="600" y1="430" x2="600" y2="630"/>
-  </g>
+  </g> -->
   
-  <!-- Center design icon: pen tool -->
+  <!-- Center design icon: pen tool 
   <g transform="translate(600, 315)" opacity="0.25">
     <path 
       d="M -40 -60 L -40 60 L 0 40 L 40 60 L 40 -60 L 0 -40 Z" 
@@ -44,7 +44,7 @@
       stroke-linejoin="round"
     />
     <circle cx="0" cy="0" r="15" fill="white"/>
-  </g>
+  </g> -->
   
   <!-- Corner design elements -->
   <g opacity="0.15">

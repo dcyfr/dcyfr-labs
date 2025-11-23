@@ -5,8 +5,9 @@ import Image from "next/image";
 import type { Post } from "@/data/posts";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
 import { trackRelatedPostClick } from "@/lib/analytics";
+import { ensurePostImage } from "@/lib/default-images";
 
 /**
  * Props for the RelatedPosts component
@@ -83,65 +84,74 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
   return (
     <aside className="mt-12 border-t pt-6">
       <h2 className={`${TYPOGRAPHY.h2.standard} mb-4`}>Related Posts</h2>
-      <div className="grid gap-5 sm:grid-cols-2">
-        {posts.map((post, index) => (
-          <Link
-            key={post.slug}
-            href={`/blog/${post.slug}`}
-            onClick={() => handleClick(post.slug, index)}
-            className="group block rounded-lg border bg-card overflow-hidden transition-colors hover:bg-accent"
-          >
-            {/* Optional thumbnail image */}
-            {post.image && (
-              <div className="relative w-full h-40 bg-muted">
+      <div className="grid gap-4 sm:grid-cols-2">
+        {posts.map((post, index) => {
+          const featuredImage = ensurePostImage(post.image, {
+            title: post.title,
+            tags: post.tags,
+          });
+          
+          return (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              onClick={() => handleClick(post.slug, index)}
+              className={`group block rounded-lg border overflow-hidden relative holo-card holo-card-3d ${HOVER_EFFECTS.cardSubtle}`}
+            >
+              {/* Background Image with gradient overlay */}
+              <div className="absolute inset-0 z-0">
                 <Image
-                  src={post.image.url}
-                  alt={post.image.alt || post.title}
+                  src={featuredImage.url}
+                  alt={featuredImage.alt}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover holo-image-shift"
                   sizes="(max-width: 640px) 100vw, 50vw"
                   loading="lazy"
                 />
+                <div className="absolute inset-0 holo-gradient-dark group-hover:holo-gradient-dark-hover transition-all duration-300" />
               </div>
-            )}
-            
-            <div className="space-y-2 p-4">
-              <h3 className="font-medium leading-tight group-hover:text-primary transition-colors">
-                {post.title}
-              </h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {post.summary}
-              </p>
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {post.tags.slice(0, 3).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-                {post.tags.length > 3 && (
-                  <Badge variant="secondary" className="text-xs">
-                    +{post.tags.length - 3}
-                  </Badge>
-                )}
+              
+              {/* Subtle shine effect */}
+              <div className="holo-shine" />
+              
+              <div className="space-y-2 p-4 relative z-10">
+                <h3 className="font-medium leading-tight group-hover:text-primary transition-colors">
+                  {post.title}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {post.summary}
+                </p>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {post.tags.slice(0, 3).map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                  {post.tags.length > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{post.tags.length - 3}
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground pt-1">
+                  <time dateTime={post.publishedAt}>
+                    {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <span aria-hidden>•</span>
+                  <span>{post.readingTime.text}</span>
+                </div>
+                <div className="flex items-center gap-1 text-sm text-primary pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>Read more</span>
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </div>
               </div>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground pt-1">
-                <time dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </time>
-                <span aria-hidden>•</span>
-                <span>{post.readingTime.text}</span>
-              </div>
-              <div className="flex items-center gap-1 text-sm text-primary pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span>Read more</span>
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </aside>
   );

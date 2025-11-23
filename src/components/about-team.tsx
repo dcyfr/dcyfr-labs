@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AboutAvatar } from "@/components/about-avatar";
-import { TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, HOVER_EFFECTS, SPACING } from "@/lib/design-tokens";
 import { Sparkles } from "lucide-react";
 import { teamMembers, teamDescription } from "@/data/team";
 
@@ -16,7 +16,7 @@ export function AboutTeam() {
   const [drew, dcyfr] = teamMembers;
 
   return (
-    <div className="space-y-6">
+    <div className={SPACING.content}>
       <div className="space-y-2">
         <h2 className={TYPOGRAPHY.h2.standard}>Meet the team</h2>
         <p className={TYPOGRAPHY.metadata}>

@@ -201,16 +201,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             title={post.title}
             date={new Date(post.publishedAt)}
             metadata={`${post.readingTime.text}${typeof viewCount === "number" ? ` · ${viewCount.toLocaleString()} ${viewCount === 1 ? "view" : "views"}` : ""}`}
+            backgroundImage={post.image ? {
+              url: post.image.url,
+              alt: post.image.alt || `Hero image for ${post.title}`,
+              position: post.image.position === 'background' ? 'center' : post.image.position as 'center' | 'top' | 'bottom' | 'left' | 'right' | undefined,
+            } : undefined}
           />
-          
-          {/* Hero image - show after header if post has featured image */}
-          {post.image && (
-            <PostHeroImage
-              image={post.image}
-              title={post.title}
-              priority={true}
-            />
-          )}
           
           {/* Series navigation - show after header if post is part of a series */}
           {post.series && seriesPosts.length > 0 && (

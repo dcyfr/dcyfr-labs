@@ -32,6 +32,7 @@ import {
   PAGE_LAYOUT,
   CONTAINER_WIDTHS,
   SCROLL_BEHAVIOR,
+  getContainerClasses,
 } from "@/lib/design-tokens";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
@@ -130,6 +131,7 @@ export default async function Home() {
         <Section>
           <ScrollReveal animation="fade-up">
             <PageHero
+              contentClassName="max-w-2xl mx-auto text-center"
               variant="homepage"
               align="center"
               title={
@@ -158,7 +160,7 @@ export default async function Home() {
                   <Button variant="outline" asChild size="default">
                     <Link href="/blog">Read my blog</Link>
                   </Button>
-                  <Button variant="outline" className="hidden sm:inline-flex" asChild size="default">
+                  <Button variant="outline" asChild size="default">
                     <Link href="/projects">View Projects</Link>
                   </Button>
                 </div>

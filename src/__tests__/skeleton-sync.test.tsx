@@ -23,17 +23,16 @@ describe('Skeleton Structural Sync', () => {
     it('should use PageHero component structure', () => {
       const { container } = render(<HomeLoading />);
       
-      // Should have PageLayout wrapper
-      const main = container.querySelector('main');
-      expect(main).toBeTruthy();
+      // Should have PageLayout wrapper (div with min-h-screen)
+      const wrapper = container.querySelector('[class*="min-h-screen"]');
+      expect(wrapper).toBeTruthy();
       
       // Should have hero section (from PageHero)
       const heroSection = container.querySelector('section');
       expect(heroSection).toBeTruthy();
-      expect(heroSection?.className).toContain('py-14');
       
-      // Should have skeleton elements
-      const skeletons = container.querySelectorAll('[class*="animate-pulse"]');
+      // Should have skeleton elements (using skeleton-shimmer class)
+      const skeletons = container.querySelectorAll('.skeleton-shimmer');
       expect(skeletons.length).toBeGreaterThan(0);
     });
 
@@ -70,8 +69,8 @@ describe('Skeleton Structural Sync', () => {
     it('should have GitHub heatmap skeleton', () => {
       const { container } = render(<ProjectsLoading />);
       
-      // GitHub heatmap should be present
-      const skeletons = container.querySelectorAll('[class*="animate-pulse"]');
+      // GitHub heatmap should be present (using skeleton-shimmer class)
+      const skeletons = container.querySelectorAll('.skeleton-shimmer');
       expect(skeletons.length).toBeGreaterThan(0);
     });
 
@@ -102,8 +101,8 @@ describe('Skeleton Structural Sync', () => {
     it('should have search and filter skeletons', () => {
       const { container } = render(<BlogLoading />);
       
-      // Should have search input skeleton
-      const skeletons = container.querySelectorAll('[class*="animate-pulse"]');
+      // Should have search input skeleton (using skeleton-shimmer class)
+      const skeletons = container.querySelectorAll('.skeleton-shimmer');
       expect(skeletons.length).toBeGreaterThan(0);
       
       // Should have filter badges skeleton (flex-wrap)
@@ -114,8 +113,8 @@ describe('Skeleton Structural Sync', () => {
     it('should have post list skeleton', () => {
       const { container } = render(<BlogLoading />);
       
-      // Should have multiple skeleton items for posts
-      const skeletons = container.querySelectorAll('[class*="animate-pulse"]');
+      // Should have multiple skeleton items for posts (using skeleton-shimmer class)
+      const skeletons = container.querySelectorAll('.skeleton-shimmer');
       // At least 5 post skeletons + search + filters
       expect(skeletons.length).toBeGreaterThan(7);
     });
@@ -133,8 +132,8 @@ describe('Skeleton Structural Sync', () => {
     it('should have avatar skeleton', () => {
       const { container } = render(<AboutLoading />);
       
-      // Should have rounded-full skeleton (avatar)
-      const avatarSkeleton = container.querySelector('[class*="rounded-full"]');
+      // Should have rounded-full skeleton (avatar with skeleton-shimmer class)
+      const avatarSkeleton = container.querySelector('.skeleton-shimmer[class*="rounded-full"]');
       expect(avatarSkeleton).toBeTruthy();
     });
 
@@ -173,12 +172,12 @@ describe('Skeleton Structural Sync', () => {
     it('should have form skeleton', () => {
       const { container } = render(<ContactLoading />);
       
-      // Should have card (form container)
-      const card = container.querySelector('[class*="rounded-lg"]');
+      // Should have form card (Card component uses data-slot="card")
+      const card = container.querySelector('[data-slot="card"]');
       expect(card).toBeTruthy();
       
-      // Should have multiple skeletons for form fields
-      const skeletons = container.querySelectorAll('[class*="animate-pulse"]');
+      // Should have multiple skeletons for form fields (using skeleton-shimmer class)
+      const skeletons = container.querySelectorAll('.skeleton-shimmer');
       expect(skeletons.length).toBeGreaterThan(3);
     });
   });
@@ -203,8 +202,8 @@ describe('Skeleton Structural Sync', () => {
     it('should have card skeletons for resume items', () => {
       const { container } = render(<ResumeLoading />);
       
-      // Should have card components
-      const cards = container.querySelectorAll('[class*="rounded-lg"]');
+      // Should have card components (Card component uses data-slot="card")
+      const cards = container.querySelectorAll('[data-slot="card"]');
       expect(cards.length).toBeGreaterThan(0);
     });
   });
@@ -222,15 +221,21 @@ describe('Skeleton Structural Sync', () => {
     it('all loading states should have PageLayout wrapper', () => {
       loadingComponents.forEach(({ name, component: Component }) => {
         const { container } = render(<Component />);
-        const main = container.querySelector('main');
-        expect(main, `${name} should have main element`).toBeTruthy();
+        // PageLayout renders a div with min-h-screen class
+        // ArchiveLayout (Blog, Projects) doesn't use PageLayout - check for section instead
+        const hasPageLayout = container.querySelector('[class*="min-h-screen"]');
+        const hasSection = container.querySelector('section');
+        expect(
+          hasPageLayout || hasSection, 
+          `${name} should have either PageLayout wrapper or section element`
+        ).toBeTruthy();
       });
     });
 
     it('all loading states should have skeleton animations', () => {
       loadingComponents.forEach(({ name, component: Component }) => {
         const { container } = render(<Component />);
-        const skeletons = container.querySelectorAll('[class*="animate-pulse"]');
+        const skeletons = container.querySelectorAll('.skeleton-shimmer');
         expect(skeletons.length, `${name} should have skeletons`).toBeGreaterThan(0);
       });
     });

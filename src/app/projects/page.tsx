@@ -80,7 +80,7 @@ export default async function ProjectsPage() {
         </div>
         
         {/* Projects grid */}
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {visibleProjects.map((project) => (
             <ProjectCard key={project.slug} project={project} />
           ))}

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../styles/holo-card.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -23,6 +24,21 @@ html {
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   font-variant-ligatures: common-ligatures contextual;
+  scroll-behavior: smooth;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /**
@@ -211,7 +227,7 @@ svg {
   /* View Transitions API support (if available) */
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 300ms;
+    animation-duration: 150ms;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   
@@ -224,16 +240,21 @@ svg {
                   background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Card and surface transitions */
-    [class*="card"],
-    [class*="popover"],
-    header,
-    footer,
-    aside,
-    nav {
-      transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    /* Text color transitions for all elements */
+    * {
+      transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
                   border-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
-                  color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+                  fill 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  stroke 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Preserve existing transforms and other transitions */
+    *[class*="transition-transform"],
+    *[class*="transition-all"],
+    *[class*="transition-opacity"] {
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
   
@@ -339,6 +360,61 @@ svg {
     );
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
+  }
+
+  /* Holographic effect for cards */
+  @keyframes holographic {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .holographic-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .holographic-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      transparent 0%,
+      hsl(var(--primary) / 0.03) 25%,
+      hsl(var(--primary) / 0.05) 50%,
+      hsl(var(--primary) / 0.03) 75%,
+      transparent 100%
+    );
+    background-size: 300% 300%;
+    animation: holographic 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .holographic-card > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (hover: hover) {
+    .holographic-card:hover::before {
+      animation-duration: 4s;
+      background: linear-gradient(
+        135deg,
+        transparent 0%,
+        hsl(var(--primary) / 0.05) 25%,
+        hsl(var(--primary) / 0.08) 50%,
+        hsl(var(--primary) / 0.05) 75%,
+        transparent 100%
+      );
+    }
   }
 
   /* Reduced motion: disable shimmer animation */
@@ -975,4 +1051,35 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   a[href^="/"]::after {
     content: "";
   }
+}
+
+/* ===================================================================
+   KaTeX Math Rendering - Enhanced Readability
+   ================================================================ */
+
+/**
+ * Improved sizing for LaTeX math equations
+ * - Inline math: 1.15em (15% larger than default)
+ * - Block math: 1.2em (20% larger than default)
+ * Enhances readability while maintaining proportions
+ */
+
+/* Inline math equations */
+.katex {
+  font-size: 1.15em !important;
+}
+
+/* Block math equations (display mode) */
+.katex-display {
+  font-size: 1.2em !important;
+}
+
+/* Ensure math integrates well with prose */
+.prose .katex {
+  font-size: 1.15em !important;
+}
+
+.prose .katex-display {
+  font-size: 1.2em !important;
+  margin: 1.5rem 0;
 }

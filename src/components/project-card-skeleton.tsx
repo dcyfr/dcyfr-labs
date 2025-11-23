@@ -69,7 +69,7 @@ export function ProjectCardSkeleton() {
  */
 export function ProjectListSkeleton({ count = 3 }: { count?: number }) {
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="grid gap-4 sm:grid-cols-2">
       {Array.from({ length: count }).map((_, i) => (
         <ProjectCardSkeleton key={i} />
       ))}

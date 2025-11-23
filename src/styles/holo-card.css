@@ -1,0 +1,248 @@
+/**
+ * Holographic Card Effect CSS Module
+ * 
+ * CSS-only holographic shine and flare effects for featured cards.
+ * Inspired by https://react-holo-card-effect.vercel.app/
+ * 
+ * Features:
+ * - Animated holographic shine on hover
+ * - Rainbow gradient reflections
+ * - Lens flare effects
+ * - Increased contrast with darker gradients
+ * - Custom noise/grain texture
+ * - GPU-accelerated transforms
+ * 
+ * Usage:
+ * Apply .holo-card class to card container
+ * Apply .holo-shine to overlay element
+ * 
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations
+ */
+
+/* Holographic card container */
+.holo-card {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Darker gradient overlay for increased contrast */
+.holo-gradient-dark {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.75) 0%,
+    hsl(var(--background) / 0.85) 50%,
+    hsl(var(--background) / 0.95) 100%
+  );
+}
+
+/* Hover state - lighter for shine-through effect */
+.holo-gradient-dark-hover {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.65) 0%,
+    hsl(var(--background) / 0.75) 50%,
+    hsl(var(--background) / 0.9) 100%
+  );
+}
+
+/* Holographic shine overlay - subtle gradient */
+.holo-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 5;
+}
+
+.holo-card:hover .holo-shine {
+  opacity: 1;
+}
+
+/* Image enhancement - subtle */
+.holo-image-shift {
+  transition: transform 0.3s ease;
+}
+
+.holo-card:hover .holo-image-shift {
+  transform: scale(1.03);
+}
+
+/* Subtle lift effect on card */
+.holo-card-3d {
+  transition: transform 0.2s ease;
+}
+
+.holo-card-3d:hover {
+  transform: translateY(-2px);
+}
+
+/* Improved text visibility on holo cards */
+/* Apply white text to specific text elements, not universal selector */
+
+/* Badges: explicitly reset to theme colors with highest specificity */
+/* Must come FIRST to avoid being overridden */
+.holo-card [data-slot="badge"].font-semibold {
+    color: inherit !important;
+}
+
+.holo-card [data-slot="badge"],
+.holo-card [data-slot="badge"] * {
+    text-shadow: none !important;
+}
+
+
+/* Status badges: use lighter colors in light mode for readability on holo cards */
+@media (prefers-color-scheme: light) {
+  .holo-card [data-slot="badge"].font-semibold.text-blue-700 {
+    color: rgb(147 197 253) !important; /* blue-300 */
+  }
+  
+  .holo-card [data-slot="badge"].font-semibold.text-amber-700 {
+    color: rgb(252 211 77) !important; /* amber-300 */
+  }
+  
+  .holo-card [data-slot="badge"].font-semibold.text-green-700 {
+    color: rgb(134 239 172) !important; /* green-300 */
+  }
+  
+  .holo-card [data-slot="badge"].font-semibold.text-red-700 {
+    color: rgb(252 165 165) !important; /* red-300 */
+  }
+}
+
+/* Force white text for regular outline badges (tags) in light mode on holo cards */
+/* Exclude status badges that have font-semibold class */
+@media (prefers-color-scheme: light) {
+  .holo-card [data-slot="badge"]:not(.font-semibold) {
+    color: hsl(0 0% 100%) !important;
+    background: hsl(var(--background) / 0.9) !important;
+    border-color: hsl(var(--border) / 0.5) !important;
+  }
+}
+
+/* Buttons and link-buttons: reset to theme colors */
+.holo-card button {
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+.holo-card button * {
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+.holo-card a.inline-flex {
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+.holo-card a.inline-flex * {
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+/* Force dark text for link-buttons in light mode */
+@media (prefers-color-scheme: light) {
+  .holo-card a.inline-flex,
+  .holo-card a.inline-flex span,
+  .holo-card a.inline-flex svg {
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  .holo-card a.inline-flex:hover,
+  .holo-card a.inline-flex:hover span,
+  .holo-card a.inline-flex:hover svg {
+    color: hsl(var(--accent-foreground)) !important;
+  }
+}
+
+/* Headings get pure white with strong shadow */
+.holo-card h1,
+.holo-card h2,
+.holo-card h3,
+.holo-card h4,
+.holo-card h5,
+.holo-card h6 {
+  color: hsl(0 0% 100%) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Paragraphs only (no spans/divs that might contain badges) */
+.holo-card p {
+  color: hsl(0 0% 100% / 0.95);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Time stamps */
+.holo-card time {
+  color: hsl(0 0% 100% / 0.9) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+}
+
+/* Font weight classes - only if not in a badge or link-button */
+.holo-card .font-semibold:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *),
+.holo-card .font-bold:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *),
+.holo-card .font-medium:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *) {
+  color: hsl(0 0% 100%) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Muted text - only if not in a badge */
+.holo-card .text-muted-foreground:not([data-slot="badge"]):not([data-slot="badge"] *) {
+  color: hsl(0 0% 100% / 0.85) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Text size variants - only apply to non-badge elements */
+.holo-card .text-xs:not([data-slot="badge"]):not([data-slot="badge"] *),
+.holo-card .text-sm:not([data-slot="badge"]):not([data-slot="badge"] *),
+.holo-card .text-base:not([data-slot="badge"]):not([data-slot="badge"] *),
+.holo-card .text-lg:not([data-slot="badge"]):not([data-slot="badge"] *) {
+  color: hsl(0 0% 100% / 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Links that aren't badges/buttons get white with primary color on hover */
+.holo-card a:not(.inline-flex):not([class*="button"]) {
+  color: hsl(0 0% 100% / 0.95);
+}
+
+.holo-card a:not(.inline-flex):not([class*="button"]):hover {
+  color: hsl(var(--primary));
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .holo-shine,
+  .holo-image-shift,
+  .holo-card-3d {
+    transition: opacity 0.2s ease !important;
+  }
+  
+  .holo-card-3d:hover {
+    transform: none;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .holo-shine {
+    background: linear-gradient(
+      135deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 100%
+    );
+  }
+}

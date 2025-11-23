@@ -3,6 +3,7 @@
  * 
  * Standardized header for individual item pages with title, date, tags, and badges.
  * Provides consistent metadata display across all article-type pages.
+ * Now supports featured background images with gradient overlays matching card designs.
  * 
  * @example
  * ```tsx
@@ -12,12 +13,17 @@
  *   tags={['react', 'design', 'typescript']}
  *   badges={<PostBadges draft={false} archived={false} />}
  *   metadata="5 min read · 1,234 views"
+ *   backgroundImage={{
+ *     url: "/blog/hero.jpg",
+ *     alt: "Hero image"
+ *   }}
  * />
  * ```
  */
 
 import { TYPOGRAPHY } from '@/lib/design-tokens';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
@@ -48,6 +54,13 @@ export interface ArticleHeaderProps {
   
   /** Function to generate tag URLs (returns URL string) */
   onTagClick?: (tag: string) => string;
+  
+  /** Featured background image with gradient overlay */
+  backgroundImage?: {
+    url: string;
+    alt: string;
+    position?: 'center' | 'top' | 'bottom' | 'left' | 'right';
+  };
 }
 
 export function ArticleHeader({
@@ -60,6 +73,7 @@ export function ArticleHeader({
   inlineTags = false,
   className,
   onTagClick,
+  backgroundImage,
 }: ArticleHeaderProps) {
   /**
    * Format date for display
@@ -72,6 +86,103 @@ export function ArticleHeader({
       )
     : null;
 
+  // If background image is provided, render with card-like styling
+  if (backgroundImage) {
+    return (
+      <div className={cn("relative rounded-lg border overflow-hidden -mx-4 sm:-mx-6 md:-mx-8 mb-8 holo-card", className)}>
+        {/* Background Image with gradient overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={backgroundImage.url}
+            alt={backgroundImage.alt}
+            fill
+            priority
+            quality={90}
+            className={cn(
+              "object-cover holo-image-shift",
+              backgroundImage.position && `object-${backgroundImage.position}`
+            )}
+            sizes="100vw"
+          />
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 holo-gradient-dark" />
+        </div>
+        
+        {/* Subtle shine effect */}
+        <div className="holo-shine" />
+
+        {/* Content - positioned above background */}
+        <div className="relative z-10 px-4 sm:px-6 md:px-8 py-8 md:py-12 space-y-4">
+          {/* Badges */}
+          {badges && (
+            <div className="flex flex-wrap gap-2">
+              {badges}
+            </div>
+          )}
+
+          {/* Title */}
+          <h1 className={TYPOGRAPHY.h1.article}>
+            {title}
+          </h1>
+
+          {/* Metadata Row */}
+          {(date || metadata) && (
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+              {formattedDate && (
+                <time dateTime={date?.toISOString()}>
+                  {formattedDate}
+                </time>
+              )}
+              
+              {metadata && (
+                <>
+                  {formattedDate && <span aria-hidden="true">·</span>}
+                  <span>{metadata}</span>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Tags */}
+          {tags.length > 0 && (
+            <div className={cn(
+              "flex flex-wrap items-center gap-2",
+              !inlineTags && "mt-4"
+            )}>
+              {!inlineTags && (
+                <span className="text-sm text-muted-foreground">
+                  Tagged:
+                </span>
+              )}
+              {tags.map((tag) => {
+                const tagUrl = onTagClick?.(tag);
+                const badgeContent = (
+                  <Badge
+                    key={tag}
+                    variant="outline"
+                    className={cn(
+                      "text-xs",
+                      tagUrl && "cursor-pointer hover:bg-accent transition-colors"
+                    )}
+                  >
+                    {tag}
+                  </Badge>
+                );
+                
+                return tagUrl ? (
+                  <Link key={tag} href={tagUrl}>
+                    {badgeContent}
+                  </Link>
+                ) : badgeContent;
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Default rendering without background image
   return (
     <div className={cn("space-y-4", className)}>
       {/* Badges */}
@@ -120,9 +231,10 @@ export function ArticleHeader({
             const badgeContent = (
               <Badge
                 key={tag}
-                variant="secondary"
+                variant="outline"
                 className={cn(
-                  tagUrl && "cursor-pointer hover:bg-secondary/80 transition-colors"
+                  "text-xs",
+                  tagUrl && "cursor-pointer hover:bg-accent transition-colors"
                 )}
               >
                 {tag}
