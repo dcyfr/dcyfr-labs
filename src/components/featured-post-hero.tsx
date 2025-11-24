@@ -69,7 +69,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
         {/* Featured Badge */}
         <div className="flex items-center gap-2">
           <Badge variant="default" className={cn("text-xs", "font-medium")}>
-            Featured Post
+            Featured
           </Badge>
           {post.tags.slice(0, 2).map((tag) => (
             <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>

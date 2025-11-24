@@ -32,7 +32,7 @@ export const CONTAINER_WIDTHS = {
   narrow: "max-w-2xl",
   
   /** Wide width for data-heavy pages (dashboards, analytics, tables) */
-  dashboard: "max-w-6xl",
+  dashboard: "max-w-7xl",
 } as const;
 
 /**

@@ -835,6 +835,13 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   margin-bottom: 1rem;
 }
 
+/* Remove top margin from first heading to prevent extra spacing at top of page */
+.prose > h1:first-child,
+.prose > h2:first-child,
+.prose > h3:first-child {
+  margin-top: 0;
+}
+
 .prose blockquote {
   font-family: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   font-style: italic;

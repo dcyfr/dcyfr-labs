@@ -119,23 +119,7 @@ export function ArticleFooter<T>({
         </section>
       )}
 
-      {/* Share Section */}
-      {hasShare && (
-        <section className={SPACING.subsection}>
-          <h2 className={cn(TYPOGRAPHY.h2.standard, "mb-4")}>
-            Share this article
-          </h2>
-          {shareComponent || (
-            <div className="flex gap-2">
-              <p className="text-sm text-muted-foreground">
-                Share functionality will be rendered by the parent component
-              </p>
-            </div>
-          )}
-        </section>
-      )}
-
-      {/* Sources Section */}
+{/* Sources Section */}
       {hasSources && (
         <section className={SPACING.subsection}>
           <h2 className={cn(TYPOGRAPHY.h2.standard, "mb-4")}>
@@ -168,6 +152,22 @@ export function ArticleFooter<T>({
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {/* Share Section */}
+      {hasShare && (
+        <section className={SPACING.subsection}>
+          <h2 className={cn(TYPOGRAPHY.h2.standard, "mb-4")}>
+            Share this article
+          </h2>
+          {shareComponent || (
+            <div className="flex gap-2">
+              <p className="text-sm text-muted-foreground">
+                Share functionality will be rendered by the parent component
+              </p>
+            </div>
+          )}
         </section>
       )}
 
