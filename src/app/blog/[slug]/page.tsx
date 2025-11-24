@@ -230,11 +230,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             tags={post.tags}
             onTagClick={(tag) => `/blog?tag=${encodeURIComponent(tag)}`}
           >
+            {/* Call-to-action */}
+            <BlogPostCTA variant="default" location="blog-post-end" />
+          
             {/* Related posts section */}
             <RelatedPosts posts={articleData.relatedItems} currentSlug={post.slug} />
-            
-            {/* Call-to-action for consulting/collaboration */}
-            <BlogPostCTA variant="default" location="blog-post-end" />
           </ArticleFooter>
           
           {/* Comments section - hidden for draft posts */}
