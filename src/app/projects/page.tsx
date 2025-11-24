@@ -87,7 +87,7 @@ export default async function ProjectsPage() {
         </div>
         
         {/* Call-to-action for hiring/consulting */}
-        {/* <ProjectsCTA /> */}
+        <ProjectsCTA />
       </ArchiveLayout>
     </>
   );

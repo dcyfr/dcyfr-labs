@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Select,
   SelectContent,
@@ -37,8 +38,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AlertCircle, ArrowUp, ArrowDown, ArrowUpDown, Download, RefreshCw, Filter, ChevronDown, Calendar } from "lucide-react";
+import { AlertCircle, ArrowUp, ArrowDown, ArrowUpDown, Download, RefreshCw, Filter, ChevronDown, Calendar, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 // Hooks
 import { useAnalyticsData } from "@/hooks/use-analytics-data";
@@ -49,6 +51,8 @@ import { useDashboardSort } from "@/hooks/use-dashboard-sort";
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { AnalyticsOverview } from "@/components/analytics/analytics-overview";
 import { ConversionMetrics } from "@/components/analytics/conversion-metrics";
+import { AnalyticsInsights } from "@/components/analytics/analytics-insights";
+import { AnalyticsRecommendations } from "@/components/analytics/analytics-recommendations";
 import dynamic from "next/dynamic";
 
 const AnalyticsCharts = dynamic(() => import("@/components/analytics/analytics-charts").then(mod => ({ default: mod.AnalyticsCharts })), {
@@ -83,15 +87,53 @@ import { AnalyticsTrending } from "@/components/analytics/analytics-trending";
 import { PostAnalytics, DateRange, DATE_RANGE_LABELS } from "@/types/analytics";
 
 // Utils
-import { sortData, filterBySearch, filterByTags, filterByFlags, getUniqueValues, calculateEngagementRate, getEngagementTier } from "@/lib/dashboard/table-utils";
+import { 
+  sortData, 
+  filterBySearch, 
+  filterByTags, 
+  filterByFlags, 
+  getUniqueValues, 
+  calculateEngagementRate, 
+  getEngagementTier,
+  getPerformanceTier,
+  getBenchmark,
+  filterByPublicationCohort,
+  filterByPerformanceTier,
+  filterByTagsWithMode
+} from "@/lib/dashboard/table-utils";
 import { exportData } from "@/lib/dashboard/export-utils";
+import { 
+  PublicationCohort, 
+  PerformanceTierFilter, 
+  TagFilterMode 
+} from "@/types/analytics";
+import { AnalyticsFilters } from "@/components/analytics/analytics-filters";
 
 type SortField = "title" | "views" | "views24h" | "publishedAt" | "viewsRange" | "shares" | "shares24h" | "comments" | "comments24h" | "engagementRate";
+
+// Helper function to copy to clipboard
+const copyToClipboard = async (value: string | number, label: string) => {
+  try {
+    await navigator.clipboard.writeText(String(value));
+    toast.success(`Copied ${label}`, {
+      description: String(value),
+      duration: 2000,
+    });
+  } catch (err) {
+    toast.error("Failed to copy to clipboard");
+  }
+};
 
 export default function AnalyticsDashboard() {
   // State
   const [dateRange, setDateRange] = useState<DateRange>("all");
   const [autoRefresh, setAutoRefresh] = useState(false);
+  const [publicationCohort, setPublicationCohort] = useState<PublicationCohort>("all");
+  const [performanceTier, setPerformanceTier] = useState<PerformanceTierFilter>("all");
+  const [tagFilterMode, setTagFilterMode] = useState<TagFilterMode>("AND");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [showConversion, setShowConversion] = useState(false);
+  const [showPerformance, setShowPerformance] = useState(false);
 
   // Custom hooks
   const { data, loading, error, isRefreshing, lastUpdated, refresh } = useAnalyticsData({
@@ -126,26 +168,17 @@ export default function AnalyticsDashboard() {
         filteredSummary: {
           totalPosts: 0,
           totalViews: 0,
-          totalViews24h: 0,
           totalViewsRange: 0,
           totalShares: 0,
-          totalShares24h: 0,
           totalComments: 0,
-          totalComments24h: 0,
           averageViews: 0,
-          averageViews24h: 0,
           averageViewsRange: 0,
           averageShares: 0,
-          averageShares24h: 0,
           averageComments: 0,
-          averageComments24h: 0,
           topPost: null,
-          topPost24h: null,
           topPostRange: null,
           mostSharedPost: null,
-          mostSharedPost24h: null,
           mostCommentedPost: null,
-          mostCommentedPost24h: null,
         },
         trendStats: { totalViewsTrend24h: 0, totalTrendPercent: 0 },
       };
@@ -156,7 +189,13 @@ export default function AnalyticsDashboard() {
     // Apply filters
     let filtered = filterByFlags(allPosts, { draft: hideDrafts, archived: hideArchived });
     filtered = filterBySearch(filtered, searchQuery, ["title", "summary", "tags"]);
-    filtered = filterByTags(filtered, selectedTags, "tags");
+    
+    // Apply advanced filters
+    filtered = filterByPublicationCohort(filtered, publicationCohort, "publishedAt");
+    filtered = filterByPerformanceTier(filtered, performanceTier, "views");
+    
+    // Apply tag filter with mode (AND/OR)
+    filtered = filterByTagsWithMode(filtered, selectedTags, "tags", tagFilterMode);
 
     // Apply sorting (handle engagement rate specially)
     let sorted: PostAnalytics[];
@@ -177,44 +216,27 @@ export default function AnalyticsDashboard() {
     const summary = {
       totalPosts: filtered.length,
       totalViews: filtered.reduce((s, p) => s + p.views, 0),
-      totalViews24h: filtered.reduce((s, p) => s + p.views24h, 0),
       totalViewsRange: filtered.reduce((s, p) => s + p.viewsRange, 0),
       totalShares: filtered.reduce((s, p) => s + p.shares, 0),
-      totalShares24h: filtered.reduce((s, p) => s + p.shares24h, 0),
       totalComments: filtered.reduce((s, p) => s + p.comments, 0),
-      totalComments24h: filtered.reduce((s, p) => s + p.comments24h, 0),
       averageViews: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.views, 0) / filtered.length) : 0,
-      averageViews24h: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.views24h, 0) / filtered.length) : 0,
       averageViewsRange: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.viewsRange, 0) / filtered.length) : 0,
       averageShares: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.shares, 0) / filtered.length) : 0,
-      averageShares24h: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.shares24h, 0) / filtered.length) : 0,
       averageComments: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.comments, 0) / filtered.length) : 0,
-      averageComments24h: filtered.length > 0 ? Math.round(filtered.reduce((s, p) => s + p.comments24h, 0) / filtered.length) : 0,
       topPost: filtered.length > 0 ? [...filtered].sort((a, b) => b.views - a.views)[0] : null,
-      topPost24h: filtered.length > 0 ? [...filtered].sort((a, b) => b.views24h - a.views24h)[0] : null,
       topPostRange: filtered.length > 0 ? [...filtered].sort((a, b) => b.viewsRange - a.viewsRange)[0] : null,
       mostSharedPost: filtered.length > 0 ? [...filtered].sort((a, b) => b.shares - a.shares)[0] : null,
-      mostSharedPost24h: filtered.length > 0 ? [...filtered].sort((a, b) => b.shares24h - a.shares24h)[0] : null,
       mostCommentedPost: filtered.length > 0 ? [...filtered].sort((a, b) => b.comments - a.comments)[0] : null,
-      mostCommentedPost24h: filtered.length > 0 ? [...filtered].sort((a, b) => b.comments24h - a.comments24h)[0] : null,
     };
-
-    // Calculate trend indicators
-    const totalViewsTrend24h = summary.totalViews24h;
-    const previousTotalViews = summary.totalViews - totalViewsTrend24h || 1;
-    const totalTrendPercent =
-      previousTotalViews > 0
-        ? Math.round(((totalViewsTrend24h - previousTotalViews) / previousTotalViews) * 100)
-        : 0;
 
     return {
       filteredPosts: filtered,
       sortedPosts: sorted,
       filteredTrending: trending,
       filteredSummary: summary,
-      trendStats: { totalViewsTrend24h, totalTrendPercent },
+      trendStats: { totalViewsTrend24h: 0, totalTrendPercent: 0 },
     };
-  }, [data, hideDrafts, hideArchived, searchQuery, selectedTags, sortField, sortDirection]);
+  }, [data, hideDrafts, hideArchived, searchQuery, selectedTags, tagFilterMode, publicationCohort, performanceTier, sortField, sortDirection]);
 
   // Export functions
   const handleExportCSV = () => {
@@ -223,11 +245,8 @@ export default function AnalyticsDashboard() {
       "slug",
       "views",
       "viewsRange",
-      "views24h",
       "shares",
-      "shares24h",
       "comments",
-      "comments24h",
       "publishedAt",
       "tags",
     ];
@@ -318,179 +337,46 @@ export default function AnalyticsDashboard() {
     <DashboardLayout
       title="Analytics Dashboard"
       description="View and analyze blog post performance metrics"
-      actions={
-        <>
-          {/* Date Range Selector */}
-          <Select value={dateRange} onValueChange={(value: DateRange) => setDateRange(value)}>
-            <SelectTrigger className="w-[140px] h-8 text-xs">
-              <Calendar className="h-3 w-3 mr-1.5" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {(["1", "7", "30", "90", "all"] as DateRange[]).map((range) => (
-                <SelectItem key={range} value={range} className="text-xs">
-                  {DATE_RANGE_LABELS[range]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Tags Filter */}
-          {allTags.length > 0 && (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="inline-flex items-center gap-1.5 px-2 py-1.5 text-xs rounded border border-border hover:bg-muted transition-colors h-8">
-                <Filter className="h-3 w-3" />
-                Tags {selectedTags.length > 0 && `(${selectedTags.length})`}
-                <ChevronDown className="h-3 w-3 opacity-50" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56 max-h-[300px] overflow-y-auto">
-                <DropdownMenuLabel className="text-xs">Filter by tags</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {allTags.map((tag) => (
-                  <DropdownMenuCheckboxItem
-                    key={tag}
-                    checked={selectedTags.includes(tag)}
-                    onCheckedChange={(checked) => {
-                      setSelectedTags((prev) =>
-                        checked ? [...prev, tag] : prev.filter((t) => t !== tag)
-                      );
-                    }}
-                    className="text-xs"
-                  >
-                    {tag}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-
-          {/* Export Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center gap-1.5 px-2 py-1.5 text-xs rounded border border-border hover:bg-muted transition-colors h-8">
-              <Download className="h-3 w-3" />
-              Export
-              <ChevronDown className="h-3 w-3 opacity-50" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuLabel className="text-xs">Export format</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleExportCSV} className="text-xs cursor-pointer">
-                <Download className="h-3 w-3 mr-2" />
-                Download CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExportJSON} className="text-xs cursor-pointer">
-                <Download className="h-3 w-3 mr-2" />
-                Download JSON
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <div className="h-4 w-px bg-border" />
-
-          {/* Refresh Button */}
-          <button
-            onClick={refresh}
-            disabled={isRefreshing}
-            className="inline-flex items-center gap-1.5 px-2 py-1.5 text-xs rounded border border-border hover:bg-muted transition-colors disabled:opacity-50 h-8"
-            title="Refresh data"
-          >
-            <RefreshCw className={cn("h-3 w-3", isRefreshing && "animate-spin")} />
-            <span className="hidden sm:inline">Refresh</span>
-          </button>
-
-          {/* Auto-refresh Toggle */}
-          <label className="inline-flex items-center text-xs gap-1.5 cursor-pointer" title="Auto-refresh every 30 seconds">
-            <input
-              type="checkbox"
-              checked={autoRefresh}
-              onChange={(e) => setAutoRefresh(e.target.checked)}
-              className="h-3 w-3 rounded border-muted bg-background cursor-pointer"
-            />
-            <span className="font-medium">Auto (30s)</span>
-          </label>
-
-          {lastUpdated && (
-            <span className="text-xs text-muted-foreground">
-              Updated {lastUpdated.toLocaleTimeString()}
-            </span>
-          )}
-        </>
-      }
     >
-      {/* Filter Status */}
-      {(hideDrafts || hideArchived || searchQuery || selectedTags.length > 0) && (
-        <div className="flex flex-wrap items-center gap-2 mb-4 text-xs text-muted-foreground">
-          <span>Active filters:</span>
-          {hideDrafts && <Badge variant="secondary">Drafts hidden</Badge>}
-          {hideArchived && <Badge variant="secondary">Archived hidden</Badge>}
-          {searchQuery && <Badge variant="secondary">Search: {searchQuery}</Badge>}
-          {selectedTags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="default"
-              className="cursor-pointer hover:bg-primary/80"
-              onClick={() => setSelectedTags((prev) => prev.filter((t) => t !== tag))}
-            >
-              {tag} ×
-            </Badge>
-          ))}
-        </div>
-      )}
-
-      {/* Search and Filters Section */}
-      <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Input
-              placeholder="Search posts..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 h-8 text-xs"
-            />
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant={hideDrafts ? "default" : "outline"}
-                onClick={() => setHideDrafts(!hideDrafts)}
-                className="text-xs h-8"
-              >
-                {hideDrafts ? "Show" : "Hide"} Drafts
-              </Button>
-              <Button
-                size="sm"
-                variant={hideArchived ? "default" : "outline"}
-                onClick={() => setHideArchived(!hideArchived)}
-                className="text-xs h-8"
-              >
-                {hideArchived ? "Show" : "Hide"} Archived
-              </Button>
-            </div>
-          </div>
-          <div className="mt-3 text-xs text-muted-foreground">
-            Showing {sortedPosts.length} of {filteredPosts.length} posts
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Analytics Overview */}
-      <AnalyticsOverview
-        summary={filteredSummary}
-        totalViewsTrend24h={trendStats.totalViewsTrend24h}
-        totalTrendPercent={trendStats.totalTrendPercent}
-      />
-
-      {/* Conversion Goals & Metrics */}
-      <ConversionMetrics
-        completionRate={0}
-        avgScrollDepth={0}
-        totalPostsViewed={filteredSummary.totalViews}
-      />
-
-      {/* Time-Series Charts */}
-      <AnalyticsCharts posts={sortedPosts} dateRange={dateRange} />
-
-      {/* Trending Posts */}
-      <AnalyticsTrending trending={filteredTrending} limit={3} />
+      {/* Consolidated Filters & Controls */}
+      <div className="mb-6">
+        <AnalyticsFilters
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+          publicationCohort={publicationCohort}
+          onPublicationCohortChange={setPublicationCohort}
+          performanceTier={performanceTier}
+          onPerformanceTierChange={setPerformanceTier}
+          tagFilterMode={tagFilterMode}
+          onTagFilterModeChange={setTagFilterMode}
+          selectedTags={selectedTags}
+          onTagsChange={setSelectedTags}
+          availableTags={allTags}
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          hideDrafts={hideDrafts}
+          onHideDraftsChange={setHideDrafts}
+          hideArchived={hideArchived}
+          onHideArchivedChange={setHideArchived}
+          onExportCSV={handleExportCSV}
+          onExportJSON={handleExportJSON}
+          onRefresh={refresh}
+          isRefreshing={isRefreshing}
+          autoRefresh={autoRefresh}
+          onAutoRefreshChange={setAutoRefresh}
+          lastUpdated={lastUpdated || undefined}
+          compact={true}
+          onClearAll={() => {
+            setPublicationCohort("all");
+            setPerformanceTier("all");
+            setSelectedTags([]);
+            setSearchQuery("");
+            setHideDrafts(false);
+            setHideArchived(false);
+          }}
+          resultCount={{ shown: sortedPosts.length, total: filteredPosts.length }}
+        />
+      </div>
 
       {/* All Posts Table */}
       <Card className="overflow-hidden mb-6">
@@ -528,7 +414,7 @@ export default function AnalyticsDashboard() {
                       onClick={() => handleSort("views" as keyof PostAnalytics)}
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                     >
-                      Views (All)
+                      Views
                       <SortIndicator field="views" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
@@ -545,29 +431,11 @@ export default function AnalyticsDashboard() {
                   )}
                   <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
                     <button
-                      onClick={() => handleSort("views24h" as keyof PostAnalytics)}
-                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
-                    >
-                      Views (24h)
-                      <SortIndicator field="views24h" sortField={sortField} sortDirection={sortDirection} />
-                    </button>
-                  </th>
-                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
-                    <button
                       onClick={() => handleSort("shares" as keyof PostAnalytics)}
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                     >
-                      Shares (All)
+                      Shares
                       <SortIndicator field="shares" sortField={sortField} sortDirection={sortDirection} />
-                    </button>
-                  </th>
-                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
-                    <button
-                      onClick={() => handleSort("shares24h" as keyof PostAnalytics)}
-                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
-                    >
-                      Shares (24h)
-                      <SortIndicator field="shares24h" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
@@ -575,17 +443,8 @@ export default function AnalyticsDashboard() {
                       onClick={() => handleSort("comments" as keyof PostAnalytics)}
                       className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
                     >
-                      Comments (All)
+                      Comments
                       <SortIndicator field="comments" sortField={sortField} sortDirection={sortDirection} />
-                    </button>
-                  </th>
-                  <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
-                    <button
-                      onClick={() => handleSort("comments24h" as keyof PostAnalytics)}
-                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors cursor-pointer ml-auto"
-                    >
-                      Comments (24h)
-                      <SortIndicator field="comments24h" sortField={sortField} sortDirection={sortDirection} />
                     </button>
                   </th>
                   <th className="text-right py-2 px-3 font-semibold whitespace-nowrap">
@@ -597,6 +456,9 @@ export default function AnalyticsDashboard() {
                       Engagement
                       <SortIndicator field="engagementRate" sortField={sortField} sortDirection={sortDirection} />
                     </button>
+                  </th>
+                  <th className="text-center py-2 px-3 font-semibold whitespace-nowrap hidden lg:table-cell">
+                    Performance
                   </th>
                   <th className="text-left py-2 px-3 font-semibold whitespace-nowrap hidden md:table-cell">
                     <button
@@ -622,18 +484,34 @@ export default function AnalyticsDashboard() {
                       </a>
                     </td>
                     <td className="text-right py-2 px-3 font-semibold tabular-nums">
-                      {post.views.toLocaleString()}
+                      <TooltipProvider delayDuration={300}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => copyToClipboard(post.views, "views")}
+                              className="cursor-pointer underline decoration-dotted decoration-muted-foreground/50 hover:text-primary transition-colors inline-flex items-center gap-1 group"
+                            >
+                              {post.views.toLocaleString()}
+                              <Copy className="h-3 w-3 opacity-0 group-hover:opacity-50 transition-opacity" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="left" className="text-xs">
+                            <div className="space-y-1">
+                              <p className="font-semibold">{getBenchmark(post.views, filteredSummary.averageViews)}</p>
+                              <p className="text-muted-foreground">Site average: {filteredSummary.averageViews.toLocaleString()}</p>
+                              <p className="text-[10px] text-muted-foreground mt-1.5 pt-1.5 border-t">Click to copy</p>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </td>
                     {dateRange !== "all" && (
                       <td className="text-right py-2 px-3 font-semibold tabular-nums">
                         {post.viewsRange.toLocaleString()}
                       </td>
                     )}
-                    <td className="text-right py-2 px-3 tabular-nums">{post.views24h.toLocaleString()}</td>
                     <td className="text-right py-2 px-3 tabular-nums">{post.shares.toLocaleString()}</td>
-                    <td className="text-right py-2 px-3 tabular-nums">{post.shares24h.toLocaleString()}</td>
                     <td className="text-right py-2 px-3 tabular-nums">{post.comments.toLocaleString()}</td>
-                    <td className="text-right py-2 px-3 tabular-nums">{post.comments24h.toLocaleString()}</td>
                     <td className="text-right py-2 px-3">
                       {(() => {
                         const rate = calculateEngagementRate(post.views, post.shares, post.comments);
@@ -648,6 +526,24 @@ export default function AnalyticsDashboard() {
                           )}>
                             {rate.toFixed(1)}%
                           </span>
+                        );
+                      })()}
+                    </td>
+                    <td className="text-center py-2 px-3 hidden lg:table-cell">
+                      {(() => {
+                        const allViews = sortedPosts.map(p => p.views);
+                        const tier = getPerformanceTier(post.views, allViews);
+                        const benchmark = getBenchmark(post.views, filteredSummary.averageViews);
+                        return (
+                          <div className="flex flex-col gap-1 items-center">
+                            <Badge 
+                              variant={tier === "top" ? "default" : tier === "above-average" ? "secondary" : tier === "below-average" ? "outline" : "destructive"}
+                              className="text-[10px] px-1.5 py-0"
+                            >
+                              {tier === "top" ? "Top 10%" : tier === "above-average" ? "Above Avg" : tier === "below-average" ? "Below Avg" : "Needs Focus"}
+                            </Badge>
+                            <span className="text-[10px] text-muted-foreground">{benchmark}</span>
+                          </div>
                         );
                       })()}
                     </td>
@@ -675,6 +571,74 @@ export default function AnalyticsDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Analytics Overview */}
+      <AnalyticsOverview
+        summary={filteredSummary}
+      />
+
+      {/* Conversion Goals & Metrics */}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base font-medium">Conversion Metrics</CardTitle>
+              <CardDescription className="text-sm">Track user engagement and goal completion</CardDescription>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowConversion(!showConversion)}
+              className="h-8 gap-2"
+            >
+              {showConversion ? "Hide" : "Show"}
+              <ChevronDown className={cn("h-4 w-4 transition-transform", showConversion && "rotate-180")} />
+            </Button>
+          </div>
+        </CardHeader>
+        {showConversion && (
+          <CardContent className="pt-0">
+            <ConversionMetrics
+              completionRate={0}
+              avgScrollDepth={0}
+              totalPostsViewed={filteredSummary.totalViews}
+            />
+          </CardContent>
+        )}
+      </Card>
+
+      {/* Performance Insights - All-Time Records & Distribution */}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base font-medium">Performance Insights</CardTitle>
+              <CardDescription className="text-sm">Trends, records, and content distribution</CardDescription>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowPerformance(!showPerformance)}
+              className="h-8 gap-2"
+            >
+              {showPerformance ? "Hide" : "Show"}
+              <ChevronDown className={cn("h-4 w-4 transition-transform", showPerformance && "rotate-180")} />
+            </Button>
+          </div>
+        </CardHeader>
+        {showPerformance && (
+          <CardContent className="pt-0 space-y-6">
+            {/* Time-Series Charts */}
+            <AnalyticsCharts posts={sortedPosts} dateRange={dateRange} />
+            
+            {/* All-Time Records & Distribution */}
+            <AnalyticsInsights posts={sortedPosts} compact={false} />
+          </CardContent>
+        )}
+      </Card>
+
+      {/* Trending Posts */}
+      <AnalyticsTrending trending={filteredTrending} limit={3} />
     </DashboardLayout>
   );
 }

@@ -19,7 +19,7 @@ export interface CTAProps {
   variant?: 'default' | 'minimal' | 'centered';
   
   /** Location identifier for tracking */
-  location: 'blog-post-end' | 'projects-page' | 'about-page' | 'homepage';
+  location: 'homepage' | 'about-page' | 'projects-page' | 'blog-post-end';
   
   /** Custom className */
   className?: string;
@@ -75,7 +75,7 @@ export function BlogPostCTA({ variant = 'default', location, className }: CTAPro
     return (
       <div className={cn('border-t pt-12 mt-12 text-center', className)}>
         <h2 className={cn(TYPOGRAPHY.h2.standard, 'mb-3')}>
-          Work Together?
+          
         </h2>
         <p className={cn('text-muted-foreground mb-6 mx-auto', getContainerClasses('prose'))}>
           If you&apos;re building a Next.js application and need help with security,
@@ -107,11 +107,11 @@ export function BlogPostCTA({ variant = 'default', location, className }: CTAPro
   return (
     <div className={cn('rounded-lg border bg-muted/30 p-6 mt-12', className)}>
       <h2 className={cn(TYPOGRAPHY.h3.standard, 'mb-2')}>
-        Work Together?
+        Building a Next.js app?
       </h2>
       <p className="text-muted-foreground mb-4">
-        If you&apos;re building a Next.js application and need help with security,
-        performance, or architecture, I&apos;d love to discuss your project.
+        Whether you&apos;re facing challenges with security, performance, or architecture,
+        I&apos;m here to help you build robust and scalable applications.
       </p>
       <div className="flex gap-3">
         <Button asChild size="sm">
@@ -163,11 +163,11 @@ export function ProjectsCTA({ className }: { className?: string }) {
     <section className={cn('mt-16 text-center', className)}>
       <div className="rounded-lg border bg-linear-to-b from-muted/50 to-muted/30 p-8 md:p-12">
         <h2 className={cn(TYPOGRAPHY.h2.featured, 'mb-3')}>
-          Like what you see?
+          Interested in working together?
         </h2>
         <p className={cn('text-lg text-muted-foreground mb-6 mx-auto', getContainerClasses('standard'))}>
-          I&apos;m available for consulting, contract work, and full-time opportunities.
-          Let&apos;s build something great together.
+          Whether you&apos;re looking for a developer, consultant, or collaborator,
+          I&apos;m always open to discussing new projects and opportunities.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg">
@@ -206,15 +206,14 @@ export function AvailabilityBanner({ className }: { className?: string }) {
         <div className="h-3 w-3 rounded-full bg-green-500 mt-1 shrink-0" />
         <div className="flex-1">
           <div className="font-semibold mb-1">
-            Available for new opportunities
+            Open to new opportunities
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            Currently accepting consulting projects and exploring full-time roles in
-            cybersecurity architecture and full-stack development.
+            If you&apos;d like to discuss a project or opportunity, feel free to reach out!
           </p>
           <Button asChild>
             <Link href="/contact" onClick={handleContactClick}>
-              Get in touch
+              Contact me
             </Link>
           </Button>
         </div>

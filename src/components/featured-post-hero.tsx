@@ -107,7 +107,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
           
           <Button asChild size="default" className="group/btn">
             <Link href={`/blog/${post.slug}`}>
-              Read Article
+              Read article
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
             </Link>
           </Button>

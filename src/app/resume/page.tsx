@@ -4,9 +4,7 @@ import { headers } from "next/headers";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { resume, getSummary } from "@/data/resume";
-import { CollapsibleCertifications } from "@/components/collapsible-certifications";
-import { CollapsibleSkills } from "@/components/collapsible-skills";
-import { CollapsibleEducation } from "@/components/collapsible-education";
+import { SkillsAndCertifications } from "@/components/skills-and-certifications";
 import { highlightMetrics } from "@/lib/highlight-metrics";
 import { TYPOGRAPHY, PAGE_LAYOUT, SPACING, HOVER_EFFECTS } from "@/lib/design-tokens";
 import { PageLayout } from "@/components/layouts/page-layout";
@@ -15,7 +13,7 @@ import { createPageMetadata } from "@/lib/metadata";
 import { getResumePageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { DownloadResumeButton } from "@/components/download-resume-button";
 import { ResumeStats } from "@/components/resume-stats";
-import { ExperienceTimeline } from "@/components/experience-timeline";
+import { UnifiedTimeline } from "@/components/unified-timeline";
 import { ResumeSectionNav } from "@/components/resume-section-nav";
 import { BackToTop } from "@/components/back-to-top";
 import dynamic from "next/dynamic";
@@ -48,7 +46,7 @@ export default async function ResumePage() {
   // JSON-LD structured data for resume page
   const jsonLd = getResumePageSchema(
     pageDescription,
-    resume.experience.slice(0, 3) // Include top 3 positions for schema
+    resume.experience.slice(0, 3) // Include top 3 roles for schema
   );
 
   return (
@@ -85,39 +83,28 @@ export default async function ResumePage() {
         </ScrollReveal>
       </section> */}
 
-      {/* Experience */}
-      <section id="experience" className={PAGE_LAYOUT.section.container} aria-labelledby="experience-heading">
+      {/* Professional Timeline (Experience + Education) */}
+      <section id="timeline" className={PAGE_LAYOUT.section.container} aria-labelledby="timeline-heading">
         <ScrollReveal animation="fade-up" delay={150}>
           <div className={SPACING.content}>
-            <h2 id="experience-heading" className={TYPOGRAPHY.h2.standard}>Experience</h2>
-            <ExperienceTimeline experiences={resume.experience} companyUrls={companyUrls} />
+            <h2 id="timeline-heading" className={TYPOGRAPHY.h2.standard}>Professional Timeline</h2>
+            <UnifiedTimeline 
+              experiences={resume.experience} 
+              education={resume.education}
+              companyUrls={companyUrls} 
+            />
           </div>
         </ScrollReveal>
       </section>
 
-      {/* Education & Certifications */}
-      <section id="education" className={PAGE_LAYOUT.section.container} aria-labelledby="education-heading">
+      {/* Skills & Certifications */}
+      <section id="skills" className={PAGE_LAYOUT.section.container} aria-labelledby="skills-heading">
         <ScrollReveal animation="fade-up" delay={200}>
           <div className={SPACING.content}>
-            <h2 id="education-heading" className={TYPOGRAPHY.h2.standard}>Education &amp; Certifications</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Card className="p-5">
-                <CollapsibleEducation education={resume.education} />
-              </Card>
-              <Card className="p-5">
-                <CollapsibleCertifications certifications={resume.certifications} />
-              </Card>
-            </div>
-          </div>
-        </ScrollReveal>
-      </section>
-
-      {/* Skills */}
-      <section id="skills" className={PAGE_LAYOUT.section.container} aria-labelledby="skills-heading">
-        <ScrollReveal animation="fade-up" delay={250}>
-          <div className={SPACING.content}>
-            <h2 id="skills-heading" className={TYPOGRAPHY.h2.standard}>Skills</h2>
-            <CollapsibleSkills skills={resume.skills} />
+            <SkillsAndCertifications 
+              skills={resume.skills} 
+              certifications={resume.certifications}
+            />
           </div>
         </ScrollReveal>
       </section>

@@ -2,14 +2,15 @@
  * Analytics Charts Component
  * 
  * Time-series visualizations for views, shares, and comments over time.
- * Uses Recharts for responsive, interactive charts.
+ * Uses Recharts for responsive, interactive charts with real daily data.
  */
 
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   LineChart,
   Line,
@@ -31,6 +32,14 @@ interface AnalyticsChartsProps {
   dateRange: DateRange;
 }
 
+interface DailyData {
+  date: string;
+  views: number;
+  shares: number;
+  comments: number;
+  engagement: number;
+}
+
 /**
  * Time-series charts for analytics dashboard
  * 
@@ -40,43 +49,113 @@ interface AnalyticsChartsProps {
  * - Combined metrics
  */
 export function AnalyticsCharts({ posts, dateRange }: AnalyticsChartsProps) {
-  // Generate mock time-series data based on current totals
-  // TODO: Replace with actual time-series data from API when available
-  const chartData = useMemo(() => {
-    const days = dateRange === "all" ? 30 : parseInt(dateRange);
-    const data = [];
-    
-    // Calculate daily averages
-    const totalViews = posts.reduce((sum, p) => sum + p.views, 0);
-    const totalShares = posts.reduce((sum, p) => sum + p.shares, 0);
-    const totalComments = posts.reduce((sum, p) => sum + p.comments, 0);
-    
-    const avgViewsPerDay = totalViews / days;
-    const avgSharesPerDay = totalShares / days;
-    const avgCommentsPerDay = totalComments / days;
-    
-    // Generate simulated daily data with deterministic variance based on day index
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      
-      // Use deterministic variance based on day index for stable rendering
-      const variance = 0.8 + ((i * 7) % 10) / 25; // Ranges from 0.8 to 1.2
-      
-      data.push({
-        date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-        views: Math.round(avgViewsPerDay * variance),
-        shares: Math.round(avgSharesPerDay * variance),
-        comments: Math.round(avgCommentsPerDay * variance),
-        engagement: Math.round((avgSharesPerDay + avgCommentsPerDay) * variance),
-      });
+  const [chartData, setChartData] = useState<DailyData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchDailyData() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const days = dateRange === "all" ? 30 : parseInt(dateRange);
+        const response = await fetch(`/api/analytics/daily?days=${days}`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch daily analytics");
+        }
+
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || "Failed to load data");
+        }
+
+        // Transform API data to chart format
+        const transformedData: DailyData[] = result.data.map((item: { date: string; views: number }) => {
+          const dateObj = new Date(item.date);
+          return {
+            date: dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+            views: item.views,
+            // TODO: Add shares and comments when daily tracking is implemented
+            shares: 0,
+            comments: 0,
+            engagement: 0,
+          };
+        });
+
+        setChartData(transformedData);
+      } catch (err) {
+        console.error("Failed to fetch daily analytics:", err);
+        setError(err instanceof Error ? err.message : "Unknown error");
+        // Set empty data on error
+        setChartData([]);
+      } finally {
+        setLoading(false);
+      }
     }
-    
-    return data;
-  }, [posts, dateRange]);
+
+    fetchDailyData();
+  }, [dateRange]);
 
   if (posts.length === 0) {
     return null;
+  }
+
+  if (loading) {
+    return (
+      <Card className="mb-6">
+        <CardHeader className="p-4">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-3 w-64 mt-2" />
+        </CardHeader>
+        <CardContent className="p-4 pt-0">
+          <Skeleton className="h-[300px] w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="mb-6">
+        <CardHeader className="p-4">
+          <CardTitle className="text-base">Performance Trends</CardTitle>
+          <CardDescription className="text-xs text-destructive">
+            {error}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  // Check if we have any actual data (non-zero views)
+  const hasData = chartData.some(d => d.views > 0);
+
+  if (!hasData) {
+    return (
+      <Card className="mb-6">
+        <CardHeader className="p-4">
+          <CardTitle className="text-base">Performance Trends</CardTitle>
+          <CardDescription className="text-xs">
+            Daily analytics over the selected time period
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-4 pt-0">
+          <div className="flex items-center justify-center h-[300px] text-center">
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground">
+                No daily tracking data available yet
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Daily metrics will appear here as users view your posts. Visit a blog post to generate your first data point.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -84,7 +163,7 @@ export function AnalyticsCharts({ posts, dateRange }: AnalyticsChartsProps) {
       <CardHeader className="p-4">
         <CardTitle className="text-base">Performance Trends</CardTitle>
         <CardDescription className="text-xs">
-          Analytics over the selected time period (estimated daily distribution)
+          Daily analytics over the selected time period
         </CardDescription>
       </CardHeader>
       <CardContent className="p-4 pt-0">
@@ -220,10 +299,6 @@ export function AnalyticsCharts({ posts, dateRange }: AnalyticsChartsProps) {
             </ResponsiveContainer>
           </TabsContent>
         </Tabs>
-        
-        <p className="text-xs text-muted-foreground mt-4">
-          Note: Time-series data is currently estimated. Enable detailed analytics tracking for actual daily metrics.
-        </p>
       </CardContent>
     </Card>
   );

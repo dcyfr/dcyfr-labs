@@ -234,7 +234,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <RelatedPosts posts={articleData.relatedItems} currentSlug={post.slug} />
             
             {/* Call-to-action for consulting/collaboration */}
-            {/* <BlogPostCTA variant="default" location="blog-post-end" /> */}
+            <BlogPostCTA variant="default" location="blog-post-end" />
           </ArticleFooter>
           
           {/* Comments section - hidden for draft posts */}

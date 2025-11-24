@@ -83,8 +83,8 @@ export function ExperienceTimeline({ experiences, companyUrls }: ExperienceTimel
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   {exp.responsibilities.map((resp, idx) => (
                     <li key={idx} className="flex gap-2 items-start">
-                      <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
-                      <span className="flex-1">{highlightMetrics(resp)}</span>
+                      <Logo width={12} height={12} className="mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+                      <span className="flex-1">{resp}</span>
                     </li>
                   ))}
                 </ul>

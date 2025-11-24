@@ -9,6 +9,7 @@
 
 export { AnalyticsOverview } from "./analytics-overview";
 export { AnalyticsTrending } from "./analytics-trending";
+export { AnalyticsRecommendations } from "./analytics-recommendations";
 
 // Re-export types
 export type {
