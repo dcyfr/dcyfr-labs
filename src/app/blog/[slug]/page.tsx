@@ -10,6 +10,7 @@ import { getPostShares } from "@/lib/shares";
 import { ReadingProgress } from "@/components/reading-progress";
 import { RelatedPosts } from "@/components/related-posts";
 import { TableOfContents } from "@/components/table-of-contents";
+import { BlogPostSidebar } from "@/components/blog-post-sidebar";
 import { extractHeadings } from "@/lib/toc";
 import { headers } from "next/headers";
 import { ShareButtons } from "@/components/share-buttons";
@@ -187,10 +188,33 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       {/* <BlogFABMenu headings={headings} /> */}
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       
-      {/* Table of Contents */}
-      <TableOfContents headings={headings} slug={post.slug} />
+      {/* Mobile/Tablet ToC - Keep existing FAB for smaller screens */}
+      <div className="lg:hidden">
+        <TableOfContents headings={headings} slug={post.slug} />
+      </div>
       
-      <ArticleLayout useProseWidth={false}>
+      {/* Desktop Layout: Sidebar + Content */}
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8">
+        <div className="grid gap-8 items-start lg:grid-cols-[280px_1fr]">
+          {/* Left Sidebar (desktop only) */}
+          <BlogPostSidebar 
+            headings={headings} 
+            slug={post.slug}
+            postTitle={post.title}
+            metadata={{
+              publishedAt: new Date(post.publishedAt),
+              readingTime: post.readingTime.text,
+              viewCount: viewCount ?? undefined,
+              tags: post.tags,
+            }}
+            series={post.series}
+            seriesPosts={seriesPosts}
+            relatedPosts={articleData.relatedItems}
+          />
+          
+          {/* Main Content */}
+          <div className="min-w-0">
+      <ArticleLayout useProseWidth={false} className="py-0! max-w-none px-0">
           <Breadcrumbs items={[
             { label: "Home", href: "/" },
             { label: "Blog", href: "/blog" },
@@ -208,7 +232,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             } : undefined}
           />
           
-          {/* Series navigation - show after header if post is part of a series */}
+          {/* Series navigation */}
           {post.series && seriesPosts.length > 0 && (
             <SeriesNavigation currentPost={post} seriesPosts={seriesPosts} />
           )}
@@ -230,16 +254,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             tags={post.tags}
             onTagClick={(tag) => `/blog?tag=${encodeURIComponent(tag)}`}
           >
+          
             {/* Call-to-action */}
             <BlogPostCTA variant="default" location="blog-post-end" />
-          
+
             {/* Related posts section */}
             <RelatedPosts posts={articleData.relatedItems} currentSlug={post.slug} />
           </ArticleFooter>
           
           {/* Comments section - hidden for draft posts */}
           {!post.draft && <GiscusComments />}
-        </ArticleLayout>
+      </ArticleLayout>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

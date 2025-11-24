@@ -69,7 +69,7 @@ export function AnalyticsTrending({ trending, limit = 3 }: AnalyticsTrendingProp
                 {post.summary}
               </p>
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>{post.readingTime.text}</span>
+                <span>{post.readingTime?.text || `${post.readingTime?.minutes || 0} min read`}</span>
                 <Link
                   href={`/blog/${post.slug}`}
                   className="inline-flex items-center gap-1 text-primary hover:underline px-2 py-1 -mr-2 rounded"

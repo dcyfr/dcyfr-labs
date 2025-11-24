@@ -33,32 +33,6 @@ export type Project = {
 
 const projectDrafts: Project[] = [
   {
-    slug: "example-project",
-    title: "Example Project",
-    description: "A brief description of the project goes here.",
-    timeline: "2024",
-    status: "archived",
-    tech: ["Tech1", "Tech2", "Tech3"],
-    tags: ["Tag1", "Tag2"],
-    links: [
-      { label: "Article", href: `#`, type: "article" },
-      { label: "Website", href: `#`, type: "demo" },
-      { label: "Code", href: `#`, type: "github" }
-    ],
-    featured: false,
-    image: {
-      url: "/projects/default/general.svg",
-      alt: "Example Project - brief image description",
-      position: "center",
-    },
-    hidden: true,
-    highlights: [
-      "Highlight 1 about the project.",
-      "Highlight 2 about the project.",
-      "Highlight 3 about the project."
-    ],
-  },
-  {
     slug: "x64",
     title: "X64: The Indie Cyber Publication",
     description: "A digital publication focused on cybersecurity, technology trends, and industry insights.",
@@ -93,7 +67,7 @@ const projectDrafts: Project[] = [
       { label: "Website", href: `https://cyberdrew.dev/`, type: "demo" },
       { label: "Code", href: `https://github.com/dcyfr/cyberdrew-dev`, type: "github" }
     ],
-    featured: true,
+    featured: false,
     image: {
       url: "/projects/default/tech.svg",
       alt: "Drew's Lab - Personal portfolio and blog",

@@ -169,60 +169,80 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* featured post hero */}
+        {/* featured article */}
         <Section className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={50}>
-            <FeaturedPostHero post={featuredPost} />
-          </ScrollReveal>
-        </Section>
-
-        {/* featured projects */}
-        <Section className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={200}>
+          <ScrollReveal animation="fade-up" delay={100}>
             <div className={SPACING.content}>
-              <SectionHeader
-                title="Featured Projects"
-                actionHref="/projects"
-              />
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-                {featuredProjects.slice(0, 2).map((p) => (
-                  <ProjectCard key={p.title} project={p} />
-                ))}
-              </div>
+              <FeaturedPostHero post={featuredPost} viewCounts={viewCounts} />
             </div>
           </ScrollReveal>
         </Section>
 
-        {/* featured articles */}
-        <Section className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={190}>
-            <div className={SPACING.content}>
-              <SectionHeader
-                title="Featured Articles"
-                actionHref="/blog"
-              />
-              <PostList 
-                posts={featuredPosts.slice(0, 3)}
-                latestSlug={latestSlug ?? undefined}
-                hottestSlug={hottestSlug ?? undefined}
-                titleLevel="h3"
-              />
-            </div>
-          </ScrollReveal>
-        </Section>
-
-        {/* Recent Activity */}
+        {/* Latest Activity */}
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={215}>
             <div className={SPACING.content}>
               <SectionHeader
-                title="Recent Activity"
+                title="Latest Activity"
               />
               <RecentActivity 
                 posts={recentPosts}
                 projects={[...featuredProjects]}
-                limit={5}
+                limit={3}
               />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* Articles */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={150}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Blog Articles"
+                actionHref="/blog"
+              />
+              <PostList 
+                posts={recentPosts}
+                latestSlug={latestSlug ?? undefined}
+                hottestSlug={hottestSlug ?? undefined}
+                viewCounts={viewCounts}
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* Projects */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={200}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Featured Project"
+                actionHref="/projects"
+              />
+              <ProjectCard project={featuredProjects[0]} large />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* Projects */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={200}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Latest Projects"
+                actionHref="/projects"
+              />
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+                {projects
+                  .filter(p => !p.hidden)
+                  .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
+                  .slice(0, 2)
+                  .map((project) => (
+                    <ProjectCard key={project.slug} project={project} />
+                  ))
+                }
+              </div>
             </div>
           </ScrollReveal>
         </Section>
@@ -249,24 +269,6 @@ export default async function Home() {
           </ScrollReveal>
         </Section> */}
 
-        {/* latest blog articles 
-        <Section className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={175}>
-            <div className={SPACING.content}>
-              <SectionHeader
-                title="Latest articles"
-                actionHref="/blog"
-              />
-              <PostList 
-                posts={recentPosts}
-                latestSlug={latestSlug ?? undefined}
-                hottestSlug={hottestSlug ?? undefined}
-                titleLevel="h3"
-              />
-            </div>
-          </ScrollReveal>
-        </Section> */}
-
         {/* GitHub Activity 
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={125}>
@@ -290,7 +292,6 @@ export default async function Home() {
             </div>
           </ScrollReveal>
         </Section> */}
-
 
       </SectionNavigator>
     </PageLayout> 

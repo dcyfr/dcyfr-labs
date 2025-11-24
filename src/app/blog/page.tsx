@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { posts, type Post } from "@/data/posts";
+import { posts, featuredPosts, type Post } from "@/data/posts";
 import { PostList } from "@/components/post-list";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BlogSearchAnalytics } from "@/components/blog-search-analytics";
+import { BlogSidebar } from "@/components/blog-sidebar";
 import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import { getArchiveData } from "@/lib/archive";
@@ -11,6 +12,12 @@ import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { createArchivePageMetadata, createCollectionSchema, getJsonLdScriptProps } from "@/lib/metadata";
 import { AUTHOR_NAME, SITE_URL } from "@/lib/site-config";
 import { headers } from "next/headers";
+import { getMultiplePostViews } from "@/lib/views";
+import { ViewToggle } from "@/components/view-toggle";
+import { Badge } from "@/components/ui/badge";
+import { BlogLayoutManager } from "@/components/blog-layout-manager";
+import { BlogLayoutWrapper } from "@/components/blog-layout-wrapper";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 const BlogFilters = dynamic(() => import("@/components/blog-filters").then(mod => ({ default: mod.BlogFilters })), {
   loading: () => (
@@ -55,19 +62,37 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const selectedTags = tagParam ? tagParam.split(",").filter(Boolean) : [];
   const query = getParam("q");
   const readingTime = getParam("readingTime");
+  const sortBy = getParam("sortBy") || "newest";
+  const dateRange = getParam("dateRange") || "all";
   const layoutParam = getParam("layout");
-  const layout = (layoutParam === "magazine" || layoutParam === "default") ? layoutParam : "grid";
+  const layout = (["grid", "list", "magazine", "compact"].includes(layoutParam)) ? layoutParam as "grid" | "list" | "magazine" | "compact" : "compact";
+  
+  // Apply date range filter
+  const now = new Date();
+  const postsWithDateFilter = dateRange !== "all"
+    ? posts.filter((post) => {
+        const postDate = new Date(post.publishedAt);
+        const daysDiff = Math.floor((now.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (dateRange === "30d") return daysDiff <= 30;
+        if (dateRange === "90d") return daysDiff <= 90;
+        if (dateRange === "year") {
+          return postDate.getFullYear() === now.getFullYear();
+        }
+        return true;
+      })
+    : posts;
   
   // Apply reading time filter (custom filter not in Archive pattern)
   const postsWithReadingTimeFilter = readingTime
-    ? posts.filter((post) => {
+    ? postsWithDateFilter.filter((post) => {
         const minutes = post.readingTime.minutes;
         if (readingTime === "quick") return minutes <= 5;
         if (readingTime === "medium") return minutes > 5 && minutes <= 15;
         if (readingTime === "deep") return minutes > 15;
         return true;
       })
-    : posts;
+    : postsWithDateFilter;
   
   // Apply multiple tag filter manually before Archive pattern
   const postsWithTagFilter = selectedTags.length > 0
@@ -91,8 +116,60 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     }
   );
   
+  // Get view counts for all posts (for sorting and display)
+  const postIds = archiveData.allFilteredItems.map(post => post.id);
+  const viewCounts = await getMultiplePostViews(postIds);
+  
+  // Apply sort by popularity if requested
+  let sortedItems = archiveData.allFilteredItems;
+  if (sortBy === "popular") {
+    sortedItems = [...archiveData.allFilteredItems].sort((a, b) => {
+      const aViews = viewCounts.get(a.id) || 0;
+      const bViews = viewCounts.get(b.id) || 0;
+      return bViews - aViews; // Descending order
+    });
+  } else if (sortBy === "oldest") {
+    sortedItems = [...archiveData.allFilteredItems].sort((a, b) => {
+      return new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
+    });
+  }
+  // "newest" is already the default sort from archiveData
+  
+  // Re-paginate sorted items
+  const startIndex = (archiveData.currentPage - 1) * archiveData.itemsPerPage;
+  const endIndex = startIndex + archiveData.itemsPerPage;
+  const paginatedItems = sortedItems.slice(startIndex, endIndex);
+  
+  // Update archiveData with sorted items
+  const sortedArchiveData = {
+    ...archiveData,
+    items: paginatedItems,
+    allFilteredItems: sortedItems,
+    totalItems: sortedItems.length,
+    totalPages: Math.ceil(sortedItems.length / archiveData.itemsPerPage),
+  };
+  
+  // Transform availableTags to include counts
+  const availableTagsWithCounts = sortedArchiveData.availableTags.map(tag => ({
+    tag,
+    count: sortedArchiveData.allFilteredItems.filter(post => post.tags.includes(tag)).length,
+  }));
+  
+  // Check if filters are active for empty state
+  const hasActiveFilters = Boolean(query || selectedTags.length > 0 || readingTime || sortBy !== 'newest' || dateRange !== 'all');
+  
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
+  
+  // Featured posts disabled - always show all posts
+  // const activeFeaturedPosts = featuredPosts.filter(p => !p.archived && !p.draft);
+  // const shouldShowFeaturedSection = activeFeaturedPosts.length > 0 && !hasActiveFilters;
+  const shouldShowFeaturedSection = false;
+  
+  // Exclude featured posts from main list only when featured section is shown
+  const mainListPosts = shouldShowFeaturedSection 
+    ? sortedArchiveData.items.filter(p => !p.featured)
+    : sortedArchiveData.items;
   
   // JSON-LD structured data
   const collectionTitle = selectedTags.length > 0 ? `Blog - ${selectedTags.join(", ")}` : pageTitle;
@@ -104,7 +181,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     name: collectionTitle,
     description: collectionDescription,
     url: `${SITE_URL}/blog`,
-    items: archiveData.allFilteredItems.map(post => ({
+    items: sortedArchiveData.allFilteredItems.map(post => ({
       name: post.title,
       description: post.summary,
       url: `${SITE_URL}/blog/${post.slug}`,
@@ -121,38 +198,87 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <BlogSearchAnalytics 
         query={query}
         tags={selectedTags}
-        resultsCount={archiveData.totalItems}
+        resultsCount={sortedArchiveData.totalItems}
       />
       
-      <ArchiveLayout
-        title={pageTitle}
-        description={pageDescription}
-        filters={
-          <BlogFilters 
-            selectedTags={selectedTags}
-            readingTime={readingTime} 
-            tagList={archiveData.availableTags}
-            query={query}
-          />
-        }
-        pagination={
-          <ArchivePagination
-            currentPage={archiveData.currentPage}
-            totalPages={archiveData.totalPages}
-            hasPrevPage={archiveData.currentPage > 1}
-            hasNextPage={archiveData.currentPage < archiveData.totalPages}
-          />
-        }
-      >
-        <PostList 
-          posts={archiveData.items}
-          latestSlug={latestSlug ?? undefined}
-          hottestSlug={hottestSlug ?? undefined}
-          titleLevel="h2"
-          layout={layout}
-          emptyMessage="No posts found. Try adjusting your search or filters."
-        />
-      </ArchiveLayout>
+      {/* Layout preference manager */}
+      <BlogLayoutManager />
+      
+      {/* Blog layout with sidebar on desktop */}
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8">
+        {/* Main grid: Sidebar + Content */}
+        <BlogLayoutWrapper>
+          {/* Sidebar (desktop only) */}
+          <div className="hidden lg:block">
+            <div className="sticky top-24">
+              <BlogSidebar
+                selectedTags={selectedTags}
+                readingTime={readingTime}
+                tagList={availableTagsWithCounts}
+                query={query}
+                sortBy={sortBy}
+                dateRange={dateRange}
+                totalResults={sortedArchiveData.totalItems}
+                totalPosts={posts.length}
+              />
+            </div>
+          </div>
+
+          {/* Main content area */}
+          <div className="px-2 sm:px-4 lg:px-6 w-full">
+            {/* Header with View Toggle */}
+            <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div className="flex-1">
+                <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
+                <p className="text-muted-foreground">{pageDescription}</p>
+              </div>
+              <div className="shrink-0 hidden lg:flex items-center gap-3">
+                <ViewToggle currentView={layout} />
+              </div>
+            </div>
+            
+            {/* Mobile filters (below lg breakpoint) */}
+            <div className="lg:hidden mb-6 p-4 border rounded-lg">
+              <BlogFilters 
+                selectedTags={selectedTags}
+                readingTime={readingTime} 
+                tagList={sortedArchiveData.availableTags}
+                query={query}
+                sortBy={sortBy}
+                dateRange={dateRange}
+              />
+            </div>
+
+            {/* Featured posts section - DISABLED */}
+            {/* To re-enable: set shouldShowFeaturedSection logic above */}
+
+            {/* Post list */}
+            <PostList 
+              posts={mainListPosts}
+              latestSlug={latestSlug ?? undefined}
+              hottestSlug={hottestSlug ?? undefined}
+              titleLevel="h2"
+              layout={layout}
+              viewCounts={viewCounts}
+              hasActiveFilters={hasActiveFilters}
+              emptyMessage="No posts found. Try adjusting your search or filters."
+              searchQuery={query}
+            />
+
+            {/* Pagination */}
+            {sortedArchiveData.totalPages > 1 && (
+              <div className="mt-8">
+                <ArchivePagination
+                  currentPage={sortedArchiveData.currentPage}
+                  totalPages={sortedArchiveData.totalPages}
+                  hasPrevPage={sortedArchiveData.currentPage > 1}
+                  hasNextPage={sortedArchiveData.currentPage < sortedArchiveData.totalPages}
+                />
+              </div>
+            )}
+          </div>
+        </BlogLayoutWrapper>
+      </div>
     </>
   );
 }
