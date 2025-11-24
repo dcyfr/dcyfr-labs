@@ -6,8 +6,6 @@
  */
 
 export type SocialPlatform = 
-  | "homepage"
-  | "email"
   | "calendar"
   | "linkedin" 
   | "github" 
@@ -31,34 +29,6 @@ export type SocialLink = {
  */
 export const socialLinks: SocialLink[] = [
     {
-      platform: "homepage",
-      label: "Homepage",
-      url: "https://cyberdrew.dev/",
-      icon: "home",
-      description: "Visit my website"
-    },
-    {
-      platform: "email",
-      label: "Contact Me",
-      url: "https://cyberdrew.dev/contact",
-      icon: "mail",
-      description: "Send me an email"
-    },
-    {
-      platform: "calendar",
-      label: "Book a Meeting",
-      url: "https://cal.com/dcyfr",
-      icon: "calendar",
-      description: "Let's meet up"
-    },
-    {
-      platform: "github-sponsor",
-      label: "Become a Sponsor",
-      url: "https://github.com/sponsors/dcyfr",
-      icon: "heart",
-      description: "Support open source contributions"
-    },
-    {
       platform: "linkedin",
       label: "LinkedIn",
       url: "https://www.linkedin.com/in/dcyfr",
@@ -78,6 +48,20 @@ export const socialLinks: SocialLink[] = [
       url: "https://github.com/dcyfr",
       icon: "github",
       description: "View my code"
+    },
+    {
+      platform: "github-sponsor",
+      label: "Become a Sponsor",
+      url: "https://github.com/sponsors/dcyfr",
+      icon: "heart",
+      description: "Support open source contributions"
+    },
+    {
+      platform: "calendar",
+      label: "Book a Meeting",
+      url: "https://cal.com/dcyfr",
+      icon: "calendar",
+      description: "Let's meet up"
     },
     {
       platform: "credly",

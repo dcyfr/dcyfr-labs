@@ -11,6 +11,8 @@ import {
   isValidSessionId,
 } from "@/lib/anti-spam";
 import { handleApiError } from "@/lib/error-handler";
+import { inngest } from "@/inngest/client";
+import { posts } from "@/data/posts";
 
 /**
  * POST /api/views
@@ -161,6 +163,24 @@ export async function POST(request: NextRequest) {
 
     // All checks passed - increment the view count
     const count = await incrementPostViews(validPostId);
+
+    // Trigger Inngest event for daily analytics tracking
+    // Find post metadata by ID to get slug and title
+    const post = posts.find(p => p.id === validPostId);
+    if (post) {
+      try {
+        await inngest.send({
+          name: "blog/post.viewed",
+          data: {
+            slug: post.slug,
+            title: post.title,
+          },
+        });
+      } catch (error) {
+        // Don't fail the view increment if Inngest event fails
+        console.error("Failed to send Inngest event:", error);
+      }
+    }
 
     return NextResponse.json(
       { count, recorded: true },

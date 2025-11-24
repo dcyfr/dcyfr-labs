@@ -409,9 +409,11 @@ This todo list is organized by **criticality, impact, and ROI**:
   - ✅ Conversion dashboard: ✅ **FULLY IMPLEMENTED** (Nov 22, 2025)
   - ✅ Event tracking: Complete custom events library and usage examples
   - ✅ **Implementation Complete**: All infrastructure built and tested
+  - ✅ **CTAs Enabled**: All 3 CTA components now active (Jan 2025)
   - **Documentation**:
     - Strategy: `docs/analytics/conversion-tracking-strategy.md` (1,200+ lines)
     - Implementation: `docs/analytics/conversion-tracking-implementation-complete.md`
+    - Activation: `docs/features/conversion-tracking-enabled.md`
   - **Primary Goals**:
     1. Consulting inquiries (highest priority, 5/month target)
     2. LinkedIn connections (10/month target)
@@ -422,11 +424,10 @@ This todo list is organized by **criticality, impact, and ROI**:
     - Organic Search → Blog → Contact (2% conversion target)
     - Social Media → Homepage → LinkedIn (15% CTR target)
     - Direct/Referral → Projects → GitHub → Contact (5% return conversion)
-  - **CTA Components Built** (`src/components/cta.tsx`):
-    - BlogPostCTA (3 variants: default, linkedin, github)
-    - ProjectsCTA (consulting + LinkedIn dual CTA)
-    - AvailabilityBanner (compact consulting CTA)
-    - All CTAs currently commented out in pages (ready to enable)
+  - **CTA Components Enabled** (`src/components/cta.tsx`):
+    - BlogPostCTA (3 variants: default, linkedin, github) - ✅ Active on all blog posts
+    - ProjectsCTA (consulting + LinkedIn dual CTA) - ✅ Active on projects page
+    - AvailabilityBanner (compact consulting CTA) - ✅ Active on about page
   - **Scroll Depth Analytics** (`src/hooks/use-blog-analytics.ts`):
     - ✅ Milestone tracking at 25%, 50%, 75%, 90%
     - ✅ Event type: `blog_scroll_milestone` with time on page
@@ -442,12 +443,12 @@ This todo list is organized by **criticality, impact, and ROI**:
     - Event tracking via `src/lib/analytics.ts` (external_link_clicked, blog_scroll_milestone)
     - Dashboard integrated into `src/app/analytics/AnalyticsClient.tsx`
     - Progress component added (`src/components/ui/progress.tsx`)
-  - **Impact**: ⭐⭐⭐⭐⭐ Complete conversion tracking infrastructure, ready for deployment
+  - **Impact**: ⭐⭐⭐⭐⭐ Complete conversion tracking infrastructure, ready for data collection
   - **Next Steps**:
-    - ✅ Create conversion dashboard section in analytics
-    - Uncomment CTAs when ready to deploy (single-line changes in 3 files)
-    - Monitor scroll milestone data in Vercel Analytics
-    - Launch first A/B test after CTAs enabled
+    - ✅ Uncomment CTAs (completed Jan 2025)
+    - Monitor Vercel Analytics for external_link_clicked events
+    - Track first conversions in dashboard
+    - Launch first A/B test after baseline data collected (1-2 weeks)
     - Optimize based on real conversion data
 
 ---
@@ -576,8 +577,26 @@ This todo list is organized by **criticality, impact, and ROI**:
 - [ ] Husky + lint-staged - Pre-commit prettier and eslint
 
 ### Analytics Dashboard Enhancements
-**Deferred until Phase 2 SEO/content work validates need:**
-- Visual trend charts, sparklines, historical snapshots, tag performance, lifecycle labels, engagement tracking
+**Phase 1 - Quick Wins** ✅ **COMPLETED** (Nov 23, 2025):
+- ✅ Benchmark indicators (vs site average)
+- ✅ Engagement score calculation (weighted: views 40%, completion 30%, shares 20%, comments 10%)
+- ✅ Performance tier badges (Top 10%, Above Average, Average, Below Average, Bottom 10%)
+- ✅ Tooltip insights with contextual information
+- ✅ Copy-to-clipboard for metrics with toast feedback
+
+**Phase 2 - Advanced Features** ✅ **COMPLETED** (Nov 23, 2025):
+- ✅ Publication cohort filtering (Last 7/30/90 days, quarters, years)
+- ✅ Performance tier filtering by percentile
+- ✅ Tag combination with AND/OR logic
+- ✅ Filter presets (Top Performers, Needs Attention, Recent, etc.)
+- ✅ All-time records display (highest views, best tag, top growth, most engaged)
+- ✅ View distribution analysis (5K+, 1K-5K, 500-1K, 100-500, <100)
+
+**Phase 3 - Long-term** (Data-driven prioritization):
+- [ ] Sparkline trend visualizations
+- [ ] Keyboard shortcuts (J/K navigation, ? for help)
+- [ ] Real Vercel Analytics integration (engagement, CLS, FID)
+- [ ] GitHub-style heatmap calendar view
 
 ### ESLint Design Token Migration
 **Status**: Quick wins complete (Nov 9, 2025) - 71 warnings backlogged

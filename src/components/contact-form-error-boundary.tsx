@@ -5,6 +5,7 @@ import { ErrorBoundary, type ErrorFallbackProps } from "./error-boundary";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/logo";
 
 /**
  * Error fallback for the contact form.
@@ -25,15 +26,15 @@ function ContactFormErrorFallback({ error, resetError }: ErrorFallbackProps) {
           <p className={cn("text-sm", "font-medium")}>Alternative contact methods:</p>
           <ul className="text-sm text-muted-foreground space-y-1">
             <li className="flex gap-2 items-start">
-              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <Logo width={12} height={12} className="mt-1.5 shrink-0 text-primary" aria-hidden="true" />
               <span className="flex-1">GitHub: Check the footer for links</span>
             </li>
             <li className="flex gap-2 items-start">
-              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <Logo width={12} height={12} className="mt-1.5 shrink-0 text-primary" aria-hidden="true" />
               <span className="flex-1">LinkedIn: Available in the footer</span>
             </li>
             <li className="flex gap-2 items-start">
-              <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+              <Logo width={12} height={12} className="mt-1.5 shrink-0 text-primary" aria-hidden="true" />
               <span className="flex-1">Email: Direct contact available in footer</span>
             </li>
           </ul>

@@ -62,7 +62,7 @@ export function ResumeStats() {
   const yearsExp = getYearsOfExperience();
   const totalCerts = resume.certifications.reduce((sum, cat) => sum + cat.certifications.length, 0);
   const totalSkills = resume.skills.reduce((sum, cat) => sum + cat.skills.length, 0);
-  const totalPositions = resume.experience.length;
+  const totalRoles = resume.experience.length;
 
   const stats: Stat[] = [
     {
@@ -90,11 +90,11 @@ export function ResumeStats() {
       suffix: "+",
     },
     {
-      label: "Positions",
-      value: `${totalPositions}`,
+      label: "Roles",
+      value: `${totalRoles}`,
       icon: Briefcase,
       description: "Career progression",
-      animateNumber: totalPositions,
+      animateNumber: totalRoles,
       suffix: "",
     },
   ];

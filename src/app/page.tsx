@@ -28,6 +28,7 @@ import { TechStack } from "@/components/tech-stack";
 import { SocialProof } from "@/components/social-proof";
 import { TrendingPosts } from "@/components/trending-posts";
 import { RecentActivity } from "@/components/recent-activity";
+import { HomepageHeroActions } from "@/components/homepage-hero-actions";
 
 const ScrollReveal = dynamic(() => import("@/components/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
@@ -163,19 +164,7 @@ export default async function Home() {
                   />
                 </div>
               }
-              actions={
-                <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 sm:pt-2 justify-center">
-                  <Button asChild size="default">
-                    <Link href="/about">Learn more</Link>
-                  </Button>
-                  <Button variant="outline" asChild size="default">
-                    <Link href="/blog">Read my blog</Link>
-                  </Button>
-                  <Button variant="outline" asChild size="default">
-                    <Link href="/projects">View Projects</Link>
-                  </Button>
-                </div>
-              }
+              actions={<HomepageHeroActions />}
             />
           </ScrollReveal>
         </Section>
@@ -301,6 +290,8 @@ export default async function Home() {
             </div>
           </ScrollReveal>
         </Section> */}
+
+
       </SectionNavigator>
     </PageLayout> 
   );

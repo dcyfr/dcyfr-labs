@@ -226,7 +226,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 <ul className="space-y-3 mb-0">
                   {project.highlights.map((highlight, index) => (
                     <li key={index} className="flex gap-2 items-start text-base leading-relaxed">
-                      <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+                      <Logo width={12} height={12} className="mt-1.5 shrink-0 text-primary" aria-hidden="true" />
                       <span className="flex-1">{highlight}</span>
                     </li>
                   ))}

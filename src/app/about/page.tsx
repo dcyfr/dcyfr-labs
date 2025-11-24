@@ -124,9 +124,6 @@ export default async function AboutPage() {
                 projectCount={visibleProjects.length}
               />
             </div>
-            
-            {/* Availability Banner 
-            <AvailabilityBanner className="mb-6" /> */}
 
             {/* Current Role  */}
             <div className="mb-6">
@@ -137,11 +134,10 @@ export default async function AboutPage() {
                     <p className="font-medium text-lg">{currentRole.title}</p>
                     <p className="text-sm text-muted-foreground">{currentRole.duration}</p>
                   </div>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
+                  <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
                     {currentRole.responsibilities.map((item, idx) => (
-                      <li key={idx} className="flex gap-2 items-start">
-                        <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
-                        <span className="flex-1">{item}</span>
+                      <li key={idx}>
+                        {item}
                       </li>
                     ))}
                   </ul>
@@ -200,6 +196,7 @@ export default async function AboutPage() {
               <p className="text-muted-foreground mb-4">
               I&apos;m open to connecting with fellow builders, sharing knowledge, and exploring new opportunities. Feel free to reach out through any of the platforms below!
             </p>
+              <AvailabilityBanner className="my-6" />
               <SocialLinksGrid />
             </div>
           </ScrollReveal>

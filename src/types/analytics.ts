@@ -52,26 +52,17 @@ export interface MostSharedPost {
 export interface AnalyticsSummary {
   totalPosts: number;
   totalViews: number;
-  totalViews24h: number;
   totalViewsRange: number;
   totalShares: number;
-  totalShares24h: number;
   totalComments: number;
-  totalComments24h: number;
   averageViews: number;
-  averageViews24h: number;
   averageViewsRange: number;
   averageShares: number;
-  averageShares24h: number;
   averageComments: number;
-  averageComments24h: number;
   topPost: TopPost | null;
-  topPost24h: TopPost | null;
   topPostRange: TopPost | null;
   mostSharedPost: MostSharedPost | null;
-  mostSharedPost24h: MostSharedPost | null;
   mostCommentedPost: MostSharedPost | null;
-  mostCommentedPost24h: MostSharedPost | null;
 }
 
 export interface AnalyticsData {
@@ -92,3 +83,105 @@ export const DATE_RANGE_LABELS: Record<DateRange, string> = {
   "90": "90 Days",
   "all": "All Time",
 };
+
+/**
+ * Publication date cohort filters
+ */
+export type PublicationCohort = 
+  | "last-7-days"
+  | "last-30-days"
+  | "last-90-days"
+  | "this-quarter"
+  | "last-quarter"
+  | "this-year"
+  | "last-year"
+  | "all";
+
+export const PUBLICATION_COHORT_LABELS: Record<PublicationCohort, string> = {
+  "last-7-days": "Last 7 Days",
+  "last-30-days": "Last 30 Days",
+  "last-90-days": "Last 90 Days",
+  "this-quarter": "This Quarter",
+  "last-quarter": "Last Quarter",
+  "this-year": "This Year",
+  "last-year": "Last Year",
+  "all": "All Time",
+};
+
+/**
+ * Performance tier filters
+ */
+export type PerformanceTierFilter = "all" | "top" | "above-average" | "below-average" | "needs-attention";
+
+export const PERFORMANCE_TIER_LABELS: Record<PerformanceTierFilter, string> = {
+  "all": "All Posts",
+  "top": "Top 10%",
+  "above-average": "Above Average",
+  "below-average": "Below Average",
+  "needs-attention": "Needs Attention",
+};
+
+/**
+ * Tag filter mode (AND vs OR logic)
+ */
+export type TagFilterMode = "AND" | "OR";
+
+/**
+ * Filter preset configurations
+ */
+export interface FilterPreset {
+  id: string;
+  name: string;
+  description: string;
+  filters: {
+    performanceTier?: PerformanceTierFilter;
+    publicationCohort?: PublicationCohort;
+    tags?: string[];
+    tagMode?: TagFilterMode;
+    hideDrafts?: boolean;
+    hideArchived?: boolean;
+  };
+}
+
+export const DEFAULT_FILTER_PRESETS: FilterPreset[] = [
+  {
+    id: "top-performers",
+    name: "Top Performers",
+    description: "Best performing posts (Top 10%)",
+    filters: {
+      performanceTier: "top",
+      hideDrafts: true,
+      hideArchived: true,
+    },
+  },
+  {
+    id: "needs-attention",
+    name: "Needs Attention",
+    description: "Low performing posts that need optimization",
+    filters: {
+      performanceTier: "needs-attention",
+      hideDrafts: true,
+      hideArchived: true,
+    },
+  },
+  {
+    id: "recent-posts",
+    name: "Recent Posts",
+    description: "Posts from last 30 days",
+    filters: {
+      publicationCohort: "last-30-days",
+      hideDrafts: true,
+      hideArchived: true,
+    },
+  },
+  {
+    id: "this-quarter",
+    name: "This Quarter",
+    description: "Posts published this quarter",
+    filters: {
+      publicationCohort: "this-quarter",
+      hideDrafts: true,
+      hideArchived: true,
+    },
+  },
+];

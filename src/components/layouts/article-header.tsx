@@ -89,7 +89,7 @@ export function ArticleHeader({
   // If background image is provided, render with card-like styling
   if (backgroundImage) {
     return (
-      <div className={cn("relative rounded-lg border overflow-hidden -mx-4 sm:-mx-6 md:-mx-8 mb-8 holo-card", className)}>
+      <div className={cn("relative rounded-lg border overflow-hidden mb-8 holo-card", className)}>
         {/* Background Image with gradient overlay */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -102,7 +102,7 @@ export function ArticleHeader({
               "object-cover holo-image-shift",
               backgroundImage.position && `object-${backgroundImage.position}`
             )}
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
           />
           {/* Gradient overlay for better text readability */}
           <div className="absolute inset-0 holo-gradient-dark" />

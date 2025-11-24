@@ -35,7 +35,7 @@ export function CollapsibleEducation({ education }: CollapsibleEducationProps) {
             <ul className="space-y-1 text-sm text-muted-foreground mt-2">
               {edu.highlights.map((highlight, idx) => (
                 <li key={idx} className="flex gap-2 items-start">
-                  <Logo className="w-3 h-3 mt-1.5 shrink-0 text-primary" aria-hidden="true" />
+                  <Logo width={12} height={12} className="mt-1.5 shrink-0 text-primary" aria-hidden="true" />
                   <span className="flex-1">{highlight}</span>
                 </li>
               ))}
