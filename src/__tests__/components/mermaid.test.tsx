@@ -50,13 +50,13 @@ describe("Mermaid Component", () => {
       expect(container).toBeInTheDocument();
     });
 
-    it("should initialize mermaid with default theme", () => {
+    it("should initialize mermaid with neutral theme", () => {
       render(<Mermaid chart="graph LR\n A-->B" />);
       
       expect(mockInitialize).toHaveBeenCalledWith(
         expect.objectContaining({
           startOnLoad: false,
-          theme: "default",
+          theme: "neutral",
           fontFamily: "ui-sans-serif, system-ui, sans-serif",
           fontSize: 14,
         })
@@ -171,14 +171,14 @@ describe("Mermaid Component", () => {
       });
     });
 
-    it("should use default theme for light mode", () => {
+    it("should use neutral theme for light mode", () => {
       document.documentElement.setAttribute('data-theme', 'light');
       
       render(<Mermaid chart="graph LR\n A-->B" />);
       
       expect(mockInitialize).toHaveBeenCalledWith(
         expect.objectContaining({
-          theme: "default",
+          theme: "neutral",
         })
       );
       

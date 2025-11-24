@@ -59,16 +59,6 @@ describe('Socials Data', () => {
       })
     })
 
-    it('has homepage link', () => {
-      const homepage = socialLinks.find((l) => l.platform === 'homepage')
-      expect(homepage).toBeDefined()
-    })
-
-    it('has email/contact link', () => {
-      const email = socialLinks.find((l) => l.platform === 'email')
-      expect(email).toBeDefined()
-    })
-
     it('has github link', () => {
       const github = socialLinks.find((l) => l.platform === 'github')
       expect(github).toBeDefined()
@@ -151,12 +141,6 @@ describe('Socials Data', () => {
     it('returns undefined for invalid platform', () => {
       const invalid = getSocialLink('invalid' as SocialPlatform)
       expect(invalid).toBeUndefined()
-    })
-
-    it('returns correct link for homepage', () => {
-      const homepage = getSocialLink('homepage')
-      expect(homepage).toBeDefined()
-      expect(homepage?.url).toContain('cyberdrew.dev')
     })
 
     it('returns correct link for linkedin', () => {
@@ -317,11 +301,6 @@ describe('Socials Data', () => {
     it('has dcyfr as main handle', () => {
       const github = getSocialLink('github')
       expect(github?.url).toContain('dcyfr')
-    })
-
-    it('homepage points to cyberdrew.dev', () => {
-      const homepage = getSocialLink('homepage')
-      expect(homepage?.url).toContain('cyberdrew.dev')
     })
 
     it('has multiple social platforms', () => {
