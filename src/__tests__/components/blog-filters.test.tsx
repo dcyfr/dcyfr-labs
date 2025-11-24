@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BlogFilters } from "@/components/blog-filters";
@@ -38,7 +38,7 @@ vi.mock("@/components/ui/select", () => ({
 }));
 
 vi.mock("@/components/ui/badge", () => ({
-  Badge: ({ children, onClick, variant }: { children: React.ReactNode; onClick: () => void; variant: string }) => {
+  Badge: ({ children, onClick, variant, className }: { children: React.ReactNode; onClick: () => void; variant: string; className?: string }) => {
     // Extract text from children (handle both string and React elements)
     const getText = (node: React.ReactNode): string => {
       if (typeof node === 'string') return node;
@@ -57,6 +57,7 @@ vi.mock("@/components/ui/badge", () => ({
       <button
         data-testid={`badge-${tagName}`}
         data-variant={variant}
+        className={className}
         onClick={onClick}
       >
         {children}
@@ -103,6 +104,11 @@ describe("BlogFilters Component", () => {
     vi.clearAllMocks();
     mockSearchParamsData = {};
     vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   describe("Rendering", () => {
@@ -377,12 +383,14 @@ describe("BlogFilters Component", () => {
     it("should show filter count badge", () => {
       render(<BlogFilters {...defaultProps} selectedTags={["React", "TypeScript"]} readingTime="quick" query="test" />);
       const button = screen.getByTestId("clear-all-button");
+      expect(button.textContent).toContain("Clear all");
       expect(button.textContent).toContain("3");
     });
 
     it("should calculate correct filter count", () => {
       render(<BlogFilters {...defaultProps} selectedTags={["React"]} />);
       const button = screen.getByTestId("clear-all-button");
+      expect(button.textContent).toContain("Clear all");
       expect(button.textContent).toContain("1");
     });
 
