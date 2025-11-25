@@ -20,6 +20,7 @@ import { LoadingBar } from "@/components/loading-bar";
 import { WebVitalsReporter } from "@/components/web-vitals-reporter";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { AxiomWebVitals } from "next-axiom";
 import { headers } from "next/headers";
 
 const geistSans = Geist({
@@ -141,6 +142,8 @@ export default async function RootLayout({
           )}
           {/* Web Vitals Tracking */}
           <WebVitalsReporter />
+          {/* Axiom Web Vitals - Production only */}
+          <AxiomWebVitals />
         </ThemeProvider>
       </body>
     </html>
