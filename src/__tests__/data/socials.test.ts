@@ -41,8 +41,6 @@ describe('Socials Data', () => {
   describe('Platform Types', () => {
     it('all platforms are valid SocialPlatform types', () => {
       const validPlatforms: SocialPlatform[] = [
-        'homepage',
-        'email',
         'calendar',
         'linkedin',
         'github',
@@ -254,10 +252,9 @@ describe('Socials Data', () => {
     })
 
     it('has contact methods', () => {
-      const email = getSocialLink('email')
       const calendar = getSocialLink('calendar')
       
-      expect(email || calendar).toBeTruthy()
+      expect(calendar).toBeDefined()
     })
 
     it('labels match platforms appropriately', () => {

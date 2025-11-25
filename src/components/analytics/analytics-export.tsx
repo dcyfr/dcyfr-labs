@@ -164,7 +164,9 @@ export function AnalyticsExport({ posts, summary, dateRange, filters }: Analytic
       }
     }
 
-    downloadFile(csv, `analytics-${dateRange}-${Date.now()}.csv`, 'text/csv');
+    // eslint-disable-next-line react-hooks/purity
+    const timestamp = Date.now();
+    downloadFile(csv, `analytics-${dateRange}-${timestamp}.csv`, 'text/csv');
     toast.success('CSV exported successfully');
   };
 
@@ -205,7 +207,9 @@ export function AnalyticsExport({ posts, summary, dateRange, filters }: Analytic
     }
 
     const json = JSON.stringify(data, null, 2);
-    downloadFile(json, `analytics-${dateRange}-${Date.now()}.json`, 'application/json');
+    // eslint-disable-next-line react-hooks/purity
+    const timestamp = Date.now();
+    downloadFile(json, `analytics-${dateRange}-${timestamp}.json`, 'application/json');
     toast.success('JSON exported successfully');
   };
 
@@ -258,7 +262,9 @@ export function AnalyticsExport({ posts, summary, dateRange, filters }: Analytic
       md += `| ${row.join(' | ')} |\n`;
     });
 
-    downloadFile(md, `analytics-${dateRange}-${Date.now()}.md`, 'text/markdown');
+    // eslint-disable-next-line react-hooks/purity
+    const timestamp = Date.now();
+    downloadFile(md, `analytics-${dateRange}-${timestamp}.md`, 'text/markdown');
     toast.success('Markdown exported successfully');
   };
 
