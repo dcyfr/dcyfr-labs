@@ -14,9 +14,8 @@ test.describe('Homepage', () => {
     // Check that the page loaded successfully
     await expect(page).toHaveTitle(/Drew's Lab/)
     
-    // Verify main heading is visible
-    const heading = page.locator('h1')
-    await expect(heading).toBeVisible()
+    // Verify main heading is visible - use getByRole to avoid strict mode violations
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
 
   test('should have working navigation', async ({ page }) => {
@@ -82,11 +81,11 @@ test.describe('Homepage', () => {
     await page.setViewportSize({ width: 375, height: 667 })
     await page.goto('/')
     
-    // Page should still load and be usable
-    await expect(page.locator('h1')).toBeVisible()
+    // Page should still load and be usable - use getByRole with level to be specific
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     
     // Test desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 })
-    await expect(page.locator('h1')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
 })

@@ -21,8 +21,8 @@ test.describe('Blog', () => {
   test('should have working search functionality', async ({ page }) => {
     await page.goto('/blog')
     
-    // Find search input
-    const searchInput = page.getByRole('searchbox')
+    // Find search input by its aria-label to be more specific
+    const searchInput = page.getByRole('searchbox', { name: /search/i }).first()
     await expect(searchInput).toBeVisible()
     
     // Type in search

@@ -21,14 +21,23 @@ vi.mock("next/navigation", () => ({
 }));
 
 // Mock UI components
+let selectCounter = 0;
 vi.mock("@/components/ui/select", () => ({
-  Select: ({ children, value, onValueChange }: { children: React.ReactNode; value: string; onValueChange: (value: string) => void }) => (
-    <div data-testid="select-container">
-      <select data-testid="reading-time-select" value={value} onChange={(e) => onValueChange(e.target.value)}>
-        {children}
-      </select>
-    </div>
-  ),
+  Select: ({ children, value, onValueChange }: { children: React.ReactNode; value: string; onValueChange: (value: string) => void }) => {
+    const id = selectCounter++;
+    return (
+      <div data-testid={`select-container-${id}`}>
+        <select 
+          data-testid={`select-${id}`} 
+          value={value} 
+          onChange={(e) => onValueChange(e.target.value)}
+          aria-label={`Select ${id}`}
+        >
+          {children}
+        </select>
+      </div>
+    );
+  },
   SelectContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SelectItem: ({ value, children }: { value: string; children: React.ReactNode }) => (
     <option value={value}>{children}</option>
@@ -104,6 +113,7 @@ describe("BlogFilters Component", () => {
     vi.clearAllMocks();
     mockSearchParamsData = {};
     vi.useFakeTimers();
+    selectCounter = 0; // Reset counter for each test
   });
 
   afterEach(() => {
@@ -120,7 +130,7 @@ describe("BlogFilters Component", () => {
 
     it("should render reading time select", () => {
       render(<BlogFilters {...defaultProps} />);
-      expect(screen.getByTestId("reading-time-select")).toBeInTheDocument();
+      expect(screen.getByTestId("select-0")).toBeInTheDocument();
     });
 
     it("should render all tag badges", () => {
@@ -143,21 +153,22 @@ describe("BlogFilters Component", () => {
 
   describe("Search Functionality", () => {
     it("should update search input value on change", async () => {
-      const user = userEvent.setup({ delay: null });
+      vi.useRealTimers(); // userEvent doesn't work with fake timers
+      const user = userEvent.setup();
       render(<BlogFilters {...defaultProps} />);
       
       const input = screen.getByTestId("search-input") as HTMLInputElement;
       await user.type(input, "test query");
       
       expect(input.value).toBe("test query");
+      vi.useFakeTimers();
     });
 
     it("should debounce search updates (250ms)", async () => {
-      const user = userEvent.setup({ delay: null });
-      render(<BlogFilters {...defaultProps} />);
+      const { unmount } = render(<BlogFilters {...defaultProps} />);
       
       const input = screen.getByTestId("search-input");
-      await user.type(input, "test");
+      fireEvent.change(input, { target: { value: "test" } });
       
       // Should not push immediately
       expect(mockPush).not.toHaveBeenCalled();
@@ -165,18 +176,9 @@ describe("BlogFilters Component", () => {
       // Fast-forward time
       vi.advanceTimersByTime(250);
       
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith("/blog?q=test", { scroll: false });
-      });
-    });
-
-    it("should clear debounce timer on component unmount", async () => {
-      const user = userEvent.setup({ delay: null });
-      const { unmount } = render(<BlogFilters {...defaultProps} />);
+      expect(mockPush).toHaveBeenCalledWith("/blog?q=test", { scroll: false });
       
-      const input = screen.getByTestId("search-input");
-      await user.type(input, "test");
-      
+      mockPush.mockClear();
       unmount();
       vi.advanceTimersByTime(250);
       
@@ -184,64 +186,52 @@ describe("BlogFilters Component", () => {
     });
 
     it("should not update URL if search value unchanged", async () => {
-      const user = userEvent.setup({ delay: null });
       render(<BlogFilters {...defaultProps} query="existing" />);
       
-      const input = screen.getByTestId("search-input");
+      const input = screen.getByTestId("search-input") as HTMLInputElement;
       
       // Clear and retype the same value
-      await user.clear(input);
-      await user.type(input, "existing");
+      fireEvent.change(input, { target: { value: "" } });
+      fireEvent.change(input, { target: { value: "existing" } });
       
       vi.advanceTimersByTime(250);
       
       // Should not call push since value is the same
-      await waitFor(() => {
-        expect(mockPush).not.toHaveBeenCalled();
-      });
+      expect(mockPush).not.toHaveBeenCalled();
     });
 
     it("should trim search query", async () => {
-      const user = userEvent.setup({ delay: null });
       render(<BlogFilters {...defaultProps} />);
       
       const input = screen.getByTestId("search-input");
-      await user.type(input, "  test query  ");
+      fireEvent.change(input, { target: { value: "  test query  " } });
       
       vi.advanceTimersByTime(250);
       
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith("/blog?q=test+query", { scroll: false });
-      });
+      expect(mockPush).toHaveBeenCalledWith("/blog?q=test+query", { scroll: false });
     });
 
     it("should delete query param when search is cleared", async () => {
-      const user = userEvent.setup({ delay: null });
       render(<BlogFilters {...defaultProps} query="existing" />);
       
       const input = screen.getByTestId("search-input");
-      await user.clear(input);
+      fireEvent.change(input, { target: { value: "" } });
       
       vi.advanceTimersByTime(250);
       
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith("/blog?", { scroll: false });
-      });
+      expect(mockPush).toHaveBeenCalledWith("/blog?", { scroll: false });
     });
 
     it("should reset page parameter when searching", async () => {
       mockSearchParamsData.page = "2";
-      const user = userEvent.setup({ delay: null });
       render(<BlogFilters {...defaultProps} />);
       
       const input = screen.getByTestId("search-input");
-      await user.type(input, "test");
+      fireEvent.change(input, { target: { value: "test" } });
       
       vi.advanceTimersByTime(250);
       
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith("/blog?q=test", { scroll: false });
-      });
+      expect(mockPush).toHaveBeenCalledWith("/blog?q=test", { scroll: false });
     });
 
     it("should sync search value with query prop", () => {
@@ -258,19 +248,19 @@ describe("BlogFilters Component", () => {
   describe("Reading Time Filter", () => {
     it("should display 'all' as default value", () => {
       render(<BlogFilters {...defaultProps} />);
-      const select = screen.getByTestId("reading-time-select") as HTMLSelectElement;
+      const select = screen.getByTestId("select-0") as HTMLSelectElement;
       expect(select.value).toBe("all");
     });
 
     it("should display selected reading time", () => {
       render(<BlogFilters {...defaultProps} readingTime="quick" />);
-      const select = screen.getByTestId("reading-time-select") as HTMLSelectElement;
+      const select = screen.getByTestId("select-0") as HTMLSelectElement;
       expect(select.value).toBe("quick");
     });
 
     it("should update URL when reading time changes", () => {
       render(<BlogFilters {...defaultProps} />);
-      const select = screen.getByTestId("reading-time-select");
+      const select = screen.getByTestId("select-0");
       
       fireEvent.change(select, { target: { value: "medium" } });
       
@@ -279,7 +269,7 @@ describe("BlogFilters Component", () => {
 
     it("should remove readingTime param when 'all' selected", () => {
       render(<BlogFilters {...defaultProps} readingTime="quick" />);
-      const select = screen.getByTestId("reading-time-select");
+      const select = screen.getByTestId("select-0");
       
       fireEvent.change(select, { target: { value: "all" } });
       
@@ -290,7 +280,7 @@ describe("BlogFilters Component", () => {
       mockSearchParamsData.page = "3";
       render(<BlogFilters {...defaultProps} />);
       
-      const select = screen.getByTestId("reading-time-select");
+      const select = screen.getByTestId("select-0");
       fireEvent.change(select, { target: { value: "deep" } });
       
       expect(mockPush).toHaveBeenCalledWith("/blog?readingTime=deep");
@@ -301,7 +291,7 @@ describe("BlogFilters Component", () => {
       mockSearchParamsData.tag = "React";
       render(<BlogFilters {...defaultProps} query="test" selectedTags={["React"]} />);
       
-      const select = screen.getByTestId("reading-time-select");
+      const select = screen.getByTestId("select-0");
       fireEvent.change(select, { target: { value: "quick" } });
       
       expect(mockPush).toHaveBeenCalledWith("/blog?q=test&tag=React&readingTime=quick");
@@ -321,53 +311,48 @@ describe("BlogFilters Component", () => {
       expect(badge.getAttribute("data-variant")).toBe("default");
     });
 
-    it("should add tag when clicked", async () => {
-      const user = userEvent.setup();
+    it("should add tag when clicked", () => {
       render(<BlogFilters {...defaultProps} />);
       
       const badge = screen.getByTestId("badge-React");
-      await user.click(badge);
+      fireEvent.click(badge);
       
       expect(mockPush).toHaveBeenCalledWith("/blog?tag=React");
     });
 
-    it("should remove tag when clicked again", async () => {
-      const user = userEvent.setup();
+    it("should remove tag when clicked again", () => {
       render(<BlogFilters {...defaultProps} selectedTags={["React"]} />);
       
       const badge = screen.getByTestId("badge-React");
-      await user.click(badge);
+      fireEvent.click(badge);
       
       expect(mockPush).toHaveBeenCalledWith("/blog?");
     });
 
-    it("should handle multiple selected tags", async () => {
-      const user = userEvent.setup();
+    it("should handle multiple selected tags", () => {
       render(<BlogFilters {...defaultProps} selectedTags={["React"]} />);
       
       const badge = screen.getByTestId("badge-TypeScript");
-      await user.click(badge);
+      fireEvent.click(badge);
       
       expect(mockPush).toHaveBeenCalledWith("/blog?tag=React%2CTypeScript");
     });
 
-    it("should remove tag from multiple selections", async () => {
-      const user = userEvent.setup();
+    it("should remove tag from multiple selections", () => {
       render(<BlogFilters {...defaultProps} selectedTags={["React", "TypeScript"]} />);
       
       const badge = screen.getByTestId("badge-React");
-      await user.click(badge);
+      fireEvent.click(badge);
       
       expect(mockPush).toHaveBeenCalledWith("/blog?tag=TypeScript");
     });
 
-    it("should reset page parameter when toggling tags", async () => {
+    it("should reset page parameter when toggling tags", () => {
       mockSearchParamsData.page = "2";
-      const user = userEvent.setup();
       render(<BlogFilters {...defaultProps} />);
       
       const badge = screen.getByTestId("badge-React");
-      await user.click(badge);
+      fireEvent.click(badge);
       
       expect(mockPush).toHaveBeenCalledWith("/blog?tag=React");
     });
@@ -384,7 +369,7 @@ describe("BlogFilters Component", () => {
       render(<BlogFilters {...defaultProps} selectedTags={["React", "TypeScript"]} readingTime="quick" query="test" />);
       const button = screen.getByTestId("clear-all-button");
       expect(button.textContent).toContain("Clear all");
-      expect(button.textContent).toContain("3");
+      expect(button.textContent).toContain("4"); // 2 tags + 1 readingTime + 1 query
     });
 
     it("should calculate correct filter count", () => {
@@ -394,27 +379,25 @@ describe("BlogFilters Component", () => {
       expect(button.textContent).toContain("1");
     });
 
-    it("should navigate to /blog when clicked", async () => {
-      const user = userEvent.setup();
+    it("should navigate to /blog when clicked", () => {
       render(<BlogFilters {...defaultProps} selectedTags={["React"]} />);
       
       const button = screen.getByTestId("clear-all-button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(mockPush).toHaveBeenCalledWith("/blog");
     });
 
-    it("should clear all filters at once", async () => {
+    it("should clear all filters at once", () => {
       mockSearchParamsData.q = "test";
       mockSearchParamsData.tag = "React,TypeScript";
       mockSearchParamsData.readingTime = "quick";
       mockSearchParamsData.page = "2";
       
-      const user = userEvent.setup();
       render(<BlogFilters {...defaultProps} selectedTags={["React", "TypeScript"]} readingTime="quick" query="test" />);
       
       const button = screen.getByTestId("clear-all-button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(mockPush).toHaveBeenCalledWith("/blog");
     });
@@ -461,7 +444,7 @@ describe("BlogFilters Component", () => {
 
     it("should have responsive width for reading time select", () => {
       const { container } = render(<BlogFilters {...defaultProps} />);
-      const selectContainer = container.querySelector(".w-full.sm\\:w-\\[200px\\]");
+      const selectContainer = container.querySelector(".flex-1.min-w-\\[140px\\]");
       expect(selectContainer).toBeInTheDocument();
     });
   });
@@ -473,17 +456,14 @@ describe("BlogFilters Component", () => {
     });
 
     it("should handle special characters in search", async () => {
-      const user = userEvent.setup({ delay: null });
       render(<BlogFilters {...defaultProps} />);
       
       const input = screen.getByTestId("search-input");
-      await user.type(input, "test & query <>");
+      fireEvent.change(input, { target: { value: "test & query <>" } });
       
       vi.advanceTimersByTime(250);
       
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalled();
-      });
+      expect(mockPush).toHaveBeenCalled();
     });
 
     it("should handle tags with special characters", () => {
@@ -494,22 +474,19 @@ describe("BlogFilters Component", () => {
     });
 
     it("should handle rapid search input changes", async () => {
-      const user = userEvent.setup({ delay: null });
       render(<BlogFilters {...defaultProps} />);
       
       const input = screen.getByTestId("search-input");
-      await user.type(input, "a");
+      fireEvent.change(input, { target: { value: "a" } });
       vi.advanceTimersByTime(100);
-      await user.type(input, "b");
+      fireEvent.change(input, { target: { value: "ab" } });
       vi.advanceTimersByTime(100);
-      await user.type(input, "c");
+      fireEvent.change(input, { target: { value: "abc" } });
       vi.advanceTimersByTime(250);
       
       // Should only push once with final value
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledTimes(1);
-        expect(mockPush).toHaveBeenCalledWith("/blog?q=abc", { scroll: false });
-      });
+      expect(mockPush).toHaveBeenCalledTimes(1);
+      expect(mockPush).toHaveBeenCalledWith("/blog?q=abc", { scroll: false });
     });
   });
 });
