@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 23, 2025 (Phase 3 testing complete - 198 integration tests passing)
+**Last Updated:** November 24, 2025 (Codebase structural analysis complete)
 
 ---
 
@@ -16,12 +16,141 @@ This todo list is organized by **criticality, impact, and ROI**:
 - **🟢 LOW** - Polish, enhancements, nice-to-have - ongoing/data-driven
 - **⚪ BACKLOG** - Future consideration, deferred until validated need
 
-**Current Focus:** Foundation & reliability (Phase 1) - infrastructure before features
+**Current Focus:** Code organization and structural improvements (Phase 4) - maintainability and developer experience
 
 **Priority Framework:**
-- **Phase 1** (Weeks 1-2): Foundation & Reliability (16-20 hours)
-- **Phase 2** (Weeks 3-4): Performance & Visibility (15-19 hours)
-- **Phase 3** (Ongoing): Enhancement & Polish (data-driven)
+
+- **Phase 1** (Weeks 1-2): Foundation & Reliability (16-20 hours) ✅ COMPLETE
+- **Phase 2** (Weeks 3-4): Performance & Visibility (15-19 hours) ✅ COMPLETE
+- **Phase 3** (Ongoing): Enhancement & Polish (data-driven) ✅ COMPLETE
+- **Phase 4** (Weeks 9-12): Code Organization & Structural Improvements (15-25 hours) 🔄 CURRENT
+
+---
+
+## 🔴 HIGH - This Month (Phase 4: Code Organization & Structure)
+
+### Component Organization - Critical Refactoring
+
+- [ ] **Phase 4.1: Component directory reorganization** (4-6 hours) 🔴 **HIGH PRIORITY**
+  - **Problem**: 80 components in root `/components` directory with no logical grouping
+  - **Impact**: Difficult navigation, maintenance burden, poor developer experience
+  - **Approach**: Create feature-based subdirectories
+  - **Tasks**:
+    1. Create new directory structure: `blog/`, `projects/`, `resume/`, `about/`, `home/`, `common/`, `navigation/`, `features/`
+    2. Move 14 blog components to `components/blog/` (filters, sidebar, post)
+    3. Move 4 project components to `components/projects/`
+    4. Move 10 resume components to `components/resume/`
+    5. Move 3 about components to `components/about/`
+    6. Move 2 homepage components to `components/home/`
+    7. Move shared components to `components/common/` (error-boundaries, stats, skeletons)
+    8. Move navigation components to `components/navigation/`
+    9. Update all import paths across codebase
+    10. Verify TypeScript compilation and build
+  - **Expected Outcome**: Better discoverability, easier maintenance, clearer ownership
+  - **ROI**: ⭐⭐⭐⭐⭐ Daily developer experience improvement
+
+- [ ] **Phase 4.2: Extract common filter logic** (3-4 hours) 🔴 **HIGH PRIORITY**
+  - **Problem**: 90%+ code duplication across 4 filter components (blog, projects, archive, analytics)
+  - **Files**: `blog-filters.tsx` (261 lines), `project-filters.tsx` (304 lines), `archive-filters.tsx`, `analytics-filters.tsx` (585 lines!)
+  - **Impact**: Maintenance burden, inconsistent behavior, bug fixes need 4x effort
+  - **Approach**: Create reusable filter composition system
+  - **Tasks**:
+    1. Create `components/common/filters/` directory
+    2. Extract shared types to `types.ts`
+    3. Create `FilterProvider.tsx` (context for filter state)
+    4. Create `SearchInput.tsx` (debounced search component)
+    5. Create `SelectFilter.tsx` (generic select dropdown)
+    6. Create `TagFilter.tsx` (multi-select badges)
+    7. Create `ClearButton.tsx` (clear all filters)
+    8. Create `useFilterState.ts` (shared hook for URL params)
+    9. Refactor all 4 filter components to use new system
+    10. Add barrel export `index.ts`
+  - **Expected Outcome**: Single source of truth, consistent UX, easier to maintain
+  - **ROI**: ⭐⭐⭐⭐⭐ Eliminates 700+ lines of duplicated code
+
+- [ ] **Phase 4.3: Add barrel exports** (1-2 hours) 🟡 **MEDIUM PRIORITY**
+  - **Problem**: Only 3 subdirectories have `index.ts` files, verbose imports throughout codebase
+  - **Impact**: Harder refactoring, verbose import statements
+  - **Approach**: Add `index.ts` to all feature directories
+  - **Tasks**:
+    1. Add `index.ts` to `components/blog/`
+    2. Add `index.ts` to `components/projects/`
+    3. Add `index.ts` to `components/resume/`
+    4. Add `index.ts` to `components/about/`
+    5. Add `index.ts` to `components/home/`
+    6. Add `index.ts` to `components/common/`
+    7. Add `index.ts` to `components/navigation/`
+    8. Update imports to use barrel exports
+  - **Expected Outcome**: Cleaner imports, easier refactoring
+  - **ROI**: ⭐⭐⭐⭐ Better DX, easier to refactor in future
+
+### Library Organization - Code Quality
+
+- [ ] **Phase 4.4: Decompose large lib files** (3-5 hours) 🟡 **MEDIUM PRIORITY**
+  - **Problem**: Several files exceed 500 lines with multiple responsibilities
+  - **Files**:
+    - `lib/analytics.ts` (558 lines, 22 exports)
+    - `lib/metadata.ts` (496 lines, 7 exports)
+    - `lib/design-tokens.ts` (480 lines, 16 exports)
+    - `lib/article.ts` (433 lines, 6 exports)
+    - `lib/feeds.ts` (426 lines, 3 exports)
+    - `lib/archive.ts` (423 lines, 6 exports)
+  - **Impact**: Violates single-responsibility principle, harder to test and maintain
+  - **Approach**: Split into logical subdirectories
+  - **Tasks**:
+    1. Create `lib/analytics/` with `fetching.ts`, `aggregations.ts`, `transformations.ts`
+    2. Create `lib/metadata/` with `pages.ts`, `structured-data.ts`, `social.ts`
+    3. Keep `lib/design-tokens.ts` as-is (configuration file)
+    4. Consider splitting `lib/article.ts`, `lib/feeds.ts`, `lib/archive.ts` if needed
+    5. Add barrel exports to new directories
+    6. Update imports across codebase
+  - **Expected Outcome**: Better code organization, easier to find and test specific functionality
+  - **ROI**: ⭐⭐⭐⭐ Improved maintainability, easier onboarding
+
+### Error Handling - DRY Principles
+
+- [ ] **Phase 4.5: Consolidate error boundaries** (1-2 hours) 🟢 **LOW PRIORITY**
+  - **Problem**: 4 separate error boundary implementations with similar patterns
+  - **Files**: `error-boundary.tsx`, `contact-form-error-boundary.tsx`, `page-error-boundary.tsx`, `github-heatmap-error-boundary.tsx`
+  - **Impact**: Duplicated logic, inconsistent error handling
+  - **Approach**: Create base error boundary with customizable fallbacks
+  - **Tasks**:
+    1. Create `components/common/error-boundaries/BaseErrorBoundary.tsx`
+    2. Create `withErrorBoundary.tsx` HOC for easy wrapping
+    3. Refactor existing boundaries to extend base
+    4. Add barrel export
+    5. Update usage across codebase
+  - **Expected Outcome**: DRY error handling, consistent user experience
+  - **ROI**: ⭐⭐⭐ Reduces maintenance, ensures consistent error UX
+
+### Style Organization
+
+- [ ] **Phase 4.6: Consolidate CSS files** (30 minutes) 🟢 **LOW PRIORITY**
+  - **Problem**: CSS split between `app/` and `styles/` directories
+  - **Files**: `app/globals.css`, `app/print.css`, `styles/holo-card.css`
+  - **Impact**: Inconsistent organization, harder to find styles
+  - **Approach**: Move all CSS to `src/styles/`
+  - **Tasks**:
+    1. Create `src/styles/components/` directory
+    2. Move `styles/holo-card.css` to `styles/components/`
+    3. Move `app/print.css` to `styles/print.css`
+    4. Keep `app/globals.css` (required by Next.js)
+    5. Update import paths
+  - **Expected Outcome**: All styles in one location (except globals)
+  - **ROI**: ⭐⭐⭐ Better organization, easier to maintain
+
+### Cleanup
+
+- [ ] **Phase 4.7: Remove backup/disabled files** (15 minutes) 🟢 **LOW PRIORITY**
+  - **Problem**: 10 backup files in source tree (`.disabled`, `.backup`, `.old`)
+  - **Location**: `src/app/analytics/` directory
+  - **Impact**: Clutter, confusion, potential security risk if deployed
+  - **Tasks**:
+    1. Review all `.disabled`, `.backup`, `.old` files
+    2. Archive to `/archive/` outside source tree or delete
+    3. Document any important learnings
+  - **Expected Outcome**: Clean source tree, no confusion
+  - **ROI**: ⭐⭐ Code hygiene
 
 ---
 
@@ -746,9 +875,9 @@ Ask these questions before adding new items:
 
 **Current Todo List:**
 - 🚨 CRITICAL: 0 items (all accessibility work complete)
-- 🔴 HIGH: 1 item (backup & disaster recovery - backlogged)
+- 🔴 HIGH: 7 items (Phase 4 code organization - **CURRENT FOCUS**)
 - 🟡 MEDIUM: 6 items (performance optimizations - backlogged)
-- 🟢 LOW: 8 items (ongoing, data-driven) - **Phase 3 Focus**
+- 🟢 LOW: 8 items (ongoing, data-driven)
 - ⚪ BACKLOG: 50+ items (consolidated from 100+)
 
 **Phase Completion Status:**
@@ -763,18 +892,24 @@ Ask these questions before adding new items:
   - Performance monitoring with budgets active
   - Bot detection and security layers implemented
   - Conversion tracking infrastructure ready
-- 🟢 **Phase 3: Enhancement & Polish** (Ongoing)
-  - Data-driven improvements based on analytics
-  - Content creation and maintenance
-  - Incremental enhancements validated by user behavior
+- ✅ **Phase 3 Complete** (Enhancement & Polish)
+  - Keyboard shortcuts implemented
+  - Conversion CTAs activated
+  - Analytics dashboard enhancements complete
+  - Blog improvements operational
+- 🔄 **Phase 4: Code Organization & Structural Improvements** (CURRENT)
+  - Comprehensive structural analysis completed
+  - 7 refactoring tasks identified (15-25 hours total)
+  - Focus: Component reorganization, code deduplication, maintainability
 
 **Removed from Consideration:** 40+ speculative/over-engineering items
 
 **Key Changes Since Last Update:**
-- ✅ Completed Phase 3 testing (198 integration tests, 100% pass rate)
-- ✅ All Phase 1 foundation work complete
-- ✅ All Phase 2 performance & visibility work complete
-- ✅ Moved to Phase 3: enhancement and polish mode
+
+- ✅ Completed comprehensive codebase structural analysis (Nov 24, 2025)
+- ✅ Phase 3 enhancement work complete (keyboard shortcuts, CTAs)
+- 🔄 Starting Phase 4: Code organization and structural improvements
+- 📋 Identified critical issues: 80 components in root directory, 90%+ filter code duplication, large lib files
 
 ---
 
@@ -789,5 +924,5 @@ Ask these questions before adding new items:
 
 ---
 
-**Last Updated:** November 23, 2025  
-**Next Review:** Phase 3 ongoing - review as needed based on analytics and user feedback
+**Last Updated:** November 24, 2025
+**Next Review:** Phase 4 in progress - weekly reviews during code organization work
