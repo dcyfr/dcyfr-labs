@@ -2,7 +2,10 @@
 
 A modern, full-featured developer blog and portfolio built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui. Features an MDX-powered blog with advanced analytics, GitHub integration, Redis-backed view counts, background job processing, and comprehensive security features.
 
-**🤖 AI Contributors:** See [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) for the AI contributor guide.
+**🤖 AI Contributors:**
+
+- **Claude Code**: See [`.github/claude-instructions.md`](./.github/claude-instructions.md) for comprehensive development guide
+- **GitHub Copilot**: See [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) for quick reference
 
 ## ✨ Features
 
