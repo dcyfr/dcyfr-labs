@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CopyCodeButton } from "@/components/copy-code-button";
 
@@ -28,6 +28,11 @@ vi.mock("@/components/ui/button", () => ({
 
 describe("CopyCodeButton Component", () => {
   const mockCode = "console.log('Hello, World!');";
+
+  // Helper to flush promises with fake timers
+  const flushPromises = () => act(async () => {
+    await Promise.resolve();
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -87,107 +92,105 @@ describe("CopyCodeButton Component", () => {
 
   describe("Copy Functionality", () => {
     it("should copy code to clipboard when clicked", async () => {
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockCode);
     });
 
     it("should show check icon after successful copy", async () => {
-      const user = userEvent.setup();
       const { container } = render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
-      await waitFor(() => {
-        const checkIcon = container.querySelector('[class*="lucide-check"]');
-        expect(checkIcon).toBeInTheDocument();
-      });
+      // Wait for promise to resolve
+      await flushPromises();
+      
+      const checkIcon = container.querySelector('[class*="lucide-check"]');
+      expect(checkIcon).toBeInTheDocument();
     });
 
     it("should update aria-label to 'Copied!' after copy", async () => {
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
-      await waitFor(() => {
-        expect(button).toHaveAttribute("aria-label", "Copied!");
-      });
+      await flushPromises();
+
+      expect(button).toHaveAttribute("aria-label", "Copied!");
     });
 
     it("should reset to copy icon after 2 seconds", async () => {
-      const user = userEvent.setup();
       const { container } = render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       // Check icon should be visible
-      await waitFor(() => {
-        const checkIcon = container.querySelector('[class*="lucide-check"]');
-        expect(checkIcon).toBeInTheDocument();
-      });
+      await flushPromises();
+      
+      const checkIcon = container.querySelector('[class*="lucide-check"]');
+      expect(checkIcon).toBeInTheDocument();
       
       // Fast-forward 2 seconds
-      vi.advanceTimersByTime(2000);
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
       
       // Copy icon should be back
-      await waitFor(() => {
-        const copyIcon = container.querySelector('[class*="lucide-copy"]');
-        expect(copyIcon).toBeInTheDocument();
-      });
+      await flushPromises();
+
+      const copyIcon = container.querySelector('[class*="lucide-copy"]');
+      expect(copyIcon).toBeInTheDocument();
     });
 
     it("should reset aria-label after 2 seconds", async () => {
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
-      await waitFor(() => {
-        expect(button).toHaveAttribute("aria-label", "Copied!");
+      await flushPromises();
+
+      expect(button).toHaveAttribute("aria-label", "Copied!");
+      
+      act(() => {
+        vi.advanceTimersByTime(2000);
       });
       
-      vi.advanceTimersByTime(2000);
-      
-      await waitFor(() => {
-        expect(button).toHaveAttribute("aria-label", "Copy code");
-      });
+      await flushPromises();
+
+      expect(button).toHaveAttribute("aria-label", "Copy code");
     });
 
     it("should handle multiple clicks", async () => {
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
       
       // First click
-      await user.click(button);
+      fireEvent.click(button);
       expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
       
       // Second click before timeout
-      await user.click(button);
+      fireEvent.click(button);
       expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(2);
       
       // After timeout
       vi.advanceTimersByTime(2000);
-      await user.click(button);
+      fireEvent.click(button);
       expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(3);
     });
 
     it("should copy empty string if code is empty", async () => {
-      const user = userEvent.setup();
       render(<CopyCodeButton code="" />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith("");
     });
@@ -196,11 +199,10 @@ describe("CopyCodeButton Component", () => {
       const multiLineCode = `function greet(name) {
   console.log(\`Hello, \${name}!\`);
 }`;
-      const user = userEvent.setup();
       render(<CopyCodeButton code={multiLineCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(multiLineCode);
     });
@@ -219,15 +221,14 @@ describe("CopyCodeButton Component", () => {
         configurable: true,
       });
       
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
-      await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to copy code:", clipboardError);
-      });
+      await Promise.resolve();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to copy code:", clipboardError);
       
       consoleErrorSpy.mockRestore();
     });
@@ -241,17 +242,16 @@ describe("CopyCodeButton Component", () => {
         configurable: true,
       });
       
-      const user = userEvent.setup();
       const { container } = render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       // Wait a bit and check that check icon is not shown
-      await waitFor(() => {
-        const checkIcon = container.querySelector('[class*="lucide-check"]');
-        expect(checkIcon).not.toBeInTheDocument();
-      });
+      await Promise.resolve();
+
+      const checkIcon = container.querySelector('[class*="lucide-check"]');
+      expect(checkIcon).not.toBeInTheDocument();
       
       // Copy icon should still be visible
       const copyIcon = container.querySelector('[class*="lucide-copy"]');
@@ -267,18 +267,17 @@ describe("CopyCodeButton Component", () => {
         configurable: true,
       });
       
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
       const initialLabel = button.getAttribute("aria-label");
       
-      await user.click(button);
+      fireEvent.click(button);
       
-      await waitFor(() => {
-        // Label should not change on error
-        expect(button.getAttribute("aria-label")).toBe(initialLabel);
-      });
+      await Promise.resolve();
+
+      // Label should not change on error
+      expect(button.getAttribute("aria-label")).toBe(initialLabel);
     });
   });
 
@@ -294,13 +293,12 @@ describe("CopyCodeButton Component", () => {
       // Press Enter to activate
       button.click();
       
-      await waitFor(() => {
-        expect(navigator.clipboard.writeText).toHaveBeenCalled();
-      });
+      await Promise.resolve();
+
+      expect(navigator.clipboard.writeText).toHaveBeenCalled();
     });
 
     it("should have descriptive aria-label at all times", async () => {
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
@@ -310,18 +308,18 @@ describe("CopyCodeButton Component", () => {
       expect(button.getAttribute("aria-label")).not.toBe("");
       
       // After click
-      await user.click(button);
-      await waitFor(() => {
-        expect(button.getAttribute("aria-label")).toBeTruthy();
-        expect(button.getAttribute("aria-label")).not.toBe("");
-      });
+      fireEvent.click(button);
+      await Promise.resolve();
+
+      expect(button.getAttribute("aria-label")).toBeTruthy();
+      expect(button.getAttribute("aria-label")).not.toBe("");
       
       // After timeout
       vi.advanceTimersByTime(2000);
-      await waitFor(() => {
-        expect(button.getAttribute("aria-label")).toBeTruthy();
-        expect(button.getAttribute("aria-label")).not.toBe("");
-      });
+      await Promise.resolve();
+
+      expect(button.getAttribute("aria-label")).toBeTruthy();
+      expect(button.getAttribute("aria-label")).not.toBe("");
     });
 
     it("should be a button element", () => {
@@ -333,16 +331,15 @@ describe("CopyCodeButton Component", () => {
 
   describe("Visual Feedback", () => {
     it("should show green check icon on success", async () => {
-      const user = userEvent.setup();
       const { container } = render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
-      await waitFor(() => {
-        const checkIcon = container.querySelector('[class*="text-green-500"]');
-        expect(checkIcon).toBeInTheDocument();
-      });
+      await flushPromises();
+
+      const checkIcon = container.querySelector('[class*="text-green-500"]');
+      expect(checkIcon).toBeInTheDocument();
     });
 
     it("should use proper icon sizes", () => {
@@ -360,60 +357,55 @@ describe("CopyCodeButton Component", () => {
 
   describe("Edge Cases", () => {
     it("should handle rapid successive clicks", async () => {
-      const user = userEvent.setup();
       render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
       
       // Click 5 times rapidly
-      await user.click(button);
-      await user.click(button);
-      await user.click(button);
-      await user.click(button);
-      await user.click(button);
+      fireEvent.click(button);
+      fireEvent.click(button);
+      fireEvent.click(button);
+      fireEvent.click(button);
+      fireEvent.click(button);
       
       expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(5);
     });
 
     it("should handle special characters in code", async () => {
       const specialCode = "const str = `<script>alert('XSS')</script>`;";
-      const user = userEvent.setup();
       render(<CopyCodeButton code={specialCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(specialCode);
     });
 
     it("should handle very long code strings", async () => {
       const longCode = "x".repeat(10000);
-      const user = userEvent.setup();
       render(<CopyCodeButton code={longCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(longCode);
     });
 
     it("should handle unicode characters", async () => {
       const unicodeCode = "const emoji = '🚀 💻 🎉';";
-      const user = userEvent.setup();
       render(<CopyCodeButton code={unicodeCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(unicodeCode);
     });
 
     it("should clean up timeout on unmount", async () => {
-      const user = userEvent.setup();
       const { unmount } = render(<CopyCodeButton code={mockCode} />);
       
       const button = screen.getByRole("button");
-      await user.click(button);
+      fireEvent.click(button);
       
       // Unmount before timeout
       unmount();

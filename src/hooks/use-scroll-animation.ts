@@ -120,6 +120,7 @@ export function useScrollAnimation({
   const [isVisible, setIsVisible] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Check for prefers-reduced-motion on mount
   useEffect(() => {
@@ -145,13 +146,17 @@ export function useScrollAnimation({
       ([entry]) => {
         if (entry.isIntersecting) {
           if (delay > 0) {
-            const timeoutId = setTimeout(() => {
+            // Clear any existing timeout
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+            }
+            timeoutRef.current = setTimeout(() => {
               setIsVisible(true);
               if (triggerOnce) {
                 setHasAnimated(true);
               }
+              timeoutRef.current = null;
             }, delay);
-            return () => clearTimeout(timeoutId);
           } else {
             setIsVisible(true);
             if (triggerOnce) {
@@ -159,6 +164,11 @@ export function useScrollAnimation({
             }
           }
         } else if (!triggerOnce) {
+          // Clear timeout if element leaves viewport before delay completes
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
           setIsVisible(false);
         }
       },
@@ -168,6 +178,10 @@ export function useScrollAnimation({
     observer.observe(element);
 
     return () => {
+      // Clear timeout on unmount
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       observer.disconnect();
     };
   }, [threshold, rootMargin, delay, triggerOnce]);
@@ -180,7 +194,7 @@ export function useScrollAnimation({
   }, [triggerOnce, hasAnimated]);
 
   // Compute final animation state
-  const shouldAnimate = prefersReducedMotion ? true : isVisible;
+  const shouldAnimate = !prefersReducedMotion && isVisible;
 
   return {
     ref,
