@@ -34,3 +34,17 @@ export function sanitizeUrl(url: string): string {
     return '#';
   }
 }
+
+/**
+ * Format a number with thousands separators
+ * 
+ * @param num - Number to format
+ * @returns Formatted number string (e.g., "1,234" or "1.2K")
+ */
+export function formatNumber(num: number): string {
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1)}K`;
+  }
+  return num.toLocaleString();
+}
+

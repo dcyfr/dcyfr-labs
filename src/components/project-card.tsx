@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Eye } from "lucide-react";
 import { Project, ProjectStatus } from "@/data/projects";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn, sanitizeUrl } from "@/lib/utils";
+import { cn, sanitizeUrl, formatNumber } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
 import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
@@ -75,9 +75,11 @@ const STATUS_LABEL: Record<ProjectStatus, string> = {
  * @see {@link /docs/components/skeleton-sync-strategy.md} for skeleton sync guidelines
  */
 export function ProjectCard({ 
-  project
+  project,
+  viewCount
 }: { 
   project: Project;
+  viewCount?: number;
 }) {
   const router = useRouter();
   
@@ -135,6 +137,12 @@ export function ProjectCard({
           {project.timeline && (
             <p className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
               <Badge variant={STATUS_VARIANT[project.status]}>{STATUS_LABEL[project.status]}</Badge> {project.timeline}
+              {viewCount !== undefined && viewCount > 0 && (
+                <span className="ml-auto flex items-center gap-1 text-muted-foreground">
+                  <Eye className="h-3 w-3" />
+                  <span>{formatNumber(viewCount)}</span>
+                </span>
+              )}
             </p>
           )}
           <div className="flex flex-wrap items-center gap-2">

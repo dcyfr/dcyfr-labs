@@ -173,7 +173,7 @@ export default async function Home() {
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={100}>
             <div className={SPACING.content}>
-              <FeaturedPostHero post={featuredPost} viewCounts={viewCounts} />
+              <FeaturedPostHero post={featuredPost} />
             </div>
           </ScrollReveal>
         </Section>
@@ -220,7 +220,7 @@ export default async function Home() {
                 title="Featured Project"
                 actionHref="/projects"
               />
-              <ProjectCard project={featuredProjects[0]} large />
+              <ProjectCard project={featuredProjects[0]} />
             </div>
           </ScrollReveal>
         </Section>
@@ -236,7 +236,12 @@ export default async function Home() {
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
                 {projects
                   .filter(p => !p.hidden)
-                  .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
+                  .sort((a, b) => {
+                    // Sort by timeline (most recent first) - extract year from "YYYY → Present" format
+                    const aYear = a.timeline ? parseInt(a.timeline.match(/^\d{4}/)?.[0] || "0") : 0;
+                    const bYear = b.timeline ? parseInt(b.timeline.match(/^\d{4}/)?.[0] || "0") : 0;
+                    return bYear - aYear;
+                  })
                   .slice(0, 2)
                   .map((project) => (
                     <ProjectCard key={project.slug} project={project} />

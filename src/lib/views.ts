@@ -2,6 +2,8 @@ import { createClient } from "redis";
 
 const VIEW_KEY_PREFIX = "views:post:";
 const VIEW_HISTORY_KEY_PREFIX = "views:history:post:";
+const PROJECT_VIEW_KEY_PREFIX = "views:project:";
+const PROJECT_VIEW_HISTORY_KEY_PREFIX = "views:history:project:";
 const redisUrl = process.env.REDIS_URL;
 
 type RedisClient = ReturnType<typeof createClient>;
@@ -12,6 +14,8 @@ declare global {
 
 const formatKey = (postId: string) => `${VIEW_KEY_PREFIX}${postId}`;
 const formatHistoryKey = (postId: string) => `${VIEW_HISTORY_KEY_PREFIX}${postId}`;
+const formatProjectKey = (projectSlug: string) => `${PROJECT_VIEW_KEY_PREFIX}${projectSlug}`;
+const formatProjectHistoryKey = (projectSlug: string) => `${PROJECT_VIEW_HISTORY_KEY_PREFIX}${projectSlug}`;
 
 async function getClient(): Promise<RedisClient | null> {
   if (!redisUrl) return null;
