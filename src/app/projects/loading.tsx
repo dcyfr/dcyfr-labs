@@ -1,5 +1,5 @@
-import { ProjectListSkeleton } from "@/components/project-card-skeleton";
-import { GitHubHeatmapSkeleton } from "@/components/github-heatmap-skeleton";
+import { ProjectListSkeleton } from "@/components/projects/project-card-skeleton";
+import { GitHubHeatmapSkeleton } from "@/components/common/skeletons/github-heatmap-skeleton";
 import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 

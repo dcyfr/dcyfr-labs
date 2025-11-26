@@ -1,4 +1,4 @@
-import { BlogPostSkeleton } from "@/components/blog-post-skeleton";
+import { BlogPostSkeleton } from "@/components/blog/post/blog-post-skeleton";
 
 /**
  * Loading state for individual blog post pages.

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
 import { PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/common/logo";
 
 /**
  * Loading state for about page.

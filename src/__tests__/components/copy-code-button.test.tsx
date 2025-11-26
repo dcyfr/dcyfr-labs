@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CopyCodeButton } from "@/components/copy-code-button";
+import { CopyCodeButton } from "@/components/common/copy-code-button";
 
 // Mock framer-motion to simplify animations in tests
 vi.mock("framer-motion", () => ({

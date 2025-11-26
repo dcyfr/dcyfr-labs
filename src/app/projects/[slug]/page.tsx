@@ -18,9 +18,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn, sanitizeUrl } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
 import { getContainerClasses, TYPOGRAPHY } from "@/lib/design-tokens";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/common/logo";
 import { headers } from "next/headers";
-import { OtherProjectCard } from "@/components/other-project-card";
+import { OtherProjectCard } from "@/components/projects/other-project-card";
 import { ArticleHeader } from "@/components/layouts";
 
 // Enable Incremental Static Regeneration with 1 hour revalidation

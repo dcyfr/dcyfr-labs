@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import "./print.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/features/theme/theme-provider";
 import {
   SITE_URL,
   SITE_TITLE,
@@ -12,12 +12,12 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
-import { BottomNav } from "@/components/bottom-nav";
+import { SiteHeader } from "@/components/navigation/site-header";
+import { SiteFooter } from "@/components/navigation/site-footer";
+import { BottomNav } from "@/components/navigation/bottom-nav";
 import { Toaster } from "@/components/ui/sonner";
-import { LoadingBar } from "@/components/loading-bar";
-import { WebVitalsReporter } from "@/components/web-vitals-reporter";
+import { LoadingBar } from "@/components/features/loading-bar";
+import { WebVitalsReporter } from "@/components/features/web-vitals-reporter";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AxiomWebVitals } from "next-axiom";

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { postsBySeries, allSeriesNames } from "@/data/posts";
 import { Badge } from "@/components/ui/badge";
-import { PostList } from "@/components/post-list";
+import { PostList } from "@/components/blog/post/post-list";
 import { BookOpen } from "lucide-react";
 import { SITE_TITLE_PLAIN, SITE_URL, getOgImageUrl, getTwitterImageUrl } from "@/lib/site-config";
 import { CONTAINER_WIDTHS, CONTAINER_VERTICAL_PADDING, CONTAINER_PADDING, TYPOGRAPHY } from "@/lib/design-tokens";

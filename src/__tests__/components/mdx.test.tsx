@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { MDX } from "@/components/mdx";
+import { MDX } from "@/components/common/mdx";
 
 // Mock the heavy dependencies
 vi.mock("next-mdx-remote/rsc", () => ({
@@ -39,15 +39,15 @@ vi.mock("next-mdx-remote/rsc", () => ({
   },
 }));
 
-vi.mock("@/components/copy-code-button", () => ({
+vi.mock("@/components/common/copy-code-button", () => ({
   CopyCodeButton: () => <button data-testid="copy-button">Copy</button>,
 }));
 
-vi.mock("@/components/horizontal-rule", () => ({
+vi.mock("@/components/common/horizontal-rule", () => ({
   HorizontalRule: () => <hr data-testid="horizontal-rule" />,
 }));
 
-vi.mock("@/components/mermaid", () => ({
+vi.mock("@/components/common/mermaid", () => ({
   Mermaid: ({ chart }: { chart: string }) => <div data-testid="mermaid-diagram">{chart}</div>,
 }));
 

@@ -3,23 +3,23 @@ import { notFound, redirect } from "next/navigation";
 import { posts, postsBySeries } from "@/data/posts";
 import { getPostByAnySlug } from "@/lib/blog";
 import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
-import { MDX } from "@/components/mdx";
+import { MDX } from "@/components/common/mdx";
 import "katex/dist/katex.min.css"; // KaTeX styles for math rendering in blog posts
 import { getPostViews, getMultiplePostViews } from "@/lib/views";
 import { getPostShares } from "@/lib/shares";
-import { ReadingProgress } from "@/components/reading-progress";
-import { RelatedPosts } from "@/components/related-posts";
-import { TableOfContents } from "@/components/table-of-contents";
-import { BlogPostSidebar } from "@/components/blog-post-sidebar";
+import { ReadingProgress } from "@/components/features/reading-progress";
+import { RelatedPosts } from "@/components/common/related-posts";
+import { TableOfContents } from "@/components/common/table-of-contents";
+import { BlogPostSidebar } from "@/components/blog/post/blog-post-sidebar";
 import { extractHeadings } from "@/lib/toc";
 import { headers } from "next/headers";
-import { ShareButtons } from "@/components/share-buttons";
-import { Breadcrumbs } from "@/components/breadcrumbs";
-import { SeriesNavigation } from "@/components/series-navigation";
-import { GiscusComments } from "@/components/giscus-comments";
-import { PostHeroImage } from "@/components/post-hero-image";
-import { ViewTracker } from "@/components/view-tracker";
-import { BlogAnalyticsTracker } from "@/components/blog-analytics-tracker";
+import { ShareButtons } from "@/components/features/sharing/share-buttons";
+import { Breadcrumbs } from "@/components/navigation/breadcrumbs";
+import { SeriesNavigation } from "@/components/blog/post/series-navigation";
+import { GiscusComments } from "@/components/features/comments/giscus-comments";
+import { PostHeroImage } from "@/components/blog/post/post-hero-image";
+import { ViewTracker } from "@/components/features/view-tracker";
+import { BlogAnalyticsTracker } from "@/components/blog/blog-analytics-tracker";
 import { ArticleLayout, ArticleHeader, ArticleFooter } from "@/components/layouts";
 import { getArticleData } from "@/lib/article";
 import { 
@@ -28,7 +28,7 @@ import {
   createBreadcrumbSchema,
   getJsonLdScriptProps 
 } from "@/lib/metadata";
-import { BlogPostCTA } from "@/components/cta";
+import { BlogPostCTA } from "@/components/common/cta";
 
 // Enable Incremental Static Regeneration with 1 hour revalidation
 export const revalidate = 3600; // 1 hour in seconds
