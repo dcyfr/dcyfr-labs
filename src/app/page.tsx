@@ -100,7 +100,7 @@ export default async function Home() {
         url: SITE_URL,
         image: socialImage,
         description: pageDescription,
-        jobTitle: "Cybersecurity Architect & Developer",
+        jobTitle: "Cybersecurity Architect & Tinkerer",
         sameAs: getSocialUrls(),
         knowsAbout: [
           "Cybersecurity",
