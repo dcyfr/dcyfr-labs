@@ -1,74 +1,68 @@
 # Documentation Index
 
-**Last Updated:** November 15, 2025  
-**Status:** Test coverage roadmap created - 3-phase plan to reach 80% coverage ✅
+**Last Updated:** November 26, 2025
+**Status:** Documentation cleanup complete - 22→14 directories, merged analytics/seo/performance/content ✅
 
 ---
 
 ## 📊 Current Structure
 
-The documentation is organized into **16 focused directories**:
+The documentation is organized into **14 focused directories**:
 
 ### 📁 Core Documentation (9 directories)
+
 1. **`architecture/`** - Architecture patterns and refactoring guides
-2. **`blog/`** - Blog system documentation + content strategy + RSS feeds
-3. **`components/`** - Component documentation (23 files)
+2. **`blog/`** - Blog system documentation + content strategy + RSS feeds (merged from `/rss`, `/content`)
+3. **`components/`** - Component documentation (26 files)
 4. **`api/`** - API integration references
-5. **`features/`** - Feature guides (Inngest, GitHub, MCP, analytics)
+5. **`features/`** - Feature guides (Inngest, GitHub, MCP)
 6. **`design/`** - Design system and UX (organized by topic)
 7. **`security/`** - Security implementation (CSP, rate limiting)
 8. **`platform/`** - Platform configuration (env vars, site config)
 9. **`operations/`** - Project management (todo, done, deployment)
 
-### 🔧 Development & Optimization (2 directories)
-10. **`development/`** - Testing + performance optimization
-11. **`optimization/`** - SEO + accessibility + analytics
+### 🔧 Development & Optimization (3 directories)
 
-### 📦 Reference & Archive (3 directories)
-12. **`archive/`** - Historical documentation
-13. **`ai/`** - AI discovery research
-14. **Root files** - `README.md`, `QUICK_START.md`, this `INDEX.md`
+1. **`development/`** - Performance optimization (merged from `/performance`)
+2. **`testing/`** - Test infrastructure and coverage roadmap
+3. **`optimization/`** - SEO + accessibility + analytics (merged from `/seo`, `/analytics`)
 
----
+### 📦 Reference & Archive (2 directories)
 
-## 🎉 **LATEST: Test Coverage Roadmap (Nov 15, 2025)**
-
-### What's New
-- ✅ **Coverage analysis complete** - Current: 0.63%, Target: 80%
-- ✅ **3-phase roadmap created** - 6-8 weeks to reach coverage goals
-- ✅ **Prioritized testing plan** - Critical business logic first (metadata, rate-limit, feeds)
-- ✅ **Comprehensive documentation** - Testing guide, quick reference, roadmap
-- ✅ **Established milestones** - Phase 1: 25%, Phase 2: 50%, Phase 3: 80%
-
-### Testing Documentation
-- **[testing/README.md](./testing/README.md)** - Testing overview and setup
-- **[testing/coverage-roadmap.md](./testing/coverage-roadmap.md)** - Detailed 3-phase plan
-- **[testing/quick-reference.md](./testing/quick-reference.md)** - Commands and patterns
-
-### Next Steps
-1. Lower coverage thresholds temporarily (~10%) to unblock CI
-2. Start Phase 1: Test critical business logic (14-18 hours)
-3. Progress through phases incrementally over 6-8 weeks
+1. **`archive/`** - Historical documentation
+2. **`ai/`** - AI discovery research
 
 ---
 
-## 📖 **Documentation Refactoring (Nov 14, 2025)**
+## 🎉 LATEST: Documentation Cleanup (Nov 26, 2025)
 
 ### What Changed
-- ✅ **Consolidated 21 → 16 directories** (24% reduction)
-- ✅ **Archived `/fixes`** → `archive/fixes-2025/`
-- ✅ **Created `/optimization`** ← merged seo + accessibility + analytics
-- ✅ **Created `/development`** ← merged testing + performance
-- ✅ **Moved `/mcp`** → `features/mcp/`
-- ✅ **Organized `/design`** → typography/, mobile/, print/, spacing/, ui-patterns/
-- ✅ **Merged `/rss`** → `blog/feeds/`
-- ✅ **Merged `/content`** → `blog/`
+
+- ✅ **Consolidated 22 → 14 directories** (36% reduction)
+- ✅ **Completed pending merges** - analytics → optimization, seo → optimization, performance → development, content → blog
+- ✅ **Removed empty directories** - mcp/, rss/, accessibility/
+- ✅ **Archived fixes** - vercel-build-warnings-resolution.md → archive/fixes-2025/
+- ✅ **Updated documentation** - README and INDEX now accurately reflect structure
 
 ### Benefits
-- 🎯 **Clearer organization** - Related docs are together
-- 📚 **Easier navigation** - Fewer top-level directories
-- 🔍 **Better discoverability** - Logical groupings
-- 🧹 **Cleaner structure** - No more scattered small directories
+
+- 🎯 **Accurate documentation** - README/INDEX match actual structure
+- 📚 **Cleaner organization** - No orphaned directories
+- 🔍 **Better navigation** - Related docs properly grouped
+- 🧹 **Completed migrations** - All claimed merges actually executed
+
+### Previous Updates
+
+#### Test Coverage Roadmap (Nov 15, 2025)
+
+- ✅ 3-phase roadmap created (0.63% → 80% coverage)
+- ✅ Testing documentation: [testing/README.md](./testing/README.md), [coverage-roadmap.md](./testing/coverage-roadmap.md), [quick-reference.md](./testing/quick-reference.md)
+
+#### Documentation Refactoring (Nov 14, 2025)
+
+- ✅ Initial structure planned (documented but not fully executed until Nov 26)
+- ✅ Organized design/ into subdirectories
+- ✅ Moved mcp/ → features/mcp/
 
 ---
 

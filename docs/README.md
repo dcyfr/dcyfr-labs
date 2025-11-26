@@ -68,18 +68,25 @@ This directory is the knowledge base for the portfolio. Content is organized by 
   - [`todo.md`](./operations/todo.md) - Active tasks and priorities
   - [`done.md`](./operations/done.md) - Completed projects archive
 
-**Development & Optimization (2 directories):**
+**Development & Optimization (3 directories):**
 
-- **`development/`** – Testing + performance (merged from `/testing` and `/performance`):
+- **`development/`** – Performance optimization (merged from `/performance`):
   - [`lighthouse-ci.md`](./development/lighthouse-ci.md) - Lighthouse CI setup
   - [`inp-optimization.md`](./development/inp-optimization.md) - INP optimization
   - [`isr-implementation.md`](./development/isr-implementation.md) - ISR setup
   - [`bundle-analysis.md`](./development/bundle-analysis.md) - Bundle optimization
+  - [`performance-monitoring.md`](./development/performance-monitoring.md) - Performance monitoring
+
+- **`testing/`** – Test infrastructure and coverage:
+  - [`README.md`](./testing/README.md) - Testing overview and setup
+  - [`coverage-roadmap.md`](./testing/coverage-roadmap.md) - 3-phase coverage plan
+  - [`quick-reference.md`](./testing/quick-reference.md) - Testing commands & patterns
 
 - **`optimization/`** – SEO + accessibility + analytics (merged from `/seo`, `/accessibility`, `/analytics`):
   - [`json-ld-implementation.md`](./optimization/json-ld-implementation.md) - Structured data
   - [`alt-text-guide.md`](./optimization/alt-text-guide.md) - Accessibility
   - [`tag-analytics.md`](./optimization/tag-analytics.md) - Tag analytics
+  - [`conversion-tracking-implementation-complete.md`](./optimization/conversion-tracking-implementation-complete.md) - Conversion tracking
 
 **Reference & Archive (2 directories):**
 
@@ -133,4 +140,4 @@ This directory is the knowledge base for the portfolio. Content is organized by 
 - `agents.md` – Auto-synced instructions consumed by agents.
 - Project root `README.md` – High-level overview and developer quick start.
 
-_Last updated: November 14, 2025. Documentation structure refactored: 21→16 directories, improved organization._
+_Last updated: November 26, 2025. Documentation structure refactored: 22→14 directories, improved organization._
