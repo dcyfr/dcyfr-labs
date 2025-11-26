@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only, **organized by criticality**. Completed tasks are moved to **`done.md`**.
 
-**Last Updated:** November 24, 2025 (Codebase structural analysis complete)
+**Last Updated:** November 25, 2025 (Copilot/AI token optimization complete)
 
 ---
 
@@ -24,6 +24,23 @@ This todo list is organized by **criticality, impact, and ROI**:
 - **Phase 2** (Weeks 3-4): Performance & Visibility (15-19 hours) ✅ COMPLETE
 - **Phase 3** (Ongoing): Enhancement & Polish (data-driven) ✅ COMPLETE
 - **Phase 4** (Weeks 9-12): Code Organization & Structural Improvements (15-25 hours) 🔄 CURRENT
+
+---
+
+## ✅ Recently Completed
+
+### AI/Copilot Token Optimization (Nov 25, 2025)
+
+- [x] **Slim down copilot-instructions.md** - Reduced from 391 lines to 85 lines (78% reduction)
+  - Moved detailed content to existing tier-2 docs (`DESIGN_SYSTEM.md`, `BEST_PRACTICES.md`)
+  - Auto-loaded context reduced from ~3,500 tokens to ~700 tokens
+  - References detailed docs by path instead of duplicating content
+  
+- [x] **VS Code settings for Copilot** - Added optimized settings to `.vscode/settings.json`
+  - Enabled agent mode and inline suggestions
+  - Disabled suggestions for plaintext files (reduce noise)
+
+**Impact**: ~80% reduction in auto-loaded context per Copilot conversation, better token efficiency
 
 ---
 
