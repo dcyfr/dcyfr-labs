@@ -19,8 +19,9 @@ describe('useScrollAnimation Hook', () => {
   // Helper to trigger the callback with entries
   function triggerIntersection(entries: any[]) {
     if (observerCallback) {
+      const callback = observerCallback
       act(() => {
-        observerCallback(entries)
+        callback(entries)
       })
     }
   }
