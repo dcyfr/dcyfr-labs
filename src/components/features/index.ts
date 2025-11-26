@@ -1,0 +1,12 @@
+// Feature components
+export { ThemeProvider } from "./theme/theme-provider";
+export { ThemeToggle } from "./theme/theme-toggle";
+export { GitHubHeatmap } from "./github/github-heatmap";
+export { GiscusComments } from "./comments/giscus-comments";
+export { ShareButtons } from "./sharing/share-buttons";
+export { ViewTracker } from "./view-tracker";
+export { WebVitalsReporter } from "./web-vitals-reporter";
+export { ReadingProgress } from "./reading-progress";
+export { ScrollReveal } from "./scroll-reveal";
+export { LoadingBar } from "./loading-bar";
+export { DraftBanner } from "./draft-banner";

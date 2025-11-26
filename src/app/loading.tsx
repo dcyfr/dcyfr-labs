@@ -1,5 +1,5 @@
-import { PostListSkeleton } from "@/components/post-list-skeleton";
-import { ProjectCardSkeleton } from "@/components/project-card-skeleton";
+import { PostListSkeleton } from "@/components/blog/post/post-list-skeleton";
+import { ProjectCardSkeleton } from "@/components/projects/project-card-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";

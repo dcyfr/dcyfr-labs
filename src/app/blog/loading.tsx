@@ -1,4 +1,4 @@
-import { PostListSkeleton } from "@/components/post-list-skeleton";
+import { PostListSkeleton } from "@/components/blog/post/post-list-skeleton";
 import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 

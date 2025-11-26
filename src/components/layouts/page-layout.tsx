@@ -31,7 +31,7 @@
 import { ReactNode } from 'react'
 import { PAGE_LAYOUT } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
-import { DraftBanner } from '@/components/draft-banner'
+import { DraftBanner } from '@/components/features/draft-banner'
 
 interface PageLayoutProps {
   /** Page content */

@@ -1,13 +1,13 @@
 import { featuredProjects, projects } from "@/data/projects";
-import { ProjectCard } from "@/components/project-card";
-import { PostList } from "@/components/post-list";
+import { ProjectCard } from "@/components/projects/project-card";
+import { PostList } from "@/components/blog/post/post-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { SectionHeader } from "@/components/section-header";
+import { SectionHeader } from "@/components/common/section-header";
 import { posts, featuredPosts } from "@/data/posts";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { getMultiplePostViews } from "@/lib/views";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/common/logo";
 import { getSocialUrls } from "@/data/socials";
 import {
   SITE_URL,
@@ -18,19 +18,19 @@ import {
 } from "@/lib/site-config";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { FeaturedPostHero } from "@/components/featured-post-hero";
+import { FeaturedPostHero } from "@/components/home/featured-post-hero";
 import dynamic from "next/dynamic";
-import { SectionNavigator, Section } from "@/components/section-navigator";
-import { WhatIDo } from "@/components/what-i-do";
-import { GitHubHeatmap } from "@/components/github-heatmap";
-import { HomepageStats } from "@/components/homepage-stats";
-import { TechStack } from "@/components/tech-stack";
-import { SocialProof } from "@/components/social-proof";
-import { TrendingPosts } from "@/components/trending-posts";
-import { RecentActivity } from "@/components/recent-activity";
-import { HomepageHeroActions } from "@/components/homepage-hero-actions";
+import { SectionNavigator, Section } from "@/components/common/section-navigator";
+import { WhatIDo } from "@/components/about/what-i-do";
+import { GitHubHeatmap } from "@/components/features/github/github-heatmap";
+import { HomepageStats } from "@/components/home/homepage-stats";
+import { TechStack } from "@/components/about/tech-stack";
+import { SocialProof } from "@/components/about/social-proof";
+import { TrendingPosts } from "@/components/common/stats/trending-posts";
+import { RecentActivity } from "@/components/common/stats/recent-activity";
+import { HomepageHeroActions } from "@/components/home/homepage-hero-actions";
 
-const ScrollReveal = dynamic(() => import("@/components/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
+const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
   ssr: true,
 });
@@ -183,7 +183,7 @@ export default async function Home() {
           <ScrollReveal animation="fade-up" delay={215}>
             <div className={SPACING.content}>
               <SectionHeader
-                title="Latest Activity"
+                title="Recent Activity"
               />
               <RecentActivity 
                 posts={recentPosts}
@@ -194,7 +194,7 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* Articles */}
+        {/* Blog articles 
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={150}>
             <div className={SPACING.content}>
@@ -210,9 +210,9 @@ export default async function Home() {
               />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
 
-        {/* Projects */}
+        {/* Featured project 
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={200}>
             <div className={SPACING.content}>
@@ -223,14 +223,14 @@ export default async function Home() {
               <ProjectCard project={featuredProjects[0]} />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
 
-        {/* Projects */}
+        {/* Latest projects 
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={200}>
             <div className={SPACING.content}>
               <SectionHeader
-                title="Latest Projects"
+                title="Projects"
                 actionHref="/projects"
               />
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
@@ -250,7 +250,7 @@ export default async function Home() {
               </div>
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
 
         {/* What I Do - Core Pillars 
         <Section className={PAGE_LAYOUT.section.container}>

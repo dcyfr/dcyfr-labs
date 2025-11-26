@@ -4,7 +4,7 @@ import type React from 'react'
 import { PageLayout } from '@/components/layouts/page-layout'
 
 // Mock dependencies
-vi.mock('@/components/draft-banner', () => ({
+vi.mock('@/components/features/draft-banner', () => ({
   DraftBanner: () => <div data-testid="draft-banner">Draft Banner</div>,
 }))
 

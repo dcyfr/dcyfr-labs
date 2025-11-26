@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import { BlogAnalyticsTracker } from '@/components/blog-analytics-tracker'
+import { BlogAnalyticsTracker } from '@/components/blog/blog-analytics-tracker'
 
 // Mock dependencies
 const mockUseBlogAnalytics = vi.fn()

@@ -3,19 +3,19 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { resume, getShortSummary } from "@/data/resume";
 import { getOgImageUrl } from "@/lib/site-config";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/common/logo";
 import { getAboutPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
 import { ExternalLink } from "lucide-react";
-import { AboutAvatar } from "@/components/about-avatar";
-import { AboutStats } from "@/components/about-stats";
+import { AboutAvatar } from "@/components/about/about-avatar";
+import { AboutStats } from "@/components/about/about-stats";
 import { SocialLinksGrid } from "@/components/sections/social-links-grid";
-import { AboutTeam } from "@/components/about-team";
-import { PostList } from "@/components/post-list";
+import { AboutTeam } from "@/components/about/about-team";
+import { PostList } from "@/components/blog/post/post-list";
 import { posts } from "@/data/posts";
 import { visibleProjects } from "@/data/projects";
 import { getYearsOfExperience } from "@/data/resume";
-import { SectionNavigator, Section } from "@/components/section-navigator";
+import { SectionNavigator, Section } from "@/components/common/section-navigator";
 import { 
   TYPOGRAPHY, 
   SPACING,
@@ -27,11 +27,11 @@ import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
 import { createPageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
-import { AvailabilityBanner } from "@/components/cta";
-import { DownloadResumeButton } from "@/components/download-resume-button";
+import { AvailabilityBanner } from "@/components/common/cta";
+import { DownloadResumeButton } from "@/components/resume/download-resume-button";
 import dynamic from "next/dynamic";
 
-const ScrollReveal = dynamic(() => import("@/components/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
+const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
   ssr: true,
 });
@@ -91,7 +91,7 @@ export default async function AboutPage() {
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={0}>
             <div className={SPACING.content}>
-              <h2 className={TYPOGRAPHY.h2.standard}>What drives me</h2>
+              <h2 className={TYPOGRAPHY.h2.standard}>What Drives Me</h2>
               <div className="space-y-3 text-muted-foreground">
               <p>
                 My passion for cybersecurity stems from a deep-seated curiosity about technology and a commitment to making the digital world a safer place. I thrive on solving complex problems, staying ahead of emerging threats, and continuously learning in this ever-evolving field.
@@ -107,11 +107,11 @@ export default async function AboutPage() {
           </ScrollReveal>
         </Section>
         
-        {/* Professional background */}
+        {/* Professional Background */}
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={50}>
             <div className={SPACING.content}>
-              <h2 className={TYPOGRAPHY.h2.standard}>Professional background</h2>
+              <h2 className={TYPOGRAPHY.h2.standard}>Professional Background</h2>
 
               <p className="text-muted-foreground mb-6">
               With over {getYearsOfExperience()} years of experience in the cybersecurity industry, I have had the privilege of working with diverse organizations ranging from startups to established enterprises. My journey has equipped me with a comprehensive understanding of security frameworks, risk management, and incident response strategies.
@@ -192,7 +192,7 @@ export default async function AboutPage() {
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={100}>
             <div className={SPACING.content}>
-              <h2 className={TYPOGRAPHY.h2.standard}>Connect with me</h2>
+              <h2 className={TYPOGRAPHY.h2.standard}>Connect with Me</h2>
               <p className="text-muted-foreground mb-4">
               I&apos;m open to connecting with fellow builders, sharing knowledge, and exploring new opportunities. Feel free to reach out through any of the platforms below!
             </p>

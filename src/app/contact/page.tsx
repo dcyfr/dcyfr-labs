@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/contact-form";
-import { ContactFormErrorBoundary } from "@/components/contact-form-error-boundary";
+import { ContactForm } from "@/components/common/contact-form";
+import { ContactFormErrorBoundary } from "@/components/common/error-boundaries/contact-form-error-boundary";
 import { getContactPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
 import { SPACING, PAGE_LAYOUT } from "@/lib/design-tokens";
@@ -9,7 +9,7 @@ import { PageHero } from "@/components/layouts/page-hero";
 import { createPageMetadata } from "@/lib/metadata";
 import dynamic from "next/dynamic";
 
-const ScrollReveal = dynamic(() => import("@/components/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
+const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
   ssr: true,
 });
