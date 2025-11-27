@@ -6,7 +6,7 @@ import { createArchivePageMetadata, createCollectionSchema, getJsonLdScriptProps
 import { AUTHOR_NAME, SITE_URL } from "@/lib/site-config";
 import { headers } from "next/headers";
 import { getMultiplePostViews } from "@/lib/views";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import {
   PostList,
@@ -51,7 +51,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const sortBy = getParam("sortBy") || "newest";
   const dateRange = getParam("dateRange") || "all";
   const layoutParam = getParam("layout");
-  const layout = (["grid", "list", "magazine", "compact"].includes(layoutParam)) ? layoutParam as "grid" | "list" | "magazine" | "compact" : "list";
+  const layout = (["grid", "list", "magazine", "compact"].includes(layoutParam)) ? layoutParam as "grid" | "list" | "magazine" | "compact" : "compact";
   
   // Apply date range filter
   const now = new Date();
@@ -191,7 +191,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <BlogLayoutManager />
       
       {/* Blog layout with sidebar on desktop */}
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8">
+      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8`}>
         {/* Main grid: Sidebar + Content */}
         <BlogLayoutWrapper>
           {/* Sidebar (desktop only) */}

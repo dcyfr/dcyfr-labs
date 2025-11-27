@@ -77,6 +77,8 @@ describe("ProjectFilters Component", () => {
     techList: ["react", "nextjs", "typescript"],
     query: "",
     sortBy: "newest",
+    totalResults: 10,
+    hasActiveFilters: false,
   };
 
   beforeEach(() => {
@@ -90,12 +92,13 @@ describe("ProjectFilters Component", () => {
       expect(screen.getByTestId("search-input")).toBeInTheDocument();
     });
 
-    it("should render status filter", () => {
+    // Status and sort filters are temporarily disabled
+    it.skip("should render status filter", () => {
       render(<ProjectFilters {...defaultProps} />);
       expect(screen.getByTestId("select-all")).toBeInTheDocument();
     });
 
-    it("should render sort filter", () => {
+    it.skip("should render sort filter", () => {
       render(<ProjectFilters {...defaultProps} />);
       expect(screen.getByTestId("select-newest")).toBeInTheDocument();
     });
@@ -165,7 +168,8 @@ describe("ProjectFilters Component", () => {
     });
   });
 
-  describe("Status Filter", () => {
+  // Status and sort filters are temporarily disabled
+  describe.skip("Status Filter", () => {
     it("should display current status", () => {
       render(<ProjectFilters {...defaultProps} status="active" />);
       const select = screen.getByTestId("select-active") as HTMLSelectElement;
@@ -180,7 +184,7 @@ describe("ProjectFilters Component", () => {
     });
   });
 
-  describe("Sort Filter", () => {
+  describe.skip("Sort Filter", () => {
     it("should display current sort option", () => {
       render(<ProjectFilters {...defaultProps} sortBy="oldest" />);
       const select = screen.getByTestId("select-oldest") as HTMLSelectElement;

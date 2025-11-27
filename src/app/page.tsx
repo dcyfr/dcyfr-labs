@@ -27,7 +27,6 @@ import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
-import { ProjectCard } from "@/components/projects";
 import { PostList } from "@/components/blog";
 import {
   SectionHeader,
@@ -47,7 +46,7 @@ const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal")
 });
 
 // Optimized meta description for homepage (157 characters)
-const pageDescription = "DCYFR Labs - Cybersecurity architect and tinkerer helping organizations build resilient security programs that empower teams to move fast and stay secure.";
+const pageDescription = "Cyber architecture and design insights from DCYFR Labs. Exploring coding, security, and tech trends.";
 
 export const metadata: Metadata = createPageMetadata({
   title: SITE_TITLE_PLAIN,
@@ -100,7 +99,7 @@ export default async function Home() {
         url: SITE_URL,
         image: socialImage,
         description: pageDescription,
-        jobTitle: "Cybersecurity Architect & Tinkerer",
+        jobTitle: "Founder & Cyber Architect",
         sameAs: getSocialUrls(),
         knowsAbout: [
           "Cybersecurity",
@@ -142,20 +141,20 @@ export default async function Home() {
         <Section>
           <ScrollReveal animation="fade-up">
             <PageHero
-              contentClassName="max-w-2xl mx-auto text-center"
+              contentClassName={`${CONTAINER_WIDTHS.narrow} mx-auto text-center`}
               variant="homepage"
               align="center"
               title={
                 <span className="flex items-center gap-2 justify-center">
-                  Drew&apos;s Lab <Logo className="pb-2" width={32} height={32} />
+                  DCYFR Labs <Logo className="pb-2" width={32} height={32} />
                 </span>
               }
-              description="Hi! I'm Drew, a cybersecurity architect and tinkerer. Welcome to my lab where I share insights on security, development, and tech."
+              description="Hi, I&apos;m Drew, Cyber Architect and Tinkerer. I help organizations build resilient security programs that empower teams to move fast and stay secure."
               image={
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40">
                   <Image
                     src="/images/avatar.jpg"
-                    alt="Drew's profile picture"
+                    alt="Drew (dcyfr)"
                     fill
                     sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
                     className="rounded-full object-cover ring-4 ring-border shadow-lg"

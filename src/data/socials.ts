@@ -5,16 +5,16 @@
  * Used across the site for consistent linking and display.
  */
 
-export type SocialPlatform = 
-  | "calendar"
-  | "linkedin" 
-  | "github" 
-  | "github-sponsor" 
-  | "peerlist" 
+export type SocialPlatform =
+  | "linkedin"
+  | "github"
+  | "github-sponsor"
+  | "peerlist"
   | "goodreads"
   | "credly"
+  | "calendar"
   | "orcid"
-  | "twitter";
+  | "twitter"
 
 export type SocialLink = {
   platform: SocialPlatform;
@@ -57,25 +57,11 @@ export const socialLinks: SocialLink[] = [
       description: "Support open source contributions"
     },
     {
-      platform: "calendar",
-      label: "Book a Meeting",
-      url: "https://cal.com/dcyfr",
-      icon: "calendar",
-      description: "Let's meet up"
-    },
-    {
       platform: "credly",
       label: "Credly",
       url: "https://www.credly.com/users/dcyfr",
       icon: "award",
       description: "View my professional certifications"
-    },
-    {
-      platform: "orcid",
-      label: "ORCID",
-      url: "https://orcid.org/0009-0008-1312-2812",
-      icon: "graduation-cap",
-      description: "View my research contributions"
     },
     {
       platform: "goodreads",

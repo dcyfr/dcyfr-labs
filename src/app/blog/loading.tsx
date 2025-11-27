@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { PostListSkeleton } from "@/components/blog/post/post-list-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BlogLayoutWrapper } from "@/components/blog";
+import { TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 
 /**
  * Layout-aware skeleton content that reads URL params
@@ -17,7 +18,7 @@ function BlogLoadingContent() {
     : "list";
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8">
+    <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8`}>
       <BlogLayoutWrapper>
         {/* Desktop Sidebar (hidden on mobile) */}
         <div className="hidden lg:block">
@@ -44,7 +45,7 @@ function BlogLoadingContent() {
           {/* Header with ViewToggle */}
           <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl mb-2">Blog</h1>
+              <h1 className={TYPOGRAPHY.h1.hero}>Blog</h1>
               <p className="text-muted-foreground">Articles on web development, cybersecurity, artificial intelligence, and more.</p>
             </div>
             <div className="shrink-0 hidden lg:flex items-center gap-3">
@@ -97,7 +98,7 @@ export default function Loading() {
  */
 function BlogLoadingFallback() {
   return (
-    <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8">
+    <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8`}>
       <BlogLayoutWrapper>
         <div className="hidden lg:block">
           <div className="sticky top-24">
@@ -117,7 +118,7 @@ function BlogLoadingFallback() {
         <div className="px-2 sm:px-4 lg:px-6 w-full">
           <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl mb-2">Blog</h1>
+              <h1 className={TYPOGRAPHY.h1.hero}>Blog</h1>
               <p className="text-muted-foreground">Articles on web development, cybersecurity, artificial intelligence, and more.</p>
             </div>
             <div className="shrink-0 hidden lg:flex items-center gap-3">

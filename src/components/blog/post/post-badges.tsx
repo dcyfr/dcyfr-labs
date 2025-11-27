@@ -26,7 +26,7 @@ export function PostBadges({
       <Badge
         key="draft"
         variant="outline"
-        className={`border-blue-500/70 bg-blue-500/15 text-blue-700 dark:text-blue-300 backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
+        className={`border-blue-500/70 bg-blue-500/50 text-white backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
       >
         Draft
       </Badge>
@@ -39,7 +39,7 @@ export function PostBadges({
       <Badge
         key="archived"
         variant="outline"
-        className={`border-amber-500/70 bg-amber-500/15 text-amber-700 dark:text-amber-300 backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
+        className={`border-amber-500/70 bg-amber-500/50 text-white backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
       >
         Archived
       </Badge>
@@ -52,7 +52,7 @@ export function PostBadges({
       <Badge
         key="new"
         variant="outline"
-        className={`border-green-500/70 bg-green-500/15 text-green-700 dark:text-green-300 backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
+        className={`border-green-500/70 bg-green-500/50 text-white backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
       >
         New
       </Badge>
@@ -65,7 +65,7 @@ export function PostBadges({
       <Badge
         key="hot"
         variant="outline"
-        className={`border-red-500/70 bg-red-500/15 text-red-700 dark:text-red-300 backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
+        className={`border-red-500/70 bg-red-500/50 text-white backdrop-blur-sm font-semibold ${size === "sm" ? "text-xs" : ""}`}
       >
         Hot
       </Badge>

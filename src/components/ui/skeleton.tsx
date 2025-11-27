@@ -2,16 +2,10 @@ import { cn } from "@/lib/utils";
 
 /**
  * Base skeleton component for loading states.
- * Provides a shimmer animation effect (gradient moving left-to-right).
- * More engaging than pulse and implies loading direction.
+ * DISABLED: Returns null to hide all skeleton loading states across the site.
  */
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("skeleton-shimmer rounded-md bg-muted", className)}
-      {...props}
-    />
-  );
+  return null;
 }
 
 export { Skeleton };

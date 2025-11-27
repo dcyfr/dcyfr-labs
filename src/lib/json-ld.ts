@@ -25,7 +25,7 @@ export function getPersonSchema(socialImage?: string) {
     name: AUTHOR_NAME,
     url: SITE_URL,
     ...(socialImage && { image: socialImage }),
-    jobTitle: "Cybersecurity Architect & Developer",
+    jobTitle: "Founder & Cyber Architect",
     sameAs: getSocialUrls(),
   };
 }

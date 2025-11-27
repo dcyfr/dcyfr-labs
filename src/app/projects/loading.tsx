@@ -1,20 +1,23 @@
 import { ProjectCardSkeleton } from "@/components/projects/project-card-skeleton";
-import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
+import { TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 
 /**
  * Loading state for projects page.
- * Uses ArchiveLayout component to match actual page structure.
+ * Uses same container structure as page.tsx to prevent layout shift.
  * 
- * @see src/app/projects/page.tsx - Must match structure
+ * @see src/app/projects/page.tsx - Must match structure exactly
  */
 export default function Loading() {
   return (
-    <ArchiveLayout
-      title="Projects"
-      description="Browse my portfolio of development projects, open-source contributions, and published work."
-    >
+    <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8`}>
+      {/* Header - matches page.tsx structure */}
+      <div className="mb-8">
+        <h1 className={TYPOGRAPHY.h1.hero}>Projects</h1>
+        <p className="text-muted-foreground">Browse my portfolio of development projects, open-source contributions, and published work.</p>
+      </div>
+
       {/* Filters skeleton - matches ProjectFilters structure */}
       <div className="mb-8">
         <div className="space-y-6">
@@ -29,11 +32,6 @@ export default function Loading() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Results count skeleton */}
-      <div className="mb-6 flex items-center justify-between">
-        <Skeleton className="h-5 w-40" />
       </div>
 
       {/* Projects Grid - 3 columns on lg, 2 on sm, 1 on mobile */}
@@ -53,6 +51,6 @@ export default function Loading() {
           </CardContent>
         </Card>
       </div>
-    </ArchiveLayout>
+    </div>
   );
 }

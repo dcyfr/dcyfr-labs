@@ -263,6 +263,9 @@ describe('Authentication & Security Integration', () => {
   describe('Rate Limiting Integration', () => {
     beforeEach(() => {
       vi.clearAllMocks()
+      // Force in-memory fallback for consistent test behavior
+      delete process.env.REDIS_URL
+      globalThis.__rateLimitRedisClient = undefined
     })
 
     it('enforces rate limits consistently', async () => {

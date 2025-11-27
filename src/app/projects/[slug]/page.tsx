@@ -72,16 +72,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-const STATUS_VARIANT: Record<Project["status"], "secondary" | "default" | "outline"> = {
-  "active": "outline",
-  "in-progress": "outline",
-  "archived": "outline",
-};
-
 const STATUS_LABEL: Record<Project["status"], string> = {
   "active": "Active",
   "in-progress": "In Progress",
   "archived": "Archived",
+};
+
+// Status badge color styles - matching homepage activity badges
+const STATUS_STYLES: Record<Project["status"], string> = {
+  active:
+    "border-green-500/70 bg-green-500/50 backdrop-blur-sm font-semibold text-white",
+  "in-progress":
+    "border-blue-500/70 bg-blue-500/50 backdrop-blur-sm font-semibold text-white",
+  archived:
+    "border-amber-500/70 bg-amber-500/50 backdrop-blur-sm font-semibold text-white",
 };
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -145,7 +149,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           title={project.title}
           metadata={project.timeline || undefined}
           badges={
-            <Badge variant={STATUS_VARIANT[project.status]}>
+            <Badge variant="outline" className={STATUS_STYLES[project.status]}>
               {STATUS_LABEL[project.status]}
             </Badge>
           }

@@ -26,7 +26,7 @@ const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal")
 });
 
 const pageTitle = "Resume";
-const pageDescription = "Professional resume for Drew - cybersecurity architect with expertise in risk management, incident response, cloud security, and compliance (ISO 27001, SOC2).";
+const pageDescription = "Explore Drew's professional experience, skills, and certifications as a cyber architect.";
 
 export const metadata: Metadata = createPageMetadata({
   title: pageTitle,

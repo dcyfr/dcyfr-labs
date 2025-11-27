@@ -32,8 +32,8 @@ export type Resume = {
 };
 
 export const resume: Resume = {
-  shortSummary: "Cybersecurity architect with 5+ years leading security programs, incident response, and secure development practices for global organizations.",
-  summary: "I'm a cybersecurity architect with over 5 years of experience leading security programs, incident response, and building secure development practices for global organizations. I specialize in cyber risk management, vulnerability management, and automating operational security. I'm passionate about mentoring the next generation of cyber professionals and sharing my knowledge through writing and community engagement.",
+  shortSummary: "Cyber architect with 5+ years leading security programs, incident response, and secure development practices for global organizations.",
+  summary: "I'm a cyber architect with over 5 years of experience leading security programs, incident response, and building secure development practices for global organizations. I specialize in cyber risk management, vulnerability management, and automating operational security. I'm passionate about mentoring the next generation of cyber professionals and sharing my knowledge through writing and community engagement.",
   experience: [
     {
       title: "Principal Security Engineer",
@@ -189,7 +189,7 @@ export function getYearsOfExperience(): number {
  */
 export function getShortSummary(): string {
   const years = getYearsOfExperience();
-  return `Cybersecurity architect with ${years}+ years leading security programs, incident response, and secure development practices for global organizations.`;
+  return `Cyber architect with ${years}+ years leading security programs, incident response, and secure development practices for global organizations.`;
 }
 
 /**
@@ -198,7 +198,7 @@ export function getShortSummary(): string {
  */
 export function getSummary(): string {
   const years = getYearsOfExperience();
-  return `I'm a cybersecurity architect with over ${years} years of experience leading security programs, incident response, and building secure development practices for global organizations. I specialize in cyber risk management, vulnerability management, and automating operational security. I'm passionate about mentoring the next generation of cyber professionals and sharing my knowledge through writing and community engagement.`;
+  return `I'm a cyber architect with over ${years} years of experience leading security programs, incident response, and building secure development practices for global organizations. I specialize in cyber risk management, vulnerability management, and automating operational security. I'm passionate about mentoring the next generation of cyber professionals and sharing my knowledge through writing and community engagement.`;
 }
 
 export default resume;

@@ -1,7 +1,7 @@
 /**
- * Call-to-Action Component
- * 
- * Reusable conversion-optimized CTA for blog posts, project pages, and other content.
+ * Call-to-Action Components
+ *
+ * Reusable conversion-optimized CTAs for blog posts, project pages, and other content.
  * Tracks clicks and provides consistent styling.
  */
 
@@ -14,121 +14,216 @@ import { trackEvent } from '@/lib/analytics';
 import { TYPOGRAPHY, getContainerClasses } from '@/lib/design-tokens';
 import { getSocialLink } from '@/data/socials';
 
+// ============================================================================
+// SHARED STYLES
+// ============================================================================
+
+/**
+ * Prose reset styles for headings inside prose containers
+ * Overrides serif font and margin from .prose h1/h2/h3 rules
+ */
+const PROSE_RESET_STYLES: React.CSSProperties = {
+  fontFamily: 'var(--font-sans)',
+  marginTop: 0,
+  marginBottom: 0,
+};
+
+// ============================================================================
+// SHARED UTILITIES
+// ============================================================================
+
+type TrackingLocation =
+  | "homepage"
+  | "about-page"
+  | "about-availability-banner"
+  | "blog-post-end"
+  | "project-page-end";
+
+/**
+ * Creates a click handler that tracks navigation events
+ */
+function createTrackingHandler(url: string, source: TrackingLocation) {
+  return () => {
+    trackEvent({
+      name: 'external_link_clicked',
+      properties: { url, source },
+    });
+  };
+}
+
+/**
+ * Gets LinkedIn link with UTM parameters
+ */
+function getLinkedInUrl(campaign: string): string | null {
+  const linkedInLink = getSocialLink('linkedin');
+  if (!linkedInLink) return null;
+  return `${linkedInLink.url}?utm_source=portfolio&utm_medium=website&utm_campaign=${campaign}`;
+}
+
+/**
+ * Gets Peerlist link with UTM parameters
+ */
+function getPeerlistUrl(campaign: string): string | null {
+  const peerlistLink = getSocialLink('peerlist');
+  if (!peerlistLink) return null;
+  return `${peerlistLink.url}?utm_source=portfolio&utm_medium=website&utm_campaign=${campaign}`;
+}
+
+/**
+ * Gets Calendar link with UTM parameters
+ */
+function getCalendarUrl(campaign: string): string | null {
+  const calendarLink = getSocialLink('calendar');
+  if (!calendarLink) return null;
+  return `${calendarLink.url}?utm_source=portfolio&utm_medium=website&utm_campaign=${campaign}`;
+}
+
 export interface CTAProps {
   /** CTA variant style */
   variant?: 'default' | 'minimal' | 'centered';
-  
+
   /** Location identifier for tracking */
-  location: 'homepage' | 'about-page' | 'projects-page' | 'blog-post-end';
-  
+  location: 'homepage' | 'about-page' | 'blog-post-end' | 'project-page-end';
+
   /** Custom className */
   className?: string;
 }
 
 /**
- * Blog Post CTA - Appears at the end of blog posts
+ * About Page Availability Banner
  */
-export function BlogPostCTA({ variant = 'default', location, className }: CTAProps) {
+export function AvailabilityBanner({ className }: { className?: string }) {
   const linkedInLink = getSocialLink('linkedin');
-  
-  const handleContactClick = () => {
-    trackEvent({
-      name: 'external_link_clicked',
-      properties: {
-        url: '/contact',
-        source: location,
-      },
-    });
-  };
+  const linkedInUrl = getLinkedInUrl('availability_banner');
+  const calendarLink = getSocialLink('calendar');
+  const calendarUrl = getCalendarUrl('availability_banner');
 
-  const handleLinkedInClick = () => {
-    if (linkedInLink) {
-      trackEvent({
-        name: 'external_link_clicked',
-        properties: {
-          url: linkedInLink.url,
-          source: location,
-        },
-      });
-    }
-  };
+  const handleContactClick = createTrackingHandler(
+    '/contact',
+    'about-availability-banner'
+  );
+  const handleLinkedInClick = linkedInLink
+    ? createTrackingHandler(linkedInLink.url, 'about-availability-banner')
+    : undefined;
+  const handleCalendarClick = calendarLink
+    ? createTrackingHandler(calendarLink.url, 'about-availability-banner')
+    : undefined;
+
+  return (
+    <div className={cn("rounded-lg border bg-muted/50 p-6", className)}>
+      <div className="flex items-start gap-3">
+        <div className="relative h-3 w-3 mt-1.5 shrink-0" aria-hidden="true">
+          <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
+          <span className="absolute inset-0 rounded-full bg-green-500" />
+        </div>
+        <div className="flex-1">
+          <div className="font-semibold mb-1">
+            I am currently open to new opportunities and collaborations!
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Whether you have a project in mind or just want to connect, feel
+            free to reach out.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild>
+              <Link href="/contact" onClick={handleContactClick}>
+                Contact me
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <a
+                href={calendarUrl ?? '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleCalendarClick}
+                aria-label={calendarLink?.description ?? 'Schedule a meeting'}
+              >
+                Schedule a meeting
+              </a>
+            </Button>
+            {/* LinkedIn link
+            <Button variant="outline" asChild>
+              <a
+                href={linkedInUrl ?? '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleLinkedInClick}
+                aria-label={linkedInLink?.description ?? 'Connect on LinkedIn'}
+              >
+                Connect on LinkedIn
+              </a>
+            </Button>
+             */}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Blog Post CTA
+ */
+export function BlogPostCTA({
+  variant = 'default',
+  location,
+  className,
+}: CTAProps) {
+  const handleContactClick = createTrackingHandler('/contact', location);
+  const handleAboutClick = createTrackingHandler('/about', location);
 
   if (variant === 'minimal') {
     return (
-      <div className={cn('border-t pt-8 mt-8', className)}>
+      <div className={cn("border-t pt-8 mt-8", className)}>
         <p className="text-sm text-muted-foreground">
-          Building something similar? I&apos;d love to hear about it—
+          What did you think of this post? Leave a comment below or
           <Link
             href="/contact"
             onClick={handleContactClick}
-            className="text-primary hover:underline ml-1"
+            className="text-primary underline ml-1"
           >
-            let&apos;s chat
+            send me a message
           </Link>
-          .
+          {' '}with your thoughts!
         </p>
-      </div>
-    );
-  }
-
-  if (variant === 'centered') {
-    return (
-      <div className={cn('border-t pt-12 mt-12 text-center', className)}>
-        <h2 className={cn(TYPOGRAPHY.h2.standard, 'mb-3')}>
-          
-        </h2>
-        <p className={cn('text-muted-foreground mb-6 mx-auto', getContainerClasses('prose'))}>
-          If you&apos;re building a Next.js application and need help with security,
-          performance, or architecture, I&apos;m here to help.
-        </p>
-        <div className="flex gap-4 justify-center">
-          <Button asChild>
-            <Link href="/contact" onClick={handleContactClick}>
-              Start a conversation
-            </Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <a
-              href={linkedInLink ? `${linkedInLink.url}?utm_source=portfolio&utm_medium=website&utm_campaign=blog_cta` : '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleLinkedInClick}
-              aria-label={linkedInLink?.description || 'Connect on LinkedIn'}
-            >
-              Connect on LinkedIn
-            </a>
-          </Button>
-        </div>
       </div>
     );
   }
 
   // Default variant
   return (
-    <div className={cn('rounded-lg border bg-muted/30 p-6 mt-12', className)}>
-      <h2 className={cn(TYPOGRAPHY.h3.standard, 'mb-2')}>
-        Building a Next.js app?
+    <div
+      className={cn(
+        variant === "centered" ? "text-center" : "",
+        "rounded-lg border bg-linear-to-b from-muted/50 to-muted/30 p-6 md:p-8 mt-12 mb-6",
+        className
+      )}
+    >
+      <h2
+        className={cn(TYPOGRAPHY.h2.featured, "mb-2")}
+        style={PROSE_RESET_STYLES}
+      >
+        Did you enjoy this post?
       </h2>
-      <p className="text-muted-foreground mb-4">
-        Whether you&apos;re facing challenges with security, performance, or architecture,
-        I&apos;m here to help you build robust and scalable applications.
+      <p className="text-muted-foreground mb-6">
+        If you found this content helpful, please reach out and let me know what
+        you think!
       </p>
-      <div className="flex gap-3">
-        <Button asChild size="sm">
+      <div
+        className={cn(
+          variant === "centered" ? "justify-center" : "",
+          "flex flex-col sm:flex-row gap-3"
+        )}
+      >
+        <Button asChild size="lg">
           <Link href="/contact" onClick={handleContactClick}>
-            Get in touch
+            Contact
           </Link>
         </Button>
-        <Button variant="outline" size="sm" asChild>
-          <a
-            href={linkedInLink ? `${linkedInLink.url}?utm_source=portfolio&utm_medium=website&utm_campaign=blog_cta` : '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleLinkedInClick}
-            aria-label={linkedInLink?.description || 'Connect on LinkedIn'}
-          >
-            Connect on LinkedIn
-          </a>
+        <Button variant="outline" size="lg" asChild>
+          <Link href="/about" onClick={handleAboutClick}>
+            About
+          </Link>
         </Button>
       </div>
     </div>
@@ -139,85 +234,48 @@ export function BlogPostCTA({ variant = 'default', location, className }: CTAPro
  * Projects Page CTA
  */
 export function ProjectsCTA({ className }: { className?: string }) {
-  const handleContactClick = () => {
-    trackEvent({
-      name: 'external_link_clicked',
-      properties: {
-        url: '/contact',
-        source: 'projects-page-cta',
-      },
-    });
-  };
+  const peerlistLink = getSocialLink('peerlist');
+  const peerlistUrl = getPeerlistUrl('projects_cta');
 
-  const handleAboutClick = () => {
-    trackEvent({
-      name: 'external_link_clicked',
-      properties: {
-        url: '/about',
-        source: 'projects-page-cta',
-      },
-    });
-  };
+  const handleContactClick = createTrackingHandler(
+    '/contact',
+    'project-page-end'
+  );
+  const handlePeerlistClick = peerlistLink
+    ? createTrackingHandler(peerlistLink.url, 'project-page-end')
+    : undefined;
 
   return (
     <section className={cn('mt-12 text-center', className)}>
       <div className="rounded-lg border bg-linear-to-b from-muted/50 to-muted/30 p-6 md:p-8">
         <h2 className={cn(TYPOGRAPHY.h2.featured, 'mb-2')}>
-          Interested in working together?
+          Interested in collaborating?
         </h2>
-        <p className={cn('text-lg text-muted-foreground mb-4 mx-auto', getContainerClasses('standard'))}>
-          Whether you&apos;re looking for a developer, consultant, or collaborator,
-          I&apos;m always open to discussing new projects and opportunities.
+        <p
+          className="text-muted-foreground mb-6"
+        >
+          Feel free to reach out or connect with me on Peerlist to explore
+          potential opportunities!
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button asChild size="lg">
             <Link href="/contact" onClick={handleContactClick}>
-              Start a conversation
+              Contact
             </Link>
           </Button>
           <Button variant="outline" size="lg" asChild>
-            <Link href="/about" onClick={handleAboutClick}>
-              Learn more about me
-            </Link>
+            <a
+              href={peerlistUrl ?? '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handlePeerlistClick}
+              aria-label={peerlistLink?.description ?? 'Collaborate on Peerlist'}
+            >
+              Peerlist
+            </a>
           </Button>
         </div>
       </div>
     </section>
-  );
-}
-
-/**
- * About Page Availability Banner
- */
-export function AvailabilityBanner({ className }: { className?: string }) {
-  const handleContactClick = () => {
-    trackEvent({
-      name: 'external_link_clicked',
-      properties: {
-        url: '/contact',
-        source: 'about-availability-banner',
-      },
-    });
-  };
-
-  return (
-    <div className={cn('rounded-lg border bg-muted/50 p-6', className)}>
-      <div className="flex items-start gap-3">
-        <div className="h-3 w-3 rounded-full bg-green-500 mt-1 shrink-0" />
-        <div className="flex-1">
-          <div className="font-semibold mb-1">
-            Open to new opportunities
-          </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            If you&apos;d like to discuss a project or opportunity, feel free to reach out!
-          </p>
-          <Button asChild>
-            <Link href="/contact" onClick={handleContactClick}>
-              Contact me
-            </Link>
-          </Button>
-        </div>
-      </div>
-    </div>
   );
 }

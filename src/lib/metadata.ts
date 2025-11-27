@@ -71,7 +71,7 @@ export interface BaseMetadataOptions {
  * ```tsx
  * export const metadata = createPageMetadata({
  *   title: 'About',
- *   description: 'Learn about Drew, a cybersecurity architect...',
+ *   description: 'Learn about Drew, a cyber architect...',
  *   path: '/about',
  * });
  * ```

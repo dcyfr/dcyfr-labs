@@ -16,23 +16,23 @@
  * 
  * @example
  * ```tsx
- * <div className={`mx-auto ${CONTAINER_WIDTHS.prose} ${CONTAINER_PADDING}`}>
+ * <div className={`mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING}`}>
  *   {content}
  * </div>
  * ```
  */
 export const CONTAINER_WIDTHS = {
-  /** Long-form content optimized for reading (blog posts, about page) */
-  prose: "max-w-4xl",
-  
-  /** Standard width for list/grid pages (blog listing, projects) */
-  standard: "max-w-4xl",
-  
-  /** Narrow width for forms and focused content (contact page) */
+  /** Narrow width for forms and focused content (contact forms) */
   narrow: "max-w-2xl",
   
-  /** Wide width for data-heavy pages (dashboards, analytics, tables) */
-  dashboard: "max-w-7xl",
+  /** Standard width for core pages (homepage, about, contact, resume) */
+  standard: "max-w-4xl",
+  
+  /** Content-heavy pages with sidebar (individual blog posts, project detail pages) */
+  content: "max-w-7xl",
+  
+  /** Archive/listing pages with filters and grids (blog listing, projects listing) */
+  archive: "max-w-7xl",
 } as const;
 
 /**
@@ -352,7 +352,7 @@ export const PAGE_LAYOUT = {
   /** Prose/reading-optimized section (about page, long-form content) */
   proseSection: {
     /** Container for prose content */
-    container: `mx-auto ${CONTAINER_WIDTHS.prose} ${CONTAINER_PADDING} py-10 md:py-14`,
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} py-10 md:py-14`,
     /** Prose content wrapper */
     content: SPACING.content,
   },

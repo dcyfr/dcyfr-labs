@@ -11,9 +11,9 @@ export const teamMembers: TeamMember[] = [
   {
     id: "drew",
     name: "Drew",
-    title: "Cybersecurity Architect",
+    title: "Cyber Architect",
     subtitle: "Human",
-    description: "Cybersecurity architect focused on secure development, incident response, and building resilient systems.",
+    description: "Cyber architect focused on secure development, incident response, and building resilient systems.",
     badges: [
       { label: "Security", icon: Shield },
       { label: "Development", icon: Code },

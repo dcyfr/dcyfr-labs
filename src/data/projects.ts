@@ -35,7 +35,7 @@ const projectDrafts: Project[] = [
   {
     slug: "dcyfr-labs",
     title: "DCYFR Labs",
-    description: "Cyber Architecture & Design Services, Portfolio, and Blog.",
+    description: "Cyber Architecture & Design",
     timeline: "2025 → Present",
     status: "active",
     tech: ["React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui"],

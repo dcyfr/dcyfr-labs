@@ -60,10 +60,10 @@ All JSON-LD structured data schemas have been reviewed and validated against Sch
       "@id": "https://cyberdrew.dev/#person",
       "name": "Drew",
       "url": "https://cyberdrew.dev",
-      "jobTitle": "Cybersecurity Architect & Developer",
+      "jobTitle": "Founder & Cyber Architect",
       "sameAs": [
         "https://github.com/dcyfr",
-        "https://linkedin.com/in/drewhcypher"
+        "https://linkedin.com/in/dcyfr"
       ]
     }
   ]

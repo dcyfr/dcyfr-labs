@@ -36,7 +36,7 @@ export function BlogLayoutManager() {
         router.replace(`/blog?${params.toString()}`, { scroll: false });
       }
     }
-  }, []); // Empty deps - only run on mount
+  }, [router, searchParams]); // Run on mount and when router/searchParams change
 
   return null; // This component doesn't render anything
 }

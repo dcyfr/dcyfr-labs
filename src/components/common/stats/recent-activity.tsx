@@ -19,6 +19,7 @@ interface ActivityItem {
   date: string;
   href: string;
   tags?: string[];
+  totalTags?: number;
 }
 
 interface RecentActivityProps {
@@ -52,7 +53,8 @@ export function RecentActivity({ posts, projects, limit = 5 }: RecentActivityPro
       description: post.summary,
       date: post.publishedAt,
       href: `/blog/${post.slug}`,
-      tags: post.tags.slice(0, 2),
+      tags: post.tags.slice(0, 3),
+      totalTags: post.tags.length,
     })),
     ...projects.slice(0, 2).map(project => ({
       id: project.slug,
@@ -62,6 +64,7 @@ export function RecentActivity({ posts, projects, limit = 5 }: RecentActivityPro
       date: project.timeline || new Date().toISOString(),
       href: `/projects#${project.slug}`,
       tags: project.tags?.slice(0, 2),
+      totalTags: project.tags?.length ?? 0,
     })),
   ];
 
@@ -88,7 +91,7 @@ export function RecentActivity({ posts, projects, limit = 5 }: RecentActivityPro
   const getTypeLabel = (type: ActivityType) => {
     switch (type) {
       case "post":
-        return "Article";
+        return "Blog Post";
       case "project":
         return "Project";
       case "commit":
@@ -99,11 +102,11 @@ export function RecentActivity({ posts, projects, limit = 5 }: RecentActivityPro
   const getTypeBadgeClass = (type: ActivityType) => {
     switch (type) {
       case "post":
-        return "border-blue-500/70 bg-blue-500/15 text-blue-700 dark:text-blue-300";
+        return "border-blue-500/70 bg-blue-500/50 text-dark dark:text-white";
       case "project":
-        return "border-purple-500/70 bg-purple-500/15 text-purple-700 dark:text-purple-300";
+        return "border-purple-500/70 bg-purple-500/50 text-dark dark:text-white";
       case "commit":
-        return "border-green-500/70 bg-green-500/15 text-green-700 dark:text-green-300";
+        return "border-green-500/70 bg-green-500/50 text-dark dark:text-white";
     }
   };
 
@@ -198,6 +201,14 @@ export function RecentActivity({ posts, projects, limit = 5 }: RecentActivityPro
                               {tag}
                             </Badge>
                           ))}
+                          {activity.totalTags && activity.totalTags > activity.tags.length && (
+                            <Badge 
+                              variant="secondary" 
+                              className="text-xs px-1.5 py-0 text-muted-foreground"
+                            >
+                              +{activity.totalTags - activity.tags.length}
+                            </Badge>
+                          )}
                         </div>
                       </>
                     )}

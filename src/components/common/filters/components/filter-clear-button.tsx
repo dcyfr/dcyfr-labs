@@ -9,14 +9,14 @@ export function FilterClearButton({
   visible,
   className = "h-10 px-4 whitespace-nowrap shrink-0",
 }: FilterClearButtonProps) {
-  if (!visible) return null;
-
   return (
     <Button
       variant="ghost"
       size="sm"
       onClick={onClear}
-      className={className}
+      className={`${className} ${!visible ? "invisible" : ""}`}
+      aria-hidden={!visible}
+      tabIndex={visible ? 0 : -1}
     >
       Clear all
       {count > 0 && (

@@ -73,35 +73,10 @@
 /* Improved text visibility on holo cards */
 /* Apply white text to specific text elements, not universal selector */
 
-/* Badges: explicitly reset to theme colors with highest specificity */
-/* Must come FIRST to avoid being overridden */
-.holo-card [data-slot="badge"].font-semibold {
-    color: inherit !important;
-}
-
+/* Badges: preserve their own text colors, don't inherit from holo card */
 .holo-card [data-slot="badge"],
 .holo-card [data-slot="badge"] * {
     text-shadow: none !important;
-}
-
-
-/* Status badges: use lighter colors in light mode for readability on holo cards */
-@media (prefers-color-scheme: light) {
-  .holo-card [data-slot="badge"].font-semibold.text-blue-700 {
-    color: rgb(147 197 253) !important; /* blue-300 */
-  }
-  
-  .holo-card [data-slot="badge"].font-semibold.text-amber-700 {
-    color: rgb(252 211 77) !important; /* amber-300 */
-  }
-  
-  .holo-card [data-slot="badge"].font-semibold.text-green-700 {
-    color: rgb(134 239 172) !important; /* green-300 */
-  }
-  
-  .holo-card [data-slot="badge"].font-semibold.text-red-700 {
-    color: rgb(252 165 165) !important; /* red-300 */
-  }
 }
 
 /* Force white text for regular outline badges (tags) in light mode on holo cards */
