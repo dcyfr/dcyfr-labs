@@ -253,5 +253,5 @@ Everything you need is documented. The blueprint is clear. Time to execute.
 ---
 
 **Created:** October 27, 2025  
-**Strategy Owner:** Drew (dcyfr)  
+**Strategy Owner:** Drew  
 **Review Date:** November 15, 2025

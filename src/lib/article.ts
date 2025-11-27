@@ -270,7 +270,7 @@ function calculateRelevanceScore<T>(
  *     description: post.description,
  *     path: `/blog/${post.slug}`,
  *     publishedAt: post.publishedAt,
- *     author: 'Drew Cypher',
+ *     author: 'Drew',
  *     tags: post.tags,
  *     image: post.image?.url,
  *   });
@@ -387,7 +387,7 @@ export function createArticleBreadcrumbs(items: BreadcrumbItem[]) {
  *   description: post.description,
  *   url: `https://cyberdrew.dev/blog/${post.slug}`,
  *   publishedAt: post.publishedAt,
- *   author: 'Drew Cypher',
+ *   author: 'Drew',
  *   image: post.image?.url,
  * });
  * ```

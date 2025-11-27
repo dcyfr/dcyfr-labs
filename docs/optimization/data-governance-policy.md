@@ -2,7 +2,7 @@
 
 **Last Updated:** November 22, 2025  
 **Version:** 1.0  
-**Owner:** Drew Cypher
+**Owner:** Drew
 
 Policies and procedures for managing analytics data for cyberdrew.dev in compliance with privacy regulations and best practices.
 
@@ -410,7 +410,7 @@ npm run analytics:export
 
 ### Who Has Access?
 
-**Owner (Drew Cypher):**
+**Owner (Drew):**
 - Full access to Redis data
 - Full access to Vercel Analytics dashboard
 - Can export, modify, delete data
@@ -643,7 +643,7 @@ cyberdrew:views:ai-development-workflow:history
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
-| 1.0 | 2025-11-22 | Initial policy creation | Drew Cypher |
+| 1.0 | 2025-11-22 | Initial policy creation | Drew |
 
 ---
 
@@ -679,7 +679,7 @@ Changes to this policy require:
 
 ## Contact
 
-**Data Protection Officer:** Drew Cypher  
+**Data Protection Officer:** Drew  
 **Email:** [Contact form on site]  
 **Last Review:** November 22, 2025  
 **Next Review:** January 2026

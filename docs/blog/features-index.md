@@ -796,7 +796,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   "datePublished": "2025-10-24",
   "author": {
     "@type": "Person",
-    "name": "Drew Cyfrr",
+    "name": "Drew",
     "url": "https://cyberdrew.dev"
   },
   "wordCount": 1350,

@@ -1076,7 +1076,7 @@ These are topics we'll explore as blog post opportunities emerge:
 - Adjust future topics based on traffic and engagement metrics
 - Review quarterly and adjust goals based on performance
 
-**Content Strategy Owner:** Drew (dcyfr)  
+**Content Strategy Owner:** Drew  
 **Last Updated:** October 27, 2025  
 **Next Quarterly Review:** January 15, 2026
 
@@ -1168,6 +1168,6 @@ These are topics we'll explore as blog post opportunities emerge:
 - Add new series ideas as they emerge
 - Review and adjust goals quarterly
 
-**Owner:** Drew (dcyfr)  
+**Owner:** Drew  
 **Last Review:** October 26, 2025  
 **Next Review:** November 15, 2025

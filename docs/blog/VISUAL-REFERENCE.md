@@ -433,6 +433,6 @@ Promote ideas to Tier 1              → ideas-brainstorm.md > Tier 2
 ---
 
 **Created:** October 27, 2025  
-**Owner:** Drew (dcyfr)  
+**Owner:** Drew  
 **Purpose:** Quick visual reference and lookup tables  
 **Last Updated:** October 27, 2025

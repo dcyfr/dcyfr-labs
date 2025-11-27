@@ -283,7 +283,7 @@ This document outlines target keywords for planned blog posts and overall SEO st
 Track rankings monthly for:
 - Primary keywords (top 3 per post)
 - "cyberdrew.dev" brand searches
-- "drew cypher" + relevant tech terms
+- "Drew" + relevant tech terms
 
 **Tools:**
 - Vercel Analytics (organic search traffic)

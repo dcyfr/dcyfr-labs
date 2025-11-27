@@ -27,7 +27,7 @@ Added `image` property to all visible projects:
 | Project | Image | Alt Text |
 |---------|-------|----------|
 | X64 Publication | `/projects/default/design.svg` | "X64 Publication - Cybersecurity and technology publication" |
-| Drew's Lab | `/projects/default/tech.svg` | "Drew's Lab - Personal portfolio and blog" |
+|DCYFR Labs | `/projects/default/tech.svg` | "Drew's Lab - Personal portfolio and blog" |
 | ISN Inc. | `/projects/default/general.svg` | "Information Security Network - Non-profit cybersecurity organization" |
 
 ### 3. Feed Route Updates

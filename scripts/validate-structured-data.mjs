@@ -38,7 +38,7 @@ const TEST_SCHEMAS = {
   "About Page": getAboutPageSchema("Cybersecurity architect and developer focused on building secure, scalable web applications."),
   
   // Contact page
-  "Contact Page": getContactPageSchema("Get in touch with Drew Cypher for consulting, speaking, or collaboration opportunities."),
+  "Contact Page": getContactPageSchema("Get in touch with Drew for consulting, speaking, or collaboration opportunities."),
   
   // Blog collection
   "Blog Collection": {

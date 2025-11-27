@@ -333,7 +333,7 @@ Let's go.
 ---
 
 **Created:** October 27, 2025  
-**Strategy Owner:** Drew (dcyfr)  
+**Strategy Owner:** Drew  
 **Location:** `/docs/content/`  
 **Next Action:** Start November post (due Nov 15, 2025)  
 **Next Review:** November 15, 2025
