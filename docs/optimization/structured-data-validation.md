@@ -58,7 +58,7 @@ All JSON-LD structured data schemas have been reviewed and validated against Sch
     {
       "@type": "Person",
       "@id": "https://cyberdrew.dev/#person",
-      "name": "Drew Cypher",
+      "name": "Drew",
       "url": "https://cyberdrew.dev",
       "jobTitle": "Cybersecurity Architect & Developer",
       "sameAs": [
@@ -107,12 +107,12 @@ All JSON-LD structured data schemas have been reviewed and validated against Sch
       "dateModified": "2025-11-18",
       "author": {
         "@type": "Person",
-        "name": "Drew Cypher",
+        "name": "Drew",
         "url": "https://cyberdrew.dev"
       },
       "publisher": {
         "@type": "Person",
-        "name": "Drew Cypher",
+        "name": "Drew",
         "url": "https://cyberdrew.dev"
       },
       "url": "https://cyberdrew.dev/blog/post-slug",

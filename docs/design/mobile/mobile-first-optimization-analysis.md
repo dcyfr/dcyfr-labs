@@ -1130,7 +1130,7 @@ export function InstallPrompt() {
       <div className="bg-card border rounded-lg shadow-lg p-4">
         <div className="flex items-start gap-3">
           <div className="flex-1">
-            <h3 className="font-semibold mb-1">Install Drew's Lab</h3>
+            <h3 className="font-semibold mb-1">InstallDCYFR Labs</h3>
             <p className="text-sm text-muted-foreground mb-3">
               Add to your home screen for quick access and offline reading.
             </p>

@@ -142,7 +142,7 @@ Feed items are converted to Atom 1.0 format:
   <published>2025-11-10T12:00:00.000Z</published>
   <updated>2025-11-10T12:00:00.000Z</updated>
   <author>
-    <name>Drew (dcyfr)</name>
+    <name>Drew</name>
     <email>drew@cyberdrew.dev</email>
   </author>
   <summary type="html"><![CDATA[...]]></summary>
@@ -166,7 +166,7 @@ Feed items are converted to Atom 1.0 format:
   link: "https://cyberdrew.dev",
   feedUrl: "https://cyberdrew.dev/feed",
   language: "en-us",
-  author: { name: "Drew (dcyfr)", email: "drew@cyberdrew.dev" }
+  author: { name: "Drew", email: "drew@cyberdrew.dev" }
 }
 ```
 

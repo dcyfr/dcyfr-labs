@@ -604,7 +604,7 @@ export async function GET(request: Request) {
 ```markdown
 # Available Feeds
 
-Subscribe to updates from Drew's Lab using your favorite RSS/Atom reader.
+Subscribe to updates fromDCYFR Labs using your favorite RSS/Atom reader.
 
 ## 📰 All Content
 - **Atom:** [/feed](/feed)

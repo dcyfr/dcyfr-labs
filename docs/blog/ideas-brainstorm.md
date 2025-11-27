@@ -678,7 +678,7 @@ Compile related posts into structured learning path:
 
 ---
 
-**Owner:** Drew (dcyfr)  
+**Owner:** Drew  
 **Created:** October 27, 2025  
 **Last Updated:** October 27, 2025  
 **Next Review:** November 15, 2025

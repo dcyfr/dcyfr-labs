@@ -205,4 +205,4 @@ gh auth login
 ---
 
 **Last Updated:** November 16, 2025  
-**Maintainer:** Drew Cypher (@dcyfr)
+**Maintainer:** Drew (@dcyfr)

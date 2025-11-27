@@ -27,7 +27,7 @@
  *   description: post.summary,
  *   path: `/blog/${post.slug}`,
  *   publishedAt: post.publishedAt,
- *   author: 'Drew Cypher',
+ *   author: 'Drew',
  *   tags: post.tags,
  *   image: post.image?.url,
  * });
@@ -232,7 +232,7 @@ export interface ArticleMetadataOptions extends BaseMetadataOptions {
  *     description: post.summary,
  *     path: `/blog/${post.slug}`,
  *     publishedAt: post.publishedAt,
- *     author: 'Drew Cypher',
+ *     author: 'Drew',
  *     tags: post.tags,
  *     image: post.image?.url ? `${SITE_URL}${post.image.url}` : undefined,
  *     imageWidth: post.image?.width,
@@ -370,7 +370,7 @@ export interface ArticleSchemaOptions {
  *   description: post.summary,
  *   url: `${SITE_URL}/blog/${post.slug}`,
  *   publishedAt: post.publishedAt,
- *   author: 'Drew Cypher',
+ *   author: 'Drew',
  *   image: post.image?.url ? `${SITE_URL}${post.image.url}` : undefined,
  *   tags: post.tags,
  * });
@@ -441,7 +441,7 @@ export interface CollectionSchemaOptions {
  *     description: post.summary,
  *     url: `${SITE_URL}/blog/${post.slug}`,
  *     datePublished: post.publishedAt,
- *     author: 'Drew Cypher',
+ *     author: 'Drew',
  *   })),
  * });
  * ```

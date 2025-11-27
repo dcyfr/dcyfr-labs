@@ -252,7 +252,7 @@ describe('metadata.ts', () => {
         description: 'A great blog post',
         path: '/blog/my-post',
         publishedAt: baseDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
       };
 
       const metadata = createArticlePageMetadata(options);
@@ -268,13 +268,13 @@ describe('metadata.ts', () => {
         title: 'Article',
         description: 'Description',
         path: '/blog/article',
-        author: 'Drew Cypher',
+        author: 'Drew',
       };
 
       const metadata = createArticlePageMetadata(options);
 
-      expect(metadata.authors).toEqual([{ name: 'Drew Cypher' }]);
-      expect((metadata.openGraph as any)?.authors).toEqual(['Drew Cypher']);
+      expect(metadata.authors).toEqual([{ name: 'Drew' }]);
+      expect((metadata.openGraph as any)?.authors).toEqual(['Drew']);
     });
 
     it('should handle multiple authors', () => {
@@ -282,17 +282,17 @@ describe('metadata.ts', () => {
         title: 'Collaborative Article',
         description: 'Written by many',
         path: '/blog/collab',
-        author: ['Drew Cypher', 'Jane Doe', 'John Smith'],
+        author: ['Drew', 'Jane Doe', 'John Smith'],
       };
 
       const metadata = createArticlePageMetadata(options);
 
       expect(metadata.authors).toEqual([
-        { name: 'Drew Cypher' },
+        { name: 'Drew' },
         { name: 'Jane Doe' },
         { name: 'John Smith' },
       ]);
-      expect((metadata.openGraph as any)?.authors).toEqual(['Drew Cypher', 'Jane Doe', 'John Smith']);
+      expect((metadata.openGraph as any)?.authors).toEqual(['Drew', 'Jane Doe', 'John Smith']);
     });
 
     it('should handle missing author', () => {
@@ -468,7 +468,7 @@ describe('metadata.ts', () => {
         description: 'A deep dive into React hooks',
         url: 'https://cyberdrew.dev/blog/react-hooks',
         publishedAt: baseDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
       };
 
       const schema = createArticleSchema(options);
@@ -481,7 +481,7 @@ describe('metadata.ts', () => {
       expect(schema.datePublished).toBe(baseDate.toISOString());
       expect(schema.author).toEqual({
         '@type': 'Person',
-        name: 'Drew Cypher',
+        name: 'Drew',
       });
     });
 
@@ -492,7 +492,7 @@ describe('metadata.ts', () => {
         url: 'https://cyberdrew.dev/blog/article',
         publishedAt: baseDate,
         modifiedAt: modifiedDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
       };
 
       const schema = createArticleSchema(options);
@@ -506,7 +506,7 @@ describe('metadata.ts', () => {
         description: 'Description',
         url: 'https://cyberdrew.dev/blog/article',
         publishedAt: baseDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
       };
 
       const schema = createArticleSchema(options);
@@ -520,7 +520,7 @@ describe('metadata.ts', () => {
         description: 'Has image',
         url: 'https://cyberdrew.dev/blog/image',
         publishedAt: baseDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
         image: 'https://cyberdrew.dev/images/article.jpg',
       };
 
@@ -535,7 +535,7 @@ describe('metadata.ts', () => {
         description: 'Description',
         url: 'https://cyberdrew.dev/blog/article',
         publishedAt: baseDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
       };
 
       const schema = createArticleSchema(options);
@@ -549,7 +549,7 @@ describe('metadata.ts', () => {
         description: 'Has tags',
         url: 'https://cyberdrew.dev/blog/tagged',
         publishedAt: baseDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
         tags: ['react', 'typescript', 'nextjs'],
       };
 
@@ -564,7 +564,7 @@ describe('metadata.ts', () => {
         description: 'Description',
         url: 'https://cyberdrew.dev/blog/article',
         publishedAt: baseDate,
-        author: 'Drew Cypher',
+        author: 'Drew',
         tags: [],
       };
 
@@ -588,14 +588,14 @@ describe('metadata.ts', () => {
             description: 'Learn React hooks',
             url: 'https://cyberdrew.dev/blog/react-hooks',
             datePublished: baseDate,
-            author: 'Drew Cypher',
+            author: 'Drew',
           },
           {
             name: 'TypeScript Tips',
             description: 'TypeScript best practices',
             url: 'https://cyberdrew.dev/blog/typescript-tips',
             datePublished: new Date('2024-02-01T10:00:00Z'),
-            author: 'Drew Cypher',
+            author: 'Drew',
           },
         ],
       };
@@ -622,7 +622,7 @@ describe('metadata.ts', () => {
             description: 'First project',
             url: 'https://cyberdrew.dev/projects/one',
             datePublished: baseDate,
-            author: 'Drew Cypher',
+            author: 'Drew',
           },
         ],
       };
@@ -637,7 +637,7 @@ describe('metadata.ts', () => {
       expect(item.item.description).toBe('First project');
       expect(item.item.url).toBe('https://cyberdrew.dev/projects/one');
       expect(item.item.datePublished).toBe(baseDate.toISOString());
-      expect(item.item.author).toEqual({ '@type': 'Person', name: 'Drew Cypher' });
+      expect(item.item.author).toEqual({ '@type': 'Person', name: 'Drew' });
     });
 
     it('should handle items without optional fields', () => {
