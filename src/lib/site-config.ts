@@ -12,7 +12,7 @@ export const AUTHOR_EMAIL = "drew@cyberdrew.dev";
 export const SITE_TITLE = "DCYFR Labs";
 export const SITE_TITLE_PLAIN = "DCYFR Labs"; // For meta tags (without special characters)
 export const SITE_SUBTITLE = "Developer Portfolio & Tech Blog";
-export const SITE_DESCRIPTION = "Cybersecurity architecture and development insights from DCYFR Labs. Exploring coding, security, and tech trends.";
+export const SITE_DESCRIPTION = "Cyber architecture and design insights from DCYFR Labs. Exploring coding, security, and tech trends.";
 
 /**
  * Feature Flags

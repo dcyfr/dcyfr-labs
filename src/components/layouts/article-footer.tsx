@@ -19,6 +19,7 @@ import { TYPOGRAPHY, SPACING } from '@/lib/design-tokens';
 import { cn, sanitizeUrl } from '@/lib/utils';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { BlogPostCTA } from "@/components/common";
 
 export interface ArticleFooterProps<T = Record<string, unknown>> {
   /** Share URL (enables share section) */
@@ -92,9 +93,7 @@ export function ArticleFooter<T>({
       {hasTags && (
         <section className={SPACING.subsection}>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-muted-foreground">
-              Tagged:
-            </span>
+            <span className="text-sm text-muted-foreground">Tagged:</span>
             {tags.map((tag) => {
               const tagUrl = onTagClick?.(tag);
               const badgeContent = (
@@ -102,24 +101,27 @@ export function ArticleFooter<T>({
                   key={tag}
                   variant="secondary"
                   className={cn(
-                    tagUrl && "cursor-pointer hover:bg-secondary/80 transition-colors"
+                    tagUrl &&
+                      "cursor-pointer hover:bg-secondary/80 transition-colors"
                   )}
                 >
                   {tag}
                 </Badge>
               );
-              
+
               return tagUrl ? (
                 <Link key={tag} href={tagUrl}>
                   {badgeContent}
                 </Link>
-              ) : badgeContent;
+              ) : (
+                badgeContent
+              );
             })}
           </div>
         </section>
       )}
-
-{/* Sources Section */}
+      
+      {/* Sources Section */}
       {hasSources && (
         <section className={SPACING.subsection}>
           <h2 className={cn(TYPOGRAPHY.h2.standard, "mb-4")}>
@@ -171,24 +173,11 @@ export function ArticleFooter<T>({
         </section>
       )}
 
-      {/* Related Items Section */}
-      {hasRelated && (
-        <section className={SPACING.subsection}>
-          <h2 className={cn(TYPOGRAPHY.h2.standard, "mb-6")}>
-            {relatedTitle}
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {relatedItems.map((item, index) => renderRelatedItem(item, index))}
-          </div>
-        </section>
-      )}
+      {/* Call-to-Action Section */}
+      <BlogPostCTA variant="centered" location="blog-post-end" />
 
       {/* Custom Footer Content */}
-      {children && (
-        <section className={SPACING.subsection}>
-          {children}
-        </section>
-      )}
+      {children && <section className={SPACING.subsection}>{children}</section>}
     </div>
   );
 }

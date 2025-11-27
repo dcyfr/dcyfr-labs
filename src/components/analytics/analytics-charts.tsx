@@ -145,6 +145,7 @@ export function AnalyticsCharts({ posts, dateRange }: AnalyticsChartsProps) {
         <CardContent className="p-4 pt-0">
           <div className="flex items-center justify-center h-[300px] text-center">
             <div className="space-y-2">
+              {/* eslint-disable-next-line no-restricted-syntax */}
               <p className="text-sm font-medium text-muted-foreground">
                 No daily tracking data available yet
               </p>

@@ -35,7 +35,7 @@ const TEST_SCHEMAS = {
   "Person Schema": getPersonSchema(),
   
   // About page
-  "About Page": getAboutPageSchema("Cybersecurity architect and developer focused on building secure, scalable web applications."),
+  "About Page": getAboutPageSchema("Founder and cyber architect focused on building secure, scalable web applications."),
   
   // Contact page
   "Contact Page": getContactPageSchema("Get in touch with Drew for consulting, speaking, or collaboration opportunities."),

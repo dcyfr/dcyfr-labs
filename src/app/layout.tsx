@@ -15,6 +15,7 @@ import {
 import { SiteHeader, SiteFooter, BottomNav } from "@/components/navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { LoadingBar } from "@/components/features/loading-bar";
+import { ScrollToTop } from "@/components/features/scroll-to-top";
 import { WebVitalsReporter } from "@/components/features/web-vitals-reporter";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -40,7 +41,7 @@ const geistMono = Geist_Mono({
 const newsreader = Newsreader({
   variable: "--font-serif",
   subsets: ["latin"],
-  display: "optional",
+  display: "swap",
   preload: true,
   adjustFontFallback: true,
 });
@@ -126,6 +127,7 @@ export default async function RootLayout({
             Skip to main content
           </a>
           <LoadingBar />
+          <ScrollToTop />
           <SiteHeader />
           <main id="main-content" className="min-h-[calc(100dvh-128px)] pb-20 md:pb-8">{children}</main>
           <SiteFooter />

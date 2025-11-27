@@ -77,9 +77,10 @@ TYPOGRAPHY.body.muted     // Muted text
 
 **CONTAINER_WIDTHS:**
 ```typescript
-CONTAINER_WIDTHS.narrow   // "max-w-3xl" - Articles, forms
-CONTAINER_WIDTHS.default  // "max-w-4xl" - Standard pages
-CONTAINER_WIDTHS.wide     // "max-w-6xl" - Wide layouts
+CONTAINER_WIDTHS.narrow    // "max-w-2xl" - Forms, focused content
+CONTAINER_WIDTHS.standard  // "max-w-4xl" - Core pages (home, about, contact, resume)
+CONTAINER_WIDTHS.content   // "max-w-7xl" - Content pages with sidebars (blog posts, project details)
+CONTAINER_WIDTHS.archive   // "max-w-7xl" - Archive/listing pages (blog listing, projects listing)
 ```
 
 ### 3. Validate Reusability
@@ -361,8 +362,8 @@ export function ProjectCard({ project }: { project: Project }) {
 
 ### Container Width Violations
 
-❌ `max-w-5xl` → Use `CONTAINER_WIDTHS.wide`
-❌ `max-w-7xl` → Use `CONTAINER_WIDTHS.wide`
+❌ `max-w-5xl` → Use `CONTAINER_WIDTHS.standard` or `CONTAINER_WIDTHS.content`
+❌ `max-w-7xl` → Use `CONTAINER_WIDTHS.archive` or `CONTAINER_WIDTHS.content`
 ❌ `max-w-2xl` → Use `CONTAINER_WIDTHS.narrow`
 ❌ Custom max-widths → Use CONTAINER_WIDTHS constants
 

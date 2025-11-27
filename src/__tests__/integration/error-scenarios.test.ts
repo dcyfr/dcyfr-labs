@@ -34,6 +34,9 @@ describe('Error Scenario Integration Tests', () => {
     vi.stubEnv('NODE_ENV', 'development')
     delete process.env.VERCEL_ENV
     delete process.env.ADMIN_API_KEY
+    // Force in-memory fallback for rate limiting
+    delete process.env.REDIS_URL
+    globalThis.__rateLimitRedisClient = undefined
 
     // Default behavior: return zero maps
     vi.mocked(getMultiplePostViews).mockResolvedValue(new Map())
@@ -42,10 +45,11 @@ describe('Error Scenario Integration Tests', () => {
     vi.mocked(getPostSharesBulk).mockResolvedValue({})
     vi.mocked(getPostShares24hBulk).mockResolvedValue({})
 
-    // Mock redis client createClient to return a client with get/quit
+    // Mock redis client createClient to return a client with get/quit/on
     vi.mocked(createClient).mockImplementation(() => {
       return {
         isOpen: true,
+        on: vi.fn(),
         connect: vi.fn().mockResolvedValue(undefined),
         get: vi.fn().mockResolvedValue(null),
         quit: vi.fn().mockResolvedValue(undefined),

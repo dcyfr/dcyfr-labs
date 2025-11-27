@@ -71,20 +71,22 @@ All design tokens are centralized in `src/lib/design-tokens.ts`. Import and use 
 ```typescript
 import { CONTAINER_WIDTHS, getContainerClasses } from '@/lib/design-tokens';
 
-// Three semantic width options
-CONTAINER_WIDTHS.prose     // max-w-3xl - Long-form content
-CONTAINER_WIDTHS.standard  // max-w-5xl - Lists, grids
+// Four semantic width options
 CONTAINER_WIDTHS.narrow    // max-w-2xl - Forms, focused content
+CONTAINER_WIDTHS.standard  // max-w-4xl - Core pages (home, about, contact, resume)
+CONTAINER_WIDTHS.content   // max-w-7xl - Content pages with sidebars (blog posts, project details)
+CONTAINER_WIDTHS.archive   // max-w-7xl - Archive/listing pages (blog listing, projects listing)
 
 // Utility function for complete classes
-getContainerClasses('prose')
-// Returns: "mx-auto max-w-3xl py-14 md:py-20 px-4 sm:px-6 md:px-8"
+getContainerClasses('standard')
+// Returns: "mx-auto max-w-4xl py-14 md:py-20 px-4 sm:px-6 md:px-8"
 ```
 
 **When to use each:**
-- **Prose** (`max-w-3xl`): Blog posts, about page, long-form content
-- **Standard** (`max-w-5xl`): Blog listing, projects, homepage
 - **Narrow** (`max-w-2xl`): Contact form, focused content
+- **Standard** (`max-w-4xl`): Homepage, about page, resume, contact page
+- **Content** (`max-w-7xl`): Individual blog posts, project detail pages (with sidebar)
+- **Archive** (`max-w-7xl`): Blog listing, projects listing (with filters/grids)
 
 ### Typography
 

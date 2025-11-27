@@ -16,7 +16,6 @@ import { createClient } from "redis";
 type RedisClient = ReturnType<typeof createClient>;
 
 const RATE_LIMIT_KEY_PREFIX = "ratelimit:";
-const redisUrl = process.env.REDIS_URL;
 
 declare global {
   var __rateLimitRedisClient: RedisClient | undefined;
@@ -26,6 +25,7 @@ declare global {
  * Get or create the Redis client for rate limiting
  */
 async function getRateLimitClient(): Promise<RedisClient | null> {
+  const redisUrl = process.env.REDIS_URL; // Read dynamically to allow test overrides
   if (!redisUrl) return null;
 
   if (!globalThis.__rateLimitRedisClient) {

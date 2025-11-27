@@ -11,16 +11,21 @@ import { cn, sanitizeUrl, formatNumber } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
 import { HOVER_EFFECTS } from "@/lib/design-tokens";
 
-const STATUS_VARIANT: Record<ProjectStatus, "secondary" | "default" | "outline"> = {
-  "active": "default",
-  "in-progress": "default",
-  "archived": "outline",
-};
-
+// Human-readable status labels
 const STATUS_LABEL: Record<ProjectStatus, string> = {
   "active": "Active",
   "in-progress": "In progress",
   "archived": "Archived",
+};
+
+// Status badge color styles - matching homepage activity badges
+const STATUS_STYLES: Record<ProjectStatus, string> = {
+  active:
+    "border-green-500/70 bg-green-500/50 backdrop-blur-sm font-semibold text-white",
+  "in-progress":
+    "border-blue-500/70 bg-blue-500/50 backdrop-blur-sm font-semibold text-white",
+  archived:
+    "border-amber-500/70 bg-amber-500/50 backdrop-blur-sm font-semibold text-white",
 };
 
 export interface ProjectCardProps {
@@ -34,6 +39,11 @@ export interface ProjectCardProps {
 
 /**
  * ProjectCard Component
+ * 
+ * @deprecated **Currently unused** - The `/projects` page uses `ProjectList` which renders 
+ * cards inline with multiple layout variants. Consider using `ProjectList` for archive views
+ * or `OtherProjectCard` for compact card displays. This component is retained for potential
+ * future use (e.g., homepage featured projects section).
  * 
  * Displays a portfolio project card in archive view with link to detail page.
  * The entire card is clickable and links to the project detail page.
@@ -70,6 +80,8 @@ export interface ProjectCardProps {
  * ```
  * 
  * @see {@link /docs/components/skeleton-sync-strategy.md} for skeleton sync guidelines
+ * @see ProjectList - Used for /projects archive page with grid/list/compact layouts
+ * @see OtherProjectCard - Used for "Other Projects" section on detail pages
  */
 export function ProjectCard({ 
   project,
@@ -168,7 +180,9 @@ export function ProjectCard({
         <CardHeader className="space-y-1.5 relative z-10 px-4 sm:px-6 py-4 sm:py-5">
           {project.timeline && (
             <p className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-              <Badge variant={STATUS_VARIANT[project.status]}>{STATUS_LABEL[project.status]}</Badge> {project.timeline}
+              <Badge variant="outline" className={STATUS_STYLES[project.status]}>
+                {STATUS_LABEL[project.status]}
+              </Badge> {project.timeline}
               {viewCount !== undefined && viewCount > 0 && (
                 <span className="ml-auto flex items-center gap-1 text-muted-foreground">
                   <Eye className="h-3 w-3" />

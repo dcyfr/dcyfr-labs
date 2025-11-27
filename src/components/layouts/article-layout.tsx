@@ -70,7 +70,7 @@ export function ArticleLayout({
   loading = false,
   skeletonParagraphs = 8,
 }: ArticleLayoutProps) {
-  const containerWidth = useProseWidth ? CONTAINER_WIDTHS.prose : CONTAINER_WIDTHS.standard;
+  const containerWidth = useProseWidth ? CONTAINER_WIDTHS.standard : CONTAINER_WIDTHS.standard;
 
   // Loading state - render skeleton with identical structure
   if (loading) {

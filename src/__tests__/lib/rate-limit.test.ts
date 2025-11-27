@@ -242,6 +242,13 @@ describe('rate-limit.ts', () => {
         windowInSeconds: 60,
       };
 
+      // Set up incr mock to return incrementing values
+      let callCount = 0;
+      mockRedisClient.incr.mockImplementation(() => {
+        callCount++;
+        return Promise.resolve(callCount);
+      });
+
       const result1 = await rateLimit('single-req-user', singleRequest);
       expect(result1.success).toBe(true);
       expect(result1.remaining).toBe(0);

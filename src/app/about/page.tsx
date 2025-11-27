@@ -78,7 +78,7 @@ export default async function AboutPage() {
             <div className="flex-1 space-y-4">
               <h1 className={TYPOGRAPHY.h1.hero}>
                 <span className="flex items-center gap-2">
-                  Drew <Logo className="pb-2" width={32} height={32} />
+                  About Drew
                 </span>
               </h1>
               <p className={TYPOGRAPHY.description}>
@@ -148,7 +148,7 @@ export default async function AboutPage() {
             
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
               <Link 
-                className={`inline-flex items-center gap-2 text-primary ${HOVER_EFFECTS.link}`}
+                className={`underline inline-flex items-center gap-2 text-primary ${HOVER_EFFECTS.link}`}
                 href="/resume"
               >
                 View full resume

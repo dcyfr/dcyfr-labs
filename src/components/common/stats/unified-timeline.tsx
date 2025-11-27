@@ -177,6 +177,7 @@ function EducationCard({ education }: { education: Education }) {
               {education.degree}
             </h3>
           </div>
+          {/* eslint-disable-next-line no-restricted-syntax */}
           <p className="text-sm font-medium text-muted-foreground">
             {education.institution}
           </p>

@@ -9,6 +9,7 @@ import { getPostShares } from "@/lib/shares";
 import { extractHeadings } from "@/lib/toc";
 import { headers } from "next/headers";
 import { getArticleData } from "@/lib/article";
+import { CONTAINER_WIDTHS } from "@/lib/design-tokens";
 import {
   createArticlePageMetadata,
   createArticleSchema,
@@ -26,7 +27,6 @@ import {
   MDX,
   RelatedPosts,
   TableOfContents,
-  BlogPostCTA,
 } from "@/components/common";
 import { Breadcrumbs } from "@/components/navigation";
 import { ReadingProgress } from "@/components/features/reading-progress";
@@ -188,7 +188,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
 
       {/* Desktop Layout: Sidebar + Content */}
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8">
+      <div className={`container ${CONTAINER_WIDTHS.content} mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8`}>
         <div className="grid gap-8 items-start lg:grid-cols-[280px_1fr]">
           {/* Left Sidebar (desktop only) */}
           <BlogPostSidebar
@@ -253,13 +253,16 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               )}
 
               <div className="prose my-8">
-                {/* Post content */}
                 <MDX source={post.body} />
-                {/* Call-to-action */}
-                <BlogPostCTA variant="default" location="blog-post-end" />
               </div>
 
               <ArticleFooter
+                tags={post.tags}
+                onTagClick={(tag) => `/blog?tag=${encodeURIComponent(tag)}`}
+                sources={post.sources?.map((s) => ({
+                  title: s.label,
+                  url: s.href,
+                }))}
                 shareComponent={
                   <ShareButtons
                     url={`${SITE_URL}/blog/${post.slug}`}
@@ -268,12 +271,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     initialShareCount={shareCount ?? 0}
                   />
                 }
-                sources={post.sources?.map((s) => ({
-                  title: s.label,
-                  url: s.href,
-                }))}
-                tags={post.tags}
-                onTagClick={(tag) => `/blog?tag=${encodeURIComponent(tag)}`}
               >
                 {/* Related posts section */}
                 <RelatedPosts

@@ -1,11 +1,9 @@
 /**
  * Analytics Overview Component
- * 
+ *
  * Displays summary statistics and top posts for the analytics dashboard.
  * Extracted from AnalyticsClient.tsx for reusability.
  */
-
-/* eslint-disable no-restricted-syntax */
 
 import { Card, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

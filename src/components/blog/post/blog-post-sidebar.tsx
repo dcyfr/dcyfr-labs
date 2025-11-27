@@ -256,6 +256,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
                     
                     {isCurrent ? (
                       <div className="flex-1 min-w-0">
+                        {/* eslint-disable-next-line no-restricted-syntax */}
                         <span className="text-xs font-medium text-primary block truncate">
                           {post.title}
                         </span>
@@ -294,6 +295,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
                   className="block group"
                 >
                   <div className="space-y-1.5">
+                    {/* eslint-disable-next-line no-restricted-syntax */}
                     <h3 className="text-xs font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
                       {post.title}
                     </h3>

@@ -565,6 +565,68 @@ svg {
     top: 50%;
     transform: translate(-50%, -50%);
   }
+
+  /* ===================================================================
+     DISABLE ALL ANIMATIONS
+     ================================================================ */
+
+  /**
+   * Global animation disable - all animations and transitions disabled.
+   * Overrides all animation properties site-wide for performance/preference.
+   */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable skeleton shimmer */
+  .skeleton-shimmer {
+    animation: none !important;
+    background: hsl(var(--muted)) !important;
+  }
+
+  /* Disable holographic card effect */
+  .holographic-card::before {
+    animation: none !important;
+  }
+
+  /* Disable heatmap animations */
+  .react-calendar-heatmap rect {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .react-calendar-heatmap rect:hover {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Disable card hover transforms */
+  .group.rounded-lg.border,
+  .flex.h-full.flex-col {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .group.rounded-lg.border:hover,
+  .flex.h-full.flex-col:hover {
+    transform: none !important;
+  }
+
+  /* Disable view transitions */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0ms !important;
+  }
 }
 
 /* GitHub Heatmap Styles */

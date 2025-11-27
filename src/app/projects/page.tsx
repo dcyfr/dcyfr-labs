@@ -1,23 +1,13 @@
 import type { Metadata } from "next";
 import { visibleProjects, type Project } from "@/data/projects";
-import dynamic from "next/dynamic";
 import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 import { createArchivePageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { headers } from "next/headers";
 import { getArchiveData } from "@/lib/archive";
-import { Badge } from "@/components/ui/badge";
 import { getMultipleProjectViews } from "@/lib/project-views";
-import { ArchiveLayout } from "@/components/layouts/archive-layout";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
-import { ProjectCard, ProjectFilters } from "@/components/projects";
-import {
-  GitHubHeatmapErrorBoundary,
-  GitHubHeatmapSkeleton,
-} from "@/components/common";
-
-const GitHubHeatmap = dynamic(() => import("@/components/features/github/github-heatmap").then(mod => ({ default: mod.GitHubHeatmap })), {
-  loading: () => <GitHubHeatmapSkeleton />,
-});
+import { TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
+import { ProjectList, ProjectFilters } from "@/components/projects";
 
 const pageTitle = "Projects";
 const pageDescription = "Browse my portfolio of development projects, open-source contributions, and published work.";
@@ -129,13 +119,20 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
     totalPages: Math.ceil(sortedItems.length / archiveData.itemsPerPage),
   };
   
-  // Get all available tags and tech from visible projects
+  // Get available tags and tech from filtered results (for progressive filtering)
+  // Include currently selected items so they remain visible when selected
   const availableTags = Array.from(
-    new Set(visibleProjects.flatMap((p) => p.tags || []))
+    new Set([
+      ...sortedArchiveData.allFilteredItems.flatMap((p) => p.tags || []),
+      ...selectedTags, // Keep selected tags visible
+    ])
   ).sort();
   
   const availableTech = Array.from(
-    new Set(visibleProjects.flatMap((p) => p.tech || []))
+    new Set([
+      ...sortedArchiveData.allFilteredItems.flatMap((p) => p.tech || []),
+      ...selectedTech, // Keep selected tech visible
+    ])
   ).sort();
   
   // Check if filters are active for empty state
@@ -196,18 +193,21 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
-      
-      <ArchiveLayout
-        title={pageTitle}
-        description={pageDescription}
-      > 
-        {/* GitHub contribution heatmap 
+
+      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-20 pb-8`}>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
+          <p className="text-muted-foreground">{pageDescription}</p>
+        </div>
+
+        {/* GitHub contribution heatmap
         <div className="mb-8">
           <GitHubHeatmapErrorBoundary>
             <GitHubHeatmap username="dcyfr" />
           </GitHubHeatmapErrorBoundary>
         </div> */}
-        
+
         {/* Filters */}
         <div className="mb-8">
           <ProjectFilters
@@ -218,66 +218,32 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
             techList={availableTech}
             query={query}
             sortBy={sortBy}
+            totalResults={sortedArchiveData.totalItems}
+            hasActiveFilters={hasActiveFilters}
           />
         </div>
-        
-        {/* Results count */}
-        <div className="mb-6 flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            {sortedArchiveData.totalItems === 0 && hasActiveFilters ? (
-              "No projects match your filters"
-            ) : sortedArchiveData.totalItems === 0 ? (
-              "No projects found"
-            ) : (
-              <>
-                Showing {sortedArchiveData.totalItems} {sortedArchiveData.totalItems === 1 ? "project" : "projects"}
-                {hasActiveFilters && " (filtered)"}
-              </>
-            )}
-          </p>
-        </div>
-        
-        {/* Projects grid */}
-        {sortedArchiveData.items.length > 0 ? (
-          <>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {sortedArchiveData.items.map((project) => (
-                <ProjectCard key={project.slug} project={project} viewCount={viewCounts.get(project.slug)} />
-              ))}
-            </div>
-            
-            {/* Pagination */}
-            {sortedArchiveData.totalPages > 1 && (
-              <div className="mt-12">
-                <ArchivePagination
-                  currentPage={sortedArchiveData.currentPage}
-                  totalPages={sortedArchiveData.totalPages}
-                  hasPrevPage={sortedArchiveData.currentPage > 1}
-                  hasNextPage={sortedArchiveData.currentPage < sortedArchiveData.totalPages}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              {hasActiveFilters ? (
-                <>
-                  No projects match your filters.{" "}
-                  <button
-                    onClick={() => window.location.href = "/projects"}
-                    className="text-primary hover:underline"
-                  >
-                    Clear filters
-                  </button>
-                </>
-              ) : (
-                "No projects found."
-              )}
-            </p>
+
+        {/* Projects list */}
+        <ProjectList
+          projects={sortedArchiveData.items}
+          layout="grid"
+          viewCounts={viewCounts}
+          hasActiveFilters={hasActiveFilters}
+          emptyMessage="No projects found. Try adjusting your search or filters."
+        />
+
+        {/* Pagination */}
+        {sortedArchiveData.totalPages > 1 && (
+          <div className="mt-12">
+            <ArchivePagination
+              currentPage={sortedArchiveData.currentPage}
+              totalPages={sortedArchiveData.totalPages}
+              hasPrevPage={sortedArchiveData.currentPage > 1}
+              hasNextPage={sortedArchiveData.currentPage < sortedArchiveData.totalPages}
+            />
           </div>
         )}
-      </ArchiveLayout>
+      </div>
     </>
   );
 }

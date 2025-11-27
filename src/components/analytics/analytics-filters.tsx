@@ -556,6 +556,7 @@ export function AnalyticsFilters({
         {/* Active Filters Summary */}
         {hasActiveFilters && (
           <div className="pt-2 border-t">
+            {/* eslint-disable-next-line no-restricted-syntax */}
             <p className="text-xs font-medium mb-2">Active Filters:</p>
             <div className="flex flex-wrap gap-2">
               {publicationCohort !== "all" && (

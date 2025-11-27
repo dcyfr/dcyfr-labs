@@ -20,6 +20,8 @@ interface ProjectFiltersProps {
   techList: string[];
   query: string;
   sortBy?: string;
+  totalResults: number;
+  hasActiveFilters: boolean;
 }
 
 const STATUS_OPTIONS: FilterOption[] = [
@@ -62,7 +64,9 @@ export function ProjectFilters({
   tagList,
   techList,
   query,
-  sortBy = 'newest'
+  sortBy = 'newest',
+  totalResults,
+  hasActiveFilters,
 }: ProjectFiltersProps) {
   const { updateParam, toggleMultiParam, clearAll } = useFilterParams({ basePath: "/projects" });
   const { searchValue, setSearchValue } = useFilterSearch({ query, basePath: "/projects" });
@@ -91,6 +95,7 @@ export function ProjectFilters({
       />
 
       {/* Filter Controls - Separate Row */}
+      {/* Status and Sort filters temporarily disabled
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 flex flex-wrap gap-3">
           <FilterSelect
@@ -111,14 +116,8 @@ export function ProjectFilters({
             className="flex-1 min-w-[130px]"
           />
         </div>
-
-        {/* Clear All Button */}
-        <FilterClearButton
-          onClear={clearAll}
-          count={count}
-          visible={hasActive}
-        />
       </div>
+      */}
 
       {/* Tech Stack Badges */}
       {techList.length > 0 && (
@@ -145,6 +144,27 @@ export function ProjectFilters({
           />
         </div>
       )}
+
+      {/* Results count with Clear button */}
+      <div className="flex items-center justify-between pt-2">
+        <p className="text-sm text-muted-foreground">
+          {totalResults === 0 && hasActiveFilters ? (
+            "No projects match your filters"
+          ) : totalResults === 0 ? (
+            "No projects found"
+          ) : (
+            <>
+              Showing {totalResults} {totalResults === 1 ? "project" : "projects"}
+              {hasActiveFilters && " (filtered)"}
+            </>
+          )}
+        </p>
+        <FilterClearButton
+          onClear={clearAll}
+          count={count}
+          visible={hasActive}
+        />
+      </div>
     </div>
   );
 }
