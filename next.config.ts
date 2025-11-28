@@ -29,7 +29,7 @@ export default withSentryConfig(withBundleAnalyzer(withBotId(withAxiom(nextConfi
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: "dcyfr-labs-gj",
+  org: "dcfr-labs",
 
   project: "dcyfr-labs",
 
