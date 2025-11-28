@@ -55,7 +55,7 @@ export const CONTAINER_VERTICAL_PADDING = "py-14 md:py-20" as const;
  * 
  * @example
  * ```tsx
- * <div className={getContainerClasses('prose')}>
+ * <div className={getContainerClasses('narrow')}>
  *   <article>{content}</article>
  * </div>
  * ```

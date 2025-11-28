@@ -77,7 +77,7 @@ export function BlogPostCTA({ variant = 'default', location, className }: CTAPro
         <h2 className={cn(TYPOGRAPHY.h2.standard, 'mb-3')}>
           
         </h2>
-        <p className={cn('text-muted-foreground mb-6 mx-auto', getContainerClasses('prose'))}>
+        <p className={cn('text-muted-foreground mb-6 mx-auto', getContainerClasses('narrow'))}>
           If you&apos;re building a Next.js application and need help with security,
           performance, or architecture, I&apos;m here to help.
         </p>
