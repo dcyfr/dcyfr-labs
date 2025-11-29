@@ -9,6 +9,7 @@ import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import matter from "gray-matter";
+import yaml from "js-yaml";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -165,7 +166,11 @@ async function findMDXFiles() {
 async function validateFile(filePath) {
   try {
     const content = await fs.readFile(filePath, "utf-8");
-    const { data: frontmatter } = matter(content);
+    const { data: frontmatter } = matter(content, {
+      engines: {
+        yaml: (s) => yaml.load(s, { schema: yaml.DEFAULT_SCHEMA })
+      }
+    });
 
     return validateFrontmatter(frontmatter, filePath);
   } catch (error) {

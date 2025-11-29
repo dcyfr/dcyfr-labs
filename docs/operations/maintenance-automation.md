@@ -1,7 +1,7 @@
 # Maintenance Automation System
 
-**Status:** Phase 1-2 Complete (Testing + Security Automation)
-**Last Updated:** November 28, 2025
+**Status:** Phase 1-3 Complete (Testing + Security + Content/Cleanup Automation)
+**Last Updated:** November 29, 2025
 
 ---
 
@@ -12,9 +12,9 @@ Automated recurring maintenance tasks with GitHub Issues, email alerts, and dash
 **Priorities:**
 - Testing (5) ✅ **Implemented**
 - Security (4) ✅ **Implemented**
-- Content (3) - Planned
-- AI/Dev (3) - Planned
-- Cleanup (2) - Planned
+- Content (3) ✅ **Implemented**
+- Cleanup (2) ✅ **Implemented**
+- AI/Dev (3) - Planned (Phase 4)
 
 ---
 
@@ -184,6 +184,137 @@ Options:
 
 ---
 
+## Phase 3: Content & Cleanup Automation ✅
+
+### Content Validation
+
+**Workflow:** [`.github/workflows/validate-content.yml`](.github/workflows/validate-content.yml)
+
+**Triggers:**
+
+- Pull requests modifying `src/content/**/*.mdx`
+- Weekly on Wednesdays at 10:00 UTC
+- Manual dispatch
+
+**What it does:**
+
+1. Validates MDX blog post frontmatter for:
+   - Required fields (title, summary, publishedAt, tags)
+   - SEO compliance (title 10-70 chars, summary 50-160 chars)
+   - Date validation (ISO 8601 format, publishedAt ≤ today)
+   - Tag validation (1-5 tags, no empty values)
+   - Accessibility (imageAlt required if image present)
+2. Posts validation results as PR comment (on PRs)
+3. Blocks PR merge if validation fails
+4. Creates Issue for scheduled runs if errors found
+
+**Script:** `scripts/validate-frontmatter.mjs`
+
+- Recursively scans `src/content/` for `.mdx` files
+- Parses frontmatter using gray-matter + js-yaml
+- Validates all fields against SEO and accessibility requirements
+- Outputs markdown summary for GitHub Actions
+
+**Validation Rules:**
+
+- **Title:** 10-70 characters (SEO optimization)
+- **Summary:** 50-160 characters (meta description length)
+- **publishedAt:** Required, must be ≤ today
+- **updatedAt:** Optional, must be ≥ publishedAt
+- **Tags:** 1-5 tags required, no empty values
+- **Image:** If present, imageAlt required (WCAG compliance)
+- **Draft:** Warns if post marked as draft
+
+### Monthly Cleanup
+
+**Workflow:** [`.github/workflows/monthly-cleanup.yml`](.github/workflows/monthly-cleanup.yml)
+
+**Schedule:** 15th of every month at 11:00 UTC
+
+**What it does:**
+
+1. Detects unused exports via ts-prune
+2. Finds unused dependencies via depcheck
+3. Identifies large files (>500 lines) for refactoring
+4. Scans for TODO/FIXME/HACK comments
+5. Checks for duplicate package versions
+6. Generates workspace cleanup checklist
+7. Creates GitHub Issue with all findings
+
+**Script:** `scripts/monthly-cleanup.mjs`
+
+- Uses ts-prune to detect unused exports
+- Uses depcheck to find unused dependencies
+- Scans codebase for large files and technical debt
+- Analyzes npm dependency tree for duplicates
+- Generates comprehensive cleanup report
+
+**Issue Creation:**
+
+- Updates existing Issue for current month if present
+- Creates new Issue otherwise
+- Labels: `cleanup`, `automated`, `monthly-cleanup`
+- Includes action items checklist
+
+**Workspace Cleanup Checklist:**
+
+- Clear `.next` build cache
+- Clear node_modules and reinstall
+- Clear test coverage
+- Review and close stale Issues
+- Archive old branches
+- Update dependencies
+- Clean git objects
+- Review `.gitignore`
+
+### Phase 3 Issue Template
+
+**`.github/ISSUE_TEMPLATE/monthly-cleanup.md`**
+
+- Standardized format for cleanup reports
+- Includes summary table with counts
+- Lists unused exports, dependencies, large files
+- Shows TODO comments and duplicate packages
+- Provides workspace cleanup checklist
+- Auto-assigned to `drew` with `cleanup` labels
+
+### Phase 3 Manual Triggering
+
+**Content Validation:**
+
+```bash
+# Trigger workflow manually
+gh workflow run validate-content.yml
+
+# Or run script directly
+node scripts/validate-frontmatter.mjs
+```
+
+**Cleanup Analysis:**
+
+```bash
+# Trigger workflow manually
+gh workflow run monthly-cleanup.yml
+
+# Or run script directly
+node scripts/monthly-cleanup.mjs
+```
+
+### Phase 3 Monitoring
+
+**GitHub Actions:**
+
+- Content validation: [Actions tab](https://github.com/dcyfr/cyberdrew-dev/actions/workflows/validate-content.yml)
+- Cleanup reports: [Actions tab](https://github.com/dcyfr/cyberdrew-dev/actions/workflows/monthly-cleanup.yml)
+- Artifacts retained for 30-90 days
+
+**GitHub Issues:**
+
+- Content: Filter by [`content`](https://github.com/dcyfr/cyberdrew-dev/issues?q=is%3Aissue+label%3Acontent) and [`validation`](https://github.com/dcyfr/cyberdrew-dev/issues?q=is%3Aissue+label%3Avalidation) labels
+- Cleanup: Filter by [`cleanup`](https://github.com/dcyfr/cyberdrew-dev/issues?q=is%3Aissue+label%3Acleanup) and [`monthly-cleanup`](https://github.com/dcyfr/cyberdrew-dev/issues?q=is%3Aissue+label%3Amonthly-cleanup) labels
+
+---
+
 ## Environment Variables
 
 **Required:**
@@ -261,39 +392,46 @@ The deduplication logic should prevent this. If it's happening:
 
 ## Future Enhancements
 
-**Phase 3: Content & Cleanup** (Planned)
-- Blog frontmatter validation
-- Dead code detection
-- Workspace cleanup checklists
-
 **Phase 4: Dashboard** (Planned)
-- Maintenance dashboard at `/admin/maintenance`
+
+- Maintenance dashboard at `/dev/maintenance` (integrates with existing dev tools)
 - 52-week trend visualizations
-- Observation logging system
+- Observation logging system for AI/dev environment tracking
+- Inngest functions for background task scheduling
+- Public-facing admin deferred to future phases
 
 ---
 
 ## Resources
 
-**GitHub Actions:**
-- [Workflow file](.github/workflows/weekly-test-health.yml)
-- [Actions tab](https://github.com/dcyfr/cyberdrew-dev/actions/workflows/weekly-test-health.yml)
+**GitHub Workflows:**
 
-**Phase 1 Scripts:**
+- [`.github/workflows/weekly-test-health.yml`](../../.github/workflows/weekly-test-health.yml)
+- [`.github/workflows/monthly-security-review.yml`](../../.github/workflows/monthly-security-review.yml)
+- [`.github/workflows/validate-content.yml`](../../.github/workflows/validate-content.yml)
+- [`.github/workflows/monthly-cleanup.yml`](../../.github/workflows/monthly-cleanup.yml)
+
+**Phase 1 Scripts (Testing):**
+
 - [`scripts/analyze-test-health.mjs`](../../scripts/analyze-test-health.mjs)
 - [`scripts/sentry-enricher.mjs`](../../scripts/sentry-enricher.mjs)
 - [`scripts/github-api.mjs`](../../scripts/github-api.mjs)
 
-**Phase 2 Scripts:**
+**Phase 2 Scripts (Security):**
+
 - [`scripts/security-audit.mjs`](../../scripts/security-audit.mjs)
 - [`scripts/branch-cleanup.mjs`](../../scripts/branch-cleanup.mjs)
 
-**Issue Templates:**
-- [`.github/ISSUE_TEMPLATE/test-health-report.md`](.github/ISSUE_TEMPLATE/test-health-report.md)
-- [`.github/ISSUE_TEMPLATE/monthly-security-review.md`](.github/ISSUE_TEMPLATE/monthly-security-review.md)
+**Phase 3 Scripts (Content & Cleanup):**
 
-**Comprehensive Plan:**
-- [Phase 1-4 Implementation Plan](../../.claude/plans/)
+- [`scripts/validate-frontmatter.mjs`](../../scripts/validate-frontmatter.mjs)
+- [`scripts/monthly-cleanup.mjs`](../../scripts/monthly-cleanup.mjs)
+
+**Issue Templates:**
+
+- [`.github/ISSUE_TEMPLATE/test-health-report.md`](../../.github/ISSUE_TEMPLATE/test-health-report.md)
+- [`.github/ISSUE_TEMPLATE/monthly-security-review.md`](../../.github/ISSUE_TEMPLATE/monthly-security-review.md)
+- [`.github/ISSUE_TEMPLATE/monthly-cleanup.md`](../../.github/ISSUE_TEMPLATE/monthly-cleanup.md)
 
 ---
 
