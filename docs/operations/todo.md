@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only. Completed tasks are in **`done.md`**.
 
-**Last Updated:** November 26, 2025
+**Last Updated:** November 28, 2025
 
 ---
 
@@ -29,7 +29,28 @@ All major phases complete. Project is in **maintenance mode** with data-driven e
 
 ## 🟢 Active Work Queue
 
-No active maintenance tasks. All major work complete.
+### Maintenance Automation (Phase 2/4 Complete)
+
+- [x] **Phase 1: Testing Automation** ✅ (Nov 28, 2025)
+  - Weekly test health reports with Sentry enrichment
+  - Automated GitHub Issue creation
+  - Coverage tracking and regression detection
+  - See [`docs/operations/maintenance-automation.md`](maintenance-automation.md)
+
+- [ ] **Phase 2: Security Automation** (Next: Dec 2025, 12-16 hours)
+  - Monthly security reviews
+  - Automated branch cleanup
+  - Dependency vulnerability tracking
+
+- [ ] **Phase 3: Content & Cleanup** (Planned: Dec 2025, 10-12 hours)
+  - Blog frontmatter validation
+  - Dead code detection
+  - Workspace cleanup checklists
+
+- [ ] **Phase 4: Dashboard & Observability** (Planned: Jan 2026, 14-18 hours)
+  - Maintenance dashboard at `/admin/maintenance`
+  - Observation logging system
+  - 52-week trend visualizations
 
 ---
 

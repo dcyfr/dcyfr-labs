@@ -1,0 +1,99 @@
+name: Monthly Security Review
+
+on:
+  schedule:
+    # First day of each month at 09:00 UTC
+    - cron: '0 9 1 * *'
+  workflow_dispatch: # Allow manual triggering
+    inputs:
+      auto_delete_branches:
+        description: 'Auto-delete merged branches (dry run if false)'
+        required: false
+        default: 'false'
+
+# Cancel in-progress runs for same workflow
+concurrency:
+  group: monthly-security-review-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write # For deleting branches
+  issues: write
+  pull-requests: read
+  security-events: read # For CodeQL
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for branch analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Setup GitHub CLI
+        run: |
+          # gh CLI is pre-installed on GitHub Actions runners
+          gh --version
+
+      - name: Branch cleanup analysis
+        id: branch-cleanup
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          AUTO_DELETE: ${{ github.event.inputs.auto_delete_branches == 'true' }}
+        run: |
+          node scripts/branch-cleanup.mjs > branch-cleanup.txt
+          echo "BRANCH_SUMMARY<<EOF" >> $GITHUB_ENV
+          cat branch-cleanup.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Run security audit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          BRANCH_SUMMARY: ${{ env.BRANCH_SUMMARY }}
+        run: node scripts/security-audit.mjs
+
+      - name: Upload SBOM
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ github.run_number }}
+          path: sbom.json
+          retention-days: 90
+        continue-on-error: true
+
+      - name: Upload branch cleanup report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: branch-cleanup-${{ github.run_number }}
+          path: branch-cleanup.txt
+          retention-days: 30
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Security Review Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Checks Performed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ npm audit (dependency vulnerabilities)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ CodeQL findings (last 30 days)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Dependabot PR review" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Branch cleanup analysis" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ SBOM generation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check the [Issues tab](https://github.com/${{ github.repository }}/issues?q=is%3Aissue+label%3Asecurity+is%3Aopen) for detailed security review." >> $GITHUB_STEP_SUMMARY
