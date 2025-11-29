@@ -518,6 +518,16 @@ svg {
     text-decoration: underline;
   }
 
+  /* Footnote definition scroll offset - prevents nav bar overlap */
+  [id^="user-content-fn-"] {
+    scroll-margin-top: 5rem;
+  }
+
+  /* Footnote reference in text scroll offset - for backref clicks */
+  [id^="user-content-fnref-"] {
+    scroll-margin-top: 5rem;
+  }
+
   /* Footnote backref styling - hide emoji, use icon instead */
   a[data-footnote-backref] {
     text-decoration: none;

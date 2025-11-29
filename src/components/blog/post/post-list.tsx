@@ -232,7 +232,7 @@ export function PostList({
                     <div className="p-6 md:p-10 lg:p-12">
                       {/* Badges and metadata */}
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm mb-4 text-zinc-700 dark:text-zinc-300">
-                        <PostBadges post={p} isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory />
+                        <PostBadges post={p} isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                         <SeriesBadge post={p} />
                         <time dateTime={p.publishedAt} className="text-zinc-700 dark:text-zinc-300">
                           {new Date(p.publishedAt).toLocaleDateString("en-US", { 
@@ -297,7 +297,7 @@ export function PostList({
                   <div className="p-6 md:p-8">
                       {/* Badges and metadata */}
                       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm text-zinc-600 dark:text-zinc-400 mb-3">
-                        <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory />
+                        <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                         <SeriesBadge post={p} size="sm" />
                         <time dateTime={p.publishedAt} className="text-zinc-600 dark:text-zinc-400">
                           {new Date(p.publishedAt).toLocaleDateString("en-US", { 
@@ -374,7 +374,7 @@ export function PostList({
                   <div className="flex-1 p-4 flex flex-col">
                     {/* Badges and metadata */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-2">
-                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory />
+                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                       <SeriesBadge post={p} size="sm" />
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString("en-US", { 
@@ -450,7 +450,7 @@ export function PostList({
                   <div className="p-5 md:p-6">
                     {/* Badges and metadata */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-3">
-                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory />
+                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                       <SeriesBadge post={p} size="sm" />
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString("en-US", { 
@@ -521,7 +521,7 @@ export function PostList({
                   <div className="p-3">
                     {/* Badges and metadata - compact */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-1.5">
-                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory />
+                      <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                       <SeriesBadge post={p} size="sm" />
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString("en-US", { 
@@ -576,7 +576,7 @@ export function PostList({
                 <div className="flex-1 p-4 flex flex-col">
                   {/* Badges and metadata */}
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground mb-2">
-                    <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory />
+                    <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} />
                     <time dateTime={p.publishedAt}>
                       {new Date(p.publishedAt).toLocaleDateString("en-US", { 
                         year: "numeric", 
