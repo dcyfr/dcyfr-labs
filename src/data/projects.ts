@@ -96,7 +96,7 @@ const projectDrafts: Project[] = [
   {
     slug: "dcyfr-labs",
     title: "DCYFR Labs",
-    description: "Cyber Architecture & Design",
+    description: "Cyber architecture and design services for modern businesses, focusing on secure and scalable solutions.",
     timeline: "2025 → Present",
     status: "active",
     category: "startup",
@@ -116,7 +116,7 @@ const projectDrafts: Project[] = [
   {
     slug: "x64",
     title: "X64: Indie Cyber Publication",
-    description: "A digital publication focused on cybersecurity, technology trends, and industry insights.",
+    description: "An independent online publication focused on cybersecurity topics, trends, and research, providing in-depth articles and analysis for professionals and enthusiasts.",
     timeline: "2024 → Present",
     status: "active",
     category: "community",
@@ -135,7 +135,7 @@ const projectDrafts: Project[] = [
   {
     slug: "isn",
     title: "Information Security Network, Inc.",
-    description: "A non-profit organization dedicated to promoting public information security awareness.",
+    description: "A local nonprofit dedicated to promoting public security awareness through community outreach and education.",
     timeline: "2019 → 2021",
     status: "archived",
     category: "nonprofit",

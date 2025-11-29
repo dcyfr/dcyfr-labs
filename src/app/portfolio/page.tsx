@@ -223,14 +223,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
           <p className="text-muted-foreground">{pageDescription}</p>
         </div>
 
-        {/* GitHub contribution heatmap
-        <div className="mb-8">
-          <GitHubHeatmapErrorBoundary>
-            <GitHubHeatmap username="dcyfr" />
-          </GitHubHeatmapErrorBoundary>
-        </div> */}
-
-        {/* Filters */}
+        {/* Filters - temporarily hidden
         <div className="mb-8">
           <ProjectFilters
             selectedCategory={selectedCategory}
@@ -244,6 +237,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
             hasActiveFilters={hasActiveFilters}
           />
         </div>
+        */}
 
         {/* Projects list */}
         <ProjectList
