@@ -158,7 +158,7 @@ Document all exceptions with rationale in Sentry issue comments.
 ### Review Checklist
 
 1. **Open Sentry Dashboard**
-   - Navigate to [https://dcyfr-labs-gj.sentry.io/](https://dcyfr-labs-gj.sentry.io/)
+   - Navigate to [https://dcyfr-labs.sentry.io/](https://dcyfr-labs.sentry.io/)
    - Select `dcyfr-labs` project
 
 2. **Review Issue Summary (Last 7 Days)**
@@ -540,7 +540,7 @@ After each Critical or High severity incident:
 
 ## Contact & Support
 
-- **Sentry Dashboard:** https://dcyfr-labs-gj.sentry.io/
+- **Sentry Dashboard:** https://dcyfr-labs.sentry.io/
 - **Documentation:** https://docs.sentry.io/
 - **Internal Support:** `#engineering` Slack channel
 - **On-Call:** [PagerDuty/rotation link]
