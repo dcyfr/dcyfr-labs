@@ -111,8 +111,14 @@ function validateFrontmatter(frontmatter, filePath) {
   }
 
   // Validate image accessibility
-  if (frontmatter.image && !frontmatter.imageAlt) {
-    errors.push(`Image present but missing imageAlt (accessibility requirement)`);
+  // Support both top-level imageAlt and structured image.alt
+  const hasImage = frontmatter.image || frontmatter.imageAlt;
+  const hasAlt = frontmatter.imageAlt ||
+                 (typeof frontmatter.image === 'object' && frontmatter.image?.alt) ||
+                 (typeof frontmatter.image === 'string'); // String images don't need alt
+
+  if (hasImage && !hasAlt) {
+    errors.push(`Image present but missing alt text (accessibility requirement)`);
   }
 
   // Validate draft status
