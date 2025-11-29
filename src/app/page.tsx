@@ -1,5 +1,6 @@
 import { featuredProjects, projects } from "@/data/projects";
 import { posts, featuredPosts } from "@/data/posts";
+import { visibleChangelog } from "@/data/changelog";
 import { getSocialUrls } from "@/data/socials";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { getMultiplePostViews } from "@/lib/views";
@@ -34,11 +35,17 @@ import {
   SectionNavigator,
   Section,
   TrendingPosts,
-  RecentActivity,
 } from "@/components/common";
+import { ActivityFeed } from "@/components/activity";
+import {
+  transformPosts,
+  transformProjects,
+  transformChangelog,
+  getGitHubActivities,
+  aggregateActivities,
+} from "@/lib/activity";
 import { FeaturedPostHero, HomepageStats, HomepageHeroActions } from "@/components/home";
 import { WhatIDo, TechStack, SocialProof } from "@/components/about";
-import { GitHubHeatmap } from "@/components/features/github/github-heatmap";
 
 const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
@@ -68,7 +75,10 @@ export default async function Home() {
   const recentPosts = [...posts]
     .filter(p => !p.archived)
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
-    .slice(0, 3);
+    .slice(0, 5);
+  
+  // Fetch GitHub activity (commits, releases)
+  const githubActivities = await getGitHubActivities();
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
@@ -176,16 +186,19 @@ export default async function Home() {
         </Section>
 
         {/* Recent Activity */}
-        {/* TODO: Combine Recent Activity and Trending Posts into a single section with two columns */}
-        {/* TODO: Activity feed page */}
         <Section className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={215}>
             <div className={SPACING.content}>
-              <SectionHeader title="Recent Activity" />
-              <RecentActivity
-                posts={recentPosts}
-                projects={[...featuredProjects]}
-                limit={5}
+              <SectionHeader title="Activity" />
+              <ActivityFeed
+                items={aggregateActivities([
+                  ...transformPosts(recentPosts),
+                  ...transformProjects([...featuredProjects]),
+                  ...transformChangelog(visibleChangelog),
+                  ...githubActivities,
+                ], { limit: 8 })}
+                variant="timeline"
+                viewAllHref="/activity"
               />
             </div>
           </ScrollReveal>

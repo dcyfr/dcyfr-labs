@@ -34,12 +34,13 @@ interface BlogPostSidebarProps {
   relatedPosts?: Post[];
 }
 
+// Category styles - dimmer/muted colors (secondary emphasis)
 const CATEGORY_STYLES: Record<PostCategory, string> = {
-  "development": "border-blue-500/70 bg-blue-500/15 text-blue-700 dark:text-blue-300",
-  "security": "border-red-500/70 bg-red-500/15 text-red-700 dark:text-red-300",
-  "career": "border-green-500/70 bg-green-500/15 text-green-700 dark:text-green-300",
-  "ai": "border-purple-500/70 bg-purple-500/15 text-purple-700 dark:text-purple-300",
-  "tutorial": "border-amber-500/70 bg-amber-500/15 text-amber-700 dark:text-amber-300",
+  "development": "border-blue-400/40 bg-blue-400/10 text-blue-600/80 dark:text-blue-400/80",
+  "security": "border-red-400/40 bg-red-400/10 text-red-600/80 dark:text-red-400/80",
+  "career": "border-green-400/40 bg-green-400/10 text-green-600/80 dark:text-green-400/80",
+  "ai": "border-purple-400/40 bg-purple-400/10 text-purple-600/80 dark:text-purple-400/80",
+  "tutorial": "border-amber-400/40 bg-amber-400/10 text-amber-600/80 dark:text-amber-400/80",
 };
 
 const CATEGORY_LABEL: Record<PostCategory, string> = {
@@ -242,7 +243,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
                   <Link href="/blog?sortBy=drafts">
                     <Badge
                       variant="outline"
-                      className="border-blue-500/70 bg-blue-500/15 text-blue-700 dark:text-blue-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                      className="border-blue-500 bg-blue-500/20 text-blue-700 dark:text-blue-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
                     >
                       Draft
                     </Badge>
@@ -252,7 +253,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
                   <Link href="/blog?sortBy=archived">
                     <Badge
                       variant="outline"
-                      className="border-amber-500/70 bg-amber-500/15 text-amber-700 dark:text-amber-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                      className="border-amber-500 bg-amber-500/20 text-amber-700 dark:text-amber-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
                     >
                       Archived
                     </Badge>
@@ -264,7 +265,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
                     <Link href="/blog?dateRange=30d">
                       <Badge
                         variant="outline"
-                        className="border-green-500/70 bg-green-500/15 text-green-700 dark:text-green-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                        className="border-green-500 bg-green-500/20 text-green-700 dark:text-green-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
                       >
                         New
                       </Badge>
@@ -276,7 +277,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
                     <Link href="/blog?sortBy=popular">
                       <Badge
                         variant="outline"
-                        className="border-red-500/70 bg-red-500/15 text-red-700 dark:text-red-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                        className="border-red-500 bg-red-500/20 text-red-700 dark:text-red-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
                       >
                         Hot
                       </Badge>

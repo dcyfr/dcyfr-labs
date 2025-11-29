@@ -22,12 +22,13 @@ const STATUS_LABEL: Record<ProjectStatus, string> = {
   "archived": "Archived",
 };
 
+// Category styles - dimmer/muted colors (secondary emphasis)
 const CATEGORY_STYLES: Record<ProjectCategory, string> = {
-  "code": "border-blue-500/70 bg-blue-500/15 text-blue-700 dark:text-blue-300",
-  "photography": "border-pink-500/70 bg-pink-500/15 text-pink-700 dark:text-pink-300",
-  "community": "border-purple-500/70 bg-purple-500/15 text-purple-700 dark:text-purple-300",
-  "nonprofit": "border-emerald-500/70 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
-  "startup": "border-orange-500/70 bg-orange-500/15 text-orange-700 dark:text-orange-300",
+  "code": "border-blue-400/40 bg-blue-400/10 text-blue-600/80 dark:text-blue-400/80",
+  "photography": "border-pink-400/40 bg-pink-400/10 text-pink-600/80 dark:text-pink-400/80",
+  "community": "border-purple-400/40 bg-purple-400/10 text-purple-600/80 dark:text-purple-400/80",
+  "nonprofit": "border-emerald-400/40 bg-emerald-400/10 text-emerald-600/80 dark:text-emerald-400/80",
+  "startup": "border-orange-400/40 bg-orange-400/10 text-orange-600/80 dark:text-orange-400/80",
 };
 
 const CATEGORY_LABEL: Record<ProjectCategory, string> = {

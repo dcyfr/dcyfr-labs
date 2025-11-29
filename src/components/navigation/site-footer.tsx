@@ -31,6 +31,9 @@ export function SiteFooter() {
           <SiteLogo size="sm" iconClassName="opacity-70" />
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <a href="/activity" className="hover:underline underline-offset-4 will-change-auto whitespace-nowrap px-1.5 py-1">
+            Activity
+          </a>
           <a
             href="/contact"
             className="hover:underline underline-offset-4 will-change-auto whitespace-nowrap px-1.5 py-1"

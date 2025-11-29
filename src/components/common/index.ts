@@ -27,8 +27,10 @@ export { GitHubHeatmapSkeleton } from "./skeletons/github-heatmap-skeleton";
 
 // Stats
 export { TrendingPosts } from "./stats/trending-posts";
-export { RecentActivity } from "./stats/recent-activity";
 export { UnifiedTimeline } from "./stats/unified-timeline";
+
+// Activity (replaces deprecated RecentActivity)
+export * from "../activity";
 
 // Filters
 export { ActiveFilters } from "./filters/active-filters";

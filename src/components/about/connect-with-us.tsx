@@ -14,9 +14,7 @@ export function ConnectWithUs() {
     <div className={SPACING.content}>
       <h2 className={TYPOGRAPHY.h2.standard}>Connect with Us</h2>
       <p className="text-muted-foreground mb-4">
-        We&apos;re open to connecting with fellow builders, sharing knowledge,
-        and exploring new opportunities. Feel free to reach out through any of
-        the platforms below!
+        We&apos;d love to hear from you! Whether you have questions, feedback, or just want to say hello, feel free to reach out through our social channels below.
       </p>
       <AvailabilityBanner className="my-6" />
       <SocialLinksGrid />

@@ -46,14 +46,14 @@ export default function Loading() {
           </div>
         </Section>
 
-        {/* Recent Activity Section */}
+        {/* Activity Section */}
         <Section className={PAGE_LAYOUT.section.container}>
           <div className={SPACING.content}>
             {/* Section header skeleton */}
             <div className="mb-6">
               <Skeleton className="h-8 w-32" />
             </div>
-            {/* RecentActivity uses space-y-3 with Card components */}
+            {/* ActivityFeed timeline skeleton */}
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, i) => (
                 <Card key={i} className="group">

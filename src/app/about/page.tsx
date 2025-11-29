@@ -24,10 +24,12 @@ import {
   Logo,
   SectionNavigator,
   Section,
+  GitHubHeatmapErrorBoundary,
 } from "@/components/common";
 import { AboutAvatar, AboutStats, TeamSpotlights, ConnectWithUs } from "@/components/about";
 import { PostList } from "@/components/blog";
 import { DownloadResumeButton } from "@/components/resume";
+import { GitHubHeatmap } from "@/components/features/github/github-heatmap";
 import dynamic from "next/dynamic";
 
 const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
@@ -156,6 +158,21 @@ export default async function AboutPage() {
             </div>
           </ScrollReveal>
         </Section>
+
+        {/* GitHub Activity */}
+        <Section className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={60}>
+            <div className={SPACING.content}>
+              <h2 className={TYPOGRAPHY.h2.standard}>GitHub Activity</h2>
+              <p className="text-muted-foreground mb-6">
+                A snapshot of my open source contributions and coding activity over the past year.
+              </p>
+              <GitHubHeatmapErrorBoundary>
+                <GitHubHeatmap username="dcyfr" />
+              </GitHubHeatmapErrorBoundary>
+            </div>
+          </ScrollReveal>
+        </Section>
         
         {/* Meet the Team */}
         <Section className={PAGE_LAYOUT.section.container}>
@@ -163,29 +180,6 @@ export default async function AboutPage() {
             <TeamSpotlights />
           </ScrollReveal>
         </Section>
-
-        {/* Featured Writing 
-        <Section className={PAGE_LAYOUT.section.container}>
-          <div className={SPACING.content}>
-            <h2 className={TYPOGRAPHY.h2.standard}>Recent Writing</h2>
-            <p className="text-muted-foreground mb-6">
-              I write about cybersecurity, development practices, and technology trends. Here are some recent posts:
-            </p>
-            <PostList 
-              posts={recentPosts} 
-              layout="default"
-              titleLevel="h3"
-            />
-            <div className="mt-6">
-              <Link 
-                className={`inline-flex items-center gap-2 text-primary ${HOVER_EFFECTS.link}`}
-                href="/blog"
-              >
-                View all posts
-              </Link>
-            </div>
-          </ScrollReveal>
-        </Section> */}
 
         {/* Connect with Us */}
         <Section className={PAGE_LAYOUT.section.container}>
