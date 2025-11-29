@@ -3,7 +3,7 @@ title: "Building with AI: How Model Context Protocol is Changing Development Wor
 summary: "Exploring the Model Context Protocol (MCP) and how it's enabling new patterns for AI-assisted development with practical examples from real projects."
 publishedAt: "2025-11-11"
 updatedAt: "2025-11-18"
-category: "ai"
+category: "AI"
 tags: ["AI", "MCP", "Developer Tools", "Productivity", "Architecture"]
 featured: true
 image:
@@ -116,7 +116,7 @@ const logs = await mcp_vercel_get_deployment_build_logs({
 
 ## Building Your Own MCP Server
 
-MCP servers are surprisingly simple. Here's a minimal example:
+MCP servers are surprisingly simple to build. The official SDK[^mcp-github] provides everything you need. Here's a minimal example:
 
 ```typescript
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -315,7 +315,7 @@ Add to `.vscode/settings.json` or user settings:
 
 ## What's Next for MCP?
 
-The protocol is still evolving, but the direction is clear:
+The protocol is still evolving. Anthropic recently announced code execution capabilities[^mcp-code-execution], and the direction is clear:
 
 - **More integrations**: Database tools, cloud platforms, analytics
 - **Better discovery**: Marketplace for MCP servers
@@ -330,7 +330,7 @@ Model Context Protocol represents a shift in how we think about AI-assisted deve
 
 The key insight: **context is everything**. An AI that can query your production errors, read your actual codebase, and fetch current documentation is infinitely more useful than one working from a text description.
 
-If you're building AI tools or just trying to improve your development workflow, MCP is worth exploring. The protocol is open, the SDKs are straightforward, and the ecosystem is growing fast.
+If you're building AI tools or just trying to improve your development workflow, MCP is worth exploring. The protocol is open, the SDKs are straightforward, and the ecosystem is growing fast. With frameworks like Next.js 15[^nextjs-15] embracing server components and actions, the synergy with MCP-powered AI assistants is only getting stronger.
 
 ---
 

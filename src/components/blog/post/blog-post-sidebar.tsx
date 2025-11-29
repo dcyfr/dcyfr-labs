@@ -232,7 +232,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
               </div>
             )}
 
-            {/* Status & Category Badges */}
+            {/* Status & Category Badges - Hidden
             {(metadata.isDraft ||
               metadata.isArchived ||
               metadata.isLatest ||
@@ -288,6 +288,7 @@ export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, s
                 )}
               </div>
             )}
+            */}
 
             {/* Tags */}
             {metadata.tags && metadata.tags.length > 0 && (

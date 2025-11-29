@@ -55,7 +55,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const sortBy = getParam("sortBy") || "newest";
   const dateRange = getParam("dateRange") || "all";
   const layoutParam = getParam("layout");
-  const layout = (["grid", "list", "magazine", "compact"].includes(layoutParam)) ? layoutParam as "grid" | "list" | "magazine" | "compact" : "compact";
+  const layout = (["grid", "list", "magazine", "compact"].includes(layoutParam)) ? layoutParam as "grid" | "list" | "magazine" | "compact" : "grid";
   
   // Apply category filter first (case-insensitive)
   const postsWithCategoryFilter = selectedCategory
@@ -268,9 +268,10 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
                 <p className="text-muted-foreground">{pageDescription}</p>
               </div>
-              <div className="shrink-0 hidden lg:flex items-center gap-3">
+              {/* Layout switcher hidden - grid is default */}
+              {/* <div className="shrink-0 hidden lg:flex items-center gap-3">
                 <ViewToggle currentView={layout} />
-              </div>
+              </div> */}
             </div>
             
             {/* Mobile filters (below lg breakpoint) */}

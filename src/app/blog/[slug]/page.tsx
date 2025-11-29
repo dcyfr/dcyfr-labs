@@ -233,16 +233,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
               <ArticleHeader
                 title={post.title}
-                badges={
-                  <HideWhenSidebarVisible>
-                    <PostBadges
-                      post={post}
-                      isLatestPost={latestPost?.slug === post.slug}
-                      isHotPost={hottestSlug === post.slug}
-                      showCategory
-                    />
-                  </HideWhenSidebarVisible>
-                }
+                /* badges prop hidden - status badges disabled */
               >
                 {/* Metadata shown only when sidebar is hidden */}
                 <HideWhenSidebarVisible>
