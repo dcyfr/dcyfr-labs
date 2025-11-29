@@ -159,20 +159,23 @@ export async function fetchGitHubActivity(): Promise<GitHubActivity> {
 
 /**
  * Transform GitHub commits into activity items
+ * Filters out bot commits (e.g., dependabot)
  */
 export function transformCommits(commits: GitHubCommit[]): ActivityItem[] {
-  return commits.map((commit) => ({
-    id: `github-commit-${commit.sha.substring(0, 7)}`,
-    source: "github" as const,
-    verb: "committed" as const,
-    title: commit.message,
-    description: `Commit by ${commit.author}`,
-    timestamp: new Date(commit.date),
-    href: commit.url,
-    meta: {
-      category: "Code",
-    },
-  }));
+  return commits
+    .filter((commit) => !commit.author.toLowerCase().includes("dependabot"))
+    .map((commit) => ({
+      id: `github-commit-${commit.sha.substring(0, 7)}`,
+      source: "github" as const,
+      verb: "committed" as const,
+      title: commit.message,
+      description: `Commit by ${commit.author}`,
+      timestamp: new Date(commit.date),
+      href: commit.url,
+      meta: {
+        category: "Code",
+      },
+    }));
 }
 
 /**

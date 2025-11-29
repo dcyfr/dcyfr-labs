@@ -11,7 +11,6 @@ import {
   transformPosts,
   transformProjects,
   transformChangelog,
-  getGitHubActivities,
   aggregateActivities,
 } from "@/lib/activity";
 
@@ -32,9 +31,6 @@ export default async function ActivityPage() {
   // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
 
-  // Fetch GitHub activity
-  const githubActivities = await getGitHubActivities();
-
   // Transform all content into activity items
   const blogActivities = transformPosts(
     posts.filter((p) => !p.archived && !p.draft)
@@ -47,7 +43,6 @@ export default async function ActivityPage() {
     ...blogActivities,
     ...projectActivities,
     ...changelogActivities,
-    ...githubActivities,
   ]);
 
   // JSON-LD structured data

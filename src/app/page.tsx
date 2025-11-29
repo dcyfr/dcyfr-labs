@@ -41,7 +41,6 @@ import {
   transformPosts,
   transformProjects,
   transformChangelog,
-  getGitHubActivities,
   aggregateActivities,
 } from "@/lib/activity";
 import { FeaturedPostHero, HomepageStats, HomepageHeroActions } from "@/components/home";
@@ -76,9 +75,6 @@ export default async function Home() {
     .filter(p => !p.archived)
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
     .slice(0, 5);
-  
-  // Fetch GitHub activity (commits, releases)
-  const githubActivities = await getGitHubActivities();
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
@@ -195,7 +191,6 @@ export default async function Home() {
                   ...transformPosts(recentPosts),
                   ...transformProjects([...featuredProjects]),
                   ...transformChangelog(visibleChangelog),
-                  ...githubActivities,
                 ], { limit: 8 })}
                 variant="timeline"
                 viewAllHref="/activity"
