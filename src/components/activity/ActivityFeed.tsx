@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 import { ActivityItem } from "./ActivityItem";
 import { ActivitySkeleton } from "./ActivitySkeleton";
 import {
@@ -159,7 +160,13 @@ function GroupedFeed({
 
         return (
           <div key={group}>
-            <h3 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">
+            {/* Use TYPOGRAPHY tokens for heading styles */}
+            <h3
+              className={cn(
+                TYPOGRAPHY.h3.standard,
+                "text-muted-foreground mb-3 uppercase tracking-wider"
+              )}
+            >
               {TIME_GROUP_LABELS[group]}
             </h3>
 

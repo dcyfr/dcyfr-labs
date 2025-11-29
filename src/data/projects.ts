@@ -106,6 +106,11 @@ const projectDrafts: Project[] = [
       { label: "Website", href: `https://dcyfrlabs.com/`, type: "demo" },
       { label: "Code", href: `https://github.com/dcyfr/dcyfr-labs`, type: "github" }
     ],
+    highlights: [
+      "Designed and developed a modern web presence, showcasing cyber architecture and design services.",
+      "Implemented responsive design principles to ensure optimal viewing across devices.",
+      "Integrated SEO best practices to enhance online visibility and search engine rankings."
+    ],
     featured: true,
     image: {
       url: "/portfolio/default/tech.svg",
@@ -125,6 +130,11 @@ const projectDrafts: Project[] = [
     links: [
       { label: "Website", href: `https://x64.onl`, type: "demo" }
     ],
+    highlights: [
+      "Launched an independent online publication dedicated to cybersecurity topics, trends, and research.",
+      "Curated and published in-depth articles and analysis for cybersecurity professionals and enthusiasts.",
+      "Built a community of readers and contributors passionate about cybersecurity awareness and education."
+    ],
     featured: false,
     image: {
       url: "/portfolio/default/design.svg",
@@ -142,6 +152,11 @@ const projectDrafts: Project[] = [
     tech: ["WordPress", "PHP", "MySQL", "HTML", "CSS"],
     tags: ["Cybersecurity", "Awareness"],
     links: [],
+    highlights: [
+      "Developed and maintained the organization's website to enhance online presence and outreach.",
+      "Created educational content and resources to promote cybersecurity awareness within the community.",
+      "Organized events and workshops to engage the public and foster a culture of security awareness."
+    ],
     featured: false,
     image: {
       url: "/portfolio/default/general.svg",
