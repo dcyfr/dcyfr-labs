@@ -68,8 +68,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: cyberdrew-dev
-          SENTRY_PROJECT: cyberdrew-dev
+          SENTRY_ORG: dcyfr-labs
+          SENTRY_PROJECT: dcyfr-labs
           GITHUB_REPOSITORY: ${{ github.repository }}
           TEST_RESULTS_FILE: test-results.json
           BASELINE_FILE: ${{ steps.baseline-cache.outputs.cache-hit == 'true' && 'test-baseline.json' || '' }}

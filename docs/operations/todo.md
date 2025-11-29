@@ -70,6 +70,11 @@ Items deferred until data validates need or time permits.
   - Fix rate limiting test timing issues
   - Fix error scenario integration tests
 
+- [ ] Fix broken Sentry MCP integration (1 hour)
+  - MCP server returning 404 for organization `dcyfr-labs-gj` (should be `dcyfr-labs`)
+  - Update VS Code Sentry MCP extension settings with correct org
+  - Test with `mcp_sentry_find_organizations` tool
+
 ### Infrastructure & Reliability
 
 - [ ] Backup & disaster recovery plan (2 hours)

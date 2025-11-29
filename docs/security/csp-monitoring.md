@@ -36,7 +36,7 @@ Location: `src/proxy.ts`
 
 ### 2025-11-12: Perplexity AI Browser Extension
 
-**Sentry Issue:** [CYBERDREW-DEV-9](https://dcyfr-labs-gj.sentry.io/issues/CYBERDREW-DEV-9)
+**Sentry Issue:** [CYBERDREW-DEV-9](https://dcyfr-labs.sentry.io/issues/CYBERDREW-DEV-9)
 
 **Details:**
 - **Blocked URI:** `https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2`

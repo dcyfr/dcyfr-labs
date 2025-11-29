@@ -272,7 +272,7 @@ This project uses **Model Context Protocol (MCP)** servers in VS Code to enhance
       "url": "https://api.githubcopilot.com/mcp/"
     },
     "Sentry": {
-      "url": "https://mcp.sentry.dev/mcp/dcyfr-labs-gj/dcyfr-labs",
+      "url": "https://mcp.sentry.dev/mcp/dcyfr-labs/dcyfr-labs",
       "type": "http",
       "disabled": false
     },
