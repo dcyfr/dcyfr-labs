@@ -1,80 +1,84 @@
 "use client";
 
 import { useState } from "react";
-import { Tags, FolderOpen, ArrowDownUp, ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { SPACING } from "@/lib/design-tokens";
 import {
   useFilterParams,
   useFilterSearch,
   useActiveFilters,
   FilterSearchInput,
-  FilterBadges,
   FilterClearButton,
 } from "@/components/common/filters";
 import { Button } from "@/components/ui/button";
+import {
+  ProjectSort,
+  ProjectStatusFilter,
+  ProjectTechFilter,
+  ProjectTagFilter,
+} from "./filters";
 
 interface ProjectFiltersProps {
-  selectedCategory: string;
   selectedTags: string[];
-  categoryList: string[];
-  categoryDisplayMap: Record<string, string>;
+  selectedTech: string[];
+  status: string;
   tagList: string[];
+  techList: string[];
   query: string;
   sortBy?: string;
   totalResults: number;
   hasActiveFilters: boolean;
 }
 
-const SORT_OPTIONS = [
-  { value: "newest", label: "Newest" },
-  { value: "oldest", label: "Oldest" },
-  { value: "archived", label: "Archived" },
-];
-
 /**
  * ProjectFilters Component
  *
  * Consolidated search and filter interface for projects with:
  * - Search input with debounce
- * - Sort by badges (Newest, Oldest, Archived)
- * - Category badges (primary classification)
- * - Tag badges (secondary classification)
+ * - Sort by badges (Newest, Oldest, A-Z, Status)
+ * - Status filter badges (Active, In Progress, Archived)
+ * - Tech stack badges
+ * - Tag badges
  * - Clear all filters button
  *
- * @param selectedCategory - Currently selected category (lowercase)
- * @param selectedTags - Currently selected tags (lowercase for matching)
- * @param categoryList - Array of available categories (lowercase)
- * @param categoryDisplayMap - Map of lowercase category to display name
- * @param tagList - Array of available tags (proper casing)
- * @param query - Current search query
- * @param sortBy - Current sort option (newest/oldest/archived)
+ * Modularized into separate components:
+ * - ProjectSort: Sort by badges
+ * - ProjectStatusFilter: Status filter badges
+ * - ProjectTechFilter: Tech stack filter badges
+ * - ProjectTagFilter: Tag filter badges
  */
 export function ProjectFilters({
-  selectedCategory,
   selectedTags,
-  categoryList,
-  categoryDisplayMap,
+  selectedTech,
+  status,
   tagList,
+  techList,
   query,
   sortBy = 'newest',
   totalResults,
   hasActiveFilters,
 }: ProjectFiltersProps) {
-  const { updateParam, toggleMultiParam, clearAll } = useFilterParams({ basePath: "/portfolio" });
-  const { searchValue, setSearchValue } = useFilterSearch({ query, basePath: "/portfolio" });
+  const { updateParam, toggleMultiParam, clearAll } = useFilterParams({ basePath: "/projects" });
+  const { searchValue, setSearchValue } = useFilterSearch({ query, basePath: "/projects" });
 
   const { hasActive, count } = useActiveFilters({
-    category: selectedCategory,
+    status,
     tags: selectedTags,
+    tech: selectedTech,
     query,
     sortBy,
   }, {
     sortBy: "newest",
+    status: "",
   });
 
-  // Category uses single-select with lowercase URL values
-  const setCategory = (category: string) => updateParam("category", category, "");
+  // Status uses single-select
+  const setStatus = (s: string) => updateParam("status", s, "");
   // Tags use lowercase for URL matching
   const toggleTag = (tag: string) => toggleMultiParam("tag", tag.toLowerCase(), selectedTags);
+  // Tech uses multi-select
+  const toggleTech = (tech: string) => toggleMultiParam("tech", tech, selectedTech);
   // Sort uses single-select
   const setSort = (sort: string) => updateParam("sortBy", sort, "newest");
 
@@ -82,7 +86,7 @@ export function ProjectFilters({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="space-y-6">
+    <div className={SPACING.subsection}>
       {/* Search Input - Full Width */}
       <FilterSearchInput
         value={searchValue}
@@ -116,40 +120,19 @@ export function ProjectFilters({
 
       {/* Collapsible Filters Section */}
       {isExpanded && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-200">
-          {/* Sort By Badges */}
-          <FilterBadges
-            items={SORT_OPTIONS.map(o => o.value)}
-            selected={[sortBy]}
-            onToggle={(sort) => setSort(sort === sortBy && sort !== "newest" ? "newest" : sort)}
-            icon={ArrowDownUp}
-            label="Sort by"
-            displayMap={Object.fromEntries(SORT_OPTIONS.map(o => [o.value, o.label]))}
+        <div className={cn(SPACING.subsection, "animate-in fade-in slide-in-from-top-2 duration-200")}>
+          <ProjectSort sortBy={sortBy} onSortChange={setSort} />
+          <ProjectStatusFilter status={status} onStatusChange={setStatus} />
+          <ProjectTechFilter
+            techList={techList}
+            selectedTech={selectedTech}
+            onTechToggle={toggleTech}
           />
-
-          {/* Category Badges - Primary classification */}
-          {categoryList.length > 0 && (
-            <FilterBadges
-              items={categoryList}
-              selected={selectedCategory ? [selectedCategory] : []}
-              onToggle={(cat) => setCategory(selectedCategory === cat ? "" : cat)}
-              icon={FolderOpen}
-              label="Categories"
-              displayMap={categoryDisplayMap}
-            />
-          )}
-
-          {/* Tag Badges - Secondary classification */}
-          {tagList.length > 0 && (
-            <FilterBadges
-              items={tagList}
-              selected={selectedTags}
-              onToggle={toggleTag}
-              icon={Tags}
-              label="Tags"
-              caseInsensitive
-            />
-          )}
+          <ProjectTagFilter
+            tagList={tagList}
+            selectedTags={selectedTags}
+            onTagToggle={toggleTag}
+          />
         </div>
       )}
 

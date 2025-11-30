@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import { resume, getShortSummary } from "@/data/resume";
 import { getOgImageUrl } from "@/lib/site-config";
@@ -29,8 +30,7 @@ import {
 import { AboutAvatar, AboutStats, TeamSpotlights, ConnectWithUs } from "@/components/about";
 import { PostList } from "@/components/blog";
 import { DownloadResumeButton } from "@/components/resume";
-import { GitHubHeatmap } from "@/components/features/github/github-heatmap";
-import dynamic from "next/dynamic";
+import { LazyGitHubHeatmap } from "@/components/features/github/lazy-github-heatmap";
 
 const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
@@ -69,7 +69,7 @@ export default async function AboutPage() {
       <SectionNavigator scrollOffset={SCROLL_BEHAVIOR.offset.standard} className="space-y-10 md:space-y-14">
         {/* Page Hero */}
         <Section className={PAGE_LAYOUT.hero.container}>
-          <div className="flex flex-col md:flex-row md:items-start md:gap-6 lg:gap-8">
+          <div className="flex flex-col md:flex-row md:items-start md:gap-4 lg:gap-8">
             {/* Avatar */}
             <div className="shrink-0 mb-6 md:mb-0">
               <AboutAvatar size="md" />
@@ -168,7 +168,7 @@ export default async function AboutPage() {
                 A snapshot of my open source contributions and coding activity over the past year.
               </p>
               <GitHubHeatmapErrorBoundary>
-                <GitHubHeatmap username="dcyfr" />
+                <LazyGitHubHeatmap username="dcyfr" />
               </GitHubHeatmapErrorBoundary>
             </div>
           </ScrollReveal>

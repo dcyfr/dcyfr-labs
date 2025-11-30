@@ -1,13 +1,14 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { X, Search, ChevronDown, ChevronUp, PanelRightClose, PanelRightOpen } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition, useEffect } from "react";
+import { SPACING } from "@/lib/design-tokens";
 import { useSidebarContext } from "@/components/blog/blog-layout-wrapper";
 import { useBlogKeyboard } from "@/components/blog/blog-keyboard-provider";
+import { SidebarSearch } from "./sidebar-search";
+import { SidebarFilters } from "./sidebar-filters";
+import { SidebarCategories } from "./sidebar-categories";
+import { SidebarTopics } from "./sidebar-topics";
 
 interface BlogSidebarProps {
   selectedCategory: string;
@@ -29,6 +30,12 @@ interface BlogSidebarProps {
  * Sticky sidebar for blog filtering and navigation on desktop screens.
  * Provides search, view toggle, sorting, filtering, category and tag selection.
  * Collapses to top section on mobile/tablet.
+ * 
+ * Modularized into separate components:
+ * - SidebarSearch: Search input with results count
+ * - SidebarFilters: Sort, date range, reading time filters
+ * - SidebarCategories: Category filter badges
+ * - SidebarTopics: Tag filter badges with counts
  */
 export function BlogSidebar({
   selectedCategory,
@@ -47,7 +54,7 @@ export function BlogSidebar({
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [searchValue, setSearchValue] = useState(query);
-  const { isCollapsed, setIsCollapsed } = useSidebarContext();
+  const { isCollapsed } = useSidebarContext();
   const { searchInputRef } = useBlogKeyboard();
   const [expandedSections, setExpandedSections] = useState({
     filters: true,
@@ -143,229 +150,48 @@ export function BlogSidebar({
   };
 
   return (
-    <aside className="space-y-6">
-      {/* Toggle button - temporarily disabled */}
-      {/* <div className="flex items-center justify-between">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className={isCollapsed ? "w-10 h-10" : "w-full justify-start gap-2 text-muted-foreground hover:text-foreground h-10"}
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? (
-            <PanelRightOpen className="h-4 w-4" />
-          ) : (
-            <>
-              <PanelRightClose className="h-4 w-4" />
-              <span className="text-sm">Hide Filters</span>
-            </>
-          )}
-        </Button>
-      </div> */}
-
+    <aside className={SPACING.subsection}>
       {!isCollapsed && (
         <>
-      {/* Search */}
-      <div className="space-y-2">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            ref={searchInputRef}
-            type="search"
-            placeholder="Search posts..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-9 h-11"
+          <SidebarSearch
+            searchValue={searchValue}
+            onSearchChange={setSearchValue}
+            searchInputRef={searchInputRef}
+            totalResults={totalResults}
+            totalPosts={totalPosts}
+            activeFilterCount={activeFilterCount}
+            onClearAll={clearAllFilters}
+            isPending={isPending}
           />
-        </div>
-        
-        {/* Results count */}
-        <div className="flex items-center justify-between text-sm text-muted-foreground px-1">
-          <span>
-            {totalResults === totalPosts 
-              ? `${totalResults} posts` 
-              : `${totalResults} of ${totalPosts} posts`}
-          </span>
-          {activeFilterCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearAllFilters}
-              className="h-7 text-xs"
-            >
-              Clear all
-            </Button>
-          )}
-        </div>
-      </div>
 
-      {/* Sort & Time Filters */}
-      <div className="space-y-3">
-        <button
-          onClick={() => toggleSection("filters")}
-          className="flex items-center justify-between w-full text-sm font-medium"
-        >
-          <span>Sort & Filters</span>
-          {expandedSections.filters ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
-        </button>
-        
-        {expandedSections.filters && (
-          <div className="space-y-3 pt-2">
-            {/* Sort badges */}
-            <div className="space-y-1.5">
-              <label className="text-xs text-muted-foreground">Sort by</label>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  { value: "newest", label: "Newest" },
-                  { value: "popular", label: "Popular" },
-                  { value: "oldest", label: "Oldest" },
-                  { value: "archived", label: "Archived" },
-                  ...(process.env.NODE_ENV === "development" ? [{ value: "drafts", label: "Drafts" }] : []),
-                ].map((option) => {
-                  const isSelected = sortBy === option.value;
-                  return (
-                    <Badge
-                      key={option.value}
-                      variant={isSelected ? "default" : "outline"}
-                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors select-none text-xs"
-                      onClick={() => updateParam("sortBy", option.value)}
-                    >
-                      {option.label}
-                    </Badge>
-                  );
-                })}
-              </div>
-            </div>
+          <SidebarFilters
+            sortBy={sortBy}
+            dateRange={dateRange}
+            readingTime={readingTime}
+            isExpanded={expandedSections.filters}
+            onToggle={() => toggleSection("filters")}
+            onSortChange={(value) => updateParam("sortBy", value)}
+            onDateRangeChange={(value) => updateParam("dateRange", value)}
+            onReadingTimeChange={(value) => updateParam("readingTime", value)}
+          />
 
-            {/* Date range badges */}
-            <div className="space-y-1.5">
-              <label className="text-xs text-muted-foreground">Date range</label>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  { value: "all", label: "All time" },
-                  { value: "30d", label: "30 days" },
-                  { value: "90d", label: "90 days" },
-                  { value: "year", label: "This year" },
-                ].map((option) => {
-                  const isSelected = dateRange === option.value;
-                  return (
-                    <Badge
-                      key={option.value}
-                      variant={isSelected ? "default" : "outline"}
-                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors select-none text-xs"
-                      onClick={() => updateParam("dateRange", option.value)}
-                    >
-                      {option.label}
-                    </Badge>
-                  );
-                })}
-              </div>
-            </div>
+          <SidebarCategories
+            categoryList={categoryList}
+            categoryDisplayMap={categoryDisplayMap}
+            selectedCategory={selectedCategory}
+            isExpanded={expandedSections.categories}
+            onToggle={() => toggleSection("categories")}
+            onCategorySelect={setCategory}
+          />
 
-            {/* Reading time badges */}
-            <div className="space-y-1.5">
-              <label className="text-xs text-muted-foreground">Reading time</label>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  { value: "all", label: "All" },
-                  { value: "quick", label: "≤5 min" },
-                  { value: "medium", label: "5-15 min" },
-                  { value: "deep", label: ">15 min" },
-                ].map((option) => {
-                  const isSelected = (readingTime || "all") === option.value;
-                  return (
-                    <Badge
-                      key={option.value}
-                      variant={isSelected ? "default" : "outline"}
-                      className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors select-none text-xs"
-                      onClick={() => updateParam("readingTime", option.value)}
-                    >
-                      {option.label}
-                    </Badge>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Categories */}
-      {categoryList.length > 0 && (
-        <div className="space-y-3">
-          <button
-            onClick={() => toggleSection("categories")}
-            className="flex items-center justify-between w-full text-sm font-medium"
-          >
-            <span>Categories</span>
-            {expandedSections.categories ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </button>
-
-          {expandedSections.categories && (
-            <div className="flex flex-wrap gap-2 pt-2">
-              {categoryList.map((category) => {
-                const isSelected = selectedCategory === category;
-                const displayName = categoryDisplayMap[category] || category;
-                return (
-                  <Badge
-                    key={category}
-                    variant={isSelected ? "default" : "outline"}
-                    className="cursor-pointer hover:bg-accent transition-colors"
-                    onClick={() => setCategory(category)}
-                  >
-                    {displayName}
-                    {isSelected && <X className="ml-1 h-3 w-3" />}
-                  </Badge>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Topics (Tags) */}
-      <div className="space-y-3">
-        <button
-          onClick={() => toggleSection("topics")}
-          className="flex items-center justify-between w-full text-sm font-medium"
-        >
-          <span>Topics</span>
-          {expandedSections.topics ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
-        </button>
-
-        {expandedSections.topics && tagList.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-2">
-            {tagList.map(({ tag, count }) => {
-              const isSelected = selectedTags.some(t => t.toLowerCase() === tag.toLowerCase());
-              return (
-                <Badge
-                  key={tag}
-                  variant={isSelected ? "default" : "outline"}
-                  className="cursor-pointer hover:bg-accent transition-colors"
-                  onClick={() => toggleTag(tag)}
-                >
-                  {tag}
-                  <span className="ml-1.5 text-xs opacity-70">({count})</span>
-                </Badge>
-              );
-            })}
-          </div>
-        )}
-      </div>
-      </>
+          <SidebarTopics
+            tagList={tagList}
+            selectedTags={selectedTags}
+            isExpanded={expandedSections.topics}
+            onToggle={() => toggleSection("topics")}
+            onTagToggle={toggleTag}
+          />
+        </>
       )}
     </aside>
   );
