@@ -16,7 +16,7 @@ image:
   height: 630
 ---
 
-> **Series Background:** This is a follow-up to [Shipping a Developer Portfolio: Next.js, Tailwind v4 & shadcn/ui](/blog/shipping-tiny-portfolio), where I built a minimal portfolio with Next.js 15, TypeScript, and Tailwind v4 in a weekend. This series documents the production-hardening work I did after launch.
+> **Series Background:** This is a follow-up to [Shipping a Developer Portfolio: Next.js, Tailwind v4 & shadcn/ui](/blog/shipping-developer-portfolio), where I built a minimal portfolio with Next.js 15, TypeScript, and Tailwind v4 in a weekend. This series documents the production-hardening work I did after launch.
 
 ---
 
@@ -169,7 +169,7 @@ export function ThemeToggle() {
 ```
 
 **Results:**
-- INP score improved from 664ms+ to &lt;200ms (Good)
+- INP score improved from 664ms+ to under 200ms (Good)
 - Smoother navigation and interactions
 - Theme toggle feels instant
 - No layout shifts or visual jank
@@ -224,7 +224,7 @@ const fetchContributions = async (): Promise<ContributionResponse> => {
 - Live contribution data on homepage
 - 24-hour client-side cache reduces API calls
 - Graceful fallback to sample data
-- <5KB bundle size increase
+- Under 5KB bundle size increase
 
 ### Part 3: Developer Experience
 
@@ -254,7 +254,7 @@ I created comprehensive instructions for AI coding assistants (GitHub Copilot, C
 ## Key Takeaways
 
 1. **Security is not optional**: CSP and rate limiting should be in every production app
-2. **Performance is perception**: 664ms feels slow, &lt;200ms feels instant
+2. **Performance is perception**: 664ms feels slow, under 200ms feels instant
 3. **Zero dependencies are underrated**: Custom rate limiter = 146 lines, no external deps
 4. **Caching strategy matters**: Client-side cache + fallback data = resilient UX
 5. **Document everything**: Future you will thank present you
