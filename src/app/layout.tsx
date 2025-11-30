@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Alegreya } from "next/font/google";
 import "./globals.css";
 import "./print.css";
+import "@/styles/katex.css";
 import { ThemeProvider } from "@/components/features/theme/theme-provider";
 import {
   SITE_URL,

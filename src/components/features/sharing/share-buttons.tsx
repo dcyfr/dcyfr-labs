@@ -196,7 +196,7 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
           <Share2 className="h-4 w-4" aria-hidden="true" />
           <span>Share this post</span>
         </div>
-        
+
         {/* Share Counter */}
         {shareCount > 0 && (
           <motion.div
@@ -212,11 +212,11 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
             >
               {shareCount}
             </motion.span>
-            <span>share{shareCount !== 1 ? 's' : ''}</span>
+            <span>share{shareCount !== 1 ? "s" : ""}</span>
           </motion.div>
         )}
       </div>
-      
+
       <div className="flex flex-wrap gap-2">
         {/* Native Share Button (Mobile only) */}
         {canShare && (
@@ -237,7 +237,10 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
           variant="outline"
           size="default"
           onClick={handleCopyLink}
-          className={cn("gap-2 h-11 md:h-10", copied && "text-green-600 dark:text-green-400")}
+          className={cn(
+            "gap-2 h-11 md:h-10",
+            copied && "text-green-600 dark:text-green-400"
+          )}
           aria-label="Copy link to clipboard"
         >
           {copied ? (
@@ -250,7 +253,7 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
           </span>
         </Button>
 
-        {/* LinkedIn Share Button */}
+        {/* LinkedIn Share Button 
         <Button
           variant="outline"
           size="default"
@@ -260,7 +263,7 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
         >
           <Linkedin className="h-4 w-4" aria-hidden="true" />
           <span className="hidden sm:inline">LinkedIn</span>
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

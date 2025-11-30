@@ -90,7 +90,11 @@ export function BlogPostSidebar({
         )}
 
         {/* Quick Actions */}
-        <PostQuickActions slug={slug} postTitle={postTitle} />
+        <PostQuickActions 
+          slug={slug} 
+          postTitle={postTitle}
+          publishedAt={metadata?.publishedAt?.toISOString()}
+        />
 
         {/* Series Navigation */}
         {series && seriesPosts && seriesPosts.length > 0 && (

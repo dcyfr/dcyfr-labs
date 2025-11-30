@@ -1,0 +1,210 @@
+/**
+ * KaTeX Inline Math Styling
+ * 
+ * Improves readability of mathematical expressions by:
+ * - Fixing baseline alignment with surrounding text
+ * - Adding consistent spacing around inline math
+ * - Optimizing font rendering
+ * - Ensuring dark mode compatibility
+ * 
+ * @see https://katex.org/docs/browser.html
+ * @see https://en.wikibooks.org/wiki/LaTeX/Mathematics
+ */
+
+/* ============================================================================
+   INLINE MATH BASELINE & SPACING
+   ============================================================================ */
+
+/**
+ * Inline math baseline alignment
+ * 
+ * KaTeX renders slightly below baseline by default. This adjustment brings
+ * it into visual alignment with surrounding text while maintaining proper
+ * mathematical typesetting.
+ * 
+ * Technical note: -0.125em (approximately -1/8em) compensates for KaTeX's
+ * default descent from the baseline. Adjust based on font metrics if needed.
+ */
+.katex {
+  /* Align with surrounding text baseline */
+  vertical-align: -0.125em;
+  
+  /* Add breathing room on left and right */
+  margin: 0 0.1em;
+}
+
+/**
+ * Optimize font rendering for math expressions
+ * Improves clarity and consistency with body text
+ */
+.katex {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================================
+   DISPLAY MATH (BLOCK EQUATIONS)
+   ============================================================================ */
+
+/**
+ * Display mode equations get more vertical breathing room
+ * Improves visual hierarchy and readability for complex expressions
+ */
+.katex-display {
+  margin: 1.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/**
+ * Horizontal scrolling for equations wider than viewport
+ * Maintains readability on smaller screens
+ */
+.katex-display > .katex {
+  display: inline-block;
+}
+
+/* ============================================================================
+   TYPOGRAPHY INTEGRATION
+   ============================================================================ */
+
+/**
+ * Ensure inline math respects prose container font sizing
+ * 
+ * The .prose class applies typography scales. Math should match.
+ */
+.prose .katex {
+  font-size: 1em;
+}
+
+/* Display math in prose containers */
+.prose .katex-display {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ============================================================================
+   DARK MODE SUPPORT
+   ============================================================================ */
+
+/**
+ * Ensure KaTeX has proper contrast in dark mode
+ * Inherits from surrounding text color by default
+ */
+@media (prefers-color-scheme: dark) {
+  .katex {
+    color: inherit;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+/**
+ * High contrast mode support
+ * Ensures mathematical expressions remain readable with forced colors
+ */
+@media (prefers-contrast: more) {
+  .katex {
+    font-weight: 500;
+    text-rendering: optimizeContrast;
+  }
+}
+
+/**
+ * Reduced motion support
+ * KaTeX doesn't animate by default, but ensure nothing does
+ */
+@media (prefers-reduced-motion: reduce) {
+  .katex {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ============================================================================
+   SPECIAL CASES & CONTEXTS
+   ============================================================================ */
+
+/**
+ * Math in headings gets subtle adjustments
+ * Maintains visual consistency with heading typography
+ */
+h1 .katex,
+h2 .katex,
+h3 .katex,
+h4 .katex,
+h5 .katex,
+h6 .katex {
+  vertical-align: -0.15em;
+}
+
+/**
+ * Math in table cells needs tighter spacing
+ * Prevents overflow and maintains table layout
+ */
+td .katex,
+th .katex {
+  margin: 0 0.05em;
+}
+
+/**
+ * Math in lists gets standard spacing
+ */
+li .katex {
+  margin: 0 0.1em;
+}
+
+/**
+ * Math in blockquotes
+ */
+blockquote .katex {
+  margin: 0 0.1em;
+}
+
+/* ============================================================================
+   DISPLAY VARIANTS
+   ============================================================================ */
+
+/**
+ * Inline-block wrapper for better control
+ * Use this when inline rendering has alignment issues
+ */
+.katex-inline-wrapper {
+  display: inline-block;
+  vertical-align: -0.125em;
+  white-space: nowrap;
+}
+
+/**
+ * Block equations container
+ * Ensures proper spacing and alignment for display mode
+ */
+.katex-block-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1.5em 0;
+  overflow-x: auto;
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+/**
+ * Optimize math rendering for print
+ * Ensures mathematical expressions print clearly
+ */
+@media print {
+  .katex {
+    color: black;
+    font-weight: normal;
+  }
+  
+  .katex-display {
+    page-break-inside: avoid;
+    margin: 1em 0;
+  }
+}

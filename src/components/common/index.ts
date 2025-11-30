@@ -18,6 +18,17 @@ export { TableOfContents } from "./table-of-contents";
 export { ViewToggle } from "./view-toggle";
 export { default as DevToolsDropdown } from "./dev-tools-dropdown";
 
+// Math components
+export { 
+  InlineMath, 
+  DisplayMath, 
+  getMathClasses,
+  INLINE_MATH_CLASSES,
+  type InlineMathProps,
+  type DisplayMathProps,
+  type MathContext,
+} from "./inline-math";
+
 // Annotation (Rough Notation) - hand-drawn text annotations
 export { 
   Annotation, 
