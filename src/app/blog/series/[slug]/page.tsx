@@ -128,7 +128,7 @@ export default async function SeriesPage({
         {seriesPosts.map((post, index) => (
           <div key={post.slug} className="relative">
             <div className="absolute left-0 top-0 -ml-12 hidden md:block">
-              <Badge variant="outline" className="min-w-[40px] justify-center">
+              <Badge variant="outline" className="min-w-10 justify-center">
                 {index + 1}
               </Badge>
             </div>
