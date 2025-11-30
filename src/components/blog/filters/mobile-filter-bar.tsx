@@ -115,54 +115,56 @@ export function MobileFilterBar({
   return (
     <div className="border rounded-lg overflow-hidden">
       {/* Collapsed summary bar */}
-      <button
-        type="button"
-        onClick={() => setIsExpanded(!isExpanded)}
-        className={cn(
-          "w-full flex items-center justify-between gap-3 p-3",
-          "text-left hover:bg-muted/50 transition-colors",
-          isExpanded && "border-b"
-        )}
-        aria-expanded={isExpanded}
-        aria-controls="mobile-filter-content"
-      >
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <SlidersHorizontal className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <span className="text-sm font-medium">
-            {hasActiveFilters ? (
-              <>Filters ({activeFilters.length})</>
-            ) : (
-              <>Filter & Search</>
-            )}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            · {totalResults} post{totalResults !== 1 ? "s" : ""}
-          </span>
-        </div>
-        
-        <div className="flex items-center gap-2 shrink-0">
-          {hasActiveFilters && !isExpanded && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 px-2 text-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClearAll();
-              }}
-              disabled={isPending}
-            >
-              {isPending ? "..." : "Clear"}
-            </Button>
+      <div className={cn("border-b", !isExpanded && "border-b-0")}>
+        <button
+          type="button"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={cn(
+            "w-full flex items-center justify-between gap-3 p-3",
+            "text-left hover:bg-muted/50 transition-colors"
           )}
+          aria-expanded={isExpanded}
+          aria-controls="mobile-filter-content"
+        >
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <SlidersHorizontal className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="text-sm font-medium">
+              {hasActiveFilters ? (
+                <>Filters ({activeFilters.length})</>
+              ) : (
+                <>Filter & Search</>
+              )}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              · {totalResults} post{totalResults !== 1 ? "s" : ""}
+            </span>
+          </div>
+          
           {isExpanded ? (
             <ChevronUp className="h-4 w-4 text-muted-foreground" />
           ) : (
             <ChevronDown className="h-4 w-4 text-muted-foreground" />
           )}
-        </div>
-      </button>
-
+        </button>
+        
+        {hasActiveFilters && !isExpanded && (
+          <div className="px-3 pb-3 flex justify-end">
+            <button
+              type="button"
+              className={cn(
+                "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs font-medium transition-all",
+                "hover:bg-accent hover:text-accent-foreground active:bg-accent/80 dark:hover:bg-accent/60",
+                "disabled:pointer-events-none disabled:opacity-50",
+                "h-6 px-2"
+              )}
+              onClick={handleClearAll}
+              disabled={isPending}
+            >
+              {isPending ? "..." : "Clear"}
+            </button>
+          </div>
+        )}
+      </div>
       {/* Active filter badges (collapsed view) */}
       {hasActiveFilters && !isExpanded && (
         <div className="px-3 pb-3 flex flex-wrap gap-1.5">

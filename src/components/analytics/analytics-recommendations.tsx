@@ -231,15 +231,18 @@ export function AnalyticsRecommendations({ posts, compact = false }: AnalyticsRe
 
       <div className="space-y-3">
         {recommendations.map((rec) => {
-          const Icon = typeIcons[rec.type];
+          // Safely access type with fallback
+          const type = rec.type || 'insight';
+          const Icon = typeIcons[type as keyof typeof typeIcons] || Lightbulb;
+          const priority = rec.priority || 'medium';
           
           return (
             <Card 
               key={rec.id} 
-              className={`p-4 border-l-4 ${priorityColors[rec.priority]} ${compact ? 'hover:shadow-sm' : 'hover:shadow-md'} transition-shadow`}
+              className={`p-4 border-l-4 ${priorityColors[priority as keyof typeof priorityColors]} ${compact ? 'hover:shadow-sm' : 'hover:shadow-md'} transition-shadow`}
             >
               <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-lg ${typeColors[rec.type]}`}>
+                <div className={`p-2 rounded-lg ${typeColors[type as keyof typeof typeColors]}`}>
                   <Icon className="h-4 w-4" />
                 </div>
                 

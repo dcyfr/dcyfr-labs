@@ -1416,6 +1416,22 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   max-width: 100%;
   height: auto;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  overflow: visible !important;
+}
+
+.mermaid {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Prevent text clipping in nodes */
+.mermaid .nodeLabel,
+.mermaid .node text,
+.mermaid text {
+  overflow: visible !important;
+  word-wrap: break-word !important;
+  white-space: normal !important;
 }
 
 /* Node styling - softer, rounder appearance */
@@ -1550,39 +1566,224 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
 }
 
-/* Light theme specific colors */
+/* Light theme: Primary color-aware design */
 .mermaid .node rect {
-  fill: oklch(0.98 0 0) !important;
-  stroke: oklch(0.75 0 0) !important;
+  fill: hsl(var(--primary) / 0.08) !important;
+  stroke: hsl(var(--primary) / 0.5) !important;
+  stroke-width: 1.5px !important;
 }
 
 .mermaid .node.default rect {
-  fill: oklch(0.96 0.01 250) !important;
-  stroke: oklch(0.7 0.05 250) !important;
+  fill: hsl(var(--primary) / 0.1) !important;
+  stroke: hsl(var(--primary) / 0.6) !important;
 }
 
 .mermaid .edgePath path.path {
-  stroke: oklch(0.5 0 0) !important;
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 2px !important;
 }
 
-/* Dark theme colors */
+.mermaid .edgeLabel {
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Circle nodes (decision diamonds, states) */
+.mermaid .node circle {
+  fill: hsl(var(--primary) / 0.1) !important;
+  stroke: hsl(var(--primary) / 0.6) !important;
+  stroke-width: 1.5px !important;
+}
+
+/* Diamond nodes */
+.mermaid .node.state circle {
+  fill: hsl(var(--primary) / 0.12) !important;
+  stroke: hsl(var(--primary) / 0.7) !important;
+}
+
+/* Text colors for light theme */
+.mermaid .nodeLabel {
+  color: hsl(var(--foreground)) !important;
+}
+
+.mermaid .label {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Dark theme: Primary color-aware design */
 .dark .mermaid .node rect {
-  fill: oklch(0.25 0 0) !important;
-  stroke: oklch(0.45 0 0) !important;
+  fill: hsl(var(--primary) / 0.15) !important;
+  stroke: hsl(var(--primary) / 0.7) !important;
+  stroke-width: 1.5px !important;
 }
 
 .dark .mermaid .node.default rect {
-  fill: oklch(0.28 0.02 250) !important;
-  stroke: oklch(0.5 0.05 250) !important;
+  fill: hsl(var(--primary) / 0.2) !important;
+  stroke: hsl(var(--primary) / 0.8) !important;
 }
 
 .dark .mermaid .edgePath path.path {
-  stroke: oklch(0.65 0 0) !important;
+  stroke: hsl(var(--primary) / 0.8) !important;
+  stroke-width: 2px !important;
 }
 
 .dark .mermaid .edgeLabel {
-  background: oklch(0.2 0 0) !important;
-  color: oklch(0.9 0 0) !important;
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Circle nodes in dark theme */
+.dark .mermaid .node circle {
+  fill: hsl(var(--primary) / 0.2) !important;
+  stroke: hsl(var(--primary) / 0.8) !important;
+  stroke-width: 1.5px !important;
+}
+
+.dark .mermaid .node.state circle {
+  fill: hsl(var(--primary) / 0.25) !important;
+  stroke: hsl(var(--primary) / 0.9) !important;
+}
+
+/* Text colors for dark theme */
+.dark .mermaid .nodeLabel {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .mermaid .label {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Sequence diagrams - primary color theme */
+.mermaid .actor line {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 1.5px !important;
+}
+
+.mermaid .actor {
+  stroke: hsl(var(--primary) / 0.7) !important;
+  fill: hsl(var(--primary) / 0.1) !important;
+}
+
+.mermaid .message {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 1px !important;
+}
+
+.dark .mermaid .actor {
+  stroke: hsl(var(--primary) / 0.9) !important;
+  fill: hsl(var(--primary) / 0.2) !important;
+}
+
+.dark .mermaid .message {
+  stroke: hsl(var(--primary) / 0.85) !important;
+}
+
+/* State diagrams - primary color theme */
+.mermaid .state-box {
+  stroke: hsl(var(--primary) / 0.6) !important;
+  fill: hsl(var(--primary) / 0.08) !important;
+}
+
+.dark .mermaid .state-box {
+  stroke: hsl(var(--primary) / 0.8) !important;
+  fill: hsl(var(--primary) / 0.15) !important;
+}
+
+/* Class diagrams - primary color theme */
+.mermaid .classGroup line {
+  stroke: hsl(var(--primary) / 0.6) !important;
+}
+
+.mermaid .classGroup rect {
+  stroke: hsl(var(--primary) / 0.6) !important;
+  fill: hsl(var(--primary) / 0.08) !important;
+}
+
+.dark .mermaid .classGroup line {
+  stroke: hsl(var(--primary) / 0.8) !important;
+}
+
+.dark .mermaid .classGroup rect {
+  stroke: hsl(var(--primary) / 0.8) !important;
+  fill: hsl(var(--primary) / 0.15) !important;
+}
+
+/* Relationship lines */
+.mermaid .relationship {
+  stroke: hsl(var(--primary) / 0.5) !important;
+}
+
+.dark .mermaid .relationship {
+  stroke: hsl(var(--primary) / 0.7) !important;
+}
+
+/* ERD diagram - primary color theme */
+.mermaid .entityBox {
+  stroke: hsl(var(--primary) / 0.6) !important;
+  fill: hsl(var(--primary) / 0.08) !important;
+}
+
+.mermaid .entityLine {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 1.5px !important;
+}
+
+.dark .mermaid .entityBox {
+  stroke: hsl(var(--primary) / 0.8) !important;
+  fill: hsl(var(--primary) / 0.15) !important;
+}
+
+.dark .mermaid .entityLine {
+  stroke: hsl(var(--primary) / 0.85) !important;
+}
+
+/* Cluster/group styling */
+.mermaid .cluster rect {
+  stroke: hsl(var(--primary) / 0.5) !important;
+  fill: hsl(var(--primary) / 0.04) !important;
+}
+
+.mermaid .cluster text {
+  color: hsl(var(--primary) / 0.8) !important;
+}
+
+.dark .mermaid .cluster rect {
+  stroke: hsl(var(--primary) / 0.7) !important;
+  fill: hsl(var(--primary) / 0.1) !important;
+}
+
+.dark .mermaid .cluster text {
+  color: hsl(var(--primary) / 0.9) !important;
+}
+
+/* Arrows and markers */
+.mermaid marker {
+  fill: hsl(var(--primary)) !important;
+}
+
+.dark .mermaid marker {
+  fill: hsl(var(--primary) / 0.85) !important;
+}
+
+/* Container styling */
+.mermaid-container {
+  border-radius: 0.5rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  transition: all 0.3s ease;
+}
+
+.mermaid-container:hover {
+  border-color: hsl(var(--primary) / 0.3);
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.05);
+}
+
+.mermaid-container > div {
+  display: flex;
+  justify-content: center;
 }
 
 /* Accessibility - respect reduced motion */

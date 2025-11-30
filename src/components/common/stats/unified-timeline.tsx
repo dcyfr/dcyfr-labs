@@ -93,14 +93,14 @@ export function UnifiedTimeline({ experiences, education, companyUrls }: Unified
 
             {/* Content card */}
             <Card className="p-5 md:ml-20">
-              {item.type === 'experience' ? (
+              {item?.type === 'experience' ? (
                 <ExperienceCard 
                   experience={item.data as Experience} 
                   companyUrls={companyUrls} 
                 />
-              ) : (
+              ) : item?.type === 'education' ? (
                 <EducationCard education={item.data as Education} />
-              )}
+              ) : null}
             </Card>
           </div>
         ))}

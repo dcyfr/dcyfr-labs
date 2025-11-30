@@ -77,9 +77,9 @@ export function ActivityItem({
   showConnector = true,
   className,
 }: ActivityItemProps) {
-  const Icon = SOURCE_ICONS[activity.source];
-  const colors = ACTIVITY_SOURCE_COLORS[activity.source];
-  const sourceLabel = ACTIVITY_SOURCE_LABELS[activity.source];
+  const Icon = SOURCE_ICONS[activity.source] || FileText;
+  const colors = ACTIVITY_SOURCE_COLORS[activity.source] || { icon: "", text: "", bg: "" };
+  const sourceLabel = ACTIVITY_SOURCE_LABELS[activity.source] || "Activity";
 
   if (variant === "minimal") {
     return <MinimalItem activity={activity} className={className} />;
@@ -122,7 +122,7 @@ export function ActivityItem({
             <Icon
               className={cn(
                 "h-4 w-4 transition-colors",
-                colors.icon,
+                colors?.icon,
                 "group-hover:text-primary"
               )}
             />
@@ -202,8 +202,8 @@ function CompactItem({
   activity: ActivityItemType;
   className?: string;
 }) {
-  const Icon = SOURCE_ICONS[activity.source];
-  const colors = ACTIVITY_SOURCE_COLORS[activity.source];
+  const Icon = SOURCE_ICONS[activity.source] || FileText;
+  const colors = ACTIVITY_SOURCE_COLORS[activity.source] || { icon: "", text: "", bg: "" };
 
   return (
     <Link
@@ -221,7 +221,7 @@ function CompactItem({
           "group-hover:border-primary/50 transition-colors"
         )}
       >
-        <Icon className={cn("h-3.5 w-3.5", colors.icon)} />
+        <Icon className={cn("h-3.5 w-3.5", colors?.icon)} />
       </div>
 
       <span className="flex-1 text-sm font-medium truncate group-hover:text-primary transition-colors">
@@ -282,9 +282,9 @@ function TimelineItem({
   showConnector: boolean;
   className?: string;
 }) {
-  const Icon = SOURCE_ICONS[activity.source];
-  const colors = ACTIVITY_SOURCE_COLORS[activity.source];
-  const sourceLabel = ACTIVITY_SOURCE_LABELS[activity.source];
+  const Icon = SOURCE_ICONS[activity.source] || FileText;
+  const colors = ACTIVITY_SOURCE_COLORS[activity.source] || { icon: "", text: "", bg: "" };
+  const sourceLabel = ACTIVITY_SOURCE_LABELS[activity.source] || "Activity";
 
   return (
     <div className={cn("relative flex gap-4", className)}>
@@ -304,7 +304,7 @@ function TimelineItem({
           "group-hover:border-primary/50 transition-colors"
         )}
       >
-        <Icon className={cn("h-4 w-4", colors.icon)} />
+        <Icon className={cn("h-4 w-4", colors?.icon)} />
       </div>
 
       {/* Content */}

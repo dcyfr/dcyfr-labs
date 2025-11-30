@@ -3,20 +3,22 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Share2, Bookmark, Link2, Linkedin } from "lucide-react";
+import { Share2, Bookmark, Link2, Linkedin, BookOpen } from "lucide-react";
 import { toast } from "sonner";
+import { AUTHOR_NAME, SITE_TITLE_PLAIN } from "@/lib/site-config";
 
 interface PostQuickActionsProps {
   slug?: string;
   postTitle?: string;
+  publishedAt?: string;
 }
 
 /**
  * Post Quick Actions Section
  * 
- * Provides bookmark, share, copy link, and LinkedIn share buttons.
+ * Provides bookmark, share, copy link, copy IEEE citation, and LinkedIn share buttons.
  */
-export function PostQuickActions({ slug, postTitle }: PostQuickActionsProps) {
+export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActionsProps) {
   const [isBookmarked, setIsBookmarked] = React.useState(false);
 
   // Check if post is bookmarked on mount
@@ -76,30 +78,36 @@ export function PostQuickActions({ slug, postTitle }: PostQuickActionsProps) {
     toast.success(isBookmarked ? "Bookmark removed" : "Bookmarked for later");
   };
 
+  const generateIEEECitation = (): string => {
+    const url = window.location.href;
+    const date = publishedAt ? new Date(publishedAt) : new Date();
+    const formattedDate = date.toLocaleDateString("en-US", { 
+      year: "numeric", 
+      month: "long", 
+      day: "numeric" 
+    });
+
+    // IEEE format: [#] Initial(s). Surname, "Article title," Website Name, Month Day, Year. [Online]. Available: URL. [Accessed: Month Day, Year].
+    const citation = `[1] ${AUTHOR_NAME}, "${postTitle}," ${SITE_TITLE_PLAIN}, ${formattedDate}. [Online]. Available: ${url}. [Accessed: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}].`;
+    
+    return citation;
+  };
+
+  const handleCopyIEEECitation = async () => {
+    try {
+      const citation = generateIEEECitation();
+      await navigator.clipboard.writeText(citation);
+      toast.success("Citation copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy citation");
+    }
+  };
+
   return (
     <div className="space-y-2 pb-6 border-b">
       <h2 className="font-semibold mb-3 text-sm">Quick Actions</h2>
 
-      <Button
-        variant="outline"
-        size="sm"
-        className="w-full justify-start gap-2"
-        onClick={handleBookmark}
-      >
-        <Bookmark className={cn("h-4 w-4", isBookmarked && "fill-current")} />
-        {isBookmarked ? "Bookmarked" : "Bookmark"}
-      </Button>
-
-      <Button
-        variant="outline"
-        size="sm"
-        className="w-full justify-start gap-2"
-        onClick={handleShare}
-      >
-        <Share2 className="h-4 w-4" />
-        Share
-      </Button>
-
+      {/* Copy Link Button */}
       <Button
         variant="outline"
         size="sm"
@@ -110,6 +118,41 @@ export function PostQuickActions({ slug, postTitle }: PostQuickActionsProps) {
         Copy Link
       </Button>
 
+      {/* Bookmark Button */}
+      <Button
+        variant="outline"
+        size="sm"
+        className="w-full justify-start gap-2"
+        onClick={handleBookmark}
+      >
+        <Bookmark className={cn("h-4 w-4", isBookmarked && "fill-current")} />
+        {isBookmarked ? "Bookmarked" : "Bookmark"}
+      </Button>
+
+      {/* Share Button */}
+      <Button
+        variant="outline"
+        size="sm"
+        className="w-full justify-start gap-2"
+        onClick={handleShare}
+      >
+        <Share2 className="h-4 w-4" />
+        Share Post
+      </Button>
+
+      {/* Citation Button */}
+      <Button
+        variant="outline"
+        size="sm"
+        className="w-full justify-start gap-2"
+        onClick={handleCopyIEEECitation}
+        title="Copy webpage citation"
+      >
+        <BookOpen className="h-4 w-4" />
+        Copy Citation
+      </Button>
+
+      {/* Share on LinkedIn Button 
       <Button
         variant="outline"
         size="sm"
@@ -118,7 +161,7 @@ export function PostQuickActions({ slug, postTitle }: PostQuickActionsProps) {
       >
         <Linkedin className="h-4 w-4" />
         Share on LinkedIn
-      </Button>
+      </Button> */}
     </div>
   );
 }

@@ -30,6 +30,8 @@
     "lighthouse:ci": "npm run build && lhci autorun",
     "perf:check": "npm run build && node scripts/check-bundle-size.mjs",
     "perf:analyze": "ANALYZE=true npm run build",
+    "validate:content": "node scripts/validate-markdown-content.mjs",
+    "lint:mermaid": "node scripts/lint-mermaid-diagrams.mjs",
     "prepare": "husky"
   },
   "lint-staged": {

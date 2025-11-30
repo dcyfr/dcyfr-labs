@@ -9,7 +9,7 @@ import rehypeKatex from "rehype-katex";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
 import { CopyCodeButton } from "@/components/common/copy-code-button";
 import { HorizontalRule } from "@/components/common/horizontal-rule";
-import { Mermaid } from "@/components/common/mermaid";
+import { Mermaid as MermaidComponent } from "@/components/common/mermaid";
 import { 
   Check, 
   X, 
@@ -37,6 +37,9 @@ import { TYPOGRAPHY } from "@/lib/design-tokens";
  *
  * @type {RehypePrettyCodeOptions}
  */
+// Languages that should skip syntax highlighting (handled by custom components)
+const DIAGRAM_LANGUAGES = new Set(["mermaid"]);
+
 // Configure syntax highlighting with Shiki
 const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
   theme: {
@@ -44,14 +47,51 @@ const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
     light: "github-light",
   },
   defaultLang: "plaintext",
+  // Transform mermaid language to plaintext to avoid Shiki processing errors
+  // The MDX component will detect data-language="mermaid" and render the Mermaid component
+  transformers: [
+    {
+      name: "diagram-passthrough",
+      preprocess(code, options) {
+        // For diagram languages, treat them as plaintext but preserve the original language
+        if (options.lang && DIAGRAM_LANGUAGES.has(options.lang)) {
+          // Store original language and switch to plaintext for Shiki
+          const optionsWithMeta = options as unknown as { _originalLang?: string; lang: string };
+          optionsWithMeta._originalLang = options.lang;
+          optionsWithMeta.lang = "plaintext";
+        }
+        return code;
+      },
+      root(root) {
+        // Restore the original language in the output for component detection
+        const optionsWithMeta = this.options as unknown as { _originalLang?: string };
+        if (optionsWithMeta._originalLang && root.children) {
+          const pre = root.children[0];
+          if (pre && pre.type === "element" && pre.tagName === "pre") {
+            const code = pre.children?.[0];
+            if (code && code.type === "element" && code.tagName === "code") {
+              code.properties = code.properties || {};
+              code.properties["data-language"] = optionsWithMeta._originalLang;
+            }
+          }
+        }
+        return root;
+      },
+    },
+  ],
   // Prevent lines from collapsing in `display: grid` mode
   onVisitLine(node) {
-    if (node.children.length === 0) {
+    if (!node.children || node.children.length === 0) {
       node.children = [{ type: "text", value: " " }];
     }
   },
   onVisitHighlightedLine(node) {
-    node.properties.className?.push("highlighted");
+    if (!node.properties.className) {
+      node.properties.className = [];
+    }
+    if (Array.isArray(node.properties.className)) {
+      node.properties.className.push("highlighted");
+    }
   },
   onVisitHighlightedChars(node) {
     node.properties.className = ["word"];
@@ -174,7 +214,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
           const language = childProps["data-language"];
           if (language === "mermaid") {
             const diagramCode = extractTextFromChildren(childProps.children);
-            return <Mermaid chart={diagramCode} key="mermaid-diagram" />;
+            return <MermaidComponent chart={diagramCode} key="mermaid-diagram" />;
           }
           
           return extractTextFromChildren(childProps.children);
@@ -206,7 +246,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
       if (React.isValidElement(child)) {
         const childProps = child.props as { children?: React.ReactNode };
         const diagramCode = extractTextFromChildren(childProps.children);
-        return <Mermaid chart={diagramCode} />;
+        return <MermaidComponent chart={diagramCode} />;
       }
     }
 
@@ -268,18 +308,24 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   ZapIcon: () => <Zap className="inline-block w-4 h-4 text-purple-600 dark:text-purple-400" aria-label="Lightning" />,
   LockIcon: () => <Lock className="inline-block w-4 h-4 text-muted-foreground" aria-label="Lock" />,
   RocketIcon: () => <Rocket className="inline-block w-4 h-4 text-blue-600 dark:text-blue-400" aria-label="Rocket" />,
+  // Mermaid diagrams component
+  Mermaid: (props: { children?: string }) => {
+    const chart = props.children || '';
+    return <MermaidComponent chart={chart} />;
+  },
   // Footnote superscripts with icon
   sup: (props: React.HTMLAttributes<HTMLElement>) => {
     // Check if this contains a link (footnote reference) or has footnote-related attributes
-    const hasLink = React.Children.toArray(props.children).some(
-      child => React.isValidElement(child) && child.type === 'a'
+    const children = React.Children.toArray(props.children);
+    const hasLink = children.some(
+      child => React.isValidElement(child) && child?.type === 'a'
     );
     
     if (hasLink) {
       // This is a footnote reference - replace the content with our icon
       // Get the href from the link to preserve navigation
-      const linkChild = React.Children.toArray(props.children).find(
-        child => React.isValidElement(child) && child.type === 'a'
+      const linkChild = children.find(
+        child => React.isValidElement(child) && child?.type === 'a'
       ) as React.ReactElement | undefined;
       
       const href = (linkChild?.props as { href?: string })?.href;

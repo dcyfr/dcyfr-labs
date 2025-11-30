@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 import mermaid from "mermaid";
 import { cn } from "@/lib/utils";
 
@@ -45,49 +46,45 @@ export function Mermaid({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
   const [error, setError] = useState<string | null>(null);
   const [rendered, setRendered] = useState(false);
-  const [themeKey, setThemeKey] = useState(0);
 
   useEffect(() => {
-    // Listen for theme changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class' || mutation.attributeName === 'data-theme') {
-          setThemeKey(prev => prev + 1);
-        }
-      });
-    });
+    if (!ref.current) return;
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class', 'data-theme']
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     // Detect theme preference
-    const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const htmlElement = document.documentElement;
-    const dataTheme = htmlElement.getAttribute('data-theme') || htmlElement.classList.contains('dark');
-    const useDarkTheme = dataTheme === 'dark' || (dataTheme !== 'light' && isDark);
+    const isDarkClass = htmlElement.classList.contains('dark');
+    const dataTheme = htmlElement.getAttribute('data-theme');
+    
+    // Determine if we're in dark mode
+    // Priority: data-theme attribute > resolvedTheme > .dark class
+    let useDarkTheme = false;
+    if (dataTheme) {
+      useDarkTheme = dataTheme === 'dark';
+    } else if (resolvedTheme) {
+      useDarkTheme = resolvedTheme === 'dark';
+    } else {
+      useDarkTheme = isDarkClass;
+    }
 
-    // Initialize Mermaid with enhanced theme configuration
+    // Initialize Mermaid with built-in themes
     mermaid.initialize({
       startOnLoad: false,
       theme: useDarkTheme ? "dark" : "neutral",
       fontFamily: "ui-sans-serif, system-ui, sans-serif",
       fontSize: 14,
-      // Modern styling options
       flowchart: {
-        curve: 'basis', // Smoother curves
+        curve: 'basis',
         padding: 20,
-        nodeSpacing: 50,
-        rankSpacing: 50,
+        nodeSpacing: 80,
+        rankSpacing: 100,
         htmlLabels: true,
         useMaxWidth: true,
+        wrappingWidth: 300,
+        diagramMarginX: 20,
+        diagramMarginY: 20,
       },
       sequence: {
         actorMargin: 50,
@@ -97,37 +94,6 @@ export function Mermaid({
         messageMargin: 35,
         mirrorActors: true,
         useMaxWidth: true,
-      },
-      themeVariables: useDarkTheme ? {
-        // Dark theme variables for softer look
-        primaryColor: '#3b4252',
-        primaryTextColor: '#eceff4',
-        primaryBorderColor: '#4c566a',
-        lineColor: '#81a1c1',
-        secondaryColor: '#434c5e',
-        tertiaryColor: '#2e3440',
-        background: '#242933',
-        mainBkg: '#2e3440',
-        nodeBorder: '#4c566a',
-        clusterBkg: '#3b4252',
-        clusterBorder: '#4c566a',
-        titleColor: '#eceff4',
-        edgeLabelBackground: '#2e3440',
-      } : {
-        // Light theme variables for clean look
-        primaryColor: '#f8fafc',
-        primaryTextColor: '#1e293b',
-        primaryBorderColor: '#cbd5e1',
-        lineColor: '#64748b',
-        secondaryColor: '#f1f5f9',
-        tertiaryColor: '#e2e8f0',
-        background: '#ffffff',
-        mainBkg: '#f8fafc',
-        nodeBorder: '#cbd5e1',
-        clusterBkg: '#f1f5f9',
-        clusterBorder: '#e2e8f0',
-        titleColor: '#1e293b',
-        edgeLabelBackground: '#ffffff',
       },
     });
 
@@ -149,7 +115,7 @@ export function Mermaid({
     }
 
     renderDiagram();
-  }, [chart, id, themeKey]);
+  }, [chart, id, resolvedTheme]);
 
   if (error) {
     return (

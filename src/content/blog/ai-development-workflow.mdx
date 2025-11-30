@@ -31,9 +31,14 @@ Before MCP, each AI tool had to build custom integrations for every service. Wan
 MCP follows a client-server model:
 
 ```mermaid
+%%{init: {'flowchart': {'htmlLabels': true, 'useMaxWidth': true, 'nodeSpacing': 150, 'rankSpacing': 150}}}%%
 graph LR
-    A[AI Client<br/>Claude, Copilot] -->|MCP Protocol| B[MCP Server<br/>GitHub, Sentry, Database]
-    B -->|API| C[Data Source<br/>GitHub, Sentry, Postgres]
+    A["<b>AI Client</b><br/>Claude, Copilot"] 
+    B["<b>MCP Server</b><br/>GitHub, Sentry,<br/>Database"]
+    C["<b>Data Source</b><br/>GitHub, Sentry,<br/>Postgres"]
+    
+    A -->|MCP Protocol| B
+    B -->|API| C
 ```
 
 **Key benefits:**
@@ -112,8 +117,6 @@ const logs = await mcp_vercel_get_deployment_build_logs({
 });
 ```
 
----
-
 ## Building Your Own MCP Server
 
 MCP servers are surprisingly simple to build. The official SDK[^mcp-github] provides everything you need. Here's a minimal example:
@@ -167,8 +170,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 const transport = new StdioServerTransport();
 await server.connect(transport);
 ```
-
----
 
 ## Patterns I've Learned
 
@@ -226,8 +227,6 @@ const config = await mcp_filesystem_read_file({
 
 The file contents stay on your machine.
 
----
-
 ## The Developer Experience
 
 Here's what a typical workflow looks like:
@@ -250,8 +249,6 @@ Here's what a typical workflow looks like:
 
 The difference is dramatic. **The AI works with your actual project state**, not a text summary you typed.
 
----
-
 ## Security Considerations
 
 MCP is designed with security in mind, but you still need to be careful:
@@ -264,8 +261,6 @@ MCP is designed with security in mind, but you still need to be careful:
 From the MCP security guidelines[^mcp-intro]:
 
 > "MCP servers run with the same permissions as your user account. Only install servers from trusted sources."
-
----
 
 ## Getting Started
 
@@ -310,8 +305,6 @@ Add to `.vscode/settings.json` or user settings:
 "Use Context7 to look up the latest Next.js App Router patterns"
 "Use Memory to recall our authentication architecture"
 ```
-
----
 
 ## What's Next for MCP?
 
