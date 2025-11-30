@@ -1,15 +1,16 @@
 "use client";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
-import { trackToCClick } from "@/lib/analytics";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Eye, Tag, Share2, Bookmark, BookOpen, ChevronRight, Lightbulb, Link2, Linkedin } from "lucide-react";
-import { toast } from "sonner";
-import Link from "next/link";
 import type { Post, PostCategory } from "@/data/posts";
+import { cn } from "@/lib/utils";
+import { SPACING } from "@/lib/design-tokens";
+import {
+  PostMetadata,
+  PostQuickActions,
+  PostSeriesNav,
+  PostRelated,
+  PostTableOfContents,
+} from "./sidebar";
 
 interface BlogPostSidebarProps {
   headings: TocHeading[];
@@ -34,44 +35,6 @@ interface BlogPostSidebarProps {
   relatedPosts?: Post[];
 }
 
-// Category styles - using outline variant (no custom colors)
-const CATEGORY_STYLES: Record<PostCategory, string> = {
-  "development": "",
-  "security": "",
-  "career": "",
-  "ai": "",
-  "tutorial": "",
-  "Demo": "",
-  "Career Development": "",
-  "Web Development": "",
-  "DevSecOps": "",
-};
-
-const CATEGORY_LABEL: Record<PostCategory, string> = {
-  "development": "Development",
-  "security": "Security",
-  "career": "Career",
-  "ai": "AI",
-  "tutorial": "Tutorial",
-  "Demo": "Demo",
-  "Career Development": "Career Development",
-  "Web Development": "Web Development",
-  "DevSecOps": "DevSecOps",
-};
-
-function CategoryBadge({ category }: { category: PostCategory }) {
-  return (
-    <Link href={`/blog?category=${category}`}>
-      <Badge
-        variant="outline"
-        className={`${CATEGORY_STYLES[category]} backdrop-blur-sm font-semibold cursor-pointer hover:opacity-80 transition-opacity`}
-      >
-        {CATEGORY_LABEL[category]}
-      </Badge>
-    </Link>
-  );
-}
-
 /**
  * Blog Post Sidebar Component
  * 
@@ -87,420 +50,64 @@ function CategoryBadge({ category }: { category: PostCategory }) {
  * - Sticky positioning within viewport
  * - Hierarchical heading display (h2/h3)
  * - Smooth scroll navigation
+ * 
+ * Modularized into separate components:
+ * - PostMetadata: Date, time, views, status badges, tags
+ * - PostQuickActions: Bookmark, share, copy link buttons
+ * - PostSeriesNav: Series navigation if applicable
+ * - PostRelated: Related posts list
+ * - PostTableOfContents: Heading navigation with active tracking
  */
-export function BlogPostSidebar({ headings, slug, metadata, postTitle, series, seriesPosts, relatedPosts }: BlogPostSidebarProps) {
-  const [activeId, setActiveId] = React.useState<string>("");
-  const [isBookmarked, setIsBookmarked] = React.useState(false);
-
-  // Check if post is bookmarked on mount
-  React.useEffect(() => {
-    if (typeof window === "undefined" || !slug) return;
-    const bookmarks = JSON.parse(localStorage.getItem("bookmarked-posts") || "[]");
-    setIsBookmarked(bookmarks.includes(slug));
-  }, [slug]);
-
-  const handleShare = async () => {
-    const url = window.location.href;
-    const title = postTitle || "Check out this article";
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, url });
-        toast.success("Shared successfully!");
-      } catch (err) {
-        if ((err as Error).name !== "AbortError") {
-          // Fallback to copy
-          await copyToClipboard(url);
-        }
-      }
-    } else {
-      await copyToClipboard(url);
-    }
-  };
-
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast.success("Link copied to clipboard!");
-    } catch {
-      toast.error("Failed to copy link");
-    }
-  };
-
-  const handleCopyLink = async () => {
-    await copyToClipboard(window.location.href);
-  };
-
-  const handleLinkedInShare = () => {
-    const url = encodeURIComponent(window.location.href);
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-    window.open(linkedInUrl, "_blank", "noopener,noreferrer,width=600,height=600");
-  };
-
-  const handleBookmark = () => {
-    if (!slug) return;
-    
-    const bookmarks = JSON.parse(localStorage.getItem("bookmarked-posts") || "[]");
-    const newBookmarks = isBookmarked
-      ? bookmarks.filter((s: string) => s !== slug)
-      : [...bookmarks, slug];
-    
-    localStorage.setItem("bookmarked-posts", JSON.stringify(newBookmarks));
-    setIsBookmarked(!isBookmarked);
-    toast.success(isBookmarked ? "Bookmark removed" : "Bookmarked for later");
-  };
-
-  React.useEffect(() => {
-    if (typeof window === "undefined" || headings.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-            break;
-          }
-        }
-      },
-      {
-        rootMargin: "-80px 0px -80% 0px",
-        threshold: 1.0,
-      }
-    );
-
-    const headingElements = headings
-      .map(({ id }) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    headingElements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, [headings]);
-
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string, heading: TocHeading) => {
-    e.preventDefault();
-    
-    const element = document.getElementById(id);
-    if (!element) return;
-
-    const headerOffset = 80;
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
-
-    if (slug) {
-      trackToCClick(slug, heading.text, heading.level);
-    }
-
-    window.history.pushState(null, "", `#${id}`);
-  };
-
+export function BlogPostSidebar({ 
+  headings, 
+  slug, 
+  metadata, 
+  postTitle, 
+  series, 
+  seriesPosts, 
+  relatedPosts 
+}: BlogPostSidebarProps) {
   if (headings.length === 0) {
     return null;
   }
 
   return (
     <aside className="hidden lg:block">
-      <div className="sticky top-24 space-y-6">
+      <div className={cn("sticky top-24", SPACING.subsection)}>
         {/* Post Metadata */}
         {metadata && (
-          <div className="space-y-3 pb-6 border-b">
-            <h2 className="font-semibold mb-3 text-sm">Post Details</h2>
-
-            {/* Published Date */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4 shrink-0" />
-              <time dateTime={metadata.publishedAt.toISOString()}>
-                {metadata.publishedAt.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </time>
-            </div>
-
-            {/* Reading Time */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4 shrink-0" />
-              <span>{metadata.readingTime}</span>
-            </div>
-
-            {/* View Count */}
-            {typeof metadata.viewCount === "number" && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Eye className="h-4 w-4 shrink-0" />
-                <span>
-                  {metadata.viewCount.toLocaleString()}{" "}
-                  {metadata.viewCount === 1 ? "view" : "views"}
-                </span>
-              </div>
-            )}
-
-            {/* Status & Category Badges - Hidden
-            {(metadata.isDraft ||
-              metadata.isArchived ||
-              metadata.isLatest ||
-              metadata.isHot ||
-              metadata.category) && (
-              <div className="flex flex-wrap gap-2">
-                {process.env.NODE_ENV === "development" && metadata.isDraft && (
-                  <Link href="/blog?sortBy=drafts">
-                    <Badge
-                      variant="outline"
-                      className="border-blue-500 bg-blue-500/20 text-blue-700 dark:text-blue-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      Draft
-                    </Badge>
-                  </Link>
-                )}
-                {metadata.isArchived && (
-                  <Link href="/blog?sortBy=archived">
-                    <Badge
-                      variant="outline"
-                      className="border-amber-500 bg-amber-500/20 text-amber-700 dark:text-amber-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
-                    >
-                      Archived
-                    </Badge>
-                  </Link>
-                )}
-                {metadata.isLatest &&
-                  !metadata.isArchived &&
-                  !metadata.isDraft && (
-                    <Link href="/blog?dateRange=30d">
-                      <Badge
-                        variant="outline"
-                        className="border-green-500 bg-green-500/20 text-green-700 dark:text-green-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        New
-                      </Badge>
-                    </Link>
-                  )}
-                {metadata.isHot &&
-                  !metadata.isArchived &&
-                  !metadata.isDraft && (
-                    <Link href="/blog?sortBy=popular">
-                      <Badge
-                        variant="outline"
-                        className="border-red-500 bg-red-500/20 text-red-700 dark:text-red-300 backdrop-blur-sm font-semibold text-xs cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        Hot
-                      </Badge>
-                    </Link>
-                  )}
-                {metadata.category && (
-                  <CategoryBadge category={metadata.category} />
-                )}
-              </div>
-            )}
-            */}
-
-            {/* Tags */}
-            {metadata.tags && metadata.tags.length > 0 && (
-              <div className="pt-2">
-                <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
-                  <Tag className="h-4 w-4 shrink-0" />
-                  <span className="font-medium">Tags</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {metadata.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      href={`/blog?tag=${encodeURIComponent(tag.toLowerCase())}`}
-                    >
-                      <Badge
-                        variant="secondary"
-                        className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                      >
-                        {tag}
-                      </Badge>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <PostMetadata
+            publishedAt={metadata.publishedAt}
+            readingTime={metadata.readingTime}
+            viewCount={metadata.viewCount}
+            tags={metadata.tags}
+            category={metadata.category}
+            isDraft={metadata.isDraft}
+            isArchived={metadata.isArchived}
+            isLatest={metadata.isLatest}
+            isHot={metadata.isHot}
+          />
         )}
 
         {/* Quick Actions */}
-        <div className="space-y-2 pb-6 border-b">
-          <h2 className="font-semibold mb-3 text-sm">Quick Actions</h2>
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full justify-start gap-2"
-            onClick={handleBookmark}
-          >
-            <Bookmark
-              className={cn("h-4 w-4", isBookmarked && "fill-current")}
-            />
-            {isBookmarked ? "Bookmarked" : "Bookmark"}
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full justify-start gap-2"
-            onClick={handleShare}
-          >
-            <Share2 className="h-4 w-4" />
-            Share
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full justify-start gap-2"
-            onClick={handleCopyLink}
-          >
-            <Link2 className="h-4 w-4" />
-            Copy Link
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full justify-start gap-2"
-            onClick={handleLinkedInShare}
-          >
-            <Linkedin className="h-4 w-4" />
-            Share on LinkedIn
-          </Button>
-        </div>
+        <PostQuickActions slug={slug} postTitle={postTitle} />
 
         {/* Series Navigation */}
         {series && seriesPosts && seriesPosts.length > 0 && (
-          <div className="space-y-3 pb-6 border-b">
-            <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="h-4 w-4 text-primary" />
-              <h2 className="font-semibold text-sm">{series.name}</h2>
-            </div>
-
-            <p className="text-xs text-muted-foreground mb-3">
-              Part {series.order} of {seriesPosts.length}
-            </p>
-
-            <nav aria-label="Series navigation" className="space-y-1.5">
-              {seriesPosts.map((post) => {
-                const isCurrent = post.slug === slug;
-                const order = post.series?.order ?? 0;
-
-                return (
-                  <div key={post.slug} className="flex items-start gap-2">
-                    <Badge
-                      variant="outline"
-                      className="mt-0.5 shrink-0 min-w-6 h-5 text-xs justify-center px-1"
-                    >
-                      {order}
-                    </Badge>
-
-                    {isCurrent ? (
-                      <div className="flex-1 min-w-0">
-                        {/* eslint-disable-next-line no-restricted-syntax */}
-                        <span className="text-xs font-medium text-primary block truncate">
-                          {post.title}
-                        </span>
-                      </div>
-                    ) : (
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="flex-1 min-w-0 group flex items-start gap-1"
-                      >
-                        <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors truncate flex-1">
-                          {post.title}
-                        </span>
-                        <ChevronRight className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors shrink-0 mt-0.5" />
-                      </Link>
-                    )}
-                  </div>
-                );
-              })}
-            </nav>
-          </div>
+          <PostSeriesNav
+            series={series}
+            seriesPosts={seriesPosts}
+            currentSlug={slug}
+          />
         )}
 
         {/* Related Posts */}
         {relatedPosts && relatedPosts.length > 0 && (
-          <div className="space-y-3 pb-6 border-b">
-            <div className="flex items-center gap-2 mb-3">
-              <Lightbulb className="h-4 w-4 text-primary" />
-              <h2 className="font-semibold text-sm">Related Posts</h2>
-            </div>
-
-            <nav aria-label="Related posts" className="space-y-3">
-              {relatedPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="block group"
-                >
-                  <div className="space-y-1.5">
-                    {/* eslint-disable-next-line no-restricted-syntax */}
-                    <h3 className="text-xs font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" />
-                      <span>{post.readingTime.text}</span>
-                    </div>
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {post.tags.slice(0, 2).map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="secondary"
-                            className="text-xs px-1.5 py-0 h-4"
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
-                        {post.tags.length > 2 && (
-                          <span className="text-xs text-muted-foreground">
-                            +{post.tags.length - 2}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </nav>
-          </div>
+          <PostRelated posts={relatedPosts} />
         )}
 
         {/* Table of Contents */}
-        <div>
-          <h2 className="font-semibold mb-3 text-sm">On this page</h2>
-          <nav aria-label="Table of contents">
-            <ul className="space-y-2 text-sm">
-              {headings.map((heading) => {
-                const isActive = activeId === heading.id;
-                const isH3 = heading.level === 3;
-
-                return (
-                  <li key={heading.id} className={cn(isH3 && "ml-4")}>
-                    <a
-                      href={`#${heading.id}`}
-                      onClick={(e) => handleClick(e, heading.id, heading)}
-                      className={cn(
-                        "block py-1 transition-colors hover:text-foreground",
-                        isActive
-                          ? "text-foreground font-medium border-l-2 border-primary pl-3 -ml-0.5"
-                          : "text-muted-foreground hover:underline"
-                      )}
-                    >
-                      {heading.text}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
+        <PostTableOfContents headings={headings} slug={slug} />
       </div>
     </aside>
   );
