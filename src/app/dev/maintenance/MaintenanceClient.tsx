@@ -28,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AlertCircle, RefreshCw, ExternalLink, CheckCircle2, XCircle, Server, TrendingUp, Plus, X as XIcon } from "lucide-react";
+import { AlertCircle, RefreshCw, ExternalLink, CheckCircle2, XCircle, Server, TrendingUp, Plus, X as XIcon, FileWarning, Database } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { TYPOGRAPHY } from "@/lib/design-tokens";
@@ -83,6 +83,50 @@ interface ApiHealth {
     runtime: string;
     region: string;
   };
+}
+
+/**
+ * Design System Report types
+ */
+interface DesignSystemViolation {
+  file: string;
+  line: number;
+  column: number;
+  type: string;
+  violation: string;
+  suggestion: string;
+  description: string;
+}
+
+interface DesignSystemReport {
+  generatedAt: string;
+  totalViolations: number;
+  filesScanned: number;
+  violations: DesignSystemViolation[];
+  summary: {
+    spacing: number;
+    typography: number;
+  };
+}
+
+/**
+ * Redis Health Status types
+ */
+interface RedisTestResult {
+  success: boolean;
+  latency: number;
+  error?: string;
+}
+
+interface RedisHealthStatus {
+  enabled: boolean;
+  configured: boolean;
+  connected: boolean;
+  message: string;
+  error?: string;
+  url?: string;
+  testResult?: RedisTestResult;
+  timestamp?: string;
 }
 
 /**
@@ -390,8 +434,10 @@ function ObservationLogger({ onSubmit }: { onSubmit: () => void }) {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to create observation");
+        throw new Error(data.message || data.error || "Failed to create observation");
       }
 
       toast.success("Observation logged successfully");
@@ -405,7 +451,9 @@ function ObservationLogger({ onSubmit }: { onSubmit: () => void }) {
 
       onSubmit();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to log observation");
+      const errorMsg = error instanceof Error ? error.message : "Failed to log observation";
+      console.error("Observation creation error:", errorMsg);
+      toast.error(errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -598,6 +646,233 @@ function ObservationList({ observations }: { observations: Observation[] }) {
 }
 
 /**
+ * Redis Health Status Component
+ */
+function RedisHealthCard({ health }: { health: RedisHealthStatus | null }) {
+  if (!health) {
+    return (
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-32" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-4 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const statusConfig = {
+    connected: { variant: "default" as const, className: "bg-green-600", icon: CheckCircle2 },
+    notConfigured: { variant: "secondary" as const, className: "bg-blue-600", icon: AlertCircle },
+    unavailable: { variant: "destructive" as const, className: "", icon: XCircle },
+  };
+
+  let status: "connected" | "notConfigured" | "unavailable" = "unavailable";
+  if (!health.configured) {
+    status = "notConfigured";
+  } else if (health.connected) {
+    status = "connected";
+  }
+
+  const config = statusConfig[status];
+  const StatusIcon = config.icon;
+
+  return (
+    <Card className={!health.configured ? "border-blue-500/50" : health.connected ? "border-green-500/50" : "border-red-500/50"}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Database className="h-5 w-5 text-muted-foreground" />
+            <CardTitle className="text-lg">Redis Cache</CardTitle>
+          </div>
+          <Badge variant={config.variant} className={config.className}>
+            <StatusIcon className="h-3 w-3 mr-1" />
+            {status === "connected" && "Connected"}
+            {status === "notConfigured" && "Not Configured"}
+            {status === "unavailable" && "Unavailable"}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3 text-sm">
+          {health.configured ? (
+            <>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">URL:</span>
+                <code className="bg-muted px-2 py-1 rounded text-xs font-mono">{health.url || "N/A"}</code>
+              </div>
+
+              {health.testResult && (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Connection:</span>
+                    <span className={health.testResult.success ? "text-green-600" : "text-red-600"}>
+                      {health.testResult.success ? "✓ OK" : "✗ Failed"}
+                    </span>
+                  </div>
+
+                  {health.testResult.success && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Latency:</span>
+                      <span className="font-mono">{health.testResult.latency}ms</span>
+                    </div>
+                  )}
+
+                  {health.testResult.error && (
+                    <div className="bg-red-50 dark:bg-red-950 rounded p-2">
+                      <p className="text-xs text-red-600 dark:text-red-300 font-mono">
+                        {health.testResult.error}
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {health.error && (
+                <div className="bg-red-50 dark:bg-red-950 rounded p-2">
+                  <p className="text-xs text-red-600 dark:text-red-300 font-mono">
+                    {health.error}
+                  </p>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <p className="text-muted-foreground">{health.message}</p>
+              <div className="bg-blue-50 dark:bg-blue-950 rounded p-2">
+                <p className="text-xs text-blue-600 dark:text-blue-300">
+                  Fallback: Using in-memory storage for observations and metrics
+                </p>
+              </div>
+            </>
+          )}
+
+          {health.timestamp && (
+            <div className="pt-2 text-xs text-muted-foreground border-t">
+              Checked: {new Date(health.timestamp).toLocaleTimeString()}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+/**
+ * Design System Report Card Component
+ */
+function DesignSystemReportCard({ report }: { report: DesignSystemReport | null }) {
+  const [expanded, setExpanded] = useState(false);
+
+  if (!report) {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <FileWarning className="h-5 w-5 text-muted-foreground" />
+            <CardTitle>Design System Report</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No report available</p>
+            <p className="text-xs mt-2">Run: <code className="bg-muted px-1 py-0.5 rounded">node scripts/validate-design-tokens.mjs</code></p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const hasViolations = report.totalViolations > 0;
+
+  // Group violations by file
+  const violationsByFile = report.violations.reduce((acc, v) => {
+    const fileName = v.file.split("/").slice(-2).join("/");
+    if (!acc[fileName]) acc[fileName] = [];
+    acc[fileName].push(v);
+    return acc;
+  }, {} as Record<string, DesignSystemViolation[]>);
+
+  return (
+    <Card className={hasViolations ? "border-yellow-500/50" : "border-green-500/50"}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileWarning className={`h-5 w-5 ${hasViolations ? "text-yellow-500" : "text-green-500"}`} />
+            <div>
+              <CardTitle>Design System Report</CardTitle>
+              <CardDescription>
+                Generated {new Date(report.generatedAt).toLocaleString()}
+              </CardDescription>
+            </div>
+          </div>
+          <Badge variant={hasViolations ? "secondary" : "default"} className={hasViolations ? "bg-yellow-600" : "bg-green-600"}>
+            {report.totalViolations} violation{report.totalViolations !== 1 ? "s" : ""}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {/* Summary Stats */}
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="bg-muted rounded-lg p-3">
+              <div className="text-2xl font-bold">{report.filesScanned}</div>
+              <div className="text-xs text-muted-foreground">Files Scanned</div>
+            </div>
+            <div className="bg-muted rounded-lg p-3">
+              <div className="text-2xl font-bold text-yellow-600">{report.summary.spacing}</div>
+              <div className="text-xs text-muted-foreground">Spacing Issues</div>
+            </div>
+            <div className="bg-muted rounded-lg p-3">
+              <div className="text-2xl font-bold text-purple-600">{report.summary.typography}</div>
+              <div className="text-xs text-muted-foreground">Typography Issues</div>
+            </div>
+          </div>
+
+          {/* Violations List */}
+          {hasViolations && (
+            <div className="space-y-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setExpanded(!expanded)}
+                className="w-full justify-between"
+              >
+                <span>{expanded ? "Hide" : "Show"} Violations</span>
+                <span className="text-xs text-muted-foreground">
+                  {Object.keys(violationsByFile).length} files affected
+                </span>
+              </Button>
+
+              {expanded && (
+                <div className="max-h-96 overflow-y-auto space-y-3 text-sm">
+                  {Object.entries(violationsByFile).map(([file, violations]) => (
+                    <div key={file} className="border rounded-lg p-3">
+                      <div className="font-mono text-xs text-muted-foreground mb-2">{file}</div>
+                      <div className="space-y-1">
+                        {violations.map((v, i) => (
+                          <div key={i} className="flex items-start gap-2 text-xs">
+                            <span className="text-muted-foreground">L{v.line}:</span>
+                            <span className="text-red-500 font-mono">{v.violation}</span>
+                            <span className="text-muted-foreground">→</span>
+                            <span className="text-green-600">{v.suggestion}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+/**
  * Main maintenance dashboard component
  */
 export default function MaintenanceClient() {
@@ -605,13 +880,15 @@ export default function MaintenanceClient() {
   const [apiHealth, setApiHealth] = useState<ApiHealth | null>(null);
   const [trends, setTrends] = useState<WeeklyMetrics[] | null>(null);
   const [observations, setObservations] = useState<Observation[]>([]);
+  const [designSystemReport, setDesignSystemReport] = useState<DesignSystemReport | null>(null);
+  const [redisHealth, setRedisHealth] = useState<RedisHealthStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   /**
-   * Fetch dashboard data (workflows, health, trends, observations)
+   * Fetch dashboard data (workflows, health, trends, observations, reports)
    */
   const fetchDashboardData = async (showToast = false) => {
     try {
@@ -619,11 +896,13 @@ export default function MaintenanceClient() {
       setError(null);
 
       // Fetch all data in parallel
-      const [workflowsRes, healthRes, trendsRes, observationsRes] = await Promise.all([
+      const [workflowsRes, healthRes, trendsRes, observationsRes, designReportRes, redisHealthRes] = await Promise.all([
         fetch("/api/maintenance/workflows"),
         fetch("/api/health"),
         fetch("/api/maintenance/metrics?period=52weeks"),
         fetch("/api/maintenance/observations?limit=10"),
+        fetch("/dev/api/reports/design-system-report.json"),
+        fetch("/dev/api/redis-health"),
       ]);
 
       if (!workflowsRes.ok) {
@@ -647,6 +926,16 @@ export default function MaintenanceClient() {
       if (observationsRes.ok) {
         const observationsData = await observationsRes.json();
         setObservations(observationsData.observations);
+      }
+
+      if (designReportRes.ok) {
+        const designData = await designReportRes.json();
+        setDesignSystemReport(designData);
+      }
+
+      if (redisHealthRes.ok) {
+        const redisData = await redisHealthRes.json();
+        setRedisHealth(redisData);
       }
 
       setLastRefresh(new Date());
@@ -728,9 +1017,11 @@ export default function MaintenanceClient() {
       }
     >
       <div className="space-y-8">
-        {/* API Health Status */}
-        <section>
+        {/* API Health & Design System Status */}
+        <section className="grid gap-4 lg:grid-cols-3">
           <ApiHealthCard health={apiHealth} />
+          <DesignSystemReportCard report={designSystemReport} />
+          <RedisHealthCard health={redisHealth} />
         </section>
 
         {/* Workflow Status Grid */}
