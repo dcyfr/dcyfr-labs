@@ -52,5 +52,8 @@ next-env.d.ts
 /public/data/*.json
 !/public/data/.gitkeep
 
+# generated reports (dev tools - stored outside public for security)
+/.reports/
+
 # Sentry Config File
 .env.sentry-build-plugin

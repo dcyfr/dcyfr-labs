@@ -1,6 +1,53 @@
 import { NextResponse } from "next/server";
 import { SITE_DOMAIN } from "@/lib/site-config";
 import type { NextRequest } from "next/server";
+import * as Sentry from "@sentry/nextjs";
+
+/**
+ * Suspicious paths that indicate reconnaissance or attack attempts.
+ * Access attempts to these paths are logged to Sentry for security monitoring.
+ */
+const SUSPICIOUS_PATHS = [
+  // Common admin/management paths
+  "/admin",
+  "/administrator",
+  "/wp-admin",
+  "/wp-login",
+  "/wp-content",
+  "/wordpress",
+  "/cms",
+  "/cpanel",
+  "/phpmyadmin",
+  "/mysql",
+  "/adminer",
+  // Common config/env paths
+  "/.env",
+  "/.git",
+  "/.svn",
+  "/config",
+  "/backup",
+  "/db",
+  "/database",
+  "/sql",
+  "/dump",
+  // Common API exploit paths
+  "/api/v1",
+  "/api/v2",
+  "/graphql",
+  "/rest",
+  // Common scanner paths
+  "/debug",
+  "/trace",
+  "/server-status",
+  "/server-info",
+  "/phpinfo",
+  "/info.php",
+  "/test.php",
+  "/shell",
+  "/cmd",
+  "/exec",
+  "/eval",
+];
 
 /**
  * Content Security Policy (CSP) Proxy (Next.js 16+)
@@ -30,11 +77,42 @@ export default function proxy(request: NextRequest) {
   // Detect development environment
   const isDevelopment = process.env.NODE_ENV === "development";
 
+  const pathname = request.nextUrl.pathname;
+  const pathnameLC = pathname.toLowerCase();
+
+  // Security monitoring: detect and report suspicious path access attempts
+  // This helps identify reconnaissance and attack patterns
+  if (!isDevelopment) {
+    const isSuspicious = SUSPICIOUS_PATHS.some(
+      (p) => pathnameLC === p || pathnameLC.startsWith(p + "/") || pathnameLC.startsWith(p + ".")
+    );
+
+    if (isSuspicious) {
+      // Report to Sentry for security monitoring
+      Sentry.captureMessage(`Suspicious path access attempt: ${pathname}`, {
+        level: "warning",
+        tags: {
+          security: "reconnaissance",
+          path: pathname,
+        },
+        extra: {
+          url: request.url,
+          method: request.method,
+          userAgent: request.headers.get("user-agent") || "unknown",
+          ip: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown",
+          referer: request.headers.get("referer") || "none",
+        },
+      });
+
+      // Return 404 to not reveal information
+      return NextResponse.rewrite(new URL("/_not-found", request.url));
+    }
+  }
+
   // Protect developer-only pages at request time. Even if a page was
   // prerendered during build as development content, middleware runs at
   // request time so we can reliably serve a 404 in non-development envs.
   const devOnlyPaths = ["/dev"];
-  const pathname = request.nextUrl.pathname;
   if (!isDevelopment) {
     for (const p of devOnlyPaths) {
       if (pathname === p || pathname.startsWith(p + "/")) {

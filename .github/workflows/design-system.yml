@@ -40,7 +40,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const reportPath = 'design-system-report.txt';
+            const reportPath = '.reports/design-system-report.txt';
 
             if (fs.existsSync(reportPath)) {
               const report = fs.readFileSync(reportPath, 'utf8');

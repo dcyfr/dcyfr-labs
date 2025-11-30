@@ -261,10 +261,33 @@ async function main() {
   const report = formatViolations(allViolations);
   console.log(report);
 
-  // Write report to file for CI/CD
+  // Ensure reports directory exists (private, not in public/)
+  const reportsDir = path.join(projectRoot, '.reports');
+  if (!fs.existsSync(reportsDir)) {
+    fs.mkdirSync(reportsDir, { recursive: true });
+  }
+
+  // Write text report for CI/CD and human readability
   fs.writeFileSync(
-    path.join(projectRoot, 'design-system-report.txt'),
+    path.join(reportsDir, 'design-system-report.txt'),
     report,
+    'utf-8'
+  );
+
+  // Write JSON report for dev tools consumption
+  const jsonReport = {
+    generatedAt: new Date().toISOString(),
+    totalViolations: allViolations.length,
+    filesScanned: files.length,
+    violations: allViolations,
+    summary: {
+      spacing: allViolations.filter(v => v.type === 'spacing').length,
+      typography: allViolations.filter(v => v.type === 'typography').length,
+    },
+  };
+  fs.writeFileSync(
+    path.join(reportsDir, 'design-system-report.json'),
+    JSON.stringify(jsonReport, null, 2),
     'utf-8'
   );
 

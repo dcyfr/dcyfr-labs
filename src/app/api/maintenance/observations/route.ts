@@ -1,6 +1,8 @@
 /**
  * Maintenance Observations API
  * GET/POST endpoints for observation logging
+ * 
+ * Stores observations in Redis if available, otherwise uses in-memory storage (dev only).
  */
 
 import { NextResponse } from "next/server";
@@ -10,6 +12,9 @@ import type { Observation } from "@/types/maintenance";
 const redisUrl = process.env.REDIS_URL;
 const OBSERVATIONS_KEY = "maintenance:observations";
 const MAX_OBSERVATIONS = 100; // Keep last 100 observations
+
+// In-memory fallback storage for development (not persisted)
+let inMemoryObservations: Observation[] = [];
 
 /**
  * Get Redis client (with connection)
@@ -48,40 +53,47 @@ export async function GET(request: Request) {
     const severity = searchParams.get("severity");
 
     const redis = await getRedisClient();
-    if (!redis) {
-      return NextResponse.json({
-        observations: [],
-        total: 0,
-        message: "Redis unavailable - observations storage disabled",
-      });
-    }
+    let observations: Observation[] = [];
+    let total = 0;
+    let usingFallback = false;
 
-    // Fetch observations from Redis list
-    const observations: Observation[] = [];
-    const rawObservations = await redis.lrange(OBSERVATIONS_KEY, 0, limit - 1);
-
-    // Ensure rawObservations is iterable (array of strings)
-    const items = Array.isArray(rawObservations) ? rawObservations : [];
-    
-    for (const raw of items) {
-      try {
-        if (typeof raw !== 'string') continue;
-        const obs = JSON.parse(raw) as Observation;
-        // Apply filters if provided
-        if (category && obs.category !== category) continue;
-        if (severity && obs.severity !== severity) continue;
-        observations.push(obs);
-      } catch (parseError) {
-        console.error("Failed to parse observation:", parseError);
+    if (redis) {
+      // Use Redis
+      const rawObservations = await redis.lrange(OBSERVATIONS_KEY, 0, limit - 1);
+      const items = Array.isArray(rawObservations) ? rawObservations : [];
+      
+      for (const raw of items) {
+        try {
+          if (typeof raw !== 'string') continue;
+          const obs = JSON.parse(raw) as Observation;
+          // Apply filters if provided
+          if (category && obs.category !== category) continue;
+          if (severity && obs.severity !== severity) continue;
+          observations.push(obs);
+        } catch (parseError) {
+          console.error("Failed to parse observation:", parseError);
+        }
       }
-    }
 
-    const total = await redis.llen(OBSERVATIONS_KEY);
+      total = await redis.llen(OBSERVATIONS_KEY);
+    } else {
+      // Use in-memory fallback
+      usingFallback = true;
+      observations = inMemoryObservations
+        .slice(0, limit)
+        .filter((obs) => {
+          if (category && obs.category !== category) return false;
+          if (severity && obs.severity !== severity) return false;
+          return true;
+        });
+      total = inMemoryObservations.length;
+    }
 
     return NextResponse.json({
       observations,
       total,
       timestamp: new Date().toISOString(),
+      ...(usingFallback && { note: "Using in-memory storage (development only)" }),
     });
   } catch (error) {
     console.error("Failed to fetch observations:", error);
@@ -156,27 +168,37 @@ export async function POST(request: Request) {
       metadata: body.metadata,
     };
 
-    // Store in Redis
+    // Try to store in Redis, fall back to in-memory
     const redis = await getRedisClient();
-    if (!redis) {
-      return NextResponse.json(
-        { error: "Redis unavailable - observation not saved" },
-        { status: 503 }
-      );
+    let usingFallback = false;
+
+    if (redis) {
+      try {
+        // Add to front of list (most recent first)
+        await redis.lpush(OBSERVATIONS_KEY, JSON.stringify(observation));
+
+        // Trim to keep only last MAX_OBSERVATIONS
+        await redis.ltrim(OBSERVATIONS_KEY, 0, MAX_OBSERVATIONS - 1);
+      } catch (redisError) {
+        console.warn("Redis storage failed, using fallback:", redisError);
+        usingFallback = true;
+      }
+    } else {
+      usingFallback = true;
     }
 
-    // Add to front of list (most recent first)
-    await redis.lpush(OBSERVATIONS_KEY, JSON.stringify(observation));
+    // Use in-memory storage if Redis not available or failed
+    if (usingFallback) {
+      inMemoryObservations = [observation, ...inMemoryObservations].slice(0, MAX_OBSERVATIONS);
+    }
 
-    // Trim to keep only last MAX_OBSERVATIONS
-    await redis.ltrim(OBSERVATIONS_KEY, 0, MAX_OBSERVATIONS - 1);
-
-    console.log(`[Observation Created] ${severity.toUpperCase()}: ${title}`);
+    console.log(`[Observation Created] ${severity.toUpperCase()}: ${title}${usingFallback ? " (in-memory)" : " (Redis)"}`);
 
     return NextResponse.json(
       {
         observation,
         message: "Observation created successfully",
+        ...(usingFallback && { note: "Stored in-memory (development only)" }),
       },
       { status: 201 }
     );
