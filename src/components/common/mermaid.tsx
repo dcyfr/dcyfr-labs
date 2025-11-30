@@ -83,8 +83,6 @@ export function Mermaid({
         htmlLabels: true,
         useMaxWidth: true,
         wrappingWidth: 300,
-        diagramMarginX: 20,
-        diagramMarginY: 20,
       },
       sequence: {
         actorMargin: 50,
