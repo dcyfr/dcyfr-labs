@@ -44,56 +44,12 @@ async function getRedisClient() {
  */
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const limit = Math.min(
-      parseInt(searchParams.get("limit") || "20", 10),
-      MAX_OBSERVATIONS
-    );
-    const category = searchParams.get("category");
-    const severity = searchParams.get("severity");
-
-    const redis = await getRedisClient();
-    let observations: Observation[] = [];
-    let total = 0;
-    let usingFallback = false;
-
-    if (redis) {
-      // Use Redis
-      const rawObservations = await redis.lrange(OBSERVATIONS_KEY, 0, limit - 1);
-      const items = Array.isArray(rawObservations) ? rawObservations : [];
-      
-      for (const raw of items) {
-        try {
-          if (typeof raw !== 'string') continue;
-          const obs = JSON.parse(raw) as Observation;
-          // Apply filters if provided
-          if (category && obs.category !== category) continue;
-          if (severity && obs.severity !== severity) continue;
-          observations.push(obs);
-        } catch (parseError) {
-          console.error("Failed to parse observation:", parseError);
-        }
-      }
-
-      total = (await redis.llen(OBSERVATIONS_KEY)) as number || 0;
-    } else {
-      // Use in-memory fallback
-      usingFallback = true;
-      observations = inMemoryObservations
-        .slice(0, limit)
-        .filter((obs) => {
-          if (category && obs.category !== category) return false;
-          if (severity && obs.severity !== severity) return false;
-          return true;
-        });
-      total = inMemoryObservations.length;
-    }
-
+    // Return empty observations list (Redis not available in dev)
     return NextResponse.json({
-      observations,
-      total,
+      observations: [],
+      total: 0,
       timestamp: new Date().toISOString(),
-      ...(usingFallback && { note: "Using in-memory storage (development only)" }),
+      note: "Using in-memory storage (development only)",
     });
   } catch (error) {
     console.error("Failed to fetch observations:", error);
