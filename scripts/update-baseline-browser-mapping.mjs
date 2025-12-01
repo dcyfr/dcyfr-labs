@@ -7,7 +7,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { getAllVersions } from 'baseline-browser-mapping'
+import { getAllVersions, getCompatibleVersions } from 'baseline-browser-mapping'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,6 +19,7 @@ function parseArgs() {
     output: path.join(process.cwd(), 'src', 'data', 'baseline-browser-mapping.json'),
     includeDownstream: true,
     useSupports: false,
+    allVersions: false,
   }
 
   for (let i = 0; i < args.length; i++) {
@@ -31,6 +32,8 @@ function parseArgs() {
       opts.includeDownstream = false
     } else if (a === '--use-supports') {
       opts.useSupports = true
+    } else if (a === '--all-versions') {
+      opts.allVersions = true
     }
   }
   return opts
@@ -43,16 +46,21 @@ async function main() {
 
   console.log(`Generating baseline mapping for date: ${date}`)
 
-  // getAllVersions returns an array of browsers with support metadata
-  const data = getAllVersions({
-    includeDownstreamBrowsers: opts.includeDownstream,
-    outputFormat: 'array',
-    useSupports: opts.useSupports
-  })
-
-  // If a date is provided, narrow the dataset to the Widely Available set for that date
-  // The library doesn't directly accept a 'widelyAvailableOnDate' in getAllVersions, but getCompatibleVersions can be used for date-targeted output.
-  // For simplicity we'll use getAllVersions and include all versions, then write to the file. If date-based filtering is required, use getCompatibleVersions in a follow-up.
+  // Default behavior: use getCompatibleVersions for the target date (widely available on date)
+  // Use --all-versions to get the full dataset instead
+  let data
+  if (opts.allVersions) {
+    data = getAllVersions({
+      includeDownstreamBrowsers: opts.includeDownstream,
+      outputFormat: 'array',
+      useSupports: opts.useSupports
+    })
+  } else {
+    data = getCompatibleVersions({
+      widelyAvailableOnDate: date,
+      includeDownstreamBrowsers: opts.includeDownstream
+    })
+  }
 
   const outPath = path.isAbsolute(opts.output) ? opts.output : path.join(process.cwd(), opts.output)
   await fs.mkdir(path.dirname(outPath), { recursive: true })
