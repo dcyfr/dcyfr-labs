@@ -102,7 +102,7 @@
     "@eslint/eslintrc": "^3",
     "@lhci/cli": "^0.15.0",
     "@next/bundle-analyzer": "^16.0.4",
-    "@octokit/rest": "^20.0.0",
+    "@octokit/rest": "^22.0.1",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@testing-library/jest-dom": "^6.9.1",
