@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only. Completed tasks are in **`done.md`**.
 
-**Last Updated:** November 29, 2025 (Phase 4 Complete)
+**Last Updated:** December 1, 2025 (Phase 4 Complete)
 
 ---
 
@@ -64,6 +64,12 @@ All major phases complete. Project is in **maintenance mode** with data-driven e
 Items deferred until data validates need or time permits.
 
 ### Testing & Quality
+
+- [ ] Fix design token linting warnings (2-3 hours)
+  - 29 warnings for improper spacing classes (space-y-8, space-y-6 instead of SPACING tokens)
+  - Affected files: activity-client.tsx, AnalyticsClient.tsx, blog/[slug]/page.tsx, dev pages
+  - Replace hardcoded padding/margin with design tokens from @/lib/design-tokens
+  - Replace hardcoded typography classes with TYPOGRAPHY tokens
 
 - [ ] Fix React 19 test failures - 11 tests (2-3 hours)
   - Wrap Mermaid async state updates in act()
