@@ -38,7 +38,7 @@ const RATE_LIMIT_CONFIG = {
 };
 
 // Server-side cache configuration
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes server-side cache
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hour server-side cache
 let cachedData: { data: ContributionResponse; timestamp: number } | null = null;
 
 /**
@@ -57,7 +57,7 @@ function isValidUsername(username: string): boolean {
  * - Rate limiting (10 requests/minute per IP)
  * - Username restricted to portfolio owner
  * - Input validation and sanitization
- * - Server-side caching (5 minutes)
+ * - Server-side caching (1 hour)
  * - Graceful error handling
  */
 export async function GET(request: NextRequest) {
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
       source: 'server-cache',
     }, {
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
         'X-Cache-Status': 'HIT',
       },
     });
@@ -260,7 +260,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result, {
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
         'X-Cache-Status': 'MISS',
         ...createRateLimitHeaders(rateLimitResult),
       },

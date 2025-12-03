@@ -56,6 +56,9 @@ export { GitHubHeatmapErrorBoundary } from "./error-boundaries/github-heatmap-er
 // Skeletons
 export { GitHubHeatmapSkeleton } from "./skeletons/github-heatmap-skeleton";
 
+// Team
+export { TeamMemberCard, type TeamMemberCardLayout } from "./team-member-card";
+
 // Stats
 export { TrendingPosts } from "./stats/trending-posts";
 export { UnifiedTimeline } from "./stats/unified-timeline";

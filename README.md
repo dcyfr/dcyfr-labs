@@ -134,7 +134,7 @@ See [`/docs/blog/content-creation.md`](./docs/blog/content-creation.md) for comp
 Asynchronous task processing with automatic retries:
 
 - **Contact Form** - Send emails without blocking API response
-- **GitHub Sync** - Refresh contribution data every 5 minutes
+- **GitHub Sync** - Refresh contribution data every hour
 - **Blog Analytics** - Track views, calculate trending posts
 - **Daily Summaries** - Automated analytics reports (midnight UTC)
 

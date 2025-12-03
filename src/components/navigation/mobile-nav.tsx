@@ -74,6 +74,7 @@ export function MobileNav() {
     { href: "/about", label: "About" },
     { href: "/blog", label: "Blog" },
     { href: "/portfolio", label: "Portfolio" },
+    { href: "/sponsors", label: "Sponsors" },
     { href: "/contact", label: "Contact" },
   ];
 

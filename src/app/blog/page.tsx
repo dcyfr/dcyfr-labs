@@ -256,7 +256,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </div>
 
           {/* Main content area */}
-          <div className="px-2 sm:px-4 lg:px-8 w-full">
+          <div id="blog-posts" className="px-2 sm:px-4 lg:px-8 w-full">
             {/* Header with View Toggle */}
             <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
               <div className="flex-1">

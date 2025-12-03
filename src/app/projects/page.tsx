@@ -196,7 +196,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
 
       <div className={`container ${CONTAINER_WIDTHS.standard} mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8`}>
         {/* Header */}
-        <div className="mb-8">
+        <div id="projects-header" className="mb-8">
           <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
           <p className="text-muted-foreground">{pageDescription}</p>
         </div>
@@ -209,7 +209,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
         </div> */}
 
         {/* Filters */}
-        <div className="mb-8">
+        <div id="projects-filters" className="mb-8">
           <ProjectFilters
             selectedTags={selectedTags}
             selectedTech={selectedTech}
@@ -224,6 +224,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
         </div>
 
         {/* Projects list */}
+        <div id="projects-list">
         <ProjectList
           projects={sortedArchiveData.items}
           layout="grid"
@@ -231,6 +232,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           hasActiveFilters={hasActiveFilters}
           emptyMessage="No projects found. Try adjusting your search or filters."
         />
+        </div>
 
         {/* Pagination */}
         {sortedArchiveData.totalPages > 1 && (

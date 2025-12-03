@@ -106,7 +106,7 @@ export default async function Home() {
         url: SITE_URL,
         image: socialImage,
         description: pageDescription,
-        jobTitle: "Founder & Cyber Architect",
+        jobTitle: "Founding Architect",
         sameAs: getSocialUrls(),
         knowsAbout: [
           "Cybersecurity",
@@ -148,7 +148,7 @@ export default async function Home() {
         className="space-y-10 md:space-y-14"
       >
         {/* Hero Section */}
-        <Section>
+        <Section id="hero">
           <ScrollReveal animation="fade-up">
             <div className={`${PAGE_LAYOUT.hero.container}`}>
               <div
@@ -200,7 +200,7 @@ export default async function Home() {
         </Section>
 
         {/* featured article */}
-        <Section className={PAGE_LAYOUT.section.container}>
+        <Section id="featured-post" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={100}>
             <div className={SPACING.content}>
               <FeaturedPostHero post={featuredPost} />
@@ -209,7 +209,7 @@ export default async function Home() {
         </Section>
 
         {/* Recent Activity */}
-        <Section className={PAGE_LAYOUT.section.container}>
+        <Section id="recent-activity" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={215}>
             <div className={SPACING.content}>
               <SectionHeader title="Activity" />

@@ -288,7 +288,7 @@ This project includes 2 main API routes:
 
 ### 2. **GET /api/github-contributions** - GitHub Data
 - Fetches GitHub contribution data
-- Caches results (5 minutes)
+- Caches results (1 hour)
 - Fallback data on errors
 - Rate limited (10 requests/minute per IP)
 - **Documentation:** `github-contributions.md`
@@ -305,9 +305,9 @@ This project includes 2 main API routes:
 ### Caching Strategy
 
 **GitHub Contributions:**
-- Server-side cache: 5 minutes TTL
-- HTTP cache: 300 seconds (`s-maxage`)
-- Stale while revalidate: 600 seconds
+- Server-side cache: 1 hour TTL
+- HTTP cache: 3600 seconds (`s-maxage`)
+- Stale while revalidate: 7200 seconds
 
 **Contact Form:**
 - No caching (transactional)
@@ -413,7 +413,7 @@ describe("POST /api/contact", () => {
 | 400 Bad Request | Invalid input | Check field values |
 | 500 Server Error | Unexpected error | Check logs, retry |
 | Email not sending | RESEND_API_KEY not set | Set env var or accept 200 with warning |
-| GitHub data stale | Using cached response | Wait 5 minutes or check cache status |
+| GitHub data stale | Using cached response | Wait 1 hour or check cache status |
 
 ## Best Practices
 

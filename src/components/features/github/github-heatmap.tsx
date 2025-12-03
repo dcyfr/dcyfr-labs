@@ -185,7 +185,7 @@ function formatTooltipDate(dateString: string): string {
  *
  * Displays a GitHub contribution activity heatmap for the past year.
  * Fetches data from the `/api/github-contributions` endpoint which handles:
- * - Server-side caching (5-minute cache with 1-minute fallback)
+ * - Server-side caching (1-hour cache with 1-minute fallback)
  * - Rate limiting (10 requests/minute per IP)
  * - Graceful fallback with sample data if GitHub API is unavailable
  *

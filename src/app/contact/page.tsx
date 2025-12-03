@@ -33,13 +33,15 @@ export default async function ContactPage() {
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <div className="space-y-10 md:space-y-14">
+      <section id="hero">
       <PageHero
         title="Contact Us"
         description="Whether you have questions, feedback, or collaboration ideas, feel free to reach out using the form below."
       />
-      
+      </section>
+
       {/* Contact Form */}
-      <section className={PAGE_LAYOUT.section.container}>
+      <section id="contact-form" className={PAGE_LAYOUT.section.container}>
         <ScrollReveal animation="fade-up" delay={0}>
           <div className={SPACING.content}>
             <ContactFormErrorBoundary>
