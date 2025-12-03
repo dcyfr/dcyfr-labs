@@ -109,13 +109,73 @@ export default function proxy(request: NextRequest) {
     }
   }
 
-  // Protect developer-only pages at request time. Even if a page was
-  // prerendered during build as development content, middleware runs at
-  // request time so we can reliably serve a 404 in non-development envs.
-  const devOnlyPaths = ["/dev"];
+  // Honeypot routes - paths that are intentionally exposed to catch attackers.
+  // These paths act as honeypots in all environments, logging access attempts to Sentry.
+  // /private - always a honeypot
+  // /dev - honeypot in production/preview only (accessible in development)
+  const honeypotPaths = ["/private"];
+  const devOnlyHoneypotPaths = ["/dev"]; // Only honeypot in non-development
+
+  // Check honeypot paths (always active)
+  for (const p of honeypotPaths) {
+    if (pathname === p || pathname.startsWith(p + "/")) {
+      // Log as honeypot trigger (security monitoring)
+      Sentry.captureMessage(`Honeypot triggered: ${pathname}`, {
+        level: "warning",
+        tags: {
+          security: "honeypot",
+          path: pathname,
+        },
+        extra: {
+          url: request.url,
+          method: request.method,
+          userAgent: request.headers.get("user-agent") || "unknown",
+          ip: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown",
+          referer: request.headers.get("referer") || "none",
+        },
+      });
+
+      Sentry.setContext("honeypot_attempt", {
+        path: pathname,
+        user_agent: request.headers.get("user-agent") || "unknown",
+        referer: request.headers.get("referer") || "direct",
+        ip: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown",
+        timestamp: new Date().toISOString(),
+      });
+
+      // Rewrite to Next's not-found page
+      return NextResponse.rewrite(new URL("/_not-found", request.url));
+    }
+  }
+
+  // Check dev-only honeypot paths (only active in production/preview)
   if (!isDevelopment) {
-    for (const p of devOnlyPaths) {
+    for (const p of devOnlyHoneypotPaths) {
       if (pathname === p || pathname.startsWith(p + "/")) {
+        // Log as honeypot trigger (security monitoring)
+        Sentry.captureMessage(`Honeypot triggered: ${pathname}`, {
+          level: "warning",
+          tags: {
+            security: "honeypot",
+            path: pathname,
+          },
+          extra: {
+            url: request.url,
+            method: request.method,
+            userAgent: request.headers.get("user-agent") || "unknown",
+            ip: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown",
+            referer: request.headers.get("referer") || "none",
+          },
+        });
+
+        Sentry.setContext("honeypot_attempt", {
+          path: pathname,
+          user_agent: request.headers.get("user-agent") || "unknown",
+          referer: request.headers.get("referer") || "direct",
+          ip: request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown",
+          timestamp: new Date().toISOString(),
+        });
+
         // Rewrite to Next's not-found page
         return NextResponse.rewrite(new URL("/_not-found", request.url));
       }
@@ -124,9 +184,9 @@ export default function proxy(request: NextRequest) {
 
   // Protect internal API endpoints - only allow from same domain in production/preview
   // These endpoints are for internal maintenance monitoring only
+  // Note: /dev/api is already blocked by the honeypot check above
   const internalApiPaths = [
     "/api/maintenance",
-    "/dev/api",
   ];
 
   if (!isDevelopment) {
