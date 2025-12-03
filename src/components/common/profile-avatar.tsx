@@ -134,7 +134,7 @@ export function ProfileAvatar({
           sizes={sizeClass.sizes}
           className="object-cover ring-2 ring-border shadow-lg"
           onError={() => setImageError(true)}
-          onLoadingComplete={() => setIsLoaded(true)}
+          onLoad={() => setIsLoaded(true)}
           priority={priority}
         />
       ) : (

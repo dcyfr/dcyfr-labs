@@ -1,5 +1,5 @@
 {
-  "description": "Performance budgets for cyberdrew.dev - Core Web Vitals targets and bundle size limits",
+  "description": "Performance budgets - Core Web Vitals targets and bundle size limits",
   "budgets": {
     "webVitals": {
       "LCP": {
