@@ -44,7 +44,7 @@ describe('json-ld.ts', () => {
         '@id': 'https://example.com/#person',
         name: 'Test Author',
         url: 'https://example.com',
-        jobTitle: 'Founder & Cyber Architect',
+        jobTitle: 'Founding Architect',
         sameAs: [
           'https://github.com/test',
           'https://twitter.com/test',

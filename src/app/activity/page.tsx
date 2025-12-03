@@ -75,13 +75,15 @@ export default async function ActivityPage() {
 
       <div className={`container ${CONTAINER_WIDTHS.standard} mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8`}>
         {/* Header */}
-        <div className="mb-8">
+        <div id="activity-header" className="mb-8">
           <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
           <p className="text-muted-foreground">{pageDescription}</p>
         </div>
 
         {/* Activity Feed */}
+        <div id="activity-feed">
         <ActivityPageClient activities={serializedActivities} />
+        </div>
       </div>
     </>
   );

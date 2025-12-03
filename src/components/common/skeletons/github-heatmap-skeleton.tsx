@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export function GitHubHeatmapSkeleton() {
   return (
-    <Card className="p-6">
+    <Card className="p-6 min-h-[400px]">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-2">

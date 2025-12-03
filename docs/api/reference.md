@@ -98,14 +98,14 @@ X-RateLimit-Reset: 1696348920000
 - Invalid characters
 
 #### 4. Server-Side Caching 💾
-- **5-minute cache** for successful responses
+- **1-hour cache** for successful responses
 - **1-minute cache** for fallback data
 - In-memory cache with TTL
 - ~95% reduction in GitHub API calls
 
 **Cache Headers**:
 ```http
-Cache-Control: public, s-maxage=300, stale-while-revalidate=600
+Cache-Control: public, s-maxage=3600, stale-while-revalidate=7200
 X-Cache-Status: HIT|MISS|FALLBACK
 ```
 

@@ -60,7 +60,7 @@ All JSON-LD structured data schemas have been reviewed and validated against Sch
       "@id": "https://www.dcyfr.ai/#person",
       "name": "Drew",
       "url": "https://www.dcyfr.ai",
-      "jobTitle": "Founder & Cyber Architect",
+      "jobTitle": "Founding Architect",
       "sameAs": [
         "https://github.com/dcyfr",
         "https://linkedin.com/in/dcyfr"

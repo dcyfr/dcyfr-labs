@@ -76,7 +76,7 @@ Standard HTTP headers are fine. No special headers required.
 | Source | Meaning | When Used |
 |--------|---------|-----------|
 | github-api | Fresh data from GitHub | On cache miss |
-| server-cache | Cached data from memory | Within 5-minute window |
+| server-cache | Cached data from memory | Within 1-hour window |
 | fallback | Synthetic data | On GitHub API error |
 
 ### Example with Warning
@@ -254,13 +254,13 @@ async function fetchWithRetry(username, maxAttempts = 3) {
 
 ### Server-Side Cache
 
-The endpoint implements a **5-minute server-side cache** to reduce GitHub API calls:
+The endpoint implements a **1-hour server-side cache** to reduce GitHub API calls:
 
 ```
 Request arrives
     ↓
 Check server-side cache
-    ├─ Hit (< 5 min old) → Return cached data
+    ├─ Hit (< 1 hour old) → Return cached data
     └─ Miss (expired/new) → Fetch from GitHub API
          ↓
          Store in cache
@@ -281,7 +281,7 @@ cachedData = {
 ### Cache Duration
 
 ```tsx
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
 ```
 
 ### Fallback Data Caching
@@ -303,7 +303,7 @@ The endpoint includes standard HTTP cache headers for browser/CDN caching:
 
 **On Success:**
 ```
-Cache-Control: public, s-maxage=300, stale-while-revalidate=600
+Cache-Control: public, s-maxage=3600, stale-while-revalidate=7200
 X-Cache-Status: MISS (first request) or HIT (subsequent)
 ```
 
@@ -603,7 +603,7 @@ curl -i "http://localhost:3000/api/github-contributions?username=dcyfr"
 curl -i "http://localhost:3000/api/github-contributions?username=dcyfr"
 # Look for: X-Cache-Status: HIT and source: "server-cache"
 
-# After 5 minutes
+# After 1 hour
 # Cache expires, next request shows source: "github-api"
 ```
 
@@ -746,7 +746,7 @@ None - endpoint works without environment variables
 | 429 Too Many Requests | Rate limit exceeded | Wait 60s, check X-RateLimit headers |
 | 400 Invalid username | Bad format | Use alphanumeric + hyphens only |
 | 403 Unauthorized | Wrong username | Only "dcyfr" is allowed |
-| Stale data | Cache not expired | Wait 5 minutes or restart |
+| Stale data | Cache not expired | Wait 1 hour or restart |
 | Fallback data | GitHub API down | Wait for GitHub to recover |
 | No data | Invalid response | Check GitHub API status |
 

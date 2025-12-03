@@ -218,7 +218,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
 
       <div className={`container ${CONTAINER_WIDTHS.content} mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8`}>
         {/* Header */}
-        <div className="mb-8">
+        <div id="portfolio-header" className="mb-8">
           <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
           <p className="text-muted-foreground">{pageDescription}</p>
         </div>
@@ -240,6 +240,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
         */}
 
         {/* Projects list */}
+        <div id="portfolio-list">
         <ProjectList
           projects={sortedArchiveData.items}
           layout="grid"
@@ -247,6 +248,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
           hasActiveFilters={hasActiveFilters}
           emptyMessage="No projects found. Try adjusting your search or filters."
         />
+        </div>
 
         {/* Pagination */}
         {sortedArchiveData.totalPages > 1 && (

@@ -162,7 +162,7 @@ export function PageHero({
         {/* Description - use div for ReactNode, p for string to avoid hydration errors */}
         {description && (
           typeof description === 'string' ? (
-            <p className={styles.description}>
+            <p className={cn(styles.description, "max-w-3xl", align === 'center' && 'mx-auto')}>
               {description}
               {itemCount !== undefined && (
                 <span className="text-muted-foreground">
@@ -171,7 +171,7 @@ export function PageHero({
               )}
             </p>
           ) : (
-            <div className={styles.description}>
+            <div className={cn(styles.description, "max-w-3xl", align === 'center' && 'mx-auto')}>
               {description}
             </div>
           )

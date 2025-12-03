@@ -46,7 +46,7 @@ export const { GET, POST, PUT } = serve({
     contactFormSubmitted,
     
     // GitHub data refresh
-    refreshGitHubData,           // Scheduled: every 5 minutes
+    refreshGitHubData,           // Scheduled: every hour
     manualRefreshGitHubData,    // Event-driven: manual refresh
     
     // Blog analytics

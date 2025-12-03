@@ -35,7 +35,7 @@ async function getRedisClient(): Promise<RedisClient | null> {
 }
 
 const CACHE_KEY = "github:contributions:dcyfr";
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
 interface ContributionDay {
   date: string;
@@ -129,7 +129,7 @@ async function fetchGitHubContributions(): Promise<ContributionResponse | null> 
 /**
  * Scheduled GitHub data refresh function
  * 
- * Runs every 5 minutes to keep contribution data fresh.
+ * Runs every hour to keep contribution data fresh.
  * Fetches latest data from GitHub GraphQL API and updates Redis cache.
  * 
  * Benefits:
@@ -138,14 +138,14 @@ async function fetchGitHubContributions(): Promise<ContributionResponse | null> 
  * - Better handling of rate limits
  * - Proactive error detection
  * 
- * Cron schedule: daily at midnight UTC
+ * Cron schedule: hourly at the top of each hour
  */
 export const refreshGitHubData = inngest.createFunction(
   { 
     id: "refresh-github-data",
     retries: 2,
   },
-  { cron: "0 0 * * *" }, // Daily at midnight UTC
+  { cron: "0 * * * *" }, // Hourly at minute 0
   async ({ step }) => {
     // Step 1: Fetch fresh data from GitHub
     const freshData = await step.run("fetch-github-data", async () => {

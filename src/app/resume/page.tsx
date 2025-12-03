@@ -55,10 +55,12 @@ export default async function ResumePage() {
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <div className="space-y-10 md:space-y-14">
+      <section id="hero">
       <PageHero
         title="Drew's Resume"
         description={getSummary()}
       />
+      </section>
       
       {/* Download Button 
       <ScrollReveal animation="fade-up" delay={0}>
@@ -68,7 +70,7 @@ export default async function ResumePage() {
       </ScrollReveal> */}
 
       {/* Stats Overview */}
-      <section className={PAGE_LAYOUT.section.container}>
+      <section id="stats" className={PAGE_LAYOUT.section.container}>
         <ScrollReveal animation="fade-up" delay={50}>
           <div className={SPACING.content}>
             <ResumeStats />

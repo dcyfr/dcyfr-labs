@@ -14,7 +14,7 @@ The `GitHubHeatmap` component displays a visual calendar heatmap of GitHub contr
 
 - **Contribution Visualization**: Color-coded heatmap showing activity intensity (less → more)
 - **One-Year Window**: Displays contributions for the past 12 months
-- **Server-Side Caching**: 5-minute cache with fallback data to reduce API calls
+- **Server-Side Caching**: 1-hour cache with fallback data to reduce API calls
 - **Rate Limiting**: Per-IP rate limiting (10 requests/minute)
 - **Error Handling**: Wrapped in error boundary with graceful degradation
 - **Loading States**: Skeleton loader while data is fetching
@@ -70,7 +70,7 @@ GitHubHeatmap (Client Component)
 ├── useEffect: Fetch data on mount/username change
 ├── /api/github-contributions endpoint
 │   ├── Rate limiting check
-│   ├── Server-side cache check (5 minutes)
+│   ├── Server-side cache check (1 hour)
 │   └── GitHub GraphQL API (if not cached)
 ├── Loading state → GitHubHeatmapSkeleton
 └── Render heatmap with CalendarHeatmap + metadata
@@ -83,7 +83,7 @@ Client Request
     ↓
 Rate Limit Check (per IP)
     ↓
-Cache Check (5 min TTL)
+Cache Check (1 hour TTL)
 ├─ Hit → Return cached data
 └─ Miss → Fetch from GitHub API
          ↓
@@ -152,7 +152,7 @@ interface ContributionResponse {
 
 ## Caching Strategy
 
-### Server-Side Caching (5 minutes)
+### Server-Side Caching (1 hour)
 
 ```
 First Request
@@ -160,18 +160,18 @@ First Request
   ├─ Cache result in memory
   └─ Return with X-Cache-Status: MISS
 
-Subsequent Requests (within 5 min)
+Subsequent Requests (within 1 hour)
   ├─ Check cache
   ├─ Return cached result
   └─ Return with X-Cache-Status: HIT
 
-Cache Expired (after 5 min)
+Cache Expired (after 1 hour)
   └─ Repeat process
 ```
 
 ### HTTP Cache Headers
 
-- **Success (GitHub API)**: `Cache-Control: public, s-maxage=300, stale-while-revalidate=600`
+- **Success (GitHub API)**: `Cache-Control: public, s-maxage=3600, stale-while-revalidate=7200`
 - **Fallback Data**: `Cache-Control: public, s-maxage=60, stale-while-revalidate=120`
 - **Rate Limit Hit**: No caching
 
