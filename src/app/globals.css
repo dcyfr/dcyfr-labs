@@ -1802,8 +1802,58 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
     transform: none;
     transition: none;
   }
-  
+
   .mermaid-container:hover {
     transition: none;
   }
+}
+
+/* ===================================================================
+   ReactFlow Diagram Styling
+   Override ReactFlow's default CSS variables to use our design tokens
+   ================================================================ */
+
+/* ReactFlow CSS variable overrides - use our semantic design tokens */
+.react-flow {
+  /* Node styling */
+  --xy-node-background-color: transparent;
+  --xy-node-color: var(--foreground);
+  --xy-node-border: none;
+
+  /* Edge styling - already handled via inline styles */
+  --xy-edge-stroke: var(--muted-foreground);
+  --xy-edge-stroke-width: 2px;
+
+  /* Controls styling */
+  --xy-controls-button-background-color: var(--card);
+  --xy-controls-button-background-color-hover: var(--muted);
+  --xy-controls-button-color: var(--foreground);
+  --xy-controls-button-border-color: var(--border);
+
+  /* MiniMap styling */
+  --xy-minimap-background-color: var(--card);
+  --xy-minimap-mask-background-color: var(--background);
+}
+
+/* Ensure ReactFlow nodes don't override our custom node components */
+.react-flow__node-input,
+.react-flow__node-default,
+.react-flow__node-output,
+.react-flow__node-group,
+.react-flow__node-modern,
+.react-flow__node-process,
+.react-flow__node-decision {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.react-flow__edge-textbg {
+  fill: var(--card) !important;
+  stroke: var(--border) !important;
+  stroke-width: 1px !important;
+}
+
+.react-flow__edge-text {
+  fill: var(--foreground) !important;
 }
