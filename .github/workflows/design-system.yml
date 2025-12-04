@@ -8,9 +8,19 @@ on:
       - 'eslint.config.mjs'
       - 'scripts/validate-design-tokens.mjs'
 
+# Cancel in-progress runs for same PR
+concurrency:
+  group: design-system-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
@@ -23,7 +33,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefer-offline
 
       - name: Run ESLint
         run: npm run lint
@@ -36,7 +46,7 @@ jobs:
 
       - name: Post PR Comment
         if: failure() && steps.validation.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
