@@ -6,9 +6,18 @@ on:
     - cron: '0 0 * * 0'
   workflow_dispatch: {}
 
+# Prevent overlapping runs
+concurrency:
+  group: update-baseline-mapping
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
 jobs:
   update-baseline:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,7 +28,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - name: Install
-        run: npm ci
+        run: npm ci --prefer-offline
       - name: Generate baseline mapping
         run: npm run update:baseline
       - name: Commit changed files

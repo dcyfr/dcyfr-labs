@@ -9,7 +9,7 @@ Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + MDX portfolio sit
 **Commands**: `npm run dev` | `npm run build` | `npm run lint` | `npm run test`
 **Alias**: `@/*` → `src/*` (always use)
 **Hosting**: Vercel
-**Tests**: 1185/1197 passing (99.0%)
+**Tests**: 1339/1346 passing (99.5%)
 
 ## Architecture
 

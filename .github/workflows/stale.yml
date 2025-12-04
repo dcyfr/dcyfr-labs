@@ -8,9 +8,15 @@ on:
     - cron: '31 10 * * *'  # Daily at 10:31 UTC
   workflow_dispatch:
 
+# Prevent overlapping runs
+concurrency:
+  group: stale-issues
+  cancel-in-progress: true
+
 jobs:
   stale:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       issues: write
       pull-requests: write
