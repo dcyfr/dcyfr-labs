@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useEffect } from "react";
 import {
   ReactFlow,
   Controls,
@@ -10,6 +10,7 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
+  useReactFlow,
   type Node,
   type Edge,
   type OnConnect,
@@ -54,7 +55,7 @@ function ModernNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
 
   return (
     <>
-      <Handle type="target" position={Position.Top} className="!bg-primary !w-3 !h-3 !border-2 !border-background" />
+      <Handle type="target" position={Position.Top} className="bg-primary! w-3! h-3! border-2! border-background!" />
       <div
         className={cn(
           "px-4 py-3 rounded-lg border-2 shadow-sm transition-all duration-200",
@@ -196,6 +197,28 @@ const nodeTypes: NodeTypes = {
 };
 
 // ============================================================================
+// Auto Fit View Component (must be inside ReactFlow context)
+// ============================================================================
+
+/**
+ * Internal component that handles automatic fit view on layout changes
+ */
+function AutoFitView({ nodes }: { nodes: Node<BaseNodeData>[] }) {
+  const { fitView: reactFlowFitView } = useReactFlow();
+
+  useEffect(() => {
+    // Fit view when nodes change (layout shifts)
+    const timer = setTimeout(() => {
+      reactFlowFitView({ padding: 0.2, duration: 400 });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [nodes, reactFlowFitView]);
+
+  return null;
+}
+
+// ============================================================================
 // Main Component
 // ============================================================================
 
@@ -292,25 +315,6 @@ export function InteractiveDiagram({
 }: InteractiveDiagramProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [isDark, setIsDark] = useState(false);
-
-  // Detect dark mode
-  useEffect(() => {
-    const checkDarkMode = () => {
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      setIsDark(isDarkMode);
-    };
-
-    checkDarkMode();
-
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   const onConnect: OnConnect = useCallback(
     (params) => {
@@ -320,15 +324,18 @@ export function InteractiveDiagram({
             {
               ...params,
               animated: true,
-              style: { stroke: isDark ? '#a1a1aa' : '#71717a' },
-              markerEnd: { type: MarkerType.ArrowClosed },
+              style: { stroke: 'color-mix(in srgb, var(--foreground) 80%, transparent)' },
+              markerEnd: {
+                type: MarkerType.ArrowClosed,
+                color: 'color-mix(in srgb, var(--foreground) 80%, transparent)',
+              },
             },
             eds
           )
         );
       }
     },
-    [setEdges, connectable, isDark]
+    [setEdges, connectable]
   );
 
   // Merge custom node types with defaults
@@ -337,88 +344,96 @@ export function InteractiveDiagram({
     [customNodeTypes]
   );
 
-  // Style edges with theme-aware colors
+  // Style edges with theme-aware colors using semantic CSS variables
   const styledEdges = useMemo(
     () =>
       edges.map((edge) => ({
         ...edge,
         style: {
-          stroke: isDark ? '#a1a1aa' : '#71717a',
+          stroke: 'color-mix(in srgb, var(--foreground) 80%, transparent)',
           strokeWidth: 2,
           ...edge.style,
         },
         markerEnd: edge.markerEnd || {
           type: MarkerType.ArrowClosed,
-          color: isDark ? '#a1a1aa' : '#71717a',
+          color: 'color-mix(in srgb, var(--foreground) 80%, transparent)',
         },
       })),
-    [edges, isDark]
+    [edges]
   );
 
   return (
     <div
       className={cn(
-        "my-6 rounded-lg border border-border bg-card overflow-hidden",
+        "rounded-lg border border-border bg-card overflow-hidden flex flex-col",
         className
       )}
       style={{ height }}
     >
-      {(title || description) && (
-        <div className="px-4 py-3 border-b border-border bg-muted/30">
-          {title && <h3 className="font-medium text-sm text-foreground">{title}</h3>}
+      {/*{(title || description) && (
+        <div className="px-4 py-1 border-b border-border bg-muted/30 shrink-0">
+          {title && <h3 className="font-sans! font-medium text-sm text-foreground">{title}</h3>}
           {description && (
-            <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+            <p className="text-xs text-muted-foreground">{description}</p>
           )}
         </div>
-      )}
-      <ReactFlow
-        nodes={nodes}
-        edges={styledEdges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        nodeTypes={mergedNodeTypes}
-        edgeTypes={customEdgeTypes}
-        nodesDraggable={draggable}
-        nodesConnectable={connectable}
-        fitView={fitView}
-        minZoom={minZoom}
-        maxZoom={maxZoom}
-        proOptions={{ hideAttribution: true }}
-        className="bg-background"
-      >
+      )}*/}
+      <div className="flex-1">
+        <ReactFlow
+          nodes={nodes}
+          edges={styledEdges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={mergedNodeTypes}
+          edgeTypes={customEdgeTypes}
+          nodesDraggable={draggable}
+          nodesConnectable={connectable}
+          fitView={fitView}
+          minZoom={minZoom}
+          maxZoom={maxZoom}
+          proOptions={{ hideAttribution: true }}
+          className="bg-background"
+        >
         {showBackground && (
           <Background
             variant={backgroundVariant}
             gap={20}
             size={1}
-            color={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}
+            style={{
+              color: 'color-mix(in srgb, var(--foreground) 15%, transparent)'
+            }}
           />
         )}
         {showControls && (
           <Controls
-            className="!bg-card !border-border !shadow-md"
+            className="bg-card! border-border! shadow-md!"
             showInteractive={connectable}
+            position="bottom-right"
+            orientation="horizontal"
           />
         )}
         {showMinimap && (
           <MiniMap
-            className="!bg-card !border-border"
+            className="bg-card! border-border!"
             nodeColor={(node) => {
+              // Use semantic colors that adapt to theme automatically
               switch (node.type) {
                 case "input":
-                  return isDark ? "#22c55e" : "#16a34a";
+                  return 'var(--primary)';
                 case "output":
-                  return isDark ? "#3b82f6" : "#2563eb";
+                  return 'color-mix(in srgb, var(--primary) 80%, transparent)';
                 case "process":
-                  return isDark ? "#a855f7" : "#9333ea";
+                  return 'var(--accent-foreground)';
                 default:
-                  return isDark ? "#71717a" : "#a1a1aa";
+                  return 'color-mix(in srgb, var(--foreground) 60%, transparent)';
               }
             }}
           />
         )}
+        <AutoFitView nodes={nodes} />
       </ReactFlow>
+      </div>
     </div>
   );
 }
