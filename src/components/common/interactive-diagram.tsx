@@ -73,7 +73,7 @@ function ModernNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
           </div>
         </div>
       </div>
-      <Handle type="source" position={Position.Bottom} className="!bg-primary !w-3 !h-3 !border-2 !border-background" />
+      <Handle type="source" position={Position.Bottom} className="bg-primary! w-3! h-3! border-2! border-background!" />
     </>
   );
 }
