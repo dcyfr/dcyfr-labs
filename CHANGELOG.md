@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Repository documentation templates (PR template, issue templates, code of conduct)
 - MIT license
+- Vercel Blob integration plan for future asset storage
 
 ### Changed
 - Updated all repository documentation to reflect Phase 4 completion
-- Updated test metrics across documentation (1185/1197 tests passing, 99.0%)
+- Updated test metrics across documentation (1339/1346 tests passing, 99.5%)
+- Optimized GitHub Actions workflows with concurrency and timeouts
+- Updated github-script actions to v8
 
 ## [1.0.0] - 2025-11-26
 

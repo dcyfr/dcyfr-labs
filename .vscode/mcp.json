@@ -1,20 +1,10 @@
 {
 	"servers": {
-		"Memory": {
+		"Perplexity": {
+			"type": "stdio",
 			"command": "npx",
-			"args": [
-				"-y",
-				"@modelcontextprotocol/server-memory"
-			],
-			"type": "stdio"
-		},
-		"Thinking": {
-			"command": "npx",
-			"args": [
-				"-y",
-				"@modelcontextprotocol/server-sequential-thinking"
-			],
-			"type": "stdio"
+			"args": ["-y", "@perplexity-ai/mcp-server"],
+			"envFile": "${workspaceFolder}/.env.local"
 		},
 		"Context": {
 			"command": "npx",
@@ -23,6 +13,16 @@
 				"@upstash/context7-mcp@latest"
 			],
 			"type": "stdio"
+		},
+		"Playwright": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@playwright/mcp@latest"]
+		},
+		"Axiom": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "mcp-remote", "https://mcp.axiom.co/mcp"]
 		},
 		"Filesystem": {
 			"command": "npx",
@@ -45,7 +45,7 @@
             "type": "http"
         },
         "Sentry": {
-			"url": "https://mcp.sentry.dev/mcp/dcyfr-labs/cyberdrew-dev",
+			"url": "https://mcp.sentry.dev/mcp/dcyfr-labs/dcyfr-labs",
 			"type": "http"
 		}
 	}

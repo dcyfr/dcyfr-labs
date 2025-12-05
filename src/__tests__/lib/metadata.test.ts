@@ -700,7 +700,8 @@ describe('metadata.ts', () => {
       const props = getJsonLdScriptProps(schema);
 
       expect(props.type).toBe('application/ld+json');
-      expect(props.dangerouslySetInnerHTML.__html).toBe(JSON.stringify(schema));
+      expect(props.dangerouslySetInnerHTML).toBeDefined();
+      expect(props.dangerouslySetInnerHTML!.__html).toBe(JSON.stringify(schema));
       expect(props.suppressHydrationWarning).toBe(true);
       expect(props).not.toHaveProperty('nonce');
     });
@@ -715,11 +716,14 @@ describe('metadata.ts', () => {
       expect(props.suppressHydrationWarning).toBe(true);
     });
 
-    it('should not include nonce property when empty string', () => {
+    it('should include nonce property even when empty string', () => {
       const schema = { '@type': 'Article', name: 'Test' };
       const props = getJsonLdScriptProps(schema, '');
 
-      expect(props).not.toHaveProperty('nonce');
+      // IMPORTANT: Empty nonce should still be included
+      // An empty nonce="" is better than no nonce for CSP compliance
+      expect(props).toHaveProperty('nonce');
+      expect(props.nonce).toBe('');
     });
 
     it('should properly stringify complex schema', () => {
@@ -732,7 +736,10 @@ describe('metadata.ts', () => {
       };
       const props = getJsonLdScriptProps(schema);
 
-      const parsed = JSON.parse(props.dangerouslySetInnerHTML.__html);
+      expect(props.dangerouslySetInnerHTML).toBeDefined();
+      const html = props.dangerouslySetInnerHTML!.__html;
+      const htmlString = typeof html === 'string' ? html : html.toString();
+      const parsed = JSON.parse(htmlString);
       expect(parsed).toEqual(schema);
     });
   });
