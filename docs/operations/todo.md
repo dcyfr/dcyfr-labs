@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only. Completed tasks are in **`done.md`**.
 
-**Last Updated:** December 5, 2025 (Performance Optimizations Complete)
+**Last Updated:** December 5, 2025 (ESLint Warnings Fixed)
 
 ---
 
@@ -24,7 +24,7 @@ All major phases complete. Project is in **maintenance mode** with data-driven e
 - 198 integration tests
 - 0 security vulnerabilities ✅
 - 0 TypeScript compilation errors ✅
-- 0 ESLint errors (2 minor warnings) ✅
+- 0 ESLint errors, 0 warnings ✅
 - All dependencies current (latest versions) ✅
 - All Core Web Vitals monitored
 - SEO foundation complete
@@ -185,7 +185,27 @@ Implemented three high-impact performance optimizations to improve Core Web Vita
 
 ---
 
-## 🟢 Recent Completion: Codebase Quality Cleanup (Dec 5, 2025) ✅
+## 🟢 Recent Completion: ESLint Warnings Fixed (Dec 5, 2025) ✅
+
+Final code quality cleanup - achieved zero warnings:
+
+- [x] **ESLint Warnings Fixed** ✅ (5 minutes)
+  - Fixed anonymous default export in `scripts/github-api.mjs`
+  - Fixed anonymous default export in `scripts/sentry-enricher.mjs`
+  - Added named constants: `githubApi` and `sentryEnricher`
+  - ESLint now reports 0 errors, 0 warnings
+
+- [x] **Verification** ✅
+  - All tests passing (1339/1346 - 99.5%)
+  - TypeScript compilation successful (0 errors)
+  - Production build successful
+  - Lint check clean (0 errors, 0 warnings)
+
+**Current State:** Perfect code quality - ready for new development
+
+---
+
+## 🟢 Completion: Codebase Quality Cleanup (Dec 5, 2025) ✅
 
 Complete cleanup of all remaining code quality issues:
 
@@ -197,14 +217,11 @@ Complete cleanup of all remaining code quality issues:
 - [x] **Design Token Linting** ✅
   - Reduced from 59 warnings to 2 warnings
   - Eliminated all design token violations
-  - Only remaining warnings: anonymous default exports in scripts
 
 - [x] **Test Suite Health** ✅
   - 1339/1346 tests passing (99.5%)
   - 7 tests intentionally skipped
   - All integration tests passing
-
-**Current State:** Clean codebase ready for new development
 
 ---
 
@@ -246,13 +263,6 @@ Comprehensive audit and standardization of blog post metadata:
 ## ⚪ Backlog
 
 Items deferred until data validates need or time permits.
-
-### Testing & Quality
-
-- [ ] Optional: Fix 2 ESLint warnings in scripts (15 minutes)
-  - `scripts/github-api.mjs` - anonymous default export
-  - `scripts/sentry-enricher.mjs` - anonymous default export
-  - Non-blocking, cosmetic fix only
 
 ### Infrastructure & Reliability
 
