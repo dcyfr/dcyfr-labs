@@ -2,7 +2,7 @@
 
 Full-stack developer portfolio with Next.js 16 App Router, TypeScript, Tailwind v4, shadcn/ui, MDX blog, GitHub integration, and Redis analytics. Optimized for server-first rendering, type safety, and maintainable architecture.
 
-## Current Focus (November 2025)
+## Current Focus (December 2025)
 
 **All major phases complete** ✅
 
@@ -11,7 +11,7 @@ Project is in **maintenance mode** with data-driven enhancements.
 **Key Metrics** (see [`docs/operations/todo.md`](docs/operations/todo.md)):
 
 - ✅ Phase 1-4 complete
-- ✅ 1185/1197 tests passing (99.0%)
+- ✅ 1339/1346 passing (99.5%)
 - ✅ 198 integration tests
 - ✅ All Core Web Vitals monitored
 - ✅ Zero security vulnerabilities
@@ -145,7 +145,7 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 
 - ESLint (0 errors)
 - TypeScript compilation
-- Tests (≥99% pass rate, 1185/1197 passing)
+- Tests (≥99% pass rate, 1339/1346 passing)
 - Lighthouse CI (≥90% perf, ≥95% a11y)
 
 **GitHub Actions:**
@@ -155,11 +155,16 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 - Test suite on PR
 - Lighthouse CI on deploy
 
-## MCP Servers
+## MCP Servers (Chat)
 
-Available via `.vscode/mcp.json`:
-- Memory, Sequential Thinking, Context7
+Perplexity, Context, Playwright, Axiom, Filesystem, GitHub, Vercel, Sentry
+- Perplexity (web search, deep research, reasoning)
+- Context7 (library documentation)
+- Playwright (browser automation, E2E testing)
+- Axiom (log queries, monitoring)
 - Filesystem, GitHub, Vercel, Sentry
+
+*Note: Memory and Sequential Thinking MCPs removed Dec 2025 - replaced by native Claude/Copilot capabilities and built-in memory tools.*
 
 ---
 
