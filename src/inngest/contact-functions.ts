@@ -1,6 +1,7 @@
 import { inngest } from "./client";
 import { Resend } from "resend";
 import { AUTHOR_EMAIL, FROM_EMAIL } from "@/lib/site-config";
+import { track } from "@vercel/analytics/server";
 
 // Initialize Resend only if configured
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -63,6 +64,13 @@ export const contactFormSubmitted = inngest.createFunction(
           messageId: result.data?.id,
           to: AUTHOR_EMAIL,
           emailDomain: email.split('@')[1],
+        });
+        
+        // Track in Vercel Analytics
+        await track('contact_form_submitted', {
+          emailDomain: email.split('@')[1],
+          hasMessage: !!message,
+          success: true,
         });
 
         return { 

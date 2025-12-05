@@ -1,5 +1,6 @@
 import { inngest } from "./client";
 import { createClient } from "redis";
+import { track } from "@vercel/analytics/server";
 
 // Redis configuration
 const redisUrl = process.env.REDIS_URL;
@@ -64,6 +65,15 @@ export const trackPostView = inngest.createFunction(
         const views = await redis.get(`${VIEW_KEY_PREFIX}${postId}`);
         const count = parseInt(views || '0');
         console.log(`Post view tracked: ${slug} (${count} total views)`);
+        
+        // Track in Vercel Analytics
+        await track('blog_post_viewed', {
+          postId,
+          slug,
+          title,
+          totalViews: count,
+        });
+        
         return count;
       } catch (error) {
         console.error("Failed to get view count:", error);
@@ -142,6 +152,14 @@ export const handleMilestone = inngest.createFunction(
         Milestone: ${milestone.toLocaleString()} views
         Total: ${totalViews.toLocaleString()} views
       `);
+      
+      // Track in Vercel Analytics
+      await track('blog_milestone_reached', {
+        slug,
+        title,
+        milestone,
+        totalViews,
+      });
     });
 
     // Step 2: Send email notification to author (optional feature)
@@ -253,6 +271,12 @@ export const calculateTrending = inngest.createFunction(
         );
         
         console.log(`Updated trending posts: ${trending.length} posts`);
+        
+        // Track in Vercel Analytics
+        await track('trending_posts_calculated', {
+          trendingCount: trending.length,
+          topPostId: trending[0]?.postId,
+        });
       } catch (error) {
         console.error("Failed to store trending data:", error);
       }
@@ -356,6 +380,15 @@ export const generateAnalyticsSummary = inngest.createFunction(
         console.log(`Analytics summary generated for ${period}:`, {
           totalViews: summary.totalViews,
           posts: summary.uniquePosts,
+        });
+        
+        // Track in Vercel Analytics
+        await track('analytics_summary_generated', {
+          period,
+          totalViews: summary.totalViews,
+          uniquePosts: summary.uniquePosts,
+          startDate,
+          endDate,
         });
       } catch (error) {
         console.error("Failed to store analytics summary:", error);
