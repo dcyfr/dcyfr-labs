@@ -198,6 +198,100 @@ Final code quality cleanup - achieved zero warnings:
 - [x] **Verification** ✅
   - All tests passing (1339/1346 - 99.5%)
   - TypeScript compilation successful (0 errors)
+
+---
+
+## 🟢 Recent Completion: Performance Monitoring & Analytics Infrastructure (Dec 5, 2025) ✅
+
+**Bundle Size Monitoring with Baseline Comparison** ✅
+
+- [x] **Enhanced Bundle Size Monitor** ✅ (Dec 5, 2025 - 1 hour)
+  - Created `performance-baselines.json` with configurable regression thresholds
+  - Enhanced `scripts/check-bundle-size.mjs` with baseline comparison logic
+  - Implemented three-tier regression detection: <10% pass, 10-25% warning, >25% error
+  - Added CI integration in `.github/workflows/test.yml` (new "Bundle Size Check" job)
+  - **Next.js 16/Turbopack Compatible:** Handles new build manifest structure
+  - **Status:** Ready for baseline collection after first production deployment
+
+- [x] **Regression Thresholds Configured** ✅
+  - **Bundles:** 10% warning, 25% error (prevents bundle bloat)
+  - **Lighthouse:** 5-point warning, 10-point error (maintains quality scores)
+  - **Web Vitals:** 15% warning, 30% error (protects Core Web Vitals)
+  - **Strategy:** Configurable via `performance-baselines.json` for team flexibility
+
+**Analytics Data Flow Documentation** ✅
+
+- [x] **Custom Redis-Backed Analytics System** ✅ (Fully Operational)
+  - **Architecture:** Hybrid approach (Custom Redis primary + Vercel Analytics supplementary)
+  - **Reason:** Vercel Analytics has no data retrieval API (dashboard-only view)
+  - **Custom System Capabilities:**
+    - Real-time view tracking with 5-layer anti-spam protection
+    - Session deduplication (30-minute window)
+    - IP rate limiting (10 views per 5 minutes)
+    - Visibility API validation (only counts visible pageviews)
+    - User-agent filtering (blocks bots)
+    - Abuse pattern detection (tracks repeat offenders)
+
+  - **Redis Key Structure:**
+    - `views:post:{id}` - Total view count (permanent)
+    - `views:post:{id}:timestamps` - View timestamps (24h sorted set, auto-cleanup)
+    - `views:post:{id}:day:{date}` - Daily views (90-day retention)
+    - `shares:post:{id}` - Total shares (permanent)
+    - `blog:trending` - Top 10 trending posts (1-hour cache)
+    - `blog:milestone:{id}:{count}` - Milestone timestamps (permanent)
+    - `session:view:{id}` - Session deduplication (30-minute expiry)
+
+  - **Milestone Detection:** 100, 1K, 10K, 50K, 100K views with cascade events
+  - **Trending Algorithm:** `score = recentViews * (recentViews / totalViews)`
+  - **Scheduled Jobs:**
+    - `calculateTrending` - Hourly trending posts calculation
+    - `dailyAnalyticsSummary` - Daily analytics at midnight UTC
+
+  - **Security:**
+    - Analytics API blocked in production (requires API key + rate limiting)
+    - 5-layer anti-spam protection on view tracking
+    - Audit logging for all access attempts
+    - Fail-closed rate limiting on contact forms
+
+- [x] **Vercel Analytics Integration Enhanced** ✅ (Dec 5, 2025 - 30 minutes)
+  - **Server-Side Tracking Implemented:** Complete visibility into background jobs
+  - **Tracked Events:**
+    - `blog_post_viewed` - Post view with metadata (postId, slug, title, totalViews)
+    - `blog_milestone_reached` - Milestone achievements (slug, milestone, totalViews)
+    - `trending_posts_calculated` - Trending calculation runs (count, topPostId)
+    - `analytics_summary_generated` - Daily summaries (period, totalViews, uniquePosts)
+    - `contact_form_submitted` - Form submissions (emailDomain, success status)
+  - **Implementation:** Added `track()` calls from `@vercel/analytics/server` in Inngest functions
+  - **Benefit:** Holistic view across both custom Redis analytics and Vercel dashboard
+
+**Historical Data Storage Strategy** ✅
+
+- [x] **14-Day Retention via GitHub Actions** ✅ (Current Strategy)
+  - Lighthouse CI results stored as artifacts (14-day automatic expiry)
+  - Bundle size data logged in CI runs (14-day retention)
+  - **Rationale:** Sufficient for immediate regression detection and trend spotting
+  - **Future Migration Path:** When data volume or retention requirements increase:
+    - Option A: Vercel Blob storage for long-term historical data
+    - Option B: Redis with extended retention policies
+    - Decision deferred until data shows need (data-driven approach)
+
+**Status Summary:**
+
+- ✅ Bundle monitoring: Enhanced with baseline comparison + CI enforcement
+- ✅ Analytics: Redis-backed with 5-layer security, fully operational
+- ✅ Vercel tracking: Server-side events implemented for complete visibility
+- ✅ Historical storage: 14-day retention sufficient, migration path documented
+- ⏳ Baseline collection: Pending first production deployment
+- ⏳ Vercel Speed Insights alerts: Configure in dashboard post-deployment
+
+**Next Steps:**
+
+1. Deploy to preview branch (trigger production build)
+2. Run Lighthouse CI manually to collect baseline scores
+3. Extract bundle sizes from build output
+4. Populate `performance-baselines.json` with actual metrics
+5. Document baselines in `performance-review-log.md`
+6. Configure Vercel Speed Insights alerts in dashboard
   - Production build successful
   - Lint check clean (0 errors, 0 warnings)
 
