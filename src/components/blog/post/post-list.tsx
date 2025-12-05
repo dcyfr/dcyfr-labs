@@ -380,14 +380,23 @@ export function PostList({
                 <Link href={`/blog/${p.slug}`} className="flex flex-col h-full">
                   {/* Post content - larger padding for featured posts */}
                   <div className={`flex-1 flex flex-col ${isFeatured ? "p-5 md:p-8" : "p-4"}`}>
-                    {/* Badges and metadata */}
-                    <div className={`flex flex-nowrap items-center gap-x-2 text-muted-foreground mb-3 overflow-x-auto ${isFeatured ? "text-sm" : "text-xs"}`}>
+                    {/* Badges - show on all posts */}
+                    <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground mb-2 ${isFeatured ? "text-sm" : "text-xs"}`}>
                       <PostBadges post={p} size={isFeatured ? "default" : "sm"} isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory={true} />
                       <SeriesBadge post={p} size={isFeatured ? "default" : "sm"} />
+                    </div>
+                    
+                    {/* Title - larger for featured posts */}
+                    <TitleTag className={`font-semibold line-clamp-2 mb-2 ${isFeatured ? "text-2xl md:text-3xl" : "text-lg md:text-xl"}`}>
+                      <HighlightText text={p.title} searchQuery={searchQuery} />
+                    </TitleTag>
+                    
+                    {/* Metadata - moved below title for featured posts */}
+                    <div className={`flex flex-nowrap items-center gap-x-2 text-muted-foreground mb-2 ${isFeatured ? "text-xs" : "text-xs"}`}>
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString("en-US", { 
                           year: "numeric", 
-                          month: isFeatured ? "long" : "short", 
+                          month: "short", 
                           day: "numeric" 
                         })}
                       </time>
@@ -396,15 +405,10 @@ export function PostList({
                       {viewCounts && viewCounts.has(p.id) && viewCounts.get(p.id)! > 0 && (
                         <>
                           <span aria-hidden="true">•</span>
-                          <span className="hidden sm:inline">{formatViews(viewCounts.get(p.id)!)} views</span>
+                          <span>{formatViews(viewCounts.get(p.id)!)} views</span>
                         </>
                       )}
                     </div>
-                    
-                    {/* Title - larger for featured posts */}
-                    <TitleTag className={`font-semibold line-clamp-2 mb-2 ${isFeatured ? "text-2xl md:text-3xl" : "text-lg md:text-xl"}`}>
-                      <HighlightText text={p.title} searchQuery={searchQuery} />
-                    </TitleTag>
                     
                     {/* Summary - more lines for featured */}
                     <p className={`text-muted-foreground flex-1 ${isFeatured ? "text-base line-clamp-4 md:line-clamp-3" : "text-sm line-clamp-3"}`}>
@@ -540,8 +544,8 @@ export function PostList({
                       <span>{p.readingTime.text}</span>
                       {viewCounts && viewCounts.has(p.id) && viewCounts.get(p.id)! > 0 && (
                         <>
-                          <span className="hidden sm:inline" aria-hidden="true">•</span>
-                          <span className="hidden sm:inline">{formatViews(viewCounts.get(p.id)!)} views</span>
+                          <span aria-hidden="true">•</span>
+                          <span>{formatViews(viewCounts.get(p.id)!)} views</span>
                         </>
                       )}
                     </div>
@@ -594,7 +598,7 @@ export function PostList({
                     {viewCounts && viewCounts.has(p.id) && viewCounts.get(p.id)! > 0 && (
                       <>
                         <span aria-hidden="true">•</span>
-                        <span className="hidden sm:inline">{formatViews(viewCounts.get(p.id)!)} views</span>
+                        <span>{formatViews(viewCounts.get(p.id)!)} views</span>
                       </>
                     )}
                   </div>

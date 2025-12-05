@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { PostImage } from "@/data/posts";
 import { cn } from "@/lib/utils";
+import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
 
 /**
  * Props for the PostThumbnail component
@@ -101,6 +102,8 @@ export function PostThumbnail({
         className="object-cover transition-transform duration-300 hover:scale-105"
         priority={priority}
         sizes={`(max-width: 640px) 80px, (max-width: 768px) 128px, 200px`}
+        placeholder="blur"
+        blurDataURL={IMAGE_PLACEHOLDER.blur}
       />
     </div>
   );

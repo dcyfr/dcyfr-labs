@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { PhotoCard, type Photo } from "./photo-card";
+import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
 
 // Storage key for layout preference
 const STORAGE_KEY = "gallery-layout-preference";
@@ -256,6 +257,8 @@ export function PhotoGrid({
                 sizes="95vw"
                 className="object-contain"
                 priority
+                placeholder="blur"
+                blurDataURL={IMAGE_PLACEHOLDER.blur}
               />
             </div>
           )}

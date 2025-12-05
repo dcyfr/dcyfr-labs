@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { PostImage } from "@/data/posts";
+import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
 
 /**
  * PostHeroImage Component
@@ -72,7 +73,7 @@ export function PostHeroImage({ image, title, priority = true }: PostHeroImagePr
           className="object-cover"
           sizes="100vw"
           placeholder="blur"
-          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlNWU3ZWIiLz48L3N2Zz4="
+          blurDataURL={IMAGE_PLACEHOLDER.blur}
         />
       </div>
       

@@ -159,11 +159,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     totalPages: Math.ceil(sortedItems.length / archiveData.itemsPerPage),
   };
   
-  // Transform availableTags to include counts
-  const availableTagsWithCounts = sortedArchiveData.availableTags.map(tag => ({
-    tag,
-    count: sortedArchiveData.allFilteredItems.filter(post => post.tags.includes(tag)).length,
-  }));
+  // Transform availableTags to include counts and sort by count (highest first)
+  const availableTagsWithCounts = sortedArchiveData.availableTags
+    .map(tag => ({
+      tag,
+      count: sortedArchiveData.allFilteredItems.filter(post => post.tags.includes(tag)).length,
+    }))
+    .sort((a, b) => b.count - a.count);
   
   // Get available categories from all posts (for filter UI)
   // Use centralized category label mapping as single source of truth
@@ -277,7 +279,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 readingTime={readingTime}
                 categoryList={availableCategories}
                 categoryDisplayMap={categoryDisplayMap}
-                tagList={sortedArchiveData.availableTags}
+                tagList={availableTagsWithCounts.map(({ tag }) => tag)}
                 query={query}
                 sortBy={sortBy}
                 dateRange={dateRange}

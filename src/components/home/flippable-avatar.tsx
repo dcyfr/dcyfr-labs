@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
 
 /**
  * FlippableAvatar Component
@@ -138,6 +139,8 @@ export function FlippableAvatar({
             className="object-cover"
             onLoad={() => setDrewLoaded(true)}
             priority={priority}
+            placeholder="blur"
+            blurDataURL={IMAGE_PLACEHOLDER.blur}
           />
         </div>
 

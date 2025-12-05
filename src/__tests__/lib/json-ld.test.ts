@@ -508,7 +508,7 @@ describe('json-ld.ts', () => {
       const schema = { '@type': 'WebSite', name: 'Test', url: 'https://example.com' };
       const props = getJsonLdScriptProps(schema, 'test-nonce');
 
-      expect(props.dangerouslySetInnerHTML.__html).toBe(
+      expect((props.dangerouslySetInnerHTML as { __html: string }).__html).toBe(
         JSON.stringify(schema)
       );
     });
@@ -523,7 +523,7 @@ describe('json-ld.ts', () => {
       };
       const props = getJsonLdScriptProps(schema, 'test-nonce');
 
-      expect(props.dangerouslySetInnerHTML.__html).toBe(
+      expect((props.dangerouslySetInnerHTML as { __html: string }).__html).toBe(
         JSON.stringify(schema)
       );
     });
@@ -531,7 +531,7 @@ describe('json-ld.ts', () => {
     it('should handle empty object', () => {
       const props = getJsonLdScriptProps({}, 'test-nonce');
 
-      expect(props.dangerouslySetInnerHTML.__html).toBe('{}');
+      expect((props.dangerouslySetInnerHTML as { __html: string }).__html).toBe('{}');
     });
   });
 });
