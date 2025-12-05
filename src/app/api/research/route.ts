@@ -27,7 +27,6 @@ import {
 } from "@/lib/perplexity";
 import { SERVICES } from "@/lib/site-config";
 import {
-  checkApiLimitMiddleware,
   recordApiCall,
   estimatePerplexityCost,
 } from "@/lib/api-guardrails";
@@ -218,23 +217,8 @@ export async function POST(request: NextRequest) {
   }
 
   // Check API usage limits
-  const limitCheck = await checkApiLimitMiddleware("perplexity", "/api/research");
-  if (!limitCheck.allowed) {
-    console.warn("[Research API] Monthly usage limit reached");
-    return NextResponse.json(
-      {
-        error: "Service temporarily unavailable",
-        message: limitCheck.message,
-      },
-      {
-        status: limitCheck.status,
-        headers: limitCheck.retryAfter
-          ? { "Retry-After": limitCheck.retryAfter.toString() }
-          : {},
-      }
-    );
-  }
-
+  // API usage limits are enforced by the rate limiter (via trackApiUsage)
+  // to avoid duplicated checks; proceed with rate limiting and per-request checks.
   // Rate limiting check
   const clientIp = getClientIp(request);
   const rateLimitResult = await rateLimit(clientIp, RATE_LIMIT_CONFIG);

@@ -497,9 +497,9 @@ export function getJsonLdScriptProps(schema: object, nonce?: string) {
     suppressHydrationWarning: true,
   };
 
-  // Always include nonce if it was provided (even if empty string)
-  // The key insight: An empty nonce="" is better than no nonce attribute for CSP compliance
-  if (nonce !== undefined) {
+  // Only include nonce if it is a non-empty string.
+  // IMPORTANT: An empty nonce="" is NOT CSP-compliant and will cause violations.
+  if (typeof nonce === "string" && nonce.length > 0) {
     props.nonce = nonce;
   }
 
