@@ -203,12 +203,10 @@ export function formatEnrichmentSection(enrichments) {
   return markdown;
 }
 
-const sentryEnricher = {
+export default {
   querySentryIssues,
   getSentryIssueDetails,
   enrichWithSentryData,
   batchEnrich,
   formatEnrichmentSection,
 };
-
-export default sentryEnricher;

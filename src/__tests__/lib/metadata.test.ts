@@ -700,7 +700,8 @@ describe('metadata.ts', () => {
       const props = getJsonLdScriptProps(schema);
 
       expect(props.type).toBe('application/ld+json');
-      expect(props.dangerouslySetInnerHTML.__html).toBe(JSON.stringify(schema));
+      expect(props.dangerouslySetInnerHTML).toBeDefined();
+      expect(props.dangerouslySetInnerHTML!.__html).toBe(JSON.stringify(schema));
       expect(props.suppressHydrationWarning).toBe(true);
       expect(props).not.toHaveProperty('nonce');
     });
@@ -735,7 +736,10 @@ describe('metadata.ts', () => {
       };
       const props = getJsonLdScriptProps(schema);
 
-      const parsed = JSON.parse(props.dangerouslySetInnerHTML.__html);
+      expect(props.dangerouslySetInnerHTML).toBeDefined();
+      const html = props.dangerouslySetInnerHTML!.__html;
+      const htmlString = typeof html === 'string' ? html : html.toString();
+      const parsed = JSON.parse(htmlString);
       expect(parsed).toEqual(schema);
     });
   });

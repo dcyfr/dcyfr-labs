@@ -271,7 +271,7 @@ export async function getCodeQLAlerts(days = 30) {
   }
 }
 
-const githubApi = {
+export default {
   findExistingIssue,
   createIssue,
   updateIssue,
@@ -282,5 +282,3 @@ const githubApi = {
   deleteBranch,
   getCodeQLAlerts,
 };
-
-export default githubApi;

@@ -295,11 +295,10 @@ export default function proxy(request: NextRequest) {
   // Set CSP header with nonce
   response.headers.set("Content-Security-Policy", cspHeader);
   
-  // Also set nonce in response headers and as a cookie for additional reliability
+  // Set nonce as a cookie for additional reliability
   // This ensures it's available through multiple mechanisms
-  response.headers.set("x-nonce", nonce);
   response.cookies.set("x-nonce", nonce, {
-    httpOnly: false, // Allow client-side access if needed
+    httpOnly: true, // Prevent client-side access for security
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 3600, // 1 hour
