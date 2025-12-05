@@ -83,44 +83,6 @@ jobs:
           ADVISORY_COUNT: ${{ steps.check.outputs.advisory_count }}
         run: node scripts/create-security-issue.mjs
 
-      - name: Send Slack notification
-        if: steps.check.outputs.has_new_advisories == 'true' && vars.SLACK_WEBHOOK_URL
-        run: |
-          curl -X POST "${{ vars.SLACK_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "text": "🚨 Security Advisory Alert",
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "🚨 New Security Advisories Detected"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*${{ steps.check.outputs.advisory_count }}* new security advisories found for monitored packages.\n\nCheck the GitHub Issue for details and required actions."
-                  }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Issues"
-                      },
-                      "url": "https://github.com/${{ github.repository }}/issues?q=is%3Aissue+label%3Asecurity+is%3Aopen"
-                    }
-                  ]
-                }
-              ]
-            }'
-
       - name: Summary
         run: |
           echo "## Security Advisory Monitor" >> $GITHUB_STEP_SUMMARY
