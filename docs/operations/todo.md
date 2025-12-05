@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work only. Completed tasks are in **`done.md`**.
 
-**Last Updated:** December 4, 2025 (Red Team Security Analysis Complete)
+**Last Updated:** December 4, 2025 (Blog Frontmatter Improvements Complete)
 
 ---
 
@@ -147,6 +147,41 @@ Comprehensive security penetration testing and vulnerability remediation complet
 
 ---
 
+## 🟢 Recent Completion: Blog Frontmatter Improvements (Dec 4, 2025) ✅
+
+Comprehensive audit and standardization of blog post metadata:
+
+- [x] **Timezone-Safe Timestamps** ✅
+  - All 9 posts updated with full ISO timestamps (`2025-12-03T12:00:00Z`)
+  - Fixed date display bug (CVE post showing Dec 2 instead of Dec 3)
+  - Prevents timezone-related display issues across all posts
+
+- [x] **Metadata Consistency** ✅
+  - Added missing `updatedAt` field to CVE post
+  - Fixed copy-pasted image metadata in 2 posts (hardening, shipping)
+  - Added consistent `credit: "Default Blog Image"` to all placeholder images
+
+- [x] **Image Metadata Accuracy** ✅
+  - Updated alt text and captions to match actual post content
+  - Removed incorrect AI/MCP references from portfolio posts
+  - Ensured all image metadata is descriptive and relevant
+
+**Standards Established:**
+
+- Always use full timestamps: `publishedAt: "2025-12-04T12:00:00Z"`
+- Include `updatedAt` on all posts (even if same as publishedAt)
+- Image metadata must match post content (alt, caption, credit)
+- Consistent field ordering across all posts
+
+**Future Opportunities Identified:**
+
+- 8/9 posts use placeholder images - consider custom hero images
+- Add SEO fields: keywords, author, readingTime
+- Add organization fields: series, relatedPosts
+- Separate social media images: ogImage, twitterCard
+
+---
+
 ## ⚪ Backlog
 
 Items deferred until data validates need or time permits.
@@ -182,20 +217,7 @@ Items deferred until data validates need or time permits.
 
 ## 🔧 Current Short-Term Tasks (Next day)
 
-- [ ] Stabilize E2E (Mobile) - (1-2 hours)
-  - Investigate intermittent failures on Mobile Safari (WebKit) where the MobileNav trigger remains disabled until mount.
-  - Add small Playwright helper for reliably opening the mobile nav (ensures enabled state or force-click fallback).
-  - If the component mount behavior causes issues, consider refactoring `MobileNav` to remove the disabled pre-mount placeholder or render a visible, accessible fallback.
-
-- [ ] Validate E2E Production Build Runs in CI - (30-60 minutes)
-  - CI now runs Playwright with production build by default (PLAYWRIGHT_USE_PROD=1).
-  - Validate full Playwright runs against production build on an ephemeral environment.
-
-- [ ] Investigate Dev Overlay Artifact - (30-45 minutes)
-  - Dev overlay (Next.js dev overlay) previously interfered with E2E interactions. Running tests against the production build should resolve it; verify and document findings.
-
-- [x] Add Playwright utility for mobile nav and update `e2e` tests - (1 hour)
-  - Create a shared helper in `e2e/utils` to open mobile nav with robust retries and logging.
+_All current short-term tasks completed as of December 4, 2025._
 
 
 ### Performance (Data-Driven)
