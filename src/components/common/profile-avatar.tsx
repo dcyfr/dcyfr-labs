@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { User } from "lucide-react";
+import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
 
 /**
  * ProfileAvatar Component
@@ -136,6 +137,8 @@ export function ProfileAvatar({
           onError={() => setImageError(true)}
           onLoad={() => setIsLoaded(true)}
           priority={priority}
+          placeholder="blur"
+          blurDataURL={IMAGE_PLACEHOLDER.blur}
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-muted ring-2 ring-border shadow-lg">

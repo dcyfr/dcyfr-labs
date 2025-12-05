@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
 
 export interface Photo {
   url: string;
@@ -98,6 +98,8 @@ export function PhotoCard({
             "group-hover:scale-105"
           )}
           priority={priority}
+          placeholder="blur"
+          blurDataURL={IMAGE_PLACEHOLDER.blur}
         />
       </div>
 

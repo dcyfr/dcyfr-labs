@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
 import { Sparkles } from "lucide-react";
 import type { TeamMember } from "@/types/team";
 
@@ -98,6 +98,8 @@ function MemberAvatar({
         fill
         className="object-cover"
         sizes={size === "sm" ? "48px" : "64px"}
+        placeholder="blur"
+        blurDataURL={IMAGE_PLACEHOLDER.blur}
       />
     </div>
   );

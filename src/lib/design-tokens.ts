@@ -623,3 +623,32 @@ export type AnimationDuration = keyof typeof ANIMATIONS;
 
 /** Type for word spacing variants */
 export type WordSpacingVariant = keyof typeof WORD_SPACING;
+
+// ============================================================================
+// IMAGE PLACEHOLDERS
+// ============================================================================
+
+/**
+ * Standard blur placeholder for Next.js Image components
+ * Provides smooth loading experience with subtle gray placeholder
+ *
+ * Usage:
+ * - Add placeholder="blur" to Image component
+ * - Add blurDataURL={IMAGE_PLACEHOLDER.blur} for inline images
+ * - For external images, consider using plaiceholder library
+ *
+ * @example
+ * ```tsx
+ * <Image
+ *   src="/images/avatar.jpg"
+ *   alt="Avatar"
+ *   fill
+ *   placeholder="blur"
+ *   blurDataURL={IMAGE_PLACEHOLDER.blur}
+ * />
+ * ```
+ */
+export const IMAGE_PLACEHOLDER = {
+  /** Standard gray blur placeholder (matches muted background) */
+  blur: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlNWU3ZWIiLz48L3N2Zz4=",
+} as const;
