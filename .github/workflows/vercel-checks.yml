@@ -16,7 +16,7 @@ on:
 
 # Cancel in-progress runs for same deployment
 concurrency:
-  group: vercel-checks-${{ github.event.deployment.id || inputs.deployment_id }}
+  group: vercel-checks-${{ inputs.deployment_id || github.event.deployment.id }}
   cancel-in-progress: true
 
 jobs:
@@ -57,7 +57,7 @@ jobs:
         id: create-bundle-check
         run: |
           RESPONSE=$(curl -s -X POST \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -75,7 +75,7 @@ jobs:
         if: steps.create-bundle-check.outputs.check_id
         run: |
           curl -s -X PATCH \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks/${{ steps.create-bundle-check.outputs.check_id }}" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks/${{ steps.create-bundle-check.outputs.check_id }}" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -125,7 +125,7 @@ jobs:
           OUTPUT=$(cat bundle-check-output.txt | sed 's/"/\\"/g' | awk '{printf "%s\\n", $0}')
           
           curl -s -X PATCH \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks/${{ steps.create-bundle-check.outputs.check_id }}" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks/${{ steps.create-bundle-check.outputs.check_id }}" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{
@@ -145,7 +145,7 @@ jobs:
         id: create-lighthouse-check
         run: |
           RESPONSE=$(curl -s -X POST \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -163,7 +163,7 @@ jobs:
         if: steps.create-lighthouse-check.outputs.check_id
         run: |
           curl -s -X PATCH \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks/${{ steps.create-lighthouse-check.outputs.check_id }}" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks/${{ steps.create-lighthouse-check.outputs.check_id }}" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -247,7 +247,7 @@ jobs:
           OUTPUT=$(cat lighthouse-output.txt | tail -n 50 | sed 's/"/\\"/g' | awk '{printf "%s\\n", $0}')
           
           curl -s -X PATCH \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks/${{ steps.create-lighthouse-check.outputs.check_id }}" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks/${{ steps.create-lighthouse-check.outputs.check_id }}" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{
@@ -267,7 +267,7 @@ jobs:
         id: create-baseline-check
         run: |
           RESPONSE=$(curl -s -X POST \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{
@@ -339,7 +339,7 @@ jobs:
           OUTPUT=$(cat baseline-report.txt | sed 's/"/\\"/g' | awk '{printf "%s\\n", $0}')
           
           curl -s -X PATCH \
-            "https://api.vercel.com/v1/deployments/${{ github.event.deployment.id }}/checks/${{ steps.create-baseline-check.outputs.check_id }}" \
+            "https://api.vercel.com/v1/deployments/${{ env.DEPLOYMENT_ID }}/checks/${{ steps.create-baseline-check.outputs.check_id }}" \
             -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{
@@ -367,7 +367,7 @@ jobs:
           echo "Baseline: ${{ steps.baseline-check.outputs.conclusion }}"
           echo ""
           echo "Deployment: ${{ env.DEPLOYMENT_URL }}"
-          echo "View checks: https://vercel.com/${{ github.repository_owner }}/deployments/${{ github.event.deployment.id }}"
+          echo "View checks: https://vercel.com/${{ github.repository_owner }}/deployments/${{ env.DEPLOYMENT_ID }}"
       
       - name: Fail if Critical Checks Failed
         if: |
