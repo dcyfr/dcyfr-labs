@@ -3,24 +3,38 @@ name: Vercel Deployment Checks
 # Trigger on Vercel deployment status changes
 on:
   deployment_status:
+  workflow_dispatch:
+    inputs:
+      deployment_url:
+        description: 'Deployment URL to validate'
+        required: true
+        type: string
+      deployment_id:
+        description: 'Vercel deployment ID'
+        required: true
+        type: string
 
 # Cancel in-progress runs for same deployment
 concurrency:
-  group: vercel-checks-${{ github.event.deployment.id }}
+  group: vercel-checks-${{ github.event.deployment.id || inputs.deployment_id }}
   cancel-in-progress: true
 
 jobs:
-  # Only run when deployment succeeds and is from Vercel
+  # Only run when deployment succeeds and is from Vercel, OR manually triggered
   validate:
     name: Performance Validation
     if: |
-      github.event.deployment_status.state == 'success' &&
-      github.event.deployment_status.environment_url != ''
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment_status.environment_url != '')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       deployments: write
       contents: read
+    env:
+      DEPLOYMENT_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.deployment_url || github.event.deployment_status.environment_url }}
+      DEPLOYMENT_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.deployment_id || github.event.deployment.id }}
     
     steps:
       - name: Checkout code
@@ -156,7 +170,7 @@ jobs:
               "status": "running",
               "output": {
                 "summary": "Running Lighthouse audits...",
-                "text": "Auditing deployment: ${{ github.event.deployment_status.environment_url }}"
+                "text": "Auditing deployment: ${{ env.DEPLOYMENT_URL }}"
               }
             }'
       
@@ -168,7 +182,7 @@ jobs:
         continue-on-error: true
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          DEPLOYMENT_URL: ${{ github.event.deployment_status.environment_url }}
+          DEPLOYMENT_URL: ${{ env.DEPLOYMENT_URL }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           echo "🔦 Running Lighthouse audits..."
@@ -352,7 +366,7 @@ jobs:
           echo "Lighthouse: ${{ steps.lighthouse.outputs.conclusion }}"
           echo "Baseline: ${{ steps.baseline-check.outputs.conclusion }}"
           echo ""
-          echo "Deployment: ${{ github.event.deployment_status.environment_url }}"
+          echo "Deployment: ${{ env.DEPLOYMENT_URL }}"
           echo "View checks: https://vercel.com/${{ github.repository_owner }}/deployments/${{ github.event.deployment.id }}"
       
       - name: Fail if Critical Checks Failed
