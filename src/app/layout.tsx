@@ -84,9 +84,14 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
     types: {
       "application/atom+xml": [
-        { url: `${SITE_URL}/feed`, title: `${SITE_TITLE} — All Content` },
+        { url: `${SITE_URL}/activity/feed`, title: `${SITE_TITLE} — Activity` },
         { url: `${SITE_URL}/blog/feed`, title: `${SITE_TITLE} — Blog` },
-        { url: `${SITE_URL}/portfolio/feed`, title: `${SITE_TITLE} — Portfolio` },
+        { url: `${SITE_URL}/work/feed`, title: `${SITE_TITLE} — Portfolio` },
+      ],
+      "application/feed+json": [
+        { url: `${SITE_URL}/activity/feed.json`, title: `${SITE_TITLE} — Activity (JSON)` },
+        { url: `${SITE_URL}/blog/feed.json`, title: `${SITE_TITLE} — Blog (JSON)` },
+        { url: `${SITE_URL}/work/feed.json`, title: `${SITE_TITLE} — Portfolio (JSON)` },
       ],
     },
   },

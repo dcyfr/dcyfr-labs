@@ -9,6 +9,7 @@
 
 import { Post } from "@/data/posts";
 import { Project } from "@/data/projects";
+import { ChangelogEntry } from "@/data/changelog";
 import { SITE_URL, AUTHOR_NAME, AUTHOR_EMAIL, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/site-config";
 import { mdxToHtml } from "@/lib/mdx-to-html";
 
@@ -50,7 +51,60 @@ export type FeedConfig = {
   };
 };
 
-export type FeedFormat = "rss" | "atom";
+export type FeedFormat = "rss" | "atom" | "json";
+
+// ============================================================================
+// JSON Feed Types (JSON Feed 1.1 spec)
+// ============================================================================
+
+export type JsonFeed = {
+  version: string; // "https://jsonfeed.org/version/1.1"
+  title: string;
+  home_page_url?: string;
+  feed_url?: string;
+  description?: string;
+  user_comment?: string;
+  icon?: string;
+  favicon?: string;
+  authors?: Array<{
+    name?: string;
+    url?: string;
+    avatar?: string;
+  }>;
+  language?: string;
+  expired?: boolean;
+  hubs?: Array<{
+    type: string;
+    url: string;
+  }>;
+  items: Array<{
+    id: string;
+    url?: string;
+    external_url?: string;
+    title?: string;
+    content_html?: string;
+    content_text?: string;
+    summary?: string;
+    image?: string;
+    banner_image?: string;
+    date_published?: string; // ISO 8601
+    date_modified?: string; // ISO 8601
+    authors?: Array<{
+      name?: string;
+      url?: string;
+      avatar?: string;
+    }>;
+    tags?: string[];
+    language?: string;
+    attachments?: Array<{
+      url: string;
+      mime_type: string;
+      title?: string;
+      size_in_bytes?: number;
+      duration_in_seconds?: number;
+    }>;
+  }>;
+};
 
 // ============================================================================
 // Utilities
@@ -172,6 +226,31 @@ export function projectToFeedItem(project: Project, basePath: string = '/work'):
           type: inferImageMimeType(project.image.url),
         }
       : undefined,
+  };
+}
+
+/**
+ * Convert a changelog entry to a feed item
+ */
+export function changelogToFeedItem(entry: ChangelogEntry): FeedItem {
+  const htmlContent = entry.description
+    ? `<p>${escapeXml(entry.description)}</p>`
+    : "";
+  
+  const typeLabel = entry.type.charAt(0).toUpperCase() + entry.type.slice(1);
+  
+  return {
+    id: absoluteUrl(`/activity#${entry.id}`),
+    title: `[${typeLabel}] ${entry.title}`,
+    description: entry.description || entry.title,
+    content: htmlContent,
+    link: entry.href ? absoluteUrl(entry.href) : absoluteUrl("/activity"),
+    published: new Date(entry.date),
+    categories: [entry.type, "changelog"],
+    author: {
+      name: AUTHOR_NAME,
+      email: AUTHOR_EMAIL,
+    },
   };
 }
 
@@ -324,6 +403,60 @@ ${itemsXml}
 </feed>`;
 }
 
+/**
+ * Generate JSON Feed 1.1
+ */
+export function generateJsonFeed(items: FeedItem[], config: FeedConfig): string {
+  const feed: JsonFeed = {
+    version: "https://jsonfeed.org/version/1.1",
+    title: config.title,
+    home_page_url: config.link,
+    feed_url: config.feedUrl,
+    description: config.description,
+    icon: `${SITE_URL}/icons/icon-512x512.png`,
+    favicon: `${SITE_URL}/favicon.ico`,
+    language: config.language || "en-us",
+    authors: config.author
+      ? [
+          {
+            name: config.author.name,
+            url: SITE_URL,
+          },
+        ]
+      : undefined,
+    items: items.map((item) => ({
+      id: item.id,
+      url: item.link,
+      title: item.title,
+      content_html: item.content,
+      summary: item.description,
+      image: item.image?.url,
+      date_published: item.published.toISOString(),
+      date_modified: item.updated?.toISOString(),
+      authors: item.author
+        ? [
+            {
+              name: item.author.name,
+              url: SITE_URL,
+            },
+          ]
+        : undefined,
+      tags: item.categories,
+      attachments: item.image
+        ? [
+            {
+              url: item.image.url,
+              mime_type: item.image.type,
+              size_in_bytes: item.image.length,
+            },
+          ]
+        : undefined,
+    })),
+  };
+  
+  return JSON.stringify(feed, null, 2);
+}
+
 // ============================================================================
 // High-Level Feed Builders
 // ============================================================================
@@ -333,7 +466,7 @@ ${itemsXml}
  */
 export async function buildBlogFeed(
   posts: readonly Post[],
-  format: FeedFormat = "rss",
+  format: FeedFormat = "atom",
   limit: number = 20
 ): Promise<string> {
   const sortedPosts = [...posts]
@@ -347,7 +480,7 @@ export async function buildBlogFeed(
     title: `${SITE_TITLE} - Blog`,
     description: "Articles and notes on web development, security, and TypeScript.",
     link: `${SITE_URL}/blog`,
-    feedUrl: `${SITE_URL}/blog/feed`,
+    feedUrl: `${SITE_URL}/blog/feed${format === "json" ? ".json" : ""}`,
     language: "en-us",
     author: {
       name: AUTHOR_NAME,
@@ -355,6 +488,7 @@ export async function buildBlogFeed(
     },
   };
   
+  if (format === "json") return generateJsonFeed(items, config);
   return format === "rss" ? generateRssFeed(items, config) : generateAtomFeed(items, config);
 }
 
@@ -364,7 +498,7 @@ export async function buildBlogFeed(
  */
 export async function buildProjectsFeed(
   projects: readonly Project[],
-  format: FeedFormat = "rss",
+  format: FeedFormat = "atom",
   limit: number = 20,
   basePath: string = "/work"
 ): Promise<string> {
@@ -378,7 +512,7 @@ export async function buildProjectsFeed(
     title: `${SITE_TITLE} - Our Work`,
     description: "Our projects, open-source contributions, and creative works.",
     link: `${SITE_URL}${basePath}`,
-    feedUrl: `${SITE_URL}${basePath}/feed`,
+    feedUrl: `${SITE_URL}${basePath}/feed${format === "json" ? ".json" : ""}`,
     language: "en-us",
     author: {
       name: AUTHOR_NAME,
@@ -386,6 +520,7 @@ export async function buildProjectsFeed(
     },
   };
   
+  if (format === "json") return generateJsonFeed(items, config);
   return format === "rss" ? generateRssFeed(items, config) : generateAtomFeed(items, config);
 }
 
@@ -395,7 +530,7 @@ export async function buildProjectsFeed(
 export async function buildCombinedFeed(
   posts: readonly Post[],
   projects: readonly Project[],
-  format: FeedFormat = "rss",
+  format: FeedFormat = "atom",
   limit: number = 20
 ): Promise<string> {
   // Convert posts and projects to feed items
@@ -418,7 +553,7 @@ export async function buildCombinedFeed(
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     link: SITE_URL,
-    feedUrl: `${SITE_URL}/feed`,
+    feedUrl: `${SITE_URL}/feed${format === "json" ? ".json" : ""}`,
     language: "en-us",
     author: {
       name: AUTHOR_NAME,
@@ -426,5 +561,52 @@ export async function buildCombinedFeed(
     },
   };
   
+  if (format === "json") return generateJsonFeed(allItems, config);
+  return format === "rss" ? generateRssFeed(allItems, config) : generateAtomFeed(allItems, config);
+}
+
+/**
+ * Build an activity feed from posts, projects, and changelog
+ */
+export async function buildActivityFeed(
+  posts: readonly Post[],
+  projects: readonly Project[],
+  changelog: readonly ChangelogEntry[],
+  format: FeedFormat = "atom",
+  limit: number = 50
+): Promise<string> {
+  // Convert all content to feed items
+  const postItems = await Promise.all(
+    posts
+      .filter((p) => !p.draft)
+      .map(postToFeedItem)
+  );
+  
+  const projectItems = projects
+    .filter((p) => !p.hidden)
+    .map((p) => projectToFeedItem(p));
+  
+  const changelogItems = changelog
+    .filter((e) => e.visible !== false)
+    .map(changelogToFeedItem);
+  
+  // Combine and sort by published date
+  const allItems = [...postItems, ...projectItems, ...changelogItems]
+    .sort((a, b) => b.published.getTime() - a.published.getTime())
+    .slice(0, limit);
+  
+  const config: FeedConfig = {
+    title: `${SITE_TITLE} — Activity`,
+    description: "Complete timeline of blog posts, projects, and site updates.",
+    link: `${SITE_URL}/activity`,
+    feedUrl: `${SITE_URL}/activity/feed${format === "json" ? ".json" : ""}`,
+    language: "en-us",
+    author: {
+      name: AUTHOR_NAME,
+      email: AUTHOR_EMAIL,
+    },
+  };
+  
+  if (format === "json") return generateJsonFeed(allItems, config);
   return format === "rss" ? generateRssFeed(allItems, config) : generateAtomFeed(allItems, config);
 }

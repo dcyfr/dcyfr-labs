@@ -54,10 +54,10 @@ export function SiteFooter() {
               Contact
             </a>
             <a
-              href="/feed"
+              href="/feeds"
               className="hover:underline underline-offset-4 will-change-auto whitespace-nowrap px-1.5 py-1"
             >
-              Feed
+              Feeds
             </a>
             <a
               href="/sitemap.xml"
