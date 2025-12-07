@@ -6,7 +6,7 @@ import { createPageMetadata } from "@/lib/metadata";
 import dynamic from "next/dynamic";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
-import { ContactForm, ContactFormErrorBoundary } from "@/components/common";
+import { ContactForm, ContactFormErrorBoundary, SmoothScrollToHash } from "@/components/common";
 
 const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
@@ -32,6 +32,7 @@ export default async function ContactPage() {
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
       <div className="space-y-10 md:space-y-14">
       <section id="hero">
       <PageHero

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import mermaid from "mermaid";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * Mermaid Diagram Component
@@ -122,8 +123,8 @@ export function Mermaid({
         role="alert"
         aria-live="polite"
       >
-        {/* eslint-disable-next-line no-restricted-syntax */}
-        <p className="text-sm font-semibold text-destructive mb-2">
+        { }
+        <p className={cn(TYPOGRAPHY.label.small, "text-destructive mb-2")}>
           Mermaid Diagram Error
         </p>
         <pre className="text-xs text-muted-foreground overflow-x-auto">

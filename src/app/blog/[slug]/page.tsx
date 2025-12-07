@@ -9,7 +9,7 @@ import { getPostShares } from "@/lib/shares";
 import { extractHeadings } from "@/lib/toc";
 import { headers } from "next/headers";
 import { getArticleData } from "@/lib/article";
-import { CONTAINER_WIDTHS } from "@/lib/design-tokens";
+import { CONTAINER_WIDTHS, CONTAINER_PADDING, CONTAINER_VERTICAL_PADDING } from "@/lib/design-tokens";
 import {
   createArticlePageMetadata,
   createArticleSchema,
@@ -195,15 +195,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
 
       {/* Desktop Layout: Sidebar + Content */}
-      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8`}>
+      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto ${CONTAINER_PADDING} pt-24 md:pt-28 lg:pt-32 pb-8 md:pb-12`}>
         <div className="grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start">
           {/* Left Sidebar (desktop only) */}
           <BlogPostSidebar
             headings={headings}
             slug={post.slug}
+            authors={post.authors}
             postTitle={post.title}
             metadata={{
               publishedAt: new Date(post.publishedAt),
+              updatedAt: post.updatedAt ? new Date(post.updatedAt) : undefined,
               readingTime: post.readingTime.text,
               viewCount: viewCount ?? undefined,
               tags: post.tags,
@@ -236,6 +238,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <ArticleHeader
                 title={post.title}
                 subtitle={post.subtitle}
+                backgroundImage={post.image ? {
+                  url: post.image.url,
+                  alt: post.image.alt || `Hero image for ${post.title}`,
+                  position: (post.image.position === 'background' ? 'center' : post.image.position) || 'center',
+                  priority: post.featured || false, // Prioritize hero image loading for featured posts
+                } : undefined}
               >
                 {/* Metadata shown only when sidebar is hidden */}
                 <HideWhenSidebarVisible>

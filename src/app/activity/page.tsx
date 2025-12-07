@@ -1,22 +1,14 @@
 import type { Metadata } from "next";
-import { posts } from "@/data/posts";
-import { visibleProjects } from "@/data/projects";
-import { visibleChangelog } from "@/data/changelog";
 import { headers } from "next/headers";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
-import { CONTAINER_WIDTHS, TYPOGRAPHY } from "@/lib/design-tokens";
+import { CONTAINER_WIDTHS, CONTAINER_PADDING, CONTAINER_VERTICAL_PADDING } from "@/lib/design-tokens";
+import { PageHero } from "@/components/layouts/page-hero";
 import { ActivityPageClient } from "./activity-client";
-import {
-  transformPosts,
-  transformProjects,
-  transformChangelog,
-  aggregateActivities,
-} from "@/lib/activity";
 
 const pageTitle = "Activity";
 const pageDescription =
-  "Timeline of recent blog posts, project updates, GitHub commits, and site activity.";
+  "Real-time timeline of blog posts, project updates, trending content, milestones, and GitHub activity.";
 
 export const metadata: Metadata = createPageMetadata({
   title: pageTitle,
@@ -24,26 +16,41 @@ export const metadata: Metadata = createPageMetadata({
   path: "/activity",
 });
 
-// Enable ISR for activity page
-export const revalidate = 3600; // 1 hour
+// Enable ISR for activity page - revalidate every 5 minutes
+export const revalidate = 300;
 
 export default async function ActivityPage() {
   // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
 
-  // Transform all content into activity items
-  const blogActivities = transformPosts(
-    posts.filter((p) => !p.archived && !p.draft)
-  );
-  const projectActivities = transformProjects([...visibleProjects]);
-  const changelogActivities = transformChangelog(visibleChangelog);
+  // Fetch activities from API
+  // Use internal URL to avoid network overhead
+  // In development, use localhost. In production, use VERCEL_URL or SITE_URL
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : SITE_URL;
+  
+  let allActivities: any[] = [];
+  let error: string | null = null;
 
-  // Aggregate all activities
-  const allActivities = aggregateActivities([
-    ...blogActivities,
-    ...projectActivities,
-    ...changelogActivities,
-  ]);
+  try {
+    const response = await fetch(`${baseUrl}/api/activity?limit=100`, {
+      next: { revalidate: 300 }, // Cache for 5 minutes
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      allActivities = data.activities || [];
+    } else {
+      error = `Failed to fetch activities: ${response.status}`;
+      console.error("[Activity Page]", error);
+    }
+  } catch (err) {
+    error = "Failed to connect to activity API";
+    console.error("[Activity Page]", err);
+  }
 
   // JSON-LD structured data
   const jsonLd = {
@@ -66,23 +73,42 @@ export default async function ActivityPage() {
   // Serialize activities for client component
   const serializedActivities = allActivities.map((activity) => ({
     ...activity,
-    timestamp: activity.timestamp.toISOString(),
+    timestamp:
+      typeof activity.timestamp === "string"
+        ? activity.timestamp
+        : activity.timestamp?.toISOString?.() || new Date().toISOString(),
   }));
 
   return (
     <>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
 
-      <div className={`container ${CONTAINER_WIDTHS.standard} mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8`}>
-        {/* Header */}
-        <div id="activity-header" className="mb-8">
-          <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
-          <p className="text-muted-foreground">{pageDescription}</p>
-        </div>
+      {/* Header */}
+      <div id="activity-header">
+        <PageHero
+          title={pageTitle}
+          description={pageDescription}
+          variant="homepage"
+        />
+      </div>
+
+      <div
+        className={`container ${CONTAINER_WIDTHS.standard} mx-auto ${CONTAINER_PADDING} pb-8`}
+      >
+
+        {/* Error State */}
+        {error && (
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 mb-8">
+            <p className="text-sm text-destructive">{error}</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Activities may be temporarily unavailable. Please try again later.
+            </p>
+          </div>
+        )}
 
         {/* Activity Feed */}
         <div id="activity-feed">
-        <ActivityPageClient activities={serializedActivities} />
+          <ActivityPageClient activities={serializedActivities} />
         </div>
       </div>
     </>

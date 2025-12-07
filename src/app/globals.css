@@ -142,12 +142,11 @@ svg {
      @see /docs/ai/DESIGN_SYSTEM.md for usage guidelines
      ============================================================================ */
   
-  /* Duration Scale */
+  /* Duration Scale - Standardized to 3 core values */
   --duration-instant: 0ms;
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 400ms;
-  --duration-slower: 600ms;
+  --duration-fast: 150ms;     /* Quick interactions (hover, focus) */
+  --duration-normal: 300ms;   /* Standard transitions (content reveal, modal) */
+  --duration-slow: 500ms;     /* Complex animations (page transitions) */
   
   /* Easing Functions */
   --ease-default: cubic-bezier(0.4, 0, 0.2, 1);    /* Smooth in-out */
@@ -257,6 +256,7 @@ svg {
   }
   
   /* CSS fallback for browsers without View Transitions API */
+  /* Selective transitions for better performance - only target elements that change during theme switch */
   html:not(.view-transitions-supported) {
     /* Main background transition */
     body {
@@ -265,21 +265,34 @@ svg {
                   background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Text color transitions for all elements */
-    * {
+    /* Target specific UI elements for theme transitions */
+    nav,
+    header,
+    footer,
+    main,
+    article,
+    section,
+    [data-radix-scroll-area-viewport],
+    .card,
+    [role="navigation"],
+    [role="banner"],
+    [role="contentinfo"] {
       transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1),
                   background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
-                  border-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
-                  fill 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* SVG and icon elements */
+    svg,
+    [class*="icon"] {
+      transition: fill 150ms cubic-bezier(0.4, 0, 0.2, 1),
                   stroke 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Preserve existing transforms and other transitions */
-    *[class*="transition-transform"],
-    *[class*="transition-all"],
-    *[class*="transition-opacity"] {
-      transition-duration: 150ms;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Preserve existing animation transitions - don't override */
+    [class*="transition-"],
+    [class*="animate-"] {
+      /* Keep existing transition definitions intact */
     }
   }
   
@@ -487,49 +500,55 @@ svg {
   }
 
   /* Star bullets for unordered lists */
-  :where([data-slot="card"] ul, .prose ul) {
+  :where([data-slot="card"] ul) {
     list-style-type: disc;
+    padding-left: 1.5rem;
   }
 
-  :where([data-slot="card"] ul li, .prose ul li)::marker {
+  /* Ordered lists - add left padding */
+  :where([data-slot="card"] ol) {
+    padding-left: 1.5rem;
+  }
+
+  :where([data-slot="card"] ul li)::marker {
     content: "\2726\2000";
     font-size: 0.9em;
     color: currentColor;
   }
 
   /* Task lists - remove bullets, start with checkbox */
-  :where([data-slot="card"] ul, .prose ul) li:has(> input[type="checkbox"]) {
+  :where([data-slot="card"] ul) li:has(> input[type="checkbox"]) {
     list-style-type: none;
   }
 
-  :where([data-slot="card"] ul li, .prose ul li):has(> input[type="checkbox"])::marker {
+  :where([data-slot="card"] ul li):has(> input[type="checkbox"])::marker {
     content: none;
   }
 
   /* Task list checkboxes */
-  :where([data-slot="card"] ul, .prose ul) li > input[type="checkbox"] {
+  :where([data-slot="card"] ul) li > input[type="checkbox"] {
     margin-right: 0.5em;
     margin-left: 0;
     vertical-align: middle;
   }
 
   /* Dim and strikethrough completed task text */
-  :where([data-slot="card"] ul, .prose ul) li:has(> input[type="checkbox"]:checked) {
+  :where([data-slot="card"] ul) li:has(> input[type="checkbox"]:checked) {
     opacity: 0.6;
     text-decoration: line-through;
   }
 
   /* Hide bullet points when list item starts with an icon (SVG) */
-  :where([data-slot="card"] ul, .prose ul) li:has(> svg:first-child) {
+  :where([data-slot="card"] ul) li:has(> svg:first-child) {
     list-style-type: none;
   }
 
-  :where([data-slot="card"] ul li, .prose ul li):has(> svg:first-child)::marker {
+  :where([data-slot="card"] ul li):has(> svg:first-child)::marker {
     content: none;
   }
 
   /* Add spacing after SVG icons in list items */
-  :where([data-slot="card"] ul, .prose ul) li > svg:first-child {
+  :where([data-slot="card"] ul) li > svg:first-child {
     margin-right: 0.5em;
     vertical-align: middle;
   }
@@ -746,7 +765,30 @@ svg {
   transition-timing-function: var(--ease-out);
 }
 
-/* Color/background transitions (for theme, hover states) */
+/* Optimized transition utilities for specific use cases */
+
+/* Movement - transform only (best for hover, interactive elements) */
+.transition-movement {
+  transition-property: transform;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+}
+
+/* Appearance - opacity + transform (best for reveal animations) */
+.transition-appearance {
+  transition-property: opacity, transform;
+  transition-duration: var(--duration-normal);
+  transition-timing-function: var(--ease-default);
+}
+
+/* Theme - colors only (best for theme changes, hover states) */
+.transition-theme {
+  transition-property: color, background-color, border-color, fill, stroke;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+}
+
+/* Legacy alias - use .transition-theme instead */
 .transition-colors {
   transition-property: color, background-color, border-color, fill, stroke;
   transition-duration: var(--duration-fast);
@@ -1080,13 +1122,20 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 
 /* Prose typography improvements */
 .prose h1,
-.prose h2,
-.prose h3 {
+.prose h2 {
   font-family: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   font-weight: 700;
-  line-height: 1.25;
-  margin-top: 2.5rem;
+  line-height: 1.3;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.5px;
+}
+
+.prose h3,
+.prose h4 {
+  margin-top: 2rem;
   margin-bottom: 1rem;
+  letter-spacing: -0.3px;
 }
 
 /* Remove top margin from first heading to prevent extra spacing at top of page */
@@ -1113,8 +1162,10 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 }
 
 .prose p {
-  line-height: 1.75;
-  margin-bottom: 1rem;
+  line-height: 1.9;
+  letter-spacing: 0.3px;
+  margin-bottom: 1.5rem;
+  word-spacing: 0.05em;
 }
 
 /* Mobile typography enhancements */
@@ -1124,19 +1175,23 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   }
 
   .prose p {
-    line-height: 1.85; /* More breathing room on mobile */
-    margin-bottom: 1.25rem; /* Better paragraph separation */
-  }
-
-  .prose h1 {
-    font-size: 2rem; /* 32px - slightly smaller than desktop */
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-
+    line-height: 1.95; /* More breathing room on mobile */
+    margin-bottom: 1.75rem; /* Better paragraph separation */
+    letter-spacing: 0.4px;
+    word-spacing: 0.08em;
   .prose h2 {
     font-size: 1.75rem; /* 28px */
-    margin-top: 2.5rem; /* More section separation */
+    margin-top: 3rem; /* More section separation */
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.5px;
+  }
+
+  .prose h3 {
+    font-size: 1.375rem; /* 22px */
+    margin-top: 2.25rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.3px;
+  } margin-top: 2.5rem; /* More section separation */
     margin-bottom: 1rem;
   }
 
@@ -1161,17 +1216,23 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   }
 
   /* Lists with default browser spacing */
-  .prose ul,
-  .prose ol {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    margin-left: 1.5rem;
+  .prose ul {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
     padding-left: 1.5rem;
   }
 
+  .prose ol {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    margin-left: 1.5rem;
+    list-style-position: outside;
+  }
+
   .prose li {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.8;
   }
 
   /* Blockquotes more prominent */
@@ -1180,8 +1241,114 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
     margin-bottom: 1.5rem;
     padding-left: 1rem;
   }
+
+  /* Details/Summary (Collapsible FAQ) Styling */
+  .prose details {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: hsl(var(--card));
+  }
+
+  .prose details summary {
+    cursor: pointer;
+    font-weight: bold !important;
+    font-size: 1.25rem !important;
+    list-style: none;
+    user-select: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .prose details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .prose details summary::before {
+    content: '▶';
+    margin-right: 0.5rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+
+  .prose details[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  .prose details > *:not(summary) {
+    margin-left: 1.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .prose details > summary + * {
+    margin-top: 1rem;
+  }
 }
 
+/* Desktop prose enhancements */
+@media (min-width: 769px) {
+  .prose {
+    line-height: 1.9;
+  }
+
+  .prose p {
+    line-height: 1.9;
+    letter-spacing: 0.3px;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose strong {
+    font-weight: 600;
+  }
+
+  .prose em {
+    font-style: italic;
+  }
+
+  /* Better table readability */
+  .prose table {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose thead th {
+    padding: 0.75rem 1rem;
+    line-height: 1.5;
+  }
+
+  .prose tbody td {
+    padding: 0.75rem 1rem;
+    line-height: 1.6;
+  }
+
+  /* Better blockquote visibility and spacing */
+  .prose blockquote {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding-left: 1.25rem;
+    line-height: 1.8;
+  }
+
+  .prose blockquote p {
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  /* Code block improvements */
+  .prose pre {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Horizontal rule better spacing */
+  .prose hr {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    opacity: 0.5;
+  }
+}
 
 /* GitHub Heatmap Custom Styles */
 .react-calendar-heatmap .color-empty {
@@ -1645,6 +1812,19 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
 
 .mermaid .label {
   color: hsl(var(--foreground)) !important;
+}
+
+/* ===================================================================
+   FAQ Accordion Styling
+   ================================================================ */
+
+/**
+ * Accordion trigger button styling for FAQ questions.
+ * Ensures bold, larger text for better readability.
+ */
+button[data-state][data-radix-collection-item] {
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
 }
 
 /* Dark theme: Primary color-aware design */

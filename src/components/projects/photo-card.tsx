@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { HOVER_EFFECTS, IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, IMAGE_PLACEHOLDER, ANIMATION } from "@/lib/design-tokens";
 
 export interface Photo {
   url: string;
@@ -94,7 +94,8 @@ export function PhotoCard({
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className={cn(
-            "object-cover transition-transform duration-300",
+            "object-cover transition-transform",
+            ANIMATION.duration.normal,
             "group-hover:scale-105"
           )}
           priority={priority}
@@ -106,8 +107,9 @@ export function PhotoCard({
       {/* Caption overlay (shown on hover) */}
       {photo.caption && (
         <div className={cn(
-          "absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent",
-          "px-3 py-2 translate-y-full transition-transform duration-300",
+          "absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent",
+          "px-3 py-2 translate-y-full transition-transform",
+          ANIMATION.duration.normal,
           "group-hover:translate-y-0"
         )}>
           <p className="text-sm text-white line-clamp-2">

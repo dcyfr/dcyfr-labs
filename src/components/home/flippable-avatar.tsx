@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
+import { IMAGE_PLACEHOLDER, ANIMATION } from "@/lib/design-tokens";
 
 /**
  * FlippableAvatar Component
@@ -112,23 +112,41 @@ export function FlippableAvatar({
       <div
         className={cn(
           "relative w-full h-full transition-transform duration-700 ease-out",
-          animated && !isAnimating && "hover:scale-105",
+          animated && !isAnimating && "hover:scale-105 *:transition-transform",
           isLoaded ? "opacity-100" : "opacity-0"
         )}
         style={{
           transformStyle: "preserve-3d",
-          transform: isFlipped 
-            ? "rotateY(180deg)" 
-            : "rotateY(0deg)",
+          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           transition: "transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* Front face - Drew */}
+        {/* Front face - DCYFR */}
         <div
           className="absolute inset-0 rounded-full overflow-hidden ring-2 ring-border shadow-lg"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
+          }}
+        >
+          <Image
+            src="/images/dcyfr-avatar.svg"
+            alt="DCYFR's avatar"
+            fill
+            sizes={sizeClass.sizes}
+            className="object-cover"
+            onLoad={() => setDcyfrLoaded(true)}
+            priority={false}
+          />
+        </div>
+
+        {/* Back face - Drew */}
+        <div
+          className="absolute inset-0 rounded-full overflow-hidden ring-2 ring-border shadow-lg"
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
           }}
         >
           <Image
@@ -143,32 +161,13 @@ export function FlippableAvatar({
             blurDataURL={IMAGE_PLACEHOLDER.blur}
           />
         </div>
-
-        {/* Back face - DCYFR */}
-        <div
-          className="absolute inset-0 rounded-full overflow-hidden ring-2 ring-border shadow-lg"
-          style={{
-            backfaceVisibility: "hidden",
-            WebkitBackfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-          }}
-        >
-          <Image
-            src="/images/dcyfr-avatar.svg"
-            alt="DCYFR's avatar"
-            fill
-            sizes={sizeClass.sizes}
-            className="object-cover"
-            onLoad={() => setDcyfrLoaded(true)}
-            priority={false}
-          />
-        </div>
       </div>
 
       {/* Subtle hint indicator */}
-      <div 
+      <div
         className={cn(
-          "absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs text-muted-foreground/50 whitespace-nowrap transition-opacity duration-300",
+          "absolute -bottom-1 left-1/2 -translate-x-1/2 text-xs text-muted-foreground/50 whitespace-nowrap transition-opacity",
+          ANIMATION.duration.normal,
           isAnimating ? "opacity-0" : "opacity-0 group-hover:opacity-100"
         )}
       >

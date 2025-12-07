@@ -117,7 +117,7 @@ export function AvailabilityBanner({ className }: { className?: string }) {
           <span className="absolute inset-0 rounded-full bg-green-500" />
         </div>
         <div className="flex-1">
-          <div className="font-semibold mb-1">
+          <div className={cn(TYPOGRAPHY.label.standard, "mb-1")}>
             We&apos;re currently available for new projects!
           </div>
           <p className="text-sm text-muted-foreground mb-4">
