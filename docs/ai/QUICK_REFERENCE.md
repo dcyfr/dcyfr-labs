@@ -32,10 +32,30 @@ import PostList from "../../components/blog/post-list";
 | Decision | Default Choice | Import From |
 |----------|---------------|-------------|
 | **Layout** | `PageLayout` | `@/components/layouts` |
-| **Container** | `CONTAINER_WIDTHS.content` | `@/lib/design-tokens` |
+| **Container** | `CONTAINER_WIDTHS.standard` | `@/lib/design-tokens` |
 | **Metadata** | `createPageMetadata()` | `@/lib/metadata` |
-| **Spacing** | `SPACING.content` (8) | `@/lib/design-tokens` |
+| **Spacing** | Use directly: `SPACING.content` | `@/lib/design-tokens` |
 | **Typography** | `TYPOGRAPHY.h1.standard` | `@/lib/design-tokens` |
+
+### ⚠️ SPACING Token Critical Rules
+
+**SPACING tokens are for vertical spacing (space-y-\*) ONLY.**
+
+```tsx
+// ✅ CORRECT - Use SPACING directly
+<div className={SPACING.section}>
+
+// ✅ CORRECT - Use numbers for gap/padding
+<div className="flex gap-4 p-4 space-y-2">
+
+// ❌ WRONG - Template literals (will break build)
+<div className={`gap-${SPACING.compact}`}>  // Property doesn't exist!
+
+// ❌ WRONG - Non-existent properties
+<div className={SPACING.tight}>  // No 'tight' property
+```
+
+**Valid SPACING properties:** `section`, `subsection`, `content`, `proseHero`, `proseSection`, `image`
 
 ## Quick Decision Trees
 

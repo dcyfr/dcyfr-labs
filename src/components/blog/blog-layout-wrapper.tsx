@@ -2,6 +2,8 @@
 
 import { useState, createContext, useContext } from "react";
 import { BlogKeyboardProvider } from "@/components/blog/blog-keyboard-provider";
+import { cn } from "@/lib/utils";
+import { ANIMATION } from "@/lib/design-tokens";
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -39,11 +41,13 @@ export function BlogLayoutWrapper({ children }: BlogLayoutWrapperProps) {
     <SidebarContext.Provider value={{ isCollapsed, setIsCollapsed, toggleCollapsed }}>
       <BlogKeyboardProvider onToggleFilters={toggleCollapsed}>
         <div 
-          className={`grid gap-8 items-start transition-all duration-300 ${
+          className={cn(
+            "grid gap-8 items-start transition-all",
+            ANIMATION.duration.normal,
             isCollapsed 
               ? "lg:grid-cols-[48px_1fr]" 
               : "lg:grid-cols-[280px_1fr]"
-          }`}
+          )}
         >
           {children}
         </div>

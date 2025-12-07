@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import { User } from "lucide-react";
-import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
+import { IMAGE_PLACEHOLDER, ANIMATION } from "@/lib/design-tokens";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 /**
  * ProfileAvatar Component
@@ -98,9 +100,9 @@ export function ProfileAvatar({
   return (
     <div
       className={`
-        relative flex-shrink-0 rounded-full overflow-hidden
+        relative shrink-0 rounded-full overflow-hidden
         ${sizeClass.container}
-        ${animated ? "hover:scale-110 transition-transform duration-300 ease-out" : ""}
+        ${animated ? `hover:scale-110 transition-transform ${ANIMATION.duration.normal} ease-out` : ""}
         ${animated ? "will-change-transform" : ""}
         ${isLoaded ? "animate-fade-in" : "opacity-0"}
         ${className || ""}
@@ -120,7 +122,10 @@ export function ProfileAvatar({
       {/* Glow effect for animated state */}
       {animated && (
         <div
-          className="absolute inset-0 -z-10 rounded-full blur-lg opacity-0 hover:opacity-100 transition-opacity duration-300"
+          className={cn(
+            "absolute inset-0 -z-10 rounded-full blur-lg opacity-0 hover:opacity-100 transition-opacity",
+            ANIMATION.duration.normal
+          )}
           style={{
             background: "radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent)",
           }}

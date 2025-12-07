@@ -18,9 +18,11 @@
 export type ActivitySource =
   | "blog" // Blog posts
   | "project" // Portfolio projects
-  | "github" // GitHub commits/releases (future)
-  | "changelog" // Site updates (future)
-  | "milestone"; // Achievements (future)
+  | "github" // GitHub commits/releases
+  | "changelog" // Site updates
+  | "milestone" // Achievements (view/comment milestones)
+  | "trending" // Trending posts
+  | "engagement"; // High engagement posts
 
 /**
  * Action verbs describing what happened
@@ -91,22 +93,31 @@ export interface ActivityMeta {
     alt: string;
   };
 
-  /** Engagement stats (future) */
+  /** Engagement stats */
   stats?: {
     views?: number;
     stars?: number;
     comments?: number;
   };
 
-  /** For GitHub activities */
-  commits?: number;
-  version?: string;
-
   /** Reading time for blog posts */
   readingTime?: string;
 
   /** Project status */
   status?: "active" | "in-progress" | "archived";
+
+  /** GitHub-specific fields */
+  commits?: number;
+  version?: string;
+
+  /** Milestone value (for view/comment milestones) */
+  milestone?: number;
+
+  /** Trending flag */
+  trending?: boolean;
+
+  /** Engagement rate percentage */
+  engagement?: number;
 }
 
 // ============================================================================
@@ -208,8 +219,16 @@ export const ACTIVITY_SOURCE_COLORS: Record<
     border: "border-l-muted-foreground",
   },
   milestone: {
-    icon: "text-muted-foreground",
-    border: "border-l-muted-foreground",
+    icon: "text-yellow-600 dark:text-yellow-400",
+    border: "border-l-yellow-600",
+  },
+  trending: {
+    icon: "text-orange-600 dark:text-orange-400",
+    border: "border-l-orange-600",
+  },
+  engagement: {
+    icon: "text-red-600 dark:text-red-400",
+    border: "border-l-red-600",
   },
 } as const;
 
@@ -222,6 +241,8 @@ export const ACTIVITY_SOURCE_LABELS: Record<ActivitySource, string> = {
   github: "Code",
   changelog: "Update",
   milestone: "Milestone",
+  trending: "Trending",
+  engagement: "High Engagement",
 } as const;
 
 /**

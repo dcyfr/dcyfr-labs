@@ -43,7 +43,8 @@ grep "useDebounce" --type ts         # Find debounce usage
 // Always import from design tokens
 import {
   SPACING,              // Vertical/horizontal spacing
-  TYPOGRAPHY,           // Heading/body text styles
+  TYPOGRAPHY,           // Heading/body text styles (includes label, accordion, logo)
+  ANIMATION,            // Duration tokens and transition utilities
   HOVER_EFFECTS,        // Consistent hover transitions
   CONTAINER_WIDTHS,     // Max-width constraints
   PAGE_LAYOUT,          // Page-level layout constants
@@ -82,6 +83,55 @@ CONTAINER_WIDTHS.standard  // "max-w-5xl" (1024px) - Core pages (home, about, co
 CONTAINER_WIDTHS.content   // "max-w-6xl" (1152px) - Content pages with sidebars (blog posts, project details)
 CONTAINER_WIDTHS.archive   // "max-w-7xl" (1280px) - Archive/listing pages (blog listing, projects listing)
 CONTAINER_WIDTHS.dashboard // "max-w-[1536px]" (1536px) - Full-width dashboards with data tables, charts, analytics
+```
+
+**ANIMATION:**
+```typescript
+// Duration tokens (use these instead of duration-* classes)
+ANIMATION.duration.fast    // "duration-150" - Quick UI responses (hover, focus)
+ANIMATION.duration.normal  // "duration-300" - Standard transitions (cards, modals)
+ANIMATION.duration.slow    // "duration-500" - Dramatic effects (page transitions)
+
+// Transition utilities (prefer these over manual animation classes)
+ANIMATION.transition.movement    // "transition-movement" - Transforms (scale, translate, rotate)
+ANIMATION.transition.appearance  // "transition-appearance" - Opacity, backdrop-blur
+ANIMATION.transition.theme       // "transition-theme" - Theme switching (colors, backgrounds)
+
+// Usage examples:
+className={ANIMATION.duration.fast}           // Fast hover effect
+className="transition-movement"               // For scale/translate animations
+className={cn("transition-theme", ANIMATION.duration.normal)}  // Theme transition
+```
+
+**TYPOGRAPHY (Extended):**
+```typescript
+// Standard headings (most common)
+TYPOGRAPHY.h1.standard    // "text-3xl font-semibold" - Page titles
+TYPOGRAPHY.h2.standard    // "text-2xl font-semibold" - Section headings
+TYPOGRAPHY.h3.standard    // "text-xl font-semibold" - Subsection headings
+TYPOGRAPHY.h4.standard    // "text-lg font-semibold" - Card titles
+TYPOGRAPHY.h5.standard    // "text-base font-semibold" - Small headings
+TYPOGRAPHY.h6.standard    // "text-sm font-semibold" - Micro headings
+
+// Labels (form fields, badges, metadata)
+TYPOGRAPHY.label.standard // "text-sm font-medium" - Form labels, card metadata
+TYPOGRAPHY.label.small    // "text-xs font-medium" - Small badges, timestamps
+TYPOGRAPHY.label.xs       // "text-[0.625rem] font-medium leading-tight" - Micro labels
+
+// Accordion tokens (collapsible sections)
+TYPOGRAPHY.accordion.heading  // "text-xl font-semibold" - Accordion section titles
+TYPOGRAPHY.accordion.trigger  // "text-base font-medium" - Accordion toggle buttons
+
+// Logo sizing (site branding)
+TYPOGRAPHY.logo.small     // "text-xl font-bold" - Mobile/compact logo
+TYPOGRAPHY.logo.medium    // "text-2xl font-bold" - Standard logo
+TYPOGRAPHY.logo.large     // "text-3xl font-bold" - Hero logo
+
+// Body text (paragraph content)
+TYPOGRAPHY.body.default   // "text-base" - Standard paragraphs
+TYPOGRAPHY.body.large     // "text-lg" - Emphasized content
+TYPOGRAPHY.body.small     // "text-sm" - Captions, metadata
+TYPOGRAPHY.body.muted     // "text-sm text-muted-foreground" - Secondary text
 ```
 
 ### 3. Validate Reusability

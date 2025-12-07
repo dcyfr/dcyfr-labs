@@ -150,7 +150,7 @@ export function InteractiveDecisionTree({
                   <div className="flex-1">
                     <div className="font-medium">{option.label}</div>
                   </div>
-                  <ChevronRight className="h-5 w-5 ml-2 flex-shrink-0" />
+                  <ChevronRight className="h-5 w-5 ml-2 shrink-0" />
                 </Button>
               ))}
             </div>

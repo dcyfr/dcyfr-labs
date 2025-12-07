@@ -19,33 +19,6 @@ import { SCROLL_BEHAVIOR } from "@/lib/design-tokens";
  */
 export function SmoothScrollToHash() {
   React.useEffect(() => {
-    // Handle initial hash on page load
-    const handleHashOnLoad = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-
-      const element = document.getElementById(hash.slice(1));
-      if (!element) return;
-
-      // Wait for page to fully render
-      setTimeout(() => {
-        scrollToElement(element);
-      }, 100);
-    };
-
-    // Handle hash changes during navigation
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-
-      const element = document.getElementById(hash.slice(1));
-      if (!element) {
-        return;
-      }
-
-      scrollToElement(element);
-    };
-
     // Scroll to element with animation
     const scrollToElement = (element: HTMLElement) => {
       const top = element.getBoundingClientRect().top + window.scrollY - SCROLL_BEHAVIOR.offset.standard;
@@ -67,8 +40,47 @@ export function SmoothScrollToHash() {
       }));
     };
 
-    // Run on mount
-    handleHashOnLoad();
+    // Handle initial hash on page load
+    const handleHashOnLoad = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const elementId = hash.slice(1);
+      let element = document.getElementById(elementId);
+      
+      if (!element) {
+        // Element not found immediately, try again after a delay
+        // This handles async content loading or hydration delays
+        setTimeout(() => {
+          element = document.getElementById(elementId);
+          if (element) {
+            scrollToElement(element);
+          }
+        }, 300);
+        return;
+      }
+
+      scrollToElement(element);
+    };
+
+    // Handle hash changes during navigation
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const elementId = hash.slice(1);
+      const element = document.getElementById(elementId);
+      if (element) {
+        scrollToElement(element);
+      }
+    };
+
+    // Use requestIdleCallback for better performance, fallback to setTimeout
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => handleHashOnLoad());
+    } else {
+      setTimeout(() => handleHashOnLoad(), 100);
+    }
 
     // Listen for hash changes
     window.addEventListener("hashchange", handleHashChange);

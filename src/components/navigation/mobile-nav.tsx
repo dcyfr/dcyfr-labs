@@ -45,18 +45,14 @@ export function MobileNav() {
   }, [pathname]);
 
   const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/blog", label: "Blog" },
+    { href: "/", label: "Homepage" },
+    { href: "/about", label: "About Us" },
+    { href: "/activity", label: "Activity" },
+    { href: "/blog", label: "Blog Articles" },
     { href: "/work", label: "Our Work" },
+    { href: "/contact", label: "Contact Us" },
     { href: "/sponsors", label: "Sponsors" },
-    { href: "/contact", label: "Contact" },
-  ];
-
-  const workCategories = [
-    { href: "/work?category=startup", label: "Startup" },
-    { href: "/work?category=community", label: "Community" },
-    { href: "/work?category=nonprofit", label: "Nonprofit" }
+    { href: "/feeds", label: "Feeds" },
   ];
 
   // Render button immediately but defer Sheet portal rendering until mounted
@@ -99,25 +95,6 @@ export function MobileNav() {
                   >
                     {item.label}
                   </Link>
-                  {/* Work subcategories */}
-                  {isWork && (
-                    <div className="ml-4 flex flex-col gap-0.5">
-                      {workCategories.map((cat) => (
-                        <Link
-                          key={cat.href}
-                          href={cat.href}
-                          className={cn(
-                            "flex items-center h-10 px-4 rounded-md text-sm text-muted-foreground transition-colors",
-                            "hover:bg-accent hover:text-accent-foreground",
-                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                          )}
-                          prefetch={false}
-                        >
-                          {cat.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
                 </div>
               );
             })}

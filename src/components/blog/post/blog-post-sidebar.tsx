@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { SPACING } from "@/lib/design-tokens";
 import {
   PostMetadata,
+  PostAuthor,
   PostQuickActions,
   PostSeriesNav,
   PostRelated,
@@ -16,8 +17,10 @@ import {
 interface BlogPostSidebarProps {
   headings: TocHeading[];
   slug?: string;
+  authors?: string[]; // Team member IDs for author section
   metadata?: {
     publishedAt: Date;
+    updatedAt?: Date;
     readingTime: string;
     viewCount?: number;
     tags?: string[];
@@ -44,6 +47,7 @@ interface BlogPostSidebarProps {
  * 
  * Features:
  * - Post metadata (date, reading time, views, tags)
+ * - Post author (name, title, avatar, description)
  * - Quick actions (share, bookmark)
  * - Series navigation (if part of a series)
  * - Related posts suggestions
@@ -54,6 +58,7 @@ interface BlogPostSidebarProps {
  * 
  * Modularized into separate components:
  * - PostMetadata: Date, time, views, status badges, tags
+ * - PostAuthor: Author information with avatar and bio
  * - PostQuickActions: Bookmark, share, copy link buttons
  * - PostSeriesNav: Series navigation if applicable
  * - PostRelated: Related posts list
@@ -62,6 +67,7 @@ interface BlogPostSidebarProps {
 export function BlogPostSidebar({ 
   headings, 
   slug, 
+  authors = ["dcyfr"], // Default to dcyfr if not provided
   metadata, 
   postTitle, 
   series, 
@@ -76,10 +82,14 @@ export function BlogPostSidebar({
     <aside className="hidden lg:block w-full lg:self-stretch">
       {/* Non-sticky content at the top that scrolls away */}
       <div className={cn(SPACING.subsection, "pb-6")}>
+        {/* Post Author(s) */}
+        <PostAuthor authors={authors} publishedAt={metadata?.publishedAt} />
+
         {/* Post Metadata */}
         {metadata && (
           <PostMetadata
             publishedAt={metadata.publishedAt}
+            updatedAt={metadata.updatedAt}
             readingTime={metadata.readingTime}
             viewCount={metadata.viewCount}
             tags={metadata.tags}
@@ -92,8 +102,8 @@ export function BlogPostSidebar({
         )}
 
         {/* Quick Actions */}
-        <PostQuickActions 
-          slug={slug} 
+        <PostQuickActions
+          slug={slug}
           postTitle={postTitle}
           publishedAt={metadata?.publishedAt?.toISOString()}
         />
@@ -112,7 +122,7 @@ export function BlogPostSidebar({
           <PostRelated posts={relatedPosts} />
         )}
       </div>
-      
+
       {/* Table of Contents - Sticky positioning */}
       <div className="sticky top-24 bg-background">
         <div className="max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border hover:scrollbar-thumb-muted-foreground">

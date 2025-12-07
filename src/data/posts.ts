@@ -36,6 +36,8 @@ export type Post = {
     name: string; // series name (e.g., "React Hooks Deep Dive")
     order: number; // position in series (1-indexed)
   };
+  authors?: string[]; // team member IDs (defaults to ["dcyfr"] if not specified)
+  authorId?: string; // @deprecated - use authors instead (kept for backward compatibility)
   readingTime: {
     words: number;
     minutes: number;

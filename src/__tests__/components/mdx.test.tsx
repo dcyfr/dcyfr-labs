@@ -121,7 +121,7 @@ describe("MDX Component", () => {
       render(<MDX source="- Item" />);
       const ul = screen.getByRole("list");
       expect(ul.className).toContain("list-disc");
-      expect(ul.className).toContain("pl-5");
+      expect(ul.className).toContain("pl-6");
     });
   });
 

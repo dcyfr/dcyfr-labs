@@ -32,9 +32,20 @@ export type Resume = {
 };
 
 export const resume: Resume = {
-  shortSummary: "Security architect with 5+ years leading security programs, incident response, and secure development practices for global organizations.",
-  summary: "I'm a cybersecurity professional with over 5 years of experience leading security programs, incident response, and building secure development practices for global organizations. I specialize in cyber risk management, vulnerability management, and automating operational security. I'm passionate about mentoring the next generation of security professionals and sharing my knowledge through writing and community engagement.",
+  summary: "Security architect with extensive experience leading security programs, incident response, and building secure development practices for global organizations. Specializes in cyber risk management, vulnerability management, and automating operational security. Passionate about mentoring the next generation of security professionals and sharing knowledge through writing and community engagement.",
+  shortSummary: "Security architect with extensive experience leading security programs, incident response, and building secure development practices for global organizations.",
   experience: [
+    {
+      title: "Founding Architect",
+      company: "DCYFR Labs",
+      duration: "Jan 2025 → Present",
+      responsibilities: [
+        "Lead the architecture and development of secure, scalable web solutions for clients across various industries.",
+        "Design and implement security frameworks, policies, and procedures to protect organizational assets.",
+        "Conduct risk assessments, vulnerability management, and incident response planning.",
+        "Mentor junior security professionals and contribute to community knowledge through writing and speaking engagements."
+      ]
+    },
     {
       title: "Principal Security Engineer",
       company: "Monks",

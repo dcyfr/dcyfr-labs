@@ -63,6 +63,8 @@ export interface ArticleHeaderProps {
     url: string;
     alt: string;
     position?: 'center' | 'top' | 'bottom' | 'left' | 'right';
+    /** Preload image for performance (use for featured/above-fold images) */
+    priority?: boolean;
   };
   
   /** Additional content (e.g., metadata shown conditionally) */
@@ -94,189 +96,114 @@ export function ArticleHeader({
       )
     : null;
 
-  // If background image is provided, render with card-like styling
-  if (backgroundImage) {
-    return (
-      <div className={cn("relative rounded-lg border overflow-hidden mb-8 holo-card", className)}>
-        {/* Background Image with gradient overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={backgroundImage.url}
-            alt={backgroundImage.alt}
-            fill
-            priority
-            quality={90}
-            className={cn(
-              "object-cover holo-image-shift",
-              backgroundImage.position && `object-${backgroundImage.position}`
-            )}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-          />
-          {/* Gradient overlay for better text readability */}
-          <div className="absolute inset-0 holo-gradient-dark" />
-        </div>
-        
-        {/* Subtle shine effect */}
-        <div className="holo-shine" />
-
-        {/* Content - positioned above background */}
-        <div className="relative z-10 px-4 sm:px-8 md:px-8 py-8 md:py-12 space-y-3">
-          {/* Badges */}
-          {badges && (
-            <div className="flex flex-wrap gap-2">
-              {badges}
-            </div>
-          )}
-
-          {/* Title */}
-          <h1 className={TYPOGRAPHY.h1.article}>
-            {title}
-          </h1>
-
-          {/* Subtitle */}
-          {subtitle && (
-            <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-              {subtitle}
-            </p>
-          )}
-
-          {/* Metadata Row */}
-          {(date || metadata) && (
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
-              {formattedDate && (
-                <time dateTime={date?.toISOString()}>
-                  {formattedDate}
-                </time>
-              )}
-              
-              {metadata && (
-                <>
-                  {formattedDate && <span aria-hidden="true">·</span>}
-                  <span>{metadata}</span>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div className={cn(
-              "flex flex-wrap items-center gap-2",
-              !inlineTags && "mt-4"
-            )}>
-              {!inlineTags && (
-                <span className="text-sm text-muted-foreground">
-                  Tagged:
-                </span>
-              )}
-              {tags.map((tag) => {
-                const tagUrl = onTagClick?.(tag);
-                const badgeContent = (
-                  <Badge
-                    key={tag}
-                    variant="outline"
-                    className={cn(
-                      "text-xs",
-                      tagUrl && "cursor-pointer hover:bg-accent transition-colors"
-                    )}
-                  >
-                    {tag}
-                  </Badge>
-                );
-                
-                return tagUrl ? (
-                  <Link key={tag} href={tagUrl}>
-                    {badgeContent}
-                  </Link>
-                ) : badgeContent;
-              })}
-            </div>
-          )}
-          
-          {/* Children (additional content) */}
-          {children}
-        </div>
-      </div>
-    );
-  }
-
-  // Default rendering without background image
+  // Unified card structure with optional background image
   return (
-    <div className={cn("space-y-4", className)}>
-      {/* Badges */}
-      {badges && (
-        <div className="flex flex-wrap gap-2">
-          {badges}
-        </div>
-      )}
-
-      {/* Title */}
-      <h1 className={TYPOGRAPHY.h1.article}>
-        {title}
-      </h1>
-
-      {/* Subtitle */}
-      {subtitle && (
-        <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-          {subtitle}
-        </p>
-      )}
-
-      {/* Metadata Row */}
-      {(date || metadata) && (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
-          {formattedDate && (
-            <time dateTime={date?.toISOString()}>
-              {formattedDate}
-            </time>
-          )}
+    <div className={cn("relative rounded-lg border overflow-hidden mb-8 holo-card", className)}>
+      {/* Background Image Layer (conditional) */}
+      {backgroundImage && (
+        <>
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={backgroundImage.url}
+              alt={backgroundImage.alt}
+              fill
+              priority={backgroundImage.priority || false}
+              quality={90}
+              className={cn(
+                "object-cover holo-image-shift",
+                backgroundImage.position && `object-${backgroundImage.position}`
+              )}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            />
+            {/* Gradient overlay for better text readability */}
+            <div className="absolute inset-0 holo-gradient-dark" />
+          </div>
           
-          {metadata && (
-            <>
-              {formattedDate && <span aria-hidden="true">·</span>}
-              <span>{metadata}</span>
-            </>
-          )}
-        </div>
+          {/* Subtle shine effect */}
+          <div className="holo-shine" />
+        </>
       )}
 
-      {/* Tags */}
-      {tags.length > 0 && (
-        <div className={cn(
-          "flex flex-wrap items-center gap-2",
-          !inlineTags && "mt-4"
-        )}>
-          {!inlineTags && (
-            <span className="text-sm text-muted-foreground">
-              Tagged:
-            </span>
-          )}
-          {tags.map((tag) => {
-            const tagUrl = onTagClick?.(tag);
-            const badgeContent = (
-              <Badge
-                key={tag}
-                variant="outline"
-                className={cn(
-                  "text-xs",
-                  tagUrl && "cursor-pointer hover:bg-accent transition-colors"
-                )}
-              >
-                {tag}
-              </Badge>
-            );
+      {/* Content - positioned above background if image exists */}
+      <div className={cn(
+        "px-4 sm:px-8 md:px-8 py-8 md:py-12 space-y-3",
+        backgroundImage && "relative z-10"
+      )}>
+        {/* Badges */}
+        {badges && (
+          <div className="flex flex-wrap gap-2">
+            {badges}
+          </div>
+        )}
+
+        {/* Title */}
+        <h1 className={TYPOGRAPHY.h1.article}>
+          {title}
+        </h1>
+
+        {/* Subtitle */}
+        {subtitle && (
+          <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
+            {subtitle}
+          </p>
+        )}
+
+        {/* Metadata Row */}
+        {(date || metadata) && (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+            {formattedDate && (
+              <time dateTime={date?.toISOString()}>
+                {formattedDate}
+              </time>
+            )}
             
-            return tagUrl ? (
-              <Link key={tag} href={tagUrl}>
-                {badgeContent}
-              </Link>
-            ) : badgeContent;
-          })}
-        </div>
-      )}
-      
-      {/* Children (additional content) */}
-      {children}
+            {metadata && (
+              <>
+                {formattedDate && <span aria-hidden="true">·</span>}
+                <span>{metadata}</span>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div className={cn(
+            "flex flex-wrap items-center gap-2",
+            !inlineTags && "mt-4"
+          )}>
+            {!inlineTags && (
+              <span className="text-sm text-muted-foreground">
+                Tagged:
+              </span>
+            )}
+            {tags.map((tag) => {
+              const tagUrl = onTagClick?.(tag);
+              const badgeContent = (
+                <Badge
+                  key={tag}
+                  variant="outline"
+                  className={cn(
+                    "text-xs",
+                    tagUrl && "cursor-pointer hover:bg-accent transition-colors"
+                  )}
+                >
+                  {tag}
+                </Badge>
+              );
+              
+              return tagUrl ? (
+                <Link key={tag} href={tagUrl}>
+                  {badgeContent}
+                </Link>
+              ) : badgeContent;
+            })}
+          </div>
+        )}
+        
+        {/* Children (additional content) */}
+        {children}
+      </div>
     </div>
   );
 }

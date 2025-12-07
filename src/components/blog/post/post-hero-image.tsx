@@ -50,16 +50,16 @@ export function PostHeroImage({ image, title, priority = true }: PostHeroImagePr
   return (
     <figure className="not-prose -mx-4 sm:-mx-6 md:-mx-8 mb-8 md:mb-12">
       {/* Image Container with Gradient Overlays */}
-      <div className="relative w-full aspect-video md:aspect-[21/9] overflow-hidden bg-muted">
+      <div className="relative w-full aspect-video md:aspect-21/9 overflow-hidden bg-muted">
         {/* Top gradient overlay for better header contrast */}
         <div 
-          className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background/80 via-background/40 to-transparent z-10 pointer-events-none"
+          className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-background/80 via-background/40 to-transparent z-10 pointer-events-none"
           aria-hidden="true"
         />
         
         {/* Bottom gradient overlay for caption/content */}
         <div 
-          className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background/60 to-transparent z-10 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-background/60 to-transparent z-10 pointer-events-none"
           aria-hidden="true"
         />
         

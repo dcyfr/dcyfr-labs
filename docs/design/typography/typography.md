@@ -152,7 +152,7 @@ Combine fonts for visual hierarchy:
 Headings in prose content (MDX blog posts) automatically use serif fonts:
 
 ```css
-.prose h1, .prose h2, .prose h3 {
+.prose h1, .prose h2 {
   font-family: var(--font-serif);
   font-weight: 700;
   letter-spacing: -0.025em;

@@ -1,13 +1,20 @@
 #!/usr/bin/env node
 
 /**
- * Blog Hero Image Generator
+ * Blog Hero Image Generator (Simplified Gradients)
  * 
- * Generates custom SVG hero images for blog posts based on metadata.
- * Supports multiple style variants and post-specific customization.
+ * Generates simple gradient SVG hero images for blog posts.
+ * Uses deterministic randomization based on post slug for consistent gradients.
+ * 
+ * Features:
+ * - 22 gradient variants across 5 themes (brand, warm, cool, neutral, vibrant)
+ * - Deterministic gradient selection (same slug = same gradient)
+ * - Tag-based thematic gradients (security → red/orange, performance → blue, etc.)
+ * - Manual gradient override via --variant flag
+ * - OG image compliant (1200×630px)
  * 
  * Usage:
- *   # Generate for specific post
+ *   # Generate for specific post (deterministic gradient)
  *   node scripts/generate-blog-hero.mjs --slug my-post-slug
  * 
  *   # Generate for all posts missing images
@@ -18,12 +25,24 @@
  * 
  *   # Force regeneration even if image exists
  *   node scripts/generate-blog-hero.mjs --slug my-post --force
+ * 
+ *   # Manual gradient override
+ *   node scripts/generate-blog-hero.mjs --slug my-post --variant ocean --force
+ *   node scripts/generate-blog-hero.mjs --slug my-post --variant warm.sunset --force
+ * 
+ * Available gradients:
+ *   brand: primary, secondary, accent, inverted
+ *   warm: sunset, fire, amber, rose, coral
+ *   cool: ocean, teal, sky, forest, arctic
+ *   neutral: slate, charcoal, silver, midnight
+ *   vibrant: electric, neon, plasma, aurora
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { readdir } from 'fs/promises';
+import { createHash } from 'crypto';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = join(__dirname, '..');
@@ -37,297 +56,165 @@ const flags = {
   all: args.includes('--all'),
   preview: args.includes('--preview'),
   force: args.includes('--force'),
+  variant: args.find((arg, i) => args[i - 1] === '--variant'),
 };
 
-// Brand colors from design tokens
-const COLORS = {
-  primary: '#3b82f6',    // blue-500
-  secondary: '#8b5cf6',  // violet-500
-  accent: '#06b6d4',     // cyan-500
-  success: '#10b981',    // emerald-500
-  warning: '#f59e0b',    // amber-500
-  error: '#ef4444',      // red-500
-  dark: '#0f172a',       // slate-900
-  darker: '#020617',     // slate-950
-  light: '#f1f5f9',      // slate-100
-};
-
-// Style variants with gradients and patterns
-const STYLE_VARIANTS = {
-  gradient: {
-    background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.secondary} 100%)`,
-    pattern: 'dots',
-    iconColor: 'white',
+// Import gradient definitions from design tokens
+// Note: Using direct definitions here to avoid ESM import issues
+// These mirror the GRADIENTS object in src/lib/design-tokens.ts
+const GRADIENTS = {
+  brand: {
+    primary: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
+    secondary: "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
+    accent: "linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)",
+    inverted: "linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)",
   },
-  minimal: {
-    background: COLORS.darker,
-    pattern: 'dots',
-    iconColor: COLORS.primary,
+  warm: {
+    sunset: "linear-gradient(135deg, #f97316 0%, #ef4444 50%, #ec4899 100%)",
+    fire: "linear-gradient(135deg, #ef4444 0%, #f97316 100%)",
+    amber: "linear-gradient(135deg, #eab308 0%, #f97316 100%)",
+    rose: "linear-gradient(135deg, #f472b6 0%, #f43f5e 100%)",
+    coral: "linear-gradient(135deg, #fb923c 0%, #ec4899 100%)",
   },
-  geometric: {
-    background: `linear-gradient(45deg, ${COLORS.dark} 0%, ${COLORS.primary} 100%)`,
-    pattern: 'grid',
-    iconColor: 'white',
+  cool: {
+    ocean: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #4f46e5 100%)",
+    teal: "linear-gradient(135deg, #10b981 0%, #14b8a6 100%)",
+    sky: "linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%)",
+    forest: "linear-gradient(135deg, #16a34a 0%, #10b981 100%)",
+    arctic: "linear-gradient(135deg, #67e8f9 0%, #818cf8 100%)",
   },
-  waves: {
-    background: `linear-gradient(180deg, ${COLORS.darker} 0%, ${COLORS.dark} 100%)`,
-    pattern: 'waves',
-    iconColor: COLORS.accent,
+  neutral: {
+    slate: "linear-gradient(135deg, #334155 0%, #0f172a 100%)",
+    charcoal: "linear-gradient(135deg, #1e293b 0%, #020617 100%)",
+    silver: "linear-gradient(135deg, #94a3b8 0%, #475569 100%)",
+    midnight: "linear-gradient(135deg, #0f172a 0%, #172554 100%)",
   },
-  circuit: {
-    background: COLORS.darker,
-    pattern: 'circuit',
-    iconColor: COLORS.success,
-  },
-  security: {
-    background: `linear-gradient(135deg, ${COLORS.error} 0%, ${COLORS.warning} 100%)`,
-    pattern: 'hexagons',
-    iconColor: 'white',
+  vibrant: {
+    electric: "linear-gradient(135deg, #a855f7 0%, #d946ef 100%)",
+    neon: "linear-gradient(135deg, #a3e635 0%, #22c55e 100%)",
+    plasma: "linear-gradient(135deg, #7c3aed 0%, #d946ef 50%, #f97316 100%)",
+    aurora: "linear-gradient(135deg, #34d399 0%, #22d3ee 50%, #3b82f6 100%)",
   },
 };
 
-// Icon sets for different content types
-const ICONS = {
-  code: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 6L4 10L8 14M16 6L20 10L16 14M12 4L8 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`,
-  
-  security: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2L4 6V11C4 16.5 7.5 21.5 12 22C16.5 21.5 20 16.5 20 11V6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`,
-  
-  design: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M2 17L12 22L22 17M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`,
-  
-  api: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
-    <circle cx="12" cy="5" r="2" stroke="currentColor" stroke-width="2"/>
-    <circle cx="12" cy="19" r="2" stroke="currentColor" stroke-width="2"/>
-    <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
-    <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="2"/>
-    <path d="M12 7V10M12 14V17M7 12H10M14 12H17" stroke="currentColor" stroke-width="2"/>
-  </svg>`,
-  
-  data: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="12" cy="6" rx="8" ry="3" stroke="currentColor" stroke-width="2"/>
-    <path d="M4 6V18C4 19.66 7.58 21 12 21C16.42 21 20 19.66 20 18V6" stroke="currentColor" stroke-width="2"/>
-    <path d="M4 12C4 13.66 7.58 15 12 15C16.42 15 20 13.66 20 12" stroke="currentColor" stroke-width="2"/>
-  </svg>`,
-  
-  tools: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14.7 6.3L17.7 9.3L7 20H4V17L14.7 6.3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M3 21H21M16 5L19 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`,
-  
-  performance: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-    <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  </svg>`,
-  
-  docs: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M14 2V8H20M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`,
-};
+// Flattened gradient keys for deterministic selection
+const GRADIENT_KEYS = [
+  "brand.primary",
+  "brand.secondary",
+  "brand.accent",
+  "brand.inverted",
+  "warm.sunset",
+  "warm.fire",
+  "warm.amber",
+  "warm.rose",
+  "warm.coral",
+  "cool.ocean",
+  "cool.teal",
+  "cool.sky",
+  "cool.forest",
+  "cool.arctic",
+  "neutral.slate",
+  "neutral.charcoal",
+  "neutral.silver",
+  "neutral.midnight",
+  "vibrant.electric",
+  "vibrant.neon",
+  "vibrant.plasma",
+  "vibrant.aurora",
+];
 
-// Pattern generators
-function generatePattern(type, color = 'rgba(255,255,255,0.1)') {
-  switch (type) {
-    case 'dots':
-      return `<pattern id="dots" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
-        <circle cx="15" cy="15" r="1.5" fill="${color}"/>
-      </pattern>
-      <rect width="1200" height="630" fill="url(#dots)"/>`;
-    
-    case 'grid':
-      return `<pattern id="grid" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
-        <path d="M 50 0 L 0 0 0 50" fill="none" stroke="${color}" stroke-width="1"/>
-      </pattern>
-      <rect width="1200" height="630" fill="url(#grid)"/>`;
-    
-    case 'waves':
-      return `<pattern id="waves" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-        <path d="M0 50 Q 25 30, 50 50 T 100 50" stroke="${color}" fill="none" stroke-width="2"/>
-        <path d="M0 60 Q 25 40, 50 60 T 100 60" stroke="${color}" fill="none" stroke-width="2" opacity="0.5"/>
-      </pattern>
-      <rect width="1200" height="630" fill="url(#waves)"/>`;
-    
-    case 'circuit':
-      return `<pattern id="circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-        <circle cx="20" cy="20" r="2" fill="${color}"/>
-        <circle cx="80" cy="80" r="2" fill="${color}"/>
-        <line x1="20" y1="20" x2="80" y2="20" stroke="${color}" stroke-width="1"/>
-        <line x1="20" y1="20" x2="20" y2="80" stroke="${color}" stroke-width="1"/>
-        <line x1="80" y1="20" x2="80" y2="80" stroke="${color}" stroke-width="1"/>
-      </pattern>
-      <rect width="1200" height="630" fill="url(#circuit)"/>`;
-    
-    case 'hexagons':
-      return `<pattern id="hexagons" x="0" y="0" width="56" height="100" patternUnits="userSpaceOnUse">
-        <path d="M28,0 L56,16 L56,50 L28,66 L0,50 L0,16 Z" fill="none" stroke="${color}" stroke-width="1"/>
-      </pattern>
-      <rect width="1200" height="630" fill="url(#hexagons)"/>`;
-    
-    default:
-      return '';
-  }
+/**
+ * Get gradient value from dot-notation key
+ */
+function getGradient(key) {
+  const [category, variant] = key.split(".");
+  return GRADIENTS[category]?.[variant] || GRADIENTS.brand.primary;
 }
 
-// Select style variant based on post metadata
-function selectStyleVariant(frontmatter) {
+/**
+ * Generate deterministic hash from string (post slug or ID)
+ * Returns a number between 0 and length-1 for array indexing
+ */
+function deterministicHash(str, length) {
+  const hash = createHash('md5').update(str).digest('hex');
+  const num = parseInt(hash.substring(0, 8), 16);
+  return num % length;
+}
+
+/**
+ * Select gradient variant based on post metadata or deterministic randomization
+ * Priority: manual --variant flag > tag-based selection > deterministic hash
+ */
+function selectGradientKey(frontmatter, slug) {
+  // Manual override via CLI flag
+  if (flags.variant) {
+    const key = GRADIENT_KEYS.find(k => k.includes(flags.variant));
+    if (key) return key;
+  }
+  
   const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags.map(t => t.toLowerCase()) : [];
   const category = (frontmatter.category || '').toLowerCase();
   
-  // Security content
-  if (tags.some(t => ['security', 'cve', 'vulnerability'].includes(t)) || 
-      category === 'security') {
-    return 'security';
+  // Tag-based gradient selection (thematic)
+  if (tags.some(t => ['security', 'cve', 'vulnerability'].includes(t))) {
+    return 'warm.fire'; // Red/orange for security
   }
-  
-  // Code/tech content
-  if (tags.some(t => ['javascript', 'typescript', 'react', 'node', 'code', 'programming'].includes(t)) ||
-      category === 'development') {
-    return 'minimal';
-  }
-  
-  // Design/UI content
-  if (tags.some(t => ['design', 'ui', 'ux', 'css', 'tailwind', 'styling'].includes(t)) ||
-      category === 'design') {
-    return 'geometric';
-  }
-  
-  // Performance content
   if (tags.some(t => ['performance', 'optimization', 'speed'].includes(t))) {
-    return 'waves';
+    return 'cool.ocean'; // Blue for performance
   }
-  
-  // API/Integration content
+  if (tags.some(t => ['design', 'ui', 'ux', 'css', 'tailwind'].includes(t))) {
+    return 'vibrant.electric'; // Purple/fuchsia for design
+  }
   if (tags.some(t => ['api', 'integration', 'mcp'].includes(t))) {
-    return 'circuit';
+    return 'cool.teal'; // Green/teal for APIs
+  }
+  if (tags.some(t => ['data', 'database', 'redis'].includes(t))) {
+    return 'neutral.midnight'; // Dark blue for data
+  }
+  if (category === 'tutorial') {
+    return 'brand.accent'; // Blue/cyan for tutorials
   }
   
-  // Default to gradient
-  return 'gradient';
+  // Deterministic randomization based on slug
+  const index = deterministicHash(slug, GRADIENT_KEYS.length);
+  return GRADIENT_KEYS[index];
 }
 
-// Select icon based on post metadata
-function selectIcon(frontmatter) {
-  const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags.map(t => t.toLowerCase()) : [];
-  const category = (frontmatter.category || '').toLowerCase();
-  
-  if (tags.some(t => ['security', 'cve', 'vulnerability'].includes(t))) return 'security';
-  if (tags.some(t => ['api', 'mcp', 'integration'].includes(t))) return 'api';
-  if (tags.some(t => ['design', 'ui', 'ux'].includes(t))) return 'design';
-  if (tags.some(t => ['performance', 'optimization'].includes(t))) return 'performance';
-  if (tags.some(t => ['data', 'database', 'redis'].includes(t))) return 'data';
-  if (tags.some(t => ['tools', 'cli', 'workflow'].includes(t))) return 'tools';
-  if (category === 'tutorial') return 'docs';
-  
-  return 'code'; // Default
-}
-
-// Generate SVG hero image
+/**
+ * Generate simplified SVG with pure gradient background
+ * Removes patterns, blobs, icons, and text overlays
+ * Output: 1200×630px OG image with single linearGradient
+ */
 function generateSVG(frontmatter, slug) {
-  const styleVariant = selectStyleVariant(frontmatter);
-  const style = STYLE_VARIANTS[styleVariant];
-  const iconKey = selectIcon(frontmatter);
-  const icon = ICONS[iconKey];
-  const title = frontmatter.title || '';
+  const gradientKey = selectGradientKey(frontmatter, slug);
+  const gradientValue = getGradient(gradientKey);
   
-  // Generate background
-  let backgroundDef = '';
-  if (style.background.startsWith('linear-gradient')) {
-    const gradientMatch = style.background.match(/linear-gradient\(([^)]+)\)/);
-    if (gradientMatch) {
-      const [angle, ...stops] = gradientMatch[1].split(',').map(s => s.trim());
-      const rotation = angle.replace('deg', '');
-      
-      backgroundDef = `
-  <defs>
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(${rotation})">
-      ${stops.map((stop, i) => {
-        const [color, position] = stop.split(/\s+/);
-        return `<stop offset="${position || (i * 100 / (stops.length - 1)) + '%'}" stop-color="${color}"/>`;
-      }).join('\n      ')}
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="630" fill="url(#bgGradient)"/>`;
-    }
-  } else {
-    backgroundDef = `<rect width="1200" height="630" fill="${style.background}"/>`;
+  // Parse gradient for SVG linearGradient definition
+  const gradientMatch = gradientValue.match(/linear-gradient\(([^)]+)\)/);
+  if (!gradientMatch) {
+    throw new Error(`Invalid gradient format: ${gradientValue}`);
   }
   
-  // Generate pattern overlay
-  const patternOpacity = styleVariant === 'minimal' ? '0.4' : '0.3';
-  const pattern = style.pattern 
-    ? `<g opacity="${patternOpacity}">\n    ${generatePattern(style.pattern, 'rgba(255,255,255,0.15)')}\n  </g>`
-    : '';
+  const [angle, ...stops] = gradientMatch[1].split(',').map(s => s.trim());
+  const rotation = angle.replace('deg', '');
   
-  // Icon with background
-  const iconSize = 100;
-  const iconX = 600 - iconSize / 2;
-  const iconY = 240 - iconSize / 2;
+  // Build SVG linearGradient stops
+  const stopElements = stops.map((stop, i) => {
+    const parts = stop.split(/\s+/);
+    const color = parts[0];
+    const position = parts[1] || `${(i * 100 / (stops.length - 1))}%`;
+    return `    <stop offset="${position}" stop-color="${color}"/>`;
+  }).join('\n');
   
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-  ${backgroundDef}
-  
-  ${pattern}
-  
-  <!-- Decorative blobs -->
-  <g opacity="0.2">
-    <circle cx="1050" cy="100" r="150" fill="white" filter="blur(60px)"/>
-    <circle cx="150" cy="530" r="150" fill="white" filter="blur(60px)"/>
-  </g>
-  
-  <!-- Icon container -->
-  <g transform="translate(${iconX}, ${iconY})">
-    <rect width="${iconSize}" height="${iconSize}" rx="20" fill="rgba(255,255,255,0.15)" 
-          stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
-    <g transform="translate(25, 25) scale(2)" color="${style.iconColor}">
-      ${icon}
-    </g>
-  </g>
-  
-  <!-- Title (if short enough) -->
-  ${title.length <= 60 ? `
-  <text x="600" y="400" font-family="system-ui, -apple-system, sans-serif" 
-        font-size="48" font-weight="700" fill="white" text-anchor="middle"
-        style="text-shadow: 0 2px 10px rgba(0,0,0,0.3)">
-    ${escapeXml(title.length > 50 ? title.substring(0, 50) + '...' : title)}
-  </text>` : ''}
-  
-  <!-- Site branding -->
-  <text x="600" y="520" font-family="system-ui, -apple-system, sans-serif" 
-        font-size="24" font-weight="600" fill="rgba(255,255,255,0.9)" 
-        text-anchor="middle" letter-spacing="0.05em">
-    DCYFR.AI BLOG
-  </text>
-  
-  <!-- Metadata badge -->
-  <g transform="translate(500, 560)">
-    <rect width="200" height="40" rx="20" fill="rgba(255,255,255,0.1)" 
-          stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-    <text x="100" y="26" font-family="system-ui, -apple-system, sans-serif" 
-          font-size="14" font-weight="500" fill="rgba(255,255,255,0.8)" 
-          text-anchor="middle">
-      ${frontmatter.category ? frontmatter.category.toUpperCase() : 'BLOG POST'}
-    </text>
-  </g>
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(${rotation})">
+${stopElements}
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
 </svg>`;
-}
-
-// Helper to escape XML special characters
-function escapeXml(text) {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
 }
 
 // Parse frontmatter from MDX file
@@ -394,13 +281,18 @@ function parseFrontmatter(filePath) {
 function generateForPost(slug, options = {}) {
   const { preview = false, force = false } = options;
   
-  const mdxPath = join(CONTENT_DIR, `${slug}.mdx`);
+  // Check for both flat (.mdx) and folder-based (slug/index.mdx) structures
+  let mdxPath = join(CONTENT_DIR, `${slug}.mdx`);
+  if (!existsSync(mdxPath)) {
+    mdxPath = join(CONTENT_DIR, slug, 'index.mdx');
+  }
+  
   const outputDir = join(PUBLIC_IMAGES_DIR, slug);
   const outputPath = join(outputDir, 'hero.svg');
   
   // Check if source file exists
   if (!existsSync(mdxPath)) {
-    console.error(`❌ Post not found: ${slug}.mdx`);
+    console.error(`❌ Post not found: ${slug}.mdx or ${slug}/index.mdx`);
     return false;
   }
   
@@ -424,9 +316,10 @@ function generateForPost(slug, options = {}) {
     const svg = generateSVG(frontmatter, slug);
     
     if (preview) {
+      const gradientKey = selectGradientKey(frontmatter, slug);
       console.log(`\n📄 Preview for ${slug}:\n`);
       console.log(svg);
-      console.log(`\n💡 Style: ${selectStyleVariant(frontmatter)}, Icon: ${selectIcon(frontmatter)}`);
+      console.log(`\n💡 Gradient: ${gradientKey}`);
       return true;
     }
     
@@ -490,7 +383,7 @@ async function generateForAll(options = {}) {
 
 // Main execution
 async function main() {
-  console.log('🎨 Blog Hero Image Generator\n');
+  console.log('🎨 Blog Hero Image Generator (Simplified Gradients)\n');
   
   if (!flags.slug && !flags.all) {
     console.error('❌ Error: Please specify --slug <slug> or --all\n');
@@ -499,6 +392,7 @@ async function main() {
     console.log('  node scripts/generate-blog-hero.mjs --all');
     console.log('  node scripts/generate-blog-hero.mjs --slug my-post --preview');
     console.log('  node scripts/generate-blog-hero.mjs --slug my-post --force');
+    console.log('  node scripts/generate-blog-hero.mjs --slug my-post --variant ocean --force');
     process.exit(1);
   }
   
