@@ -110,15 +110,15 @@ export default async function SponsorsPage() {
           </div>
         </Section>
 
-        {/* Invite Codes Section */}
+        {/* Invites Section */}
         <Section
-          id="invite-codes"
+          id="invites"
           className={PAGE_LAYOUT.section.container}
         >
           <div className={SPACING.content}>
             <div className="flex items-center gap-3 mb-6">
               <div>
-                <h2 className={TYPOGRAPHY.h2.standard}>Invite Codes</h2>
+                <h2 className={TYPOGRAPHY.h2.standard}>Invites</h2>
                 <p className="text-muted-foreground mt-2">
                   Join our favorite platforms and communities. Featured partnerships that support our work.
                 </p>
@@ -139,7 +139,7 @@ export default async function SponsorsPage() {
             <div className="text-center mt-8">
               <Button variant="outline" asChild>
                 <Link href="/invites">
-                  View All Invite Codes
+                  View All Invites
                 </Link>
               </Button>
             </div>
