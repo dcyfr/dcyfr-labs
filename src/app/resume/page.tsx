@@ -17,7 +17,7 @@ import {
   ResumeSectionNav,
   SkillsAndCertifications,
 } from "@/components/resume";
-import { UnifiedTimeline } from "@/components/common";
+import { UnifiedTimeline, SmoothScrollToHash } from "@/components/common";
 import { BackToTop } from "@/components/navigation";
 
 const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
@@ -54,6 +54,7 @@ export default async function ResumePage() {
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
       <div className="space-y-10 md:space-y-14">
       <section id="hero">
       <PageHero

@@ -26,6 +26,7 @@ export function TeamSpotlights() {
             member={member} 
             layout="detailed"
             avatarUrl={member.avatarType === "image" && member.id === "drew" ? "https://github.com/dcyfr.png" : undefined}
+            linkTo={member.profileUrl}
           />
         ))}
       </div>

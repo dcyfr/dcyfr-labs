@@ -44,7 +44,7 @@ export function AnalyticsOverview({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold">Summary Statistics</h3>
+            <h3 className={TYPOGRAPHY.h3.standard}>Summary Statistics</h3>
             <p className="text-sm text-muted-foreground">
               Overview of blog performance metrics
             </p>
@@ -124,7 +124,7 @@ export function AnalyticsOverview({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold">Featured Posts</h3>
+            <h3 className={TYPOGRAPHY.h3.standard}>Featured Posts</h3>
             <p className="text-sm text-muted-foreground">
               Top performing posts by category
             </p>
@@ -153,7 +153,7 @@ export function AnalyticsOverview({
             <Card className="p-4 hover:shadow-md transition-shadow">
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-sm font-semibold">Top Post</h4>
+                  <h4 className={TYPOGRAPHY.label.small}>Top Post</h4>
                   <p className="text-xs text-muted-foreground">Most viewed post overall</p>
                 </div>
                 {summary.topPost ? (
@@ -178,7 +178,7 @@ export function AnalyticsOverview({
             <Card className="p-4 hover:shadow-md transition-shadow">
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-sm font-semibold">Most Shared</h4>
+                  <h4 className={TYPOGRAPHY.label.small}>Most Shared</h4>
                   <p className="text-xs text-muted-foreground">Most shared post overall</p>
                 </div>
                 {summary.mostSharedPost ? (
@@ -203,7 +203,7 @@ export function AnalyticsOverview({
             <Card className="p-4 hover:shadow-md transition-shadow">
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-sm font-semibold">Most Commented</h4>
+                  <h4 className={TYPOGRAPHY.label.small}>Most Commented</h4>
                   <p className="text-xs text-muted-foreground">Most commented post overall</p>
                 </div>
                 {summary.mostCommentedPost ? (

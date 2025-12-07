@@ -6,8 +6,10 @@ import { headers } from "next/headers";
 import { getArchiveData } from "@/lib/archive";
 import { getMultipleProjectViews } from "@/lib/project-views";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
-import { TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, CONTAINER_WIDTHS, CONTAINER_PADDING, PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
 import { ProjectList, ProjectFilters } from "@/components/projects";
+import { SmoothScrollToHash } from "@/components/common";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 const basePageTitle = "Our Work";
 const basePageDescription = "Browse our portfolio of development projects, open-source contributions, and published works.";
@@ -276,16 +278,19 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
   };
 
   return (
-    <>
+    <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
 
-      <div className={`container ${CONTAINER_WIDTHS.content} mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8`}>
-        {/* Header */}
-        <div id="work-header" className="mb-8">
+      {/* Hero Section */}
+      <section id="hero" className={PAGE_LAYOUT.archiveHero.container}>
+        <div className={PAGE_LAYOUT.archiveHero.content}>
           <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
-          <p className="text-muted-foreground">{pageDescription}</p>
+          <p className={TYPOGRAPHY.description}>{pageDescription}</p>
         </div>
+      </section>
 
+      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto ${CONTAINER_PADDING} pb-8`}>
         {/* Filters - temporarily hidden
         <div className="mb-8">
           <ProjectFilters
@@ -326,6 +331,6 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           </div>
         )}
       </div>
-    </>
+    </PageLayout>
   );
 }

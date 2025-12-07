@@ -12,8 +12,13 @@ import {
   Megaphone,
   Trophy,
   ExternalLink,
+  TrendingUp,
+  Eye,
+  MessageSquare,
+  Flame,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ANIMATION } from "@/lib/design-tokens";
 import {
   type ActivityItem as ActivityItemType,
   type ActivitySource,
@@ -34,6 +39,8 @@ const SOURCE_ICONS: Record<ActivitySource, typeof FileText> = {
   github: GitCommit,
   changelog: Sparkles,
   milestone: Trophy,
+  trending: TrendingUp,
+  engagement: Flame,
 };
 
 // ============================================================================
@@ -104,7 +111,8 @@ export function ActivityItem({
   return (
     <Card
       className={cn(
-        "group transition-all duration-200",
+        "group transition-all",
+        ANIMATION.duration.fast,
         "hover:shadow-md hover:border-primary/30",
         className
       )}
@@ -158,6 +166,30 @@ export function ActivityItem({
                 <span>{formatActivityDate(activity.timestamp)}</span>
               </time>
 
+              {/* View count */}
+              {activity.meta?.stats?.views !== undefined &&
+                activity.meta.stats.views > 0 && (
+                  <>
+                    <span className="text-xs text-muted-foreground">•</span>
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Eye className="h-3 w-3" />
+                      {activity.meta.stats.views.toLocaleString()} views
+                    </span>
+                  </>
+                )}
+
+              {/* Comment count */}
+              {activity.meta?.stats?.comments !== undefined &&
+                activity.meta.stats.comments > 0 && (
+                  <>
+                    <span className="text-xs text-muted-foreground">•</span>
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <MessageSquare className="h-3 w-3" />
+                      {activity.meta.stats.comments} comments
+                    </span>
+                  </>
+                )}
+
               {activity.meta?.readingTime && (
                 <>
                   <span className="text-xs text-muted-foreground">•</span>
@@ -166,6 +198,49 @@ export function ActivityItem({
                   </span>
                 </>
               )}
+
+              {/* Trending badge */}
+              {activity.meta?.trending && (
+                <>
+                  <span className="text-xs text-muted-foreground">•</span>
+                  <Badge
+                    variant="secondary"
+                    className="text-xs px-1.5 py-0 bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20"
+                  >
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                    Trending
+                  </Badge>
+                </>
+              )}
+
+              {/* Milestone badge */}
+              {activity.meta?.milestone && (
+                <>
+                  <span className="text-xs text-muted-foreground">•</span>
+                  <Badge
+                    variant="secondary"
+                    className="text-xs px-1.5 py-0 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20"
+                  >
+                    <Trophy className="h-3 w-3 mr-1" />
+                    {activity.meta.milestone.toLocaleString()} milestone
+                  </Badge>
+                </>
+              )}
+
+              {/* High engagement badge */}
+              {activity.meta?.engagement !== undefined &&
+                activity.meta.engagement >= 5 && (
+                  <>
+                    <span className="text-xs text-muted-foreground">•</span>
+                    <Badge
+                      variant="secondary"
+                      className="text-xs px-1.5 py-0 bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                    >
+                      <Flame className="h-3 w-3 mr-1" />
+                      {activity.meta.engagement.toFixed(1)}% engaged
+                    </Badge>
+                  </>
+                )}
 
               {activity.meta?.tags && activity.meta.tags.length > 0 && (
                 <>

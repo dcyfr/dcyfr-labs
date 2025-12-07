@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock } from "lucide-react";
 import type { Post } from "@/data/posts";
-import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY, ANIMATION } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 interface FeaturedPostHeroProps {
@@ -62,11 +62,16 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <Card className={`group relative overflow-hidden border-2 ${HOVER_EFFECTS.cardFeatured}`}>
+      <Card className={`holo-card group relative overflow-hidden border-2 ${HOVER_EFFECTS.cardFeatured}`}>
+        {/* Holographic gradient overlay */}
+        <div className="holo-gradient-dark" />
         {/* Background Image with gradient overlay - matches project card style */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-primary/10 to-transparent" />
-          <div className="absolute inset-0 bg-linear-to-b from-background/60 via-background/70 to-background/80 transition-opacity duration-300 group-hover:from-background/50 group-hover:via-background/60 group-hover:to-background/70" />
+          <div className={cn(
+            "absolute inset-0 bg-linear-to-b from-background/60 via-background/70 to-background/80 transition-opacity group-hover:from-background/50 group-hover:via-background/60 group-hover:to-background/70",
+            ANIMATION.duration.normal
+          )} />
         </div>
         
         <div className="relative z-10 p-5 space-y-4">
@@ -96,24 +101,24 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
 
           {/* Title & Summary */}
           <div className="space-y-2">
-            <h2 className={cn(TYPOGRAPHY.h2.featured, "md:text-4xl")}>
+            <h2 className={cn(TYPOGRAPHY.h2.featured, "md:text-4xl text-foreground")}>
               {post.title}
             </h2>
             {post.subtitle && (
-              <p className="text-lg md:text-xl text-muted-foreground font-medium">
+              <p className="text-lg md:text-xl text-foreground/80 font-medium">
                 {post.subtitle}
               </p>
             )}
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-foreground/70 leading-relaxed">
               {post.summary}
             </p>
           </div>
 
           {/* Metadata & CTA */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <time dateTime={post.publishedAt}>{publishedDate}</time>
-              <span className="flex items-center gap-1">
+            <div className="flex items-center gap-4 text-sm">
+              <time dateTime={post.publishedAt} className="text-foreground/60">{publishedDate}</time>
+              <span className="flex items-center gap-1 text-foreground/60">
                 <Clock className="h-3.5 w-3.5" />
                 {post.readingTime.text}
               </span>

@@ -76,6 +76,34 @@ jobs:
           flags: unittests
           name: codecov-umbrella
 
+  bundle:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+      
+      - name: Build production bundle
+        run: npm run build
+        env:
+          NODE_ENV: production
+      
+      - name: Check bundle sizes
+        run: npm run perf:check
+
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
