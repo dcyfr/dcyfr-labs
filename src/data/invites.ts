@@ -16,54 +16,17 @@ export const inviteCodes: InviteCode[] = [
     category: "professional-network",
     featured: true,
     addedAt: "2025-12-06",
-    metrics: "Join 100K+ tech professionals"
-  },
-  {
-    id: "github-sponsors",
-    platform: "GitHub Sponsors",
-    url: "https://github.com/sponsors/dcyfr",
-    description: "Support open source work and get exclusive benefits. Help us dedicate more time to building in public.",
-    category: "developer-community",
-    featured: true,
-    addedAt: "2025-12-06",
-    metrics: "Sponsor open source"
+    metrics: "Join 100K+ builders"
   },
   {
     id: "cal",
     platform: "Cal.com",
-    url: "https://cal.com/dcyfr",
+    url: "https://refer.cal.com/dcyfr",
     description: "Schedule a 1:1 meeting to discuss security, architecture, or career growth in tech.",
     category: "productivity-tools",
     featured: true,
     addedAt: "2025-12-06",
-    metrics: "Book a free consultation"
-  },
-  {
-    id: "linkedin",
-    platform: "LinkedIn",
-    url: "https://www.linkedin.com/in/dcyfr",
-    description: "Connect on LinkedIn for professional networking and career updates in security and software engineering.",
-    category: "professional-network",
-    featured: false,
-    addedAt: "2025-12-06"
-  },
-  {
-    id: "credly",
-    platform: "Credly",
-    url: "https://www.credly.com/users/dcyfr",
-    description: "Verify professional certifications and security credentials. View badges from GIAC, CompTIA, and more.",
-    category: "professional-network",
-    featured: false,
-    addedAt: "2025-12-06"
-  },
-  {
-    id: "goodreads",
-    platform: "Goodreads",
-    url: "https://www.goodreads.com/dcyfr",
-    description: "Follow reading lists focused on security, systems design, and software engineering.",
-    category: "learning-platform",
-    featured: false,
-    addedAt: "2025-12-06"
+    metrics: "Book a free intro call"
   },
 ];
 
