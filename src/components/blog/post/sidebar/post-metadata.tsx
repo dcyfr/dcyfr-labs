@@ -8,6 +8,7 @@ import { POST_CATEGORY_LABEL } from "@/lib/post-categories";
 
 interface PostMetadataProps {
   publishedAt: Date;
+  updatedAt?: Date;
   readingTime: string;
   viewCount?: number;
   tags?: string[];
@@ -26,6 +27,7 @@ interface PostMetadataProps {
  */
 export function PostMetadata({
   publishedAt,
+  updatedAt,
   readingTime,
   viewCount,
   tags,
@@ -35,15 +37,20 @@ export function PostMetadata({
   isLatest,
   isHot,
 }: PostMetadataProps) {
+  // Determine which date to display
+  const hasUpdate = updatedAt && updatedAt.getTime() !== publishedAt.getTime();
+  const displayDate = hasUpdate ? updatedAt : publishedAt;
+  const dateLabel = hasUpdate ? "Updated" : "Published";
   return (
     <div className="space-y-3 pb-6 border-b">
       <h2 className="font-semibold mb-3 text-sm">Post Details</h2>
 
-      {/* Published Date */}
+      {/* Date - shows updated if different from published */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Calendar className="h-4 w-4 shrink-0" />
-        <time dateTime={publishedAt.toISOString()}>
-          {publishedAt.toLocaleDateString("en-US", {
+        <time dateTime={displayDate!.toISOString()}>
+          <span className="font-medium">{dateLabel}:</span>{" "}
+          {displayDate!.toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
             year: "numeric",

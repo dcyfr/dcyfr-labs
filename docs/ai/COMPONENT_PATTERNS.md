@@ -9,6 +9,8 @@ Mandatory patterns for components, layouts, imports, and metadata generation.
 - [Metadata Generation](#metadata-generation)
 - [Container Widths](#container-widths)
 - [Error Boundaries](#error-boundaries)
+- [Animation Patterns](#animation-patterns)
+- [Loading States & Skeletons](#loading-states--skeletons)
 
 ---
 
@@ -212,7 +214,7 @@ export const metadata = createArticlePageMetadata({
   publishedAt: new Date(post.publishedAt), // Required
   tags: post.tags,                      // Optional
   image: post.image?.url,               // Optional
-  author: "Drew Cyfr",                  // Optional
+  author: "Drew",                  // Optional
 });
 ```
 
@@ -300,6 +302,161 @@ import { ContactFormErrorBoundary } from "@/components/errors";
   <p>Static text</p>
 </div>
 ```
+
+---
+
+## Animation Patterns
+
+**MANDATORY:** Use ANIMATION tokens and transition utilities instead of hardcoded duration classes.
+
+### Why Standardized Animations?
+
+- **Consistency** - Same speeds across 150+ components
+- **Performance** - GPU-accelerated (transform + opacity)
+- **Accessibility** - Automatic prefers-reduced-motion support
+- **Maintainability** - Change globally via design tokens
+
+### Available Animation Tokens
+
+```typescript
+import { ANIMATION } from "@/lib/design-tokens";
+
+// Duration tokens (replace duration-* classes)
+ANIMATION.duration.fast    // "duration-150" - Quick UI responses (hover, focus)
+ANIMATION.duration.normal  // "duration-300" - Standard transitions (cards, modals)
+ANIMATION.duration.slow    // "duration-500" - Dramatic effects (page transitions)
+
+// Transition utilities (prefer these for common patterns)
+ANIMATION.transition.movement    // "transition-movement" - transform (scale, translate, rotate)
+ANIMATION.transition.appearance  // "transition-appearance" - opacity, backdrop-blur
+ANIMATION.transition.theme       // "transition-theme" - theme switching (colors, backgrounds)
+```
+
+### Usage Patterns
+
+```typescript
+// ✅ CORRECT - Use duration tokens
+<div className={cn("transition-transform", ANIMATION.duration.fast)}>
+  <Card />
+</div>
+
+// ✅ BETTER - Use transition utilities (includes duration)
+<div className="transition-movement">
+  <Card />
+</div>
+
+// ✅ BEST - Combine for complex animations
+<div className={cn("transition-movement", ANIMATION.duration.slow)}>
+  <HeroSection />
+</div>
+
+// ❌ WRONG - Hardcoded durations (ESLint will warn)
+<div className="transition-transform duration-150">
+  <Card />
+</div>
+```
+
+### When to Use Which
+
+| Pattern | Use Token | Use Utility | Example |
+|---------|-----------|-------------|---------|
+| Hover scale/translate | ✅ | ✅ | `.transition-movement` |
+| Fade in/out | ✅ | ✅ | `.transition-appearance` |
+| Theme switching | ❌ | ✅ | `.transition-theme` (slow by design) |
+| Custom timing | ✅ | ❌ | `{ANIMATION.duration.slow}` |
+
+---
+
+## Loading States & Skeletons
+
+**STRATEGY:** Selective skeletons for slow content only (APIs, databases, heavy images).
+
+### When to Use Skeletons
+
+```typescript
+// ✅ YES - External APIs (slow, unpredictable)
+<Suspense fallback={<BlogPostSkeleton />}>
+  <BlogPost slug={slug} />
+</Suspense>
+
+// ✅ YES - Database queries (can be slow)
+<Suspense fallback={<ProjectCardSkeleton />}>
+  <ProjectCardWithViews projectId={id} />
+</Suspense>
+
+// ❌ NO - Static content (fast, unnecessary)
+<div>
+  <h1>About Me</h1>
+  <p>This renders instantly from MDX</p>
+</div>
+
+// ❌ NO - Simple state (loading=true is sufficient)
+{isLoading ? <Spinner /> : <Content />}
+```
+
+### Skeleton Implementation Pattern
+
+**All skeletons must match the final component structure exactly.**
+
+```typescript
+// ProjectCard with integrated skeleton
+export function ProjectCard({ project, loading }: ProjectCardProps) {
+  if (loading || !project) {
+    return (
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-48" />  {/* Matches title */}
+          <Skeleton className="h-4 w-full" /> {/* Matches description line 1 */}
+          <Skeleton className="h-4 w-5/6" /> {/* Matches description line 2 */}
+        </CardHeader>
+      </Card>
+    );
+  }
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{project.title}</CardTitle>
+        <CardDescription>{project.description}</CardDescription>
+      </CardHeader>
+    </Card>
+  );
+}
+```
+
+### Skeleton Primitives
+
+**File:** `src/components/ui/skeleton-primitives.tsx` (420 lines)
+
+Pre-built skeletons for common patterns:
+
+```typescript
+import {
+  SkeletonText,        // Single line of text
+  SkeletonHeading,     // Heading with proper sizing
+  SkeletonParagraph,   // Multiple lines of text
+  SkeletonCard,        // Full card with header/body
+  SkeletonImage,       // Image placeholder
+  SkeletonBadge,       // Badge/tag placeholder
+} from "@/components/ui/skeleton-primitives";
+
+// Use primitives for quick skeleton construction
+<SkeletonCard>
+  <SkeletonHeading level={2} />
+  <SkeletonParagraph lines={3} />
+  <div className="flex gap-2">
+    <SkeletonBadge />
+    <SkeletonBadge />
+  </div>
+</SkeletonCard>
+```
+
+### Performance Considerations
+
+- **Shimmer animation** - GPU-accelerated (translateX + background-gradient)
+- **Auto-disabled** - Respects prefers-reduced-motion
+- **Lazy loading** - Skeletons load first, then hydrate with data
+- **Minimal DOM** - Simple structure reduces parse time
 
 ---
 

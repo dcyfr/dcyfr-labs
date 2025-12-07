@@ -1,37 +1,21 @@
 import type { PostImage } from "@/data/posts";
 
 /**
- * Default Blog Image Variants
+ * Default Blog Image
  * 
- * Pre-designed fallback images for blog posts without custom featured images.
- * Each variant has a unique style to provide visual variety.
+ * Pre-designed fallback image for blog posts without custom featured images.
  */
-export const DEFAULT_IMAGES = {
-  gradient: {
-    url: "/blog/images/default/hero.svg",
-    alt: "Default blog post featured image with gradient background",
-  },
-  minimal: {
-    url: "/blog/images/default/minimal.svg",
-    alt: "Minimal dark blog post featured image with code icon",
-  },
-  geometric: {
-    url: "/blog/images/default/geometric.svg",
-    alt: "Geometric pattern blog post featured image",
-  },
+export const DEFAULT_IMAGE = {
+  url: "/blog/images/default/hero.svg",
+  alt: "Default blog post featured image with gradient background",
 } as const;
 
-export type DefaultImageVariant = keyof typeof DEFAULT_IMAGES;
-
 /**
- * Get a default image for a blog post based on various factors
+ * Get the default image for a blog post
  * 
- * Selection priority:
- * 1. Post title hash (deterministic based on title)
- * 2. Post tags (tech/code gets minimal, design gets geometric)
- * 3. Random variant
+ * Returns the standard hero.svg default image for all posts without custom images.
  * 
- * @param options - Post metadata for selecting appropriate default
+ * @param options - Post metadata (currently unused, kept for API compatibility)
  * @returns PostImage object with default image data
  * 
  * @example
@@ -43,43 +27,8 @@ export type DefaultImageVariant = keyof typeof DEFAULT_IMAGES;
 export function getDefaultBlogImage(options?: {
   title?: string;
   tags?: string[];
-  variant?: DefaultImageVariant;
 }): PostImage {
-  // If variant explicitly specified, use it
-  if (options?.variant) {
-    return DEFAULT_IMAGES[options.variant];
-  }
-
-  // Select based on tags
-  if (options?.tags && options.tags.length > 0) {
-    const tags = options.tags.map((t) => t.toLowerCase());
-    
-    // Tech/code content → minimal (dark with code icon)
-    if (tags.some((t) => ["javascript", "typescript", "react", "node", "code", "programming"].includes(t))) {
-      return DEFAULT_IMAGES.minimal;
-    }
-    
-    // Design/UI content → geometric
-    if (tags.some((t) => ["design", "ui", "ux", "css", "tailwind", "styling"].includes(t))) {
-      return DEFAULT_IMAGES.geometric;
-    }
-    
-    // Default to gradient for other content
-    return DEFAULT_IMAGES.gradient;
-  }
-
-  // Hash title to get consistent variant for same title
-  if (options?.title) {
-    const hash = options.title.split("").reduce((acc, char) => {
-      return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
-    const variants = Object.keys(DEFAULT_IMAGES) as DefaultImageVariant[];
-    const index = Math.abs(hash) % variants.length;
-    return DEFAULT_IMAGES[variants[index]];
-  }
-
-  // Fallback to gradient
-  return DEFAULT_IMAGES.gradient;
+  return DEFAULT_IMAGE;
 }
 
 /**
@@ -89,22 +38,19 @@ export function getDefaultBlogImage(options?: {
  * with the post title overlaid on a styled background.
  * 
  * @param title - Post title to display on image
- * @param style - Visual style (gradient, minimal, geometric)
  * @returns PostImage object with API URL
  * 
  * @example
  * const dynamicImg = getDynamicDefaultImage(
- *   "Getting Started with Next.js",
- *   "gradient"
+ *   "Getting Started with Next.js"
  * );
  */
 export function getDynamicDefaultImage(
-  title: string,
-  style: "gradient" | "minimal" | "geometric" = "gradient"
+  title: string
 ): PostImage {
   const params = new URLSearchParams({
     title,
-    style,
+    style: "gradient",
   });
 
   return {

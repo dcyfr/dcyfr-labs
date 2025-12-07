@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics';
 import { Briefcase, BookOpen, Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ANIMATION } from '@/lib/design-tokens';
 
 export function HomepageHeroActions() {
   const handleBlogClick = () => {
@@ -54,7 +56,10 @@ export function HomepageHeroActions() {
         variant="cta"
         asChild
         size="default"
-        className="gap-2 hover:scale-105 transition-transform duration-200"
+        className={cn(
+          "gap-2 hover:scale-105 transition-transform",
+          ANIMATION.duration.fast
+        )}
       >
         <Link href="/work" onClick={handleProjectsClick}>
           <Briefcase className="h-4 w-4" />
@@ -67,7 +72,10 @@ export function HomepageHeroActions() {
         variant="cta-outline"
         asChild
         size="default"
-        className="gap-2 hover:scale-105 transition-transform duration-200"
+        className={cn(
+          "gap-2 hover:scale-105 transition-transform",
+          ANIMATION.duration.fast
+        )}
       >
         <Link href="/blog" onClick={handleBlogClick}>
           <BookOpen className="h-4 w-4" />
@@ -80,7 +88,10 @@ export function HomepageHeroActions() {
         variant="secondary"
         asChild
         size="default"
-        className="gap-2 hover:scale-105 transition-transform duration-200"
+        className={cn(
+          "gap-2 hover:scale-105 transition-transform",
+          ANIMATION.duration.fast
+        )}
       >
         <Link href="/about" onClick={handleAboutClick}>
           <Info className="h-4 w-4" />

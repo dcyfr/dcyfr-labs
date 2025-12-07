@@ -40,19 +40,20 @@ describe('Socials Data', () => {
 
   describe('Platform Types', () => {
     it('all platforms are valid SocialPlatform types', () => {
-      // Only test platforms that are actually in use
-      const platformsInUse: SocialPlatform[] = [
-        'linkedin',
-        'github',
-        'github-sponsor',
-        'peerlist',
-        'goodreads',
-        'credly',
+      // Only test platforms that are actually in use in socialLinks array
+      const platformsInUse = [
         'calendar',
-      ]
+        'linkedin',
+        'peerlist',
+        'wellfound',
+        'github',
+        'sponsors',
+        'credly',
+        'goodreads',
+      ] as const;
 
       socialLinks.forEach((link) => {
-        expect(platformsInUse).toContain(link.platform)
+        expect(platformsInUse).toContain(link.platform as typeof platformsInUse[number]);
       })
     })
 
@@ -285,7 +286,7 @@ describe('Socials Data', () => {
 
     it('similar platforms use consistent patterns', () => {
       const github = getSocialLink('github')
-      const githubSponsor = getSocialLink('github-sponsor')
+      const githubSponsor = getSocialLink('sponsors')
       
       if (github && githubSponsor) {
         // Both should reference github

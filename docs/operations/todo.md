@@ -514,6 +514,11 @@ _All current short-term tasks completed as of December 5, 2025._
 
 - [ ] Featured blog posts section (2 hours)
 - [ ] Downloadable resume button (1 hour)
+- [ ] Visual improvements and layout refactoring (3-4 hours)
+  - Add visual elements to break up text-heavy sections
+  - Consider icons for three content pillars in About DCYFR
+  - Improve spacing and visual hierarchy
+  - Add more engaging visual elements throughout
 
 ### Blog Features Enhancements
 

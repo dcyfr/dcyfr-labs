@@ -44,7 +44,7 @@ export function SocialLinksGrid() {
               ? Linkedin
               : social.platform === "github"
                 ? Github
-                : social.platform === "github-sponsor"
+                : social.platform === "sponsors"
                   ? Heart
                   : social.platform === "peerlist"
                     ? Users

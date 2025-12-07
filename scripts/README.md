@@ -49,6 +49,83 @@ node scripts/check-headers.mjs
 ### Accessibility Testing
 
 #### test-accessibility.mjs
+
+### Content Generation
+
+#### generate-blog-hero.mjs
+
+Generates gradient SVG hero images for blog posts with deterministic color schemes.
+
+```bash
+# Generate for specific post
+node scripts/generate-blog-hero.mjs --slug my-post-slug
+
+# Generate for all posts missing images
+node scripts/generate-blog-hero.mjs --all
+
+# Preview without saving
+node scripts/generate-blog-hero.mjs --slug my-post --preview
+
+# Force regeneration with specific gradient
+node scripts/generate-blog-hero.mjs --slug my-post --variant ocean --force
+```
+
+**Features:**
+- 22 gradient variants across 5 themes (brand, warm, cool, neutral, vibrant)
+- Tag-based thematic gradient selection (security → red, performance → blue, etc.)
+- Deterministic gradient selection (same slug = same gradient)
+- 1200×630px OG image compliant
+
+#### generate-project-hero.mjs
+
+Generates theme-aware SVG hero images for project cards with unique color schemes and pattern overlays.
+
+```bash
+# Generate all project images
+node scripts/generate-project-hero.mjs --all
+
+# Generate single project
+node scripts/generate-project-hero.mjs --project code
+
+# Preview without saving
+node scripts/generate-project-hero.mjs --project tech --preview
+
+# Force regeneration
+node scripts/generate-project-hero.mjs --all --force
+
+# Via npm script
+npm run generate:project-hero
+```
+
+**Features:**
+- 6 unique color schemes with no repeating colors:
+  - `code.svg` → Red gradient with dot pattern
+  - `tech.svg` → Blue gradient with circuit pattern
+  - `design.svg` → Green gradient with grid pattern
+  - `startup.svg` → Violet gradient with wave pattern
+  - `nonprofit.svg` → Indigo gradient with hexagon pattern
+  - `general.svg` → Orange gradient with line pattern
+- CSS custom properties for automatic light/dark mode adaptation
+- Pattern overlays for depth (dots, grid, lines, circuits, hexagons, waves)
+- 1200×630px OG image compliant
+- File sizes ~1.5-2KB per SVG
+
+**Color-to-Project Mapping:**
+| Project | Color | Pattern | Use Case |
+|---------|-------|---------|----------|
+| code | Red (#ef4444) | Dots | Code/development projects |
+| tech | Blue (#3b82f6) | Circuits | Technology/infrastructure |
+| design | Green (#10b981) | Grid | Design/creative work |
+| startup | Violet (#8b5cf6) | Waves | Startup/entrepreneurial |
+| nonprofit | Indigo (#6366f1) | Hexagons | Nonprofit/community |
+| general | Orange (#f97316) | Lines | General/miscellaneous |
+
+**Dark Mode Support:**
+Images automatically adapt to theme via CSS media queries and `data-theme` attribute. Pattern visibility is preserved in both light and dark modes through optimized gradient overlays.
+
+### Accessibility Testing
+
+#### test-accessibility.mjs
 Automated accessibility testing suite for HTML structure validation.
 
 ```bash

@@ -3,7 +3,7 @@ import { TYPOGRAPHY, SPACING, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 export function InvitesCTA() {
   return (
     <div className={SPACING.content}>
-      <div className="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-lg p-8 text-center">
+      <div className="bg-linear-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-lg p-8 text-center">
         <h2 className={TYPOGRAPHY.h2.featured}>Have a Platform to Share?</h2>
         <p
           className={`text-muted-foreground mt-4 ${CONTAINER_WIDTHS.narrow} mx-auto`}

@@ -49,39 +49,75 @@ import { SPACING, TYPOGRAPHY, HOVER_EFFECTS, CONTAINER_WIDTHS } from "@/lib/desi
 ### Available Tokens
 
 ```typescript
-// Spacing (Tailwind numeric equivalents)
+// Spacing (VERTICAL spacing only - for space-y-* patterns)
 SPACING = {
-  section: "12",    // Large gaps between sections
-  content: "8",     // Standard content gaps (most common)
-  element: "4",     // Small gaps between elements
-  tight: "2",       // Compact spacing
-  grid: "6",        // Grid/card gaps
+  section: "space-y-10 md:space-y-12",    // Major page sections
+  subsection: "space-y-6 md:space-y-8",   // Related content blocks
+  content: "space-y-4",                   // Within content blocks
+  proseHero: "prose space-y-4",           // Page hero sections
+  proseSection: "prose space-y-4",        // Generic prose sections
+  image: "mt-6 mb-6 md:mt-8 md:mb-8",    // Image elements
 }
 
 // Typography (semantic headings)
 TYPOGRAPHY = {
-  h1: { standard: "...", narrow: "..." },
-  h2: { standard: "...", narrow: "..." },
+  h1: { standard: "...", hero: "...", article: "..." },
+  h2: { standard: "...", featured: "..." },
   h3: { standard: "..." },
   // ... h4, h5, h6, body variants
 }
 
 // Container widths
 CONTAINER_WIDTHS = {
-  narrow: "max-w-[672px]",
-  standard: "max-w-[896px]",
-  content: "max-w-[1120px]",
-  archive: "max-w-[1280px]",
+  narrow: "max-w-4xl",
+  standard: "max-w-5xl",
+  content: "max-w-6xl",
+  archive: "max-w-7xl",
   dashboard: "max-w-[1536px]",
 }
 
 // Hover effects
 HOVER_EFFECTS = {
-  button: "transition-transform hover:scale-105...",
+  button: "transition-shadow hover:shadow-xl...",
   card: "transition-all hover:shadow-lg...",
   // ...
 }
 ```
+
+### ⚠️ SPACING Token Critical Rules
+
+**SPACING tokens are ONLY for vertical spacing (space-y-*).**
+
+**✅ CORRECT Usage:**
+```tsx
+// Use SPACING tokens directly for vertical spacing
+<div className={SPACING.section}>
+  <section>...</section>
+</div>
+
+// Use numeric values for gap, padding, small spacing
+<div className="flex gap-4">
+  <div className="p-4 space-y-2">...</div>
+</div>
+```
+
+**❌ INCORRECT Usage (Build Failures):**
+```tsx
+// ❌ Template literals with SPACING (property doesn't exist)
+<div className={`gap-${SPACING.compact}`}>  // SPACING has no 'compact'
+<div className={`space-y-${SPACING.tight}`}>  // SPACING has no 'tight'
+
+// ❌ Using SPACING for non-vertical spacing
+<div className={`p-${SPACING.content}`}>  // SPACING is for space-y only
+```
+
+**Common Mistakes:**
+- Using non-existent properties: `SPACING.compact`, `SPACING.tight`, `SPACING.small`
+- Using SPACING in template literals for inline properties (gap, padding)
+- Using SPACING for horizontal spacing
+
+**If you see:** `Property 'X' does not exist on type 'SPACING'`
+**Solution:** Check the valid SPACING properties above or use numeric values (2, 4, 6, 8)
 
 ### ESLint Rules
 
@@ -90,20 +126,43 @@ HOVER_EFFECTS = {
 Prohibited patterns (will trigger ESLint warnings):
 
 ```javascript
-// ❌ Hardcoded spacing (gap-5 to gap-9, p-6, p-7, etc.)
+// ❌ Hardcoded spacing (gap-5 to gap-9, p-6, p-7, space-y-6, etc.)
 "Selector[value=/gap-[5-9]/]"
 "Selector[value=/p-[67]/]"
+"Selector[value=/space-y-[5-9]/]"
 
-// ❌ Inline typography (text-3xl, text-4xl, font-semibold, etc.)
-"Selector[value=/text-(3xl|4xl|5xl)/]"
-"Selector[value=/font-(semibold|bold)/]"
+// ❌ Inline typography combinations (text-* + font-*)
+// Examples that will be flagged:
+//   "text-3xl font-semibold" → Use {TYPOGRAPHY.h1.standard}
+//   "text-2xl font-semibold" → Use {TYPOGRAPHY.h2.standard}
+//   "text-sm font-medium" → Use {TYPOGRAPHY.label.small}
+"Selector[value=/text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl).*font-(bold|semibold|medium)/]"
 
-// ❌ Hardcoded container widths
+// ❌ Hardcoded animation durations (duration-150, duration-300, transition-300, etc.)
+// Examples that will be flagged:
+//   "duration-150" → Use {ANIMATION.duration.fast} or .transition-movement
+//   "duration-300" → Use {ANIMATION.duration.normal} or .transition-appearance
+//   "duration-500" → Use {ANIMATION.duration.slow} or .transition-theme
+"Selector[value=/\\b(duration|transition)-(75|100|150|200|300|500|700|1000)\\b/]"
+
+// ❌ Hardcoded container widths (max-w-[px] patterns)
 "Selector[value=/max-w-\\[\\d+px\\]/]"
 
-// ❌ Manual hover effects
+// ❌ Manual hover effects (individual scale/shadow classes)
 "Selector[value=/hover:scale-/]"
+"Selector[value=/transition-all.*hover:shadow-(sm|md|lg|xl|2xl)/]"
 ```
+
+**New Rules (2024-01):**
+- **Typography enforcement** - Prevents mixing text-* and font-* classes
+- **Animation duration enforcement** - Requires ANIMATION.duration tokens or transition utilities
+- **Improved hover effect detection** - Catches transition-all + hover:shadow patterns
+
+**Why These Rules?**
+- **Consistency** - 150+ components use the same animation speeds
+- **Maintainability** - Change durations globally via design tokens
+- **Performance** - Transition utilities use optimized CSS custom properties
+- **Accessibility** - Respects prefers-reduced-motion automatically
 
 **Exclusions:**
 - `src/components/ui/**` - shadcn/ui uses its own system

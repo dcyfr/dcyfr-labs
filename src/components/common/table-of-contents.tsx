@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toastSuccess } from "@/lib/toast";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * Props for the TableOfContents component
@@ -368,9 +368,7 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
         <div className="space-y-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            // Not a semantic heading - button label doesn't need TYPOGRAPHY token
-            // eslint-disable-next-line no-restricted-syntax
-            className="flex w-full items-center justify-between text-sm font-semibold text-foreground hover:text-primary transition-colors"
+            className={cn("flex w-full items-center justify-between text-foreground hover:text-primary transition-colors", TYPOGRAPHY.label.small)}
             aria-expanded={isExpanded}
           >
             <span>On this page</span>

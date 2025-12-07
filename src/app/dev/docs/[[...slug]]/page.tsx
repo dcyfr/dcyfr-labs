@@ -158,7 +158,7 @@ function DirectoryTree({ node, currentPath }: { node: any; currentPath: string }
             : "text-muted-foreground hover:text-foreground hover:bg-accent"
         }`}
       >
-        <FileText className="h-4 w-4 flex-shrink-0" />
+        <FileText className="h-4 w-4 shrink-0" />
         <span className="truncate">{node.name}</span>
       </Link>
     );
@@ -167,7 +167,7 @@ function DirectoryTree({ node, currentPath }: { node: any; currentPath: string }
   return (
     <details open={currentPath.startsWith(node.name)}>
       <summary className="flex items-center gap-2 py-1.5 px-3 rounded-md text-sm font-medium cursor-pointer hover:bg-accent transition-colors">
-        <Folder className="h-4 w-4 flex-shrink-0" />
+        <Folder className="h-4 w-4 shrink-0" />
         <span className="truncate">{node.name}</span>
       </summary>
       <div className="ml-4 mt-1 space-y-1 border-l-2 border-border pl-2">

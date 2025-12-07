@@ -84,7 +84,7 @@ export function ProjectCard({
   if (loading || !project) {
     return (
       <div className="block group cursor-pointer">
-        <Card className={cn("flex h-full flex-col overflow-hidden relative", HOVER_EFFECTS.card)}>
+        <Card className={cn("holo-card flex h-full flex-col overflow-hidden relative", HOVER_EFFECTS.card)}>
           {/* Content - matches CardHeader structure exactly */}
           <CardHeader className="space-y-1.5 px-4 py-4 sm:py-4">
             {/* Timeline with status badge */}
@@ -142,7 +142,9 @@ export function ProjectCard({
         }
       }}
     >
-      <Card className={cn("flex h-full flex-col overflow-hidden relative", HOVER_EFFECTS.card)}>
+      <Card className={cn("holo-card flex h-full flex-col overflow-hidden relative", HOVER_EFFECTS.card)}>
+        {/* Holographic gradient overlay */}
+        <div className="holo-gradient-dark" />
         {/* Content */}
         <CardHeader className="space-y-1.5 px-4 py-4">
           {project.timeline && (

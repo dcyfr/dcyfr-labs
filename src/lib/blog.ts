@@ -65,6 +65,35 @@ export function calculateReadingTime(body: string): Post["readingTime"] {
   };
 }
 
+/**
+ * Check if a post has a co-located hero image
+ * Looks for hero.svg, hero.jpg, hero.jpeg, hero.png, hero.webp in the post's directory
+ * @returns Image object if found, undefined otherwise
+ */
+function getColocatedHeroImage(slug: string, title: string): Post["image"] | undefined {
+  const postDir = path.join(CONTENT_DIR, slug);
+  
+  // Only check if the post uses folder structure (not flat file)
+  if (!fs.existsSync(postDir) || !fs.statSync(postDir).isDirectory()) {
+    return undefined;
+  }
+
+  // Check for hero images in order of preference
+  const heroExtensions = ['.svg', '.jpg', '.jpeg', '.png', '.webp'];
+  
+  for (const ext of heroExtensions) {
+    const heroPath = path.join(postDir, `hero${ext}`);
+    if (fs.existsSync(heroPath)) {
+      return {
+        url: `/blog/${slug}/assets/hero${ext}`,
+        alt: `Hero image for ${title}`,
+      };
+    }
+  }
+  
+  return undefined;
+}
+
 export function getAllPosts(): Post[] {
   if (!fs.existsSync(CONTENT_DIR)) {
     return [];
@@ -106,6 +135,9 @@ export function getAllPosts(): Post[] {
     // Use explicit ID from frontmatter, or auto-generate deterministically
     const id = (data.id as string | undefined) || generatePostId(publishedAt, slug);
 
+    // Check for co-located hero image if not specified in frontmatter
+    const image = data.image as Post["image"] | undefined || getColocatedHeroImage(slug, data.title as string);
+
     posts.push({
       id,
       slug,
@@ -122,8 +154,10 @@ export function getAllPosts(): Post[] {
       body: content,
       previousSlugs: (data.previousSlugs as string[]) || undefined,
       previousIds: (data.previousIds as string[]) || undefined,
-      image: data.image as Post["image"] | undefined,
+      image,
       series: data.series as Post["series"] | undefined,
+      authors: (data.authors as string[] | undefined) || [(data.author as string | undefined) || "dcyfr"],
+      authorId: (data.author as string | undefined) || "dcyfr", // deprecated, kept for backward compatibility
       readingTime: calculateReadingTime(content),
     } satisfies Post);
   }
@@ -165,6 +199,9 @@ export function getPostBySlug(slug: string): Post | undefined {
   const publishedAt = data.publishedAt as string;
   const id = (data.id as string | undefined) || generatePostId(publishedAt, slug);
 
+  // Check for co-located hero image if not specified in frontmatter
+  const image = data.image as Post["image"] | undefined || getColocatedHeroImage(slug, data.title as string);
+
   const post: Post = {
     id,
     slug,
@@ -181,8 +218,10 @@ export function getPostBySlug(slug: string): Post | undefined {
     body: content,
     previousSlugs: (data.previousSlugs as string[]) || undefined,
     previousIds: (data.previousIds as string[]) || undefined,
-    image: data.image as Post["image"] | undefined,
+    image,
     series: data.series as Post["series"] | undefined,
+    authors: (data.authors as string[] | undefined) || [(data.author as string | undefined) || "dcyfr"],
+    authorId: (data.author as string | undefined) || "dcyfr", // deprecated, kept for backward compatibility
     readingTime: calculateReadingTime(content),
   };
 

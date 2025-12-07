@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
-import { Section, TeamMemberCard } from "@/components/common";
+import { Section, TeamMemberCard, SmoothScrollToHash } from "@/components/common";
 import {
   TYPOGRAPHY,
   SPACING,
@@ -74,6 +74,7 @@ export default async function SponsorsPage() {
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
 
       <div className="space-y-10 md:space-y-14">
         {/* Hero Section */}
@@ -104,6 +105,7 @@ export default async function SponsorsPage() {
                   layout="compact"
                   contribution={contributorDescriptions[member.id]}
                   avatarUrl={member.avatarType === "image" && member.id === "drew" ? "https://github.com/dcyfr.png" : undefined}
+                  linkTo={member.profileUrl}
                 />
               ))}
             </div>

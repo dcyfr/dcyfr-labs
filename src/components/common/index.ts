@@ -1,5 +1,6 @@
 // Common/shared components
 export { BlogPostCTA, ProjectsCTA, AvailabilityBanner, type CTAProps } from "./cta";
+export { Alert, type AlertProps } from "./alert";
 export { ContactForm } from "./contact-form";
 export { CopyCodeButton } from "./copy-code-button";
 export { HighlightText } from "./highlight-text";
@@ -8,6 +9,7 @@ export { KeyboardShortcutsHelp } from "./keyboard-shortcuts-help";
 export { default as Logo } from "./logo";
 export { SiteLogo } from "./site-logo";
 export { MDX } from "./mdx";
+export { ZoomableImage } from "./zoomable-image";
 export { Mermaid } from "./mermaid";
 export { FAQ, FAQQuestion, FAQAnswer, type FAQProps, type FAQItem } from "./faq";
 export { ProfileAvatar, type AvatarSize } from "./profile-avatar";

@@ -234,7 +234,7 @@ export const metadata = createArticlePageMetadata({
   publishedAt: new Date(post.publishedAt),
   tags: post.tags,
   image: post.image?.url,
-  author: "Drew Cyfr",
+  author: "Drew",
 });
 ```
 

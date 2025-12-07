@@ -8,7 +8,12 @@
 import type { Post } from "@/data/posts";
 import type { Project, ProjectCategory } from "@/data/projects";
 import type { ChangelogEntry, ChangelogType } from "@/data/changelog";
-import type { ActivityItem, TimeGroup, ActivityVerb } from "./types";
+import type { ActivityItem, TimeGroup, ActivityVerb, ActivitySource } from "./types";
+
+/**
+ * NOTE: This file contains only synchronous transformers that are safe for client components.
+ * Async transformers that require Redis/Node APIs are in sources.server.ts
+ */
 
 // ============================================================================
 // BLOG POST TRANSFORMER
@@ -16,23 +21,28 @@ import type { ActivityItem, TimeGroup, ActivityVerb } from "./types";
 
 /**
  * Transform blog posts into activity items
+ * Basic version without view counts (use transformPostsWithViews from sources.server.ts for enriched data)
  */
 export function transformPosts(posts: Post[]): ActivityItem[] {
-  return posts.map((post) => ({
-    id: `blog-${post.id}`,
-    source: "blog" as const,
-    verb: post.updatedAt ? "updated" : "published",
-    title: post.title,
-    description: post.summary,
-    timestamp: new Date(post.updatedAt || post.publishedAt),
-    href: `/blog/${post.slug}`,
-    meta: {
-      tags: post.tags.slice(0, 3),
-      category: post.category,
-      image: post.image ? { url: post.image.url, alt: post.image.alt } : undefined,
-      readingTime: post.readingTime?.text,
-    },
-  }));
+  return posts
+    .filter((p) => !p.archived && !p.draft)
+    .map((post) => ({
+      id: `blog-${post.id}`,
+      source: "blog" as const,
+      verb: (post.updatedAt ? "updated" : "published") as ActivityVerb,
+      title: post.title,
+      description: post.summary,
+      timestamp: new Date(post.updatedAt || post.publishedAt),
+      href: `/blog/${post.slug}`,
+      meta: {
+        tags: post.tags.slice(0, 3),
+        category: post.category,
+        image: post.image
+          ? { url: post.image.url, alt: post.image.alt }
+          : undefined,
+        readingTime: post.readingTime?.text,
+      },
+    }));
 }
 
 // ============================================================================
@@ -125,6 +135,8 @@ export function transformChangelog(entries: ChangelogEntry[]): ActivityItem[] {
   }));
 }
 
+
+
 // ============================================================================
 // AGGREGATOR
 // ============================================================================
@@ -136,7 +148,7 @@ export interface AggregateOptions {
   /** Maximum number of items to return */
   limit?: number;
   /** Filter by sources */
-  sources?: ("blog" | "project" | "github" | "changelog" | "milestone")[];
+  sources?: ActivitySource[];
   /** Only include items after this date */
   after?: Date;
   /** Only include items before this date */

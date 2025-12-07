@@ -71,9 +71,9 @@ function MemberAvatar({
 
   if (isAI) {
     return (
-      <div className="relative flex-shrink-0">
+      <div className="relative shrink-0">
         <div
-          className={`${sizeClasses} rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center ring-2 ring-border group-hover:ring-primary/50 transition-all`}
+          className={`${sizeClasses} rounded-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center ring-2 ring-border group-hover:ring-primary/50 transition-all`}
         >
           {member.avatarIcon && (
             <member.avatarIcon className={`${iconSize} text-primary`} />
@@ -90,7 +90,7 @@ function MemberAvatar({
 
   return (
     <div
-      className={`relative ${sizeClasses} rounded-full overflow-hidden flex-shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-all`}
+      className={`relative ${sizeClasses} rounded-full overflow-hidden shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-all`}
     >
       <Image
         src={imageSrc}
@@ -112,17 +112,19 @@ function MemberAvatar({
 function DetailedLayout({
   member,
   avatarUrl,
+  linkTo,
   className,
 }: {
   member: TeamMember;
   avatarUrl?: string;
+  linkTo?: string;
   className?: string;
 }) {
   const isAI = member.avatarType === "icon";
 
-  return (
+  const cardContent = (
     <Card
-      className={`p-5 space-y-4 ${isAI ? "border-primary/20" : ""} ${HOVER_EFFECTS.cardSubtle} ${className || ""}`}
+      className={`p-5 space-y-4 ${isAI ? "border-primary/20" : ""} ${linkTo ? HOVER_EFFECTS.card : HOVER_EFFECTS.cardSubtle} ${className || ""}`}
     >
       <div className="flex flex-col items-start gap-3">
         <div className="flex flex-row items-center gap-4">
@@ -136,6 +138,21 @@ function DetailedLayout({
       </div>
     </Card>
   );
+
+  if (linkTo) {
+    const isExternal = linkTo.startsWith("http");
+    return (
+      <Link
+        href={linkTo}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }
 
 /**
@@ -212,6 +229,11 @@ export function TeamMemberCard({
   }
 
   return (
-    <DetailedLayout member={member} avatarUrl={avatarUrl} className={className} />
+    <DetailedLayout 
+      member={member} 
+      avatarUrl={avatarUrl} 
+      linkTo={linkTo}
+      className={className} 
+    />
   );
 }

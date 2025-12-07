@@ -5,6 +5,7 @@ import { ErrorBoundary, type ErrorFallbackProps } from "./error-boundary";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 import { Logo } from "@/components/common/logo";
 
 /**
@@ -15,7 +16,7 @@ function ContactFormErrorFallback({ error, resetError }: ErrorFallbackProps) {
     <Card className="p-4 border-destructive/50">
       <div className="space-y-3">
         <div className="space-y-2">
-          <h2 className={cn("text-lg", "font-semibold", "text-destructive")}>Contact form error</h2>
+          <h2 className={cn(TYPOGRAPHY.h3.standard, "text-destructive")}>Contact form error</h2>
           <p className="text-sm text-muted-foreground">
             We encountered an issue with the contact form. You can try again or reach out via
             alternative methods listed below.

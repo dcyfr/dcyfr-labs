@@ -7,7 +7,15 @@ import {
   ACTIVITY_SOURCE_COLORS,
   ACTIVITY_SOURCE_LABELS,
 } from "@/lib/activity";
-import { FileText, FolderKanban, GitCommit, Sparkles, Trophy } from "lucide-react";
+import {
+  FileText,
+  FolderKanban,
+  GitCommit,
+  Sparkles,
+  Trophy,
+  TrendingUp,
+  Flame,
+} from "lucide-react";
 
 // ============================================================================
 // TYPES
@@ -45,6 +53,8 @@ const SOURCE_ICONS: Record<ActivitySource, typeof FileText> = {
   github: GitCommit,
   changelog: Sparkles,
   milestone: Trophy,
+  trending: TrendingUp,
+  engagement: Flame,
 };
 
 const TIME_RANGES: { value: TimeRangeFilter; label: string }[] = [
@@ -83,7 +93,7 @@ export function ActivityFilters({
   onSourcesChange,
   selectedTimeRange,
   onTimeRangeChange,
-  availableSources = ["blog", "project"],
+  availableSources = ["blog", "project", "github", "changelog", "milestone", "trending", "engagement"],
   className,
 }: ActivityFiltersProps) {
   const toggleSource = (source: ActivitySource) => {

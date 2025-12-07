@@ -36,6 +36,7 @@ import {
   Section,
   TrendingPosts,
   ScrollIndicator,
+  SmoothScrollToHash,
 } from "@/components/common";
 import {
   transformPosts,
@@ -44,7 +45,6 @@ import {
   aggregateActivities,
 } from "@/lib/activity";
 import { HomepageStats, HomepageHeroActions, HomepageHeroHeadline, FlippableAvatar } from "@/components/home";
-import { WhatIDo, TechStack, SocialProof } from "@/components/about";
 import { ScrollReveal } from "@/components/features";
 
 // Lazy-loaded below-fold components for better initial load performance
@@ -82,7 +82,7 @@ const ActivityFeed = dynamic(
 );
 
 // Optimized meta description for homepage (157 characters)
-const pageDescription = "Cyber architecture and design insights from DCYFR Labs. Exploring coding, security, and tech trends.";
+const pageDescription = "Discover insights on cyber architecture, coding, and security at DCYFR Labs. Stay updated with our latest articles and projects.";
 
 export const metadata: Metadata = createPageMetadata({
   title: SITE_TITLE_PLAIN,
@@ -168,9 +168,24 @@ export default async function Home() {
     ],
   };
 
+  // Transform content into activity items
+  const blogActivities = await transformPosts(recentPosts);
+  const projectActivities = transformProjects([...featuredProjects]);
+  const changelogActivities = transformChangelog(visibleChangelog);
+  
+  const recentActivities = aggregateActivities(
+    [
+      ...blogActivities,
+      ...projectActivities,
+      ...changelogActivities,
+    ],
+    { limit: 7 }
+  );
+
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
 
       <SectionNavigator
         scrollOffset={SCROLL_BEHAVIOR.offset.standard}
@@ -211,17 +226,11 @@ export default async function Home() {
                     "mx-auto"
                   )}
                 >
-                  Helping builders create secure, resilient digital experiences
-                  through cyber architecture and design insights.
+                  Exploring cyber architecture, coding, and security insights to build a safer digital future.
                 </p>
 
                 {/* Actions */}
                 <HomepageHeroActions />
-
-                {/* Scroll Indicator 
-                <div className="pt-8">
-                  <ScrollIndicator />
-                </div> */}
               </div>
             </div>
           </ScrollReveal>
@@ -242,14 +251,7 @@ export default async function Home() {
             <div className={SPACING.content}>
               <SectionHeader title="Activity" />
               <ActivityFeed
-                items={aggregateActivities(
-                  [
-                    ...transformPosts(recentPosts),
-                    ...transformProjects([...featuredProjects]),
-                    ...transformChangelog(visibleChangelog),
-                  ],
-                  { limit: 7 }
-                )}
+                items={recentActivities}
                 variant="timeline"
                 viewAllHref="/activity"
               />

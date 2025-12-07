@@ -9,6 +9,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 import {
   Accordion,
   AccordionContent,
@@ -84,7 +85,7 @@ export function FAQ({ items, title, className, children }: FAQProps) {
         {title && (
           <h2
             id="faq-title"
-            className="font-semibold text-2xl mb-4"
+            className={cn(TYPOGRAPHY.accordion.heading, "mb-4")}
             style={{ fontFamily: "var(--font-sans)" }}
           >
             {title}
@@ -93,7 +94,7 @@ export function FAQ({ items, title, className, children }: FAQProps) {
         <Accordion type="single" collapsible className="w-full">
           {items.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-left font-medium">
+              <AccordionTrigger className={TYPOGRAPHY.accordion.trigger}>
                 {item.question}
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
@@ -120,7 +121,7 @@ export function FAQ({ items, title, className, children }: FAQProps) {
           {title && (
             <h2
               id="faq-title"
-              className="font-semibold text-2xl mb-4"
+              className={cn(TYPOGRAPHY.accordion.heading, "mb-4")}
               style={{ fontFamily: "var(--font-sans)" }}
             >
               {title}
@@ -148,7 +149,7 @@ export function FAQ({ items, title, className, children }: FAQProps) {
         {title && (
           <h2
             id="faq-title"
-            className="font-semibold text-2xl mb-4"
+            className={cn(TYPOGRAPHY.accordion.heading, "mb-4")}
             style={{ fontFamily: "var(--font-sans)" }}
           >
             {title}

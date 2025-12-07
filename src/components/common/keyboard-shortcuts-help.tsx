@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { getShortcutsByCategory } from "@/config/keyboard-shortcuts";
 
 interface KeyboardShortcutsHelpProps {
   open: boolean;
@@ -19,38 +20,12 @@ interface KeyboardShortcutsHelpProps {
  * 
  * Displays available keyboard shortcuts for the blog page.
  * Triggered by pressing '?' key.
+ * 
+ * Shortcuts are centrally defined in @/config/keyboard-shortcuts.ts
+ * for easy maintenance and platform-specific customization.
  */
 export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsHelpProps) {
-  const shortcuts = [
-    {
-      category: "Navigation",
-      items: [
-        { keys: ["/"], description: "Focus search" },
-        { keys: ["Esc"], description: "Clear search / Close dialogs" },
-      ],
-    },
-    {
-      category: "Views",
-      items: [
-        { keys: ["1"], description: "Compact view" },
-        { keys: ["2"], description: "Grid view" },
-        { keys: ["3"], description: "List view" },
-        { keys: ["4"], description: "Magazine view" },
-      ],
-    },
-    {
-      category: "Filters",
-      items: [
-        { keys: ["f"], description: "Toggle sidebar filters" },
-      ],
-    },
-    {
-      category: "Help",
-      items: [
-        { keys: ["?"], description: "Show keyboard shortcuts" },
-      ],
-    },
-  ];
+  const shortcuts = getShortcutsByCategory();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -75,17 +50,12 @@ export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsH
                     <span className="text-sm text-muted-foreground">
                       {item.description}
                     </span>
-                    <div className="flex gap-1">
-                      {item.keys.map((key) => (
-                        <Badge
-                          key={key}
-                          variant="outline"
-                          className="font-mono text-xs px-2 py-0.5"
-                        >
-                          {key}
-                        </Badge>
-                      ))}
-                    </div>
+                    <Badge
+                      variant="outline"
+                      className="font-mono text-xs px-2 py-0.5"
+                    >
+                      {item.key}
+                    </Badge>
                   </div>
                 ))}
               </div>
@@ -97,6 +67,9 @@ export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsH
           <p>
             <strong>Tip:</strong> Press <Badge variant="outline" className="font-mono text-xs mx-1">?</Badge> 
             anytime to view these shortcuts
+          </p>
+          <p className="mt-2 text-xs opacity-75">
+            All shortcuts are single keys that don&apos;t conflict with browser shortcuts like Cmd+F (find) or Cmd+S (save).
           </p>
         </div>
       </DialogContent>

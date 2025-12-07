@@ -113,7 +113,7 @@ const projectDrafts: Project[] = [
     ],
     featured: true,
     image: {
-      url: "/portfolio/default/tech.svg",
+      url: "/images/projects/startup.svg",
       alt: "DCYFR Labs: Cyber Architecture & Design",
       position: "center",
     },
@@ -137,7 +137,7 @@ const projectDrafts: Project[] = [
     ],
     featured: false,
     image: {
-      url: "/portfolio/default/design.svg",
+      url: "/images/projects/design.svg",
       alt: "X64: Indie Cyber Publication",
       position: "center",
     },
@@ -159,7 +159,7 @@ const projectDrafts: Project[] = [
     ],
     featured: false,
     image: {
-      url: "/portfolio/default/general.svg",
+      url: "/images/projects/nonprofit.svg",
       alt: "Information Security Network: A Non-profit cybersecurity organization",
       position: "center",
     },

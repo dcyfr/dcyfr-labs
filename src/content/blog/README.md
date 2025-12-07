@@ -55,6 +55,9 @@ summary: "A brief summary of your post"
 publishedAt: "2025-10-01"
 tags: ["Tag1", "Tag2", "Tag3"]
 featured: true
+image:
+  url: "/blog/my-new-post/assets/hero.svg"
+  alt: "Hero image description"
 ---
 
 Your blog post content goes here...
@@ -69,6 +72,40 @@ Your blog post content goes here...
 - **featured** (optional): Set to `true` to feature this post on the homepage
 - **updatedAt** (optional): Date the post was last updated (YYYY-MM-DD format)
 - **sources** (optional): Array of source links with `label` and `href` properties
+- **image** (optional): Hero image for the post (see Hero Images section below)
+
+## Hero Images
+
+Posts can have custom hero images that display at the top of the post detail page.
+
+### Automatic Detection
+
+If you place a file named `hero.svg`, `hero.jpg`, `hero.jpeg`, `hero.png`, or `hero.webp` in your post's folder, it will be automatically detected and used as the hero image.
+
+**Example:**
+```
+src/content/blog/my-new-post/
+├── index.mdx
+└── hero.svg          # Automatically detected!
+```
+
+No frontmatter configuration needed - the system will automatically use `/blog/my-new-post/assets/hero.svg` as the hero image.
+
+### Manual Configuration
+
+You can also explicitly specify the hero image in frontmatter for more control:
+
+```yaml
+image:
+  url: "/blog/my-new-post/assets/custom-hero.jpg"
+  alt: "Descriptive alt text for accessibility"
+  width: 1200
+  height: 630
+  caption: "Optional caption displayed below image"
+  credit: "Photo by John Doe"
+```
+
+**Frontmatter image takes precedence** over automatic detection.
 
 ### Writing Content
 

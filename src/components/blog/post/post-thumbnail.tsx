@@ -1,7 +1,7 @@
 import Image from "next/image";
-import type { PostImage } from "@/data/posts";
 import { cn } from "@/lib/utils";
-import { IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
+import { ANIMATION, IMAGE_PLACEHOLDER } from "@/lib/design-tokens";
+import type { PostImage } from "@/data/posts";
 
 /**
  * Props for the PostThumbnail component
@@ -99,7 +99,10 @@ export function PostThumbnail({
         src={image.url}
         alt={image.alt}
         fill
-        className="object-cover transition-transform duration-300 hover:scale-105"
+        className={cn(
+          "object-cover transition-transform hover:scale-105",
+          ANIMATION.duration.normal
+        )}
         priority={priority}
         sizes={`(max-width: 640px) 80px, (max-width: 768px) 128px, 200px`}
         placeholder="blur"

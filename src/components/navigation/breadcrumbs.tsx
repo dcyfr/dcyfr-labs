@@ -58,20 +58,23 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
           
           return (
             <Fragment key={`${item.label}-${index}`}>
-              <li 
+              <li
                 className={`flex items-center gap-1.5 sm:gap-2 min-w-0 ${
-                  hiddenOnMobile ? 'hidden sm:flex' : 'flex'
+                  hiddenOnMobile ? "hidden sm:flex" : "flex"
                 }`}
               >
                 {item.href && !isLast ? (
-                  <Link 
+                  <Link
                     href={item.href}
                     className="hover:text-foreground transition-colors flex items-center gap-1 shrink-0"
                   >
                     {/* Show home icon on mobile for first item */}
                     {isFirst ? (
                       <>
-                        <Home className="h-3.5 w-3.5 sm:hidden" aria-label="Home" />
+                        <Home
+                          className="h-3.5 w-3.5 sm:hidden"
+                          aria-label="Home"
+                        />
                         <span className="hidden sm:inline">{item.label}</span>
                       </>
                     ) : (
@@ -81,11 +84,9 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                     )}
                   </Link>
                 ) : (
-                  <span 
-                    className={`truncate ${
-                      isLast 
-                        ? 'max-w-[220px] sm:max-w-[300px] md:max-w-[500px] lg:max-w-none' 
-                        : 'max-w-[100px] sm:max-w-[150px] md:max-w-none'
+                  <span
+                    className={`truncate font-medium ${
+                      isLast ? "text-foreground" : ""
                     }`}
                     aria-current={isLast ? "page" : undefined}
                   >
@@ -93,24 +94,24 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                   </span>
                 )}
               </li>
-              
+
               {/* Show ellipsis on mobile for collapsed middle items */}
               {isFirst && showCollapsed && (
                 <li className="flex sm:hidden items-center gap-1.5">
-                  <ChevronRight 
-                    className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground/50" 
-                    aria-hidden="true" 
+                  <ChevronRight
+                    className="h-3.5 w-3.5 shrink-0 text-muted-foreground/50"
+                    aria-hidden="true"
                   />
                   <span className="text-muted-foreground/70">…</span>
                 </li>
               )}
-              
+
               {!isLast && (
-                <ChevronRight 
-                  className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 text-muted-foreground/50 ${
-                    hiddenOnMobile ? 'hidden sm:block' : ''
-                  } ${isFirst && showCollapsed ? 'hidden sm:block' : ''}`}
-                  aria-hidden="true" 
+                <ChevronRight
+                  className={`h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-muted-foreground/50 ${
+                    hiddenOnMobile ? "hidden sm:block" : ""
+                  } ${isFirst && showCollapsed ? "hidden sm:block" : ""}`}
+                  aria-hidden="true"
                 />
               )}
             </Fragment>
