@@ -11,6 +11,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { projects } from "@/data/projects";
 import { buildProjectsFeed } from "@/lib/feeds";
 
+// Make this route dynamic to allow content negotiation via Accept header
+export const dynamic = "force-dynamic";
+
 // Lower update frequency for work feed (6 hours)
 export const revalidate = 21600;
 

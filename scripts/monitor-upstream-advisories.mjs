@@ -96,6 +96,7 @@ function meetsSeverityThreshold(severity, packageName) {
 /**
  * Fetch security advisories from the global GHSA database
  * IMPORTANT: Validates that advisories actually affect the requested package
+ * Uses multiple validation strategies to prevent false positives
  */
 async function fetchAdvisoriesForPackage(packageName) {
   const advisories = [];
@@ -104,7 +105,7 @@ async function fetchAdvisoriesForPackage(packageName) {
   try {
     console.log(`   Checking GHSA for ${packageName}...`);
     
-    // Use the global advisories API
+    // Use the global advisories API with explicit package filter
     const response = await fetch(
       `https://api.github.com/advisories?ecosystem=npm&package=${packageName}&per_page=20`,
       {
@@ -126,22 +127,76 @@ async function fetchAdvisoriesForPackage(packageName) {
     
     for (const adv of data) {
       // CRITICAL: Validate that the advisory actually affects this package
-      // The API may return advisories for related packages or due to API quirks
-      const vulnInfo = adv.vulnerabilities?.find(v => v.package?.name === packageName);
+      // The GitHub API sometimes returns unrelated advisories, so we validate multiple ways:
       
-      if (!vulnInfo) {
+      // Strategy 1: Check vulnerabilities array (most reliable)
+      let foundInVulnerabilities = false;
+      let vulnerabilityInfo = null;
+      
+      if (Array.isArray(adv.vulnerabilities)) {
+        const vulnInfo = adv.vulnerabilities.find(v => 
+          v.package?.name === packageName
+        );
+        if (vulnInfo) {
+          foundInVulnerabilities = true;
+          vulnerabilityInfo = vulnInfo;
+        }
+      }
+      
+      // Strategy 2: Check affected_packages array (fallback)
+      let foundInAffectedPackages = false;
+      if (!foundInVulnerabilities && Array.isArray(adv.affected_packages)) {
+        const affectedInfo = adv.affected_packages.find(pkg => 
+          pkg.package?.name === packageName
+        );
+        if (affectedInfo) {
+          foundInAffectedPackages = true;
+          vulnerabilityInfo = affectedInfo;
+        }
+      }
+      
+      // Strategy 3: Cross-check with package_slug if present
+      let packageSlugMatches = true;
+      if (adv.package_slug) {
+        // GitHub sometimes uses different package naming
+        // Only filter out if package_slug clearly doesn't match
+        const slugParts = adv.package_slug.split('/');
+        const actualPackage = slugParts[slugParts.length - 1] || '';
+        packageSlugMatches = actualPackage === packageName || 
+                            actualPackage.includes(packageName);
+      }
+      
+      // If not found in vulnerabilities/affected_packages, skip
+      if (!foundInVulnerabilities && !foundInAffectedPackages) {
         // Advisory does not affect the requested package - skip it
-        // This prevents false positives like open-webui and jws advisories
-        // being attributed to the next package
-        const affectedPackage = adv.vulnerabilities?.[0]?.package?.name || "unknown";
+        const affectedPackage = adv.vulnerabilities?.[0]?.package?.name || 
+                                adv.affected_packages?.[0]?.package?.name || 
+                                adv.package_slug || 
+                                "unknown";
         skippedAdvisories.push({
           id: adv.ghsa_id,
           cveId: adv.cve_id,
           actualPackage: affectedPackage,
           queriedPackage: packageName,
+          reason: 'not_in_vulnerabilities_or_affected_packages'
         });
         if (DEBUG) {
-          console.log(`   ⏭️  ${adv.ghsa_id} (${adv.cve_id}) - actually affects ${affectedPackage}, not ${packageName}`);
+          console.log(`   ⏭️  ${adv.ghsa_id} (${adv.cve_id}) - not attributed to ${packageName}`);
+        }
+        continue;
+      }
+      
+      // Additional package name validation
+      if (!packageSlugMatches && !foundInVulnerabilities) {
+        skippedAdvisories.push({
+          id: adv.ghsa_id,
+          cveId: adv.cve_id,
+          actualPackage: adv.package_slug || 'unknown',
+          queriedPackage: packageName,
+          reason: 'package_slug_mismatch'
+        });
+        if (DEBUG) {
+          console.log(`   ⏭️  ${adv.ghsa_id} - package_slug mismatch: ${adv.package_slug}`);
         }
         continue;
       }
@@ -162,8 +217,8 @@ async function fetchAdvisoriesForPackage(packageName) {
           cveId: adv.cve_id,
           publishedAt: adv.published_at,
           url: adv.html_url,
-          vulnerableRange: vulnInfo.vulnerable_version_range || "Unknown",
-          patchedVersion: vulnInfo.first_patched_version?.identifier || "Not yet available",
+          vulnerableRange: vulnerabilityInfo?.vulnerable_version_range || "Unknown",
+          patchedVersion: vulnerabilityInfo?.first_patched_version?.identifier || "Not yet available",
         });
       }
     }
