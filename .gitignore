@@ -35,14 +35,100 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# ========================================
+# SENSITIVE: Environment & Secrets
+# ========================================
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+!.env.template
 
-# MCP configuration with secrets
+# API keys and tokens
+**/secrets/**
+**/credentials/**
+*.key
+*.token
+*.secret
+
+# ========================================
+# SENSITIVE: AI Agent Configurations
+# ========================================
+# Custom AI agents and modes (DCYFR, etc.)
+.github/agents/**
+!.github/agents/.gitkeep
+!.github/agents/README.md
+
+# AI assistant configurations (local overrides)
+.github/copilot-instructions.local.md
+.github/copilot-instructions.*.md
+!.github/copilot-instructions.md
+
+# Cursor AI configs (local)
+.cursorrules.local
+.cursor/
+*.cursor
+
+# Claude Desktop configs (local)
+claude_desktop_config.json
+.claude/
+
+# MCP (Model Context Protocol) configs with secrets
+mcp.json
 .vscode/mcp.json
+.cursor/mcp.json
 
+# Anthropic/OpenAI local configs
+.anthropic/
+.openai/
+
+# ========================================
+# SENSITIVE: IDE & Editor Configs
+# ========================================
+# VS Code (allow workspace settings, block user settings)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.vscode/*.local.*
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+
+# Other editors
+.vs/
+.fleet/
+.windsurf/
+
+# ========================================
+# SENSITIVE: Development & Debug
+# ========================================
+# Local development overrides
+*.local
+*.local.*
+.local/
+*-local.*
+
+# Debug outputs
+debug/
+.debug/
+*.log.local
+dump.rdb
+
+# Performance profiling
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+.clinic/
+
+# ========================================
+# Platform & Deployment
+# ========================================
 # vercel
 .vercel
+.vercel.json.local
 
 # typescript
 *.tsbuildinfo
@@ -57,3 +143,26 @@ next-env.d.ts
 
 # Sentry Config File
 .env.sentry-build-plugin
+.sentryclirc
+
+# ========================================
+# SENSITIVE: Temporary & Cache Files
+# ========================================
+# OS-specific
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.Spotlight-V100
+.Trashes
+
+# Cache directories
+.cache/
+.temp/
+.tmp/
+tmp/
+
+# Package manager caches
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/install-state.gz
