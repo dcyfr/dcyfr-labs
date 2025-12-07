@@ -104,7 +104,16 @@ open https://your-site.com/activity
 
 ## Key Takeaways
 
-- Server components: Call functions directly
-- HTTP APIs: For external clients only
-- Follow established patterns (homepage example)
-- Graceful degradation per source
+1. **Never let external API failures cascade** - Always catch and handle errors gracefully
+2. **Check HTTP status codes explicitly** - 401 needs different handling than 500
+3. **Log actionable error messages** - Help debug production issues
+4. **Document optional dependencies** - Make degradation behavior clear
+5. **Test failure scenarios** - Missing/invalid tokens, network errors, etc.
+
+---
+
+## Additional Resources
+
+- [GitHub Token Documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+- [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables)
+- [Error Handling Best Practices](../development/error-handling.md)
