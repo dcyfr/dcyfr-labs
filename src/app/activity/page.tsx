@@ -5,6 +5,24 @@ import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 import { CONTAINER_WIDTHS, CONTAINER_PADDING, CONTAINER_VERTICAL_PADDING } from "@/lib/design-tokens";
 import { PageHero } from "@/components/layouts/page-hero";
 import { ActivityPageClient } from "./activity-client";
+import { posts } from "@/data/posts";
+import { projects } from "@/data/projects";
+import { changelog } from "@/data/changelog";
+import {
+  transformPosts,
+  transformProjects,
+  transformChangelog,
+  aggregateActivities,
+} from "@/lib/activity/sources";
+import {
+  transformPostsWithViews,
+  transformTrendingPosts,
+  transformMilestones,
+  transformHighEngagementPosts,
+  transformCommentMilestones,
+  transformGitHubActivity,
+} from "@/lib/activity/sources.server";
+import type { ActivityItem } from "@/lib/activity/types";
 
 const pageTitle = "Activity";
 const pageDescription =
@@ -23,32 +41,60 @@ export default async function ActivityPage() {
   // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
 
-  // Fetch activities from API
-  // Use internal URL to avoid network overhead
-  // In development, use localhost. In production, use VERCEL_URL or SITE_URL
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : SITE_URL;
-  
-  let allActivities: any[] = [];
+  // Fetch activities directly (no HTTP request needed in server component)
+  let allActivities: ActivityItem[] = [];
   let error: string | null = null;
 
   try {
-    const response = await fetch(`${baseUrl}/api/activity?limit=100`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
-    });
+    // Gather activity from all sources in parallel (same as API route)
+    const activities: ActivityItem[] = [];
+    
+    await Promise.all([
+      // Blog posts with views
+      transformPostsWithViews(posts)
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Blog posts fetch failed:", err)),
+      
+      // Projects
+      Promise.resolve(transformProjects([...projects]))
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Projects fetch failed:", err)),
+      
+      // Changelog
+      Promise.resolve(transformChangelog(changelog))
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Changelog fetch failed:", err)),
+      
+      // Trending posts
+      transformTrendingPosts(posts, 10)
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Trending posts fetch failed:", err)),
+      
+      // Milestones
+      transformMilestones(posts, 20)
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Milestones fetch failed:", err)),
+      
+      // High engagement posts
+      transformHighEngagementPosts(posts, 5, 10)
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] High engagement posts fetch failed:", err)),
+      
+      // Comment milestones
+      transformCommentMilestones(posts, 10)
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Comment milestones fetch failed:", err)),
+      
+      // GitHub activity
+      transformGitHubActivity("dcyfr", ["dcyfr-labs"], 15)
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] GitHub activity fetch failed:", err)),
+    ]);
 
-    if (response.ok) {
-      const data = await response.json();
-      allActivities = data.activities || [];
-    } else {
-      error = `Failed to fetch activities: ${response.status}`;
-      console.error("[Activity Page]", error);
-    }
+    // Aggregate and sort (limit to 100 for page)
+    allActivities = aggregateActivities(activities, { limit: 100 });
   } catch (err) {
-    error = "Failed to connect to activity API";
+    error = "Failed to load activities";
     console.error("[Activity Page]", err);
   }
 
