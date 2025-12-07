@@ -11,6 +11,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { posts } from "@/data/posts";
 import { buildBlogFeed } from "@/lib/feeds";
 
+// Make this route dynamic to allow content negotiation via Accept header
+export const dynamic = "force-dynamic";
+
 export const revalidate = 3600; // 1 hour
 
 export async function GET(request: NextRequest) {

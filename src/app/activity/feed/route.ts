@@ -16,6 +16,9 @@ import { projects } from "@/data/projects";
 import { changelog } from "@/data/changelog";
 import { buildActivityFeed } from "@/lib/feeds";
 
+// Make this route dynamic to allow content negotiation via Accept header
+export const dynamic = "force-dynamic";
+
 // Higher update frequency for activity feed (30 minutes)
 export const revalidate = 1800;
 
