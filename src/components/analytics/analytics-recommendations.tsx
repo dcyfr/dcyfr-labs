@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { PostAnalytics } from "@/types/analytics";
 import Link from "next/link";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 interface Recommendation {
   id: string;
@@ -218,7 +219,7 @@ export function AnalyticsRecommendations({ posts, compact = false }: AnalyticsRe
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Recommendations</h3>
+          <h3 className={TYPOGRAPHY.h3.standard}>Recommendations</h3>
           <p className="text-sm text-muted-foreground">
             {recommendations.length} actionable insights to improve your content
           </p>
@@ -248,7 +249,7 @@ export function AnalyticsRecommendations({ posts, compact = false }: AnalyticsRe
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2 mb-1">
-                    <h4 className="text-sm font-semibold">{rec.title}</h4>
+                    <h4 className={TYPOGRAPHY.label.small}>{rec.title}</h4>
                     <Badge 
                       variant={rec.priority === 'high' ? 'destructive' : rec.priority === 'medium' ? 'secondary' : 'outline'}
                       className="text-xs shrink-0"

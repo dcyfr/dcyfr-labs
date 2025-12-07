@@ -11,6 +11,7 @@ import { Flame } from "lucide-react";
 import { PostAnalytics } from "@/types/analytics";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 interface AnalyticsTrendingProps {
   /** Trending posts to display */
@@ -41,7 +42,7 @@ export function AnalyticsTrending({ trending, limit = 3 }: AnalyticsTrendingProp
 
   return (
     <div className="mb-6">
-      <h2 className={cn("text-base", "font-semibold", "mb-3")}>Trending Posts</h2>
+      <h2 className={cn(TYPOGRAPHY.label.standard, "mb-3")}>Trending Posts</h2>
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
         {displayPosts.map((post) => (
           <Card key={post.slug} className="overflow-hidden hover:shadow-md transition-shadow">
@@ -49,7 +50,10 @@ export function AnalyticsTrending({ trending, limit = 3 }: AnalyticsTrendingProp
               <div className="flex items-start justify-between gap-2 mb-2">
                 <Link 
                   href={`/blog/${post.slug}`}
-                  className="font-semibold text-sm line-clamp-2 flex-1 hover:underline"
+                  className={cn(
+                    TYPOGRAPHY.label.small,
+                    "line-clamp-2 flex-1 hover:underline"
+                  )}
                 >
                   {post.title}
                 </Link>

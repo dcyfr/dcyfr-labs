@@ -10,6 +10,8 @@ import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
 import { CopyCodeButton } from "@/components/common/copy-code-button";
 import { HorizontalRule } from "@/components/common/horizontal-rule";
 import { Mermaid as MermaidComponent } from "@/components/common/mermaid";
+import { ZoomableImage } from "@/components/common/zoomable-image";
+import { Alert } from "@/components/common/alert";
 import { MCPArchitecture, AuthenticationFlow, PipelineFlow, CVEDecisionTree } from "@/components/common/diagram-presets";
 import { FAQ } from "@/components/common/faq";
 import {
@@ -23,7 +25,7 @@ import {
   Lock,
   Rocket
 } from "lucide-react";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 
 /**
  * Configuration for the rehype-pretty-code plugin
@@ -153,9 +155,29 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   h6: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h6 {...props} className={`${TYPOGRAPHY.h6.mdx} mt-4 scroll-mt-20`} />
   ),
-  p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p {...props} className="leading-7 not-first:mt-4" />
-  ),
+  p: (props: React.HTMLAttributes<HTMLParagraphElement>) => {
+    const { children, ...restProps } = props;
+    
+    // Check if this is a single child that is likely an image component
+    // This prevents "div cannot be a descendant of p" hydration errors
+    const isSingleImageComponent =
+      children &&
+      !Array.isArray(children) &&
+      typeof children === 'object' &&
+      'type' in children &&
+      typeof children.type === 'function';
+    
+    // If it appears to be a component (not a string or primitive), render without <p>
+    if (isSingleImageComponent) {
+      return <>{children}</>;
+    }
+    
+    return (
+      <p {...restProps} className="leading-7 not-first:mt-4">
+        {children}
+      </p>
+    );
+  },
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote 
       {...props} 
@@ -183,10 +205,10 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     <td {...props} className="border border-border px-4 py-2" />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul {...props} className="list-disc pl-5 [&>li]:mt-2" />
+    <ul {...props} className="list-disc pl-6 [&>li]:mt-2" />
   ),
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol {...props} className="list-decimal pl-5 [&>li]:mt-2" />
+    <ol {...props} className="list-decimal pl-6 [&>li]:mt-2" />
   ),
   code: (props: React.HTMLAttributes<HTMLElement>) => {
     // Inline code (no data-language attribute)
@@ -300,6 +322,12 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
       </a>
     );
   },
+  img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <ZoomableImage 
+      {...props} 
+      className={`${SPACING.image} rounded-lg max-w-full h-auto`}
+    />
+  ),
   // Icon components for consistent styling across the site
   CheckIcon: () => <Check className="inline-block w-5 h-5 align-text-bottom text-green-600 dark:text-green-400" aria-label="Check" />,
   XIcon: () => <X className="inline-block w-5 h-5 align-text-bottom text-red-600 dark:text-red-400" aria-label="Cross" />,
@@ -322,6 +350,8 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   CVEDecisionTree,
   // FAQ component
   FAQ,
+  // Alert component for banners
+  Alert,
   // Footnote superscripts with icon
   sup: (props: React.HTMLAttributes<HTMLElement>) => {
     // Check if this contains a link (footnote reference) or has footnote-related attributes

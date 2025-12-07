@@ -7,7 +7,7 @@ import { createArchivePageMetadata, createCollectionSchema, getJsonLdScriptProps
 import { AUTHOR_NAME, SITE_URL } from "@/lib/site-config";
 import { headers } from "next/headers";
 import { getMultiplePostViews } from "@/lib/views";
-import { TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, CONTAINER_WIDTHS, CONTAINER_PADDING, PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import {
   PostList,
@@ -17,7 +17,8 @@ import {
   BlogLayoutWrapper,
   MobileFilterBar,
 } from "@/components/blog";
-import { ViewToggle } from "@/components/common";
+import { ViewToggle, SmoothScrollToHash } from "@/components/common";
+import { PageLayout } from "@/components/layouts/page-layout";
 
 const pageTitle = "Blog";
 const pageDescription = "Blog posts on software development, cybersecurity, emerging technologies, and more.";
@@ -159,11 +160,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     totalPages: Math.ceil(sortedItems.length / archiveData.itemsPerPage),
   };
   
-  // Transform availableTags to include counts
-  const availableTagsWithCounts = sortedArchiveData.availableTags.map(tag => ({
-    tag,
-    count: sortedArchiveData.allFilteredItems.filter(post => post.tags.includes(tag)).length,
-  }));
+  // Transform availableTags to include counts and sort by count (highest first)
+  const availableTagsWithCounts = sortedArchiveData.availableTags
+    .map(tag => ({
+      tag,
+      count: sortedArchiveData.allFilteredItems.filter(post => post.tags.includes(tag)).length,
+    }))
+    .sort((a, b) => b.count - a.count);
   
   // Get available categories from all posts (for filter UI)
   // Use centralized category label mapping as single source of truth
@@ -219,8 +222,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   });
   
   return (
-    <>
+    <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
       
       {/* Track search and filter analytics */}
       <BlogSearchAnalytics 
@@ -232,8 +236,16 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       {/* Layout preference manager */}
       <BlogLayoutManager />
       
+      {/* Hero Section */}
+      <section id="hero" className={PAGE_LAYOUT.archiveHero.container}>
+        <div className={PAGE_LAYOUT.archiveHero.content}>
+          <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
+          <p className={TYPOGRAPHY.description}>{pageDescription}</p>
+        </div>
+      </section>
+      
       {/* Blog layout with sidebar on desktop */}
-      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-8 lg:px-8 pt-8 md:pt-12 pb-8`}>
+      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto ${CONTAINER_PADDING} pb-8`}>
         {/* Main grid: Sidebar + Content */}
         <BlogLayoutWrapper>
           {/* Sidebar (desktop only) */}
@@ -257,17 +269,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
           {/* Main content area */}
           <div id="blog-posts" className="px-2 sm:px-4 lg:px-8 w-full">
-            {/* Header with View Toggle */}
-            <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-              <div className="flex-1">
-                <h1 className={TYPOGRAPHY.h1.hero}>{pageTitle}</h1>
-                <p className="text-muted-foreground">{pageDescription}</p>
-              </div>
-              {/* Layout switcher hidden - grid is default */}
-              {/* <div className="shrink-0 hidden lg:flex items-center gap-3">
-                <ViewToggle currentView={layout} />
-              </div> */}
-            </div>
             
             {/* Mobile filters (below lg breakpoint) - collapsible for better content visibility */}
             <div className="lg:hidden mb-6">
@@ -277,7 +278,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 readingTime={readingTime}
                 categoryList={availableCategories}
                 categoryDisplayMap={categoryDisplayMap}
-                tagList={sortedArchiveData.availableTags}
+                tagList={availableTagsWithCounts.map(({ tag }) => tag)}
                 query={query}
                 sortBy={sortBy}
                 dateRange={dateRange}
@@ -315,6 +316,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </div>
         </BlogLayoutWrapper>
       </div>
-    </>
+    </PageLayout>
   );
 }

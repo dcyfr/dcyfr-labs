@@ -22,10 +22,13 @@ export interface TeamMember {
   philosophy?: string;
   capabilities?: string[];
   integration?: string;
+  highlights?: TeamHighlight[];
   avatarType: "image" | "icon";
   avatarIcon?: LucideIcon;
   avatarImagePath?: string;
   isPrimary?: boolean;
+  slug: string; // URL slug for profile page (/about/[slug])
+  profileUrl: string; // Full URL to profile page
 }
 
 export interface TeamCollaborationArea {
@@ -35,7 +38,7 @@ export interface TeamCollaborationArea {
 }
 
 export interface TeamHighlight {
-  emoji: string;
+  icon: LucideIcon;
   title: string;
   description: string;
 }

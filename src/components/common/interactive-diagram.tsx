@@ -58,7 +58,8 @@ function ModernNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
       <Handle type="target" position={Position.Top} className="bg-primary! w-3! h-3! border-2! border-background!" />
       <div
         className={cn(
-          "px-4 py-3 rounded-lg border-2 shadow-sm transition-all duration-200",
+          "px-4 py-3 rounded-lg border-2 shadow-sm transition-all",
+          ANIMATION.duration.fast,
           variants[variant],
           selected && "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-lg",
           "hover:shadow-md"

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SPACING } from "@/lib/design-tokens";
 import { useSidebarContext } from "@/components/blog/blog-layout-wrapper";
 import { useBlogKeyboard } from "@/components/blog/blog-keyboard-provider";
@@ -9,6 +10,8 @@ import { SidebarSearch } from "./sidebar-search";
 import { SidebarFilters } from "./sidebar-filters";
 import { SidebarCategories } from "./sidebar-categories";
 import { SidebarTopics } from "./sidebar-topics";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface BlogSidebarProps {
   selectedCategory: string;
@@ -54,7 +57,7 @@ export function BlogSidebar({
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [searchValue, setSearchValue] = useState(query);
-  const { isCollapsed } = useSidebarContext();
+  const { isCollapsed, toggleCollapsed } = useSidebarContext();
   const { searchInputRef } = useBlogKeyboard();
   const [expandedSections, setExpandedSections] = useState({
     filters: true,
@@ -150,8 +153,23 @@ export function BlogSidebar({
   };
 
   return (
-    <aside className={SPACING.subsection}>
-      {!isCollapsed && (
+    <aside className={cn(
+      SPACING.subsection,
+      "flex flex-col",
+      isCollapsed && "items-center"
+    )}>
+      {isCollapsed ? (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 shrink-0"
+          onClick={toggleCollapsed}
+          title="Expand filters (Press 'f')"
+          aria-label="Expand filters"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      ) : (
         <>
           <SidebarSearch
             searchValue={searchValue}

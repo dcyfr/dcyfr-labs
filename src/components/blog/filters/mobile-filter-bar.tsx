@@ -6,6 +6,7 @@ import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ANIMATION } from "@/lib/design-tokens";
 import { BlogFilters } from "./blog-filters";
 
 interface MobileFilterBarProps {
@@ -189,7 +190,8 @@ export function MobileFilterBar({
       <div
         id="mobile-filter-content"
         className={cn(
-          "overflow-hidden transition-all duration-200 ease-in-out",
+          "overflow-hidden transition-all ease-in-out",
+          ANIMATION.duration.fast,
           isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
         )}
       >

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { ANIMATION } from "@/lib/design-tokens";
 
 /**
  * Loading bar component that appears during route transitions.
@@ -38,9 +40,12 @@ export function LoadingBar() {
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left transition-all duration-500 ease-in-out ${
+      className={cn(
+        "fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left transition-all ease-in-out",
+        ANIMATION.duration.slow,
+        isLoading ? "opacity-100" : "opacity-0",
         isExiting ? "opacity-0 scale-x-100" : "opacity-100 scale-x-100 animate-loading-bar"
-      }`}
+      )}
       style={{ transformOrigin: "0% 50%" }}
       role="progressbar"
       aria-label="Page loading"
