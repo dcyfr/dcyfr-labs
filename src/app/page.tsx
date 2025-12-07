@@ -24,6 +24,7 @@ import {
   getContainerClasses,
 } from "@/lib/design-tokens";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { cn } from "@/lib/utils";
@@ -35,24 +36,53 @@ import {
   Section,
   TrendingPosts,
   ScrollIndicator,
+  SmoothScrollToHash,
 } from "@/components/common";
-import { ActivityFeed } from "@/components/activity";
 import {
   transformPosts,
   transformProjects,
   transformChangelog,
   aggregateActivities,
 } from "@/lib/activity";
-import { FeaturedPostHero, HomepageStats, HomepageHeroActions, HomepageHeroHeadline, FlippableAvatar } from "@/components/home";
-import { WhatIDo, TechStack, SocialProof } from "@/components/about";
+import { HomepageStats, HomepageHeroActions, HomepageHeroHeadline, FlippableAvatar } from "@/components/home";
+import { ScrollReveal } from "@/components/features";
 
-const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
-  loading: () => <div className="contents" />,
-  ssr: true,
-});
+// Lazy-loaded below-fold components for better initial load performance
+const FeaturedPostHero = dynamic(
+  () => import("@/components/home").then(mod => ({ default: mod.FeaturedPostHero })),
+  {
+    loading: () => (
+      <Card className="p-5 space-y-4 animate-pulse">
+        <div className="flex items-center gap-2">
+          <div className="h-5 w-16 bg-muted rounded" />
+          <div className="h-5 w-20 bg-muted rounded" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-8 bg-muted rounded w-3/4" />
+          <div className="h-6 bg-muted rounded w-full" />
+        </div>
+      </Card>
+    ),
+    ssr: true,
+  }
+);
+
+const ActivityFeed = dynamic(
+  () => import("@/components/activity").then(mod => ({ default: mod.ActivityFeed })),
+  {
+    loading: () => (
+      <div className="space-y-3">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="h-20 bg-muted rounded-lg animate-pulse" />
+        ))}
+      </div>
+    ),
+    ssr: true,
+  }
+);
 
 // Optimized meta description for homepage (157 characters)
-const pageDescription = "Cyber architecture and design insights from DCYFR Labs. Exploring coding, security, and tech trends.";
+const pageDescription = "Discover insights on cyber architecture, coding, and security at DCYFR Labs. Stay updated with our latest articles and projects.";
 
 export const metadata: Metadata = createPageMetadata({
   title: SITE_TITLE_PLAIN,
@@ -138,9 +168,24 @@ export default async function Home() {
     ],
   };
 
+  // Transform content into activity items
+  const blogActivities = await transformPosts(recentPosts);
+  const projectActivities = transformProjects([...featuredProjects]);
+  const changelogActivities = transformChangelog(visibleChangelog);
+  
+  const recentActivities = aggregateActivities(
+    [
+      ...blogActivities,
+      ...projectActivities,
+      ...changelogActivities,
+    ],
+    { limit: 7 }
+  );
+
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
 
       <SectionNavigator
         scrollOffset={SCROLL_BEHAVIOR.offset.standard}
@@ -181,17 +226,11 @@ export default async function Home() {
                     "mx-auto"
                   )}
                 >
-                  Helping builders create secure, resilient digital experiences
-                  through cyber architecture and design insights.
+                  Exploring cyber architecture, coding, and security insights to build a safer digital future.
                 </p>
 
                 {/* Actions */}
                 <HomepageHeroActions />
-
-                {/* Scroll Indicator 
-                <div className="pt-8">
-                  <ScrollIndicator />
-                </div> */}
               </div>
             </div>
           </ScrollReveal>
@@ -212,14 +251,7 @@ export default async function Home() {
             <div className={SPACING.content}>
               <SectionHeader title="Activity" />
               <ActivityFeed
-                items={aggregateActivities(
-                  [
-                    ...transformPosts(recentPosts),
-                    ...transformProjects([...featuredProjects]),
-                    ...transformChangelog(visibleChangelog),
-                  ],
-                  { limit: 8 }
-                )}
+                items={recentActivities}
                 variant="timeline"
                 viewAllHref="/activity"
               />

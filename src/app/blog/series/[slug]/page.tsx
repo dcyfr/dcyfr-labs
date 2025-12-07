@@ -89,7 +89,7 @@ export default async function SeriesPage({
   }
 
   return (
-    <div className={`mx-auto ${CONTAINER_WIDTHS.content} ${CONTAINER_VERTICAL_PADDING} ${CONTAINER_PADDING}`}>
+    <div className={`mx-auto ${CONTAINER_WIDTHS.archive} ${CONTAINER_VERTICAL_PADDING} ${CONTAINER_PADDING}`}>
       {/* Page header */}
       <header className="space-y-4 mb-8">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -101,7 +101,7 @@ export default async function SeriesPage({
         </div>
         
         <div className="flex items-start gap-4">
-          <BookOpen className="h-8 w-8 mt-1 text-primary flex-shrink-0" />
+          <BookOpen className="h-8 w-8 mt-1 text-primary shrink-0" />
           <div className="flex-1">
             <h1 className={TYPOGRAPHY.h1.hero}>
               {seriesName}

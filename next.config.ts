@@ -28,6 +28,11 @@ const nextConfig: NextConfig = {
         hostname: 'github.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
     ],
   },
   async redirects() {
@@ -53,6 +58,13 @@ const nextConfig: NextConfig = {
         destination: '/work/:path*',
         permanent: true,
       },
+      // Feed redirects - unified feed now points to activity feed
+      {
+        source: '/feed',
+        destination: '/activity/feed',
+        permanent: true,
+      },
+      // Legacy RSS/Atom redirects already handled in app/rss.xml/route.ts and app/atom.xml/route.ts
     ];
   },
 };

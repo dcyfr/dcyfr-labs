@@ -126,48 +126,48 @@
 }
 
 /* Headings get pure white with subtle shadow - unless explicit color class is set */
-.holo-card h1:not([class*="text-zinc"]),
-.holo-card h2:not([class*="text-zinc"]),
-.holo-card h3:not([class*="text-zinc"]),
-.holo-card h4:not([class*="text-zinc"]),
-.holo-card h5:not([class*="text-zinc"]),
-.holo-card h6:not([class*="text-zinc"]) {
+.holo-card h1:not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card h2:not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card h3:not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card h4:not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card h5:not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card h6:not([class*="text-zinc"]):not([class*="text-foreground"]) {
   color: hsl(0 0% 100%) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Paragraphs only (no spans/divs that might contain badges) - unless explicit color class */
-.holo-card p:not([class*="text-zinc"]) {
+.holo-card p:not([class*="text-zinc"]):not([class*="text-foreground"]) {
   color: hsl(0 0% 100% / 0.95);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 /* Time stamps - unless in a container with explicit color */
-.holo-card time:not([class*="text-zinc"]) {
+.holo-card time:not([class*="text-zinc"]):not([class*="text-foreground"]) {
   color: hsl(0 0% 100% / 0.9) !important;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   font-weight: 500;
 }
 
 /* Font weight classes - only if not in a badge, link-button, or with explicit color */
-.holo-card .font-semibold:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *):not([class*="text-zinc"]),
-.holo-card .font-bold:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *):not([class*="text-zinc"]),
-.holo-card .font-medium:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *):not([class*="text-zinc"]) {
+.holo-card .font-semibold:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *):not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card .font-bold:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *):not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card .font-medium:not([data-slot="badge"]):not([data-slot="badge"] *):not(.inline-flex):not(.inline-flex *):not([class*="text-zinc"]):not([class*="text-foreground"]) {
   color: hsl(0 0% 100%) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Muted text - only if not in a badge or with explicit color */
-.holo-card .text-muted-foreground:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]) {
+.holo-card .text-muted-foreground:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]):not([class*="text-foreground"]) {
   color: hsl(0 0% 100% / 0.85) !important;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 /* Text size variants - only apply to non-badge elements without explicit color */
-.holo-card .text-xs:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]),
-.holo-card .text-sm:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]),
-.holo-card .text-base:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]),
-.holo-card .text-lg:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]) {
+.holo-card .text-xs:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card .text-sm:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card .text-base:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]):not([class*="text-foreground"]),
+.holo-card .text-lg:not([data-slot="badge"]):not([data-slot="badge"] *):not([class*="text-zinc"]):not([class*="text-foreground"]) {
   color: hsl(0 0% 100% / 0.9);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
@@ -204,4 +204,114 @@
       transparent 100%
     );
   }
+  
+  /* Adjust gradient overlay opacity for better pattern visibility in dark mode */
+  .holo-gradient-dark {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background) / 0.75) 0%,
+      hsl(var(--background) / 0.85) 50%,
+      hsl(var(--background) / 0.95) 100%
+    );
+  }
+  
+  .holo-gradient-dark-hover {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background) / 0.70) 0%,
+      hsl(var(--background) / 0.80) 50%,
+      hsl(var(--background) / 0.92) 100%
+    );
+  }
+}
+
+/* Manual theme override via data-theme attribute */
+[data-theme="dark"] .holo-gradient-dark {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.75) 0%,
+    hsl(var(--background) / 0.85) 50%,
+    hsl(var(--background) / 0.95) 100%
+  );
+}
+
+[data-theme="dark"] .holo-gradient-dark-hover {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.70) 0%,
+    hsl(var(--background) / 0.80) 50%,
+    hsl(var(--background) / 0.92) 100%
+  );
+}
+
+[data-theme="light"] .holo-gradient-dark {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.80) 0%,
+    hsl(var(--background) / 0.90) 50%,
+    hsl(var(--background) / 0.97) 100%
+  );
+}
+
+[data-theme="light"] .holo-gradient-dark-hover {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.75) 0%,
+    hsl(var(--background) / 0.85) 50%,
+    hsl(var(--background) / 0.95) 100%
+  );
+}
+
+/**
+ * Theme-aware project image overlays
+ * These classes ensure project SVG patterns remain visible in both light and dark modes
+ */
+.holo-project-image-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Light mode: darker overlay to increase contrast */
+@media (prefers-color-scheme: light) {
+  .holo-project-image-overlay {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background) / 0.70) 0%,
+      hsl(var(--background) / 0.85) 50%,
+      hsl(var(--background) / 0.95) 100%
+    );
+  }
+}
+
+/* Dark mode: lighter overlay to let patterns shine through */
+@media (prefers-color-scheme: dark) {
+  .holo-project-image-overlay {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background) / 0.60) 0%,
+      hsl(var(--background) / 0.75) 50%,
+      hsl(var(--background) / 0.90) 100%
+    );
+  }
+}
+
+/* Manual theme overrides */
+[data-theme="light"] .holo-project-image-overlay {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.70) 0%,
+    hsl(var(--background) / 0.85) 50%,
+    hsl(var(--background) / 0.95) 100%
+  );
+}
+
+[data-theme="dark"] .holo-project-image-overlay {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--background) / 0.60) 0%,
+    hsl(var(--background) / 0.75) 50%,
+    hsl(var(--background) / 0.90) 100%
+  );
 }

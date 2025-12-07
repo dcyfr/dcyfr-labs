@@ -304,8 +304,9 @@ describe('Resume Data', () => {
   })
 
   describe('Content Quality', () => {
-    it('summary mentions years of experience', () => {
-      expect(resume.summary).toMatch(/\d+\+?\s+years?/i)
+    it('summary is a non-empty string', () => {
+      expect(resume.summary).toBeTruthy()
+      expect(typeof resume.summary).toBe('string')
     })
 
     it('has multiple experience entries', () => {

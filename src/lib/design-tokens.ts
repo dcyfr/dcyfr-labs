@@ -23,16 +23,19 @@
  */
 export const CONTAINER_WIDTHS = {
   /** Narrow width for forms and focused content (contact forms) */
-  narrow: "max-w-3xl",
+  narrow: "max-w-4xl",
   
   /** Standard width for core pages (homepage, about, contact, resume) */
-  standard: "max-w-4xl",
+  standard: "max-w-5xl",
   
   /** Content-heavy pages with sidebar (individual blog posts, project detail pages) */
-  content: "max-w-7xl",
+  content: "max-w-6xl",
   
   /** Archive/listing pages with filters and grids (blog listing, projects listing) */
   archive: "max-w-7xl",
+  
+  /** Full-width dashboard pages with data tables, charts, and analytics (dashboard pages, dev tools) */
+  dashboard: "max-w-[1536px]",
 } as const;
 
 /**
@@ -40,6 +43,11 @@ export const CONTAINER_WIDTHS = {
  * Provides consistent edge spacing across breakpoints
  */
 export const CONTAINER_PADDING = "px-4 sm:px-6 md:px-8" as const;
+
+/**
+ * Horizontal padding for archive container (reduced vertical padding)
+ */
+export const ARCHIVE_CONTAINER_PADDING = "px-4 sm:px-6 md:px-8" as const;
 
 /**
  * Standard vertical padding for page containers
@@ -63,7 +71,7 @@ export const CONTAINER_VERTICAL_PADDING = "py-8 md:py-12" as const;
 export function getContainerClasses(
   width: keyof typeof CONTAINER_WIDTHS = 'standard'
 ): string {
-  return `mx-auto ${CONTAINER_WIDTHS[width]} ${CONTAINER_VERTICAL_PADDING} ${CONTAINER_PADDING}`;
+  return `mx-auto ${CONTAINER_WIDTHS[width]} pt-24 md:pt-28 lg:pt-32 pb-8 md:pb-12 ${CONTAINER_PADDING}`;
 }
 
 // ============================================================================
@@ -157,6 +165,34 @@ export const TYPOGRAPHY = {
   
   /** Body text for long-form content */
   body: "text-base text-foreground leading-relaxed ws-xs",
+  
+  /** Label and small UI text */
+  label: {
+    /** Card/section labels (e.g., "Trending Posts", "Recommendations") */
+    standard: "text-base font-semibold",
+    /** Smaller labels for list items, badges */
+    small: "text-sm font-semibold",
+    /** Extra small labels */
+    xs: "text-xs font-semibold",
+  },
+  
+  /** Accordion/FAQ specific styling */
+  accordion: {
+    /** FAQ section heading */
+    heading: "font-semibold text-2xl",
+    /** FAQ question trigger */
+    trigger: "text-left text-lg font-bold",
+  },
+  
+  /** Logo/branding text */
+  logo: {
+    /** Small logo text (mobile nav, compact views) */
+    small: "text-sm font-serif font-semibold leading-none",
+    /** Medium logo text (default) */
+    medium: "text-xl md:text-2xl font-serif font-semibold leading-none",
+    /** Large logo text (headers, hero sections) */
+    large: "text-3xl md:text-4xl font-serif font-semibold leading-none",
+  },
 } as const;
 
 // ============================================================================
@@ -166,11 +202,41 @@ export const TYPOGRAPHY = {
 /**
  * Spacing patterns for consistent vertical rhythm
  * 
+ * IMPORTANT: These tokens are for VERTICAL spacing (space-y-*) only.
+ * For inline/horizontal spacing (gap-*, p-*, px-*, py-*), use numeric values.
+ * 
+ * Valid Usage:
+ * ✅ <div className={SPACING.section}>        // Vertical spacing between sections
+ * ✅ <div className="flex gap-4">            // Horizontal gap (use numbers)
+ * ✅ <div className="space-y-2">             // Small vertical spacing (use numbers)
+ * 
+ * Invalid Usage:
+ * ❌ <div className={`gap-${SPACING.compact}`}>     // SPACING has no 'compact' property
+ * ❌ <div className={`space-y-${SPACING.tight}`}>  // SPACING has no 'tight' property
+ * ❌ <div className={`p-${SPACING.content}`}>      // SPACING is for space-y only
+ * 
+ * Available Properties:
+ * - section: Major page sections (space-y-10 md:space-y-12)
+ * - subsection: Related content blocks (space-y-6 md:space-y-8)
+ * - content: Within content blocks (space-y-4)
+ * - proseHero: Page hero/header sections
+ * - proseSection: Generic prose sections
+ * - image: Image elements in blog content
+ * 
+ * @see /docs/ai/ENFORCEMENT_RULES.md#design-token-enforcement
+ * 
  * @example
  * ```tsx
+ * // Correct - use SPACING for vertical space-y patterns
  * <div className={SPACING.section}>
  *   <section>...</section>
  *   <section>...</section>
+ * </div>
+ * 
+ * // Correct - use numbers for gap, padding, small spacing
+ * <div className="flex gap-4">
+ *   <div className="p-4">...</div>
+ *   <div className="space-y-2">...</div>
  * </div>
  * ```
  */
@@ -184,11 +250,17 @@ export const SPACING = {
   /** Within content blocks (tightest spacing) */
   content: "space-y-4",
   
+  /** Running text and prose paragraphs (better readability for long-form content) */
+  prose: "space-y-6 md:space-y-8",
+  
   /** Page hero/header sections with prose wrapper */
   proseHero: "prose space-y-4",
   
   /** Generic prose sections */
   proseSection: "prose space-y-4",
+  
+  /** Image elements in blog content (top/bottom margins) */
+  image: "mt-6 mb-6 md:mt-8 md:mb-8",
 } as const;
 
 // ============================================================================
@@ -268,19 +340,28 @@ export const HOVER_EFFECTS = {
 export const ANIMATION = {
   /** Duration scale (references CSS custom properties) */
   duration: {
-    instant: "duration-[0ms]",    // --duration-instant
-    fast: "duration-[150ms]",     // --duration-fast
-    normal: "duration-[250ms]",   // --duration-normal  
-    slow: "duration-[400ms]",     // --duration-slow
-    slower: "duration-[600ms]",   // --duration-slower
+    instant: "duration-[0ms]",    // --duration-instant (0ms) - No animation
+    fast: "duration-[150ms]",     // --duration-fast (150ms) - Quick interactions
+    normal: "duration-[300ms]",   // --duration-normal (300ms) - Standard transitions
+    slow: "duration-[500ms]",     // --duration-slow (500ms) - Complex animations
   },
   
-  /** Transition utilities */
+  /** Transition utilities - Performance optimized */
   transition: {
-    base: "transition-base",      // opacity, transform
-    fast: "transition-fast",      // faster variant
-    slow: "transition-slow",      // slower variant
-    colors: "transition-colors",  // color, background-color, etc.
+    /** Base (opacity + transform, 300ms) - Default choice */
+    base: "transition-base",
+    /** Fast variant (opacity + transform, 150ms) */
+    fast: "transition-fast",
+    /** Slow variant (opacity + transform, 500ms) */
+    slow: "transition-slow",
+    /** Movement only (transform, 150ms) - Best for hover/interactive */
+    movement: "transition-movement",
+    /** Appearance (opacity + transform, 300ms) - Best for reveals */
+    appearance: "transition-appearance",
+    /** Theme (colors, 150ms) - Best for theme changes/hover states */
+    theme: "transition-theme",
+    /** @deprecated Use .transition-theme instead */
+    colors: "transition-colors",
   },
   
   /** Scroll-reveal animation classes */
@@ -424,15 +505,23 @@ export const PAGE_LAYOUT = {
   /** Hero section spacing - larger than standard sections */
   hero: {
     /** Container for hero content - top padding accounts for sticky header */
-    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-8 md:pt-12`,
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-24 md:pt-28 lg:pt-32 pb-10 md:pb-12 lg:pb-14 mb-12`,
     /** Hero title + description wrapper */
+    content: SPACING.proseHero,
+  },
+  
+  /** Archive page hero (blog, work, portfolio listings) - matches standard hero spacing */
+  archiveHero: {
+    /** Container for archive hero - consistent with standard hero for unified layout */
+    container: `mx-auto ${CONTAINER_WIDTHS.archive} ${ARCHIVE_CONTAINER_PADDING} pt-24 md:pt-28 lg:pt-32 pb-10 md:pb-12 lg:pb-14 mb-12`,
+    /** Archive hero title + description wrapper */
     content: SPACING.proseHero,
   },
   
   /** Standard page section spacing */
   section: {
     /** Section container - no vertical padding (handled by parent gap) */
-    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING}`,
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} py-0`,
     /** Section content wrapper */
     content: SPACING.subsection,
   },
@@ -440,9 +529,9 @@ export const PAGE_LAYOUT = {
   /** Prose/reading-optimized section (about page, long-form content) */
   proseSection: {
     /** Container for prose content */
-    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} py-10 md:py-14`,
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} py-6 md:py-8`,
     /** Prose content wrapper */
-    content: SPACING.content,
+    content: SPACING.prose,
   },
   
   /** Narrow section for forms (contact page) */
@@ -623,3 +712,179 @@ export type AnimationDuration = keyof typeof ANIMATIONS;
 
 /** Type for word spacing variants */
 export type WordSpacingVariant = keyof typeof WORD_SPACING;
+
+// ============================================================================
+// GRADIENTS
+// ============================================================================
+
+/**
+ * Centralized gradient definitions for hero images, backgrounds, and UI elements
+ * All gradients are designed for 1200×630px OG images with sufficient contrast
+ * for text overlays on social media cards.
+ *
+ * Organization:
+ * - brand: Primary brand gradients (blue, violet, cyan)
+ * - warm: Warm color palettes (red, orange, yellow, pink)
+ * - cool: Cool color palettes (blue, teal, green, indigo)
+ * - neutral: Grayscale and muted tones
+ * - vibrant: High-contrast, saturated combinations
+ *
+ * @example
+ * ```tsx
+ * // In components
+ * <div className="bg-[linear-gradient(135deg,#3b82f6_0%,#8b5cf6_100%)]" />
+ *
+ * // In scripts
+ * import { GRADIENTS } from '@/lib/design-tokens';
+ * const bgGradient = GRADIENTS.brand.primary;
+ * ```
+ */
+export const GRADIENTS = {
+  /** Primary brand gradients */
+  brand: {
+    /** Primary brand gradient: blue-500 → violet-500 */
+    primary: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
+    
+    /** Secondary brand gradient: violet-500 → pink-500 */
+    secondary: "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
+    
+    /** Accent brand gradient: blue-500 → cyan-500 */
+    accent: "linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)",
+    
+    /** Inverted brand gradient: violet-500 → blue-500 */
+    inverted: "linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)",
+  },
+  
+  /** Warm color gradients */
+  warm: {
+    /** Sunset: orange-500 → red-500 → pink-500 */
+    sunset: "linear-gradient(135deg, #f97316 0%, #ef4444 50%, #ec4899 100%)",
+    
+    /** Fire: red-500 → orange-500 */
+    fire: "linear-gradient(135deg, #ef4444 0%, #f97316 100%)",
+    
+    /** Amber: yellow-500 → orange-500 */
+    amber: "linear-gradient(135deg, #eab308 0%, #f97316 100%)",
+    
+    /** Rose: pink-400 → rose-500 */
+    rose: "linear-gradient(135deg, #f472b6 0%, #f43f5e 100%)",
+    
+    /** Coral: orange-400 → pink-500 */
+    coral: "linear-gradient(135deg, #fb923c 0%, #ec4899 100%)",
+  },
+  
+  /** Cool color gradients */
+  cool: {
+    /** Ocean: sky-500 → blue-600 → indigo-600 */
+    ocean: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #4f46e5 100%)",
+    
+    /** Teal: emerald-500 → teal-500 */
+    teal: "linear-gradient(135deg, #10b981 0%, #14b8a6 100%)",
+    
+    /** Sky: cyan-400 → blue-500 */
+    sky: "linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%)",
+    
+    /** Forest: green-600 → emerald-500 */
+    forest: "linear-gradient(135deg, #16a34a 0%, #10b981 100%)",
+    
+    /** Arctic: cyan-300 → indigo-400 */
+    arctic: "linear-gradient(135deg, #67e8f9 0%, #818cf8 100%)",
+  },
+  
+  /** Neutral/grayscale gradients */
+  neutral: {
+    /** Slate: slate-700 → slate-900 */
+    slate: "linear-gradient(135deg, #334155 0%, #0f172a 100%)",
+    
+    /** Charcoal: slate-800 → slate-950 */
+    charcoal: "linear-gradient(135deg, #1e293b 0%, #020617 100%)",
+    
+    /** Silver: slate-400 → slate-600 */
+    silver: "linear-gradient(135deg, #94a3b8 0%, #475569 100%)",
+    
+    /** Midnight: slate-900 → blue-950 */
+    midnight: "linear-gradient(135deg, #0f172a 0%, #172554 100%)",
+  },
+  
+  /** Vibrant/high-contrast gradients */
+  vibrant: {
+    /** Electric: purple-500 → fuchsia-500 */
+    electric: "linear-gradient(135deg, #a855f7 0%, #d946ef 100%)",
+    
+    /** Neon: lime-400 → green-500 */
+    neon: "linear-gradient(135deg, #a3e635 0%, #22c55e 100%)",
+    
+    /** Plasma: violet-600 → fuchsia-500 → orange-500 */
+    plasma: "linear-gradient(135deg, #7c3aed 0%, #d946ef 50%, #f97316 100%)",
+    
+    /** Aurora: emerald-400 → cyan-400 → blue-500 */
+    aurora: "linear-gradient(135deg, #34d399 0%, #22d3ee 50%, #3b82f6 100%)",
+  },
+} as const;
+
+/**
+ * Gradient keys for deterministic randomization
+ * Flattened array of all gradient paths for indexing
+ */
+export const GRADIENT_KEYS = [
+  "brand.primary",
+  "brand.secondary",
+  "brand.accent",
+  "brand.inverted",
+  "warm.sunset",
+  "warm.fire",
+  "warm.amber",
+  "warm.rose",
+  "warm.coral",
+  "cool.ocean",
+  "cool.teal",
+  "cool.sky",
+  "cool.forest",
+  "cool.arctic",
+  "neutral.slate",
+  "neutral.charcoal",
+  "neutral.silver",
+  "neutral.midnight",
+  "vibrant.electric",
+  "vibrant.neon",
+  "vibrant.plasma",
+  "vibrant.aurora",
+] as const;
+
+/**
+ * Get gradient value from dot-notation key
+ * @example getGradient("brand.primary") → "linear-gradient(...)"
+ */
+export function getGradient(key: string): string {
+  const [category, variant] = key.split(".") as [keyof typeof GRADIENTS, string];
+  return (GRADIENTS[category] as Record<string, string>)[variant] || GRADIENTS.brand.primary;
+}
+
+// ============================================================================
+// IMAGE PLACEHOLDERS
+// ============================================================================
+
+/**
+ * Standard blur placeholder for Next.js Image components
+ * Provides smooth loading experience with subtle gray placeholder
+ *
+ * Usage:
+ * - Add placeholder="blur" to Image component
+ * - Add blurDataURL={IMAGE_PLACEHOLDER.blur} for inline images
+ * - For external images, consider using plaiceholder library
+ *
+ * @example
+ * ```tsx
+ * <Image
+ *   src="/images/avatar.jpg"
+ *   alt="Avatar"
+ *   fill
+ *   placeholder="blur"
+ *   blurDataURL={IMAGE_PLACEHOLDER.blur}
+ * />
+ * ```
+ */
+export const IMAGE_PLACEHOLDER = {
+  /** Standard gray blur placeholder (matches muted background) */
+  blur: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlNWU3ZWIiLz48L3N2Zz4=",
+} as const;

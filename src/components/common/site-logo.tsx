@@ -2,6 +2,7 @@ import React from "react";
 import { Logo } from "@/components/common/logo";
 import { LOGO_CONFIG } from "@/lib/logo-config";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * SiteLogo Component - DCYFR Labs Brand Logo
@@ -35,9 +36,9 @@ interface SiteLogoProps {
 }
 
 const sizeConfig: Record<SiteLogoSize, { text: string; icon: number; gap: string }> = {
-  sm: { text: "text-sm", icon: LOGO_CONFIG.sizes.small, gap: "gap-2" },
-  md: { text: "text-xl md:text-2xl", icon: LOGO_CONFIG.sizes.medium, gap: "gap-2.5" },
-  lg: { text: "text-3xl md:text-4xl", icon: LOGO_CONFIG.sizes.large, gap: "gap-3" },
+  sm: { text: TYPOGRAPHY.logo.small, icon: LOGO_CONFIG.sizes.small, gap: "gap-2" },
+  md: { text: TYPOGRAPHY.logo.medium, icon: LOGO_CONFIG.sizes.medium, gap: "gap-2.5" },
+  lg: { text: TYPOGRAPHY.logo.large, icon: LOGO_CONFIG.sizes.large, gap: "gap-3" },
 };
 
 export const SiteLogo: React.FC<SiteLogoProps> = ({
@@ -56,7 +57,6 @@ export const SiteLogo: React.FC<SiteLogoProps> = ({
         <span
           className={cn(
             config.text,
-            "font-serif font-semibold leading-none",
             collapseOnMobile && "hidden sm:inline"
           )}
         >

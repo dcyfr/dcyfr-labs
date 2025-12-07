@@ -10,9 +10,10 @@
 "use client";
 
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
 import { Briefcase, GraduationCap } from "lucide-react";
 import { Logo } from "@/components/common/logo";
 import type { Experience, Education } from "@/data/resume";
@@ -125,7 +126,7 @@ function ExperienceCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <Briefcase className="h-4 w-4 text-primary shrink-0" />
-            <h3 className="font-semibold text-lg text-foreground">
+            <h3 className={cn(TYPOGRAPHY.h3.standard, "text-foreground")}>
               {experience.title}
             </h3>
           </div>
@@ -173,7 +174,7 @@ function EducationCard({ education }: { education: Education }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <GraduationCap className="h-4 w-4 text-primary shrink-0" />
-            <h3 className="font-semibold text-lg text-foreground">
+            <h3 className={cn(TYPOGRAPHY.h3.standard, "text-foreground")}>
               {education.degree}
             </h3>
           </div>

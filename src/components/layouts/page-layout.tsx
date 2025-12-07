@@ -33,7 +33,7 @@ import { PAGE_LAYOUT } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
 import { DraftBanner } from '@/components/features/draft-banner'
 
-interface PageLayoutProps {
+export interface PageLayoutProps {
   /** Page content */
   children: ReactNode
   /** Additional CSS classes */

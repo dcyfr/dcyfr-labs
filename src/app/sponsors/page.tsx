@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { PageHero } from "@/components/layouts/page-hero";
-import { Section, TeamMemberCard } from "@/components/common";
+import { Section, TeamMemberCard, SmoothScrollToHash } from "@/components/common";
 import {
   TYPOGRAPHY,
   SPACING,
@@ -16,6 +16,9 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { Button } from "@/components/ui/button";
 import { teamMembers } from "@/data/team";
+import { featuredInviteCodes } from "@/data/invites";
+import { InviteCodeCard } from "@/components/sponsors";
+import { Gift } from "lucide-react";
 
 const pageTitle = "Sponsors";
 const pageDescription =
@@ -71,6 +74,7 @@ export default async function SponsorsPage() {
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <SmoothScrollToHash />
 
       <div className="space-y-10 md:space-y-14">
         {/* Hero Section */}
@@ -101,8 +105,45 @@ export default async function SponsorsPage() {
                   layout="compact"
                   contribution={contributorDescriptions[member.id]}
                   avatarUrl={member.avatarType === "image" && member.id === "drew" ? "https://github.com/dcyfr.png" : undefined}
+                  linkTo={member.profileUrl}
                 />
               ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* Invites Section */}
+        <Section
+          id="invites"
+          className={PAGE_LAYOUT.section.container}
+        >
+          <div className={SPACING.content}>
+            <div className="flex items-center gap-3 mb-6">
+              <div>
+                <h2 className={TYPOGRAPHY.h2.standard}>Invites</h2>
+                <p className="text-muted-foreground mt-2">
+                  Join our favorite platforms and communities. Featured partnerships that support our work.
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              {featuredInviteCodes.map((code) => (
+                <InviteCodeCard
+                  key={code.id}
+                  code={code}
+                  showFullDescription={false}
+                />
+              ))}
+            </div>
+
+            {/* Link to full list */}
+            <div className="text-center mt-8">
+              <Button variant="outline" asChild>
+                <Link href="/invites">
+                  View All Invites
+                </Link>
+              </Button>
             </div>
           </div>
         </Section>
@@ -229,7 +270,7 @@ function SponsorCard({ sponsor }: SponsorCardProps) {
       className={`group bg-card border border-border rounded-lg p-4 ${HOVER_EFFECTS.cardSubtle}`}
     >
       <div className="flex items-start gap-4">
-        <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-all">
+        <div className="relative w-16 h-16 rounded-full overflow-hidden shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-all">
           <Image
             src={sponsor.avatarUrl}
             alt={`${displayName}'s avatar`}

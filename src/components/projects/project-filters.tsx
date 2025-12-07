@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SPACING } from "@/lib/design-tokens";
+import { SPACING, ANIMATION } from "@/lib/design-tokens";
 import {
   useFilterParams,
   useFilterSearch,
@@ -123,7 +123,7 @@ export function ProjectFilters({
 
       {/* Collapsible Filters Section */}
       {isExpanded && (
-        <div className={cn(SPACING.subsection, "animate-in fade-in slide-in-from-top-2 duration-200")}>
+        <div className={cn(SPACING.subsection, "animate-in fade-in slide-in-from-top-2", ANIMATION.duration.fast)}>
           <ProjectSort sortBy={sortBy} onSortChange={setSort} />
           <ProjectStatusFilter status={status} onStatusChange={setStatus} />
           <ProjectTechFilter

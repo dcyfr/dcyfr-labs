@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -77,7 +78,7 @@ export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) 
     <Card className="p-4 border-destructive/50">
       <div className="space-y-3">
         <div className="space-y-2">
-          <h2 className={cn("text-lg", "font-semibold", "text-destructive")}>Something went wrong</h2>
+          <h2 className={cn(TYPOGRAPHY.h3.standard, "text-destructive")}>Something went wrong</h2>
           <p className="text-sm text-muted-foreground">
             We encountered an error while rendering this component. Please try again.
           </p>

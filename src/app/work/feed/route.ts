@@ -7,21 +7,41 @@
  * @see src/lib/feeds.ts for feed generation logic
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { projects } from "@/data/projects";
 import { buildProjectsFeed } from "@/lib/feeds";
 
-export const revalidate = 3600; // 1 hour
+// Make this route dynamic to allow content negotiation via Accept header
+export const dynamic = "force-dynamic";
 
-export async function GET() {
+// Lower update frequency for work feed (6 hours)
+export const revalidate = 21600;
+
+export async function GET(request: NextRequest) {
   try {
+    // Check Accept header for format preference (auto-detection)
+    const acceptHeader = request.headers.get("accept") || "";
+    const prefersJson = acceptHeader.includes("application/json") || 
+                       acceptHeader.includes("application/feed+json");
+    
+    if (prefersJson) {
+      const json = await buildProjectsFeed(projects, "json", 20, "/work");
+      
+      return new NextResponse(json, {
+        headers: {
+          "Content-Type": "application/feed+json; charset=utf-8",
+          "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400",
+        },
+      });
+    }
+    
     // Use the projects feed builder with /work path
     const xml = await buildProjectsFeed(projects, "atom", 20, "/work");
     
     return new NextResponse(xml, {
       headers: {
         "Content-Type": "application/atom+xml; charset=utf-8",
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400",
       },
     });
   } catch (error) {

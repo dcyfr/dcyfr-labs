@@ -101,9 +101,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Generate sitemap entries for feed URLs
   const feedEntries = [
     {
-      url: `${base}/feed`,
+      url: `${base}/activity/feed`,
       lastModified: now,
-      changeFrequency: "daily" as const,
+      changeFrequency: "hourly" as const,
       priority: 0.7,
     },
     {
@@ -113,10 +113,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${base}/portfolio/feed`,
+      url: `${base}/work/feed`,
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.5,
+    },
+    {
+      url: `${base}/feeds`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
     },
   ];
   

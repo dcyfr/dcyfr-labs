@@ -8,8 +8,9 @@
 export type SocialPlatform =
   | "linkedin"
   | "github"
-  | "github-sponsor"
+  | "sponsors"
   | "peerlist"
+  | "wellfound"
   | "goodreads"
   | "credly"
   | "calendar"
@@ -29,6 +30,13 @@ export type SocialLink = {
  */
 export const socialLinks: SocialLink[] = [
     {
+      platform: "calendar",
+      label: "Booking Page",
+      url: "https://cal.com/dcyfr",
+      icon: "calendar",
+      description: "Schedule a meeting"
+    },
+    {
       platform: "linkedin",
       label: "LinkedIn",
       url: "https://www.linkedin.com/in/dcyfr",
@@ -43,6 +51,13 @@ export const socialLinks: SocialLink[] = [
       description: "Build with us on Peerlist"
     },
     {
+      platform: "wellfound",
+      label: "Wellfound",
+      url: "https://wellfound.com/u/dcyfr",
+      icon: "briefcase",
+      description: "Explore startups with us on Wellfound"
+    },
+    {
       platform: "github",
       label: "GitHub",
       url: "https://github.com/dcyfr",
@@ -50,7 +65,7 @@ export const socialLinks: SocialLink[] = [
       description: "View our code"
     },
     {
-      platform: "github-sponsor",
+      platform: "sponsors",
       label: "Become a Sponsor",
       url: "https://github.com/sponsors/dcyfr",
       icon: "heart",
@@ -69,13 +84,6 @@ export const socialLinks: SocialLink[] = [
       url: "https://www.goodreads.com/dcyfr",
       icon: "book-open",
       description: "Read through our bookshelf"
-    },
-    {
-      platform: "calendar",
-      label: "Calendar",
-      url: "https://cal.com/dcyfr",
-      icon: "calendar",
-      description: "Schedule a meeting"
     }
   ];
 

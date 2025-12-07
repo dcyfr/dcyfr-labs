@@ -617,16 +617,16 @@ describe('feeds.ts', () => {
       }),
     ];
 
-    it('should generate RSS feed by default', async () => {
+    it('should generate Atom feed by default', async () => {
       const xml = await buildBlogFeed(testPosts);
 
-      expect(xml).toContain('<rss version="2.0"');
+      expect(xml).toContain('<feed xmlns="http://www.w3.org/2005/Atom">');
     });
 
-    it('should generate Atom feed when specified', async () => {
-      const xml = await buildBlogFeed(testPosts, 'atom');
+    it('should generate RSS feed when specified', async () => {
+      const xml = await buildBlogFeed(testPosts, 'rss');
 
-      expect(xml).toContain('<feed xmlns="http://www.w3.org/2005/Atom">');
+      expect(xml).toContain('<rss version="2.0"');
     });
 
     it('should sort posts by published date descending', async () => {
@@ -699,10 +699,10 @@ describe('feeds.ts', () => {
       }),
     ];
 
-    it('should generate RSS feed by default', async () => {
+    it('should generate Atom feed by default', async () => {
       const xml = await buildProjectsFeed(testProjects);
 
-      expect(xml).toContain('<rss version="2.0"');
+      expect(xml).toContain('<feed xmlns="http://www.w3.org/2005/Atom">');
     });
 
     it('should generate Atom feed when specified', async () => {

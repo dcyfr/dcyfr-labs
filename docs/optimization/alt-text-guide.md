@@ -43,7 +43,7 @@ This guide documents alt text and ARIA accessibility best practices for the proj
 ✅ **Semantic HTML**
 - Navigation uses `<nav>` with `aria-label`
 - Time elements use `<time>` with `dateTime` attribute
-- Logo SVG has `role="img"` with `aria-label="Drew's Logo"`
+- Logo SVG has `role="img"` with `aria-label="DCYFR Labs Logo"`
 
 ✅ **No Issues Found**
 - Zero `<img>` tags without alt text (project uses SVG/dynamic generation)
@@ -359,7 +359,7 @@ toast.success("Form submitted successfully");
 ```tsx
 <svg
   role="img"
-  aria-label="Drew's Logo"
+  aria-label="DCYFR Labs Logo"
   viewBox="0 17.15 38.4 38.4"
   fill="currentColor"
 >
