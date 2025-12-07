@@ -1,325 +1,238 @@
 # AI Contributor Guide
 
-Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + MDX portfolio. 
+Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + MDX portfolio.  
 **Status:** Maintenance mode (1339/1346 tests passing, 99.5%)
 
-## Quick Reference
+---
 
-| Task | Command |
-|------|---------|
-| Develop | `npm run dev` |
-| Build | `npm run build` |
-| Test | `npm run test` (unit) / `npm run test:e2e` (E2E) |
-| Lint | `npm run lint` / `npm run lint:fix` |
-| Typecheck | `npm run typecheck` |
-| Check All | `npm run check` |
+## 📚 Documentation Index
 
-**Import alias:** Always use `@/*` (never relative paths)
+**This is your entry point.** All detailed documentation is modular and accessible both in this repo and live at `/dev/docs`.
 
-## Architecture & Data Flow
+### Core References (Start Here)
 
+| Resource | Description | View |
+|----------|-------------|------|
+| **[Quick Reference](docs/ai/QUICK_REFERENCE.md)** | Commands, imports, 80/20 patterns | Essential for speed |
+| **[Component Patterns](docs/ai/COMPONENT_PATTERNS.md)** | Layouts, barrel exports, metadata | Mandatory patterns |
+| **[Enforcement Rules](docs/ai/ENFORCEMENT_RULES.md)** | Design tokens, validation, CI/CD | Quality gates |
+| **[Decision Trees](docs/ai/DECISION_TREES.md)** | Visual flowcharts for decisions | Quick answers |
+
+### Interactive Tools
+
+- **[Live Documentation Portal](/dev/docs)** - Browse all docs with search and TOC
+- **[Interactive Decision Trees](/dev/docs/decision-trees)** - Click-through flowcharts with copy-paste code
+- **[Templates Library](docs/templates/)** - Copy-paste starting points for common patterns
+
+### Templates (Copy-Paste Ready)
+
+| Template | Use Case |
+|----------|----------|
+| [NEW_PAGE.tsx](docs/templates/NEW_PAGE.tsx.md) | Standard pages with PageLayout |
+| [ARCHIVE_PAGE.tsx](docs/templates/ARCHIVE_PAGE.tsx.md) | Filterable list pages |
+| [API_ROUTE.ts](docs/templates/API_ROUTE.ts.md) | API routes with Inngest |
+| [INNGEST_FUNCTION.ts](docs/templates/INNGEST_FUNCTION.ts.md) | Background jobs |
+| [COMPONENT_WITH_BARREL.tsx](docs/templates/COMPONENT_WITH_BARREL.tsx.md) | New component with exports |
+| [METADATA_ONLY.ts](docs/templates/METADATA_ONLY.ts.md) | Metadata generation |
+| [ERROR_BOUNDARY.tsx](docs/templates/ERROR_BOUNDARY.tsx.md) | Error handling wrapper |
+| [TEST_SUITE.test.tsx](docs/templates/TEST_SUITE.test.tsx.md) | Test suite setup |
+
+---
+
+## ⚡ Quick Start (5-Minute Guide)
+
+### Essential Commands
+
+```bash
+npm run dev              # Start dev server
+npm run build            # Production build
+npm run test             # Unit tests (watch mode)
+npm run test:e2e         # E2E tests (Playwright)
+npm run lint             # ESLint check
+npm run check            # All quality checks
 ```
-src/
-├── app/                   # App Router (server-first)
-├── components/            # Organized by domain + barrel exports
-│   ├── layouts/           # PageLayout, ArchiveLayout, ArticleLayout
-│   ├── blog/              # Blog-specific (barrel: index.ts)
-│   ├── common/            # Shared (barrel: index.ts)
-│   ├── navigation/        # Headers/footers (barrel: index.ts)
-│   └── ui/                # shadcn/ui primitives
-├── data/                  # Typed content (posts.ts, projects.ts, resume.ts)
-├── lib/                   # Utilities + metadata.ts + design-tokens.ts
-├── content/blog/          # MDX posts (auto-published)
-└── inngest/               # Background jobs (view tracking, analytics)
-```
 
-### Key Data Flows
-
-**Blog System:**
-- MDX posts in `src/content/blog/` → parsed via `next-mdx-remote`
-- Metadata from `src/data/posts.ts` (title, date, tags, image)
-- Rendered via `ArticleLayout` + `createArticlePageMetadata()`
-- View tracking: API call → `inngest.send()` → `trackPostView` job → Redis
-
-**Metadata Generation:**
-- Standard pages: `createPageMetadata({ title, description, path })`
-- List pages: `createArchivePageMetadata({ title, itemCount })`
-- Article pages: `createArticlePageMetadata({ title, tags, publishedAt, image })`
-- All export OpenGraph, Twitter, and structured data
-
-**Background Jobs (Inngest):**
-- `trackPostView` - Records analytics when post viewed
-- `handleMilestone` - Milestone detection (1K, 10K views)
-- `calculateTrending` - Daily trending posts calculation
-- `dailyAnalyticsSummary` - Scheduled daily summary job
-
-## Component Patterns (MANDATORY)
-
-### Imports: Barrel Files Only
+### Most Common Patterns (80% Usage)
 
 ```typescript
-// ✅ CORRECT
-import { PostList, BlogFilters } from "@/components/blog";
-import { SiteHeader, SiteFooter } from "@/components/navigation";
-import { PageLayout, ArticleLayout } from "@/components/layouts";
+// ✅ Default choices for 80% of cases
+import { PageLayout } from "@/components/layouts";           // Layout
+import { createPageMetadata } from "@/lib/metadata";         // Metadata
+import { SPACING, TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 
-// ❌ WRONG - never import from root or specific files
-import PostList from "@/components/blog/post-list";
-```
+export const metadata = createPageMetadata({
+  title: "Page Title",
+  description: "Description",
+  path: "/path",
+});
 
-### Layout Usage (PageLayout dominates 90% of pages)
-
-**PageLayout** - Use for 90% of pages (all main routes)
-- Standard pages (homepage, about, work, resume, contact)
-- Default choice unless you have a specific reason not to
-
-```typescript
-export const metadata = createPageMetadata({...});
-
-export default function HomePage() {
+export default function Page() {
   return (
     <PageLayout>
-      {/* content */}
+      <div className={`mx-auto ${CONTAINER_WIDTHS.standard}`}>
+        <h1 className={TYPOGRAPHY.h1.standard}>Heading</h1>
+        <div className={`mt-${SPACING.content}`}>Content</div>
+      </div>
     </PageLayout>
   );
 }
 ```
 
-**ArticleLayout** - ONLY for blog posts (`src/app/blog/[slug]/page.tsx`)
-- Includes: reading time, table of contents, related posts, metadata
-- Used in exactly 1 page; highly specialized
+### Quick Decision Making
+
+**Which layout?** → `PageLayout` (90% of pages)  
+**Which container?** → `CONTAINER_WIDTHS.standard` (80% of content)  
+**Which metadata helper?** → `createPageMetadata()` (standard pages)  
+**Need error boundary?** → Only for external APIs or forms
+
+**See:** [Interactive Decision Trees](/dev/docs/decision-trees) for detailed flowcharts
+
+---
+
+## 🎯 Key Principles (Never Violate)
+
+### 1. Always Use Barrel Exports
 
 ```typescript
-export const metadata = createArticlePageMetadata({...});
+// ✅ CORRECT
+import { PostList } from "@/components/blog";
+import { PageLayout } from "@/components/layouts";
 
-export default function BlogPost({ post }) {
-  return (
-    <ArticleLayout post={post}>
-      {/* blog content */}
-    </ArticleLayout>
-  );
-}
+// ❌ WRONG
+import PostList from "@/components/blog/post-list";
+import PostList from "../../components/blog/post-list";
 ```
 
-**ArchiveLayout** - ONLY for filterable list pages
-- Includes: filters, pagination, sorting, item count
-- Use for blog archive, project listing, or similar filtered lists
+### 2. Always Use Design Tokens
 
 ```typescript
-export const metadata = createArchivePageMetadata({...});
-
-export default function BlogArchive() {
-  return (
-    <ArchiveLayout posts={posts}>
-      {/* archive content */}
-    </ArchiveLayout>
-  );
-}
-```
-
-**Rule: If unsure, use PageLayout. It's the default choice for 80% of pages.**
-
-## Design Tokens (MANDATORY)
-
-**Current compliance: 92% across all components** ✅
-
-Never hardcode spacing, typography, or colors:
-
-```typescript
-import { SPACING, TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
-
-// ✅ Use tokens
+// ✅ CORRECT
+import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 <div className={`gap-${SPACING.content}`}>
   <h1 className={TYPOGRAPHY.h1.standard}>Title</h1>
 </div>
 
-// ❌ Never hardcode
-<div className="gap-8 p-6">
+// ❌ WRONG (ESLint will flag)
+<div className="gap-8">
   <h1 className="text-3xl font-semibold">Title</h1>
 </div>
 ```
 
-**Enforcement:**
-- ESLint warnings (real-time)
-- Pre-commit hooks prevent commits
-- CI validation + PR reports
-- Run: `node scripts/validate-design-tokens.mjs`
+### 3. Use PageLayout by Default
 
-**Why strict?** Design tokens are the source of truth for spacing consistency, typography hierarchy, color theming (light/dark modes), and responsive breakpoints.
+90% of pages should use `PageLayout`. Only use specialized layouts when necessary:
+- **ArticleLayout** - Blog posts only (`/blog/[slug]`)
+- **ArchiveLayout** - Filterable lists only (`/blog`, `/work`)
 
-## API Route Patterns
-
-All POST routes follow this standard pattern to maintain consistency:
+### 4. API Routes → Inngest Pattern
 
 ```typescript
-// 1. Validate input
-// 2. Process request  
-// 3. Trigger async job with inngest.send()
-// 4. Return response immediately
-
+// API route: Validate → Process → Queue → Respond
 export async function POST(request: NextRequest) {
-  const { data } = await request.json();
+  const data = await request.json();
   
-  // Validate
-  if (!data) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
-    );
-  }
-  
-  // Process
-  const result = await processRequest(data);
-  
-  // Queue async work (don't wait for it)
   await inngest.send({
-    name: "event-name",
-    data: result,
+    name: "domain/event.name",
+    data,
   });
   
-  // Respond immediately (<100ms)
   return NextResponse.json({ success: true });
 }
 ```
 
-**Most common POST endpoints:**
-- `/api/contact` - Form submissions (triggers email + analytics)
-- `/api/views` - Track blog post views (triggers Inngest job for trending)
-- `/api/shares` - Track social shares (triggers analytics)
+---
 
-**Why this pattern?** Fire-and-forget responses are fast (<100ms) while background jobs handle side effects asynchronously via Inngest.
+## 🔍 Finding Information Fast
 
-## Background Job Patterns (Inngest)
+### Need to Know...
 
-**Most common pattern: inngest.send() from API routes**
+| Question | Resource |
+|----------|----------|
+| What command to run? | [Quick Reference](docs/ai/QUICK_REFERENCE.md#commands) |
+| Which layout to use? | [Decision Trees](docs/ai/DECISION_TREES.md#which-layout-should-i-use) |
+| How to import components? | [Component Patterns](docs/ai/COMPONENT_PATTERNS.md#barrel-exports) |
+| Design token rules? | [Enforcement Rules](docs/ai/ENFORCEMENT_RULES.md#design-token-enforcement) |
+| Copy-paste template? | [Templates](docs/templates/) |
+| Current priorities? | [todo.md](docs/operations/todo.md) |
+| Architecture decisions? | [docs/architecture/](docs/architecture/) |
 
-```typescript
-// In src/app/api/views/route.ts
-await inngest.send({
-  name: "blog/post.viewed",  // Event name convention
-  data: { slug, title },
-});
+### Search Strategies
+
+```bash
+# Find component usage patterns
+grep -r "PageLayout" src/app/
+
+# Check current priorities
+cat docs/operations/todo.md | head -20
+
+# Validate design tokens
+node scripts/validate-design-tokens.mjs
+
+# Recent changes
+git log --oneline -10
 ```
 
-This triggers the `trackPostView` function in `src/inngest/blog-functions.ts`, which:
-1. Increments view count in Redis
-2. Triggers `handleMilestone` if views hit 1K/10K
-3. Updates trending calculations
+---
 
-**When to use inngest.send():**
-- Any async side effect that shouldn't block the response
-- Analytics, notifications, email sending
-- Third-party API calls
-- Data processing or transformations
+## 🚨 Validation & Enforcement
 
-**Inside functions, use step.run() for multi-step workflows:**
+### Pre-commit Hooks (Automatic)
 
-```typescript
-export const trackPostView = inngest.createFunction(
-  { id: "track-post-view" },
-  { event: "blog/post.viewed" },
-  async ({ event, step }) => {
-    // Step 1: Increment views
-    const views = await step.run("increment-views", async () => {
-      return await redis.incr(`views:post:${event.data.slug}`);
-    });
-    
-    // Step 2: Trigger cascade if milestone reached
-    if (views === 1000) {
-      await step.send({
-        name: "blog/post.milestone",
-        data: { slug: event.data.slug, milestone: "1000" },
-      });
-    }
-  }
-);
+- ESLint auto-fix
+- Design token validation (warnings)
+- Commit blocked if linting errors remain
+
+### CI/CD Requirements (Must Pass)
+
+- ✅ ESLint (0 errors)
+- ✅ TypeScript strict mode (0 type errors)
+- ✅ Tests ≥99% pass rate
+- ✅ Lighthouse (≥90% perf, ≥95% a11y)
+- ✅ Design tokens ≥90% compliance
+
+### Manual Checks
+
+```bash
+npm run check           # Run all validations
+npm run lint            # ESLint only
+npm run typecheck       # TypeScript only
+npm run test            # Unit tests
+npm run test:e2e        # E2E tests
 ```
 
-**Common job types found in codebase:**
-- `trackPostView` - API-triggered (most common: view tracking)
-- `handleMilestone` - Event-triggered cascade (milestone detection)
-- `calculateTrending` - Scheduled daily (trending posts)
-- `dailyAnalyticsSummary` - Scheduled daily (email summary)
+---
 
-## Error Handling
+## 📦 Tech Stack
 
-**Rule: Only wrap high-risk components, not everything.**
+- **Framework:** Next.js 16 (App Router) + React 19
+- **Styling:** Tailwind v4 + shadcn/ui
+- **Content:** MDX (next-mdx-remote)
+- **Jobs:** Inngest (background tasks)
+- **Database:** Redis (analytics)
+- **Deployment:** Vercel
 
-Use custom ErrorBoundary ONLY for:
-- External API calls (GitHub API, external data sources)
-- Form submissions (user input, validation)
-- Expensive computations
+---
 
-**Examples in codebase:**
+## 🚀 Productivity Tips
 
-```typescript
-// In src/app/about/page.tsx
-<GitHubHeatmapErrorBoundary>
-  <GitHubHeatmap userId="dcyfr" />
-</GitHubHeatmapErrorBoundary>
+1. **Use templates** - Don't write boilerplate from scratch
+2. **Check decision trees** - Visual guides for common decisions
+3. **Browse live docs** - `/dev/docs` has search and TOC
+4. **Run `npm run check`** - Catch issues before committing
+5. **Use barrel imports** - Never import from specific files
 
-// In src/app/contact/page.tsx
-<ContactFormErrorBoundary>
-  <ContactForm />
-</ContactFormErrorBoundary>
-```
+---
 
-**Don't wrap:**
-- Standard text content
-- Static layouts
-- List pages
-- Components without external dependencies
+## 📖 Extended Documentation
 
-Default error handling (root layout) covers most cases. Only add boundaries when there's real risk of runtime failure.
+For deeper dives, see:
 
-## Testing Strategy
+- [Best Practices](docs/ai/BEST_PRACTICES.md) - Workflows and conventions
+- [Design System](docs/ai/DESIGN_SYSTEM.md) - Token system deep dive
+- [Optimization Strategy](docs/ai/OPTIMIZATION_STRATEGY.md) - Performance patterns
+- [Architecture Guide](docs/architecture/) - System design decisions
+- [Operations Guide](docs/operations/) - Priorities and changelog
 
-**Test Structure:**
-- `src/__tests__/` - Unit tests (component logic, utilities)
-- `tests/integration/` - Integration tests (API, data flow)
-- `e2e/` - E2E tests (Playwright, critical user paths)
+---
 
-**Commands:**
-- `npm run test` - Watch mode
-- `npm run test:unit` - Unit tests only
-- `npm run test:coverage` - Coverage report
-- `npm run test:e2e` - Playwright (production build)
-- `npm run test:e2e:dev` - Playwright (dev server)
-
-**Minimum Coverage:** ≥94% (currently 99.5%)
-
-## CI/CD Requirements
-
-**All PRs must pass:**
-- ESLint (0 errors, --fix if needed)
-- TypeScript (strict mode)
-- Tests ≥99% pass rate
-- Lighthouse: ≥90% perf, ≥95% a11y
-
-## Constraints (Do NOT change without discussion)
-
-- Import alias (`@/*`)
-- Tailwind + shadcn/ui
-- Server-first architecture (React Server Components default)
-- Design token system
-- MDX pipeline (rehype/remark plugins)
-- Background job architecture (Inngest)
-
-## Detailed Documentation
-
-| Topic | File |
-|-------|------|
-| Design system validation | `docs/ai/DESIGN_SYSTEM.md` |
-| Best practices & workflows | `docs/ai/BEST_PRACTICES.md` |
-| Token optimization | `docs/ai/OPTIMIZATION_STRATEGY.md` |
-| Operations & priorities | `docs/operations/todo.md` |
-| Architecture decisions | `docs/architecture/` |
-
-## Quick Fixes
-
-**For immediate productivity:**
-1. Check priorities: `cat docs/operations/todo.md`
-2. Verify tests pass: `npm run test`
-3. Review recent commits: `git log --oneline -5`
-4. Search patterns before implementing: Use grep/glob
-5. Use barrel imports from `components/` subdirectories
+**💡 Pro Tip:** Bookmark `/dev/docs` for live, searchable documentation with interactive decision trees and copy-paste templates.

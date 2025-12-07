@@ -117,7 +117,6 @@ export default async function SponsorsPage() {
         >
           <div className={SPACING.content}>
             <div className="flex items-center gap-3 mb-6">
-              <Gift className="h-6 w-6 text-primary" />
               <div>
                 <h2 className={TYPOGRAPHY.h2.standard}>Invite Codes</h2>
                 <p className="text-muted-foreground mt-2">

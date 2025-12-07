@@ -248,7 +248,7 @@ export default async function Home() {
                     ...transformProjects([...featuredProjects]),
                     ...transformChangelog(visibleChangelog),
                   ],
-                  { limit: 8 }
+                  { limit: 7 }
                 )}
                 variant="timeline"
                 viewAllHref="/activity"
