@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * Lazy-loaded comments wrapper
@@ -16,7 +17,7 @@ const GiscusComments = dynamic(
   {
     loading: () => (
       <section className="mt-12 border-t pt-8">
-        <h2 className="mb-6 text-2xl font-semibold">Comments</h2>
+        <h2 className={`mb-6 ${TYPOGRAPHY.h2.standard}`}>Comments</h2>
         <div className="h-40 bg-muted/50 rounded-lg animate-pulse" />
       </section>
     ),

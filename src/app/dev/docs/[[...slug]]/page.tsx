@@ -166,7 +166,7 @@ function DirectoryTree({ node, currentPath }: { node: any; currentPath: string }
   
   return (
     <details open={currentPath.startsWith(node.name)}>
-      <summary className="flex items-center gap-2 py-1.5 px-3 rounded-md text-sm font-medium cursor-pointer hover:bg-accent transition-colors">
+      <summary className={`flex items-center gap-2 py-1.5 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors ${TYPOGRAPHY.label.small}`}>
         <Folder className="h-4 w-4 shrink-0" />
         <span className="truncate">{node.name}</span>
       </summary>

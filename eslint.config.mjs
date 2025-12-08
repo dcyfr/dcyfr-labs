@@ -36,11 +36,12 @@ const eslintConfig = [
           message: "Use TYPOGRAPHY tokens from @/lib/design-tokens instead of hardcoded font classes for headings. See /docs/design/QUICK_START.md",
         },
         {
-          selector: "Literal[value=/\\b(text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl))\\s+(font-(bold|semibold|medium|normal))\\b/]",
+          selector: "Literal[value=/^(?!.*\\[&[^\\]]*\\]).*\\b(text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl))\\s+(font-(bold|semibold|medium|normal))\\b/]",
           message: "Use TYPOGRAPHY tokens from @/lib/design-tokens instead of combining text-* and font-* classes. Examples:\n" +
                    "  ❌ \"text-3xl font-semibold\" → ✅ {TYPOGRAPHY.h1.standard}\n" +
                    "  ❌ \"text-2xl font-semibold\" → ✅ {TYPOGRAPHY.h2.standard}\n" +
                    "  ❌ \"text-sm font-medium\" → ✅ {TYPOGRAPHY.label.small}\n" +
+                   "  EXCLUDES: CSS selectors like [&>strong]:font-semibold (these are valid)\n" +
                    "  See /docs/ai/DESIGN_SYSTEM.md#typography-tokens",
         },
         {
@@ -55,6 +56,26 @@ const eslintConfig = [
         {
           selector: "Literal[value=/transition-all.*hover:shadow-(sm|md|lg|xl|2xl)/]",
           message: "Use HOVER_EFFECTS tokens from @/lib/design-tokens instead of hardcoded hover effects. See /docs/design/QUICK_START.md",
+        },
+        {
+          selector: "Literal[value=/\\btransition-all\\b/]",
+          message: "Avoid transition-all (expensive, animates all properties). Use specific transitions from @/lib/design-tokens:\n" +
+                   "  ✅ .transition-movement (transform only, 150ms - best for hover/interactive)\n" +
+                   "  ✅ .transition-appearance (opacity + transform, 300ms - best for reveals)\n" +
+                   "  ✅ .transition-base (opacity + transform, 300ms - default choice)\n" +
+                   "  ✅ .transition-theme (colors only, 150ms - best for theme changes)\n" +
+                   "  Performance impact: transition-all ~10x slower than specific transitions\n" +
+                   "  See /docs/ai/DESIGN_SYSTEM.md#animation-tokens",
+        },
+        {
+          selector: "Literal[value=/(bg-green-|bg-yellow-|bg-red-|bg-blue-|bg-amber-|bg-orange-|text-green-|text-yellow-|text-red-|text-blue-|text-amber-|text-orange-)\\d{3,}/]",
+          message: "Hardcoded color detected. Use SEMANTIC_COLORS tokens from @/lib/design-tokens:\n" +
+                   "  - Alert states → SEMANTIC_COLORS.alert.{critical|warning|info|success}\n" +
+                   "  - Status badges → SEMANTIC_COLORS.status.{success|warning|info|inProgress|neutral}\n" +
+                   "  - Interactive states → SEMANTIC_COLORS.interactive.{hover|active|focus|disabled}\n" +
+                   "  - Highlighting → SEMANTIC_COLORS.highlight.{primary|mark|muted}\n" +
+                   "  EXCLUDES: Icon colors (text-*-500), accent colors in CTA, chart colors\n" +
+                   "  See /docs/ai/DESIGN_SYSTEM.md#semantic-colors",
         },
         {
           selector: "Literal[value=/\\b(space-y-[5-9]|gap-[5-9]|p-[67]|px-[67]|py-[67])\\b/]",
@@ -93,7 +114,7 @@ const eslintConfig = [
   },
   {
     // Exclude loading skeletons - they mirror component structure
-    files: ["src/**/*loading.tsx", "src/**/*skeleton.tsx"],
+    files: ["src/**/*loading.tsx", "src/**/*skeleton.tsx", "src/**/*Skeleton.tsx"],
     rules: {
       "no-restricted-syntax": "off",
     },

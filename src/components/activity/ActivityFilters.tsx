@@ -114,7 +114,7 @@ export function ActivityFilters({
         <Badge
           variant={isAllSources ? "default" : "outline"}
           className={cn(
-            "cursor-pointer transition-all",
+            "cursor-pointer transition-base",
             isAllSources
               ? "bg-primary text-primary-foreground"
               : "hover:bg-accent"
@@ -135,7 +135,7 @@ export function ActivityFilters({
               key={source}
               variant={isSelected ? "default" : "outline"}
               className={cn(
-                "cursor-pointer transition-all gap-1",
+                "cursor-pointer transition-theme gap-1",
                 !isSelected && "hover:bg-accent text-muted-foreground"
               )}
               onClick={() => toggleSource(source)}
@@ -154,7 +154,7 @@ export function ActivityFilters({
             key={value}
             variant={selectedTimeRange === value ? "secondary" : "outline"}
             className={cn(
-              "cursor-pointer transition-all",
+              "cursor-pointer transition-theme",
               selectedTimeRange === value
                 ? "bg-secondary"
                 : "hover:bg-accent text-muted-foreground"

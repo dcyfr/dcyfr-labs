@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 import type { FilterClearButtonProps } from "../types";
 
 export function FilterClearButton({
@@ -20,7 +21,7 @@ export function FilterClearButton({
     >
       Clear all
       {count > 0 && (
-        <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
+        <span className={`ml-2 rounded-full bg-muted px-2 py-0.5 ${TYPOGRAPHY.label.xs}`}>
           {count}
         </span>
       )}

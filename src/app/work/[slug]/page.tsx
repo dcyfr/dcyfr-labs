@@ -10,7 +10,10 @@ import {
   getOgImageUrl,
   getTwitterImageUrl,
 } from "@/lib/site-config";
-import { getContainerClasses } from "@/lib/design-tokens";
+import {
+  CONTAINER_WIDTHS,
+  CONTAINER_PADDING,
+} from "@/lib/design-tokens";
 import { headers } from "next/headers";
 import { ProjectLayoutStrategy } from "@/components/projects/layouts";
 
@@ -102,7 +105,7 @@ export default async function WorkItemPage({ params }: { params: Promise<{ slug:
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         suppressHydrationWarning
       />
-      <div className={getContainerClasses('standard')}>
+      <div className={`mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-12 md:pt-14 lg:pt-16 pb-8 md:pb-12`}>
         {/* Back to Our Work */}
         <Link
           href="/work"

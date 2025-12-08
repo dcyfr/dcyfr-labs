@@ -51,6 +51,7 @@ import {
   Archive as ArchiveIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 import {
   PublicationCohort,
   PUBLICATION_COHORT_LABELS,
@@ -470,7 +471,7 @@ export function AnalyticsFilters({
       <CardContent className="space-y-4">
         {/* Filter Presets */}
         <div className="space-y-2">
-          <label className="text-xs font-medium">Quick Filters</label>
+          <label className={TYPOGRAPHY.label.xs}>Quick Filters</label>
           <div className="flex flex-wrap gap-2">
             {DEFAULT_FILTER_PRESETS.map((preset) => (
               <Button
@@ -490,7 +491,7 @@ export function AnalyticsFilters({
         <div className="grid grid-cols-2 gap-4">
           {/* Publication Cohort */}
           <div className="space-y-2">
-            <label className="text-xs font-medium">Publication Date</label>
+            <label className={TYPOGRAPHY.label.xs}>Publication Date</label>
             <Select value={publicationCohort} onValueChange={(value) => onPublicationCohortChange(value as PublicationCohort)}>
               <SelectTrigger className="text-xs">
                 <SelectValue />
@@ -507,7 +508,7 @@ export function AnalyticsFilters({
 
           {/* Performance Tier */}
           <div className="space-y-2">
-            <label className="text-xs font-medium">Performance Tier</label>
+            <label className={TYPOGRAPHY.label.xs}>Performance Tier</label>
             <Select value={performanceTier} onValueChange={(value) => onPerformanceTierChange(value as PerformanceTierFilter)}>
               <SelectTrigger className="text-xs">
                 <SelectValue />
@@ -526,7 +527,7 @@ export function AnalyticsFilters({
         {/* Tag Filter Mode */}
         {selectedTags.length > 1 && (
           <div className="space-y-2">
-            <label className="text-xs font-medium">Tag Match Mode</label>
+            <label className={TYPOGRAPHY.label.xs}>Tag Match Mode</label>
             <div className="flex gap-2">
               <Button
                 variant={tagFilterMode === "AND" ? "default" : "outline"}

@@ -130,14 +130,14 @@ export default async function ProfilePage({ params }: PageProps) {
           <div className={SPACING.section}>
             <h2 className={TYPOGRAPHY.h2.standard}>Meet the Team</h2>
             <Link href={otherMember.profileUrl} className="block group mt-4">
-              <Card className="p-4 hover:shadow-lg transition-all hover:-translate-y-1">
+              <Card className="p-4 hover:shadow-lg transition-base hover:-translate-y-1">
                 <div className="flex items-start gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className={TYPOGRAPHY.h3.standard}>
                         {otherMember.name}
                       </h3>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-movement" />
                     </div>
                     <p className="text-sm text-muted-foreground mb-3">
                       {otherMember.title}

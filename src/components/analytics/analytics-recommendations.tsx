@@ -14,11 +14,12 @@ import {
   AlertTriangle, 
   Target,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Code
 } from "lucide-react";
 import { PostAnalytics } from "@/types/analytics";
 import Link from "next/link";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 interface Recommendation {
   id: string;
@@ -36,6 +37,111 @@ interface Recommendation {
 interface AnalyticsRecommendationsProps {
   posts: PostAnalytics[];
   compact?: boolean;
+}
+
+// ============================================================================
+// MISSING SOURCES DETECTION
+// ============================================================================
+
+interface MissingSource {
+  id: string;
+  name: string;
+  description: string;
+  impact: 'high' | 'medium' | 'low';
+  estimatedBenefit: string;
+  implementation?: {
+    complexity: 'simple' | 'moderate' | 'complex';
+    effort: string;
+    docs?: string;
+  };
+}
+
+/**
+ * Detect missing analytics sources that could enhance recommendations
+ * Analyzes current data gaps and suggests implementations
+ */
+function detectMissingSources(posts: PostAnalytics[]): MissingSource[] {
+  const missing: MissingSource[] = [];
+
+  // Check for shares tracking (currently hardcoded to 0)
+  const hasAnyShares = posts.some(p => (p.shares || 0) > 0);
+  if (!hasAnyShares) {
+    missing.push({
+      id: 'shares-tracking',
+      name: 'Social Shares Tracking',
+      description: 'Currently not tracking social media shares. This data would help identify highly shareable content.',
+      impact: 'high',
+      estimatedBenefit: '25-40% better engagement insights',
+      implementation: {
+        complexity: 'moderate',
+        effort: '4-6 hours',
+        docs: '/docs/analytics/shares-tracking',
+      },
+    });
+  }
+
+  // Check if all posts have reading time
+  const missingReadingTime = posts.filter(p => !p.readingTime || !p.readingTime.minutes).length;
+  if (missingReadingTime > posts.length * 0.1) {
+    missing.push({
+      id: 'reading-time',
+      name: 'Reading Time Metadata',
+      description: `${missingReadingTime} posts missing reading time. This helps users decide which posts to read.`,
+      impact: 'medium',
+      estimatedBenefit: '10-15% improvement in engagement prediction',
+      implementation: {
+        complexity: 'simple',
+        effort: '1-2 hours',
+      },
+    });
+  }
+
+  // Check for category/tag consistency
+  const postsMissingTags = posts.filter(p => !p.tags || p.tags.length === 0).length;
+  if (postsMissingTags > 0) {
+    missing.push({
+      id: 'tag-coverage',
+      name: 'Complete Tag Coverage',
+      description: `${postsMissingTags} posts missing tags. Better tag coverage enables topic-based recommendations.`,
+      impact: 'medium',
+      estimatedBenefit: '15-20% better topic recommendations',
+      implementation: {
+        complexity: 'simple',
+        effort: '2-3 hours',
+      },
+    });
+  }
+
+  // Check for email newsletter integration
+  missing.push({
+    id: 'newsletter-tracking',
+    name: 'Newsletter Analytics Integration',
+    description: 'Track which posts get shared in newsletters and measure their impact on traffic.',
+    impact: 'high',
+    estimatedBenefit: '30-50% more insight into referral quality',
+    implementation: {
+      complexity: 'moderate',
+      effort: '6-8 hours',
+    },
+  });
+
+  // Check for referral source tracking
+  missing.push({
+    id: 'referral-tracking',
+    name: 'Detailed Referral Source Tracking',
+    description: 'Currently tracking basic views but not detailed referral sources (Twitter, Dev.to, Reddit, etc).',
+    impact: 'high',
+    estimatedBenefit: '40-60% better content distribution strategy',
+    implementation: {
+      complexity: 'moderate',
+      effort: '5-7 hours',
+    },
+  });
+
+  return missing.sort((a, b) => {
+    const impactOrder = { high: 0, medium: 1, low: 2 };
+    return impactOrder[a.impact] - impactOrder[b.impact];
+  });
 }
 
 function generateRecommendations(posts: PostAnalytics[]): Recommendation[] {
@@ -175,6 +281,25 @@ function generateRecommendations(posts: PostAnalytics[]): Recommendation[] {
     });
   }
 
+  // 7. Detect missing analytics sources
+  const missingSources = detectMissingSources(posts);
+  if (missingSources.length > 0) {
+    // Add top 2 missing sources as high-priority recommendations
+    missingSources.slice(0, 2).forEach((source) => {
+      recommendations.push({
+        id: `missing-source-${source.id}`,
+        type: 'action',
+        priority: source.impact === 'high' ? 'high' : 'medium',
+        title: `Enable ${source.name}`,
+        description: `${source.description} This would provide ${source.estimatedBenefit}.${source.implementation ? ` Implementation: ${source.implementation.complexity} (${source.implementation.effort})` : ''}`,
+        action: {
+          label: 'Learn More',
+          href: source.implementation?.docs,
+        },
+      });
+    });
+  }
+
   return recommendations.sort((a, b) => {
     const priorityOrder = { high: 0, medium: 1, low: 2 };
     return priorityOrder[a.priority] - priorityOrder[b.priority];
@@ -185,20 +310,32 @@ const typeIcons = {
   opportunity: TrendingUp,
   warning: AlertTriangle,
   insight: Lightbulb,
-  action: Target,
+  action: Code,
 };
 
 const typeColors = {
-  opportunity: 'text-green-600 bg-green-50 border-green-200',
-  warning: 'text-orange-600 bg-orange-50 border-orange-200',
-  insight: 'text-blue-600 bg-blue-50 border-blue-200',
-  action: 'text-purple-600 bg-purple-50 border-purple-200',
+  opportunity: {
+    icon: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/20',
+    border: 'border-green-200 dark:border-green-900/50',
+  },
+  warning: {
+    icon: 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20',
+    border: 'border-orange-200 dark:border-orange-900/50',
+  },
+  insight: {
+    icon: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/20',
+    border: 'border-blue-200 dark:border-blue-900/50',
+  },
+  action: {
+    icon: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/20',
+    border: 'border-purple-200 dark:border-purple-900/50',
+  },
 };
 
-const priorityColors = {
-  high: 'border-l-red-500',
-  medium: 'border-l-yellow-500',
-  low: 'border-l-blue-500',
+const priorityBorders = {
+  high: 'border-l-destructive',
+  medium: 'border-l-amber-500 dark:border-l-amber-500',
+  low: SEMANTIC_COLORS.status.info.split(' ')[0].replace('bg-', 'border-l-'),
 };
 
 export function AnalyticsRecommendations({ posts, compact = false }: AnalyticsRecommendationsProps) {
@@ -240,10 +377,10 @@ export function AnalyticsRecommendations({ posts, compact = false }: AnalyticsRe
           return (
             <Card 
               key={rec.id} 
-              className={`p-4 border-l-4 ${priorityColors[priority as keyof typeof priorityColors]} ${compact ? 'hover:shadow-sm' : 'hover:shadow-md'} transition-shadow`}
+              className={`p-4 border-l-4 ${priorityBorders[priority as keyof typeof priorityBorders]} ${compact ? 'hover:shadow-sm' : 'hover:shadow-md'} transition-shadow`}
             >
               <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-lg ${typeColors[type as keyof typeof typeColors]}`}>
+                <div className={`p-2 rounded-lg ${typeColors[type as keyof typeof typeColors].icon} ${typeColors[type as keyof typeof typeColors].border} border`}>
                   <Icon className="h-4 w-4" />
                 </div>
                 

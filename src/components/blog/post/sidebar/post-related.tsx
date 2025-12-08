@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Lightbulb, Clock } from "lucide-react";
 import Link from "next/link";
 import type { Post } from "@/data/posts";
+import { SPACING } from "@/lib/design-tokens";
 
 interface PostRelatedProps {
   posts: Post[];
@@ -19,13 +20,13 @@ export function PostRelated({ posts }: PostRelatedProps) {
   if (posts.length === 0) return null;
 
   return (
-    <div className="space-y-3 pb-6 border-b">
+    <div className={`${SPACING.compact} pb-6 border-b`}>
       <div className="flex items-center gap-2 mb-3">
         <Lightbulb className="h-4 w-4 text-muted-foreground" />
         <h2 className="font-semibold text-sm">Related Posts</h2>
       </div>
 
-      <nav aria-label="Related posts" className="space-y-3">
+      <nav aria-label="Related posts" className={SPACING.compact}>
         {posts.map((post) => (
           <Link
             key={post.slug}

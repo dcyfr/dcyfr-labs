@@ -127,12 +127,7 @@ export interface ActivityMeta {
 /**
  * Time-based grouping for social media style display
  */
-export type TimeGroup =
-  | "today"
-  | "yesterday"
-  | "this-week"
-  | "this-month"
-  | "older";
+export type TimeGroup = "today" | "this-week" | "this-month" | "older";
 
 /**
  * Activity item with computed group for display

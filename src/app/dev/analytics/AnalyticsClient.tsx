@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Select,
@@ -562,7 +563,7 @@ export default function AnalyticsDashboard() {
                         return (
                           <span className={cn(
                             "inline-flex items-center gap-1",
-                            "text-xs font-semibold",
+                            TYPOGRAPHY.label.xs,
                             tier === "high" && "text-green-600",
                             tier === "medium" && "text-yellow-600",
                             tier === "low" && "text-muted-foreground"
@@ -625,7 +626,7 @@ export default function AnalyticsDashboard() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base font-medium">Conversion Metrics</CardTitle>
+              <CardTitle className={TYPOGRAPHY.label.standard}>Conversion Metrics</CardTitle>
               <CardDescription className="text-sm">Track user engagement and goal completion</CardDescription>
             </div>
             <Button
@@ -655,7 +656,7 @@ export default function AnalyticsDashboard() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base font-medium">Performance Insights</CardTitle>
+              <CardTitle className={TYPOGRAPHY.label.standard}>Performance Insights</CardTitle>
               <CardDescription className="text-sm">Trends, records, and content distribution</CardDescription>
             </div>
             <Button
