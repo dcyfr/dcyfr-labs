@@ -94,7 +94,7 @@ export function AboutDcyfrLabs() {
 
         <div className={SPACING.prose}>
           <h3 className={TYPOGRAPHY.h3.standard}>How We Work</h3>
-          <ul className={`${SPACING.prose} list-disc list-inside`}>
+          <ul className="list-disc list-inside">
             <li>
               <strong>Real projects, real constraints:</strong> We share from
               actual experience, not ivory tower theory

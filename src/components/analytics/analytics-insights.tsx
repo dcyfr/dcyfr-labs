@@ -18,7 +18,7 @@ import { PostAnalytics } from "@/types/analytics";
 import Link from "next/link";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { ANIMATION, TYPOGRAPHY } from "@/lib/design-tokens";
+import { ANIMATION, TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 interface AnalyticsInsightsProps {
   /** All posts for analysis */
@@ -191,7 +191,7 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Zap className="h-4 w-4 text-orange-500" />
-                <span className="text-xs font-medium">Highest Single-Day Views</span>
+                <span className={TYPOGRAPHY.label.xs}>Highest Single-Day Views</span>
               </div>
               <Badge variant="default" className="text-xs">
                 {insights.highestSingleDayViews.views.toLocaleString()} views
@@ -212,7 +212,7 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Target className="h-4 w-4 text-green-500" />
-                    <span className="text-xs font-medium">Most Engaged Post</span>
+                    <span className={TYPOGRAPHY.label.xs}>Most Engaged Post</span>
                   </div>
                   <Badge variant="default" className="text-xs">
                     {insights.mostEngagedPost.rate.toFixed(1)}% rate
@@ -233,7 +233,7 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-blue-500" />
-                    <span className="text-xs font-medium">Top 24h Growth</span>
+                    <span className={TYPOGRAPHY.label.xs}>Top 24h Growth</span>
                   </div>
                   <Badge variant="default" className="text-xs">
                     {insights.topViewGrowth.growth.toFixed(1)}% of total
@@ -316,11 +316,11 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
         <CardContent>
           <div className="space-y-3">
             {[
-              { label: '5,000+ views', count: insights.viewDistribution.over5000, color: 'bg-green-500' },
-              { label: '1,000-5,000 views', count: insights.viewDistribution.under5000, color: 'bg-blue-500' },
-              { label: '500-1,000 views', count: insights.viewDistribution.under1000, color: 'bg-yellow-500' },
-              { label: '100-500 views', count: insights.viewDistribution.under500, color: 'bg-orange-500' },
-              { label: 'Under 100 views', count: insights.viewDistribution.under100, color: 'bg-red-500' },
+              { label: '5,000+ views', count: insights.viewDistribution.over5000, color: SEMANTIC_COLORS.status.success },
+              { label: '1,000-5,000 views', count: insights.viewDistribution.under5000, color: SEMANTIC_COLORS.status.info },
+              { label: '500-1,000 views', count: insights.viewDistribution.under1000, color: SEMANTIC_COLORS.status.warning },
+              { label: '100-500 views', count: insights.viewDistribution.under500, color: SEMANTIC_COLORS.status.inProgress },
+              { label: 'Under 100 views', count: insights.viewDistribution.under100, color: SEMANTIC_COLORS.status.error },
             ].map((bucket) => {
               const percentage = posts.length > 0 ? (bucket.count / posts.length) * 100 : 0;
               return (
@@ -334,7 +334,7 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
                   <div className="h-2 bg-muted rounded-full overflow-hidden">
                     <div 
                       className={cn(
-                        "h-full transition-all",
+                        "h-full transition-appearance",
                         bucket.color,
                         ANIMATION.duration.slow
                       )}

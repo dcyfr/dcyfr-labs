@@ -15,13 +15,13 @@ export function InvitesCTA() {
         <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
           <a
             href="/contact"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
+            className={`inline-flex items-center justify-center rounded-md bg-primary px-4 py-3 text-primary-foreground shadow transition-colors hover:bg-primary/90 ${TYPOGRAPHY.label.small}`}
           >
             Contact Us
           </a>
           <a
             href="/sponsors"
-            className="inline-flex items-center justify-center rounded-md border border-border bg-background px-4 py-3 text-sm font-medium shadow-sm transition-colors hover:bg-muted"
+            className={`inline-flex items-center justify-center rounded-md border border-border bg-background px-4 py-3 shadow-sm transition-colors hover:bg-muted ${TYPOGRAPHY.label.small}`}
           >
             View Sponsors
           </a>

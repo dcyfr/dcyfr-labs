@@ -92,7 +92,6 @@ export async function transformPostsWithViews(posts: Post[]): Promise<ActivityIt
   });
 }
 
-// ============================================================================
 // TRENDING POSTS TRANSFORMER
 // ============================================================================
 
@@ -104,58 +103,203 @@ interface TrendingPost {
 }
 
 /**
+ * Validate trending post data for consistency and quality
+ * Returns validation result with warnings/errors for missing data
+ */
+function validateTrendingData(
+  trending: TrendingPost[],
+  posts: Post[]
+): { valid: TrendingPost[]; warnings: string[]; source: "redis" | "fallback" } {
+  const warnings: string[] = [];
+
+  const validTrending = trending.filter((item) => {
+    // Validate post exists and is published
+    const post = posts.find((p) => p.id === item.postId);
+    if (!post) {
+      warnings.push(`Post ${item.postId} not found in posts data`);
+      return false;
+    }
+    if (post.archived || post.draft) {
+      warnings.push(`Post ${item.postId} is archived or draft`);
+      return false;
+    }
+
+    // Validate required fields
+    if (!item.postId) {
+      warnings.push(`Trending item missing postId`);
+      return false;
+    }
+
+    // Check for data quality (should have either totalViews or recentViews)
+    if (item.totalViews === undefined || item.recentViews === undefined) {
+      warnings.push(`Trending item for ${item.postId} missing view counts`);
+    }
+
+    return true;
+  });
+
+  if (validTrending.length === 0) {
+    warnings.push("No valid trending posts found");
+  }
+
+  return {
+    valid: validTrending,
+    warnings,
+    source: "redis",
+  };
+}
+
+/**
  * Transform trending posts into activity items
  * Fetches from Redis blog:trending key (updated hourly by Inngest)
+ * Falls back to most recent posts if Redis is unavailable
+ * Double validates trending data for consistency
+ * Optionally filters by date range for trending posts in specific time periods
  */
 export async function transformTrendingPosts(
   posts: Post[],
-  limit = 10
+  limit = 10,
+  options?: { after?: Date; before?: Date; description?: string }
 ): Promise<ActivityItem[]> {
   const redis = await getRedisClient();
-  if (!redis) return [];
+  let trending: TrendingPost[] | null = null;
+  let trendingSource: "redis" | "fallback" = "fallback";
 
-  try {
-    const trendingData = await redis.get("blog:trending");
-    await redis.quit();
+  // Try to fetch from Redis first
+  if (redis) {
+    try {
+      const trendingData = await redis.get("blog:trending");
 
-    if (!trendingData) return [];
+      if (trendingData) {
+        try {
+          const parsed = JSON.parse(trendingData);
+          
+          // Double validation: check if data is valid
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            trending = parsed;
+            trendingSource = "redis";
+            console.log(`[Activity] Successfully fetched ${trending.length} trending posts from Redis`);
+          } else {
+            console.warn("[Activity] Redis trending data is empty or invalid format");
+          }
+        } catch (parseError) {
+          console.error("[Activity] Failed to parse trending data from Redis:", parseError);
+        }
+      } else {
+        console.warn("[Activity] No trending data found in Redis (key: blog:trending)");
+      }
 
-    const trending: TrendingPost[] = JSON.parse(trendingData);
-
-    const trendingActivities: ActivityItem[] = [];
-    
-    for (const item of trending.slice(0, limit)) {
-      const post = posts.find((p) => p.id === item.postId);
-      if (!post || post.archived || post.draft) continue;
-
-      trendingActivities.push({
-        id: `trending-${post.id}-${Date.now()}`,
-        source: "trending" as const,
-        verb: "updated" as const,
-        title: post.title,
-        description: `Trending with ${item.recentViews.toLocaleString()} views in the last 7 days`,
-        timestamp: new Date(), // Current time for "trending now"
-        href: `/blog/${post.slug}`,
-        meta: {
-          tags: post.tags.slice(0, 3),
-          category: post.category,
-          image: post.image
-            ? { url: post.image.url, alt: post.image.alt }
-            : undefined,
-          readingTime: post.readingTime?.text,
-          stats: {
-            views: item.totalViews,
-          },
-          trending: true,
-        },
-      });
+      await redis.quit();
+    } catch (error) {
+      console.error("[Activity] Failed to fetch trending posts from Redis:", error);
+      if (error instanceof Error && error.message.includes("ECONNREFUSED")) {
+        console.warn("[Activity] Redis connection refused - likely offline");
+      }
     }
-    
-    return trendingActivities;
-  } catch (error) {
-    console.error("[Activity] Failed to fetch trending posts:", error);
-    return [];
+  } else {
+    console.warn("[Activity] Redis client unavailable (REDIS_URL not configured)");
   }
+
+  // Fallback: use most recent published posts if Redis is unavailable or invalid
+  if (!trending) {
+    const validPosts = posts.filter((p) => !p.archived && !p.draft);
+    const sorted = validPosts
+      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+      .slice(0, limit);
+
+    trending = sorted.map((post) => ({
+      postId: post.id,
+      totalViews: 0,
+      recentViews: 0,
+      score: 0,
+    }));
+
+    trendingSource = "fallback";
+    console.log(
+      `[Activity] Using fallback: ${trending.length} most recent posts (Redis unavailable)`
+    );
+  }
+
+  // Double validation: validate the trending data
+  const validation = validateTrendingData(trending, posts);
+  if (validation.warnings.length > 0) {
+    console.warn(
+      `[Activity] Trending data validation warnings (${trendingSource}):`,
+      validation.warnings
+    );
+  }
+
+  const trendingActivities: ActivityItem[] = [];
+
+  for (const item of validation.valid.slice(0, limit)) {
+    const post = posts.find((p) => p.id === item.postId);
+    if (!post || post.archived || post.draft) continue;
+
+    // Filter by date range if provided
+    const postDate = new Date(post.publishedAt);
+    if (options?.after && postDate < options.after) continue;
+    if (options?.before && postDate > options.before) continue;
+
+    // Build description with view stats
+    let description: string;
+    if (options?.description) {
+      // Custom description base - add view stats if available
+      if (item.recentViews > 0) {
+        description = `${options.description} with ${item.recentViews.toLocaleString()} views in the last 7 days`;
+      } else {
+        description = options.description;
+      }
+    } else {
+      // Default description
+      description = item.recentViews > 0
+        ? `Trending with ${item.recentViews.toLocaleString()} views in the last 7 days`
+        : `Recently published`;
+    }
+
+    // Determine timestamp based on trending period
+    // - Weekly trending: use start of this week
+    // - Monthly trending: use start of this month
+    // - All time: use current time (will appear in "Today")
+    let timestamp: Date;
+    const now = new Date();
+    
+    if (options?.after) {
+      // Monthly trending - use start of month
+      timestamp = options.after;
+    } else if (options?.before) {
+      // All time trending - use current time
+      timestamp = now;
+    } else {
+      // Weekly trending - use start of this week (Monday)
+      const dayOfWeek = now.getDay();
+      const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      timestamp = new Date(now.getFullYear(), now.getMonth(), diff);
+    }
+
+    trendingActivities.push({
+      id: `trending-${post.id}-${Date.now()}`,
+      source: "trending" as const,
+      verb: "updated" as const,
+      title: post.title,
+      description,
+      timestamp,
+      href: `/blog/${post.slug}`,
+      meta: {
+        tags: post.tags.slice(0, 3),
+        category: post.category,
+        image: post.image
+          ? { url: post.image.url, alt: post.image.alt }
+          : undefined,
+        readingTime: post.readingTime?.text,
+        stats: {
+          views: item.totalViews,
+        },
+        trending: true,
+      },
+    });
+  }
+
+  return trendingActivities;
 }
 
 // ============================================================================

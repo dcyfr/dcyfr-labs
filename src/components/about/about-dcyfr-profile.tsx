@@ -133,6 +133,7 @@ export function AboutDcyfrProfile() {
             <ul className="space-y-3">
               {dcyfr.philosophy.map((principle, idx) => (
                 <li key={idx} className="flex items-start gap-3">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Decorative bullet point, not heading text */}
                   <span className="text-primary text-xl font-bold mt-0.5">
                     •
                   </span>

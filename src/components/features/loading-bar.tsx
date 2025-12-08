@@ -41,7 +41,7 @@ export function LoadingBar() {
   return (
     <div
       className={cn(
-        "fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left transition-all ease-in-out",
+        "fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left transition-movement ease-in-out",
         ANIMATION.duration.slow,
         isLoading ? "opacity-100" : "opacity-0",
         isExiting ? "opacity-0 scale-x-100" : "opacity-100 scale-x-100 animate-loading-bar"

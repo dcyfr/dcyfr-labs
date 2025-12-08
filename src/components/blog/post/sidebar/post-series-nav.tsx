@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { BookOpen, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import type { Post } from "@/data/posts";
+import { SPACING } from "@/lib/design-tokens";
 
 interface PostSeriesNavProps {
   series: {
@@ -23,7 +24,7 @@ export function PostSeriesNav({ series, seriesPosts, currentSlug }: PostSeriesNa
   if (seriesPosts.length === 0) return null;
 
   return (
-    <div className="space-y-3 pb-6 border-b">
+    <div className={`${SPACING.compact} pb-6 border-b`}>
       <div className="flex items-center gap-2 mb-3">
         <BookOpen className="h-4 w-4 text-muted-foreground" />
         <h2 className="font-semibold text-sm">{series.name}</h2>
@@ -33,7 +34,7 @@ export function PostSeriesNav({ series, seriesPosts, currentSlug }: PostSeriesNa
         Part {series.order} of {seriesPosts.length}
       </p>
 
-      <nav aria-label="Series navigation" className="space-y-1.5">
+      <nav aria-label="Series navigation" className={SPACING.list}>
         {seriesPosts.map((post) => {
           const isCurrent = post.slug === currentSlug;
           const order = post.series?.order ?? 0;

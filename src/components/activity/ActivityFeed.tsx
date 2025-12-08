@@ -51,7 +51,6 @@ interface ActivityFeedProps {
 
 const TIME_GROUP_ORDER: TimeGroup[] = [
   "today",
-  "yesterday",
   "this-week",
   "this-month",
   "older",

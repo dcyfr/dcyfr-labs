@@ -199,7 +199,8 @@ export default async function Home() {
                 className={cn(
                   PAGE_LAYOUT.hero.content,
                   "text-center",
-                  `${CONTAINER_WIDTHS.narrow} mx-auto space-y-6`
+                  `${CONTAINER_WIDTHS.narrow} mx-auto`,
+                  SPACING.subsectionAlt
                 )}
               >
                 {/* Avatar */}

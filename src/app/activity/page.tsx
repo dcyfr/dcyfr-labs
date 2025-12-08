@@ -46,6 +46,12 @@ export default async function ActivityPage() {
   let error: string | null = null;
 
   try {
+    // Calculate time boundaries for trending posts
+    const now = new Date();
+    
+    // Start of current month
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    
     // Gather activity from all sources in parallel (same as API route)
     const activities: ActivityItem[] = [];
     
@@ -65,10 +71,26 @@ export default async function ActivityPage() {
         .then((items) => activities.push(...items))
         .catch((err) => console.error("[Activity Page] Changelog fetch failed:", err)),
       
-      // Trending posts
-      transformTrendingPosts(posts, 10)
+      // Trending posts from this week (limit 1)
+      transformTrendingPosts(posts, 1)
         .then((items) => activities.push(...items))
-        .catch((err) => console.error("[Activity Page] Trending posts fetch failed:", err)),
+        .catch((err) => console.error("[Activity Page] Trending posts (this week) fetch failed:", err)),
+      
+      // Trending posts from this month (limit 1, after month start)
+      transformTrendingPosts(posts, 1, {
+        after: monthStart,
+        description: "Trending this month",
+      })
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Trending posts (this month) fetch failed:", err)),
+      
+      // All time trending posts (limit 1, before this month)
+      transformTrendingPosts(posts, 1, {
+        before: monthStart,
+        description: "All time trending",
+      })
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Trending posts (all time) fetch failed:", err)),
       
       // Milestones
       transformMilestones(posts, 20)

@@ -42,7 +42,7 @@ export function BlogLayoutWrapper({ children }: BlogLayoutWrapperProps) {
       <BlogKeyboardProvider onToggleFilters={toggleCollapsed}>
         <div 
           className={cn(
-            "grid gap-8 items-start transition-all",
+            "grid gap-8 items-start transition-appearance",
             ANIMATION.duration.normal,
             isCollapsed 
               ? "lg:grid-cols-[48px_1fr]" 

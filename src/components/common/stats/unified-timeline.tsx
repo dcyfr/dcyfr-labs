@@ -130,7 +130,7 @@ function ExperienceCard({
               {experience.title}
             </h3>
           </div>
-          <p className="text-sm font-medium">
+          <p className={TYPOGRAPHY.label.small}>
             {companyUrls[experience.company] ? (
               <Link 
                 href={companyUrls[experience.company]} 

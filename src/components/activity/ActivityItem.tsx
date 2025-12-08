@@ -16,6 +16,8 @@ import {
   Eye,
   MessageSquare,
   Flame,
+  Check,
+  Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ANIMATION } from "@/lib/design-tokens";
@@ -42,6 +44,54 @@ const SOURCE_ICONS: Record<ActivitySource, typeof FileText> = {
   trending: TrendingUp,
   engagement: Flame,
 };
+
+// ============================================================================
+// VERB DISPLAY HELPERS
+// ============================================================================
+
+/**
+ * Get display information for activity verbs
+ * Shows visual distinction between published (new) vs updated (modified)
+ */
+function getVerbDisplay(verb: ActivityItemType["verb"]) {
+  const verbConfig: Record<
+    ActivityItemType["verb"],
+    { icon: typeof Check; label: string; badge: string }
+  > = {
+    published: {
+      icon: Check,
+      label: "Published",
+      badge: "bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
+    },
+    updated: {
+      icon: Pencil,
+      label: "Updated",
+      badge: "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+    },
+    launched: {
+      icon: Megaphone,
+      label: "Launched",
+      badge: "bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800",
+    },
+    released: {
+      icon: Trophy,
+      label: "Released",
+      badge: "bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+    },
+    committed: {
+      icon: GitCommit,
+      label: "Committed",
+      badge: "bg-slate-50 dark:bg-slate-950/30 text-slate-700 dark:text-slate-400 border-slate-200 dark:border-slate-800",
+    },
+    achieved: {
+      icon: Trophy,
+      label: "Achieved",
+      badge: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
+    },
+  };
+
+  return verbConfig[verb] || verbConfig.updated;
+}
 
 // ============================================================================
 // PROPS
@@ -111,7 +161,7 @@ export function ActivityItem({
   return (
     <Card
       className={cn(
-        "group transition-all",
+        "group transition-base",
         ANIMATION.duration.fast,
         "hover:shadow-md hover:border-primary/30",
         className
@@ -145,9 +195,26 @@ export function ActivityItem({
               >
                 {activity.title}
               </Link>
-              <Badge variant="default" className="shrink-0 text-xs">
-                {sourceLabel}
-              </Badge>
+              <div className="flex gap-1.5 shrink-0">
+                {/* Verb badge (published/updated) */}
+                {(() => {
+                  const verbDisplay = getVerbDisplay(activity.verb);
+                  const VerbIcon = verbDisplay.icon;
+                  return (
+                    <Badge
+                      variant="outline"
+                      className={`text-xs border flex items-center gap-1 ${verbDisplay.badge}`}
+                    >
+                      <VerbIcon className="h-3 w-3" />
+                      <span className="hidden sm:inline">{verbDisplay.label}</span>
+                    </Badge>
+                  );
+                })()}
+                {/* Source badge */}
+                <Badge variant="default" className="shrink-0 text-xs">
+                  {sourceLabel}
+                </Badge>
+              </div>
             </div>
 
             {activity.description && (
@@ -391,9 +458,26 @@ function TimelineItem({
           >
             {activity.title}
           </Link>
-          <Badge variant="default" className="shrink-0 text-xs">
-            {sourceLabel}
-          </Badge>
+          <div className="flex gap-1.5 shrink-0">
+            {/* Verb badge (published/updated) */}
+            {(() => {
+              const verbDisplay = getVerbDisplay(activity.verb);
+              const VerbIcon = verbDisplay.icon;
+              return (
+                <Badge
+                  variant="outline"
+                  className={`text-xs border flex items-center gap-1 ${verbDisplay.badge}`}
+                  title={verbDisplay.label}
+                >
+                  <VerbIcon className="h-3 w-3" />
+                </Badge>
+              );
+            })()}
+            {/* Source badge */}
+            <Badge variant="default" className="shrink-0 text-xs">
+              {sourceLabel}
+            </Badge>
+          </div>
         </div>
 
         {activity.description && (

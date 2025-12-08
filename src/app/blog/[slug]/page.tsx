@@ -195,7 +195,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
 
       {/* Desktop Layout: Sidebar + Content */}
-      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto ${CONTAINER_PADDING} pt-24 md:pt-28 lg:pt-32 pb-8 md:pb-12`}>
+      <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto ${CONTAINER_PADDING} pt-12 md:pt-14 lg:pt-16 pb-8 md:pb-12`}>
         <div className="grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start">
           {/* Left Sidebar (desktop only) */}
           <BlogPostSidebar

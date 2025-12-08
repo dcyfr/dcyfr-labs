@@ -259,8 +259,131 @@ export const SPACING = {
   /** Generic prose sections */
   proseSection: "prose space-y-4",
   
+  /** Compact vertical spacing for lists and alerts (improved mobile space utilization) */
+  compact: "space-y-2",
+  
+  /** Reduced spacing for list items (optimized for mobile scaling) */
+  list: "space-y-0.5",
+  
   /** Image elements in blog content (top/bottom margins) */
-  image: "mt-6 mb-6 md:mt-8 md:mb-8",
+  image: "my-6 md:my-8",
+  
+  /** Blog post layout spacing (intentional gap-8 for visual hierarchy) */
+  blogLayout: "gap-8",
+  
+  /** Content grid spacing (card grids, portfolio items) */
+  contentGrid: "gap-6",
+  
+  /** Alternative subsection spacing (backwards compatibility, single value) */
+  subsectionAlt: "space-y-6",
+} as const;
+
+// ============================================================================
+// SEMANTIC COLORS
+// ============================================================================
+
+/**
+ * Semantic color tokens for consistent alert, status, and interactive states
+ * All colors automatically handle dark mode via Tailwind's dark: modifier
+ * 
+ * @example
+ * ```tsx
+ * // Alert state
+ * <div className={SEMANTIC_COLORS.alert.critical.container}>
+ *   <IconComponent className={SEMANTIC_COLORS.alert.critical.icon} />
+ *   <p className={SEMANTIC_COLORS.alert.critical.text}>Error message</p>
+ * </div>
+ * 
+ * // Status indicator
+ * <Badge className={SEMANTIC_COLORS.status.success}>Complete</Badge>
+ * 
+ * // Interactive focus state
+ * <button className={SEMANTIC_COLORS.interactive.focus}>Button</button>
+ * ```
+ */
+export const SEMANTIC_COLORS = {
+  /** Alert/notification state colors */
+  alert: {
+    critical: {
+      border: "border-l-4 border-l-destructive/60",
+      container: "bg-destructive/10 dark:bg-destructive/20",
+      text: "text-destructive dark:text-destructive/90",
+      icon: "text-destructive dark:text-destructive/80",
+      label: "text-destructive dark:text-destructive/90",
+    },
+    warning: {
+      border: "border-l-4 border-l-amber-500/60 dark:border-l-amber-500/70",
+      container: "bg-amber-500/10 dark:bg-amber-500/20",
+      text: "text-amber-900 dark:text-amber-100",
+      icon: "text-amber-600 dark:text-amber-400",
+      label: "text-amber-700 dark:text-amber-300",
+    },
+    info: {
+      border: "border-l-4 border-l-primary/60",
+      container: "bg-primary/10 dark:bg-primary/20",
+      text: "text-primary dark:text-primary/90",
+      icon: "text-primary dark:text-primary/80",
+      label: "text-primary dark:text-primary/90",
+    },
+    success: {
+      border: "border-l-4 border-l-green-500/60 dark:border-l-green-500/70",
+      container: "bg-green-500/10 dark:bg-green-500/20",
+      text: "text-green-900 dark:text-green-100",
+      icon: "text-green-600 dark:text-green-400",
+      label: "text-green-700 dark:text-green-300",
+    },
+  },
+  
+  /** Status indicators (analytics, progress, metrics) */
+  status: {
+    success: "bg-green-500 text-green-50 dark:bg-green-600 dark:text-green-50",
+    warning: "bg-yellow-500 text-yellow-50 dark:bg-yellow-600 dark:text-yellow-50",
+    info: "bg-blue-500 text-blue-50 dark:bg-blue-600 dark:text-blue-50",
+    inProgress: "bg-amber-500 text-amber-50 dark:bg-amber-600 dark:text-amber-50",
+    error: "bg-red-500 text-red-50 dark:bg-red-600 dark:text-red-50",
+    neutral: "bg-muted text-muted-foreground dark:bg-muted/50",
+  },
+  
+  /** Chart colors (map to CSS custom properties) */
+  chart: {
+    primary: "bg-chart-1 text-chart-1",
+    secondary: "bg-chart-2 text-chart-2",
+    tertiary: "bg-chart-3 text-chart-3",
+    quaternary: "bg-chart-4 text-chart-4",
+    quinary: "bg-chart-5 text-chart-5",
+  },
+  
+  /** Interactive element states */
+  interactive: {
+    hover: "hover:bg-muted/50 dark:hover:bg-muted/30",
+    active: "active:bg-muted dark:active:bg-muted/40",
+    focus: "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background",
+    disabled: "disabled:pointer-events-none disabled:opacity-50 dark:disabled:opacity-40",
+  },
+  
+  /** Content highlighting and marks */
+  highlight: {
+    primary: "bg-yellow-200/80 dark:bg-yellow-500/30 text-foreground",
+    mark: "bg-primary/10 dark:bg-primary/20 text-foreground",
+    muted: "bg-muted/50 dark:bg-muted/30 text-muted-foreground",
+  },
+} as const;
+
+/**
+ * Opacity scale for standardized transparency values
+ * Use with colors: <div className={`bg-red-500 ${OPACITY.medium}`}>
+ */
+export const OPACITY = {
+  /** Barely visible (5%) */
+  ghost: "/5",
+  /** Very subtle (10%) */
+  subtle: "/10",
+  /** Muted (20%) */
+  muted: "/20",
+  /** Medium transparency (50%) */
+  medium: "/50",
+  /** Strong/prominent (80%) */
+  strong: "/80",
 } as const;
 
 // ============================================================================
@@ -287,6 +410,12 @@ export const HOVER_EFFECTS = {
   
   /** Featured/hero cards (already prominent, minimal transform) */
   cardFeatured: "transition-all duration-300 hover:shadow-xl active:scale-[0.99]",
+  
+  /** Minimal hover for tertiary/subtle cards (shadow only) */
+  cardMinimal: "transition-shadow duration-200 hover:shadow-md",
+  
+  /** Lift effect on hover (larger shadow + small upward transform) */
+  cardLift: "transition-all duration-300 hover:shadow-lg hover:-translate-y-1",
   
   /** Interactive buttons (FAB, CTAs) */
   button: "transition-shadow hover:shadow-xl active:scale-95 active:shadow-lg",
@@ -344,6 +473,14 @@ export const ANIMATION = {
     fast: "duration-[150ms]",     // --duration-fast (150ms) - Quick interactions
     normal: "duration-[300ms]",   // --duration-normal (300ms) - Standard transitions
     slow: "duration-[500ms]",     // --duration-slow (500ms) - Complex animations
+  },
+  
+  /** Easing functions for animation curves */
+  easing: {
+    default: "ease",        // Default cubic-bezier
+    in: "ease-in",          // Slow start
+    out: "ease-out",        // Slow end
+    inOut: "ease-in-out",   // Slow start and end
   },
   
   /** Transition utilities - Performance optimized */
@@ -436,10 +573,27 @@ export const BORDERS = {
   
   /** Circular elements (avatars, FABs) */
   circle: "rounded-full",
+  
+  /** Dialog/modal border radius */
+  dialog: "rounded-lg",
+  
+  /** Dropdown/popover border radius */
+  dropdown: "rounded-md",
+  
+  /** Larger containers (hero sections, containers) */
+  container: "rounded-xl",
 } as const;
 
 /**
  * Shadow elevation patterns
+ * 
+ * @example
+ * ```tsx
+ * // Using semantic shadow pattern
+ * <Card className={SHADOWS.card.rest}>
+ *   {content}
+ * </Card>
+ * ```
  */
 export const SHADOWS = {
   /** Subtle elevation (cards at rest) */
@@ -453,6 +607,25 @@ export const SHADOWS = {
   
   /** Maximum elevation (floating action buttons) */
   xl: "shadow-xl",
+  
+  /** Extra shadow (overlay, stacked elements) */
+  "2xl": "shadow-2xl",
+  
+  /** Semantic card shadows */
+  card: {
+    rest: "shadow-sm",
+    hover: "shadow-md",
+    active: "shadow-lg",
+  },
+  
+  /** Dropdown/popover shadows */
+  dropdown: "shadow-lg",
+  
+  /** Modal shadows */
+  modal: "shadow-xl",
+  
+  /** FAB shadows */
+  fab: "shadow-xl",
 } as const;
 
 // ============================================================================
@@ -678,6 +851,66 @@ export const WORD_SPACING = {
 // ============================================================================
 
 /**
+ * Grid layout patterns for consistent multi-column layouts
+ * 
+ * @example
+ * ```tsx
+ * <div className={GRID_PATTERNS.two}>
+ *   <Card>Item 1</Card>
+ *   <Card>Item 2</Card>
+ * </div>
+ * ```
+ */
+export const GRID_PATTERNS = {
+  /** Two-column grid (1 col mobile, 2 col tablet+) */
+  two: "grid grid-cols-1 md:grid-cols-2 gap-6",
+  
+  /** Three-column grid (1 col mobile, 3 col desktop) */
+  three: "grid grid-cols-1 md:grid-cols-3 gap-6",
+  
+  /** Four-column grid (2 cols mobile, 4 cols desktop) */
+  four: "grid grid-cols-2 md:grid-cols-4 gap-4",
+  
+  /** Auto-responsive grid (1 → 2 → 3 → 4 columns) */
+  auto: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
+} as const;
+
+/**
+ * Form input patterns for consistent form styling
+ * 
+ * @example
+ * ```tsx
+ * import { cn } from "@/lib/utils";
+ * <input 
+ *   className={cn(
+ *     FORM_PATTERNS.input.base,
+ *     FORM_PATTERNS.input.padding,
+ *     FORM_PATTERNS.input.focus
+ *   )}
+ * />
+ * ```
+ */
+export const FORM_PATTERNS = {
+  /** Input base styles (border, background) */
+  input: {
+    base: "border border-input bg-background dark:bg-background/50",
+    padding: "px-3 py-2",
+    focus: "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background",
+    disabled: "disabled:cursor-not-allowed disabled:opacity-50 dark:disabled:opacity-40",
+  },
+  
+  /** Textarea styles (extends input) */
+  textarea: {
+    base: "border border-input bg-background dark:bg-background/50 resize-none",
+    padding: "px-3 py-2",
+    focus: "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background",
+  },
+  
+  /** Label styles */
+  label: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+} as const;
+
+/**
  * Reusable class combinations for common component patterns
  */
 export const COMPONENT_PATTERNS = {
@@ -712,6 +945,18 @@ export type AnimationDuration = keyof typeof ANIMATIONS;
 
 /** Type for word spacing variants */
 export type WordSpacingVariant = keyof typeof WORD_SPACING;
+
+/** Type for semantic color categories */
+export type SemanticColorCategory = keyof typeof SEMANTIC_COLORS;
+
+/** Type for alert state variants */
+export type AlertVariant = keyof typeof SEMANTIC_COLORS.alert;
+
+/** Type for status variants */
+export type StatusVariant = keyof typeof SEMANTIC_COLORS.status;
+
+/** Type for grid layout patterns */
+export type GridPattern = keyof typeof GRID_PATTERNS;
 
 // ============================================================================
 // GRADIENTS

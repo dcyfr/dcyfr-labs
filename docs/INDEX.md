@@ -76,6 +76,7 @@ The documentation is organized into **15 focused directories**:
 ### Operations
 - **[operations/todo.md](./operations/todo.md)** - Active tasks
 - **[operations/done.md](./operations/done.md)** - Completed work
+- **[operations/KNOWN_ISSUES.md](./operations/KNOWN_ISSUES.md)** - ✨ **Known issues & acceptable warnings**
 
 ---
 

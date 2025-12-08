@@ -23,7 +23,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { cn } from "@/lib/utils";
-import { ANIMATION } from "@/lib/design-tokens";
+import { ANIMATION, BORDERS, SHADOWS } from "@/lib/design-tokens";
 
 // ============================================================================
 // Custom Node Types
@@ -58,11 +58,11 @@ function ModernNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
       <Handle type="target" position={Position.Top} className="bg-primary! w-3! h-3! border-2! border-background!" />
       <div
         className={cn(
-          "px-4 py-3 rounded-lg border-2 shadow-sm transition-all",
+          `px-4 py-3 ${BORDERS.card} border-2 ${SHADOWS.sm} transition-base`,
           ANIMATION.duration.fast,
           variants[variant],
-          selected && "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-lg",
-          "hover:shadow-md"
+          selected && `ring-2 ring-primary ring-offset-2 ring-offset-background ${SHADOWS.lg}`,
+          `hover:${SHADOWS.md}`
         )}
       >
         <div className="flex items-center gap-2">
@@ -88,10 +88,10 @@ function InputNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
     <>
       <div
         className={cn(
-          "px-4 py-3 rounded-lg border-2 shadow-sm",
+          `px-4 py-3 ${BORDERS.card} border-2 ${SHADOWS.sm}`,
           ANIMATION.transition.base,
           "bg-card/80 border-border",
-          selected && "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-lg"
+          selected && `ring-2 ring-primary ring-offset-2 ring-offset-background ${SHADOWS.lg}`
         )}
       >
         <div className="flex items-center gap-2">
@@ -113,10 +113,10 @@ function OutputNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
       <Handle type="target" position={Position.Top} className="bg-primary! w-3! h-3! border-2! border-background!" />
       <div
         className={cn(
-          "px-4 py-3 rounded-lg border-2 shadow-sm",
+          `px-4 py-3 ${BORDERS.card} border-2 ${SHADOWS.sm}`,
           ANIMATION.transition.base,
           "bg-card/80 border-border",
-          selected && "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-lg"
+          selected && `ring-2 ring-primary ring-offset-2 ring-offset-background ${SHADOWS.lg}`
         )}
       >
         <div className="flex items-center gap-2">
@@ -137,10 +137,10 @@ function ProcessNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
       <Handle type="target" position={Position.Top} className="bg-primary! w-3! h-3! border-2! border-background!" />
       <div
         className={cn(
-          "px-4 py-3 rounded-lg border-2 shadow-sm",
+          `px-4 py-3 ${BORDERS.card} border-2 ${SHADOWS.sm}`,
           ANIMATION.transition.base,
           "bg-card/80 border-border",
-          selected && "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-lg"
+          selected && `ring-2 ring-primary ring-offset-2 ring-offset-background ${SHADOWS.lg}`
         )}
       >
         <div className="flex items-center gap-2">
@@ -167,11 +167,11 @@ function DecisionNode({ data, selected }: NodeProps<Node<BaseNodeData>>) {
       <Handle type="target" position={Position.Top} className="bg-primary! w-3! h-3! border-2! border-background!" />
       <div
         className={cn(
-          "px-4 py-3 border-2 shadow-sm",
+          `px-4 py-3 border-2 ${SHADOWS.sm}`,
           ANIMATION.transition.base,
           "bg-card/80 border-border",
           "w-24 h-24 rotate-45", // Diamond shape
-          selected && "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-lg"
+          selected && `ring-2 ring-primary ring-offset-2 ring-offset-background ${SHADOWS.lg}`
         )}
       >
         <div className="-rotate-45 flex items-center justify-center h-full">

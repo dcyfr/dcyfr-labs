@@ -6,7 +6,7 @@ import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ANIMATION } from "@/lib/design-tokens";
+import { ANIMATION, TYPOGRAPHY } from "@/lib/design-tokens";
 import { BlogFilters } from "./blog-filters";
 
 interface MobileFilterBarProps {
@@ -129,7 +129,7 @@ export function MobileFilterBar({
         >
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <SlidersHorizontal className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <span className="text-sm font-medium">
+            <span className={TYPOGRAPHY.label.small}>
               {hasActiveFilters ? (
                 <>Filters ({activeFilters.length})</>
               ) : (
@@ -153,7 +153,7 @@ export function MobileFilterBar({
             <button
               type="button"
               className={cn(
-                "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-xs transition-all",
+                "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-xs transition-base",
                 "hover:bg-accent hover:text-accent-foreground active:bg-accent/80 dark:hover:bg-accent/60",
                 "disabled:pointer-events-none disabled:opacity-50",
                 "h-6 px-2"
@@ -190,7 +190,7 @@ export function MobileFilterBar({
       <div
         id="mobile-filter-content"
         className={cn(
-          "overflow-hidden transition-all ease-in-out",
+          "overflow-hidden transition-movement ease-in-out",
           ANIMATION.duration.fast,
           isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
         )}

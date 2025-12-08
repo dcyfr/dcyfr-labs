@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Share2, Bookmark, Link2, Linkedin, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { AUTHOR_NAME, SITE_TITLE_PLAIN } from "@/lib/site-config";
+import { SPACING } from "@/lib/design-tokens";
 
 interface PostQuickActionsProps {
   slug?: string;
@@ -104,7 +105,7 @@ export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActi
   };
 
   return (
-    <div className="space-y-2 pb-6 border-b">
+    <div className={`${SPACING.compact} pb-6 border-b`}>
       <h2 className="font-semibold mb-3 text-sm">Quick Actions</h2>
 
       {/* Bookmark Button */}

@@ -270,7 +270,7 @@ function SponsorCard({ sponsor }: SponsorCardProps) {
       className={`group bg-card border border-border rounded-lg p-4 ${HOVER_EFFECTS.cardSubtle}`}
     >
       <div className="flex items-start gap-4">
-        <div className="relative w-16 h-16 rounded-full overflow-hidden shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-all">
+        <div className="relative w-16 h-16 rounded-full overflow-hidden shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-theme">
           <Image
             src={sponsor.avatarUrl}
             alt={`${displayName}'s avatar`}

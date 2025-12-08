@@ -7,9 +7,9 @@ export function SiteFooter() {
     <>
       {/* Mobile footer - minimalistic */}
       <footer className="md:hidden border-t mt-16 site-footer">
-        <div className="mx-auto px-4 sm:px-8 h-16 flex items-center justify-center text-sm text-muted-foreground gap-2">
-          <SiteLogo size="sm" iconClassName="opacity-80" />
-        </div>
+        {/* <div className="mx-auto px-4 sm:px-8 h-16 flex items-center justify-center text-sm text-muted-foreground gap-2">
+          <SiteLogo size="sm" showIcon={false} />
+        </div> */}
       </footer>
 
       {/* Desktop footer */}
@@ -17,7 +17,7 @@ export function SiteFooter() {
         <div
           className={cn(
             "mx-auto",
-            CONTAINER_WIDTHS.archive,
+            CONTAINER_WIDTHS.dashboard,
             "px-4",
             "sm:px-8",
             "md:px-8",
@@ -35,7 +35,8 @@ export function SiteFooter() {
           )}
         >
           <div className="flex items-center justify-center text-sm text-muted-foreground gap-2">
-            <SiteLogo size="sm" iconClassName="opacity-80" />
+            &copy; {new Date().getFullYear()}
+            <SiteLogo size="sm" iconClassName="opacity-80" showIcon={false} />
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <a

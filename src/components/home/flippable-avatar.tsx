@@ -111,7 +111,7 @@ export function FlippableAvatar({
       {/* Coin container with 3D transform */}
       <div
         className={cn(
-          "relative w-full h-full transition-transform duration-700 ease-out",
+          "relative w-full h-full transition-transform ease-out",
           animated && !isAnimating && "hover:scale-105 *:transition-transform",
           isLoaded ? "opacity-100" : "opacity-0"
         )}

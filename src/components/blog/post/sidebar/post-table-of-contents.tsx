@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
 import { trackToCClick } from "@/lib/analytics";
 import { toastSuccess } from "@/lib/toast";
+import { SPACING } from "@/lib/design-tokens";
 
 interface PostTableOfContentsProps {
   headings: TocHeading[];
@@ -154,10 +155,11 @@ export function PostTableOfContents({ headings, slug }: PostTableOfContentsProps
     <div>
       <h2 className="font-semibold mb-3 text-sm">On this page</h2>
       <nav ref={navRef} aria-label="Table of contents" className="max-h-[calc(100vh-12rem)] overflow-y-auto scrollbar-hide">
-        <ul className="space-y-2 text-sm">
+        <ul className={cn(SPACING.compact, "text-sm")}>
           {headings.map((heading, index) => {
             const isActive = activeId === heading.id;
             const isH3 = heading.level === 3;
+            const isH1Or2 = heading.level === 1 || heading.level === 2;
             const isFocused = focusedIndex === index;
 
             return (
@@ -168,8 +170,10 @@ export function PostTableOfContents({ headings, slug }: PostTableOfContentsProps
                   }}
                   className={cn(
                     "group flex items-center justify-between py-1 transition-colors hover:text-foreground",
-                    isActive
+                    isActive && isH1Or2
                       ? "text-foreground font-medium border-l-2 border-primary pl-3 -ml-0.5"
+                      : isActive
+                      ? "text-foreground font-medium border-l-2 border-primary/60 pl-3 -ml-0.5"
                       : "text-muted-foreground hover:underline",
                     isFocused && "ring-2 ring-primary ring-inset rounded"
                   )}

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { teamMembers } from "@/data/team";
 import Link from "next/link";
+import { SPACING } from "@/lib/design-tokens";
 
 interface PostAuthorProps {
   authors: string[];
@@ -39,7 +40,7 @@ export function PostAuthor({ authors, publishedAt }: PostAuthorProps) {
       <div className="pb-6 border-b">
         <h2 className="font-semibold mb-3 text-sm">Written By</h2>
 
-        <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 right-0 mb-3 ring-2 ring-background hover:ring-primary/30 transition-all">
+        <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 right-0 mb-3 ring-2 ring-background hover:ring-primary/30 transition-theme">
           <Image
             src={avatarUrl}
             alt={`${author.name}'s avatar`}
@@ -91,7 +92,7 @@ export function PostAuthor({ authors, publishedAt }: PostAuthorProps) {
             <Link
               key={author.id}
               href={author.profileUrl}
-              className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-background hover:ring-primary/30 transition-all"
+              className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-background hover:ring-primary/30 transition-theme"
               style={{ zIndex: validAuthors.length - index }}
               title={author.name}
             >
@@ -108,7 +109,7 @@ export function PostAuthor({ authors, publishedAt }: PostAuthorProps) {
       </div>
 
       {/* Author names and titles */}
-      <div className="space-y-2">
+      <div className={SPACING.compact}>
         {validAuthors.map((author) => (
           <Link
             key={author.id}
