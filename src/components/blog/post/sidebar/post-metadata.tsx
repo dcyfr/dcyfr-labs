@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import type { PostCategory } from "@/lib/post-categories";
 import { POST_CATEGORY_LABEL } from "@/lib/post-categories";
+import { SPACING } from "@/lib/design-tokens";
 
 interface PostMetadataProps {
   publishedAt: Date;
@@ -42,7 +43,7 @@ export function PostMetadata({
   const displayDate = hasUpdate ? updatedAt : publishedAt;
   const dateLabel = hasUpdate ? "Updated" : "Published";
   return (
-    <div className="space-y-3 pb-6 border-b">
+    <div className={`${SPACING.compact} pb-6 border-b`}>
       <h2 className="font-semibold mb-3 text-sm">Post Details</h2>
 
       {/* Date - shows updated if different from published */}

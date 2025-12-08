@@ -77,7 +77,7 @@ export function DashboardStat({
             <div className="flex items-center gap-1 mt-1">
               <span
                 className={cn(
-                  "text-xs font-semibold",
+                  TYPOGRAPHY.label.xs,
                   trend.direction === "up" && "text-green-600",
                   trend.direction === "down" && "text-red-600",
                   trend.direction === "neutral" && "text-muted-foreground"

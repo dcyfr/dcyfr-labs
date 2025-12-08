@@ -196,18 +196,40 @@ export function aggregateActivities(
 
 /**
  * Calculate time group for an activity based on timestamp
+ * Uses calendar-based grouping (today, week Monday-Sunday, month boundaries)
  */
 export function getTimeGroup(timestamp: Date): TimeGroup {
   const now = new Date();
-  const diffMs = now.getTime() - timestamp.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "today";
-  if (diffDays === 1) return "yesterday";
-  if (diffDays < 7) return "this-week";
-  if (diffDays < 30) return "this-month";
+  
+  // Set time to start of day for comparison
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const timestampStart = new Date(timestamp.getFullYear(), timestamp.getMonth(), timestamp.getDate());
+  
+  // Get start of current week (Monday)
+  const dayOfWeek = now.getDay();
+  const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  const weekStart = new Date(now.getFullYear(), now.getMonth(), diff);
+  weekStart.setHours(0, 0, 0, 0);
+  
+  // Get start of current month
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+  // Compare calendar periods
+  if (timestampStart.getTime() === todayStart.getTime()) {
+    return "today";
+  }
+  
+  if (timestampStart >= weekStart && timestampStart < new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000)) {
+    return "this-week";
+  }
+  
+  if (timestampStart.getFullYear() === now.getFullYear() && timestampStart.getMonth() === now.getMonth()) {
+    return "this-month";
+  }
+  
   return "older";
 }
+
 
 /**
  * Group activities by time period
@@ -232,7 +254,6 @@ export function groupActivitiesByTime(
  */
 export const TIME_GROUP_LABELS: Record<TimeGroup, string> = {
   today: "Today",
-  yesterday: "Yesterday",
   "this-week": "This Week",
   "this-month": "This Month",
   older: "Earlier",

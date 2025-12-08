@@ -205,10 +205,10 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     <td {...props} className="border border-border px-4 py-2" />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul {...props} className="list-disc pl-6 [&>li]:mt-2" />
+    <ul {...props} className={`list-disc pl-6 ${SPACING.list}`} />
   ),
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol {...props} className="list-decimal pl-6 [&>li]:mt-2" />
+    <ol {...props} className={`list-decimal pl-6 ${SPACING.list}`} />
   ),
   code: (props: React.HTMLAttributes<HTMLElement>) => {
     // Inline code (no data-language attribute)

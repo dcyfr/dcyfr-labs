@@ -4,7 +4,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { List, ChevronUp, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { HOVER_EFFECTS } from "@/lib/design-tokens"
+import { HOVER_EFFECTS, BORDERS, SHADOWS } from "@/lib/design-tokens"
 
 /**
  * FAB Menu Component
@@ -60,7 +60,7 @@ export function FABMenu({
         <Button
           size="icon"
           onClick={onTOCClick}
-          className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
+          className={`h-14 w-14 ${BORDERS.circle} ${SHADOWS.lg} ${HOVER_EFFECTS.button}`}
           aria-label="Open table of contents"
         >
           <List className="h-6 w-6" />
@@ -79,7 +79,7 @@ export function FABMenu({
         <Button
           size="icon"
           onClick={onScrollTop}
-          className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
+          className={`h-14 w-14 ${BORDERS.circle} ${SHADOWS.lg} ${HOVER_EFFECTS.button}`}
           aria-label="Back to top"
         >
           <ChevronUp className="h-7 w-7" strokeWidth={2.5} />
@@ -110,7 +110,7 @@ export function FABMenu({
                 <Button
                   size="icon"
                   onClick={onTOCClick}
-                  className={`h-12 w-12 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
+                  className={`h-12 w-12 ${BORDERS.circle} ${SHADOWS.lg} ${HOVER_EFFECTS.button}`}
                   aria-label="Open table of contents"
                 >
                   <List className="h-5 w-5" />
@@ -127,7 +127,7 @@ export function FABMenu({
                 <Button
                   size="icon"
                   onClick={onScrollTop}
-                  className={`h-12 w-12 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
+                  className={`h-12 w-12 ${BORDERS.circle} ${SHADOWS.lg} ${HOVER_EFFECTS.button}`}
                   aria-label="Back to top"
                 >
                   <ChevronUp className="h-6 w-6" strokeWidth={2.5} />
@@ -144,7 +144,7 @@ export function FABMenu({
         >
           <Button
             size="icon"
-            className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
+            className={`h-14 w-14 ${BORDERS.circle} ${SHADOWS.lg} ${HOVER_EFFECTS.button}`}
             aria-label={isExpanded ? "Close menu" : "Open menu"}
             aria-expanded={isExpanded}
           >

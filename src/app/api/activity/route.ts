@@ -135,14 +135,45 @@ export async function GET(request: NextRequest) {
 
     // Trending posts (from Redis)
     if (!sources.length || sources.includes("trending")) {
+      // Calculate time boundaries
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      
+      console.log("[Activity API] Fetching trending posts...");
+      
       fetchPromises.push(
-        transformTrendingPosts(posts, 10)
+        // This week's trending
+        transformTrendingPosts(posts, 1)
           .then((items) => {
+            console.log(`[Activity API] This week's trending: ${items.length} items`);
             activities.push(...items);
           })
           .catch((error) => {
-            console.error("[Activity API] Trending posts fetch failed:", error);
-            // Continue without trending posts
+            console.error("[Activity API] Trending posts (this week) fetch failed:", error);
+          }),
+        // This month's trending
+        transformTrendingPosts(posts, 1, {
+          after: monthStart,
+          description: "Trending this month",
+        })
+          .then((items) => {
+            console.log(`[Activity API] This month's trending: ${items.length} items`);
+            activities.push(...items);
+          })
+          .catch((error) => {
+            console.error("[Activity API] Trending posts (this month) fetch failed:", error);
+          }),
+        // All time trending
+        transformTrendingPosts(posts, 1, {
+          before: monthStart,
+          description: "All time trending",
+        })
+          .then((items) => {
+            console.log(`[Activity API] All time trending: ${items.length} items`);
+            activities.push(...items);
+          })
+          .catch((error) => {
+            console.error("[Activity API] Trending posts (all time) fetch failed:", error);
           })
       );
     }

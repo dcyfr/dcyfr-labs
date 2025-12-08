@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toastSuccess } from "@/lib/toast";
-import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY, BORDERS, SHADOWS } from "@/lib/design-tokens";
 
 /**
  * Props for the TableOfContents component
@@ -453,7 +453,7 @@ export function TableOfContents({ headings, slug, hideFAB = false, externalOpen,
               >
                 <Button
                   size="icon"
-                  className={`h-14 w-14 rounded-full shadow-lg ${HOVER_EFFECTS.button}`}
+                  className={`h-14 w-14 ${BORDERS.circle} ${SHADOWS.lg} ${HOVER_EFFECTS.button}`}
                   aria-label="Open table of contents"
                   style={{ pointerEvents: isVisible ? "auto" : "none" }}
                 >

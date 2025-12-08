@@ -73,7 +73,7 @@ function MemberAvatar({
     return (
       <div className="relative shrink-0">
         <div
-          className={`${sizeClasses} rounded-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center ring-2 ring-border group-hover:ring-primary/50 transition-all`}
+          className={`${sizeClasses} rounded-full bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center ring-2 ring-border group-hover:ring-primary/50 transition-theme`}
         >
           {member.avatarIcon && (
             <member.avatarIcon className={`${iconSize} text-primary`} />
@@ -90,7 +90,7 @@ function MemberAvatar({
 
   return (
     <div
-      className={`relative ${sizeClasses} rounded-full overflow-hidden shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-all`}
+      className={`relative ${sizeClasses} rounded-full overflow-hidden shrink-0 ring-2 ring-border group-hover:ring-primary/50 transition-theme`}
     >
       <Image
         src={imageSrc}

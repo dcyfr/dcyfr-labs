@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { ZoomIn } from "lucide-react";
+import { ANIMATION, BORDERS, SHADOWS } from "@/lib/design-tokens";
 
 /**
  * ZoomableImage Component
@@ -49,6 +50,7 @@ export function ZoomableImage(props: React.ImgHTMLAttributes<HTMLImageElement>) 
   return (
     <div className="relative group inline-block cursor-zoom-in w-full">
       {/* Image with hover zoom indicator */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- Native img required for zoom functionality */}
       <img
         {...props}
         onClick={() => setIsOpen(true)}
@@ -64,8 +66,8 @@ export function ZoomableImage(props: React.ImgHTMLAttributes<HTMLImageElement>) 
       />
       
       {/* Zoom icon overlay on hover */}
-      <span className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center pointer-events-none rounded-lg">
-        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60 backdrop-blur-sm rounded-full p-3">
+      <span className={`absolute inset-0 bg-black/0 group-hover:bg-black/10 ${ANIMATION.transition.theme} flex items-center justify-center pointer-events-none ${BORDERS.card}`}>
+        <span className={`opacity-0 group-hover:opacity-100 ${ANIMATION.transition.theme} bg-black/60 backdrop-blur-sm ${BORDERS.circle} p-3`}>
           <ZoomIn className="w-6 h-6 text-white" aria-hidden="true" />
         </span>
       </span>
@@ -73,7 +75,7 @@ export function ZoomableImage(props: React.ImgHTMLAttributes<HTMLImageElement>) 
       {/* Full-screen modal */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-200"
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in ${ANIMATION.duration.fast}`}
           onClick={() => setIsOpen(false)}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -86,10 +88,11 @@ export function ZoomableImage(props: React.ImgHTMLAttributes<HTMLImageElement>) 
           aria-label="Close zoomed image"
         >
           <div className="relative max-w-[95vw] max-h-[95vh] p-4">
+            {/* eslint-disable-next-line @next/next/no-img-element -- Native img required for zoom functionality */}
             <img
               src={props.src}
               alt={props.alt}
-              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl cursor-zoom-out"
+              className={`max-w-full max-h-[90vh] object-contain ${BORDERS.card} ${SHADOWS.xl} cursor-zoom-out`}
               onClick={(e) => {
                 e.stopPropagation();
                 setIsOpen(false);
@@ -97,7 +100,7 @@ export function ZoomableImage(props: React.ImgHTMLAttributes<HTMLImageElement>) 
             />
             
             {/* Close hint */}
-            <div className="absolute top-6 right-6 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2 text-white text-sm pointer-events-none">
+            <div className={`absolute top-6 right-6 bg-black/60 backdrop-blur-sm ${BORDERS.circle} px-4 py-2 text-white text-sm pointer-events-none`}>
               Click or press ESC to close
             </div>
           </div>

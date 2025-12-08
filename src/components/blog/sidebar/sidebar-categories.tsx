@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 interface SidebarCategoriesProps {
   categoryList: string[];
@@ -34,7 +35,7 @@ export function SidebarCategories({
     <div className="space-y-3">
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-full text-sm font-medium"
+        className={`flex items-center justify-between w-full ${TYPOGRAPHY.label.small}`}
       >
         <span>Categories</span>
         {isExpanded ? (

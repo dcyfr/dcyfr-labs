@@ -32,5 +32,15 @@
       ]
     }
   },
-  "codeQL.createQuery.qlPackLocation": "/Users/drew/Desktop/dcyfr/code/dcyfr-labs"
+  "codeQL.createQuery.qlPackLocation": "/Users/drew/Desktop/dcyfr/code/dcyfr-labs",
+
+  // Tailwind CSS - Known acceptable warnings for v1 production
+  // These are false positives from Tailwind CSS IntelliSense extension not yet supporting v4
+  "tailwindCSS.lint.cssConflict": "ignore",
+  "css.lint.unknownAtRules": "ignore",
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "tailwindCSS.validate": true
 }

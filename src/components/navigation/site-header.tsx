@@ -42,7 +42,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-backdrop-filter:bg-background/60 border-b site-header">
-      <div className={cn("mx-auto", CONTAINER_WIDTHS.archive, "px-4", "sm:px-8", "md:px-8", "h-14", "md:h-16", "flex", "items-center", "justify-between", "gap-2")}>
+      <div className={cn("mx-auto", CONTAINER_WIDTHS.dashboard, "px-4", "sm:px-8", "md:px-8", "h-14", "md:h-16", "flex", "items-center", "justify-between", "gap-2")}>
         {/* Logo - always visible */}
         <Link href="/" onClick={handleLogoClick} className={cn("touch-target", "shrink-0")}>
           <SiteLogo size="md" collapseOnMobile />

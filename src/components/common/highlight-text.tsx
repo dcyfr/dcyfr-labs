@@ -1,4 +1,5 @@
 import React from "react";
+import { SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 /**
  * HighlightText Component
@@ -53,7 +54,7 @@ export function HighlightText({ text, searchQuery, className }: HighlightTextPro
           return (
             <mark
               key={index}
-              className="bg-yellow-200/80 dark:bg-yellow-500/30 text-foreground px-0.5 rounded"
+              className={`${SEMANTIC_COLORS.highlight.primary} px-0.5 rounded`}
             >
               {part}
             </mark>

@@ -1230,8 +1230,8 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   }
 
   .prose li {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
     line-height: 1.8;
   }
 

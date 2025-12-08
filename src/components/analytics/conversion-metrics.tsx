@@ -8,6 +8,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardStats, DashboardStat } from "@/components/dashboard";
+import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import { Mail, Linkedin, Eye, Github, Target, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -61,8 +62,8 @@ export function ConversionMetrics({
   // Get status badge
   const getStatusBadge = (current: number, target: number) => {
     const progress = getProgress(current, target);
-    if (progress >= 100) return <Badge variant="default" className="bg-green-600">On Track</Badge>;
-    if (progress >= 50) return <Badge variant="default" className="bg-yellow-600">In Progress</Badge>;
+    if (progress >= 100) return <Badge variant="default" className={SEMANTIC_COLORS.status.success}>On Track</Badge>;
+    if (progress >= 50) return <Badge variant="default" className={SEMANTIC_COLORS.status.warning}>In Progress</Badge>;
     return <Badge variant="secondary">Not Started</Badge>;
   };
 
@@ -298,7 +299,7 @@ export function ConversionMetrics({
           <div className="flex items-start gap-3">
             <TrendingUp className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="text-sm font-medium">Conversion Tracking Implementation</p>
+              <p className={TYPOGRAPHY.label.small}>Conversion Tracking Implementation</p>
               <p className="text-xs text-muted-foreground">
                 CTAs and event tracking are implemented but currently hidden. Enable CTAs in blog posts, 
                 projects page, and about page to start collecting conversion data. Events will automatically 

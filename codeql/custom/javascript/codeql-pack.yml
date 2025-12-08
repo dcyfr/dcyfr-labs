@@ -3,5 +3,6 @@ library: false
 warnOnImplicitThis: false
 name: getting-started/codeql-extra-queries-javascript
 version: 1.0.0
+extractor: javascript
 dependencies:
   codeql/javascript-all: ^2.6.15
