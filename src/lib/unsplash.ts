@@ -198,6 +198,7 @@ export async function downloadImage(
     }
 
     const buffer = await response.arrayBuffer();
+    // lgtm[js/http-to-file-access] - Security controls: URL validated via validateUnsplashUrl(), path validated via validateSlug(), trusted Unsplash API source only
     writeFileSync(outputPath, Buffer.from(buffer));
 
     return `/blog/images/${validatedSlug}/${filename}`;
