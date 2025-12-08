@@ -220,7 +220,7 @@ export function PostList({
                 >
                   {/* Background image - only if explicitly defined in post and not hidden */}
                   {p.image && p.image.url && !p.image.hideCard && (
-                    <div className="absolute inset-0 z-0 overflow-hidden">
+                    <div className="absolute inset-0 z-0">
                       <Image
                         src={p.image.url}
                         alt={p.image.alt}
@@ -336,12 +336,12 @@ export function PostList({
           // Alternating horizontal layout for remaining posts
           return (
               <ScrollReveal key={p.slug} animation="fade-up" delay={index * 50}>
-                <article
+              <article
                 className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}
               >
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
-                  <div className="absolute inset-0 z-0 overflow-hidden">
+                  <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
                       alt={p.image.alt}
@@ -349,7 +349,7 @@ export function PostList({
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 100vw"
                     />
-                    {/* Gradient overlay for text contrast */}
+                    {/* Full gradient overlay for text contrast */}
                     <div className="absolute inset-0 bg-linear-to-t from-background/90 via-background/95 to-background" />
                   </div>
                 )}
@@ -459,7 +459,7 @@ export function PostList({
               <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card} flex flex-col h-full`}>
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
-                  <div className="absolute inset-0 z-0 overflow-hidden">
+                  <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
                       alt={p.image.alt}
@@ -549,7 +549,7 @@ export function PostList({
               <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}>
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
-                  <div className="absolute inset-0 z-0 overflow-hidden">
+                  <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
                       alt={p.image.alt}
@@ -628,7 +628,7 @@ export function PostList({
               <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}>
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
-                  <div className="absolute inset-0 z-0 overflow-hidden">
+                  <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
                       alt={p.image.alt}
@@ -690,7 +690,7 @@ export function PostList({
             <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card} flex flex-col h-full`}>
               {/* Background image - only if explicitly defined in post and not hidden */}
               {p.image && p.image.url && !p.image.hideCard && (
-                <div className="absolute inset-0 z-0 overflow-hidden">
+                <div className="absolute inset-0 z-0">
                   <Image
                     src={p.image.url}
                     alt={p.image.alt}

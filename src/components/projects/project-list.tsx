@@ -109,7 +109,7 @@ export function ProjectList({
               <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card} flex flex-col h-full`}>
                 {/* Background image - only if defined */}
                 {image && image.url && (
-                  <div className="absolute inset-0 z-0 overflow-hidden">
+                  <div className="absolute inset-0 z-0">
                     <Image
                       src={image.url}
                       alt={image.alt}
@@ -193,7 +193,7 @@ export function ProjectList({
               <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}>
                 {/* Background image - only if defined */}
                 {image && image.url && (
-                  <div className="absolute inset-0 z-0 overflow-hidden">
+                  <div className="absolute inset-0 z-0">
                     <Image
                       src={image.url}
                       alt={image.alt}
@@ -271,7 +271,7 @@ export function ProjectList({
               <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}>
                 {/* Background image - only if defined */}
                 {image && image.url && (
-                  <div className="absolute inset-0 z-0 overflow-hidden">
+                  <div className="absolute inset-0 z-0">
                     <Image
                       src={image.url}
                       alt={image.alt}
@@ -330,7 +330,7 @@ export function ProjectList({
             <article className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card} flex flex-col h-full`}>
               {/* Background image - only if defined */}
               {image && image.url && (
-                <div className="absolute inset-0 z-0 overflow-hidden">
+                <div className="absolute inset-0 z-0">
                   <Image
                     src={image.url}
                     alt={image.alt}
