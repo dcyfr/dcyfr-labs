@@ -102,18 +102,19 @@ function getOverlayClasses(
   
   // Gradient overlays with light/dark mode awareness
   // Using background-color with HSL variables for automatic theme adaptation
+  // Light mode overlays reduced opacity for subtlety; dark mode uses stronger blacks
   const gradientClasses = {
     // Blog posts - higher contrast for readable titles and captions
     blog: {
       top: {
-        light: 'bg-linear-to-b from-background/90 via-background/50 to-transparent',
-        medium: 'bg-linear-to-b from-background/95 via-background/60 to-transparent',
-        strong: 'bg-linear-to-b from-background/97 via-background/70 to-transparent',
+        light: 'bg-linear-to-b from-background/50 via-background/20 to-transparent',
+        medium: 'bg-linear-to-b from-background/70 via-background/35 to-transparent',
+        strong: 'bg-linear-to-b from-background/85 via-background/50 to-transparent',
       },
       bottom: {
-        light: 'bg-linear-to-t from-background/80 to-transparent',
-        medium: 'bg-linear-to-t from-background/90 to-transparent',
-        strong: 'bg-linear-to-t from-background/95 to-transparent',
+        light: 'bg-linear-to-t from-background/40 to-transparent',
+        medium: 'bg-linear-to-t from-background/60 to-transparent',
+        strong: 'bg-linear-to-t from-background/75 to-transparent',
       },
       full: {
         light: 'bg-gradient-to-b from-black/40 via-black/20 to-black/40',
@@ -125,14 +126,14 @@ function getOverlayClasses(
     // Project pages - balanced contrast with emphasis on header area
     project: {
       top: {
-        light: 'bg-linear-to-b from-background/85 via-background/40 to-transparent',
-        medium: 'bg-linear-to-b from-background/90 via-background/50 to-transparent',
-        strong: 'bg-linear-to-b from-background/95 via-background/60 to-transparent',
+        light: 'bg-linear-to-b from-background/45 via-background/15 to-transparent',
+        medium: 'bg-linear-to-b from-background/65 via-background/30 to-transparent',
+        strong: 'bg-linear-to-b from-background/80 via-background/45 to-transparent',
       },
       bottom: {
-        light: 'bg-linear-to-t from-background/70 to-transparent',
-        medium: 'bg-linear-to-t from-background/80 to-transparent',
-        strong: 'bg-linear-to-t from-background/90 to-transparent',
+        light: 'bg-linear-to-t from-background/35 to-transparent',
+        medium: 'bg-linear-to-t from-background/55 to-transparent',
+        strong: 'bg-linear-to-t from-background/70 to-transparent',
       },
       full: {
         light: 'bg-gradient-to-b from-black/10 to-black/5 to-black/10',
@@ -144,14 +145,14 @@ function getOverlayClasses(
     // Default - subtle overlay for generic use cases
     default: {
       top: {
-        light: 'bg-linear-to-b from-background/75 via-background/30 to-transparent',
-        medium: 'bg-linear-to-b from-background/85 via-background/40 to-transparent',
-        strong: 'bg-linear-to-b from-background/90 via-background/50 to-transparent',
+        light: 'bg-linear-to-b from-background/40 via-background/15 to-transparent',
+        medium: 'bg-linear-to-b from-background/60 via-background/30 to-transparent',
+        strong: 'bg-linear-to-b from-background/75 via-background/40 to-transparent',
       },
       bottom: {
-        light: 'bg-linear-to-t from-background/60 to-transparent',
-        medium: 'bg-linear-to-t from-background/70 to-transparent',
-        strong: 'bg-linear-to-t from-background/80 to-transparent',
+        light: 'bg-linear-to-t from-background/30 to-transparent',
+        medium: 'bg-linear-to-t from-background/50 to-transparent',
+        strong: 'bg-linear-to-t from-background/65 to-transparent',
       },
       full: {
         light: 'bg-gradient-to-b from-black/20 via-black/10 to-black/20',
@@ -204,10 +205,17 @@ export function BlogPostHeroOverlay({
     <>
       <HeroOverlay
         variant="blog"
-        direction="full"
+        direction="top"
         intensity={intensity}
         className={className}
         zIndex={zIndex}
+      />
+      <HeroOverlay
+        variant="blog"
+        direction="bottom"
+        intensity="light"
+        className={className}
+        zIndex={zIndex + 1}
       />
     </>
   );
@@ -230,10 +238,17 @@ export function ProjectHeroOverlay({
     <>
       <HeroOverlay
         variant="project"
-        direction="full"
+        direction="top"
         intensity={intensity}
         className={className}
         zIndex={zIndex}
+      />
+      <HeroOverlay
+        variant="project"
+        direction="bottom"
+        intensity="light"
+        className={className}
+        zIndex={zIndex + 1}
       />
     </>
   );

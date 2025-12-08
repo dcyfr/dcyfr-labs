@@ -87,15 +87,15 @@ export function ZoomableImage(props: React.ImgHTMLAttributes<HTMLImageElement>) 
         }}
         tabIndex={0}
         role="button"
-        aria-label={`Zoom image: ${props.alt || 'image'}`}
+        aria-label={`Zoom image: ${props.alt || "image"}`}
       />
-      
-      {/* Zoom icon overlay on hover */}
+
+      {/* FIX: Zoom icon overlay on hover
       <span className={`absolute inset-0 bg-black/0 group-hover:bg-black/10 ${ANIMATION.transition.theme} flex items-center justify-center pointer-events-none ${BORDERS.card}`}>
         <span className={`opacity-0 group-hover:opacity-100 ${ANIMATION.transition.theme} bg-black/60 backdrop-blur-sm ${BORDERS.circle} p-3`}>
           <ZoomIn className="w-6 h-6 text-white" aria-hidden="true" />
         </span>
-      </span>
+      </span> */}
 
       {/* Full-screen modal */}
       {isOpen && (
@@ -121,12 +121,14 @@ export function ZoomableImage(props: React.ImgHTMLAttributes<HTMLImageElement>) 
           </button>
 
           {/* Hint text - minimal padding, responsive sizing */}
-          <div className={`text-xs sm:text-sm text-white text-center mb-3 sm:mb-4`}>
+          <div
+            className={`text-xs sm:text-sm text-white text-center mb-3 sm:mb-4`}
+          >
             Click or press ESC to close
           </div>
 
           {/* Image container - no excess padding */}
-          <div 
+          <div
             className="relative max-w-[95vw] max-h-[85vh] flex items-center justify-center cursor-zoom-out"
             onClick={(e) => {
               e.stopPropagation();

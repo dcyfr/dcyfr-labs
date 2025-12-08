@@ -1195,7 +1195,8 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
   /* Reduce paragraph margin when immediately followed by lists to avoid excess spacing */
   .prose p + ul,
   .prose p + ol {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
   }
 
   .prose h2 {

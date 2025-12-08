@@ -63,10 +63,10 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <Card className={`group relative overflow-hidden border-2 ${HOVER_EFFECTS.cardFeatured}`}>
+      <Card className={`group relative overflow-hidden border-2 p-0 ${HOVER_EFFECTS.cardFeatured}`}>
         {/* Background image - only if explicitly defined in post and not hidden */}
         {post.image && !post.image.hideCard && (
-          <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute inset-0 z-0">
             <Image
               src={post.image.url}
               alt={post.image.alt}

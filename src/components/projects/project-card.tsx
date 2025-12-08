@@ -142,10 +142,10 @@ export function ProjectCard({
         }
       }}
     >
-      <Card className={cn("holo-card flex h-full flex-col overflow-hidden relative", HOVER_EFFECTS.card)}>
+      <Card className={cn("holo-card flex h-full flex-col overflow-hidden relative p-0", HOVER_EFFECTS.card)}>
         {/* Background image - only if defined */}
         {image && (
-          <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute inset-0 z-0">
             <Image
               src={image.url}
               alt={image.alt}
@@ -158,7 +158,7 @@ export function ProjectCard({
           </div>
         )}
         {/* Content */}
-        <CardHeader className="space-y-1.5 px-4 py-4 relative z-10">
+        <CardHeader className="space-y-1.5 px-6 py-8 relative z-10">
           {project.timeline && (
             <p className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
               {project.status !== "active" && (
