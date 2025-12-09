@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronUp, SlidersHorizontal } from "lucide-react";
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetClose } from "@/components/ui/sheet";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ANIMATION, TYPOGRAPHY } from "@/lib/design-tokens";
 import { BlogFilters } from "./blog-filters";
+import { useMobileFilterSheet } from "@/hooks/use-mobile-filter-sheet";
 
 interface MobileFilterBarProps {
   selectedCategory: string;
@@ -48,8 +49,8 @@ export function MobileFilterBar({
   dateRange = "all",
   totalResults,
 }: MobileFilterBarProps) {
-  // Using a mobile bottom sheet instead of inline expand/collapse
-  const [isOpen, setIsOpen] = useState(false);
+  // Using shared state with FloatingFilterFab for coordinated sheet control
+  const { isOpen, setIsOpen } = useMobileFilterSheet();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 

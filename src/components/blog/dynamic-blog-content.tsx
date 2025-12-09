@@ -13,9 +13,11 @@ import { Suspense } from "react";
 import type { ArchiveData } from "@/lib/archive";
 import type { Post } from "@/data/posts";
 import { getMultiplePostViews } from "@/lib/views";
+import { calculateActiveFilterCount } from "@/lib/blog";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import { PostList } from "@/components/blog/post/post-list";
 import { MobileFilterBar } from "@/components/blog/filters/mobile-filter-bar";
+import { FloatingFilterFab } from "@/components/blog/filters/floating-filter-fab";
 
 interface DynamicBlogContentProps {
   /** Archive data with filtered/paginated posts */
@@ -85,6 +87,16 @@ async function DynamicBlogContentImpl({
     });
   }
 
+  // Calculate active filter count for FAB
+  const activeFilterCount = calculateActiveFilterCount({
+    query,
+    selectedCategory,
+    selectedTags,
+    readingTime,
+    sortBy,
+    dateRange,
+  });
+
   return (
     <div id="blog-posts" className={`px-2 sm:px-4 lg:px-8 w-full`}>
       {/* Mobile filters (below lg breakpoint) - collapsible for better content visibility */}
@@ -102,6 +114,12 @@ async function DynamicBlogContentImpl({
           totalResults={sortedArchiveData.totalItems}
         />
       </div>
+
+      {/* Floating filter FAB for mobile */}
+      <FloatingFilterFab
+        activeFilterCount={activeFilterCount}
+        hasFilters={hasActiveFilters}
+      />
 
       {/* Post list with view counts */}
       <PostList

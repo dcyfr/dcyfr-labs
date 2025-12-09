@@ -1,6 +1,7 @@
 // Blog feature components
 export { BlogFilters } from "./filters/blog-filters";
 export { MobileFilterBar } from "./filters/mobile-filter-bar";
+export { FloatingFilterFab } from "./filters/floating-filter-fab";
 export { BlogSidebar } from "./sidebar/blog-sidebar";
 export { BlogKeyboardProvider } from "./blog-keyboard-provider";
 export { BlogLayoutManager } from "./blog-layout-manager";
