@@ -143,8 +143,9 @@ describe("Blog PPR - BlogListSkeleton Component", () => {
     it("skeleton items have consistent spacing", () => {
       const { container } = render(<BlogListSkeleton layout="grid" itemCount={2} />);
       const gridContainer = container.querySelector(".grid");
-      
+
       // Grid should have consistent gap (SPACING.contentGrid = gap-6)
+      // eslint-disable-next-line no-restricted-syntax -- Testing CSS class assertion
       expect(gridContainer).toHaveClass("gap-6");
     });
   });

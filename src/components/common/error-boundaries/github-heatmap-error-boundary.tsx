@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AlertCircle, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 /**
  * Error fallback specifically for the GitHub heatmap component.
@@ -15,16 +15,16 @@ function GitHubHeatmapErrorFallback({ error, resetError }: ErrorFallbackProps) {
   const DEFAULT_GITHUB_USERNAME = "dcyfr";
 
   return (
-    <Card className="p-4 border-amber-200 dark:border-amber-800/50 bg-amber-50/50 dark:bg-amber-900/5 min-h-[400px] flex items-center">
+    <Card className={cn("p-4 min-h-[400px] flex items-center", SEMANTIC_COLORS.alert.warning.container, SEMANTIC_COLORS.alert.warning.border)}>
       <div className="space-y-3 w-full">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+          <AlertCircle className={cn("w-5 h-5 mt-0.5 flex-shrink-0", SEMANTIC_COLORS.alert.warning.icon)} aria-hidden="true" />
           <div className="flex-1 space-y-2">
             <div>
-              <h3 className={cn(TYPOGRAPHY.label.small, "text-amber-900", "dark:text-amber-100")}>
+              <h3 className={cn(TYPOGRAPHY.label.small, SEMANTIC_COLORS.alert.warning.text)}>
                 Unable to Load GitHub Contributions
               </h3>
-              <p className="mt-1 text-sm text-amber-800 dark:text-amber-200">
+              <p className={cn("mt-1 text-sm", SEMANTIC_COLORS.alert.warning.text)}>
                 There was a problem fetching contribution data. This might be due to rate limiting,
                 network issues, or API unavailability.
               </p>
@@ -54,10 +54,10 @@ function GitHubHeatmapErrorFallback({ error, resetError }: ErrorFallbackProps) {
 
             {process.env.NODE_ENV === "development" && (
               <details className="mt-3 text-xs">
-                <summary className="cursor-pointer font-mono text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-amber-100">
+                <summary className={cn("cursor-pointer font-mono", SEMANTIC_COLORS.alert.warning.label, "hover:opacity-80")}>
                   Technical details (development only)
                 </summary>
-                <pre className="mt-2 overflow-auto rounded-md bg-amber-100 dark:bg-amber-950/50 p-2 text-xs text-amber-900 dark:text-amber-100">
+                <pre className={cn("mt-2 overflow-auto rounded-md p-2 text-xs", SEMANTIC_COLORS.alert.warning.container, SEMANTIC_COLORS.alert.warning.text)}>
                   {error.message}
                   {error.stack && `\n\n${error.stack.split("\n").slice(0, 5).join("\n")}`}
                 </pre>

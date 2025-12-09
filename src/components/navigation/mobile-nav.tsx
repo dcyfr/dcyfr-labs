@@ -45,10 +45,9 @@ export function MobileNav() {
   }, [pathname]);
 
   const navItems = [
-    { href: "/", label: "Homepage" },
+    { href: "/", label: "Home" },
+    { href: "/blog", label: "Blog" },
     { href: "/about", label: "About Us" },
-    { href: "/activity", label: "Activity" },
-    { href: "/blog", label: "Blog Articles" },
     { href: "/work", label: "Our Work" },
     { href: "/contact", label: "Contact Us" },
     { href: "/sponsors", label: "Sponsors" },

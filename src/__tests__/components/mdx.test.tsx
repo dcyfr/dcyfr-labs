@@ -181,6 +181,7 @@ describe("MDX Component", () => {
       const icon = screen.getByLabelText("Check");
       expect(icon).toBeInTheDocument();
       // Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
+      // eslint-disable-next-line no-restricted-syntax -- Testing CSS class for icon color
       expect(icon.className).toContain("text-green-600");
     });
 
@@ -189,6 +190,7 @@ describe("MDX Component", () => {
       const icon = screen.getByLabelText("Cross");
       expect(icon).toBeInTheDocument();
       // Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
+      // eslint-disable-next-line no-restricted-syntax -- Testing CSS class for icon color
       expect(icon.className).toContain("text-red-600");
     });
     it("should render InfoIcon component", () => {
@@ -196,6 +198,7 @@ describe("MDX Component", () => {
       const icon = screen.getByLabelText("Information");
       expect(icon).toBeInTheDocument();
       // Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
+      // eslint-disable-next-line no-restricted-syntax -- Testing CSS class for icon color
       expect(icon.className).toContain("text-blue-600");
     });
   });

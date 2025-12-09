@@ -17,6 +17,7 @@ import {
 import { SiteHeader, SiteFooter, BottomNav } from "@/components/navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { LayoutUtilities } from "@/components/features/layout-utilities";
+import { DevBanner } from "@/components/features/dev-banner";
 import { ScrollToAnchor } from "@/components/features/scroll-to-anchor";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -134,6 +135,8 @@ export default async function RootLayout({
               Skip to main content
             </a>
             <LayoutUtilities />
+            {/* Dev Banner: Only show in development environment */}
+            {process.env.NODE_ENV === 'development' && <DevBanner />}
             <ScrollToAnchor offset={80} />
             <SiteHeader />
             <main id="main-content" className="min-h-[calc(100dvh-128px)] pb-8">{children}</main>

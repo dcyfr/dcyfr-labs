@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Select,
@@ -54,6 +54,7 @@ import { AnalyticsOverview } from "@/components/analytics/analytics-overview";
 import { ConversionMetrics } from "@/components/analytics/conversion-metrics";
 import { AnalyticsInsights } from "@/components/analytics/analytics-insights";
 import { AnalyticsRecommendations } from "@/components/analytics/analytics-recommendations";
+import VercelInsights from "@/components/analytics/vercel-insights";
 import dynamic from "next/dynamic";
 
 const AnalyticsCharts = dynamic(() => import("@/components/analytics/analytics-charts").then(mod => ({ default: mod.AnalyticsCharts })), {
@@ -564,8 +565,8 @@ export default function AnalyticsDashboard() {
                           <span className={cn(
                             "inline-flex items-center gap-1",
                             TYPOGRAPHY.label.xs,
-                            tier === "high" && "text-green-600",
-                            tier === "medium" && "text-yellow-600",
+                            tier === "high" && SEMANTIC_COLORS.alert.success.icon,
+                            tier === "medium" && SEMANTIC_COLORS.alert.warning.icon,
                             tier === "low" && "text-muted-foreground"
                           )}>
                             {rate.toFixed(1)}%
@@ -674,6 +675,9 @@ export default function AnalyticsDashboard() {
           <CardContent className="pt-0 space-y-4">
             {/* Time-Series Charts */}
             <AnalyticsCharts posts={sortedPosts} dateRange={dateRange} />
+            {data?.vercel && (
+              <VercelInsights vercel={data.vercel} lastSynced={data.vercelLastSynced} />
+            )}
             
             {/* All-Time Records & Distribution */}
             <AnalyticsInsights posts={sortedPosts} compact={false} />

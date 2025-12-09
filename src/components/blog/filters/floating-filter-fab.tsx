@@ -3,6 +3,7 @@
 import { SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { ANIMATION, TYPOGRAPHY } from "@/lib/design-tokens";
 import { useMobileFilterSheet } from "@/hooks/use-mobile-filter-sheet";
 
 interface FloatingFilterFabProps {
@@ -46,7 +47,7 @@ export function FloatingFilterFab({
         "text-primary-foreground",
         "shadow-lg hover:shadow-xl",
         // Transitions
-        "transition-all duration-200 ease-out",
+        `${ANIMATION.transition.movement}`,
         // Accessibility
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
       )}
@@ -77,7 +78,7 @@ export function FloatingFilterFab({
             "absolute -top-1 -right-1",
             "h-5 w-5 p-0",
             "flex items-center justify-center",
-            "text-xs font-bold",
+            TYPOGRAPHY.label.xs,
             "bg-accent text-accent-foreground",
             "border border-background"
           )}

@@ -20,13 +20,6 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 ### Priority 1: Blog Features (Medium Effort)
 
-#### 🟡 **Horizontal Scroll Filter Chips** (2-3 hours)
-- Single row of horizontally scrolling filter badges
-- Selected state styling
-- "More" button for full filter access
-- Sticky to top with shadow on scroll
-- **Estimated Impact:** Mobile UX improvement
-
 #### 🟡 **Category Grouping in Blog Grid** (2-3 hours)
 - Add section headers for each category
 - Group posts visually under category headings
@@ -168,6 +161,43 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 ## ✅ COMPLETED WORK
 
+### 📅 Recent Completion: Horizontal Scroll Filter Chips (Dec 9, 2025) ✅
+
+- [x] **HorizontalFilterChips Component** ✅
+  - Created `src/components/blog/filters/horizontal-filter-chips.tsx`
+  - Single row horizontal scrolling with touch-friendly momentum
+  - Displays sort options (Newest, Popular, Oldest) with selection state
+  - Shows up to 6 category badges with display name mapping
+  - "More" button triggers full filter sheet via shared state
+  - Sticky positioning at top-16 with shadow on scroll
+  - Backdrop blur effect for visual clarity
+  - Mobile-only (hidden on lg: breakpoint)
+
+- [x] **Integration** ✅
+  - Integrated into DynamicBlogContent above MobileFilterBar
+  - Uses existing useFilterParams hook for URL state management
+  - Coordinates with useMobileFilterSheet for "More" button
+  - Negative margins to extend to container edges
+  - Proper z-index layering (z-20) below header
+
+- [x] **Quality Verification** ✅
+  - Created 21 test cases covering all functionality (100% passing)
+  - Tests cover rendering, selection state, interactions, accessibility, sticky behavior, scroll mechanics, edge cases
+  - TypeScript: 0 errors
+  - ESLint: 0 new errors
+  - Build: Successful
+  - Added barrel export to `src/components/blog/index.ts`
+
+- [x] **Features Delivered** ✅
+  - Quick access to common filters without opening full sheet
+  - Visual feedback for active selections (primary color)
+  - Smooth horizontal scroll with hidden scrollbar
+  - Border separator between sort and category sections
+  - Graceful handling of empty/missing data
+  - Touch-optimized badge spacing and sizing
+
+---
+
 ### 📅 Recent Completion: Floating Filter FAB for Mobile (Dec 9, 2025) ✅
 
 - [x] **Shared State Hook** ✅
@@ -199,6 +229,14 @@ This document tracks **active and pending** work. Completed tasks are in **`done
   - Consider keyboard navigation improvements (accessibility)
   - A/B test FAB visibility and positioning with users
   - Monitor mobile filter engagement metrics
+
+### 🔴 TEMP: Horizontal Filter Chips Disabled (Dec 9, 2025)
+- **Why**: Temporarily disabled to simplify mobile UI and reduce duplication with the Floating Filter FAB while we evaluate usage and performance.
+- **How**: Feature is gated behind `NEXT_PUBLIC_FEATURE_HORIZONTAL_FILTER_CHIPS` environment variable. Set to `true` to re-enable.
+- **Where**:
+  - Component: `src/components/blog/filters/horizontal-filter-chips.tsx`
+  - Used in: `src/components/blog/dynamic-blog-content.tsx` (gated)
+- **Follow-up**: Consider re-enabling after telemetry review or adding an experiment (A/B) to validate usability. Move to backlog if decision is no.
 
 ---
 

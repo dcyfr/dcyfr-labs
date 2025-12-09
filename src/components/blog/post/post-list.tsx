@@ -242,7 +242,7 @@ export function PostList({
                   <Link href={`/blog/${p.slug}`} className="block">
                     {/* Content */}
                     <div className="p-4 md:p-10 lg:p-12 relative z-10">
-                      {/* Badges and metadata */}
+                      {/* Badges - show on all posts */}
                       <div className="flex flex-nowrap items-center gap-x-3 text-sm mb-4 text-zinc-700 dark:text-zinc-300 overflow-x-auto">
                         <PostBadges
                           post={p}
@@ -251,6 +251,10 @@ export function PostList({
                           showCategory={true}
                         />
                         <SeriesBadge post={p} />
+                      </div>
+
+                      {/* Time/reading time/views - desktop only */}
+                      <div className="hidden md:flex flex-nowrap items-center gap-x-3 text-sm mb-4 text-zinc-700 dark:text-zinc-300 overflow-x-auto">
                         <time
                           dateTime={p.publishedAt}
                           className="text-zinc-700 dark:text-zinc-300"
@@ -367,7 +371,7 @@ export function PostList({
                 <Link href={`/blog/${p.slug}`} className="block">
                   {/* Content section */}
                   <div className="p-4 md:p-8 relative z-10">
-                    {/* Badges and metadata */}
+                    {/* Badges - show on all posts */}
                     <div className="flex flex-nowrap items-center gap-x-2.5 text-sm text-muted-foreground mb-3 overflow-x-auto">
                       <PostBadges
                         post={p}
@@ -377,6 +381,10 @@ export function PostList({
                         showCategory={true}
                       />
                       <SeriesBadge post={p} size="sm" />
+                    </div>
+
+                    {/* Time/reading time/views - desktop only */}
+                    <div className="hidden md:flex flex-nowrap items-center gap-x-2.5 text-sm text-muted-foreground mb-3 overflow-x-auto">
                       <time
                         dateTime={p.publishedAt}
                         className="text-zinc-600 dark:text-zinc-400"
@@ -523,9 +531,9 @@ export function PostList({
                       <HighlightText text={p.title} searchQuery={searchQuery} />
                     </TitleTag>
 
-                    {/* Metadata - moved below title for featured posts */}
+                    {/* Metadata - moved below title for featured posts (desktop only) */}
                     <div
-                      className={`flex flex-nowrap items-center gap-x-2 text-muted-foreground mb-2 ${isFeatured ? "text-xs" : "text-xs"}`}
+                      className={`hidden md:flex flex-nowrap items-center gap-x-2 text-muted-foreground mb-2 ${isFeatured ? "text-xs" : "text-xs"}`}
                     >
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString("en-US", {
@@ -621,7 +629,7 @@ export function PostList({
                 )}
                 <Link href={`/blog/${p.slug}`} className="block">
                   <div className="p-4 md:p-8 relative z-10">
-                    {/* Badges and metadata */}
+                    {/* Badges - show on all posts */}
                     <div className="flex flex-nowrap items-center gap-x-2 text-xs text-muted-foreground mb-3 overflow-x-auto">
                       <PostBadges
                         post={p}
@@ -631,6 +639,10 @@ export function PostList({
                         showCategory={true}
                       />
                       <SeriesBadge post={p} size="sm" />
+                    </div>
+
+                    {/* Time/reading time/views - desktop only */}
+                    <div className="hidden md:flex flex-nowrap items-center gap-x-2 text-xs text-muted-foreground mb-3 overflow-x-auto">
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString("en-US", {
                           year: "numeric",
@@ -720,7 +732,7 @@ export function PostList({
                 )}
                 <Link href={`/blog/${p.slug}`} className="block">
                   <div className="p-3 relative z-10">
-                    {/* Badges and metadata - compact */}
+                    {/* Badges - show on all posts */}
                     <div className="flex flex-nowrap items-center gap-x-2 text-xs text-muted-foreground mb-1.5 overflow-x-auto">
                       <PostBadges
                         post={p}
@@ -730,6 +742,10 @@ export function PostList({
                         showCategory={true}
                       />
                       <SeriesBadge post={p} size="sm" />
+                    </div>
+
+                    {/* Time/reading time/views - desktop only */}
+                    <div className="hidden md:flex flex-nowrap items-center gap-x-2 text-xs text-muted-foreground mb-1.5 overflow-x-auto">
                       <time dateTime={p.publishedAt}>
                         {new Date(p.publishedAt).toLocaleDateString("en-US", {
                           month: "short",
@@ -793,14 +809,19 @@ export function PostList({
               <Link href={`/blog/${p.slug}`} className="flex flex-col h-full">
                 {/* Post content */}
                 <div className="flex-1 p-4 flex flex-col relative z-10">
-                  {/* Badges and metadata */}
+                  {/* Badges - show on all posts */}
                   <div className="flex flex-nowrap items-center gap-x-2 text-xs text-muted-foreground mb-2 overflow-x-auto">
                     <PostBadges post={p} size="sm" isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory={true} />
+                    <SeriesBadge post={p} size="sm" />
+                  </div>
+
+                  {/* Time/reading time/views - desktop only */}
+                  <div className="hidden md:flex flex-nowrap items-center gap-x-2 text-xs text-muted-foreground mb-2 overflow-x-auto">
                     <time dateTime={p.publishedAt}>
-                      {new Date(p.publishedAt).toLocaleDateString("en-US", { 
-                        year: "numeric", 
-                        month: "short", 
-                        day: "numeric" 
+                      {new Date(p.publishedAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric"
                       })}
                     </time>
                     <span aria-hidden="true">•</span>

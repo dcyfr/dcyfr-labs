@@ -8,8 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ExternalLink, Flame, TrendingUp, Calendar, Target, FolderGit2, Star, GitFork } from "lucide-react";
 import { GitHubHeatmapSkeleton } from "@/components/common/skeletons/github-heatmap-skeleton";
-import { sanitizeUrl } from "@/lib/utils";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { sanitizeUrl, cn } from "@/lib/utils";
+import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import "react-calendar-heatmap/dist/styles.css";
 
 /**
@@ -305,11 +305,18 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                className="rounded-lg border border-amber-200 dark:border-amber-800/50 bg-amber-50 dark:bg-amber-900/10 p-3"
+                className={cn(
+                  "rounded-lg p-3",
+                  SEMANTIC_COLORS.alert.warning.container,
+                  SEMANTIC_COLORS.alert.warning.border
+                )}
               >
                 <div className="flex items-start gap-2">
                   <svg
-                    className="w-4 h-4 text-amber-600 dark:text-amber-500 mt-0.5 shrink-0"
+                    className={cn(
+                      "w-4 h-4 mt-0.5 shrink-0",
+                      SEMANTIC_COLORS.alert.warning.icon
+                    )}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     aria-hidden="true"
@@ -321,72 +328,27 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                     />
                   </svg>
                   <div className="flex-1 space-y-1">
-                    {/* eslint-disable-next-line no-restricted-syntax */}
-                    <p className="text-sm font-medium text-amber-900 dark:text-amber-100">Notice</p>
-                    <p className="text-xs text-amber-800 dark:text-amber-200">{warning}</p>
+                    { }
+                    <p
+                      className={cn(
+                        "text-sm font-medium",
+                        SEMANTIC_COLORS.alert.warning.text
+                      )}
+                    >
+                      Notice
+                    </p>
+                    <p
+                      className={cn(
+                        "text-xs",
+                        SEMANTIC_COLORS.alert.warning.text
+                      )}
+                    >
+                      {warning}
+                    </p>
                   </div>
                 </div>
               </motion.div>
             )}
-
-            {/* Statistics Grid */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="grid grid-cols-2 md:grid-cols-5 gap-3"
-            >
-              {/* Repositories Card */}
-              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
-                <div className="flex items-center gap-2 mb-1">
-                  <FolderGit2 className="w-4 h-4 text-cyan-500" aria-hidden="true" />
-                  <span className="text-xs text-muted-foreground">Repositories</span>
-                </div>
-                <div className={TYPOGRAPHY.display.stat}>{totalRepositories}</div>
-                <div className="text-xs text-muted-foreground">public</div>
-              </div>
-
-              {/* Active Days Card */}
-              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
-                <div className="flex items-center gap-2 mb-1">
-                  <Calendar className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                  <span className="text-xs text-muted-foreground">Active Days</span>
-                </div>
-                <div className={TYPOGRAPHY.display.stat}>{activityStats.totalDaysActive}</div>
-                <div className="text-xs text-muted-foreground">days</div>
-              </div>
-
-              {/* Daily Average Card */}
-              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
-                <div className="flex items-center gap-2 mb-1">
-                  <TrendingUp className="w-4 h-4 text-purple-500" aria-hidden="true" />
-                  <span className="text-xs text-muted-foreground">Daily Average</span>
-                </div>
-                <div className={TYPOGRAPHY.display.stat}>{activityStats.averagePerDay}</div>
-                <div className="text-xs text-muted-foreground">contributions</div>
-              </div>
-
-              {/* Longest Streak Card */}
-              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
-                <div className="flex items-center gap-2 mb-1">
-                  <TrendingUp className="w-4 h-4 text-green-500" aria-hidden="true" />
-                  <span className="text-xs text-muted-foreground">Longest Streak</span>
-                </div>
-                <div className={TYPOGRAPHY.display.stat}>{streaks.longestStreak}</div>
-                <div className="text-xs text-muted-foreground">days</div>
-              </div>
-
-              {/* Streaks and Stats Cards */}
-              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
-                <div className="flex items-center gap-2 mb-1">
-                  <Flame className="w-4 h-4 text-orange-500" aria-hidden="true" />
-                  <span className="text-xs text-muted-foreground">Current Streak</span>
-                </div>
-                <div className={TYPOGRAPHY.display.stat}>{streaks.currentStreak}</div>
-                <div className="text-xs text-muted-foreground">days</div>
-              </div>
-
-            </motion.div>
 
             {/* Busiest Day */}
             {activityStats.busiestDay && (
@@ -398,8 +360,14 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
               >
                 <Target className="h-4 w-4 shrink-0" />
                 <span>
-                  Busiest day: <span className="font-medium text-foreground">{formatTooltipDate(activityStats.busiestDay.date)}</span> with{" "}
-                  <span className="font-medium text-foreground">{activityStats.busiestDay.count} contributions</span>
+                  Busiest day:{" "}
+                  <span className="font-medium text-foreground">
+                    {formatTooltipDate(activityStats.busiestDay.date)}
+                  </span>{" "}
+                  with{" "}
+                  <span className="font-medium text-foreground">
+                    {activityStats.busiestDay.count} contributions
+                  </span>
                 </span>
               </motion.div>
             )}
@@ -428,7 +396,20 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                   }}
                   showWeekdayLabels={false}
                   showMonthLabels={true}
-                  monthLabels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']}
+                  monthLabels={[
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                  ]}
                   showOutOfRangeDays={true}
                   gutterSize={4}
                 />
@@ -441,27 +422,47 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                     <motion.div
                       className="w-2.5 h-2.5 bg-muted rounded-sm border border-border"
                       whileHover={{ scale: 1.2 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-300 dark:border-green-800 bg-[oklch(0.75_0.12_145)] dark:bg-[oklch(0.35_0.10_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-300 dark:border-[oklch(0.38_0.13_145)] bg-[oklch(0.75_0.12_145)] dark:bg-[oklch(0.48_0.13_145)]"
                       whileHover={{ scale: 1.2 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-400 dark:border-green-700 bg-[oklch(0.58_0.18_145)] dark:bg-[oklch(0.50_0.14_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-400 dark:border-[oklch(0.50_0.17_145)] bg-[oklch(0.58_0.18_145)] dark:bg-[oklch(0.60_0.17_145)]"
                       whileHover={{ scale: 1.2 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-500 dark:border-green-600 bg-[oklch(0.45_0.22_145)] dark:bg-[oklch(0.65_0.18_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-500 dark:border-[oklch(0.62_0.20_145)] bg-[oklch(0.45_0.22_145)] dark:bg-[oklch(0.72_0.20_145)]"
                       whileHover={{ scale: 1.2 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-700 dark:border-green-400 bg-[oklch(0.32_0.26_145)] dark:bg-[oklch(0.75_0.22_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-green-700 dark:border-[oklch(0.72_0.23_145)] bg-[oklch(0.32_0.26_145)] dark:bg-[oklch(0.82_0.23_145)]"
                       whileHover={{ scale: 1.2 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
                     />
                   </div>
                   <span>More</span>
@@ -473,15 +474,117 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       {totalContributions.toLocaleString()} contributions
                     </Badge>
                   )}
-                  
-                  {process.env.NODE_ENV === "development" && source === "server-cache" && (
-                    <Badge variant="outline" className="text-xs text-muted-foreground">
-                      cached
-                    </Badge>
-                  )}
+
+                  {process.env.NODE_ENV === "development" &&
+                    source === "server-cache" && (
+                      <Badge
+                        variant="outline"
+                        className="text-xs text-muted-foreground"
+                      >
+                        cached
+                      </Badge>
+                    )}
                 </div>
               </div>
             </div>
+
+            {/* Statistics Grid */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-3"
+            >
+              {/* Repositories Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <FolderGit2
+                    className="w-4 h-4 text-cyan-500"
+                    aria-hidden="true"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    Repositories
+                  </span>
+                </div>
+                <div className={TYPOGRAPHY.display.stat}>
+                  {totalRepositories}
+                </div>
+                <div className="text-xs text-muted-foreground">public</div>
+              </div>
+
+              {/* Active Days Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  { }
+                  <Calendar
+                    className="w-4 h-4 text-blue-500"
+                    aria-hidden="true"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    Active Days
+                  </span>
+                </div>
+                <div className={TYPOGRAPHY.display.stat}>
+                  {activityStats.totalDaysActive}
+                </div>
+                <div className="text-xs text-muted-foreground">days</div>
+              </div>
+
+              {/* Daily Average Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp
+                    className="w-4 h-4 text-purple-500"
+                    aria-hidden="true"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    Daily Average
+                  </span>
+                </div>
+                <div className={TYPOGRAPHY.display.stat}>
+                  {activityStats.averagePerDay}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  contributions
+                </div>
+              </div>
+
+              {/* Longest Streak Card */}
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  { }
+                  <TrendingUp
+                    className="w-4 h-4 text-green-500"
+                    aria-hidden="true"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    Longest Streak
+                  </span>
+                </div>
+                <div className={TYPOGRAPHY.display.stat}>
+                  {streaks.longestStreak}
+                </div>
+                <div className="text-xs text-muted-foreground">days</div>
+              </div>
+
+              {/* Streaks and Stats Cards 
+              <div className="bg-muted/50 rounded-lg p-3 border border-border hover:border-primary/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Icon accent color */}
+              {/* <Flame
+                    className="w-4 h-4 text-orange-500"
+                    aria-hidden="true"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    Current Streak
+                  </span> 
+                </div>
+                <div className={TYPOGRAPHY.display.stat}>
+                  {streaks.currentStreak}
+                </div>
+                <div className="text-xs text-muted-foreground">days</div>
+              </div> */}
+            </motion.div>
 
             {/* Pinned Repositories */}
             {pinnedRepositories.length > 0 && (
@@ -499,44 +602,56 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       rel="noopener noreferrer"
                       className="bg-muted/30 rounded-lg p-4 border border-border hover:border-primary/50 transition-colors group"
                       whileHover={{ scale: 1.02 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
                     >
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
-                            <FolderGit2 className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
+                            <FolderGit2
+                              className="w-4 h-4 text-muted-foreground shrink-0"
+                              aria-hidden="true"
+                            />
                             <span className="font-medium text-sm truncate group-hover:text-primary transition-colors">
                               {repo.name}
                             </span>
                           </div>
-                          <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" aria-hidden="true" />
+                          <ExternalLink
+                            className="w-3 h-3 text-muted-foreground shrink-0"
+                            aria-hidden="true"
+                          />
                         </div>
-                        
+
                         {repo.description && (
                           <p className="text-xs text-muted-foreground line-clamp-2">
                             {repo.description}
                           </p>
                         )}
-                        
+
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           {repo.primaryLanguage && (
                             <div className="flex items-center gap-1.5">
                               <span
                                 className="w-3 h-3 rounded-full border border-border"
-                                style={{ backgroundColor: repo.primaryLanguage.color }}
+                                style={{
+                                  backgroundColor: repo.primaryLanguage.color,
+                                }}
                                 aria-hidden="true"
                               />
                               <span>{repo.primaryLanguage.name}</span>
                             </div>
                           )}
-                          
+
                           {repo.stargazerCount > 0 && (
                             <div className="flex items-center gap-1">
                               <Star className="w-3 h-3" aria-hidden="true" />
                               <span>{repo.stargazerCount}</span>
                             </div>
                           )}
-                          
+
                           {repo.forkCount > 0 && (
                             <div className="flex items-center gap-1">
                               <GitFork className="w-3 h-3" aria-hidden="true" />

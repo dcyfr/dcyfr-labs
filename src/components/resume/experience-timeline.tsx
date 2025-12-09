@@ -5,10 +5,11 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { highlightMetrics } from "@/lib/highlight-metrics";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Logo } from "@/components/common/logo";
 import type { Experience } from "@/data/resume";
+import { cn } from "@/lib/utils";
 
 interface ExperienceTimelineProps {
   experiences: Experience[];
@@ -57,10 +58,10 @@ export function ExperienceTimeline({ experiences, companyUrls }: ExperienceTimel
               <article>
                 <header className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-lg text-foreground mb-1">
+                    <h3 className={cn(TYPOGRAPHY.h3.standard, "mb-1")}>
                       {exp.title}
                     </h3>
-                    <p className="text-sm font-medium">
+                    <p className={TYPOGRAPHY.label.small}>
                       {companyUrls[exp.company] ? (
                         <Link 
                           href={companyUrls[exp.company]} 

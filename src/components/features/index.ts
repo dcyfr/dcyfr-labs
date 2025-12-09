@@ -10,3 +10,4 @@ export { ReadingProgress } from "./reading-progress";
 export { ScrollReveal } from "./scroll-reveal";
 export { LoadingBar } from "./loading-bar";
 export { DraftBanner } from "./draft-banner";
+export { DevBanner } from "./dev-banner";

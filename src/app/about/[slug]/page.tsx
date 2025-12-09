@@ -111,14 +111,14 @@ export default async function ProfilePage({ params }: PageProps) {
       <div
         className={`mx-auto ${CONTAINER_WIDTHS.standard} ${SPACING.section}`}
       >
-        {/* Back to Our Team */}
+        {/* FIX: Back to Our Team - -- missing left padding/margin on mobile
         <Link
           href="/about#meet-the-team"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 mt-12"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 mt-12 -ml-4 sm:-ml-6 md:-ml-8"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Our Team</span>
-        </Link>
+        </Link> */}
         {member.slug === "drew" && <AboutDrewProfile />}
         {member.slug === "dcyfr" && <AboutDcyfrProfile />}
       </div>

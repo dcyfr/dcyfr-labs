@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Select,
@@ -633,8 +633,8 @@ export default function AnalyticsDashboard() {
                             className={cn(
                               "inline-flex items-center gap-1",
                               TYPOGRAPHY.label.xs,
-                              tier === "high" && "text-green-600",
-                              tier === "medium" && "text-yellow-600",
+                              tier === "high" && SEMANTIC_COLORS.alert.success.icon,
+                              tier === "medium" && SEMANTIC_COLORS.alert.warning.icon,
                               tier === "low" && "text-muted-foreground"
                             )}
                           >

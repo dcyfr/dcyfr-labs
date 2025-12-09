@@ -433,3 +433,51 @@ export const dailyAnalyticsSummary = inngest.createFunction(
     return { success: true, triggered: true };
   },
 );
+
+/**
+ * Sync Vercel analytics into Redis for comparison and dashboard display.
+ *
+ * Runs daily at 02:00 UTC. Uses `VERCEL_ANALYTICS_ENDPOINT` and `VERCEL_TOKEN`
+ * for a proxy endpoint (preferred) or a direct Vercel API endpoint if configured.
+ */
+export const syncVercelAnalytics = inngest.createFunction(
+  { id: "sync-vercel-analytics" },
+  { cron: "0 2 * * *" }, // Daily at 02:00 UTC
+  async ({ step }) => {
+    const redis = await getRedisClient();
+    if (!redis) {
+      console.warn("Redis not configured, skipping Vercel analytics sync");
+      return { success: false, reason: "redis-not-configured" };
+    }
+
+    const { fetchVercelAnalytics } = await import("@/lib/vercel-analytics-api");
+
+    await step.run("fetch-vercel-analytics", async () => {
+      try {
+        const result = await fetchVercelAnalytics(1);
+        if (!result) {
+          console.warn("No Vercel analytics available; ensure VERCEL_TOKEN and VERCEL_ANALYTICS_ENDPOINT are configured");
+          return { success: false, reason: "no-vercel-data" };
+        }
+
+        const { topPages, topReferrers, topDevices, fetchedAt } = result;
+
+        // Store standardized data in Redis with 24h TTL
+        await redis.set("vercel:topPages:daily", JSON.stringify(topPages), { EX: 24 * 60 * 60 });
+        await redis.set("vercel:topReferrers:daily", JSON.stringify(topReferrers), { EX: 24 * 60 * 60 });
+        await redis.set("vercel:topDevices:daily", JSON.stringify(topDevices), { EX: 24 * 60 * 60 });
+        await redis.set("vercel:metrics:lastSynced", fetchedAt, { EX: 24 * 60 * 60 });
+
+        // Track that we fetched Vercel analytics - helpful for audit
+        await track('vercel_analytics_synced', { fetchedAt, topPagesCount: topPages.length });
+
+        console.log(`Vercel analytics synced: ${topPages.length} pages, ${topReferrers.length} referrers, ${topDevices.length} devices`);
+      } catch (error) {
+        console.error("Failed to sync Vercel analytics:", error);
+      }
+    });
+
+    return { success: true };
+  }
+);
+

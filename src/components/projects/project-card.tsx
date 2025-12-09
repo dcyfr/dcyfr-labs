@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, sanitizeUrl, formatNumber } from "@/lib/utils";
 import { ensureProjectImage } from "@/lib/default-project-images";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, SPACING } from "@/lib/design-tokens";
 
 // Human-readable status labels
 const STATUS_LABEL: Record<ProjectStatus, string> = {
@@ -158,14 +158,19 @@ export function ProjectCard({
           </div>
         )}
         {/* Content */}
-        <CardHeader className="space-y-1.5 px-6 py-8 relative z-10">
+        <CardHeader className={cn(SPACING.content, "relative z-10")}>
+          {/* Status badge - show on all screens */}
+          {project.status !== "active" && (
+            <div className="mb-2">
+              <Badge variant="default">
+                {STATUS_LABEL[project.status]}
+              </Badge>
+            </div>
+          )}
+
+          {/* Timeline and view count - desktop only */}
           {project.timeline && (
-            <p className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-              {project.status !== "active" && (
-                <Badge variant="default">
-                  {STATUS_LABEL[project.status]}
-                </Badge>
-              )}
+            <p className="hidden md:flex text-xs uppercase tracking-wide text-muted-foreground items-center gap-2 mb-2">
               {project.timeline}
               {viewCount !== undefined && viewCount > 0 && (
                 <span className="ml-auto flex items-center gap-1 text-muted-foreground">

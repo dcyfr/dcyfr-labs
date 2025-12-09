@@ -72,6 +72,24 @@ export interface AnalyticsData {
   summary: AnalyticsSummary;
   posts: PostAnalytics[];
   trending: PostAnalytics[];
+  // Optional Vercel analytics data (added for Vercel integration)
+  vercel?: {
+    topPages: { path: string; views: number; url?: string }[] | null;
+    topReferrers: { referrer: string; views: number }[] | null;
+    topDevices: { device: string; views: number }[] | null;
+  } | null;
+  vercelLastSynced?: string | null;
+}
+
+// Vercel analytics types
+export type VercelTopPage = { path: string; views: number; url?: string };
+export type VercelReferrer = { referrer: string; views: number };
+export type VercelDevice = { device: string; views: number };
+
+export interface VercelAnalytics {
+  topPages: VercelTopPage[] | null;
+  topReferrers: VercelReferrer[] | null;
+  topDevices: VercelDevice[] | null;
 }
 
 export type DateRange = "1" | "7" | "30" | "90" | "all";

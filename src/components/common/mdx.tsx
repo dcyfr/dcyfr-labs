@@ -27,6 +27,7 @@ import {
   Rocket
 } from "lucide-react";
 import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 /**
  * Configuration for the rehype-pretty-code plugin
@@ -206,10 +207,10 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     <td {...props} className="border border-border px-4 py-2" />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul {...props} className={`list-disc pl-6 ${SPACING.list}`} />
+    <ul {...props} className={cn("list-disc pl-6", SPACING.list)} />
   ),
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol {...props} className={`list-decimal pl-6 ${SPACING.list}`} />
+    <ol {...props} className={cn("list-decimal pl-6", SPACING.list)} />
   ),
   // Note: SPACING.list = space-y-0.5 is used for list items spacing
   code: (props: React.HTMLAttributes<HTMLElement>) => {
@@ -332,6 +333,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   ),
   // Icon components for consistent styling across the site
   // Note: Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
+  /* eslint-disable no-restricted-syntax -- MDX icon components use accent colors */
   CheckIcon: () => <Check className="inline-block w-5 h-5 align-text-bottom text-green-600 dark:text-green-400" aria-label="Check" />,
   XIcon: () => <X className="inline-block w-5 h-5 align-text-bottom text-red-600 dark:text-red-400" aria-label="Cross" />,
   ReturnIcon: () => <CornerDownLeft className="inline-block w-5 h-5 align-text-bottom text-muted-foreground" aria-label="Return" />,
@@ -341,6 +343,7 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   ZapIcon: () => <Zap className="inline-block w-5 h-5 align-text-bottom text-purple-600 dark:text-purple-400" aria-label="Lightning" />,
   LockIcon: () => <Lock className="inline-block w-5 h-5 align-text-bottom text-muted-foreground" aria-label="Lock" />,
   RocketIcon: () => <Rocket className="inline-block w-5 h-5 align-text-bottom text-blue-600 dark:text-blue-400" aria-label="Rocket" />,
+  /* eslint-enable no-restricted-syntax */
   // Mermaid diagrams component
   Mermaid: (props: { children?: string }) => {
     const chart = props.children || '';
