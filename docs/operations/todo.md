@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work. Completed tasks are in **`done.md`**.
 
-**Last Updated:** December 7, 2025 | **Status:** Maintenance mode with data-driven enhancements | **Pass Rate:** 1339/1346 tests (99.5%)
+**Last Updated:** December 8, 2025 | **Status:** Maintenance mode with data-driven enhancements | **Pass Rate:** 1339/1346 tests (99.5%)
 
 ---
 
@@ -18,46 +18,7 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 ## 🟡 PENDING WORK QUEUE (Next Steps)
 
-### Priority 0: UI/UX Enhancements (High Impact)
-
-#### 🟡 **Advanced Holographic Card Effects with Mouse Tracking** (4-6 hours) — NEXT PHASE
-- **Current Status:** Disabled pending implementation
-- **Scope:** Refactor card hover effects with dynamic mouse tracking
-- **Reference Patterns:** 
-  - Vercel dashboard card interactions (magnetic borders, gradient borders)
-  - Framer Motion parallax effects
-  - Real-time cursor position tracking
-  - Dynamic 3D tilt based on mouse location
-- **Implementation Plan:**
-  1. Mouse event tracking hook (`useMouseTracker`) - tracks cursor position relative to card
-  2. Dynamic border shine effect - follows cursor movement
-  3. Gradient border animation - CSS mask or border-image with gradient
-  4. Card tilt/perspective - 3D rotation based on cursor X/Y
-  5. Parallax image shift - subtle image movement paralleling mouse
-  6. Performance optimization - throttle tracking, GPU acceleration via `will-change`
-  7. Mobile fallback - disable tracking on touch devices, use static effects
-  8. Accessibility - respect `prefers-reduced-motion` for all animations
-- **Files to Update:**
-  - `src/components/home/featured-post-hero.tsx` - re-enable holo effects
-  - `src/components/blog/post/post-list.tsx` - all layout variants (magazine, grid, list, compact)
-  - `src/styles/holo-card.css` - add new selectors for dynamic border tracking
-  - Create new: `src/hooks/useMouseTracker.ts` - cursor tracking utility
-  - Create new: `src/lib/card-tilt.ts` - 3D tilt calculations
-- **Design Inspiration:**
-  - Vercel's featured blog cards with animated borders
-  - Apple's product pages with parallax depth
-  - Tailwind UI premium components with shimmer effects
-- **Estimated Impact:** Significant visual polish, competitive feature parity with modern platforms
-
 ### Priority 1: Blog Features (Medium Effort)
-
-#### 🔴 **Bookmark/Reading List Functionality** (4-6 hours) — NEXT
-- LocalStorage persistence for bookmarked posts
-- Bookmark button in post header + blog grid
-- New `/bookmarks` page showing saved posts
-- Clear bookmarks button with confirmation
-- Sync option via service worker (offline support)
-- **Estimated Impact:** Core user engagement feature
 
 #### 🟡 **Mobile Filter Drawer/Sheet Pattern** (3-4 hours)
 - Replace collapsible bar with bottom sheet (shadcn Sheet)
@@ -172,9 +133,106 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 **Priority:** Low (no validated sponsor need yet)
 
+### UI/UX Enhancements
+
+- [ ] **Advanced Holographic Card Effects with Mouse Tracking** (4-6 hours)
+  - **Current Status:** Disabled pending implementation
+  - **Scope:** Refactor card hover effects with dynamic mouse tracking
+  - **Reference Patterns:** 
+    - Vercel dashboard card interactions (magnetic borders, gradient borders)
+    - Framer Motion parallax effects
+    - Real-time cursor position tracking
+    - Dynamic 3D tilt based on mouse location
+  - **Implementation Plan:**
+    1. Mouse event tracking hook (`useMouseTracker`) - tracks cursor position relative to card
+    2. Dynamic border shine effect - follows cursor movement
+    3. Gradient border animation - CSS mask or border-image with gradient
+    4. Card tilt/perspective - 3D rotation based on cursor X/Y
+    5. Parallax image shift - subtle image movement paralleling mouse
+    6. Performance optimization - throttle tracking, GPU acceleration via `will-change`
+    7. Mobile fallback - disable tracking on touch devices, use static effects
+    8. Accessibility - respect `prefers-reduced-motion` for all animations
+  - **Files to Update:**
+    - `src/components/home/featured-post-hero.tsx` - re-enable holo effects
+    - `src/components/blog/post/post-list.tsx` - all layout variants (magazine, grid, list, compact)
+    - `src/styles/holo-card.css` - add new selectors for dynamic border tracking
+    - Create new: `src/hooks/useMouseTracker.ts` - cursor tracking utility
+    - Create new: `src/lib/card-tilt.ts` - 3D tilt calculations
+  - **Design Inspiration:**
+    - Vercel's featured blog cards with animated borders
+    - Apple's product pages with parallax depth
+    - Tailwind UI premium components with shimmer effects
+  - **Estimated Impact:** Significant visual polish, competitive feature parity with modern platforms
+
 ---
 
 ## ✅ COMPLETED WORK
+
+### 📅 Recent Completion: Bookmark/Reading List Feature (Dec 8, 2025) ✅
+
+- [x] **useBookmarks Hook** ✅
+  - Created `src/hooks/use-bookmarks.ts` with localStorage persistence
+  - SSR-safe initialization (loads on mount, no hydration issues)
+  - Real-time sync across tabs via storage event
+  - Type-safe operations: add, remove, toggle, check, clear
+  - Graceful error handling and fallbacks
+
+- [x] **BookmarkButton Component** ✅
+  - Created `src/components/blog/bookmark-button.tsx`
+  - Reusable button with configurable variants/sizes
+  - Visual feedback (filled icon when bookmarked)
+  - Toast notifications on toggle
+  - Prevents event bubbling in card links
+
+- [x] **PostList Integration** ✅
+  - Added bookmark button to all layout variants (grid, list, magazine, compact)
+  - Top-right corner placement with opacity transition on hover
+  - Backdrop blur effect for visual clarity
+  - Maintains accessibility and keyboard navigation
+
+- [x] **PostQuickActions Update** ✅
+  - Refactored to use centralized useBookmarks hook
+  - Removed duplicate localStorage logic
+  - Maintains existing functionality with improved state management
+
+- [x] **Bookmarks Page** ✅
+  - Created `/bookmarks` page at `src/app/bookmarks/page.tsx`
+  - Uses PageLayout for consistency
+  - Displays bookmarked posts with PostList component
+  - Empty state with link to blog
+  - Clear all bookmarks with confirmation
+  - Info banner about local storage persistence
+
+- [x] **Quality Verification** ✅
+  - ESLint: 0 errors (all new files pass)
+  - TypeScript: 0 errors (strict mode compliant)
+  - Design tokens used correctly (TYPOGRAPHY, SPACING, CONTAINER_WIDTHS)
+  - Barrel exports updated (`src/components/blog/index.ts`)
+
+- [x] **Next Steps** 🔜
+  - Add unit tests for useBookmarks hook
+  - Add E2E tests for bookmark functionality
+  - Consider service worker sync for offline support (backlog)
+
+---
+
+### 📅 Recent Completion: Mobile Filter Drawer/Sheet Pattern (Dec 8, 2025) ✅
+
+- [x] **Mobile Filter Drawer (Sheet)** ✅
+  - Replaced inline collapsible `MobileFilterBar` with bottom sheet using `Sheet` UI (Radix + shadcn pattern)
+  - Sheet triggers via the filter summary button on mobile; supports backdrop click to close
+  - `BlogFilters` is now rendered inside `SheetContent` with `max-h-[80vh] overflow-auto` for scrolling
+  - Clear action closes sheet and returns to `/blog` (clears filters)
+  - Preserved desktop sidebar UX (desktop `BlogSidebar` still used)
+
+- [x] **Quality Verification** ✅
+  - Added unit test `src/__tests__/components/blog/mobile-filter-bar.test.tsx` covering trigger, sheet open, and clear action
+  - TypeScript: local typecheck passed; ESLint: ran with warnings unrelated to this change
+  - Layout & accessibility: `aria-label` and close button included; overlay/backdrop closable
+
+---
+
+---
 
 ### 📅 Recent Completion: Print-Friendly Blog Styling (Dec 7, 2025) ✅
 

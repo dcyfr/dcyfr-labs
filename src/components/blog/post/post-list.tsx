@@ -9,6 +9,7 @@ import { SeriesBadge } from "@/components/blog/post/series-badge";
 import { Badge } from "@/components/ui/badge";
 import { PostThumbnail } from "@/components/blog/post/post-thumbnail";
 import { HighlightText } from "@/components/common/highlight-text";
+import { BookmarkButton } from "@/components/blog/bookmark-button";
 import dynamic from "next/dynamic";
 import { HOVER_EFFECTS, SPACING } from "@/lib/design-tokens";
 
@@ -218,6 +219,11 @@ export function PostList({
                 <article
                   className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}
                 >
+                  {/* Bookmark Button - Top Right Corner */}
+                  <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <BookmarkButton slug={p.slug} size="icon" variant="ghost" className="bg-background/80 backdrop-blur-sm hover:bg-background" />
+                  </div>
+                  
                   {/* Background image - only if explicitly defined in post and not hidden */}
                   {p.image && p.image.url && !p.image.hideCard && (
                     <div className="absolute inset-0 z-0">
@@ -339,6 +345,11 @@ export function PostList({
               <article
                 className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}
               >
+                {/* Bookmark Button - Top Right Corner */}
+                <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <BookmarkButton slug={p.slug} size="icon" variant="ghost" className="bg-background/80 backdrop-blur-sm hover:bg-background" />
+                </div>
+                
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
                   <div className="absolute inset-0 z-0">
@@ -459,6 +470,11 @@ export function PostList({
               <article
                 className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card} flex flex-col h-full`}
               >
+                {/* Bookmark Button - Top Right Corner */}
+                <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <BookmarkButton slug={p.slug} size="icon" variant="ghost" className="bg-background/80 backdrop-blur-sm hover:bg-background" />
+                </div>
+                
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
                   <div className="absolute inset-0 z-0">
@@ -584,6 +600,11 @@ export function PostList({
               <article
                 className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}
               >
+                {/* Bookmark Button - Top Right Corner */}
+                <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <BookmarkButton slug={p.slug} size="icon" variant="ghost" className="bg-background/80 backdrop-blur-sm hover:bg-background" />
+                </div>
+                
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
                   <div className="absolute inset-0 z-0">
@@ -678,6 +699,11 @@ export function PostList({
               <article
                 className={`group rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}
               >
+                {/* Bookmark Button - Top Right Corner */}
+                <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <BookmarkButton slug={p.slug} size="icon" variant="ghost" className="bg-background/80 backdrop-blur-sm hover:bg-background" />
+                </div>
+                
                 {/* Background image - only if explicitly defined in post and not hidden */}
                 {p.image && p.image.url && !p.image.hideCard && (
                   <div className="absolute inset-0 z-0">

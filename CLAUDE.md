@@ -13,7 +13,7 @@ Project is in **maintenance mode** with data-driven enhancements.
 **Key Metrics** (see [`docs/operations/todo.md`](docs/operations/todo.md)):
 
 - ✅ Phase 1-4 complete
-- ✅ 1339/1346 passing (99.5%)
+- ✅ 1185/1197 passing (99.0%)
 - ✅ 198 integration tests
 - ✅ All Core Web Vitals monitored
 - ✅ Zero security vulnerabilities
@@ -159,7 +159,7 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 
 ## MCP Servers (Chat)
 
-Perplexity, Context, Playwright, Axiom, Filesystem, GitHub, Vercel, Sentry
+
 - Perplexity (web search, deep research, reasoning)
 - Context7 (library documentation)
 - Playwright (browser automation, E2E testing)
