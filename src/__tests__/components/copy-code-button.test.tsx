@@ -335,9 +335,10 @@ describe("CopyCodeButton Component", () => {
       
       const button = screen.getByRole("button");
       fireEvent.click(button);
-      
+
       await flushPromises();
 
+      // eslint-disable-next-line no-restricted-syntax -- Testing CSS selector for icon color
       const checkIcon = container.querySelector('[class*="text-green-500"]');
       expect(checkIcon).toBeInTheDocument();
     });

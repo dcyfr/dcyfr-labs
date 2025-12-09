@@ -176,7 +176,8 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
       <Card className="md:col-span-1">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <Trophy className="h-4 w-4 text-yellow-600" />
+            {/* eslint-disable-next-line no-restricted-syntax -- Icon accent color */}
+            <Trophy className="h-4 w-4 text-amber-600" />
             <div>
               <CardTitle className="text-sm">All-Time Records</CardTitle>
               <CardDescription className="text-xs">
@@ -190,6 +191,7 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Icon accent color */}
                 <Zap className="h-4 w-4 text-orange-500" />
                 <span className={TYPOGRAPHY.label.xs}>Highest Single-Day Views</span>
               </div>
@@ -211,6 +213,7 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
           <div className="space-y-2 pt-2 border-t">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
+                    {/* eslint-disable-next-line no-restricted-syntax -- Icon accent color */}
                     <Target className="h-4 w-4 text-green-500" />
                     <span className={TYPOGRAPHY.label.xs}>Most Engaged Post</span>
                   </div>
@@ -232,6 +235,7 @@ export function AnalyticsInsights({ posts, compact = false }: AnalyticsInsightsP
               <div className="space-y-2 pt-2 border-t">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
+                    {/* eslint-disable-next-line no-restricted-syntax -- Icon accent color */}
                     <TrendingUp className="h-4 w-4 text-blue-500" />
                     <span className={TYPOGRAPHY.label.xs}>Top 24h Growth</span>
                   </div>

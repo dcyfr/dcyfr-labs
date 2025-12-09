@@ -20,7 +20,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ANIMATION } from "@/lib/design-tokens";
+import { ANIMATION, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import {
   type ActivityItem as ActivityItemType,
   type ActivitySource,
@@ -61,13 +61,13 @@ function getVerbDisplay(verb: ActivityItemType["verb"]) {
     published: {
       icon: Check,
       label: "Published",
-      badge: "bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
+      badge: `${SEMANTIC_COLORS.status.success} border-green-200 dark:border-green-800`,
       // Note: Status badge colors use semantic color palette (green for success)
     },
     updated: {
       icon: Pencil,
       label: "Updated",
-      badge: "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+      badge: `${SEMANTIC_COLORS.status.info} border-blue-200 dark:border-blue-800`,
       // Note: Status badge colors use semantic color palette (blue for info)
     },
     launched: {
@@ -79,6 +79,7 @@ function getVerbDisplay(verb: ActivityItemType["verb"]) {
     released: {
       icon: Trophy,
       label: "Released",
+      // eslint-disable-next-line no-restricted-syntax -- Activity badge custom accent color
       badge: "bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800",
       // Note: Status badge colors use semantic color palette (amber for warning)
     },
@@ -91,6 +92,7 @@ function getVerbDisplay(verb: ActivityItemType["verb"]) {
     achieved: {
       icon: Trophy,
       label: "Achieved",
+      // eslint-disable-next-line no-restricted-syntax -- Activity badge custom accent color
       badge: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
       // Note: Status badge colors use semantic color palette (yellow for highlight)
     },
@@ -280,6 +282,7 @@ export function ActivityItem({
                   <span className="text-xs text-muted-foreground">•</span>
                   <Badge
                     variant="secondary"
+                    /* eslint-disable-next-line no-restricted-syntax -- Trending badge accent color */
                     className="text-xs px-1.5 py-0 bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20"
                   >
                     <TrendingUp className="h-3 w-3 mr-1" />
@@ -294,6 +297,7 @@ export function ActivityItem({
                   <span className="text-xs text-muted-foreground">•</span>
                   <Badge
                     variant="secondary"
+                    /* eslint-disable-next-line no-restricted-syntax -- Milestone badge accent color */
                     className="text-xs px-1.5 py-0 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20"
                   >
                     <Trophy className="h-3 w-3 mr-1" />
@@ -309,6 +313,7 @@ export function ActivityItem({
                     <span className="text-xs text-muted-foreground">•</span>
                     <Badge
                       variant="secondary"
+                      /* eslint-disable-next-line no-restricted-syntax -- High engagement badge accent color */
                       className="text-xs px-1.5 py-0 bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
                     >
                       <Flame className="h-3 w-3 mr-1" />

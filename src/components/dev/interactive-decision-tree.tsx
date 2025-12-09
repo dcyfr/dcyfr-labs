@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toastSuccess } from "@/lib/toast";
 import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 interface DecisionNode {
   id: string;
@@ -95,7 +96,7 @@ export function InteractiveDecisionTree({
   }
 
   return (
-    <div className={`space-y-${SPACING.content}`}>
+    <div className={cn("flex flex-col", SPACING.content)}>
       {/* Header */}
       <div>
         <h2 className={TYPOGRAPHY.h2.standard}>{title}</h2>
@@ -134,8 +135,8 @@ export function InteractiveDecisionTree({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className={`p-${SPACING.content}`}>
-            <h3 className={`${TYPOGRAPHY.h3.standard} mb-${SPACING.content}`}>
+          <Card className="p-4">
+            <h3 className={cn(TYPOGRAPHY.h3.standard, "mb-4")}>
               {currentNode.question}
             </h3>
             <div className="grid gap-3">
@@ -165,9 +166,9 @@ export function InteractiveDecisionTree({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="p-6 border-primary">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+          <Card className="p-8 border-primary">
+            <div className={cn("flex items-start gap-3 mb-4")}>
+              <div className={cn("flex h-8 w-8 items-center justify-center rounded-full", "bg-primary/10")}>
                 <Check className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1">
@@ -178,14 +179,14 @@ export function InteractiveDecisionTree({
 
             {/* Usage example */}
             <div className="mb-4">
-              <h4 className="text-sm font-medium mb-2">Usage:</h4>
+              <h4 className={cn(TYPOGRAPHY.label.small, "mb-2")}>Usage:</h4>
               <p className="text-sm text-muted-foreground">{result.usage}</p>
             </div>
 
             {/* Code example */}
             <div className="relative">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-medium">Code Example:</h4>
+                <h4 className={TYPOGRAPHY.label.small}>Code Example:</h4>
                 <Button
                   variant="ghost"
                   size="sm"

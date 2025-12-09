@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- Testing figure wrapper with native img elements */
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Figure, FigureProvider } from "@/components/common/figure-caption";

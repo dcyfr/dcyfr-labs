@@ -16,16 +16,17 @@
  */
 
 import { AlertCircle } from "lucide-react";
-import { CONTAINER_WIDTHS, CONTAINER_PADDING } from "@/lib/design-tokens";
+import { CONTAINER_WIDTHS, CONTAINER_PADDING, SEMANTIC_COLORS } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 export function DraftBanner() {
   return (
-    <div className={`mx-auto ${CONTAINER_WIDTHS.content} ${CONTAINER_PADDING} pt-6`}>
-      <div className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-4">
+    <div className={cn("mx-auto", CONTAINER_WIDTHS.content, CONTAINER_PADDING, "pt-6")}>
+      <div className={cn("rounded-lg p-4", SEMANTIC_COLORS.alert.warning.border, SEMANTIC_COLORS.alert.warning.container)}>
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 shrink-0" />
+          <AlertCircle className={cn("h-5 w-5 mt-0.5 shrink-0", SEMANTIC_COLORS.alert.warning.icon)} />
           <div className="flex-1">
-            <p className="text-sm text-amber-500/90">
+            <p className={cn("text-sm", SEMANTIC_COLORS.alert.warning.text)}>
               <strong className="font-semibold">Draft Page</strong> — This page is only visible in development and will not render in preview or production environments.
             </p>
           </div>

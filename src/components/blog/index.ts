@@ -2,6 +2,7 @@
 export { BlogFilters } from "./filters/blog-filters";
 export { MobileFilterBar } from "./filters/mobile-filter-bar";
 export { FloatingFilterFab } from "./filters/floating-filter-fab";
+export { HorizontalFilterChips } from "./filters/horizontal-filter-chips";
 export { BlogSidebar } from "./sidebar/blog-sidebar";
 export { BlogKeyboardProvider } from "./blog-keyboard-provider";
 export { BlogLayoutManager } from "./blog-layout-manager";
@@ -10,6 +11,7 @@ export { BlogSearchAnalytics } from "./blog-search-analytics";
 export { BlogSearchForm } from "./blog-search-form";
 export { BlogAnalyticsTracker } from "./blog-analytics-tracker";
 export { BookmarkButton } from "./bookmark-button";
+export { LayoutToggle } from "./layout-toggle";
 
 // Partial Prerendering components
 export { DynamicBlogContent } from "./dynamic-blog-content";

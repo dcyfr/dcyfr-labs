@@ -39,7 +39,7 @@ export function CopyCodeButton({ code }: { code: string }) {
             exit={{ scale: 0, rotate: 180 }}
             transition={{ duration: 0.2 }}
           >
-            <Check className="h-4 w-4 text-green-500" />
+            <Check className="h-4 w-4 text-emerald-500" />
           </motion.div>
         ) : (
           <motion.div

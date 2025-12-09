@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, CheckCircle2, Server, XCircle, FileWarning, Database } from "lucide-react";
 import type { ApiHealth, DesignSystemReport, RedisHealthStatus } from "../types";
+import { SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 /**
  * API Health Status Card
@@ -28,9 +29,9 @@ export function ApiHealthCard({ health }: { health: ApiHealth | null }) {
   }
 
   const statusConfig = {
-    healthy: { variant: "default" as const, className: "bg-green-600", icon: CheckCircle2 },
-    degraded: { variant: "secondary" as const, className: "bg-yellow-600", icon: AlertCircle },
-    unhealthy: { variant: "destructive" as const, className: "", icon: XCircle },
+    healthy: { variant: "default" as const, className: SEMANTIC_COLORS.status.success, icon: CheckCircle2 },
+    degraded: { variant: "secondary" as const, className: SEMANTIC_COLORS.status.warning, icon: AlertCircle },
+    unhealthy: { variant: "destructive" as const, className: "bg-destructive", icon: XCircle },
   };
 
   const config = statusConfig[health.status];
@@ -56,9 +57,9 @@ export function ApiHealthCard({ health }: { health: ApiHealth | null }) {
             <span className="text-muted-foreground">Edge Runtime:</span>
             <div className="flex items-center gap-1 mt-1">
               {health.services.edge ? (
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className={`h-4 w-4 ${SEMANTIC_COLORS.alert.success.icon}`} />
               ) : (
-                <XCircle className="h-4 w-4 text-red-600" />
+                <XCircle className={`h-4 w-4 ${SEMANTIC_COLORS.alert.critical.icon}`} />
               )}
               <span>{health.services.edge ? "Operational" : "Down"}</span>
             </div>
@@ -67,9 +68,9 @@ export function ApiHealthCard({ health }: { health: ApiHealth | null }) {
             <span className="text-muted-foreground">Vercel:</span>
             <div className="flex items-center gap-1 mt-1">
               {health.services.vercel ? (
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className={`h-4 w-4 ${SEMANTIC_COLORS.alert.success.icon}`} />
               ) : (
-                <XCircle className="h-4 w-4 text-red-600" />
+                <XCircle className={`h-4 w-4 ${SEMANTIC_COLORS.alert.critical.icon}`} />
               )}
               <span>{health.services.vercel ? "Operational" : "Down"}</span>
             </div>
@@ -123,7 +124,7 @@ export function DesignSystemReportCard({ report }: { report: DesignSystemReport 
           <Badge
             variant={report.totalViolations === 0 ? "default" : "secondary"}
             className={
-              report.totalViolations === 0 ? "bg-green-600" : "bg-orange-600"
+              report.totalViolations === 0 ? SEMANTIC_COLORS.status.success : SEMANTIC_COLORS.status.warning
             }
           >
             {report.totalViolations} violations
@@ -177,9 +178,9 @@ export function RedisHealthCard({ health }: { health: RedisHealthStatus | null }
   }
 
   const statusConfig = {
-    connected: { variant: "default" as const, className: "bg-green-600", icon: CheckCircle2 },
+    connected: { variant: "default" as const, className: SEMANTIC_COLORS.status.success, icon: CheckCircle2 },
     disconnected: { variant: "destructive" as const, className: "", icon: XCircle },
-    notConfigured: { variant: "secondary" as const, className: "bg-gray-600", icon: AlertCircle },
+    notConfigured: { variant: "secondary" as const, className: SEMANTIC_COLORS.status.neutral, icon: AlertCircle },
   };
 
   const status = health.connected ? "connected" : health.configured ? "disconnected" : "notConfigured";
@@ -206,9 +207,9 @@ export function RedisHealthCard({ health }: { health: RedisHealthStatus | null }
             <span className="text-muted-foreground">Configured:</span>
             <div className="flex items-center gap-1 mt-1">
               {health.configured ? (
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className={`h-4 w-4 ${SEMANTIC_COLORS.alert.success.icon}`} />
               ) : (
-                <XCircle className="h-4 w-4 text-gray-400" />
+                <XCircle className="h-4 w-4 text-muted-foreground" />
               )}
               <span>{health.configured ? "Yes" : "No"}</span>
             </div>
@@ -219,9 +220,9 @@ export function RedisHealthCard({ health }: { health: RedisHealthStatus | null }
                 <span className="text-muted-foreground">Status:</span>
                 <div className="flex items-center gap-1 mt-1">
                   {health.testResult.success ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className={`h-4 w-4 ${SEMANTIC_COLORS.alert.success.icon}`} />
                   ) : (
-                    <XCircle className="h-4 w-4 text-red-600" />
+                    <XCircle className={`h-4 w-4 ${SEMANTIC_COLORS.alert.critical.icon}`} />
                   )}
                   <span>{health.testResult.success ? "Healthy" : "Failed"}</span>
                 </div>

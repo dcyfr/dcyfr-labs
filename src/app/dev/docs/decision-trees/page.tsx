@@ -4,6 +4,7 @@ import { PageLayout } from "@/components/layouts";
 import { InteractiveDecisionTree } from "@/components/dev";
 import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 import { Breadcrumbs } from "@/components/navigation";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Interactive Decision Trees - Dev Docs",
@@ -273,11 +274,11 @@ export default function DecisionTreesPage() {
 
   return (
     <PageLayout>
-      <div className={`mb-${SPACING.section}`}>
+      <div className={cn("mb-8")}>
         <Breadcrumbs items={breadcrumbs} />
       </div>
 
-      <div className={`space-y-${SPACING.section}`}>
+      <div className={cn(SPACING.subsection)}>
         <div>
           <h1 className={TYPOGRAPHY.h1.standard}>Interactive Decision Trees</h1>
           <p className="text-lg text-muted-foreground mt-4">
