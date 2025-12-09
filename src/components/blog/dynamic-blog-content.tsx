@@ -14,7 +14,8 @@ import type { ArchiveData } from "@/lib/archive";
 import type { Post } from "@/data/posts";
 import { getMultiplePostViews } from "@/lib/views";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
-import { PostList, MobileFilterBar } from "@/components/blog";
+import { PostList } from "@/components/blog/post/post-list";
+import { MobileFilterBar } from "@/components/blog/filters/mobile-filter-bar";
 
 interface DynamicBlogContentProps {
   /** Archive data with filtered/paginated posts */
