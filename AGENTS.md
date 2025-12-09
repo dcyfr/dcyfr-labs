@@ -125,6 +125,12 @@ This document serves as the **single source of truth** for discovering, routing,
 }
 
 > Note: Some repositories intentionally omit the `.github/agents/DCYFR.agent.md` file. The validation script and workflows in this repository have been updated to treat this file as optional. If your project relies on DCYFR-specific instructions, add the file and set the validation configuration accordingly.
+
+Configuration: The default ignored instruction files are stored in `.github/agents/instructions/INSTRUCTIONS_CONFIG.json`. Use the `IGNORED_INSTRUCTION_FILES` environment variable to override this list in CI or local runs. Example:
+
+```
+IGNORED_INSTRUCTION_FILES='.github/agents/DCYFR.agent.md' node scripts/validate-instructions.mjs
+```
 ```
 
 ---
