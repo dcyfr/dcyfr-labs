@@ -7,6 +7,7 @@ import { Share2, Bookmark, Link2, Linkedin, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { AUTHOR_NAME, SITE_TITLE_PLAIN } from "@/lib/site-config";
 import { SPACING } from "@/lib/design-tokens";
+import { useBookmarks } from "@/hooks/use-bookmarks";
 
 interface PostQuickActionsProps {
   slug?: string;
@@ -20,14 +21,8 @@ interface PostQuickActionsProps {
  * Provides bookmark, share, copy link, copy IEEE citation, and LinkedIn share buttons.
  */
 export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActionsProps) {
-  const [isBookmarked, setIsBookmarked] = React.useState(false);
-
-  // Check if post is bookmarked on mount
-  React.useEffect(() => {
-    if (typeof window === "undefined" || !slug) return;
-    const bookmarks = JSON.parse(localStorage.getItem("bookmarked-posts") || "[]");
-    setIsBookmarked(bookmarks.includes(slug));
-  }, [slug]);
+  const { isBookmarked, toggleBookmark } = useBookmarks();
+  const bookmarked = slug ? isBookmarked(slug) : false;
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -69,14 +64,8 @@ export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActi
   const handleBookmark = () => {
     if (!slug) return;
     
-    const bookmarks = JSON.parse(localStorage.getItem("bookmarked-posts") || "[]");
-    const newBookmarks = isBookmarked
-      ? bookmarks.filter((s: string) => s !== slug)
-      : [...bookmarks, slug];
-    
-    localStorage.setItem("bookmarked-posts", JSON.stringify(newBookmarks));
-    setIsBookmarked(!isBookmarked);
-    toast.success(isBookmarked ? "Bookmark removed" : "Bookmarked for later");
+    toggleBookmark(slug);
+    toast.success(bookmarked ? "Bookmark removed" : "Bookmarked for later");
   };
 
   const generateIEEECitation = (): string => {
@@ -115,8 +104,8 @@ export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActi
         className="w-full justify-start gap-2"
         onClick={handleBookmark}
       >
-        <Bookmark className={cn("h-4 w-4", isBookmarked && "fill-current")} />
-        {isBookmarked ? "Bookmarked" : "Bookmark"}
+        <Bookmark className={cn("h-4 w-4", bookmarked && "fill-current")} />
+        {bookmarked ? "Bookmarked" : "Bookmark"}
       </Button>
 
       {/* Share Button */}
