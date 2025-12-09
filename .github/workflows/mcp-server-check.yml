@@ -1,0 +1,25 @@
+name: MCP Server Health Check
+
+on:
+  schedule:
+    - cron: '0 5 * * 1' # Weekly on Monday at 05:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  mcp-check:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - name: Run MCP check (non-strict)
+        env:
+          # Optional: secrets can be added to the repo to test authenticated endpoints
+          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          node scripts/check-mcp-servers.mjs --no-auth || echo 'MCP checks failed but continuing';

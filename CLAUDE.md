@@ -13,7 +13,7 @@ Project is in **maintenance mode** with data-driven enhancements.
 **Key Metrics** (see [`docs/operations/todo.md`](docs/operations/todo.md)):
 
 - ✅ Phase 1-4 complete
-- ✅ 1339/1346 passing (99.5%)
+- ✅ 1185/1197 passing (99.0%)
 - ✅ 198 integration tests
 - ✅ All Core Web Vitals monitored
 - ✅ Zero security vulnerabilities
