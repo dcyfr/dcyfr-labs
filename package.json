@@ -26,6 +26,7 @@
     "test:e2e:debug": "playwright test --debug",
     "test:ci": "vitest run --coverage && playwright test",
     "sync:ai": "node scripts/sync-ai-instructions.mjs",
+    "mcp:check": "node scripts/check-mcp-servers.mjs",
     "lhci:collect": "lhci collect",
     "lhci:assert": "lhci assert",
     "lhci:upload": "lhci upload",

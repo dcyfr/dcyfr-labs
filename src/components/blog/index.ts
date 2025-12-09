@@ -8,6 +8,7 @@ export { BlogLayoutWrapper } from "./blog-layout-wrapper";
 export { BlogSearchAnalytics } from "./blog-search-analytics";
 export { BlogSearchForm } from "./blog-search-form";
 export { BlogAnalyticsTracker } from "./blog-analytics-tracker";
+export { BookmarkButton } from "./bookmark-button";
 
 // Partial Prerendering components
 export { DynamicBlogContent } from "./dynamic-blog-content";

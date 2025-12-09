@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Bookmark/Reading List Feature** - Complete bookmark functionality for blog posts
+  - `useBookmarks` hook with localStorage persistence and cross-tab sync
+  - `BookmarkButton` component for all post layouts (grid, list, magazine, compact)
+  - `/bookmarks` page displaying saved posts with clear all functionality
+  - Integration with existing `PostQuickActions` sidebar component
+  - Empty states, confirmation dialogs, and user feedback via toasts
 - Comprehensive production deployment documentation (`docs/operations/PRODUCTION_DEPLOYMENT.md`)
 - Test skip documentation explaining 7 intentionally skipped tests
 - Production readiness validation and deployment runbook

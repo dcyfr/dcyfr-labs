@@ -1,0 +1,287 @@
+#!/usr/bin/env node
+
+/**
+ * Validates instruction file consistency and completeness
+ * Run: node scripts/validate-instructions.mjs
+ */
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.join(__dirname, '..');
+
+// Define all instruction files and their required sections
+const INSTRUCTION_FILES = {
+  hub: {
+    path: 'AGENTS.md',
+    type: 'hub',
+    requiredSections: [
+      '🎯 Quick Navigation',
+      '📋 Instruction Files Registry',
+      '🔄 Agent Selection Logic',
+      '🔗 Instruction File Relationships',
+      '📊 Instruction File Comparison',
+      '🔄 Synchronization & Maintenance',
+    ],
+    requiredLinks: [
+      '.github/copilot-instructions.md',
+      'CLAUDE.md',
+      '.github/agents/DCYFR.agent.md',
+    ],
+    description: 'Central hub for all AI agents and instructions',
+  },
+
+  claude: {
+    path: 'CLAUDE.md',
+    type: 'claude',
+    requiredSections: [
+      'Current Focus',
+      'Quick Reference',
+      'Essential Patterns',
+      'Design System Rules',
+      'Key Constraints',
+      'Workflow Guidelines',
+    ],
+    requiredKeywords: [
+      'PageLayout',
+      'design tokens',
+      'Next.js',
+      'mdx',
+    ],
+    description: 'General Claude instructions and project context',
+  },
+
+  copilot: {
+    path: '.github/copilot-instructions.md',
+    type: 'copilot',
+    requiredSections: [
+      'Quick Reference',
+      'Essential Commands',
+      'Quick Start',
+      'Component Patterns',
+      'Decision Trees',
+    ],
+    requiredLinks: [
+      'docs/ai/QUICK_REFERENCE.md',
+      'docs/ai/COMPONENT_PATTERNS.md',
+      'docs/templates/',
+    ],
+    description: 'GitHub Copilot quick reference instructions',
+  },
+
+  dcyfr: {
+    path: '.github/agents/DCYFR.agent.md',
+    type: 'agent',
+    requiredSections: [
+      'What This Agent Does',
+      'When to Use This Agent',
+      'Boundaries & Rules',
+      'Workflow Examples',
+      'Expected Outputs',
+    ],
+    requiredKeywords: [
+      'mandatory',
+      'design tokens',
+      'test',
+      'validation',
+      'decision tree',
+    ],
+    description: 'DCYFR specialized agent instructions',
+  },
+};
+
+// Color codes for console output
+const colors = {
+  reset: '\x1b[0m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  gray: '\x1b[90m',
+};
+
+function log(message, color = 'reset') {
+  console.log(`${colors[color]}${message}${colors.reset}`);
+}
+
+function checkFile(filename, config) {
+  const filepath = path.join(rootDir, config.path);
+
+  // Check file exists
+  if (!fs.existsSync(filepath)) {
+    log(`  ❌ File not found: ${config.path}`, 'red');
+    return false;
+  }
+
+  const content = fs.readFileSync(filepath, 'utf-8');
+  let fileValid = true;
+
+  // Check required sections
+  if (config.requiredSections) {
+    for (const section of config.requiredSections) {
+      if (!content.includes(section)) {
+        log(`  ❌ Missing section: "${section}"`, 'red');
+        fileValid = false;
+      }
+    }
+  }
+
+  // Check required keywords
+  if (config.requiredKeywords) {
+    for (const keyword of config.requiredKeywords) {
+      if (!content.toLowerCase().includes(keyword.toLowerCase())) {
+        log(`  ⚠️  Missing keyword: "${keyword}"`, 'yellow');
+      }
+    }
+  }
+
+  // Check required links
+  if (config.requiredLinks) {
+    for (const link of config.requiredLinks) {
+      // Check for markdown link format with this path
+      if (!content.includes(link)) {
+        log(`  ⚠️  Missing link to: "${link}"`, 'yellow');
+      }
+    }
+  }
+
+  if (fileValid) {
+    log(`  ✅ ${config.description}`, 'green');
+  }
+
+  return fileValid;
+}
+
+function validateRelationships() {
+  log('\n📊 Checking file relationships...', 'blue');
+
+  const agentsPath = path.join(rootDir, 'AGENTS.md');
+  const agentsContent = fs.readFileSync(agentsPath, 'utf-8');
+
+  let relationshipsValid = true;
+
+  // Verify all files mentioned in AGENTS.md actually exist
+  const fileReferences = ['CLAUDE.md', '.github/copilot-instructions.md', '.github/agents/DCYFR.agent.md'];
+
+  for (const fileRef of fileReferences) {
+    const fullPath = path.join(rootDir, fileRef);
+    if (!fs.existsSync(fullPath)) {
+      log(`  ❌ AGENTS.md references non-existent file: ${fileRef}`, 'red');
+      relationshipsValid = false;
+    } else {
+      log(`  ✅ File exists: ${fileRef}`, 'green');
+    }
+  }
+
+  return relationshipsValid;
+}
+
+function validateMetadata() {
+  log('\n📋 Checking metadata consistency...', 'blue');
+
+  const agentsPath = path.join(rootDir, 'AGENTS.md');
+  const agentsContent = fs.readFileSync(agentsPath, 'utf-8');
+
+  let metadataValid = true;
+
+  // Check that each file has a metadata section in AGENTS.md
+  const requiredMetadata = [
+    { file: 'copilot-instructions.md', type: 'copilot' },
+    { file: 'CLAUDE.md', type: 'claude' },
+    { file: 'DCYFR.agent.md', type: 'agent' },
+  ];
+
+  for (const item of requiredMetadata) {
+    if (!agentsContent.includes(item.file)) {
+      log(`  ❌ Missing metadata reference for: ${item.file}`, 'red');
+      metadataValid = false;
+    } else {
+      log(`  ✅ Metadata documented: ${item.file}`, 'green');
+    }
+  }
+
+  return metadataValid;
+}
+
+function validateDecisionTree() {
+  log('\n🌳 Checking decision tree validity...', 'blue');
+
+  const agentsPath = path.join(rootDir, 'AGENTS.md');
+  const agentsContent = fs.readFileSync(agentsPath, 'utf-8');
+
+  let decisionTreeValid = true;
+
+  // Extract decision tree section
+  const decisionStart = agentsContent.indexOf('### Decision Tree:');
+  const decisionEnd = agentsContent.indexOf('### Quick Rules');
+
+  if (decisionStart === -1) {
+    log(`  ❌ Decision tree not found in AGENTS.md`, 'red');
+    decisionTreeValid = false;
+  } else {
+    const decisionTree = agentsContent.substring(decisionStart, decisionEnd);
+
+    // Verify all referenced instructions are real
+    const instructionRefs = ['GitHub Copilot', 'Claude', 'DCYFR'];
+    for (const ref of instructionRefs) {
+      if (!decisionTree.includes(ref)) {
+        log(`  ⚠️  Decision tree missing reference to: ${ref}`, 'yellow');
+      } else {
+        log(`  ✅ Decision tree includes: ${ref}`, 'green');
+      }
+    }
+  }
+
+  return decisionTreeValid;
+}
+
+function main() {
+  log('\n🔍 Validating instruction file system...\n', 'blue');
+
+  let allValid = true;
+
+  // Check each instruction file
+  for (const [key, config] of Object.entries(INSTRUCTION_FILES)) {
+    log(`Validating ${config.type.toUpperCase()}: ${config.path}`, 'blue');
+    if (!checkFile(key, config)) {
+      allValid = false;
+    }
+  }
+
+  // Check relationships
+  if (!validateRelationships()) {
+    allValid = false;
+  }
+
+  // Check metadata
+  if (!validateMetadata()) {
+    allValid = false;
+  }
+
+  // Check decision tree
+  if (!validateDecisionTree()) {
+    allValid = false;
+  }
+
+  // Summary
+  log('\n' + '='.repeat(50), 'gray');
+  if (allValid) {
+    log('✅ All instruction files are valid!', 'green');
+    log('\n📝 Next steps:', 'blue');
+    log('  • Review decision tree logic manually');
+    log('  • Check for broken links (npm run validate-links)');
+    log('  • Verify sync status in AGENTS.md');
+    process.exit(0);
+  } else {
+    log('❌ Some instruction files have issues', 'red');
+    log('\n📝 Next steps:', 'blue');
+    log('  • Fix the errors listed above');
+    log('  • Re-run this validation script');
+    log('  • See AGENT_MANAGEMENT.md for guidance');
+    process.exit(1);
+  }
+}
+
+main();
