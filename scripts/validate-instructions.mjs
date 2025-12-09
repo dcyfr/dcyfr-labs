@@ -12,7 +12,8 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, '..');
 // Allow overriding files to ignore via environment variable for CI/preview branches
-const IGNORED_INSTRUCTION_FILES = (process.env.IGNORED_INSTRUCTION_FILES || '').split(',').map((p) => p.trim()).filter(Boolean);
+const envHasIgnoredVar = Object.prototype.hasOwnProperty.call(process.env, 'IGNORED_INSTRUCTION_FILES');
+let IGNORED_INSTRUCTION_FILES = (process.env.IGNORED_INSTRUCTION_FILES || '').split(',').map((p) => p.trim()).filter(Boolean);
 
 // Also allow repo-level default list via .github/agents/instructions/INSTRUCTIONS_CONFIG.json
 try {
@@ -20,13 +21,14 @@ try {
   if (fs.existsSync(configFile)) {
     const json = JSON.parse(fs.readFileSync(configFile, 'utf-8')) || {};
     const defaults = json.ignoredInstructionFiles || [];
-    // merge, but env var takes precedence (already in IGNORED_INSTRUCTION_FILES)
-    for (const f of defaults) {
-      if (!IGNORED_INSTRUCTION_FILES.includes(f)) IGNORED_INSTRUCTION_FILES.push(f);
+    // If an env var is provided (even if empty), it takes precedence; otherwise fall back to defaults.
+    if (!envHasIgnoredVar) {
+      IGNORED_INSTRUCTION_FILES = defaults.slice();
     }
   }
 } catch (e) {
-  // ignore config parse errors; env var will still work
+  // ignore config parse errors; env var will still work but log a warning for maintainers
+  log(`  ⚠️  Could not parse INSTRUCTIONS_CONFIG.json - ignoring defaults: ${e.message}`, 'yellow');
 }
 
 // Define all instruction files and their required sections
@@ -91,7 +93,6 @@ const INSTRUCTION_FILES = {
   dcyfr: {
     path: '.github/agents/DCYFR.agent.md',
     type: 'agent',
-    optional: true,
     requiredSections: [
       'What This Agent Does',
       'When to Use This Agent',
