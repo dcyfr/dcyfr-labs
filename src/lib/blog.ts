@@ -307,3 +307,39 @@ export function getPostByAnySlug(
 
   return null;
 }
+
+/**
+ * Calculate active filter count from blog filter parameters
+ * 
+ * Used for displaying filter badges and counts in UI components
+ * (MobileFilterBar, FloatingFilterFab, etc.)
+ * 
+ * @param filters Filter parameters
+ * @returns Number of active filters
+ */
+export function calculateActiveFilterCount(filters: {
+  query?: string;
+  selectedCategory?: string;
+  selectedTags?: string[];
+  readingTime?: string;
+  sortBy?: string;
+  dateRange?: string;
+}): number {
+  const {
+    query = "",
+    selectedCategory = "",
+    selectedTags = [],
+    readingTime = "",
+    sortBy = "newest",
+    dateRange = "all",
+  } = filters;
+
+  return [
+    query ? 1 : 0,
+    selectedCategory ? 1 : 0,
+    selectedTags.length,
+    readingTime ? 1 : 0,
+    sortBy !== "newest" ? 1 : 0,
+    dateRange !== "all" ? 1 : 0,
+  ].reduce((a, b) => a + b, 0);
+}

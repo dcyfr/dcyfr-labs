@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work. Completed tasks are in **`done.md`**.
 
-**Last Updated:** December 8, 2025 | **Status:** Maintenance mode with data-driven enhancements | **Pass Rate:** 1339/1346 tests (99.5%)
+**Last Updated:** December 9, 2025 | **Status:** Maintenance mode with data-driven enhancements | **Pass Rate:** 1339/1346 tests (99.5%)
 
 ---
 
@@ -10,29 +10,15 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 | Status | Count | Impact |
 |--------|-------|--------|
-| **Pending Work** | 15 items | Medium-effort features (2-6 hours each) |
-| **Backlog** | 11 items | Low-priority or speculative features |
-| **✅ Completed** | 45+ items | Phases 1-4 + recent completions |
+| **Pending Work** | 13 items | Medium-effort features (2-6 hours each) |
+| **Backlog** | 12 items | Low-priority or speculative features |
+| **✅ Completed** | 47+ items | Phases 1-4 + recent completions |
 
 ---
 
 ## 🟡 PENDING WORK QUEUE (Next Steps)
 
 ### Priority 1: Blog Features (Medium Effort)
-
-#### 🟡 **Mobile Filter Drawer/Sheet Pattern** (3-4 hours)
-- Replace collapsible bar with bottom sheet (shadcn Sheet)
-- Familiar mobile UX (like app store filters)
-- Swipe to dismiss, backdrop click to close
-- Maintains desktop filter sidebar
-- **Estimated Impact:** Improved mobile UX
-
-#### 🟡 **Floating Filter FAB for Mobile** (2-3 hours)
-- Floating action button (bottom-right, above footer)
-- Opens filter sheet on mobile only
-- Icon changes when filters active
-- Counts active filters
-- **Estimated Impact:** Mobile discoverability
 
 #### 🟡 **Horizontal Scroll Filter Chips** (2-3 hours)
 - Single row of horizontally scrolling filter badges
@@ -135,6 +121,20 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 ### UI/UX Enhancements
 
+- [ ] **Expandable FAB with Quick Actions Menu** (4-5 hours)
+  - **Concept:** Single floating action button → expands into radial action nodes
+  - **Actions:** Filter, Search, Clear All, Bookmarks, Layout Toggle
+  - **Animation:** Smooth cascade or radial reveal using Framer Motion
+  - **Mobile First:** Position bottom-right, gesture-friendly
+  - **Implementation Options:**
+    1. Radial menu - actions positioned in circle around FAB
+    2. Cascade reveal - actions stack downward/upward from FAB
+    3. Context menu overlay - actions appear near FAB on click
+  - **Accessibility:** Keyboard navigation between actions, ESC to close
+  - **Design Inspiration:** Facebook Messenger, Gmail mobile FAB patterns
+  - **Estimated Impact:** Unified mobile control hub for blog interactions
+  - **Priority:** Low (backlog, future enhancement)
+
 - [ ] **Advanced Holographic Card Effects with Mouse Tracking** (4-6 hours)
   - **Current Status:** Disabled pending implementation
   - **Scope:** Refactor card hover effects with dynamic mouse tracking
@@ -168,7 +168,55 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 ## ✅ COMPLETED WORK
 
-### 📅 Recent Completion: Bookmark/Reading List Feature (Dec 8, 2025) ✅
+### 📅 Recent Completion: Floating Filter FAB for Mobile (Dec 9, 2025) ✅
+
+- [x] **Shared State Hook** ✅
+  - Created `src/hooks/use-mobile-filter-sheet.ts` (zustand store)
+  - Manages sheet open/close state across components
+  - Shared by MobileFilterBar and FloatingFilterFab
+
+- [x] **FloatingFilterFab Component** ✅
+  - Created `src/components/blog/filters/floating-filter-fab.tsx`
+  - Fixed position bottom-right (above footer at z-30)
+  - Shows active filter count in badge
+  - Mobile only (hidden on lg: breakpoint)
+  - Triggers shared filter sheet on click
+
+- [x] **Integration** ✅
+  - Updated MobileFilterBar to use shared hook instead of local useState
+  - Integrated FloatingFilterFab into DynamicBlogContent
+  - Calculates active filter count from all filter states
+  - Added barrel export to `src/components/blog/index.ts`
+
+- [x] **Quality Verification** ✅
+  - Created 7 test cases for FloatingFilterFab (100% passing)
+  - Updated MobileFilterBar tests to match new aria-label (3/3 passing)
+  - TypeScript: 0 errors
+  - ESLint: 0 new errors
+  - Build: Successful
+
+- [x] **Next Steps** 🔜
+  - Consider keyboard navigation improvements (accessibility)
+  - A/B test FAB visibility and positioning with users
+  - Monitor mobile filter engagement metrics
+
+---
+
+### 📅 Recent Completion: Mobile Filter Drawer/Sheet Pattern (Dec 8, 2025) ✅
+
+- [x] **Mobile Filter Drawer (Sheet)** ✅
+  - Replaced inline collapsible `MobileFilterBar` with bottom sheet using `Sheet` UI (Radix + shadcn pattern)
+  - Sheet triggers via the filter summary button on mobile; supports backdrop click to close
+  - `BlogFilters` is now rendered inside `SheetContent` with `max-h-[80vh] overflow-auto` for scrolling
+  - Clear action closes sheet and returns to `/blog` (clears filters)
+  - Preserved desktop sidebar UX (desktop `BlogSidebar` still used)
+
+- [x] **Quality Verification** ✅
+  - Added unit test `src/__tests__/components/blog/mobile-filter-bar.test.tsx` covering trigger, sheet open, and clear action
+  - TypeScript: local typecheck passed; ESLint: ran with warnings unrelated to this change
+  - Layout & accessibility: `aria-label` and close button included; overlay/backdrop closable
+
+---
 
 - [x] **useBookmarks Hook** ✅
   - Created `src/hooks/use-bookmarks.ts` with localStorage persistence
