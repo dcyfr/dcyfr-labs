@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { createClient } from 'redis'
 import { GET } from '@/app/api/analytics/route'
 import { rateLimit } from '@/lib/rate-limit'
 import {
@@ -51,8 +52,15 @@ describe('Analytics API Integration', () => {
     
     // Reset environment
     vi.stubEnv('ADMIN_API_KEY', 'test-api-key-123')
+    vi.stubEnv('REDIS_URL', 'redis://localhost:6379')
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('VERCEL_ENV', 'preview')
+    // Ensure the redis client global cache is reset
+    // to allow createClient mocks to be invoked per-test
+    // and avoid stale client objects across tests
+     
+    // @ts-ignore - intentionally set global test var
+    global.__blogAnalyticsRedisClient = undefined
 
     // Default mocks: successful responses
     vi.mocked(rateLimit).mockResolvedValue({
@@ -271,6 +279,7 @@ describe('Analytics API Integration', () => {
 
         const response = await GET(request)
         const data = await response.json()
+        // No debug print (cleared)
 
         expect(response.status).toBe(200)
         expect(data.success).toBe(true)
@@ -278,6 +287,69 @@ describe('Analytics API Integration', () => {
         expect(data.posts).toBeDefined()
         expect(Array.isArray(data.posts)).toBe(true)
       })
+        it('includes vercel analytics data when present in Redis', async () => {
+          // Also override createClient directly to ensure the route's getRedisClient
+          // uses the mocked client implementation.
+          vi.mocked(createClient).mockImplementation(() => ({
+            isOpen: false,
+            connect: async () => "OK",
+            get: async (key: string) => {
+              if (key === 'vercel:topPages:daily') {
+                return JSON.stringify([{ path: '/blog/test-post', views: 50 }]);
+              }
+              if (key === 'vercel:topReferrers:daily') {
+                return JSON.stringify([{ referrer: 'google.com', views: 25 }]);
+              }
+              if (key === 'vercel:topDevices:daily') {
+                return JSON.stringify([{ device: 'mobile', views: 30 }]);
+              }
+              if (key === 'vercel:metrics:lastSynced') {
+                return new Date().toISOString();
+              }
+              return null;
+            },
+            quit: async () => "OK",
+            set: async () => "OK",
+          }) as any)
+          // @ts-ignore - cast as any to satisfy Redis client typings for test
+          global.__blogAnalyticsRedisClient = {
+            isOpen: true,
+            connect: async () => "OK",
+            get: async (key: string) => {
+              if (key === 'vercel:topPages:daily') {
+                return JSON.stringify([{ path: '/blog/test-post', views: 50 }]);
+              }
+              if (key === 'vercel:topReferrers:daily') {
+                return JSON.stringify([{ referrer: 'google.com', views: 25 }]);
+              }
+              if (key === 'vercel:topDevices:daily') {
+                return JSON.stringify([{ device: 'mobile', views: 30 }]);
+              }
+              if (key === 'vercel:metrics:lastSynced') {
+                return new Date().toISOString();
+              }
+              return null;
+            },
+            quit: async () => "OK",
+            set: async () => "OK",
+          } as any;
+          // Also set via globalThis to be safe
+          // @ts-ignore
+          globalThis.__blogAnalyticsRedisClient = global.__blogAnalyticsRedisClient;
+
+          const request = new Request('http://localhost:3000/api/analytics', {
+            headers: { Authorization: 'Bearer test-api-key-123' },
+          })
+
+          const response = await GET(request)
+          const data = await response.json()
+
+          expect(response.status).toBe(200)
+          expect(data.vercel).toBeDefined()
+          expect(Array.isArray(data.vercel.topPages)).toBe(true)
+          expect(data.vercel.topPages[0].path).toBe('/blog/test-post')
+          expect(data.vercelLastSynced).toBeDefined()
+        })
 
       it('supports date range parameter', async () => {
         const request = new Request('http://localhost:3000/api/analytics?days=7', {

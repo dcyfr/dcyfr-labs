@@ -39,7 +39,8 @@ import { handleApiError } from "@/lib/error-handler";
  * - NODE_ENV: Standard Node environment (development/production)
  */
 
-const redisUrl = process.env.REDIS_URL;
+// Read REDIS_URL dynamically inside helper so tests can stub env vars later
+// (Common gotcha: importing the module captures process.env at import time)
 
 // Rate limit configuration based on environment
 // Development/Preview: More generous for testing and development
@@ -131,6 +132,7 @@ function logAccess(request: Request, status: "success" | "denied", reason?: stri
 }
 
 async function getRedisClient() {
+  const redisUrl = process.env.REDIS_URL;
   if (!redisUrl) return null;
 
   try {
@@ -307,9 +309,39 @@ export async function GET(request: Request) {
             })
             .filter(Boolean);
         }
-        await redis.quit();
+          // keep connection open for additional reads (vercel keys) until the end
       } catch (error) {
         console.error("Failed to fetch trending data:", error);
+      }
+    }
+
+      // Attempt to read Vercel analytics sync data from Redis (optional)
+      let vercelData = null;
+      let vercelLastSynced = null;
+      if (redis) {
+        try {
+          const vPages = await redis.get("vercel:topPages:daily");
+          const vReferrers = await redis.get("vercel:topReferrers:daily");
+          const vDevices = await redis.get("vercel:topDevices:daily");
+          const vSynced = await redis.get("vercel:metrics:lastSynced");
+
+          vercelLastSynced = vSynced || null;
+          vercelData = {
+            topPages: vPages ? JSON.parse(vPages) : [],
+            topReferrers: vReferrers ? JSON.parse(vReferrers) : [],
+            topDevices: vDevices ? JSON.parse(vDevices) : [],
+          };
+        } catch (error) {
+          console.error("Failed to fetch vercel analytics from redis:", error);
+        }
+      }
+
+    // Close Redis connection (best-effort) after we've read trending & vercel keys
+    if (redis) {
+      try {
+        await redis.quit();
+      } catch (error) {
+        console.warn('Failed to close redis connection:', error);
       }
     }
 
@@ -419,6 +451,8 @@ export async function GET(request: Request) {
       },
       posts: postsWithViews,
       trending: trendingFromRedis || trendingPosts,
+      vercel: vercelData,
+      vercelLastSynced: vercelLastSynced,
     }, {
       headers: {
         'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',

@@ -18,6 +18,8 @@ import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import { PostList } from "@/components/blog/post/post-list";
 import { MobileFilterBar } from "@/components/blog/filters/mobile-filter-bar";
 import { FloatingFilterFab } from "@/components/blog/filters/floating-filter-fab";
+import { HorizontalFilterChips } from "@/components/blog/filters/horizontal-filter-chips";
+import { LayoutToggle } from "@/components/blog/layout-toggle";
 
 interface DynamicBlogContentProps {
   /** Archive data with filtered/paginated posts */
@@ -97,54 +99,76 @@ async function DynamicBlogContentImpl({
     dateRange,
   });
 
+  // Feature flag: Horizontal filter chips can be toggled off for now to simplify mobile UI
+  const showHorizontalFilterChips = process.env.NEXT_PUBLIC_FEATURE_HORIZONTAL_FILTER_CHIPS === 'true';
+
   return (
-    <div id="blog-posts" className={`px-2 sm:px-4 lg:px-8 w-full`}>
-      {/* Mobile filters (below lg breakpoint) - collapsible for better content visibility */}
-      <div className="lg:hidden mb-6">
-        <MobileFilterBar
-          selectedCategory={selectedCategory}
-          selectedTags={selectedTags}
-          readingTime={readingTime}
-          categoryList={availableCategories}
-          categoryDisplayMap={categoryDisplayMap}
-          tagList={availableTagsWithCounts.map(({ tag }) => tag)}
-          query={query}
-          sortBy={sortBy}
-          dateRange={dateRange}
-          totalResults={sortedArchiveData.totalItems}
-        />
-      </div>
-
-      {/* Floating filter FAB for mobile */}
-      <FloatingFilterFab
-        activeFilterCount={activeFilterCount}
-        hasFilters={hasActiveFilters}
-      />
-
-      {/* Post list with view counts */}
-      <PostList
-        posts={postsToDisplay}
-        latestSlug={latestSlug}
-        hottestSlug={hottestSlug}
-        titleLevel="h2"
-        layout={layout}
-        viewCounts={viewCounts}
-        hasActiveFilters={hasActiveFilters}
-        emptyMessage="No posts found. Try adjusting your search or filters."
-        searchQuery={query}
-      />
-
-      {/* Pagination */}
-      {sortedArchiveData.totalPages > 1 && (
-        <div className="mt-8">
-          <ArchivePagination
-            currentPage={sortedArchiveData.currentPage}
-            totalPages={sortedArchiveData.totalPages}
-            hasPrevPage={sortedArchiveData.currentPage > 1}
-            hasNextPage={sortedArchiveData.currentPage < sortedArchiveData.totalPages}
+    <div id="blog-posts" className="w-full">
+      {/* Horizontal filter chips (mobile only) - sticky at top, full width */}
+      {showHorizontalFilterChips && (
+        <div className="lg:hidden mb-4">
+          <HorizontalFilterChips
+            selectedCategory={selectedCategory}
+            sortBy={sortBy}
+            categoryList={availableCategories}
+            categoryDisplayMap={categoryDisplayMap}
           />
         </div>
       )}
+
+      {/* Layout toggle (desktop only) */}
+      <div className="mb-6 flex justify-end">
+        <LayoutToggle currentLayout={layout} />
+      </div>
+
+      <div>
+        {/* Mobile filters (below lg breakpoint) - collapsible for better content visibility */}
+        <div className="lg:hidden mb-4">
+          <MobileFilterBar
+            selectedCategory={selectedCategory}
+            selectedTags={selectedTags}
+            readingTime={readingTime}
+            categoryList={availableCategories}
+            categoryDisplayMap={categoryDisplayMap}
+            tagList={availableTagsWithCounts.map(({ tag }) => tag)}
+            query={query}
+            sortBy={sortBy}
+            dateRange={dateRange}
+            totalResults={sortedArchiveData.totalItems}
+          />
+        </div>
+
+        {/* Floating filter FAB for mobile */}
+        <FloatingFilterFab
+          activeFilterCount={activeFilterCount}
+          hasFilters={hasActiveFilters}
+        />
+
+        {/* Post list with view counts */}
+        <PostList
+          posts={postsToDisplay}
+          latestSlug={latestSlug}
+          hottestSlug={hottestSlug}
+          titleLevel="h2"
+          layout={layout}
+          viewCounts={viewCounts}
+          hasActiveFilters={hasActiveFilters}
+          emptyMessage="No posts found. Try adjusting your search or filters."
+          searchQuery={query}
+        />
+
+        {/* Pagination */}
+        {sortedArchiveData.totalPages > 1 && (
+          <div className="mt-8">
+            <ArchivePagination
+              currentPage={sortedArchiveData.currentPage}
+              totalPages={sortedArchiveData.totalPages}
+              hasPrevPage={sortedArchiveData.currentPage > 1}
+              hasNextPage={sortedArchiveData.currentPage < sortedArchiveData.totalPages}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

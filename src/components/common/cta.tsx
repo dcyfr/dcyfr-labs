@@ -114,8 +114,8 @@ export function AvailabilityBanner({ className }: { className?: string }) {
     <Card className={cn(HOVER_EFFECTS.card, "p-4 md:p-8 mt-12 mb-6", className)}>
       <div className="flex items-start gap-3">
         <div className="relative h-3 w-3 mt-1.5 shrink-0" aria-hidden="true">
-          <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
-          <span className="absolute inset-0 rounded-full bg-green-500" />
+          <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />
+          <span className="absolute inset-0 rounded-full bg-emerald-500" />
         </div>
         <div className="flex-1">
           <div className={cn(TYPOGRAPHY.label.standard, "mb-1")}>

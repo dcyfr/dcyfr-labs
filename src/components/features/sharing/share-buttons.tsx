@@ -239,7 +239,7 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
           onClick={handleCopyLink}
           className={cn(
             "gap-2 h-11 md:h-10",
-            copied && "text-green-600 dark:text-green-500"
+            copied && "text-emerald-600 dark:text-emerald-500"
           )}
           aria-label="Copy link to clipboard"
         >

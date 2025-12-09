@@ -6,11 +6,11 @@ export function SiteFooter() {
   return (
     <>
       {/* Mobile footer - minimalistic */}
-      <footer className="md:hidden border-t mt-16 site-footer">
-        {/* <div className="mx-auto px-4 sm:px-8 h-16 flex items-center justify-center text-sm text-muted-foreground gap-2">
+      {/* <footer className="md:hidden mt-16 site-footer">
+        <div className="mx-auto px-4 sm:px-8 h-16 flex items-center justify-center text-sm text-muted-foreground gap-2">
           <SiteLogo size="sm" showIcon={false} />
-        </div> */}
-      </footer>
+        </div> 
+      </footer> */}
 
       {/* Desktop footer */}
       <footer className="hidden md:block border-t mt-16 site-footer">

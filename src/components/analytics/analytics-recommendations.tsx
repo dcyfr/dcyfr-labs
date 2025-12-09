@@ -315,14 +315,16 @@ const typeIcons = {
 
 const typeColors = {
   opportunity: {
-    icon: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/20',
-    border: 'border-green-200 dark:border-green-900/50',
+    icon: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20',
+    border: 'border-emerald-200 dark:border-emerald-900/50',
   },
   warning: {
+    // eslint-disable-next-line no-restricted-syntax -- Icon accent color configuration
     icon: 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20',
     border: 'border-orange-200 dark:border-orange-900/50',
   },
   insight: {
+    // eslint-disable-next-line no-restricted-syntax -- Icon accent color configuration
     icon: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/20',
     border: 'border-blue-200 dark:border-blue-900/50',
   },

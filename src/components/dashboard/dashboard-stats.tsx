@@ -78,8 +78,8 @@ export function DashboardStat({
               <span
                 className={cn(
                   TYPOGRAPHY.label.xs,
-                  trend.direction === "up" && "text-green-600",
-                  trend.direction === "down" && "text-red-600",
+                  trend.direction === "up" && "text-emerald-600",
+                  trend.direction === "down" && "text-destructive",
                   trend.direction === "neutral" && "text-muted-foreground"
                 )}
               >

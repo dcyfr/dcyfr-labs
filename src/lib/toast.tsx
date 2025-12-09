@@ -15,7 +15,7 @@ export function toastSuccess(message: string, data?: ExternalToast) {
     ...data,
     icon: (
       <div className={`animate-in zoom-in-50 ${ANIMATION.duration.normal}`}>
-        <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+        <CheckCircle2 className={`h-5 w-5 ${SEMANTIC_COLORS.alert.success.icon}`} />
       </div>
     ),
     className: `animate-in slide-in-from-top-2 ${ANIMATION.duration.normal}`,

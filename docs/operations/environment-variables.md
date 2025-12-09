@@ -418,6 +418,22 @@ These are automatically configured by Vercel when you enable the respective feat
 ### Development Variables
 
 #### `NODE_ENV`
+
+### Vercel Analytics Proxy & Token (Optional, recommended for dashboard)
+
+#### `VERCEL_ANALYTICS_ENDPOINT`
+- **Type:** String (API endpoint URL)
+- **Required:** No (recommended for analytics dashboard)
+- **Purpose:** A small proxy or Vercel API endpoint that returns a normalized JSON shape containing analytics metrics (top pages, referrers, devices). This is used by the `syncVercelAnalytics` Inngest job and the `/api/analytics` endpoint.
+- **Example:** `https://api.my-internal-proxy.example/vercel-analytics`
+- **Notes:** If not set, the dashboard gracefully falls back to the internal Redis analytics only (view counts and trending).
+
+#### `VERCEL_TOKEN`
+- **Type:** String (Vercel personal token)
+- **Required:** No (recommended for enabling Vercel API calls)
+- **Purpose:** Authenticate with Vercel API (or your proxy) to fetch analytics data.
+- **Get token at:** https://vercel.com/account/tokens
+- **Notes:** This token is used by the `syncVercelAnalytics` scheduled job and any scripts that call Vercel's APIs. Add to `VERCEL_TOKEN` (or `VERCEL_API_TOKEN`) as appropriate.
 - **Type:** String (`development` | `production` | `test`)
 - **Required:** No (automatically set)
 - **Managed by:** Next.js

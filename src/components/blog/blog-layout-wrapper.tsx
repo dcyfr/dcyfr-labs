@@ -40,10 +40,11 @@ export function BlogLayoutWrapper({ children }: BlogLayoutWrapperProps) {
   return (
     <SidebarContext.Provider value={{ isCollapsed, setIsCollapsed, toggleCollapsed }}>
       <BlogKeyboardProvider onToggleFilters={toggleCollapsed}>
-        <div 
+        <div
           className={cn(
-            "grid gap-8 items-start transition-appearance",
-            ANIMATION.duration.normal,
+            /* eslint-disable-next-line no-restricted-syntax -- Layout gap for sidebar grid */
+            "grid gap-8 items-start",
+            ANIMATION.transition.appearance,
             isCollapsed 
               ? "lg:grid-cols-[48px_1fr]" 
               : "lg:grid-cols-[280px_1fr]"

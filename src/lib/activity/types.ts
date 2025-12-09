@@ -188,9 +188,11 @@ export interface ActivityFeedProps {
 // STYLING MAPS
 // ============================================================================
 
+import { SEMANTIC_COLORS } from "@/lib/design-tokens";
+
 /**
  * Color schemes for each activity source
- * Uses Tailwind classes for icon and border styling
+ * Uses semantic color tokens for consistency
  * Badges now use stock light/dark variants
  */
 export const ACTIVITY_SOURCE_COLORS: Record<
@@ -214,15 +216,16 @@ export const ACTIVITY_SOURCE_COLORS: Record<
     border: "border-l-muted-foreground",
   },
   milestone: {
-    icon: "text-yellow-600 dark:text-yellow-400",
-    border: "border-l-yellow-600",
+    icon: SEMANTIC_COLORS.alert.warning.icon,
+    border: "border-l-amber-600",
   },
   trending: {
+    // eslint-disable-next-line no-restricted-syntax -- Icon accent color configuration
     icon: "text-orange-600 dark:text-orange-400",
     border: "border-l-orange-600",
   },
   engagement: {
-    icon: "text-red-600 dark:text-red-400",
+    icon: SEMANTIC_COLORS.alert.critical.icon,
     border: "border-l-red-600",
   },
 } as const;
