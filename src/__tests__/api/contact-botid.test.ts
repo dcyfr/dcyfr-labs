@@ -138,8 +138,12 @@ describe("POST /api/contact - BotID Integration", () => {
 
       const response = await POST(request);
       
-      expect(response.status).toBe(500);
+      // BotID is now optional - should continue with fallback protection and succeed
+      expect(response.status).toBe(200);
       expect(checkBotId).toHaveBeenCalledTimes(1);
+      const json = await response.json();
+      expect(json.success).toBe(true);
+      expect(json.message).toBeDefined();
     });
   });
 
