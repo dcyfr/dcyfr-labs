@@ -1,7 +1,7 @@
 ---
 id: "post-20251109-7c4f3e2a"
 title: "Interactive Diagrams with ReactFlow"
-description: "Explore interactive, accessible diagrams built with ReactFlow for visualizing architecture, workflows, and decision trees."
+summary: "Explore interactive, accessible diagrams built with ReactFlow for visualizing architecture, workflows, and decision trees."
 publishedAt: "2025-11-09T00:00:00Z"
 category: "Demo"
 tags: ["Diagrams", "ReactFlow", "Interactive", "Visualization", "Demo"]
@@ -9,6 +9,9 @@ draft: true
 series:
   name: "Features"
   order: 1
+  description: "Explore interactive, accessible diagrams built with ReactFlow for visualizing architecture, workflows, and decision trees."
+  icon: "BookOpen"
+  color: "tutorial"
 ---
 
 After migrating away from Mermaid, we've built a set of interactive diagrams using [ReactFlow](https://xyflow.com/) that provide better performance, accessibility, and customization. These diagrams are fully interactive—you can pan, zoom, and explore them freely.
@@ -31,7 +34,7 @@ We've created several reusable diagram components that you can drop into any blo
 
 The Model Context Protocol (MCP) architecture follows a three-tier client-server model:
 
-<MCPArchitecture height={300} />
+<MCPArchitecture height={300} caption="The three-tier MCP architecture: AI clients communicate with MCP servers through the protocol, which then access data sources via APIs." />
 
 **Use this when:**
 - Explaining multi-tier system architecture
@@ -50,7 +53,7 @@ export default function MyPage() {
 
 This diagram shows a typical user authentication flow with decision points:
 
-<AuthenticationFlow height={500} />
+<AuthenticationFlow height={500} caption="A user authentication flow showing the decision point where valid credentials lead to the dashboard while invalid credentials redirect to the login page." />
 
 **Use this when:**
 - Explaining authentication workflows
@@ -70,7 +73,7 @@ export default function MyPage() {
 
 This diagram illustrates how markdown files are transformed into rendered HTML through multiple processing stages:
 
-<PipelineFlow height={600} />
+<PipelineFlow height={600} caption="The MDX processing pipeline transforms raw markdown through remark parsing, rehype transformation, syntax highlighting, React compilation, and finally browser rendering." />
 
 **Use this when:**
 - Explaining content processing pipelines
@@ -99,7 +102,7 @@ export default function MyPage() {
 
 This vulnerability assessment decision tree helps readers quickly determine if they're affected by a specific CVE:
 
-<CVEDecisionTree height={400} />
+<CVEDecisionTree height={400} caption="A decision tree for assessing CVE-2025-55182 impact: users determine vulnerability by checking if they use React Server Components and their React version." />
 
 **Use this when:**
 - Documenting security vulnerabilities
@@ -131,22 +134,32 @@ interface DiagramPresetProps {
   showControls?: boolean;  // Show pan/zoom controls (default: true)
   height?: number | string;  // Diagram height (default: varies)
   className?: string;  // Additional CSS classes
+  caption?: string;  // Caption text displayed below the diagram
 }
 ```
 
 **Examples:**
 
 ```tsx
-// Full height diagram with controls
-<MCPArchitecture height="100%" showControls={true} />
+// Full height diagram with controls and caption
+<MCPArchitecture 
+  height="100%" 
+  showControls={true}
+  caption="The three-tier MCP architecture"
+/>
 
-// Compact diagram without controls
-<AuthenticationFlow height={300} showControls={false} />
+// Compact diagram with custom caption
+<AuthenticationFlow 
+  height={300} 
+  showControls={false}
+  caption="User login flow showing valid and invalid paths"
+/>
 
-// With custom styling
+// With custom styling and caption
 <PipelineFlow
   height={500}
   className="rounded-lg border border-border"
+  caption="Six-stage MDX to HTML transformation pipeline"
 />
 ```
 

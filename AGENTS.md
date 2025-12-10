@@ -376,13 +376,18 @@ Each instruction file maintains this metadata:
 ## 📋 Recent Updates
 
 ### December 9, 2025
+- ✅ **Enhanced automation system**
+  - Enabled full Dependabot auto-merge for safe updates
+  - Created `scheduled-instruction-sync.yml` for quarterly doc updates
+  - Created `automated-metrics-collection.yml` for continuous metrics
+  - Created `automated-security-checks.yml` for daily security scanning
+  - Added `docs/automation/AUTOMATED_UPDATES.md` with complete automation guide
 - ✅ Completed modular refactoring of DCYFR.agent.md
   - Extracted 10 modular documentation files
   - Created 3 directories: patterns/, enforcement/, learning/
   - Reduced hub from 719 to 195 lines
   - Total modular content: 2600+ lines across 10 files
-- ✅ Updated AGENTS.md with new modular file structure
-- ✅ Documented all modular files and relationships
+- ✅ Updated AGENTS.md with modular file structure and automation reference
 
 ### December 8, 2025
 - ✅ Created `AGENTS.md` as centralized hub
@@ -390,6 +395,40 @@ Each instruction file maintains this metadata:
 - ✅ Established decision tree for agent selection
 - ✅ Created sync checklist and maintenance procedures
 - ✅ Mapped file relationships and ownership
+
+---
+
+## 🤖 Automated Updates & Maintenance
+
+dcyfr-labs uses a **comprehensive multi-layer automation system** to keep dependencies, documentation, and metrics current automatically.
+
+**Full Documentation:** [`docs/automation/AUTOMATED_UPDATES.md`](docs/automation/AUTOMATED_UPDATES.md)
+
+### What's Automated
+
+| System | Frequency | Purpose |
+|--------|-----------|---------|
+| **Dependabot Updates** | Weekly | Auto-updates npm and GitHub Actions |
+| **Auto-Merge Workflow** | Per PR | Safely auto-merges patches & minor updates |
+| **Instruction Sync** | Monthly | Keeps AI docs in sync with project metrics |
+| **Security Pre-Checks** | Daily | Scans for vulnerabilities |
+| **Test Metrics** | Per run | Captures test & performance data |
+| **Lighthouse CI** | Per push | Validates performance & accessibility |
+
+### Quick Reference
+
+```bash
+# Manually trigger instruction sync
+npm run sync:ai
+
+# Check MCP server health
+npm run mcp:check
+
+# Run all quality gates
+npm run check
+```
+
+**For detailed automation setup and configuration, see:** [`docs/automation/AUTOMATED_UPDATES.md`](docs/automation/AUTOMATED_UPDATES.md)
 
 ---
 

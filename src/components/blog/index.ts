@@ -30,6 +30,7 @@ export { PostBadges } from "./post/post-badges";
 export { SeriesBadge } from "./post/series-badge";
 export { SeriesNavigation } from "./post/series-navigation";
 export { SeriesHeader } from "./series-header";
+export { SeriesCard } from "./series-card";
 
 // Sidebar context for hiding duplicate content
 export { SidebarVisibilityProvider, useSidebarVisibility, HideWhenSidebarVisible } from "./post/sidebar-context";

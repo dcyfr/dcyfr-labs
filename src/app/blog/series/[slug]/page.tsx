@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { postsBySeries, allSeriesNames } from "@/data/posts";
+import { notFound, redirect } from "next/navigation";
+import { allSeries, getSeriesByAnySlug } from "@/data/posts";
 import { PageLayout } from "@/components/layouts";
 import { SeriesHeader, PostList } from "@/components/blog";
 import { SITE_TITLE_PLAIN, SITE_URL, getOgImageUrl, getTwitterImageUrl } from "@/lib/site-config";
@@ -8,11 +8,28 @@ import { CONTAINER_WIDTHS, CONTAINER_PADDING, SPACING } from "@/lib/design-token
 
 /**
  * Generate static paths for all series at build time
+ * Includes both current and previous slugs for 301 redirects
  */
 export async function generateStaticParams() {
-  return allSeriesNames.map((seriesName) => ({
-    slug: seriesName.toLowerCase().replace(/\s+/g, "-"),
-  }));
+  const allParams = [];
+
+  // Add current slugs
+  for (const series of allSeries) {
+    allParams.push({ slug: series.slug });
+  }
+
+  // Add previous slugs for redirect pages
+  for (const series of allSeries) {
+    for (const post of series.posts) {
+      if (post.series?.previousSlugs) {
+        for (const oldSlug of post.series.previousSlugs) {
+          allParams.push({ slug: oldSlug });
+        }
+      }
+    }
+  }
+
+  return allParams;
 }
 
 /**
@@ -24,28 +41,27 @@ export const revalidate = 86400;
 /**
  * Generate metadata for series page
  */
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> 
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params;
-  const seriesName = allSeriesNames.find(
-    name => name.toLowerCase().replace(/\s+/g, "-") === slug
-  );
-  
-  if (!seriesName) return {};
-  
-  const title = `${seriesName} Series`;
-  const description = `All posts in the ${seriesName} series`;
-  
+  const result = getSeriesByAnySlug(slug);
+
+  if (!result) return {};
+
+  const { series } = result;
+  const title = `${series.name} Series`;
+  const description = series.description || `All posts in the ${series.name} series`;
+
   return {
     title,
     description,
     openGraph: {
       title: `${title}`,
       description,
-      url: `${SITE_URL}/blog/series/${slug}`,
+      url: `${SITE_URL}/blog/series/${series.slug}`,
       siteName: SITE_TITLE_PLAIN,
       type: "website",
       images: [
@@ -82,24 +98,18 @@ export default async function SeriesPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const seriesName = allSeriesNames.find(
-    (name) => name.toLowerCase().replace(/\s+/g, "-") === slug
-  );
+  const result = getSeriesByAnySlug(slug);
 
-  if (!seriesName) {
+  if (!result) {
     notFound();
   }
 
-  const seriesPosts = postsBySeries[seriesName] || [];
+  const { series, needsRedirect, canonicalSlug } = result;
 
-  if (seriesPosts.length === 0) {
-    notFound();
+  // If this is an old slug, redirect to the current one
+  if (needsRedirect) {
+    redirect(`/blog/series/${canonicalSlug}`);
   }
-
-  // Calculate total reading time for all posts in series
-  const totalReadingTime = seriesPosts.reduce((sum, post) => {
-    return sum + post.readingTime.minutes;
-  }, 0);
 
   return (
     <PageLayout>
@@ -107,14 +117,14 @@ export default async function SeriesPage({
         className={`mx-auto ${CONTAINER_WIDTHS.archive} ${CONTAINER_PADDING}`}
       >
         <SeriesHeader
-          name={seriesName}
-          postCount={seriesPosts.length}
-          totalMinutes={Math.ceil(totalReadingTime)}
+          name={series.name}
+          postCount={series.postCount}
+          totalMinutes={Math.ceil(series.totalReadingTime)}
         />
 
         <div className={SPACING.section}>
           <PostList
-            posts={seriesPosts}
+            posts={series.posts}
             layout="list"
             emptyMessage="No posts found in this series."
           />
