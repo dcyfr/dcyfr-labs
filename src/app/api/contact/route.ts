@@ -34,23 +34,29 @@ export async function POST(request: Request) {
   let body: ContactFormData | undefined;
   
   try {
-    // Check for bot traffic using Vercel BotID
-    // This uses the BotID SDK to verify the request is from a legitimate user
+    // Check for bot traffic using Vercel BotID (production only)
+    // Skip in development and preview to avoid false positives during testing
+    // We rely on rate limiting and honeypot as fallback protection
     // See: https://vercel.com/docs/botid/get-started
-    try {
-      const verification = await checkBotId();
+    const isProduction = process.env.VERCEL_ENV === "production";
+    
+    if (isProduction) {
+      try {
+        const verification = await checkBotId();
 
-      if (verification.isBot) {
-        console.log("[Contact API] Bot detected by BotID - blocking request");
-        return NextResponse.json(
-          { error: "Access denied" },
-          { status: 403 }
-        );
+        if (verification.isBot) {
+          console.log("[Contact API] Bot detected by BotID - blocking request");
+          return NextResponse.json(
+            { error: "Access denied" },
+            { status: 403 }
+          );
+        }
+      } catch (botIdError) {
+        // If BotID fails, log but continue with fallback protection
+        console.warn("[Contact API] BotID check failed, continuing with fallback protection:", botIdError);
       }
-    } catch (botIdError) {
-      // If BotID fails (e.g., in preview environments or during setup), log but continue
-      // We rely on rate limiting and honeypot as fallback protection
-      console.warn("[Contact API] BotID check failed, continuing with fallback protection:", botIdError);
+    } else {
+      console.log("[Contact API] BotID check skipped (non-production environment)");
     }
 
     // Apply rate limiting
