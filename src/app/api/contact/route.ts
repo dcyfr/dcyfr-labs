@@ -34,29 +34,28 @@ export async function POST(request: Request) {
   let body: ContactFormData | undefined;
   
   try {
-    // Check for bot traffic using Vercel BotID (production only)
-    // Skip in development and preview to avoid false positives during testing
-    // We rely on rate limiting and honeypot as fallback protection
+    // Optional bot detection using Vercel BotID
+    // If BotID is unavailable or misconfigured, we gracefully fall back to
+    // rate limiting + honeypot + input validation for protection
     // See: https://vercel.com/docs/botid/get-started
-    const isProduction = process.env.VERCEL_ENV === "production";
-    
-    if (isProduction) {
-      try {
-        const verification = await checkBotId();
+    try {
+      const verification = await checkBotId();
 
-        if (verification.isBot) {
-          console.log("[Contact API] Bot detected by BotID - blocking request");
-          return NextResponse.json(
-            { error: "Access denied" },
-            { status: 403 }
-          );
-        }
-      } catch (botIdError) {
-        // If BotID fails, log but continue with fallback protection
-        console.warn("[Contact API] BotID check failed, continuing with fallback protection:", botIdError);
+      // Only block if BotID confidently identifies this as a bot (not a verified bot like search engines)
+      // Verified bots (search engines, monitoring) are allowed through
+      if (verification.isBot && !verification.isVerifiedBot && !verification.bypassed) {
+        console.log("[Contact API] Bot detected by BotID - blocking request");
+        return NextResponse.json(
+          { error: "Access denied" },
+          { status: 403 }
+        );
       }
-    } else {
-      console.log("[Contact API] BotID check skipped (non-production environment)");
+    } catch (botIdError) {
+      // BotID is optional - if it fails, continue with fallback protection
+      // Common reasons: not configured, CSP issues, network errors, timeout
+      console.log("[Contact API] BotID check failed, using fallback protection (rate limit + honeypot):", 
+        botIdError instanceof Error ? botIdError.message : String(botIdError)
+      );
     }
 
     // Apply rate limiting
