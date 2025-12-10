@@ -16,6 +16,8 @@ series:
 
 After migrating away from Mermaid, we've built a set of interactive diagrams using [ReactFlow](https://xyflow.com/) that provide better performance, accessibility, and customization. These diagrams are fully interactive—you can pan, zoom, and explore them freely.
 
+---
+
 ## Why ReactFlow?
 
 ReactFlow offers several advantages over Mermaid:
@@ -25,6 +27,8 @@ ReactFlow offers several advantages over Mermaid:
 - **Accessibility**: Built with semantic HTML and ARIA labels
 - **Customization**: Full control over styling and behavior
 - **React Integration**: First-class support for React components within diagrams
+
+---
 
 ## Available Diagram Presets
 
@@ -125,6 +129,8 @@ export default function SecurityPost() {
 }
 ```
 
+---
+
 ## Customization
 
 All diagram presets accept the same props for customization:
@@ -163,6 +169,8 @@ interface DiagramPresetProps {
 />
 ```
 
+---
+
 ## Creating Custom Diagrams
 
 If you need a custom diagram, use the base `InteractiveDiagram` component directly:
@@ -194,12 +202,16 @@ export function CustomDiagram() {
 }
 ```
 
+---
+
 ## Performance Notes
 
 - Diagrams are **client-side rendered** using React hooks
 - Use `showControls={false}` for read-only diagrams to reduce bundle impact
 - Each diagram is lightweight (< 5KB gzipped)
 - Animations are GPU-accelerated for smooth performance
+
+---
 
 ## Accessibility
 

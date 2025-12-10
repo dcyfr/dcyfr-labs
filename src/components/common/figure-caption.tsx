@@ -183,7 +183,7 @@ export function Figure({
 
   // Normal mode: Caption below image
   return (
-    <figure className={`flex flex-col items-center gap-1 mb-4`}>
+    <figure className={`flex flex-col items-center gap-1 mb-8`}>
       {children}
       <figcaption
         className={`${TYPOGRAPHY.body} text-muted-foreground italic text-center max-w-full text-sm`}
