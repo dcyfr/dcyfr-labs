@@ -38,6 +38,11 @@ export async function POST(request: Request) {
     // If BotID is unavailable or misconfigured, we gracefully fall back to
     // rate limiting + honeypot + input validation for protection
     // See: https://vercel.com/docs/botid/get-started
+    //
+    // NOTE: BotID is disabled for now due to false positives in preview/production
+    // We rely on: rate limiting (3/min), honeypot field, input validation, Resend spam filters
+    // Re-enable when BotID configuration is verified in Vercel dashboard
+    /*
     try {
       const verification = await checkBotId();
 
@@ -57,6 +62,7 @@ export async function POST(request: Request) {
         botIdError instanceof Error ? botIdError.message : String(botIdError)
       );
     }
+    */
 
     // Apply rate limiting
     const clientIp = getClientIp(request);
