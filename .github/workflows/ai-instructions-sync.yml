@@ -91,7 +91,7 @@ jobs:
 
       - name: Publish sync report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: agent-sync-reports
           path: sync-report-*.md
@@ -100,7 +100,7 @@ jobs:
 
       - name: Publish learning report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: learning-report-${{ github.run_number }}
           path: .github/agents/learning-data/monthly-reports/*.md
