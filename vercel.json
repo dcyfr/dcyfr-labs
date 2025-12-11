@@ -4,10 +4,10 @@
   "github": {
     "silent": true
   },
-  "crons": [
+  "rewrites": [
     {
-      "path": "/api/health",
-      "schedule": "0 0 * * *"
+      "source": "/api/(.*)",
+      "destination": "/404"
     }
   ],
   "headers": [
