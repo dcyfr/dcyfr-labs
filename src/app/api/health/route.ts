@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/nextjs';
 import { blockExternalAccess } from '@/lib/api-security';
 import { checkGitHubDataHealth } from '@/lib/github-data';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 /**
  * Health Check Endpoint with Sentry Monitoring
@@ -44,8 +44,8 @@ export async function GET(request: NextRequest) {
     const healthChecks = {
       timestamp: new Date().toISOString(),
       services: {
-        // Edge runtime is working if we got here
-        edge: true,
+        // Node.js runtime is working if we got here
+        nodejs: true,
         // Vercel platform is working if we can respond
         vercel: true,
         // GitHub cache status
@@ -56,10 +56,10 @@ export async function GET(request: NextRequest) {
         lastUpdated: githubHealth.lastUpdated,
         totalContributions: githubHealth.totalContributions,
       },
-      // Note: In edge runtime, process.uptime() may not be available
-      // This is just a placeholder for server runtime compatibility
+      // Note: In Node.js runtime, process.uptime() is available
+      // This provides server uptime information for monitoring
       serverInfo: {
-        runtime: 'edge',
+        runtime: 'nodejs',
         region: process.env.VERCEL_REGION || (process.env.NODE_ENV === 'development' ? 'local' : 'unknown'),
       },
     };
