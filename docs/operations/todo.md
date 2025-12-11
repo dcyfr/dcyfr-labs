@@ -2,7 +2,7 @@
 
 This document tracks **active and pending** work. Completed tasks are in **`done.md`**.
 
-**Last Updated:** December 10, 2025 | **Status:** Maintenance mode with data-driven enhancements | **Pass Rate:** 1339/1346 tests (99.5%)
+**Last Updated:** December 11, 2025 | **Status:** Maintenance mode + security hardening complete | **Pass Rate:** 1339/1346 tests (99.5%)
 
 > **📋 For AI Agents:** This document tracks **active and backlog** work only. For **unvalidated ideas** and **future enhancements** (>10 hours effort, experimental features, ideas needing validation), see **[`FUTURE_IDEAS.md`](../features/FUTURE_IDEAS.md)**. Move items from FUTURE_IDEAS.md to this TODO only after validation, clear business case, or resource availability.
 
@@ -12,9 +12,9 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 | Status | Count | Impact |
 |--------|-------|--------|
-| **Pending Work** | 1 item | Series analytics & navigation (1-2 hours) |
-| **Backlog** | 14 items | Low-priority or speculative features |
-| **✅ Completed** | 50+ items | Phases 1-4 + automation + activity caching + 4 layout/analytics features |
+| **Pending Work** | 3 items | Security improvements, series polish, BotID re-enablement |
+| **Backlog** | 12 items | Low-priority or speculative features |
+| **✅ Completed** | 55+ items | Phases 1-4 + automation + security hardening + 5 critical fixes (Dec 11) |
 
 ---
 
@@ -40,56 +40,108 @@ See [`CLAUDE.md`](../../CLAUDE.md#claude-code-agents-ai-powered-quality-assuranc
 
 ---
 
-## ✅ RECENTLY COMPLETED (Dec 10, 2025)
+## ✅ RECENTLY COMPLETED (Dec 11, 2025)
 
-### Blog Layout Features
+### 🔒 API Security Hardening & Incident Response
 
-- ✅ **Category Grouping in Blog Grid** - Implemented via `PostCategorySection` component + grouped layout mode
-- ✅ **Hybrid Layout Pattern** - Implemented as layout variant in `PostList` component
+**Completed:** December 11, 2025 (5-hour comprehensive audit + incident resolution)
 
-### Analytics Dashboard - VALIDATION COMPLETE
+- ✅ **Comprehensive API Security Audit** - Audited all 11 API endpoints
+- ✅ **Fixed 5 Critical Vulnerabilities:**
+  1. `/api/research` GET - Blocked public information disclosure
+  2. `/api/analytics` - Added external blocking + input validation (days parameter)
+  3. `/api/admin/api-usage` - Added external blocking + strict rate limiting (1 req/min)
+  4. `/api/inngest` - Added defense-in-depth signature validation
+  5. `/api/contact` - Strengthened email validation (RFC 5322 compliant)
+- ✅ **Critical Incident Resolution** - Contact form blocked by overly aggressive security
+  - Root cause: `blockExternalAccess()` applied to public user-facing endpoint
+  - Fixed within 15 minutes of discovery
+  - ~4 hour downtime from deployment to discovery
+- ✅ **Security Documentation** - Comprehensive 560-line audit report with incident analysis
+- ✅ **Lessons Learned** - API classification guide (internal vs public endpoints)
 
-- ✅ **GitHub-Style Heatmap** - Implemented at `src/components/features/github/github-heatmap.tsx` (52-week view, color intensity, tooltips)
-- ✅ **Vercel Analytics Integration** - Implemented at `src/components/analytics/vercel-insights.tsx` (top pages, referrers, devices with last sync time)
-- ⚠️ **Sparkline Trend Visualizations** - NOT YET IMPLEMENTED (minor component, can be added to overview cards)
+**Impact:** All API endpoints now properly secured with multi-layer defense-in-depth approach.
 
-See `done.md` for details.
+**Documentation:** [`docs/security/API_SECURITY_AUDIT_2025-12-11.md`](../security/API_SECURITY_AUDIT_2025-12-11.md)
+
+**Commits:**
+- `e46b559` - Fix research endpoint
+- `9443d66` - Comprehensive hardening (4 endpoints)
+- `c65fab8` - TypeScript fix (Inngest handlers)
+- `ca2d0eb` - Critical contact form fix
+- `42fa782` - Security documentation update
+
+See [`done.md`](done.md) for detailed breakdown.
 
 ---
 
 ## 🟡 PENDING WORK QUEUE (Next Steps)
 
-### Priority 1: Blog Series - Analytics & Navigation (1-2 hours) ⭐ NEXT
+### Priority 1: Security Improvements (2-3 hours) ⭐ HIGH PRIORITY
 
-#### 🟡 **Series Analytics & Navigation**
+Based on December 11 security audit findings, implement low-hanging fruit improvements:
 
-- Add series analytics tracking (view/start/complete events)
-- Update navigation (header dropdown, sidebar, footer)
-- Verify sitemap includes series URLs
-- Write comprehensive test suite
-- **Status:** Phase 1 complete (foundation + pages)
-- **Estimated Impact:** Enhanced series discoverability
+- [ ] **Timing-Safe API Key Comparison** (30 mins)
+  - Replace string comparison with `crypto.timingSafeEqual()` in `/api/analytics` and `/api/admin/api-usage`
+  - Prevents timing attacks that could reveal API keys byte-by-byte
+  - **File:** `src/app/api/analytics/route.ts:39`, `src/app/api/admin/api-usage/route.ts:40`
+  - **Effort:** 30 minutes
+  - **Priority:** Medium (low risk, easy fix)
 
-### Security: BotID Re-Enablement
+- [ ] **Structured Audit Logging for Admin Endpoints** (1 hour)
+  - Add JSON structured logging for all admin API access attempts
+  - Log: timestamp, IP, user agent, endpoint, result (success/denied), reason
+  - Enable security monitoring and incident response
+  - **Files:** `src/app/api/analytics/route.ts`, `src/app/api/admin/api-usage/route.ts`
+  - **Effort:** 1 hour
+  - **Priority:** Medium
 
-- [ ] **Re-enable Vercel BotID for contact form** (1-2 hours)
+- [ ] **Request Size Limits** (30 mins)
+  - Add Content-Length validation to POST endpoints
+  - Prevent DoS attacks via large payloads (max 50KB for contact form, 100KB for research)
+  - **Files:** `src/app/api/contact/route.ts`, `src/app/api/research/route.ts`
+  - **Effort:** 30 minutes
+  - **Priority:** Low
+
+- [ ] **Title Length Validation for OG Image Generator** (15 mins)
+  - Add max 1000 character limit to title parameter
+  - Prevents abuse of image generation endpoint
+  - **File:** `src/app/api/default-blog-image/route.tsx:19`
+  - **Effort:** 15 minutes
+  - **Priority:** Low
+
+**Total Estimated Effort:** 2-3 hours
+**Audit Reference:** [`docs/security/API_SECURITY_AUDIT_2025-12-11.md`](../security/API_SECURITY_AUDIT_2025-12-11.md) (Sections: "Remaining Recommendations")
+
+---
+
+### Priority 2: BotID Re-Enablement (2-3 hours)
+
+- [ ] **Re-enable Vercel BotID for contact form**
   - Verify BotID configuration in Vercel dashboard for `preview` and `production` deployments
   - Add a CI check to validate BotID TLS/keys and/or test the `checkBotId()` callback in a pre-merge integration step
   - Add unit/integration test asserting BotID is called when enabled, and that fallback protections remain (rate limit, honeypot)
   - Monitor for false positives for 48 hours after re-enable and add rollback plan
-  - **Priority:** High
+  - **Current Status:** Disabled in commit `32a2014` due to false positive 403 errors (PR #112)
+  - **Environment Variable:** Set `ENABLE_BOTID=1` to re-enable
+  - **Effort:** 2-3 hours
+  - **Priority:** Medium
+
+---
+
+### Priority 3: Blog Series - Analytics & Navigation (1-2 hours)
+
+- [ ] **Series Analytics & Navigation**
+  - Add series analytics tracking (view/start/complete events)
+  - Update navigation (header dropdown, sidebar, footer)
+  - Verify sitemap includes series URLs
+  - Write comprehensive test suite
+  - **Status:** Phase 1 complete (foundation + pages)
+  - **Estimated Impact:** Enhanced series discoverability
+  - **Effort:** 1-2 hours
+  - **Priority:** Low
 
 > **Note:** Content strategy items like Professional Services Page belong in [`FUTURE_IDEAS.md`](../features/FUTURE_IDEAS.md), not here. This queue tracks only implementation work.
-
-### Priority 4: Blog Series - Polish (1-2 hours)
-
-#### 🟡 **Series Analytics & Navigation** (1-2 hours)
-- Add series analytics tracking (view/start/complete events)
-- Update navigation (header dropdown, sidebar, footer)
-- Verify sitemap includes series URLs
-- Write comprehensive test suite
-- **Status:** Phase 1 complete (foundation + pages)
-- **Estimated Impact:** Enhanced series discoverability
 
 ---
 
