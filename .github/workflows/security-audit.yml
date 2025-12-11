@@ -11,14 +11,8 @@ name: Security Audit (npm audit)
 # - LOW: Informational only
 
 on:
-  push:
-    branches:
-      - main
-      - preview
-      - develop
-    paths:
-      - 'package.json'
-      - 'package-lock.json'
+  # Only run on package.json/lock changes in PRs or scheduled
+  # Removed push trigger to avoid false failures when paths don't match
   pull_request:
     paths:
       - 'package.json'
