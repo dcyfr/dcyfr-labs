@@ -12,72 +12,43 @@ This document tracks **active and pending** work. Completed tasks are in **`done
 
 | Status | Count | Impact |
 |--------|-------|--------|
-| **Pending Work** | 11 items | Medium-effort features (2-6 hours each) |
+| **Pending Work** | 1 item | Series analytics & navigation (1-2 hours) |
 | **Backlog** | 14 items | Low-priority or speculative features |
-| **✅ Completed** | 50+ items | Phases 1-4 + automation + activity caching |
+| **✅ Completed** | 50+ items | Phases 1-4 + automation + activity caching + 4 layout/analytics features |
+
+---
+
+## ✅ RECENTLY COMPLETED (Dec 10, 2025)
+
+### Blog Layout Features
+
+- ✅ **Category Grouping in Blog Grid** - Implemented via `PostCategorySection` component + grouped layout mode
+- ✅ **Hybrid Layout Pattern** - Implemented as layout variant in `PostList` component
+
+### Analytics Dashboard - VALIDATION COMPLETE
+
+- ✅ **GitHub-Style Heatmap** - Implemented at `src/components/features/github/github-heatmap.tsx` (52-week view, color intensity, tooltips)
+- ✅ **Vercel Analytics Integration** - Implemented at `src/components/analytics/vercel-insights.tsx` (top pages, referrers, devices with last sync time)
+- ⚠️ **Sparkline Trend Visualizations** - NOT YET IMPLEMENTED (minor component, can be added to overview cards)
+
+See `done.md` for details.
 
 ---
 
 ## 🟡 PENDING WORK QUEUE (Next Steps)
 
-### Priority 1: Blog Features (Medium Effort)
+### Priority 1: Blog Series - Analytics & Navigation (1-2 hours) ⭐ NEXT
 
-#### 🟡 **Category Grouping in Blog Grid** (2-3 hours)
-- Add section headers for each category
-- Group posts visually under category headings
-- Optional collapsible sections
-- Shows post count per category
-- **Estimated Impact:** Better content organization
+#### 🟡 **Series Analytics & Navigation**
 
-#### 🟡 **Hybrid Layout Pattern** (2-3 hours)
-- First post as large hero card, rest in 2-column grid
-- Responsive: stacked on mobile, 2-col on tablet+
-- Combines best of grid and magazine layouts
-- Fallback to magazine layout if <3 posts
-- **Estimated Impact:** Visual hierarchy improvement
-
-### Priority 2: Analytics Dashboard (Medium Effort)
-
-#### 🟡 **Sparkline Trend Visualizations** (2-3 hours)
-- Small inline charts for key metrics
-- `RechartsSparkline` component
-- Show 7-day/30-day trends
-- Use design token colors
-- **Estimated Impact:** Quick metrics overview
-
-#### 🟡 **GitHub-Style Heatmap Calendar View** (3-4 hours)
-- Calendar heatmap of post views/engagement
-- 52-week view (adjustable date range)
-- Color intensity = activity level
-- Tooltip on hover with details
-- **Estimated Impact:** Visual engagement trends
-
-#### 🟡 **Real Vercel Analytics Integration** (4-6 hours)
-- Query Vercel Analytics API (requires integration)
-- Display top pages, referrers, devices
-- Compare with custom Redis analytics
-- Sync in daily background job
-- **Estimated Impact:** Comprehensive analytics view
-
-### Priority 3: New Pages (Medium Effort)
-
-#### 🟡 **Professional Services Page** (4-6 hours)
-- Consulting offerings overview
-- Service packages with descriptions
-- Process/methodology section
-- CTA to contact form
-- Portfolio samples (link to work page)
-- **Estimated Impact:** Business development
-
-### Priority 4: Blog Series - Polish (1-2 hours)
-
-#### 🟡 **Series Analytics & Navigation** (1-2 hours)
 - Add series analytics tracking (view/start/complete events)
 - Update navigation (header dropdown, sidebar, footer)
 - Verify sitemap includes series URLs
 - Write comprehensive test suite
 - **Status:** Phase 1 complete (foundation + pages)
 - **Estimated Impact:** Enhanced series discoverability
+
+> **Note:** Content strategy items like Professional Services Page belong in [`FUTURE_IDEAS.md`](../features/FUTURE_IDEAS.md), not here. This queue tracks only implementation work.
 
 ---
 
