@@ -108,12 +108,37 @@ Project is in **maintenance mode** with data-driven enhancements.
 4. ✅ Design tokens used (no hardcoded values)
 5. Update `todo.md` and `done.md`
 
+## Security Best Practices
+
+### Logging Security (CRITICAL)
+
+Never log sensitive information in clear text. Use one of two approaches:
+
+1. **Remove logging** (preferred for tests/config scripts)
+
+```javascript
+// ❌ WRONG: console.log(credentials.client_email);
+// ✅ CORRECT: console.log("✅ Service account JSON is valid");
+```
+
+1. **Mask sensitive data** (when verification logging needed)
+
+```javascript
+const maskEmail = (email) => `${email.split('@')[0].substring(0, 2)}***@${email.split('@')[1]}`;
+console.log(`Service Account: ${maskEmail(credentials.client_email)}`);
+```
+
+**Never log:** API keys, tokens, credentials, environment variables containing secrets, user personal data, private keys, passwords, payment info
+
+**See detailed guide:** [`docs/ai/LOGGING_SECURITY.md`](docs/ai/LOGGING_SECURITY.md)
+
 ## Documentation
 
 **Comprehensive guides** (load only when needed):
 
 - [`docs/ai/BEST_PRACTICES.md`](docs/ai/BEST_PRACTICES.md) - Workflow best practices
 - [`docs/ai/DESIGN_SYSTEM.md`](docs/ai/DESIGN_SYSTEM.md) - Complete design validation
+- [`docs/ai/LOGGING_SECURITY.md`](docs/ai/LOGGING_SECURITY.md) - Logging security best practices
 - [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) - Token optimization
 - [`docs/ai/CLAUDE_CODE_SETUP.md`](docs/ai/CLAUDE_CODE_SETUP.md) - Claude Code integration setup
 
