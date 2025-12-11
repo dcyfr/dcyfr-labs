@@ -37,17 +37,21 @@ export async function ServerGitHubHeatmap({
 }: ServerGitHubHeatmapProps) {
   // Fetch data server-side from Redis cache
   let data;
-  let hasError = false;
   
   try {
     data = await getGitHubContributions(username);
   } catch (error) {
     console.error('[ServerGitHubHeatmap] Failed to load data:', error);
-    hasError = true;
+    // Return skeleton on error to prevent page crashes
+    return (
+      <Card className="p-4">
+        <GitHubHeatmapSkeleton />
+      </Card>
+    );
   }
   
-  // Return appropriate JSX based on data fetch result
-  if (hasError) {
+  // TypeScript safety: data should be defined at this point, but add explicit check
+  if (!data) {
     return (
       <Card className="p-4">
         <GitHubHeatmapSkeleton />
