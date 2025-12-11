@@ -1,11 +1,9 @@
 name: AI Instructions Sync & Validation
 
 # DISABLED: Not syncing agents to GitHub at this time
-# on:
-#   push:
-#     branches: [ 'main', 'preview' ]
-#   pull_request:
-#     branches: [ 'main', 'preview' ]
+# Only runs manually via workflow_dispatch
+on:
+  workflow_dispatch:
 
 jobs:
   sync-and-validate:
