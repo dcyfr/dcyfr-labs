@@ -118,6 +118,7 @@ This is a GitHub security design decision - CodeQL dismissals require explicit h
 
 ---
 
-**Last Updated:** December 2025
+**Last Updated:** December 10, 2025
 **Related Issues:** CodeQL Alerts #49, #50, #51 - Clear-text logging of sensitive information
 **Status:** Code fixed ✅ | Documentation complete ✅ | Awaiting manual dismissal via web UI
+**Related Workflows:** Workflow fixes applied to prevent false failures ([commit 0011617](https://github.com/dcyfr/dcyfr-labs/commit/0011617))
