@@ -81,21 +81,22 @@ export async function POST(request: NextRequest) {
   
   // Secondary check: Body size validation (for testing/environments without Content-Length)
   let rawBody: string;
+  let body: any;
   try {
     rawBody = await request.text();
-    
+
     // Check actual body size
     const bodySize = Buffer.byteLength(rawBody, 'utf8');
     if (bodySize > maxSize) {
       return NextResponse.json(
-        { 
+        {
           error: "Request too large",
           message: `Request size must not exceed ${Math.floor(maxSize / 1024)}KB`,
         },
         { status: 413 } // Payload Too Large
       );
     }
-    
+
     // Re-parse JSON from the text
     body = JSON.parse(rawBody);
   } catch (error) {
