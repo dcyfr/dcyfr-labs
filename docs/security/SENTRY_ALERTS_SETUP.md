@@ -514,7 +514,155 @@ done
 
 ---
 
-## Alert Configuration Summary
+## Step 11: Inngest Webhook Authentication Monitoring
+
+**Priority:** 🟠 **HIGH**
+**Purpose:** Monitor Inngest authentication failures and detect signature validation issues
+
+### Background
+
+Inngest uses cryptographic signature validation via the `INNGEST_SIGNING_KEY` environment variable. The `serve()` function from the Inngest SDK handles this validation internally. If your route handler has pre-emptive header validation, it can block legitimate Inngest requests before signature validation occurs.
+
+**Common Causes of Inngest 401 Errors:**
+
+1. **Incorrect INNGEST_SIGNING_KEY** - Key mismatch between local development and production
+2. **Redundant Header Validation** - Route handlers checking for headers that aren't always present
+3. **Request Body Tampering** - Proxies or middleware modifying request body
+4. **Clock Skew** - Request timestamp validation failures (> 5 min difference)
+5. **Missing Inngest Client** - Inngest SDK not properly initialized in environment
+
+### Configuration
+
+**Alert Name:** `[HIGH] Inngest Authentication Failures`
+
+**Metric Alert Setup:**
+
+1. **Access Sentry Alerts** → **Metric Alerts** → **Create Alert**
+
+2. **Configure Metric:**
+   ```
+   Metric: count()
+   Filter:
+     - message:"Inngest"
+     - tags.status:"401"
+     - request.path:"/api/inngest"
+   ```
+
+3. **Set Threshold:**
+   - Trigger when metric: `is above 20`
+   - In: `10 minutes`
+   - Frequency: `Every 10 minutes`
+
+4. **Actions:**
+   - Email notification
+   - Slack notification
+   - Create issue (high priority)
+
+### Diagnosis Steps
+
+When the alert triggers:
+
+**Step 1: Check Error Logs**
+```bash
+# View recent Inngest errors in production logs
+curl "https://api.axiom.co/v1/datasets/vercel/query" \
+  -H "Authorization: Bearer $AXIOM_TOKEN" \
+  -d '{
+    "apl": "['\'vercel'\''] | where ['\'request.path'\''] contains '\''/api/inngest'\'' | where toint(['\'request.statusCode'\'']) == 401 | limit 50"
+  }'
+```
+
+**Step 2: Verify Environment Variable**
+```bash
+# Check Inngest signing key is set
+vercel env list
+# Should show INNGEST_SIGNING_KEY value (masked)
+
+# If missing, set it:
+vercel env add INNGEST_SIGNING_KEY
+```
+
+**Step 3: Check for Route Handler Issues**
+```bash
+# Look for pre-emptive header validation in /api/inngest/route.ts
+grep -n "x-inngest" src/app/api/inngest/route.ts
+
+# If found, remove header presence checks - trust serve() to validate
+```
+
+**Step 4: Review Inngest Dashboard**
+1. Go to https://app.inngest.com
+2. Select your function
+3. Check "Recent Errors" tab
+4. Look for "Signature validation failed" or similar
+
+**Step 5: Check Clock Skew**
+```bash
+# If you see timestamp-based errors, verify server time is correct
+# Production should use NTP for accurate time
+date -u
+# Should match current UTC time (within 1 second)
+```
+
+### Recovery Procedure
+
+If Inngest webhooks are failing:
+
+1. **Check INNGEST_SIGNING_KEY is correct:**
+   ```bash
+   # Compare the key in your environment vs Inngest dashboard
+   # Settings → Signing Keys
+   ```
+
+2. **Remove redundant validation:**
+   - Delete any header presence checks before `serve()`
+   - Let `serve()` handle all signature validation
+   - Example: Don't check for `x-inngest-signature` manually
+
+3. **Verify in development first:**
+   ```bash
+   npm run dev
+   # Inngest Dev Server UI should work at http://localhost:3000/api/inngest
+   # If it doesn't, check console for errors
+   ```
+
+4. **Deploy and monitor:**
+   ```bash
+   git push origin preview
+   # Watch Sentry for alert resolution
+   # Verify with Axiom: Check /api/inngest requests have 200/201 status
+   ```
+
+### Expected Metrics After Fix
+
+✅ **Before Fix:**
+- 150-200 401 errors per hour
+- Consistent failure rate across all IPs
+- All from Inngest infrastructure IPs (198.212.45.x)
+
+✅ **After Fix:**
+- ~0 authentication failures (except legitimate signature failures)
+- GET requests return 200 (function discovery)
+- POST/PUT requests return 202 (job queued)
+- Only real signature mismatches return 401
+
+### Alert Tuning
+
+**If getting false positives (legitimate requests with real 401s):**
+
+1. Check if INNGEST_SIGNING_KEY was recently rotated
+2. Verify no middleware is modifying request bodies
+3. Check if clock skew exists (more than 5 minutes difference)
+4. Consider increasing threshold from 20 → 50 errors/10min
+
+**If not getting alerted when you should:**
+
+1. Verify Sentry is receiving Inngest logs
+2. Check filter syntax matches your log format
+3. Ensure message contains "inngest" (case-sensitive in APL)
+4. Test with manual curl request to trigger the alert
+
+---
 
 | Alert | Priority | Threshold | Frequency | Action |
 |-------|----------|-----------|-----------|--------|
@@ -550,6 +698,18 @@ For 24/7 monitoring:
 - High: Security team
 - Medium: Dev team daily digest
 - Info: Audit log only
+
+---
+
+## Alert Configuration Summary
+
+| Alert | Priority | Threshold | Frequency | Action |
+|-------|----------|-----------|-----------|--------|
+| Production Access | 🔴 Critical | 1 event / 1 min | Immediate | Email, Slack, PagerDuty |
+| Brute Force | 🟠 High | 10 events / 5 min | Every 5 min | Email, Slack |
+| Rate Limit Violations | 🟡 Medium | 20 events / 15 min | Every 15 min | Email |
+| **Inngest Auth Failures** | **🟠 High** | **20 events / 10 min** | **Every 10 min** | **Email, Slack** |
+| Success Audit | ℹ️ Info | Daily summary | Daily | Log only |
 
 ---
 
