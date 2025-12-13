@@ -11,6 +11,7 @@
 !.yarn/versions
 
 # testing
+/e2e/visual-regression.spec.ts-snapshots/**
 /coverage
 /test-results/
 /playwright-report/
