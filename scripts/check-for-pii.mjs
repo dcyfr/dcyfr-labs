@@ -191,7 +191,7 @@ function scanContent(file, content, results, isPrScan, isContentFile) {
       classification: 'PI',
       // Matches database connection strings with embedded credentials
       // PostgreSQL: postgresql://user:pass@host:port/db
-      // MongoDB: mongodb+srv://user:pass@cluster.mongodb.net/db
+      // MongoDB: mongodb+srv://user:pass@cluster.mongodb.net/db pragma: allowlist secret
       // MySQL: mysql://user:pass@host:port/db
       // Redis: redis://:password@host:port
       regex: /(postgresql|mysql|mongodb\+srv|mongodb|redis|mariadb|cockroachdb):\/\/([a-zA-Z0-9._\-%]+:[a-zA-Z0-9._\-%$@!]+@|:([a-zA-Z0-9._\-%$@!]+)@)[a-zA-Z0-9._\-:]+\/[a-zA-Z0-9._\-]*/gi,
