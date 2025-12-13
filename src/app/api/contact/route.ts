@@ -179,6 +179,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract form data (body was already parsed from request.text() above)
+    // Extract form data (body was already parsed from request.text() above)
     const { name, email, message, website } = body || {};
 
     // Honeypot validation - if filled, it's likely a bot
