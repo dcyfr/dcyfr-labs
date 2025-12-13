@@ -31,7 +31,7 @@ describe('parse-gitleaks-report.mjs', () => {
 
   function runParser(reportFile) {
     try {
-      const output = execSync(`node ${parserScript} ${reportFile}`, { 
+      const output = execSync('node', [parserScript, reportFile], { 
         encoding: 'utf8',
         stdio: 'pipe'
       });
