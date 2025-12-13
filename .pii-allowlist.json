@@ -53,6 +53,7 @@
   ],
   
   "piPaths": [
+    "src/__tests__/**",
     "docs/ai/LOGGING_SECURITY.md",
     "docs/security/**",
     "docs/architecture/**",
