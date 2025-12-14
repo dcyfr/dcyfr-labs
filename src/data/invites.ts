@@ -63,14 +63,15 @@ export const inviteCodes: InviteCode[] = [
   },
   // Productivity Tools
   {
-    id: "cal",
-    platform: "Cal.com",
-    url: "https://refer.cal.com/dcyfr",
-    description: "Schedule a 1:1 meeting to discuss security, architecture, or career growth in tech.",
+    id: "setapp",
+    platform: "Setapp",
+    url: "https://go.setapp.com/invite/v5w477nm",
+    description:
+      "Access dozens of curated Mac and iOS apps with a single subscription—use our invite link to start a free trial.",
     category: "productivity-tools",
     featured: true,
-    addedAt: "2025-12-06",
-    metrics: "Book a free intro call"
+    addedAt: "2025-12-13",
+    metrics: "Access dozens of apps"
   },
   {
     id: "raycast",
@@ -81,6 +82,16 @@ export const inviteCodes: InviteCode[] = [
     featured: false,
     addedAt: "2025-12-06",
     metrics: "Free to start"
+  },
+  {
+    id: "cal",
+    platform: "Cal.com",
+    url: "https://refer.cal.com/dcyfr",
+    description: "Schedule a 1:1 meeting to discuss security, architecture, or career growth in tech.",
+    category: "productivity-tools",
+    featured: false,
+    addedAt: "2025-12-06",
+    metrics: "Book a free intro call"
   },
   // Design Tools
   // Other
