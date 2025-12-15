@@ -21,26 +21,35 @@
  * @see src/__tests__/components/post-badges.test.tsx for regression tests
  */
 
-// All valid post categories - keep in sync with frontmatter values
-export type PostCategory = 
-  | "development" | "security" | "career" | "ai" | "tutorial" // lowercase legacy
-  | "AI" | "Career" | "Demo" | "DevSecOps" | "Web"; // capitalized (current standard)
+/**
+ * SINGLE SOURCE OF TRUTH - Define all categories here once
+ * Type and labels are auto-generated below
+ */
+const CATEGORIES = [
+  // Current standard (capitalized)
+  { id: "AI", label: "AI" },
+  { id: "Architecture", label: "Architecture" },
+  { id: "Career", label: "Career" },
+  { id: "Demo", label: "Demo" },
+  { id: "DevSecOps", label: "DevSecOps" },
+  { id: "Web", label: "Web Development" },
+  // Legacy lowercase (backwards compatibility)
+  { id: "development", label: "Development" },
+  { id: "security", label: "Security" },
+  { id: "ai", label: "AI" },
+  { id: "tutorial", label: "Tutorial" },
+] as const;
+
+// Auto-generate type from CATEGORIES - no duplication needed
+export type PostCategory = typeof CATEGORIES[number]["id"];
 
 /**
- * Human-readable labels for post categories.
+ * Auto-generated labels from CATEGORIES - always in sync
  * This is the single source of truth - import from here, don't duplicate!
  */
-export const POST_CATEGORY_LABEL: Record<PostCategory, string> = {
-  // Lowercase legacy categories
-  "development": "Development",
-  "security": "Security", 
-  "career": "Career",
-  "ai": "AI",
-  "tutorial": "Tutorial",
-  // Capitalized categories (current standard)
-  "AI": "AI",
-  "Career": "Career",
-  "Demo": "Demo",
-  "DevSecOps": "DevSecOps",
-  "Web": "Web Development",
-};
+export const POST_CATEGORY_LABEL = Object.fromEntries(
+  CATEGORIES.map(cat => [cat.id, cat.label])
+) as Record<PostCategory, string>;
+
+// Export for test generation (allows dynamic test updates)
+export { CATEGORIES };
