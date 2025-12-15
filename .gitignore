@@ -176,3 +176,5 @@ tmp/
 .pnpm-store/
 .yarn/cache/
 .yarn/install-state.gz
+# Playwright generated test reports
+playwright-report/

@@ -21,6 +21,25 @@ declare global {
 }
 
 /**
+ * Mask an IP address for safe logging/telemetry to avoid exposing raw PII.
+ * IPv4: 192.0.2.123 -> 192.0.2.xxx
+ * IPv6: 2001:db8::1 -> 2001:db8:...:1
+ */
+function maskIp(ip?: string): string {
+  if (!ip) return "[redacted]";
+  if (ip.includes(":")) {
+    const parts = ip.split(":").filter(Boolean);
+    if (parts.length <= 2) return "[redacted]";
+    const first = parts.slice(0, 2).join(":");
+    const last = parts[parts.length - 1];
+    return `${first}:...:${last}`;
+  }
+  const parts = ip.split(".");
+  if (parts.length === 4) return `${parts[0]}.${parts[1]}.${parts[2]}.xxx`;
+  return "[redacted]";
+}
+
+/**
  * Get or create Redis client for blocked IPs management
  */
 async function getBlockedIpsClient(): Promise<RedisClient | null> {
@@ -136,10 +155,11 @@ export class BlockedIPsManager {
 
       return { is_blocked: false };
     } catch (error) {
-      console.error(`Error checking if IP ${ip} is blocked:`, error);
+      const maskedIp = maskIp(ip);
+      console.error("Error checking client address (details redacted).", error);
       Sentry.captureException(error, {
         tags: { component: "blocked-ips", operation: "check" },
-        extra: { ip },
+        extra: { ip_masked: maskedIp },
       });
       return { is_blocked: false }; // Fail open for availability
     }
@@ -160,7 +180,7 @@ export class BlockedIPsManager {
     } = {}
   ): Promise<void> {
     if (!this.client) {
-      console.warn(`Cannot block IP ${ip}: Redis not available`);
+      console.warn("Cannot block client address: Redis not available");
       return;
     }
 
@@ -199,15 +219,16 @@ export class BlockedIPsManager {
         await this.client.expire(`${BLOCKED_IPS_KEY}:${ip}`, ttlSeconds);
       }
 
-      console.log(`Blocked IP: ${ip} (reason: ${reason}, source: ${source})`);
-      
-      // Log to Sentry for monitoring
+      const maskedIp = maskIp(ip);
+      console.log(`Blocked client (reason: ${reason}, source: ${source})`);
+
+      // Log to Sentry for monitoring (mask IPs in telemetry)
       Sentry.addBreadcrumb({
         category: "security",
-        message: `IP blocked: ${ip}`,
+        message: `Client blocked`,
         level: "info",
         data: {
-          ip,
+          ip_masked: maskedIp,
           reason,
           source,
           temporary: !!blockedUntil,
@@ -216,10 +237,11 @@ export class BlockedIPsManager {
       });
 
     } catch (error) {
-      console.error(`Error blocking IP ${ip}:`, error);
+      const maskedIp = maskIp(ip);
+      console.error("Error blocking client address (details redacted).", error);
       Sentry.captureException(error, {
         tags: { component: "blocked-ips", operation: "block" },
-        extra: { ip, reason, source, options },
+        extra: { ip_masked: maskedIp, reason, source, options },
       });
     }
   }
@@ -229,7 +251,7 @@ export class BlockedIPsManager {
    */
   async unblockIP(ip: string, reason: string): Promise<void> {
     if (!this.client) {
-      console.warn(`Cannot unblock IP ${ip}: Redis not available`);
+      console.warn("Cannot unblock client address: Redis not available");
       return;
     }
 
@@ -246,20 +268,22 @@ export class BlockedIPsManager {
           timestamp: new Date().toISOString(),
         }));
 
-        console.log(`Unblocked IP: ${ip} (reason: ${reason})`);
-        
+        const maskedIp = maskIp(ip);
+        console.log(`Unblocked client (reason: ${reason})`);
+
         Sentry.addBreadcrumb({
           category: "security",
-          message: `IP unblocked: ${ip}`,
+          message: `Client unblocked`,
           level: "info",
-          data: { ip, reason },
+          data: { ip_masked: maskedIp, reason },
         });
       }
     } catch (error) {
-      console.error(`Error unblocking IP ${ip}:`, error);
+      const maskedIp = maskIp(ip);
+      console.error("Error unblocking client address (details redacted).", error);
       Sentry.captureException(error, {
         tags: { component: "blocked-ips", operation: "unblock" },
-        extra: { ip, reason },
+        extra: { ip_masked: maskedIp, reason },
       });
     }
   }
@@ -287,9 +311,10 @@ export class BlockedIPsManager {
       // Set TTL for suspicious marking (24 hours)
       await this.client.expire(`${SUSPICIOUS_IPS_KEY}:${ip}`, 86400);
 
-      console.log(`Marked IP as suspicious: ${ip} (source: ${source})`);
+      console.log(`Marked client as suspicious (source: ${source})`);
     } catch (error) {
-      console.error(`Error marking IP ${ip} as suspicious:`, error);
+      const maskedIp = maskIp(ip);
+      console.error("Error marking client as suspicious (details redacted).", error);
     }
   }
 
@@ -303,7 +328,8 @@ export class BlockedIPsManager {
       const entry = await this.client.hExists(SUSPICIOUS_IPS_KEY, ip);
       return entry === 1;
     } catch (error) {
-      console.error(`Error checking if IP ${ip} is suspicious:`, error);
+      const maskedIp = maskIp(ip);
+      console.error("Error checking if client address (details redacted).", error);
       return false;
     }
   }

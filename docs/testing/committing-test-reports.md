@@ -27,6 +27,24 @@ Automating checks
 - The repo includes `scripts/validation/check-reports-for-pii.mjs` which scans for common PII patterns in text files under `reports/`.
 - Consider adding a CI job to run `npm run scan:reports` on PRs that add or modify artifacts in `reports/`.
 
+Sanitization & allowlist guidance
+- Before committing any test report (HTML/JSON/TXT), run `npm run scan:reports` and verify the output.
+- If the scanner flags potential PII, either sanitize the report (redact IPs, order identifiers, personal data) or do not commit the file.
+- If your team intentionally wants to commit a sanitized report, add an allowlist entry to `scripts/.pii-allowlist.json` with a brief justification. Example:
+
+```json
+{
+	"paths": [
+		"playwright-report/index.html"
+	],
+	"allowlistReasons": {
+		"playwright-report/index.html": "Sanitized HTML report (redacted IPs and order numbers) committed for reviewer convenience. Scanner output verified."
+	}
+}
+```
+
+- Prefer the workflow: sanitize → run `npm run scan:reports` → add allowlist entry (if still flagged) → update PR with justification and link to sanitized artifact.
+
 Notes:
 - The existing `npm run scan:pi` will perform a repository-wide PII scan and is a good pre-commit step for all changes.
 - Use `reports/performance/baselines/` for per-deployment budget files (see `docs/development/performance-budgets.md`).
