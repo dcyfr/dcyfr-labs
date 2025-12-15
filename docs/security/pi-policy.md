@@ -129,6 +129,7 @@ For reference, IP address handling code exists in:
 	- `gitleaks` runs and generates a JSON report; the pipeline parses the report and will fail the job if critical secrets (e.g., private keys, provisioning keys, AWS access keys) are detected.
 	- Allowlist changes are validated in CI using `scripts/validate-allowlist.mjs`; PRs that add new allowlist entries must include `allowlistReasons` or the job fails.
 	- The `pii-scan` job posts scan output in PR comments to help authors triage issues.
+	- A focused workflow `reports-pii-scan.yml` runs on PRs that add or modify report artifacts (e.g., `playwright-report/`, `coverage/`, `test-results/`) and will fail the PR when the report-specific scanner (`npm run scan:reports`) finds likely PII.
 
 ## Automated Remediation
 
