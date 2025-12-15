@@ -69,7 +69,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
           <div className="absolute inset-0 z-0">
             <Image
               src={post.image.url}
-              alt={post.image.alt}
+              alt={post.image.alt || post.title}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 100vw"

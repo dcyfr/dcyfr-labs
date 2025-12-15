@@ -18,6 +18,10 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "types": [
+      "vitest/globals",
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -27,7 +31,10 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    // Development performance optimizations
+    "tsBuildInfoFile": ".next/cache/tsc/tsconfig.tsbuildinfo",
+    "assumeChangesOnlyAffectDirectDependencies": true
   },
   "include": [
     "**/*.ts",

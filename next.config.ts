@@ -13,7 +13,24 @@ const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react', '@radix-ui/react-dropdown-menu', '@radix-ui/react-dialog', '@radix-ui/react-select'],
+    // Performance optimization: Use multiple CPU cores for faster builds
+    // Reserves 1 core for system, uses remaining cores for parallel processing
+    cpus: Math.max(1, require('os').cpus().length - 1),
+    // Development optimizations
+    optimizeCss: process.env.NODE_ENV === 'development',
   },
+  // Development server optimizations
+  ...(process.env.NODE_ENV === 'development' && {
+    onDemandEntries: {
+      // Extend keep alive for faster reloads
+      maxInactiveAge: 60 * 1000,
+      pagesBufferLength: 5,
+    },
+    // Enable development features
+    reactStrictMode: true,
+  }),
+  // Performance optimizations for Next.js 16
+  poweredByHeader: false,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],

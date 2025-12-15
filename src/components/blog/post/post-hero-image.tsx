@@ -45,7 +45,10 @@ interface PostHeroImageProps {
 }
 
 export function PostHeroImage({ image, title, priority = true }: PostHeroImageProps) {
-  const alt = image.alt || `Hero image for ${title}`;
+  // Prefer caption as the accessible alt text when available, otherwise use
+  // the provided alt text. If neither is available, fall back to a generated
+  // descriptive alt using the post title.
+  const alt = image.caption ?? image.alt ?? `Hero image for ${title}`;
   const hasCaption = image.caption || image.credit;
   
   return (
@@ -70,11 +73,11 @@ export function PostHeroImage({ image, title, priority = true }: PostHeroImagePr
       {hasCaption && (
         <figcaption className="px-4 sm:px-8 md:px-8 pt-3 text-sm text-muted-foreground">
           {image.caption && (
-            <p className="mb-1">{image.caption}</p>
+            <p className="mb-1">&quot;{image.caption}&quot;</p>
           )}
           {image.credit && (
-            <p className="text-xs">
-              Photo by {image.credit}
+            <p className="text-xs *:italic">
+              {image.credit}
             </p>
           )}
         </figcaption>

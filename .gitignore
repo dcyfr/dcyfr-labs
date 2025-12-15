@@ -12,6 +12,7 @@
 /coverage
 /test-results/
 /scripts/reports/
+/scripts/__tests__/
 /playwright-report/
 /playwright/.cache/
 /lighthouse/
@@ -23,6 +24,20 @@ reports/e2e-artifacts/**
 e2e/**-spec.ts-snapshots/**
 **/*-spec.ts-snapshots/**
 **/*.spec.ts-snapshots/**
+
+# -----------------------------------------------------------------------------
+# Allowlist: Enable committing *sanitized* test reports when appropriate
+# - To re-allow committing already-generated HTML/text reports for historical
+#   preservation or release notes, explicitly un-ignore the directories below.
+# - DO NOT commit raw screenshots or videos (they may contain sensitive content).
+# - Scan any report artifacts with `npm run scan:pi` before committing.
+# -----------------------------------------------------------------------------
+!/coverage/
+!/coverage/**
+!/test-results/
+!/test-results/**
+!/playwright-report/
+!/playwright-report/**
 
 # next.js
 /.next/
@@ -161,3 +176,5 @@ tmp/
 .pnpm-store/
 .yarn/cache/
 .yarn/install-state.gz
+# Playwright generated test reports
+playwright-report/

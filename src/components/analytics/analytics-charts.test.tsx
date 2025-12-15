@@ -49,11 +49,12 @@ describe('AnalyticsCharts', () => {
     });
 
     // Find the fetch call that requested the daily endpoint and assert the header was present
-    const dailyCall = fetchMock.mock.calls.find((call: any[]) => String(call[0]).includes('/api/analytics/daily'));
+    const dailyCall = (fetchMock.mock.calls as any[]).find((call: any) => String(call[0]).includes('/api/analytics/daily'));
     expect(dailyCall).toBeDefined();
-    const dailyInit = dailyCall![1];
+    if (!dailyCall) return;
+    const dailyInit = dailyCall[1] as any;
     expect(dailyInit).toBeDefined();
-    expect((dailyInit.headers as any).Authorization).toBe('Bearer test-public-key');
+    expect((dailyInit?.headers as any).Authorization).toBe('Bearer test-public-key');
   });
 
   it('displays unauthorized message when API returns 401', async () => {
