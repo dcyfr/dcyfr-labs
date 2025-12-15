@@ -38,7 +38,7 @@ export function transformPosts(posts: Post[]): ActivityItem[] {
         tags: post.tags.slice(0, 3),
         category: post.category,
         image: post.image
-          ? { url: post.image.url, alt: post.image.alt }
+          ? { url: post.image.url, alt: post.image.alt || post.title }
           : undefined,
         readingTime: post.readingTime?.text,
       },
@@ -78,7 +78,7 @@ export function transformProjects(projects: Project[]): ActivityItem[] {
         ? PROJECT_CATEGORY_LABELS[project.category]
         : undefined,
       image: project.image
-        ? { url: project.image.url, alt: project.image.alt }
+        ? { url: project.image.url, alt: project.image.alt || project.title }
         : undefined,
       status: project.status,
     },

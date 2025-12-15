@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from 'vitest';
 import { GET } from '@/app/api/health/route';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Mock dependencies
 vi.mock('@sentry/nextjs', () => ({
@@ -101,7 +101,7 @@ describe('Health Check API (/api/health)', () => {
     
     // Mock blocked access
     vi.mocked(blockExternalAccess).mockReturnValueOnce(
-      new Response('Forbidden', { status: 403 })
+      new NextResponse('Forbidden', { status: 403 })
     );
     
     const request = new NextRequest('http://example.com/api/health');

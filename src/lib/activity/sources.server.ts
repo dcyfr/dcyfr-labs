@@ -83,7 +83,7 @@ export async function transformPostsWithViews(posts: Post[]): Promise<ActivityIt
         tags: post.tags.slice(0, 3),
         category: post.category,
         image: post.image
-          ? { url: post.image.url, alt: post.image.alt }
+          ? { url: post.image.url, alt: post.image.alt || post.image.caption || post.title }
           : undefined,
         readingTime: post.readingTime?.text,
         stats: views ? { views } : undefined,
@@ -312,7 +312,7 @@ export async function transformTrendingPosts(
         tags: post.tags.slice(0, 3),
         category: post.category,
         image: post.image
-          ? { url: post.image.url, alt: post.image.alt }
+          ? { url: post.image.url, alt: post.image.alt || post.image.caption || post.title }
           : undefined,
         readingTime: post.readingTime?.text,
         stats: {
@@ -382,7 +382,7 @@ export async function transformMilestones(
           tags: post.tags.slice(0, 3),
           category: post.category,
           image: post.image
-            ? { url: post.image.url, alt: post.image.alt }
+            ? { url: post.image.url, alt: post.image.alt || post.image.caption || post.title }
             : undefined,
           stats: {
             views: parseInt(milestoneCount, 10),
@@ -473,7 +473,7 @@ export async function transformHighEngagementPosts(
         tags: data.post.tags.slice(0, 3),
         category: data.post.category,
         image: data.post.image
-          ? { url: data.post.image.url, alt: data.post.image.alt }
+          ? { url: data.post.image.url, alt: data.post.image.alt || data.post.image.caption || data.post.title }
           : undefined,
         readingTime: data.post.readingTime?.text,
         stats: {
@@ -542,7 +542,7 @@ export async function transformCommentMilestones(
         tags: data.post.tags.slice(0, 3),
         category: data.post.category,
         image: data.post.image
-          ? { url: data.post.image.url, alt: data.post.image.alt }
+          ? { url: data.post.image.url, alt: data.post.image.alt || data.post.image.caption || data.post.title }
           : undefined,
         stats: {
           comments: data.commentCount,

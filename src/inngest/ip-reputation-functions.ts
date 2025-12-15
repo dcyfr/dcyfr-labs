@@ -187,7 +187,7 @@ export const checkIpReputation = inngest.createFunction(
         blocked_ips: blockingUpdate.blocked_ips,
         rate_limited_ips: blockingUpdate.rate_limited_ips,
         alerts_generated: alerts,
-        execution_time_ms: Date.now() - Date.parse(event.ts),
+        execution_time_ms: Date.now() - (event.ts || Date.now()),
       },
     });
 
@@ -272,7 +272,7 @@ export const handleMaliciousIpDetected = inngest.createFunction(
     }
 
     // Step 3: Additional security measures for critical threats
-    if (reputation.tags?.some(tag => ["botnet", "malware", "ransomware"].includes(tag.toLowerCase()))) {
+    if (reputation.tags?.some((tag: string) => ["botnet", "malware", "ransomware"].includes(tag.toLowerCase()))) {
       await step.run("escalate-critical-threat", async () => {
         logger.warn(`Critical threat detected: ${ip} - ${reputation.tags?.join(", ")}`);
         

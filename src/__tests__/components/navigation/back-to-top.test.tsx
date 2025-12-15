@@ -27,7 +27,7 @@ describe('BackToTop', () => {
     
     // Mock scrollTo
     scrollToSpy = vi.fn();
-    window.scrollTo = scrollToSpy;
+    (window.scrollTo as any) = scrollToSpy;
     
     // Reset scroll position
     Object.defineProperty(window, 'scrollY', {
