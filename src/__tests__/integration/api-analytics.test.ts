@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { NextRequest } from 'next/server'
 import { createClient } from 'redis'
 import { GET } from '@/app/api/analytics/route'
 import { rateLimit } from '@/lib/rate-limit'
@@ -94,7 +95,7 @@ describe('Analytics API Integration', () => {
       it('blocks production environment entirely', async () => {
         vi.stubEnv('VERCEL_ENV', 'production')
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -110,7 +111,7 @@ describe('Analytics API Integration', () => {
         vi.stubEnv('NODE_ENV', 'development')
         vi.stubEnv('VERCEL_ENV', '')
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -123,7 +124,7 @@ describe('Analytics API Integration', () => {
         vi.stubEnv('NODE_ENV', 'production')
         vi.stubEnv('VERCEL_ENV', 'preview')
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -136,7 +137,7 @@ describe('Analytics API Integration', () => {
         vi.stubEnv('NODE_ENV', 'test')
         vi.stubEnv('VERCEL_ENV', '')
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -148,7 +149,7 @@ describe('Analytics API Integration', () => {
 
     describe('Layer 2: API Key Authentication', () => {
       it('rejects request without Authorization header', async () => {
-        const request = new Request('http://localhost:3000/api/analytics')
+        const request = new NextRequest('http://localhost:3000/api/analytics')
 
         const response = await GET(request)
         const data = await response.json()
@@ -159,7 +160,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('rejects request with invalid API key', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer wrong-key' },
         })
 
@@ -171,7 +172,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('accepts Bearer token format', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -181,7 +182,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('accepts plain token format', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'test-api-key-123' },
         })
 
@@ -193,7 +194,7 @@ describe('Analytics API Integration', () => {
       it('rejects when ADMIN_API_KEY not configured', async () => {
         vi.stubEnv('ADMIN_API_KEY', '')
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -216,7 +217,7 @@ describe('Analytics API Integration', () => {
           reset: resetTime,
         })
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -239,7 +240,7 @@ describe('Analytics API Integration', () => {
           reset: resetTime,
         })
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -250,7 +251,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('applies rate limiting to requests', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -278,7 +279,7 @@ describe('Analytics API Integration', () => {
         vi.mocked(getMultiplePostViews24h).mockResolvedValue(views24hMap)
         vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(viewMap)
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -342,7 +343,7 @@ describe('Analytics API Integration', () => {
           // @ts-ignore
           globalThis.__blogAnalyticsRedisClient = global.__blogAnalyticsRedisClient;
 
-          const request = new Request('http://localhost:3000/api/analytics', {
+          const request = new NextRequest('http://localhost:3000/api/analytics', {
             headers: { Authorization: 'Bearer test-api-key-123' },
           })
 
@@ -357,7 +358,7 @@ describe('Analytics API Integration', () => {
         })
 
       it('supports date range parameter', async () => {
-        const request = new Request('http://localhost:3000/api/analytics?days=7', {
+        const request = new NextRequest('http://localhost:3000/api/analytics?days=7', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -370,7 +371,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('supports "all" date range parameter', async () => {
-        const request = new Request('http://localhost:3000/api/analytics?days=all', {
+        const request = new NextRequest('http://localhost:3000/api/analytics?days=all', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -383,7 +384,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('defaults to 1 day when no parameter provided', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -405,7 +406,7 @@ describe('Analytics API Integration', () => {
         vi.mocked(getMultiplePostViews24h).mockResolvedValue(new Map())
         vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(viewMap)
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -428,7 +429,7 @@ describe('Analytics API Integration', () => {
         vi.mocked(getMultiplePostViews24h).mockResolvedValue(new Map())
         vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(viewMap)
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -445,7 +446,7 @@ describe('Analytics API Integration', () => {
         vi.mocked(getPostSharesBulk).mockResolvedValue({ 'post-1': 10 })
         vi.mocked(getPostCommentsBulk).mockResolvedValue({ 'post-slug': 5 })
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -461,7 +462,7 @@ describe('Analytics API Integration', () => {
 
     describe('Response Format', () => {
       it('includes timestamp in response', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -473,7 +474,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('includes dateRange in response', async () => {
-        const request = new Request('http://localhost:3000/api/analytics?days=7', {
+        const request = new NextRequest('http://localhost:3000/api/analytics?days=7', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -484,7 +485,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('marks dateRange as "all" when days=all', async () => {
-        const request = new Request('http://localhost:3000/api/analytics?days=all', {
+        const request = new NextRequest('http://localhost:3000/api/analytics?days=all', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -495,7 +496,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('includes post metadata in response', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -517,7 +518,7 @@ describe('Analytics API Integration', () => {
       it('handles view fetch errors gracefully', async () => {
         vi.mocked(getMultiplePostViews).mockRejectedValue(new Error('Redis error'))
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -529,7 +530,7 @@ describe('Analytics API Integration', () => {
       it('handles share fetch errors gracefully', async () => {
         vi.mocked(getPostSharesBulk).mockRejectedValue(new Error('Redis error'))
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -541,7 +542,7 @@ describe('Analytics API Integration', () => {
 
     describe('Security Flow Integration', () => {
       it('executes all security layers in correct order', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -558,7 +559,7 @@ describe('Analytics API Integration', () => {
       it('stops at environment check in production', async () => {
         vi.stubEnv('VERCEL_ENV', 'production')
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 
@@ -570,7 +571,7 @@ describe('Analytics API Integration', () => {
       })
 
       it('stops at API key check with invalid key', async () => {
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer wrong-key' },
         })
 
@@ -589,7 +590,7 @@ describe('Analytics API Integration', () => {
           reset: Date.now() + 60000,
         })
 
-        const request = new Request('http://localhost:3000/api/analytics', {
+        const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
         })
 

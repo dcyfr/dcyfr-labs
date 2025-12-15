@@ -229,7 +229,7 @@ export function PostList({
                     <div className="absolute inset-0 z-0">
                       <Image
                         src={p.image.url}
-                        alt={p.image.alt}
+                        alt={p.image.alt || p.title}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 100vw"
@@ -359,7 +359,7 @@ export function PostList({
                   <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
-                      alt={p.image.alt}
+                      alt={p.image.alt || p.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 100vw"
@@ -485,7 +485,7 @@ export function PostList({
                       <div className="absolute inset-0 z-0">
                         <Image
                           src={p.image.url}
-                          alt={p.image.alt}
+                          alt={p.image.alt || p.title}
                           fill
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 100vw"
@@ -570,7 +570,7 @@ export function PostList({
                     <div className="absolute inset-0 z-0">
                       <Image
                         src={p.image.url}
-                        alt={p.image.alt}
+                        alt={p.image.alt || p.title}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 100vw"
@@ -630,7 +630,7 @@ export function PostList({
               <div className="absolute inset-0 z-0">
                 <Image
                   src={posts[0].image.url}
-                  alt={posts[0].image.alt}
+                  alt={posts[0].image.alt || posts[0].title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 100vw"
@@ -721,7 +721,7 @@ export function PostList({
                   <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
-                      alt={p.image.alt}
+                      alt={p.image.alt || p.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
@@ -820,7 +820,7 @@ export function PostList({
                   <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
-                      alt={p.image.alt}
+                      alt={p.image.alt || p.title}
                       fill
                       className="object-cover"
                       sizes={
@@ -950,7 +950,7 @@ export function PostList({
                   <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
-                      alt={p.image.alt}
+                      alt={p.image.alt || p.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 100vw"
@@ -1053,7 +1053,7 @@ export function PostList({
                   <div className="absolute inset-0 z-0">
                     <Image
                       src={p.image.url}
-                      alt={p.image.alt}
+                      alt={p.image.alt || p.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
@@ -1129,7 +1129,7 @@ export function PostList({
                 <div className="absolute inset-0 z-0">
                   <Image
                     src={p.image.url}
-                    alt={p.image.alt}
+                    alt={p.image.alt || p.title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { POST } from "@/app/api/contact/route";
 import { checkBotId } from "botid/server";
 import { rateLimit } from "@/lib/rate-limit";
+import { NextRequest } from "next/server";
 
 // Mock dependencies
 vi.mock("botid/server");
@@ -17,7 +18,7 @@ vi.mock("@/lib/analytics", () => ({
 
 describe("POST /api/contact - BotID Integration", () => {
   const mockRequest = (body: object) => {
-    return new Request("http://localhost:3000/api/contact", {
+    return new NextRequest("http://localhost:3000/api/contact", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -154,8 +155,8 @@ describe("POST /api/contact - BotID Integration", () => {
 
   describe("BotID Protection (Enabled via ENV)", () => {
     beforeEach(() => {
-      process.env.ENABLE_BOTID = '1';
-      process.env.NODE_ENV = 'production'; // BotID only runs in production
+      vi.stubEnv('ENABLE_BOTID', '1');
+      vi.stubEnv('NODE_ENV', 'production'); // BotID only runs in production
       vi.clearAllMocks();
       vi.mocked(rateLimit).mockResolvedValue({
         success: true,
@@ -166,8 +167,7 @@ describe("POST /api/contact - BotID Integration", () => {
     });
 
     afterEach(() => {
-      delete process.env.ENABLE_BOTID;
-      process.env.NODE_ENV = 'test';
+      vi.unstubAllEnvs();
     });
 
     it.skip("should call BotID check and block if BotID identifies a bot (TEMPORARILY DISABLED)", async () => {

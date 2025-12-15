@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { NextRequest } from 'next/server'
 import { POST } from '@/app/api/contact/route'
 import { rateLimit } from '@/lib/rate-limit'
 import { inngest } from '@/inngest/client'
@@ -46,7 +47,7 @@ describe('Contact API Integration', () => {
           reset: Date.now() + 30000,
         })
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -72,7 +73,7 @@ describe('Contact API Integration', () => {
           reset: Date.now() + 30000,
         })
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -90,7 +91,7 @@ describe('Contact API Integration', () => {
 
     describe('Honeypot Protection', () => {
       it('silently accepts bot submissions with honeypot filled', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'Bot',
@@ -111,7 +112,7 @@ describe('Contact API Integration', () => {
       it('processes legitimate submission when honeypot empty', async () => {
         vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -132,7 +133,7 @@ describe('Contact API Integration', () => {
 
     describe('Input Validation', () => {
       it('rejects request with missing name', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             email: 'john@example.com',
@@ -148,7 +149,7 @@ describe('Contact API Integration', () => {
       })
 
       it('rejects request with missing email', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -164,7 +165,7 @@ describe('Contact API Integration', () => {
       })
 
       it('rejects request with missing message', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -180,7 +181,7 @@ describe('Contact API Integration', () => {
       })
 
       it('rejects invalid email format', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -207,7 +208,7 @@ describe('Contact API Integration', () => {
         ]
 
         for (const email of validEmails) {
-          const request = new Request('http://localhost:3000/api/contact', {
+          const request = new NextRequest('http://localhost:3000/api/contact', {
             method: 'POST',
             body: JSON.stringify({
               name: 'John Doe',
@@ -222,7 +223,7 @@ describe('Contact API Integration', () => {
       })
 
       it('rejects name shorter than 2 characters', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'J',
@@ -239,7 +240,7 @@ describe('Contact API Integration', () => {
       })
 
       it('rejects message shorter than 10 characters', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -258,7 +259,7 @@ describe('Contact API Integration', () => {
       it('sanitizes input by trimming whitespace', async () => {
         vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: '  John Doe  ',
@@ -283,7 +284,7 @@ describe('Contact API Integration', () => {
 
         const longMessage = 'x'.repeat(1500)
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -306,7 +307,7 @@ describe('Contact API Integration', () => {
       it('sends event to Inngest with correct data', async () => {
         vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -332,7 +333,7 @@ describe('Contact API Integration', () => {
       it('returns success response', async () => {
         vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',
@@ -352,7 +353,7 @@ describe('Contact API Integration', () => {
 
     describe('Error Handling', () => {
       it('handles invalid JSON gracefully', async () => {
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: 'invalid json',
         })
@@ -368,7 +369,7 @@ describe('Contact API Integration', () => {
       it('handles Inngest send failure', async () => {
         vi.mocked(inngest.send).mockRejectedValue(new Error('Inngest error'))
 
-        const request = new Request('http://localhost:3000/api/contact', {
+        const request = new NextRequest('http://localhost:3000/api/contact', {
           method: 'POST',
           body: JSON.stringify({
             name: 'John Doe',

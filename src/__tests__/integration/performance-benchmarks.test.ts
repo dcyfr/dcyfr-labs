@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { POST as contactPOST } from '@/app/api/contact/route'
-// @ts-ignore - endpoint removed for security
-// import { GET as githubGET } from '@/app/api/github-contributions/route'
+// GitHub endpoint removed for security - create a mock for testing
+const githubGET = vi.fn(async (request: NextRequest) => new Response(JSON.stringify({ contributions: [] }), { status: 200 }))
 import { GET as analyticsGET } from '@/app/api/analytics/route'
 import { rateLimit } from '@/lib/rate-limit'
 import { inngest } from '@/inngest/client'
@@ -105,7 +105,7 @@ describe.skip('Performance Benchmark Tests', () => {
 
   describe('API Response Time Benchmarks', () => {
     it('contact API responds within performance threshold', async () => {
-      const request = new Request('http://localhost:3000/api/contact', {
+      const request = new NextRequest('http://localhost:3000/api/contact', {
         method: 'POST',
         body: JSON.stringify({
           name: 'John Doe',
@@ -138,7 +138,7 @@ describe.skip('Performance Benchmark Tests', () => {
     it('analytics API responds within performance threshold', async () => {
       vi.stubEnv('ADMIN_API_KEY', 'test-key')
 
-      const request = new Request('http://localhost:3000/api/analytics', {
+      const request = new NextRequest('http://localhost:3000/api/analytics', {
         headers: { Authorization: 'Bearer test-key' },
       })
 
@@ -250,7 +250,7 @@ describe.skip('Performance Benchmark Tests', () => {
       const concurrentRequests = 5
       const promises = Array.from({ length: concurrentRequests }, (_, i) =>
         contactPOST(
-          new Request('http://localhost:3000/api/contact', {
+          new NextRequest('http://localhost:3000/api/contact', {
             method: 'POST',
             body: JSON.stringify({
               name: `User ${i}`,
@@ -307,10 +307,10 @@ describe.skip('Performance Benchmark Tests', () => {
       )
 
       const responses = await Promise.all(promises)
-      const dataArray = await Promise.all(responses.map((r) => r.json()))
+      const dataArray = await Promise.all(responses.map((r: Response) => r.json()))
 
       // All responses should have valid data
-      dataArray.forEach((data) => {
+      dataArray.forEach((data: any) => {
         expect(data.contributions).toBeDefined()
         expect(Array.isArray(data.contributions)).toBe(true)
         expect(data.totalContributions).toBeGreaterThanOrEqual(0)
@@ -318,7 +318,7 @@ describe.skip('Performance Benchmark Tests', () => {
 
       // Data should be consistent across all responses
       const firstTotal = dataArray[0].totalContributions
-      expect(dataArray.every((d) => d.totalContributions === firstTotal)).toBe(true)
+      expect(dataArray.every((d: any) => d.totalContributions === firstTotal)).toBe(true)
     })
   })
 
@@ -370,7 +370,7 @@ describe.skip('Performance Benchmark Tests', () => {
       const concurrentRequests = 15
       const promises = Array.from({ length: concurrentRequests }, () =>
         contactPOST(
-          new Request('http://localhost:3000/api/contact', {
+          new NextRequest('http://localhost:3000/api/contact', {
             method: 'POST',
             body: JSON.stringify({
               name: 'Load Test User',
@@ -427,7 +427,7 @@ describe.skip('Performance Benchmark Tests', () => {
 
   describe('Validation Performance', () => {
     it('input validation is fast for valid data', async () => {
-      const request = new Request('http://localhost:3000/api/contact', {
+      const request = new NextRequest('http://localhost:3000/api/contact', {
         method: 'POST',
         body: JSON.stringify({
           name: 'John Doe',
@@ -445,7 +445,7 @@ describe.skip('Performance Benchmark Tests', () => {
     })
 
     it('input validation is fast for invalid data (early rejection)', async () => {
-      const request = new Request('http://localhost:3000/api/contact', {
+      const request = new NextRequest('http://localhost:3000/api/contact', {
         method: 'POST',
         body: JSON.stringify({
           name: 'J', // Too short
@@ -466,7 +466,7 @@ describe.skip('Performance Benchmark Tests', () => {
 
   describe('End-to-End Performance', () => {
     it('complete contact form flow meets performance target', async () => {
-      const request = new Request('http://localhost:3000/api/contact', {
+      const request = new NextRequest('http://localhost:3000/api/contact', {
         method: 'POST',
         body: JSON.stringify({
           name: 'Performance Test User',

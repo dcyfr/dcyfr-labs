@@ -122,8 +122,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // Layer 3: Rate limiting (stricter for external API calls)
     const clientIp = getClientIp(request);
-    const rateLimitResult = await rateLimit({
-      ip: clientIp,
+    const rateLimitResult = await rateLimit(clientIp, {
       limit: 10, // Only 10 requests per hour due to GreyNoise API costs
       windowInSeconds: 3600,
     });
@@ -133,7 +132,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       logApiAccess(request, false, { 
         reason: "rate-limited",
         remaining: rateLimitResult.remaining,
-        resetTime: rateLimitResult.resetTime,
+        resetTime: rateLimitResult.reset,
       });
       
       return NextResponse.json(
@@ -216,7 +215,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       error: error instanceof Error ? error.message : "unknown",
     });
     
-    return handleApiError(error);
+    const errorInfo = handleApiError(error);
+
+    // Return an appropriate HTTP response based on error handling info
+    return NextResponse.json(
+      { error: errorInfo.message, code: errorInfo.isConnectionError ? "CONNECTION_CLOSED" : "INTERNAL_ERROR" },
+      { status: (errorInfo as any).statusCode ?? 500 }
+    );
   }
 }
 
@@ -248,8 +253,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Stricter rate limiting for manual triggers
     const clientIp = getClientIp(request);
-    const rateLimitResult = await rateLimit({
-      ip: clientIp,
+    const rateLimitResult = await rateLimit(clientIp, {
       limit: 5, // Only 5 manual triggers per hour
       windowInSeconds: 3600,
     });
@@ -326,7 +330,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       error: error instanceof Error ? error.message : "unknown",
     });
     
-    return handleApiError(error);
+    const errorInfo = handleApiError(error);
+    return NextResponse.json(
+      { error: errorInfo.message, code: errorInfo.isConnectionError ? "CONNECTION_CLOSED" : "INTERNAL_ERROR" },
+      { status: (errorInfo as any).statusCode ?? 500 }
+    );
   }
 }
 
@@ -401,6 +409,10 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     );
 
   } catch (error) {
-    return handleApiError(error);
+    const errorInfo = handleApiError(error);
+    return NextResponse.json(
+      { error: errorInfo.message, code: errorInfo.isConnectionError ? "CONNECTION_CLOSED" : "INTERNAL_ERROR" },
+      { status: (errorInfo as any).statusCode ?? 500 }
+    );
   }
 }
