@@ -1,0 +1,22 @@
+[
+  {
+    "Description": "AWS Access Key",
+    "StartLine": 12,
+    "EndLine": 12,
+    "StartColumn": 18,
+    "EndColumn": 54,
+    "Match": "AKIAIOSFODNN7EXAMPLE",
+    "Secret": "AKIAIOSFODNN7EXAMPLE",
+    "File": "config/.env.production",
+    "SymbolName": "",
+    "Entropy": 3.8,
+    "Author": "Developer",
+    "Date": "2024-01-15T10:30:00Z",
+    "Message": "Add production config",
+    "Tags": [],
+    "RuleID": "aws-access-key",
+    "Verified": false,
+    "Fingerprint": "aws-access-key:config/.env.production:AKIAIOSFODNN7EXAMPLE",
+    "rule": "AWS Access Key ID"
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "rule": "AWS Access Key",
+    "file": "env.js",
+    "line": 8
+  }
+]

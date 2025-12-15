@@ -1,0 +1,14 @@
+[
+  {
+    "rule": "AWS Access Key",
+    "file": "config/[prod]-secrets.env",
+    "line": 5,
+    "description": "AWS key found"
+  },
+  {
+    "rule": "API Key",
+    "file": "src/utils/(legacy)/api.js",
+    "line": 20,
+    "description": "API key found"
+  }
+]

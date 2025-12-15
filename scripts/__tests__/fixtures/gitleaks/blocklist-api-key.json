@@ -1,0 +1,8 @@
+[
+  {
+    "rule": "Generic API Key",
+    "file": "src/config.ts",
+    "line": 42,
+    "description": "API credentials detected"
+  }
+]

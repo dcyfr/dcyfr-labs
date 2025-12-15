@@ -1,0 +1,7 @@
+
+```
+-----BEGIN PRIVATE KEY-----
+EXAMPLE_PRIVATE_KEY_HERE
+-----END PRIVATE KEY-----
+```
+      

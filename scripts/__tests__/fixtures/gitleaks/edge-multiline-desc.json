@@ -1,0 +1,8 @@
+[
+  {
+    "rule": "Private Key",
+    "file": "certs/server.key",
+    "line": 1,
+    "description": "Private key found\nContext: RSA Key\nSeverity: Critical"
+  }
+]

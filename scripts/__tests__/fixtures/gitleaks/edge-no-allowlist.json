@@ -1,0 +1,8 @@
+[
+  {
+    "rule": "Generic Email",
+    "file": "src/contact.ts",
+    "line": 10,
+    "description": "Email detected"
+  }
+]

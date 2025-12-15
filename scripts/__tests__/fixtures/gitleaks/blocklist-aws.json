@@ -1,0 +1,8 @@
+[
+  {
+    "rule": "AWS Access Key",
+    "file": "config.env",
+    "line": 5,
+    "description": "Found credentials"
+  }
+]

@@ -1,0 +1,6 @@
+[
+  {
+    "rule": "SSH Key",
+    "description": "SSH PRIVATE KEY block"
+  }
+]

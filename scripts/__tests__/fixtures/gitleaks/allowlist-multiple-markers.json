@@ -1,0 +1,14 @@
+[
+  {
+    "rule": "AWS Access Key",
+    "file": "docs/examples/aws.md",
+    "line": 10,
+    "description": "AWS Access Key"
+  },
+  {
+    "rule": "API Key",
+    "file": "docs/examples/api.md",
+    "line": 25,
+    "description": "API Key"
+  }
+]

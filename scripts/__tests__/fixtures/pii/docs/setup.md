@@ -1,0 +1,7 @@
+
+```
+-----BEGIN PRIVATE KEY-----
+ACTUAL_KEY_CONTENT_WITHOUT_MARKERS
+-----END PRIVATE KEY-----
+```
+      

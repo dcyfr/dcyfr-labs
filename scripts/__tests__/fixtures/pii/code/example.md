@@ -1,0 +1,5 @@
+
+```
+const email = "user@example.com";
+```
+      

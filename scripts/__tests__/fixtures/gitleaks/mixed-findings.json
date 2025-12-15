@@ -1,0 +1,20 @@
+[
+  {
+    "rule": "Generic Email",
+    "file": "src/components/ContactForm.tsx",
+    "line": 45,
+    "description": "Email address detected"
+  },
+  {
+    "rule": "AWS Secret Access Key",
+    "file": "config/production.env",
+    "line": 8,
+    "description": "AWS Secret Key detected"
+  },
+  {
+    "rule": "Generic URL",
+    "file": "README.md",
+    "line": 25,
+    "description": "URL detected"
+  }
+]

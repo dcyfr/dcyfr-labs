@@ -1,0 +1,8 @@
+[
+  {
+    "rule": "RSA Private Key",
+    "file": "certs/private.key",
+    "line": 1,
+    "description": "RSA Private Key detected"
+  }
+]

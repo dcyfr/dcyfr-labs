@@ -1,0 +1,8 @@
+[
+  {
+    "rule": "Generic Secret",
+    "file": "env.js",
+    "line": 10,
+    "description": "AKIA pattern detected in credentials"
+  }
+]

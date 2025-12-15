@@ -1,0 +1,9 @@
+[
+  {
+    "rule": "Credential Detector",
+    "file": "config.env",
+    "line": 5,
+    "description": "Found credentials",
+    "tags": []
+  }
+]

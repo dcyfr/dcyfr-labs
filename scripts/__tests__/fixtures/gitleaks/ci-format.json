@@ -1,0 +1,14 @@
+[
+  {
+    "rule": "AWS Access Key",
+    "file": "terraform/main.tf",
+    "line": 42,
+    "description": "AWS credentials found"
+  },
+  {
+    "rule": "API Key",
+    "file": "src/api-config.js",
+    "line": 15,
+    "description": "API token"
+  }
+]

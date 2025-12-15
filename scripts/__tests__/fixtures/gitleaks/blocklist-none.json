@@ -1,0 +1,8 @@
+[
+  {
+    "rule": "Entropy Check",
+    "file": "random.txt",
+    "line": 8,
+    "description": "High entropy string detected"
+  }
+]

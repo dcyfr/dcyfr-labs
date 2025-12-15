@@ -1,0 +1,7 @@
+[
+  {
+    "rule": "API Key",
+    "file": "config/api.conf",
+    "description": "API Key detected"
+  }
+]
