@@ -8,6 +8,8 @@ import type { PostImage } from "@/data/posts";
  */
 interface PostThumbnailProps {
   image: PostImage;
+  /** Fallback alt text when image.alt is not provided */
+  alt?: string;
   /** Size variant for different layouts */
   size?: "sm" | "md" | "lg";
   /** CSS class overrides */
@@ -75,6 +77,7 @@ interface PostThumbnailProps {
  */
 export function PostThumbnail({ 
   image, 
+  alt,
   size = "md", 
   className,
   priority = false 
@@ -97,7 +100,7 @@ export function PostThumbnail({
     >
       <Image
         src={image.url}
-        alt={image.alt}
+        alt={image.alt || alt || "Blog post image"}
         fill
         className={cn(
           "object-cover transition-transform hover:scale-105",
