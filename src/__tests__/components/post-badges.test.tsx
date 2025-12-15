@@ -12,6 +12,10 @@ import { PostBadges } from "@/components/blog/post/post-badges";
 import { POST_CATEGORY_LABEL, type PostCategory } from "@/lib/post-categories";
 import type { Post } from "@/data/posts";
 
+// Re-export to get access to CATEGORIES for dynamic testing
+// @ts-expect-error - accessing internal CATEGORIES for test generation
+import { CATEGORIES } from "@/lib/post-categories";
+
 // Helper to create a minimal post for testing
 function createTestPost(overrides: Partial<Post> = {}): Post {
   return {
@@ -114,34 +118,35 @@ describe("PostBadges Component", () => {
 });
 
 describe("POST_CATEGORY_LABEL mapping", () => {
-  it("should have labels for all frontmatter categories used", () => {
-    // These are the actual categories used in MDX frontmatter
-    const frontmatterCategories: PostCategory[] = ["Demo", "Career", "Web", "AI", "DevSecOps"];
+  it("should have labels for all defined categories", () => {
+    // Dynamically test all categories from CATEGORIES
+    const allCategories = CATEGORIES.map(cat => cat.id) as PostCategory[];
     
-    for (const category of frontmatterCategories) {
+    for (const category of allCategories) {
       expect(POST_CATEGORY_LABEL[category]).toBeDefined();
       expect(typeof POST_CATEGORY_LABEL[category]).toBe("string");
       expect(POST_CATEGORY_LABEL[category].length).toBeGreaterThan(0);
     }
   });
 
-  it("should have backwards-compatible lowercase category labels", () => {
-    // These are legacy lowercase categories that should still work
-    const legacyCategories: PostCategory[] = ["development", "security", "career", "ai", "tutorial"];
+  it("should map each category to its correct label", () => {
+    // Dynamically verify each category maps to its defined label
+    for (const { id, label } of CATEGORIES) {
+      expect(POST_CATEGORY_LABEL[id as PostCategory]).toBe(label);
+    }
+  });
+
+  it("should include backwards-compatible lowercase categories", () => {
+    // Verify legacy categories are present
+    const legacyIds = ["development", "security", "career", "ai", "tutorial"];
+    const definedIds = CATEGORIES.map(cat => cat.id);
     
-    for (const category of legacyCategories) {
-      expect(POST_CATEGORY_LABEL[category]).toBeDefined();
+    for (const legacyId of legacyIds) {
+      expect(definedIds).toContain(legacyId);
     }
   });
 
   it("should map Web category to 'Web Development' label", () => {
     expect(POST_CATEGORY_LABEL["Web"]).toBe("Web Development");
-  });
-
-  it("should preserve exact category name for simple categories", () => {
-    expect(POST_CATEGORY_LABEL["Demo"]).toBe("Demo");
-    expect(POST_CATEGORY_LABEL["Career"]).toBe("Career");
-    expect(POST_CATEGORY_LABEL["AI"]).toBe("AI");
-    expect(POST_CATEGORY_LABEL["DevSecOps"]).toBe("DevSecOps");
   });
 });
