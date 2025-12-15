@@ -148,7 +148,7 @@ describe('Error Scenario Integration Tests', () => {
     // Make getMultiplePostViews throw to simulate DB/Redis layer failure
     vi.mocked(getMultiplePostViews).mockRejectedValue(new Error('Views DB error'))
 
-    const request = new Request('http://localhost:3000/api/analytics', {
+    const request = new NextRequest('http://localhost:3000/api/analytics', {
       headers: { Authorization: 'Bearer test-key' },
     })
 

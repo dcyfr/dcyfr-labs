@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-// @ts-ignore - endpoint removed for security
-// import { GET } from '@/app/api/github-contributions/route'
+// GitHub endpoint removed for security - create a mock for testing
+const GET = vi.fn(async (request: NextRequest) => new Response(JSON.stringify({ contributions: [] }), { status: 200 }))
 import { rateLimit } from '@/lib/rate-limit'
 import { NextRequest } from 'next/server'
 
@@ -20,15 +20,6 @@ global.fetch = vi.fn()
 
 // Cache instance for testing
 const cache = new Map<string, { data: unknown; timestamp: number; duration: number }>()
-
-// Mock the cache module
-vi.mock('@/app/api/github-contributions/route', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/app/api/github-contributions/route')>()
-  return {
-    ...actual,
-    // Expose cache for testing (implementation uses module-level cache)
-  }
-})
 
 describe.skip('GitHub Contributions API Integration', () => {
   const VALID_USERNAME = 'dcyfr'

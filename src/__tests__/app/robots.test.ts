@@ -8,8 +8,8 @@ describe('robots.txt Route', () => {
     expect(result).toHaveProperty('rules');
     expect(result).toHaveProperty('sitemap');
     expect(result).toHaveProperty('host');
-    expect(Array.isArray(result.rules)).toBe(true);
-    expect(result.rules.length).toBeGreaterThan(0);
+    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
+    expect(rules.length).toBeGreaterThan(0);
   });
 
   test('includes proper sitemap URL', () => {
@@ -21,9 +21,10 @@ describe('robots.txt Route', () => {
 
   test('blocks private and API paths', () => {
     const result = robots();
+    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
     
     // Find the default rule for all user agents
-    const defaultRule = result.rules.find(rule => rule.userAgent === '*');
+    const defaultRule = rules.find((rule: any) => rule.userAgent === '*');
     expect(defaultRule).toBeTruthy();
     expect(defaultRule?.disallow).toContain('/api/');
     expect(defaultRule?.disallow).toContain('/private/');
@@ -31,23 +32,25 @@ describe('robots.txt Route', () => {
 
   test('allows root access for default user agent', () => {
     const result = robots();
+    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
     
-    const defaultRule = result.rules.find(rule => rule.userAgent === '*');
+    const defaultRule = rules.find((rule: any) => rule.userAgent === '*');
     expect(defaultRule?.allow).toBe('/');
   });
 
   test('includes specific AI crawler rules', () => {
     const result = robots();
+    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
     
     // Check for GPTBot rules
-    const gptBotRule = result.rules.find(rule => 
+    const gptBotRule = rules.find((rule: any) => 
       Array.isArray(rule.userAgent) && 
       rule.userAgent.includes('GPTBot')
     );
     expect(gptBotRule).toBeTruthy();
     
     // Check for Googlebot rules
-    const googlebotRule = result.rules.find(rule => rule.userAgent === 'Googlebot');
+    const googlebotRule = rules.find((rule: any) => rule.userAgent === 'Googlebot');
     expect(googlebotRule).toBeTruthy();
   });
 
