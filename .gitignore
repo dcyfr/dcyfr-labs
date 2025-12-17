@@ -172,3 +172,9 @@ tmp/
 .yarn/install-state.gz
 # Playwright generated test reports
 playwright-report/
+# Private documentation
+# Operational status reports, security findings, audit results, internal metrics
+# See: docs/DOCS_GOVERNANCE.md for documentation standards
+docs/archive/
+docs/private/
+.docs-private
