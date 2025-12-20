@@ -155,6 +155,7 @@ export function PageHero({
       <section
         className={cn(
           "w-full pt-24 md:pt-28 lg:pt-32 pb-8 md:pb-12 relative overflow-visible",
+          align === "center" && "flex flex-col items-center",
           className
         )}
       >
@@ -162,6 +163,7 @@ export function PageHero({
           className={cn(
             `mx-auto max-w-7xl px-4 sm:px-6 md:px-8 space-y-4`,
             alignmentClasses,
+            align === "center" && "flex flex-col items-center w-full",
             contentClassName
           )}
         >
@@ -183,7 +185,7 @@ export function PageHero({
               >
                 {description}
                 {itemCount !== undefined && (
-                  <span className="text-muted-foreground">
+                  <span className="text-muted-foreground block md:inline">
                     {" "}
                     ({itemCount} {itemCount === 1 ? "item" : "items"})
                   </span>
@@ -220,6 +222,7 @@ export function PageHero({
       className={cn(
         PAGE_LAYOUT.hero.container,
         "relative overflow-visible",
+        align === "center" && "flex flex-col items-center",
         className
       )}
     >
@@ -227,6 +230,7 @@ export function PageHero({
         className={cn(
           PAGE_LAYOUT.hero.content,
           alignmentClasses,
+          align === "center" && "flex flex-col items-center w-full",
           contentClassName
         )}
       >
@@ -248,7 +252,7 @@ export function PageHero({
             >
               {description}
               {itemCount !== undefined && (
-                <span className="text-muted-foreground">
+                <span className="text-muted-foreground block md:inline">
                   {" "}
                   ({itemCount} {itemCount === 1 ? "item" : "items"})
                 </span>
