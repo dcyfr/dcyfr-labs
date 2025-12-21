@@ -182,6 +182,7 @@ export function PageHero({
                   "max-w-3xl",
                   align === "center" && "mx-auto"
                 )}
+                style={align === "center" ? { textAlign: "center" } : undefined}
               >
                 {description}
                 {itemCount !== undefined && (
@@ -249,6 +250,7 @@ export function PageHero({
                 "max-w-3xl",
                 align === "center" && "mx-auto"
               )}
+              style={align === "center" ? { textAlign: "center" } : undefined}
             >
               {description}
               {itemCount !== undefined && (
