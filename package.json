@@ -50,6 +50,7 @@
     "learning:add": "node scripts/learning/add-learning.mjs",
     "learning:query": "node scripts/learning/query-knowledge.mjs",
     "learning:report": "node scripts/learning/generate-report.mjs",
+    "analytics:populate": "node scripts/populate-analytics-milestones.mjs",
     "scan:pi": "node scripts/ci/check-for-pii.mjs",
     "scan:pi:all": "node scripts/ci/check-for-pii.mjs --all",
     "scan:reports": "node scripts/validation/check-reports-for-pii.mjs",
