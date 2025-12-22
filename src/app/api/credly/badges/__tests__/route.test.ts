@@ -34,7 +34,21 @@ const mockCredlyResponse: CredlyBadgesResponse = {
       image_url: "https://example.com/badge.png",
       issued_at: "2024-01-01T00:00:00Z",
       expires_at: null,
-      issuer: { id: "issuer-1", name: "Test Issuer" },
+      issuer: {
+        summary: "Test Issuer Summary",
+        entities: [
+          {
+            label: "Test Issuer",
+            primary: true,
+            entity: {
+              type: "Organization",
+              id: "issuer-1",
+              name: "Test Issuer",
+              url: "https://example.com",
+            },
+          },
+        ],
+      },
       user: { id: "user-1", name: "Test User" },
     },
   ],

@@ -87,13 +87,6 @@ export function SiteHeader() {
               </div>
             )}
           </div>
-          <Link 
-            href="/sponsors" 
-            className="hover:underline underline-offset-4 will-change-auto touch-target px-1.5 sm:px-2"
-            prefetch={false}
-          >
-            Sponsors
-          </Link>
           <ThemeToggle />
           {process.env.NODE_ENV === "development" && <DevToolsDropdown />}
         </nav>
