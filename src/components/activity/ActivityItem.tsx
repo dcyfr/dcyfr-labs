@@ -18,6 +18,7 @@ import {
   Flame,
   Check,
   Pencil,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ANIMATION, SEMANTIC_COLORS, NEON_COLORS } from "@/lib/design-tokens";
@@ -43,6 +44,7 @@ const SOURCE_ICONS: Record<ActivitySource, typeof FileText> = {
   milestone: Trophy,
   trending: TrendingUp,
   engagement: Flame,
+  certification: Award,
 };
 
 // ============================================================================
@@ -88,6 +90,11 @@ function getVerbDisplay(verb: ActivityItemType["verb"]) {
       icon: Trophy,
       label: "Achieved",
       badge: NEON_COLORS.yellow.badge,
+    },
+    earned: {
+      icon: Award,
+      label: "Earned",
+      badge: NEON_COLORS.blue.badge,
     },
   };
 
