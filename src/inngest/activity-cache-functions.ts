@@ -29,6 +29,10 @@ import {
   transformCommentMilestones,
   transformGitHubActivity,
   transformCredlyBadges,
+  transformVercelAnalytics,
+  transformGitHubTraffic,
+  transformGoogleAnalytics,
+  transformSearchConsole,
 } from "@/lib/activity/sources.server";
 import { createClient } from "redis";
 
@@ -110,6 +114,10 @@ export const refreshActivityFeed = inngest.createFunction(
         transformCommentMilestones(posts), // All comment milestones
         transformGitHubActivity(), // All GitHub activity
         transformCredlyBadges("dcyfr"), // All Credly certifications
+        transformVercelAnalytics(), // Vercel Analytics traffic milestones
+        transformGitHubTraffic(), // GitHub repository traffic milestones
+        transformGoogleAnalytics(), // Google Analytics visitor achievements
+        transformSearchConsole(), // Search Console SEO achievements
       ]);
 
       // Collect successful results

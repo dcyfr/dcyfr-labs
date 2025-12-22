@@ -19,6 +19,9 @@ import {
   Check,
   Pencil,
   Award,
+  BarChart3,
+  Search,
+  Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ANIMATION, SEMANTIC_COLORS, NEON_COLORS } from "@/lib/design-tokens";
@@ -45,6 +48,9 @@ const SOURCE_ICONS: Record<ActivitySource, typeof FileText> = {
   trending: TrendingUp,
   engagement: Flame,
   certification: Award,
+  analytics: BarChart3,
+  "github-traffic": Activity,
+  seo: Search,
 };
 
 // ============================================================================
@@ -95,6 +101,11 @@ function getVerbDisplay(verb: ActivityItemType["verb"]) {
       icon: Award,
       label: "Earned",
       badge: NEON_COLORS.blue.badge,
+    },
+    reached: {
+      icon: TrendingUp,
+      label: "Reached",
+      badge: NEON_COLORS.lime.badge,
     },
   };
 
