@@ -28,6 +28,7 @@ import {
   transformHighEngagementPosts,
   transformCommentMilestones,
   transformGitHubActivity,
+  transformCredlyBadges,
 } from "@/lib/activity/sources.server";
 import { createClient } from "redis";
 
@@ -103,19 +104,12 @@ export const refreshActivityFeed = inngest.createFunction(
         transformPostsWithViews(posts),
         transformProjects([...projects]),
         transformChangelog(changelog),
-        transformTrendingPosts(posts, 1), // This week
-        transformTrendingPosts(posts, 1, {
-          after: monthStart,
-          description: "Trending this month",
-        }),
-        transformTrendingPosts(posts, 1, {
-          before: monthStart,
-          description: "All time trending",
-        }),
-        transformMilestones(posts, 20),
-        transformHighEngagementPosts(posts, 5),
-        transformCommentMilestones(posts),
-        transformGitHubActivity(),
+        transformTrendingPosts(posts), // All trending posts (no limit)
+        transformMilestones(posts), // All milestones
+        transformHighEngagementPosts(posts), // All high engagement posts
+        transformCommentMilestones(posts), // All comment milestones
+        transformGitHubActivity(), // All GitHub activity
+        transformCredlyBadges("dcyfr"), // All Credly certifications
       ]);
 
       // Collect successful results

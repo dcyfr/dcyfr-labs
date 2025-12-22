@@ -183,7 +183,7 @@ function validateTrendingData(
  */
 export async function transformTrendingPosts(
   posts: Post[],
-  limit = 10,
+  limit?: number,
   options?: { after?: Date; before?: Date; description?: string }
 ): Promise<ActivityItem[]> {
   const redis = await getRedisClient();
@@ -232,10 +232,11 @@ export async function transformTrendingPosts(
   if (!trending) {
     const validPosts = posts.filter((p) => !p.archived && !p.draft);
     const sorted = validPosts
-      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-      .slice(0, limit);
+      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    
+    const limited = limit ? sorted.slice(0, limit) : sorted;
 
-    trending = sorted.map((post) => ({
+    trending = limited.map((post) => ({
       postId: post.id,
       totalViews: 0,
       recentViews: 0,
@@ -266,7 +267,8 @@ export async function transformTrendingPosts(
 
   const trendingActivities: ActivityItem[] = [];
 
-  for (const item of validation.valid.slice(0, limit)) {
+  const itemsToProcess = limit ? validation.valid.slice(0, limit) : validation.valid;
+  for (const item of itemsToProcess) {
     const post = posts.find((p) => p.id === item.postId);
     if (!post || post.archived || post.draft) continue;
 
@@ -347,7 +349,7 @@ export async function transformTrendingPosts(
  */
 export async function transformMilestones(
   posts: Post[],
-  limit = 10
+  limit?: number
 ): Promise<ActivityItem[]> {
   const redis = await getRedisClient();
   if (!redis) return [];
@@ -405,9 +407,10 @@ export async function transformMilestones(
 
     await redis.quit();
 
-    return milestoneActivities
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .slice(0, limit);
+    const sorted = milestoneActivities
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    
+    return limit ? sorted.slice(0, limit) : sorted;
   } catch (error) {
     console.error("[Activity] Failed to fetch milestones:", error);
     return [];
@@ -438,7 +441,7 @@ function calculateEngagementRate(
 export async function transformHighEngagementPosts(
   posts: Post[],
   threshold = 5, // 5% engagement threshold
-  limit = 10
+  limit?: number
 ): Promise<ActivityItem[]> {
   const publishedPosts = posts.filter((p) => !p.archived && !p.draft);
   const postIds = publishedPosts.map((p) => p.id);
@@ -469,10 +472,11 @@ export async function transformHighEngagementPosts(
         };
       })
       .filter((data) => data.engagementRate >= threshold && data.views >= 100) // Min 100 views
-      .sort((a, b) => b.engagementRate - a.engagementRate)
-      .slice(0, limit);
+      .sort((a, b) => b.engagementRate - a.engagementRate);
+    
+    const limitedData = limit ? engagementData.slice(0, limit) : engagementData;
 
-    return engagementData.map((data) => ({
+    return limitedData.map((data) => ({
       id: `engagement-${data.post.id}-${Date.now()}`,
       source: "engagement" as const,
       verb: "updated" as const,
@@ -512,7 +516,7 @@ const COMMENT_MILESTONES = [10, 50, 100, 250, 500] as const;
  */
 export async function transformCommentMilestones(
   posts: Post[],
-  limit = 10
+  limit?: number
 ): Promise<ActivityItem[]> {
   const publishedPosts = posts.filter((p) => !p.archived && !p.draft);
   const postSlugs = publishedPosts.map((p) => p.slug);
@@ -538,10 +542,11 @@ export async function transformCommentMilestones(
         };
       })
       .filter((data): data is NonNullable<typeof data> => data !== null)
-      .sort((a, b) => b.milestone - a.milestone)
-      .slice(0, limit);
+      .sort((a, b) => b.milestone - a.milestone);
+    
+    const limitedMilestones = limit ? milestones.slice(0, limit) : milestones;
 
-    return milestones.map((data) => ({
+    return limitedMilestones.map((data) => ({
       id: `comment-milestone-${data.post.id}-${data.milestone}`,
       source: "milestone" as const,
       verb: "achieved" as const,
@@ -599,7 +604,7 @@ interface GitHubRelease {
 export async function transformGitHubActivity(
   org = "dcyfr",
   repos = ["dcyfr-labs"],
-  limit = 10
+  limit?: number
 ): Promise<ActivityItem[]> {
   const githubToken = process.env.GITHUB_TOKEN;
   if (!githubToken) {
@@ -685,9 +690,10 @@ export async function transformGitHubActivity(
       }
     }
 
-    return activities
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .slice(0, limit);
+    const sorted = activities
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    
+    return limit ? sorted.slice(0, limit) : sorted;
   } catch (error) {
     console.error("[Activity] Failed to fetch GitHub activity:", error);
     return [];
@@ -704,7 +710,7 @@ export async function transformGitHubActivity(
  */
 export async function transformCredlyBadges(
   username: string = "dcyfr",
-  limit: number = 10
+  limit?: number
 ): Promise<ActivityItem[]> {
   try {
     const credlyUrl = `https://www.credly.com/users/${username}/badges.json`;
@@ -720,12 +726,13 @@ export async function transformCredlyBadges(
     const data: CredlyBadgesResponse = await response.json();
     const badges = data.data || [];
 
-    // Sort by issued_at descending and limit
+    // Sort by issued_at descending
     const sortedBadges = badges
-      .sort((a, b) => new Date(b.issued_at).getTime() - new Date(a.issued_at).getTime())
-      .slice(0, limit);
+      .sort((a, b) => new Date(b.issued_at).getTime() - new Date(a.issued_at).getTime());
+    
+    const limitedBadges = limit ? sortedBadges.slice(0, limit) : sortedBadges;
 
-    return sortedBadges.map((badge) => {
+    return limitedBadges.map((badge) => {
       const issuerName = badge.issuer.entities.find(e => e.primary)?.entity.name || 
         badge.issuer.entities[0]?.entity.name || 
         "Unknown Issuer";
