@@ -228,24 +228,31 @@ jobs:
             FILE_LIST="$FILE_LIST"$'\n'"- ... and $((DETECTION_COUNT - 20)) more findings"
           fi
 
+          cat > issue-body.md <<'ISSUEBODY'
+          ## 🚨 Critical Secret Detected
+
+          Gitleaks detected **DETECTION_COUNT_PLACEHOLDER critical secret(s)** requiring immediate remediation.
+
+          ### Affected Files
+          ```
+          FILE_LIST_PLACEHOLDER
+          ```
+
+          ### Immediate Actions Required
+          1. **Rotate all exposed credentials**
+          2. **Remove from git history** (use BFG Repo-Cleaner)
+          3. **Update secret management** (use environment variables)
+          4. **Verify remediation** (re-run scan)
+
+          See workflow artifacts for full report.
+          ISSUEBODY
+
+          sed -i "s|DETECTION_COUNT_PLACEHOLDER|${DETECTION_COUNT}|g" issue-body.md
+          sed -i "s|FILE_LIST_PLACEHOLDER|${FILE_LIST}|g" issue-body.md
+
           gh issue create \
             --title "🚨 Critical Secret Detected: $DETECTION_COUNT secret(s) found" \
-            --body "## 🚨 Critical Secret Detected
-
-Gitleaks detected **${DETECTION_COUNT} critical secret(s)** requiring immediate remediation.
-
-### Affected Files
-\`\`\`
-${FILE_LIST}
-\`\`\`
-
-### Immediate Actions Required
-1. **Rotate all exposed credentials**
-2. **Remove from git history** (use BFG Repo-Cleaner)
-3. **Update secret management** (use environment variables)
-4. **Verify remediation** (re-run scan)
-
-See workflow artifacts for full report." \
+            --body-file issue-body.md \
             --label "security" \
             --label "critical" \
             --label "gitleaks" \
