@@ -22,6 +22,10 @@ import {
   transformCommentMilestones,
   transformGitHubActivity,
   transformCredlyBadges,
+  transformVercelAnalytics,
+  transformGitHubTraffic,
+  transformGoogleAnalytics,
+  transformSearchConsole,
 } from "@/lib/activity/sources.server";
 import type { ActivityItem } from "@/lib/activity/types";
 import { createClient } from "redis";
@@ -159,6 +163,26 @@ export default async function ActivityPage() {
       transformCredlyBadges("dcyfr")
         .then((items) => activities.push(...items))
         .catch((err) => console.error("[Activity Page] Credly badges fetch failed:", err)),
+      
+      // Vercel Analytics milestones - all
+      transformVercelAnalytics()
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Vercel Analytics fetch failed:", err)),
+      
+      // GitHub Traffic milestones - all
+      transformGitHubTraffic()
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] GitHub Traffic fetch failed:", err)),
+      
+      // Google Analytics milestones - all
+      transformGoogleAnalytics()
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Google Analytics fetch failed:", err)),
+      
+      // Search Console achievements - all
+      transformSearchConsole()
+        .then((items) => activities.push(...items))
+        .catch((err) => console.error("[Activity Page] Search Console fetch failed:", err)),
     ]);
 
     // Aggregate and sort (no limits - unified timeline)

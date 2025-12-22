@@ -23,7 +23,21 @@ const mockBadges: CredlyBadge[] = [
     image_url: "https://example.com/badge1.png",
     issued_at: "2024-01-15T00:00:00Z",
     expires_at: null,
-    issuer: { id: "issuer-1", name: "GIAC" },
+    issuer: {
+      summary: "GIAC Security Certification",
+      entities: [
+        {
+          label: "GIAC",
+          primary: true,
+          entity: {
+            type: "Organization",
+            id: "issuer-1", 
+            name: "GIAC",
+            url: "https://giac.org",
+          },
+        },
+      ],
+    },
     user: { id: "user-1", name: "Drew" },
   },
   {
@@ -41,7 +55,21 @@ const mockBadges: CredlyBadge[] = [
     image_url: "https://example.com/badge2.png",
     issued_at: "2023-06-10T00:00:00Z",
     expires_at: null,
-    issuer: { id: "issuer-2", name: "AWS" },
+    issuer: {
+      summary: "AWS Certification Program", 
+      entities: [
+        {
+          label: "AWS",
+          primary: true,
+          entity: {
+            type: "Organization", 
+            id: "issuer-2",
+            name: "AWS", 
+            url: "https://aws.amazon.com",
+          },
+        },
+      ],
+    },
     user: { id: "user-1", name: "Drew" },
   },
 ];

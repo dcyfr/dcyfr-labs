@@ -71,12 +71,6 @@ export const PRIMARY_NAV: NavItem[] = [
     shortcut: "g w",
   },
   {
-    href: "/sponsors",
-    label: "Sponsors",
-    icon: Heart,
-    shortcut: "g s",
-  },
-  {
     href: "/contact",
     label: "Contact",
     icon: Mail,
@@ -179,6 +173,10 @@ export const FOOTER_NAV: NavItem[] = [
     label: "Contact",
   },
   {
+    href: "/sponsors",
+    label: "Sponsors",
+  },
+  {
     href: "/feeds",
     label: "Feeds",
     icon: Rss,
@@ -217,10 +215,6 @@ export const MOBILE_NAV: NavItem[] = [
   {
     href: "/contact",
     label: "Contact Us",
-  },
-  {
-    href: "/sponsors",
-    label: "Sponsors",
   },
   {
     href: "/feeds",
