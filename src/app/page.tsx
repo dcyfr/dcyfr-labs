@@ -4,6 +4,7 @@ import { visibleChangelog } from "@/data/changelog";
 import { getSocialUrls } from "@/data/socials";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { getMultiplePostViews } from "@/lib/views";
+import { calculateYearsWithCertifications } from "@/lib/years-calculator";
 import {
   SITE_URL,
   SITE_TITLE,
@@ -20,6 +21,7 @@ import {
   PAGE_LAYOUT,
   CONTAINER_WIDTHS,
   SCROLL_BEHAVIOR,
+  CONTAINER_VERTICAL_PADDING,
 } from "@/lib/design-tokens";
 import { Card } from "@/components/ui/card";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
@@ -53,12 +55,14 @@ const FeaturedPostHero = dynamic(
   () => import("@/components/home").then(mod => ({ default: mod.FeaturedPostHero })),
   {
     loading: () => (
-      <Card className="p-5 space-y-4 animate-pulse">
-        <div className="flex items-center gap-2">
-          <div className="h-5 w-16 bg-muted rounded" />
-          <div className="h-5 w-20 bg-muted rounded" />
+      <Card className="p-4 md:p-8 animate-pulse">
+        <div className={cn("flex items-center", SPACING.compact)}>
+          <div className="flex items-center gap-4">
+            <div className="h-5 w-16 bg-muted rounded" />
+            <div className="h-5 w-20 bg-muted rounded" />
+          </div>
         </div>
-        <div className="space-y-2">
+        <div className={cn("mt-4", SPACING.compact)}>
           <div className="h-8 bg-muted rounded w-3/4" />
           <div className="h-6 bg-muted rounded w-full" />
         </div>
@@ -72,7 +76,7 @@ const InfiniteActivitySection = dynamic(
   () => import("@/components/home").then(mod => ({ default: mod.InfiniteActivitySection })),
   {
     loading: () => (
-      <div className="space-y-3">
+      <div className={SPACING.content}>
         {[...Array(5)].map((_, i) => (
           <div key={i} className="h-20 bg-muted rounded-lg animate-pulse" />
         ))}
@@ -86,7 +90,7 @@ const HomepageHeatmapMini = dynamic(
   () => import("@/components/home").then(mod => ({ default: mod.HomepageHeatmapMini })),
   {
     loading: () => (
-      <div className="h-48 bg-muted rounded-lg animate-pulse" />
+      <div className="h-48 w-full bg-muted rounded-lg animate-pulse" />
     ),
     ssr: true,
   }
@@ -125,11 +129,11 @@ export default async function Home() {
   // Get featured post for hero section
   const featuredPost = featuredPosts[0];
   
-  // Prepare posts for homepage (more for infinite scroll timeline)
+  // Prepare posts for homepage (all posts for infinite scroll timeline)
   const recentPosts = [...posts]
     .filter(p => !p.archived)
-    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
-    .slice(0, 20); // Increased for infinite scroll
+    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+    // No limit - use all posts for timeline
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
@@ -223,7 +227,8 @@ export default async function Home() {
   const uniqueTechnologies = new Set(
     projects.flatMap(p => p.tech || [])
   );
-  const yearsOfExperience = new Date().getFullYear() - 2010; // Started in 2010
+  // Calculate years including certifications from Credly
+  const yearsOfExperience = await calculateYearsWithCertifications();
 
   return (
     <PageLayout>
@@ -232,22 +237,28 @@ export default async function Home() {
 
       <SectionNavigator
         scrollOffset={SCROLL_BEHAVIOR.offset.standard}
-        className="space-y-10 md:space-y-14"
+        className={SPACING.section}
       >
         {/* 1. Hero Section */}
         <Section id="hero">
           <ScrollReveal animation="fade-up">
-            <div className={cn(PAGE_LAYOUT.hero.container, "flex flex-col items-center w-full")}>
+            <div
+              className={cn(
+                PAGE_LAYOUT.hero.container,
+                "flex flex-col items-center w-full"
+              )}
+            >
               <div
                 className={cn(
-                  "space-y-4",
+                  SPACING.content,
                   "text-center flex flex-col items-center w-full",
-                  `${CONTAINER_WIDTHS.narrow} mx-auto`
+                  CONTAINER_WIDTHS.narrow,
+                  "mx-auto"
                 )}
               >
                 {/* Avatar */}
                 <div
-                  className="flex justify-center w-full"
+                  className="flex justify-center w-full mb-4 md:mb-6"
                   role="img"
                   aria-label="Avatar - Click to flip"
                 >
@@ -255,50 +266,54 @@ export default async function Home() {
                 </div>
 
                 {/* Logo Title */}
-                <SiteLogo size="lg" showIcon={false} className="justify-center" />
+                <div className="mb-4 md:mb-6">
+                  <SiteLogo
+                    size="lg"
+                    showIcon={false}
+                    className="justify-center"
+                  />
+                </div>
 
                 {/* Description */}
                 <p
                   className={cn(
                     "text-muted-foreground leading-relaxed",
                     TYPOGRAPHY.description,
-                    CONTAINER_WIDTHS.narrow,
-                    "mx-auto w-full",
-                    "text-center"
+                    "mx-auto w-full text-center",
+                    "mb-6 md:mb-8"
                   )}
                 >
-                  Exploring cyber architecture, coding, and security insights to build a safer digital future.
+                  Exploring cyber architecture, coding, and security insights to
+                  build a safer digital future.
                 </p>
 
                 {/* Actions */}
-                <div className="w-full flex justify-center">
+                <div className="w-full flex justify-center mb-4 md:mb-6">
                   <HomepageHeroActions />
                 </div>
 
                 {/* Quick Links Ribbon */}
-                <QuickLinksRibbon className="mt-2" />
+                <QuickLinksRibbon />
               </div>
             </div>
           </ScrollReveal>
         </Section>
 
-        {/* 2. Activity Heatmap */}
+        {/* 2. Activity Heatmap 
         <Section id="activity-heatmap" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={50}>
             <div className={SPACING.content}>
               <HomepageHeatmapMini activities={allActivities} />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
 
         {/* 3. Featured Article - Highlighted section */}
         <Section
           id="featured-post"
           className={cn(
             PAGE_LAYOUT.section.container,
-            "py-8 md:py-12 -mx-4 px-4 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
-            "bg-muted/30 dark:bg-muted/10",
-            "border-y border-border/50"
+            CONTAINER_VERTICAL_PADDING
           )}
         >
           <ScrollReveal animation="fade-up" delay={100}>
@@ -313,8 +328,16 @@ export default async function Home() {
         <Section id="trending" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={150}>
             <div className={SPACING.content}>
-              <SectionHeader title="Trending" actionHref="/blog" actionLabel="View all posts" />
-              <TrendingPosts posts={activePosts} viewCounts={viewCountsMap} limit={3} />
+              <SectionHeader
+                title="Trending"
+                actionHref="/blog"
+                actionLabel="View all posts"
+              />
+              <TrendingPosts
+                posts={activePosts}
+                viewCounts={viewCountsMap}
+                limit={3}
+              />
             </div>
           </ScrollReveal>
         </Section>
@@ -323,23 +346,32 @@ export default async function Home() {
         <Section id="recent-activity" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={200}>
             <div className={SPACING.content}>
-              <SectionHeader title="Activity Timeline" actionHref="/activity" actionLabel="View full activity" />
+              <SectionHeader
+                title="Recent Activity"
+                actionHref="/activity"
+                actionLabel="View all activity"
+              />
               <InfiniteActivitySection
                 items={timelineActivities}
-                initialCount={5}
-                pageSize={5}
-                maxHeight="50vh"
+                initialCount={12}
+                pageSize={8}
+                maxHeight="65vh"
+                showProgress
+                showScrollHint
+                maxItemsBeforeCTA={20}
+                ctaText="View all activity"
+                ctaHref="/activity"
               />
             </div>
           </ScrollReveal>
         </Section>
 
-        {/* 6. Explore Cards - Highlighted section */}
+        {/* 6. Explore Cards - Highlighted section 
         <Section
           id="explore"
           className={cn(
             PAGE_LAYOUT.section.container,
-            "py-8 md:py-12 -mx-4 px-4 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
+            CONTAINER_VERTICAL_PADDING,
             "bg-muted/30 dark:bg-muted/10",
             "border-y border-border/50"
           )}
@@ -354,9 +386,9 @@ export default async function Home() {
               />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
 
-        {/* 7. Stats Dashboard */}
+        {/* 7. Stats Dashboard 
         <Section id="stats" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={300}>
             <div className={SPACING.content}>
@@ -368,7 +400,7 @@ export default async function Home() {
               />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
       </SectionNavigator>
     </PageLayout>
   );

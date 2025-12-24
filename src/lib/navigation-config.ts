@@ -97,7 +97,7 @@ export const BOTTOM_NAV: NavItem[] = [
     href: "/work",
     label: "Work",
     icon: FolderGit2,
-  },
+  }
 ] as const;
 
 /**
@@ -201,12 +201,12 @@ export const MOBILE_NAV: NavItem[] = [
     exactMatch: true,
   },
   {
-    href: "/blog",
-    label: "Blog",
-  },
-  {
     href: "/about",
     label: "About",
+  },
+  {
+    href: "/blog",
+    label: "Blog",
   },
   {
     href: "/work",
@@ -217,9 +217,9 @@ export const MOBILE_NAV: NavItem[] = [
     label: "Contact",
   },
   {
-    href: "/feeds",
-    label: "Feeds",
-  },
+    href: "/sponsors",
+    label: "Sponsors",
+  }
 ] as const;
 
 /**

@@ -197,7 +197,7 @@ export function MiniSkillsList({
             "text-primary hover:underline"
           )}
         >
-          <span>Verified via Credly certifications</span>
+          <span>Verify on Credly</span>
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </div>

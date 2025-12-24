@@ -117,7 +117,7 @@ export function MiniBadgeList({
             "text-primary hover:underline"
           )}
         >
-          <span>View all on Credly</span>
+          <span>Verify on Credly</span>
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </div>
