@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Alert } from "@/components/common/alert";
 import { toast } from "@/lib/toast";
 import { Loader2 } from "lucide-react";
+import { SPACING } from "@/lib/design-tokens";
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,15 +77,12 @@ export function ContactForm() {
 
   return (
     <div>
-      {/* Informational banner */}
-      <div className="mb-6 p-4 bg-muted rounded-lg border border-border">
-        <p className="text-sm text-muted-foreground">
-          💡 <strong>Multiple ways to connect:</strong> You can use the form
-          below or reach out directly via email and social media.
-        </p>
-      </div>
+      {/* Informational banner using unified Alert component */}
+      <Alert type="info" className="mb-8">
+        <strong>Multiple ways to connect:</strong> You can use the form below or reach out directly via email and social media.
+      </Alert>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+      <form onSubmit={handleSubmit} className={`space-y-${SPACING.content.slice(-1)}`}>
         {/* Honeypot field - hidden from real users, visible to bots */}
         <div className="hidden" aria-hidden="true">
           <Label htmlFor="website">Website (leave blank)</Label>
@@ -140,15 +139,6 @@ export function ContactForm() {
           collect only the information you provide (name, email, message) to
           respond to your inquiry. Your data is not shared with third parties
           and is handled securely.
-          {/* " "}
-            <a
-              href="/security.txt"
-              className="underline hover:text-foreground transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Security contact
-            </a> */}
         </p>
         <Button
           type="submit"
@@ -159,9 +149,6 @@ export function ContactForm() {
           {isSubmitting && <Loader2 className="animate-spin" />}
           {isSubmitting ? "Sending..." : "Send Message"}
         </Button>
-
-        {/* Privacy Notice */}
-        <div className="mt-4 text-xs text-muted-foreground"></div>
       </form>
     </div>
   );

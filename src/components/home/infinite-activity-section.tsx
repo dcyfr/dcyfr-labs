@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, ArrowDown, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { ActivityItem as ActivityItemComponent } from "@/components/activity/ActivityItem";
 import { FeedInterruption, type FeedInterruptionProps } from "@/components/activity";
 import { useInfiniteActivity } from "@/hooks/use-infinite-activity";
@@ -30,6 +31,16 @@ interface InfiniteActivitySectionProps {
   interruptions?: FeedInterruptionProps[];
   /** Insert interruption every N items */
   interruptionInterval?: number;
+  /** Show progress indicator */
+  showProgress?: boolean;
+  /** Show scroll hint for first-time visitors */
+  showScrollHint?: boolean;
+  /** Show CTA to full activity page after N items */
+  maxItemsBeforeCTA?: number;
+  /** CTA text */
+  ctaText?: string;
+  /** CTA href */
+  ctaHref?: string;
   /** Additional class names */
   className?: string;
 }
@@ -65,6 +76,7 @@ const DEFAULT_INTERRUPTIONS: FeedInterruptionProps[] = [
 // ============================================================================
 
 const SCROLL_TO_TOP_THRESHOLD = 300;
+const SCROLL_HINT_HIDE_DELAY = 5000; // Hide scroll hint after 5s
 
 // ============================================================================
 // COMPONENT
@@ -104,9 +116,17 @@ export function InfiniteActivitySection({
   maxHeight = "60vh",
   interruptions = DEFAULT_INTERRUPTIONS,
   interruptionInterval = 4,
+  showProgress = true,
+  showScrollHint = true,
+  maxItemsBeforeCTA = 20,
+  ctaText = "View full activity timeline",
+  ctaHref = "/activity",
   className,
 }: InfiniteActivitySectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [showScrollHintIndicator, setShowScrollHintIndicator] = useState(showScrollHint);
+  const [hasUserScrolled, setHasUserScrolled] = useState(false);
 
   // Infinite scroll pagination
   const {
@@ -134,13 +154,33 @@ export function InfiniteActivitySection({
   // Scroll restoration
   useScrollRestoration("homepage-activity", scrollRef);
 
-  // Scroll detection for "scroll to top" button
+  // Auto-hide scroll hint after delay
+  useEffect(() => {
+    if (!showScrollHintIndicator) return;
+    
+    const timer = setTimeout(() => {
+      setShowScrollHintIndicator(false);
+    }, SCROLL_HINT_HIDE_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [showScrollHintIndicator]);
+
+  // Scroll detection for infinite load and scroll-to-top button
   const handleScroll = () => {
     if (!scrollRef.current) return;
     const scrollTop = scrollRef.current.scrollTop;
     const atBottom =
       scrollRef.current.scrollHeight - scrollRef.current.scrollTop <=
       scrollRef.current.clientHeight + 100;
+
+    // Track if user has scrolled (hide scroll hint)
+    if (!hasUserScrolled && scrollTop > 50) {
+      setHasUserScrolled(true);
+      setShowScrollHintIndicator(false);
+    }
+
+    // Update scroll-to-top button visibility
+    setShowScrollToTop(scrollTop > SCROLL_TO_TOP_THRESHOLD);
 
     // Trigger load more when near bottom
     if (atBottom && hasMore && !isLoadingMore) {
@@ -152,27 +192,53 @@ export function InfiniteActivitySection({
     scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Check if we should show CTA instead of loading more
+  const shouldShowCTA = visibleCount >= maxItemsBeforeCTA && hasMore;
+
   return (
     <div className={cn("relative", className)}>
       {/* Progress indicator */}
-      <div className="flex items-center justify-between mb-3 text-xs text-muted-foreground">
-        <span>
-          Showing {visibleCount} of {totalCount} activities
-        </span>
-        {hasMore && (
-          <span className={cn("animate-pulse", ANIMATION.duration.slow)}>
-            Scroll for more
+      {showProgress && (
+        <div className="flex items-center justify-between mb-3 text-xs text-muted-foreground">
+          <span className="font-medium">
+            Showing <span className="text-foreground">{visibleCount}</span> of{" "}
+            <span className="text-foreground">{totalCount}</span> activities
           </span>
-        )}
-      </div>
+          {hasMore && !shouldShowCTA && (
+            <span className="text-muted-foreground/70">
+              Scroll for more
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Scrollable feed container */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
         style={{ maxHeight }}
-        className="overflow-auto rounded-lg"
+        className="overflow-auto rounded-lg relative"
       >
+        {/* Scroll hint indicator */}
+        {showScrollHintIndicator && hasMore && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+            className="absolute top-2 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
+          >
+            <div className="flex flex-col items-center gap-1 px-3 py-2 bg-background/95 backdrop-blur-sm border border-border/50 rounded-lg shadow-md">
+              <span className="text-xs text-muted-foreground font-medium">More below</span>
+              <motion.div
+                animate={{ y: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ArrowDown className="h-3 w-3 text-muted-foreground" />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
         <div className="relative">
           {/* Timeline connector line */}
           <div className="absolute left-4.75 top-4 bottom-4 w-px bg-border/50" />
@@ -216,7 +282,7 @@ export function InfiniteActivitySection({
 
           {/* Loading indicator with entrance animation */}
           <AnimatePresence>
-            {isLoadingMore && (
+            {isLoadingMore && !shouldShowCTA && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -238,15 +304,45 @@ export function InfiniteActivitySection({
         </div>
       </div>
 
+      {/* CTA to full activity page */}
+      {shouldShowCTA && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-center py-6 border-t border-border/50 mt-2"
+        >
+          <p className="text-sm text-muted-foreground mb-3">
+            Viewing {visibleCount} of {totalCount} activities
+          </p>
+          <Button asChild variant="default" size="default">
+            <Link href={ctaHref} className="gap-2">
+              {ctaText}
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </Button>
+        </motion.div>
+      )}
+
       {/* End indicator */}
-      {!hasMore && visibleCount > 0 && (
-        <div className="text-center text-sm text-muted-foreground py-4 border-t border-border/50 mt-2">
-          You&apos;ve reached the end of the activity feed
-        </div>
+      {!hasMore && visibleCount > 0 && !shouldShowCTA && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center text-sm text-muted-foreground py-4 border-t border-border/50 mt-2"
+        >
+          <p className="mb-2">You&apos;ve reached the end of recent activity</p>
+          <Button asChild variant="outline" size="sm">
+            <Link href={ctaHref} className="gap-2">
+              View all activity
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          </Button>
+        </motion.div>
       )}
 
       {/* Scroll to top button (fixed position within section) */}
-      {scrollRef.current && scrollRef.current.scrollTop > SCROLL_TO_TOP_THRESHOLD && (
+      {showScrollToTop && (
         <Button
           onClick={scrollToTop}
           size="icon"

@@ -99,10 +99,10 @@ export function HomepageHeatmapMini({
       className={className}
     >
       <Card className="overflow-hidden">
-        <CardContent className="p-4 md:p-5">
+        <CardContent className="p-4 md:p-8">
           {/* Header with View All */}
-          <div className="flex items-center justify-between gap-3 mb-3 md:mb-4">
-            <div className="flex items-center gap-2">
+          <div className={cn("flex items-center justify-between gap-4 mb-4 md:mb-6")}>
+            <div className="flex items-center gap-4">
               <span className={cn("h-2 w-2 rounded-full animate-pulse", NEON_COLORS.lime.dot)} aria-hidden="true" />
               <h3 className={TYPOGRAPHY.h3.standard}>Activity</h3>
             </div>
@@ -110,7 +110,7 @@ export function HomepageHeatmapMini({
               variant="ghost"
               size="sm"
               onClick={() => router.push("/activity")}
-              className="text-muted-foreground hover:text-foreground gap-1"
+              className="text-muted-foreground hover:text-foreground gap-4"
             >
               View all
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -118,9 +118,9 @@ export function HomepageHeatmapMini({
           </div>
 
           {/* Compact Stats Row */}
-          <div className="flex items-center gap-4 mb-3 md:mb-4">
+          <div className={cn("flex items-center gap-4 mb-4 md:mb-6")}>
             {/* Active Days */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <Calendar className="w-4 h-4 text-blue-500" aria-hidden="true" />
               <span className="text-sm">
                 <span className="font-semibold">{stats.activeDays}</span>{" "}
@@ -129,7 +129,7 @@ export function HomepageHeatmapMini({
             </div>
 
             {/* Current Streak */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <Zap className="w-4 h-4 text-yellow-500" aria-hidden="true" />
               <span className="text-sm">
                 <span className="font-semibold">{stats.currentStreak}</span>{" "}
@@ -185,8 +185,8 @@ export function HomepageHeatmapMini({
             {/* Legend - Compact */}
             <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
               <span>Less</span>
-              <div className="flex items-center gap-0.5">
-                {/* eslint-disable-next-line no-restricted-syntax -- Chart visualization colors */}
+              <div className="flex items-center gap-4">
+                { }
                 <div className="w-2 h-2 rounded-sm bg-muted border border-border" />
                 <div className="w-2 h-2 rounded-sm bg-green-200 dark:bg-green-900" />
                 <div className="w-2 h-2 rounded-sm bg-green-300 dark:bg-green-800" />
