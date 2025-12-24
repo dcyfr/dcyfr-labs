@@ -1,5 +1,6 @@
 import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 import { SocialLinksGrid } from "@/components/sections/social-links-grid";
+import { cn } from "@/lib/utils";
 
 /**
  * Contact Social Links Component
@@ -12,6 +13,7 @@ import { SocialLinksGrid } from "@/components/sections/social-links-grid";
  * - Responsive grid layout
  * - Consistent with About page social links
  * - Platform-specific icons
+ * - Full design token compliance
  * 
  * @example
  * ```tsx
@@ -23,7 +25,7 @@ export function ContactSocialLinks() {
     <div className={SPACING.content}>
       <div className="text-center mb-8">
         <h2 className={TYPOGRAPHY.h2.standard}>Find Us Elsewhere</h2>
-        <p className="text-muted-foreground mt-2">
+        <p className={cn(TYPOGRAPHY.description, "mt-2")}>
           Connect with us across various platforms and communities
         </p>
       </div>

@@ -3,10 +3,7 @@
  * 
  * Client component for hero section buttons with conversion tracking.
  * Provides responsive button layout with visual hierarchy and icons.
- * 
- * Layout:
- * - Desktop: Primary button large + Secondary button standard + Tertiary outline
- * - Mobile: Primary button full-width, Secondary/Tertiary stacked below
+ * Uses centralized navigation configuration for consistency.
  */
 
 'use client';
@@ -14,90 +11,48 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics';
-import { Briefcase, BookOpen, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ANIMATION } from '@/lib/design-tokens';
+import { PRIMARY_NAV_LINKS, getAnalyticsSource } from '@/lib/nav-links';
 
 export function HomepageHeroActions() {
-  const handleBlogClick = () => {
+  const handleLinkClick = (href: string) => {
     trackEvent({
       name: 'external_link_clicked',
       properties: {
-        url: '/blog',
-        source: 'homepage_hero_primary_cta',
-      },
-    });
-  };
-
-  const handleProjectsClick = () => {
-    trackEvent({
-      name: 'external_link_clicked',
-      properties: {
-        url: '/work',
-        source: 'homepage_hero_secondary_cta',
-      },
-    });
-  };
-
-  const handleAboutClick = () => {
-    trackEvent({
-      name: 'external_link_clicked',
-      properties: {
-        url: '/about',
-        source: 'homepage_hero_tertiary_cta',
+        url: href,
+        source: getAnalyticsSource(href, 'hero'),
       },
     });
   };
 
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-3 pt-4 sm:pt-6 justify-center items-center">
-      {/* Primary CTA - Our Work */}
-      <Button
-        variant="cta"
-        asChild
-        size="default"
-        className={cn(
-          "gap-2 hover:scale-105 transition-transform",
-          ANIMATION.duration.fast
-        )}
-      >
-        <Link href="/work" onClick={handleProjectsClick}>
-          <Briefcase className="h-4 w-4" />
-          <span>View our work</span>
-        </Link>
-      </Button>
+    <div className="flex flex-wrap gap-4 justify-center items-center">
+      {PRIMARY_NAV_LINKS.map((link) => {
+        // Determine button variant based on link variant
+        const buttonVariant = 
+          link.variant === 'primary' ? 'cta' :
+          link.variant === 'secondary' ? 'cta-outline' :
+          'secondary';
 
-      {/* Secondary CTA - Blog */}
-      <Button
-        variant="cta-outline"
-        asChild
-        size="default"
-        className={cn(
-          "gap-2 hover:scale-105 transition-transform",
-          ANIMATION.duration.fast
-        )}
-      >
-        <Link href="/blog" onClick={handleBlogClick}>
-          <BookOpen className="h-4 w-4" />
-          <span>Read blog</span>
-        </Link>
-      </Button>
-
-      {/* Tertiary CTA - About */}
-      <Button
-        variant="secondary"
-        asChild
-        size="default"
-        className={cn(
-          "gap-2 hover:scale-105 transition-transform",
-          ANIMATION.duration.fast
-        )}
-      >
-        <Link href="/about" onClick={handleAboutClick}>
-          <Info className="h-4 w-4" />
-          <span>Learn more</span>
-        </Link>
-      </Button>
+        return (
+          <Button
+            key={link.href}
+            variant={buttonVariant}
+            asChild
+            size="default"
+            className={cn(
+              "gap-4 hover:scale-105 transition-transform",
+              ANIMATION.duration.fast
+            )}
+          >
+            <Link href={link.href} onClick={() => handleLinkClick(link.href)}>
+              <link.icon className="h-4 w-4" />
+              <span>{link.label}</span>
+            </Link>
+          </Button>
+        );
+      })}
     </div>
   );
 }

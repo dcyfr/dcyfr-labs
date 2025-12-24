@@ -185,13 +185,69 @@ export const resume: Resume = {
 };
 
 /**
- * Calculate years of experience from the earliest experience entry
- * @returns Number of years in cybersecurity
+ * Extract the earliest year from a date string or range
+ * Handles formats like:
+ * - "Jan 2025 → Present"
+ * - "Jul 2022 → Jul 2023"
+ * - "Dec 2020"
+ * - "2024"
+ * @param dateStr - Date string to parse
+ * @returns Earliest year found, or null if no valid year
  */
-export function getYearsOfExperience(): number {
-  const firstExperience = resume.experience[resume.experience.length - 1];
-  const startYear = parseInt(firstExperience.duration.match(/\d{4}/)?.[0] || "2021");
-  return new Date().getFullYear() - startYear;
+function extractEarliestYear(dateStr: string | undefined): number | null {
+  if (!dateStr) return null;
+  
+  // Match all 4-digit years in the string
+  const yearMatches = dateStr.match(/\b(19|20)\d{2}\b/g);
+  if (!yearMatches || yearMatches.length === 0) return null;
+  
+  // Convert to numbers and find the earliest
+  const years = yearMatches.map(y => parseInt(y, 10));
+  return Math.min(...years);
+}
+
+/**
+ * Calculate years of experience from all dated resume items
+ * Checks experience, education, and certifications (if provided)
+ * @param certificationDates - Optional array of certification issued dates from Credly
+ * @returns Number of years from earliest dated item to present
+ */
+export function getYearsOfExperience(certificationDates?: string[]): number {
+  const currentYear = new Date().getFullYear();
+  const years: number[] = [];
+
+  // Extract years from experience
+  resume.experience.forEach(exp => {
+    const year = extractEarliestYear(exp.duration);
+    if (year) years.push(year);
+  });
+
+  // Extract years from education
+  resume.education.forEach(edu => {
+    const year = extractEarliestYear(edu.duration);
+    if (year) years.push(year);
+  });
+
+  // Extract years from certification dates if provided
+  if (certificationDates && certificationDates.length > 0) {
+    certificationDates.forEach(dateStr => {
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        years.push(date.getFullYear());
+      }
+    });
+  }
+
+  // If no dates found, fallback to earliest experience entry
+  if (years.length === 0) {
+    const firstExperience = resume.experience[resume.experience.length - 1];
+    const startYear = parseInt(firstExperience.duration.match(/\d{4}/)?.[0] || `${currentYear}`);
+    return currentYear - startYear;
+  }
+
+  // Find the earliest year across all sources
+  const earliestYear = Math.min(...years);
+  return currentYear - earliestYear;
 }
 
 /**
