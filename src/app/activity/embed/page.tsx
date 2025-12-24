@@ -188,7 +188,9 @@ export default async function ActivityEmbedPage({
   // Serialize activities for client
   const serializedActivities = allActivities.map((activity) => ({
     ...activity,
-    timestamp: activity.timestamp.toISOString(),
+    timestamp: activity.timestamp instanceof Date 
+      ? activity.timestamp.toISOString() 
+      : activity.timestamp,
   }));
 
   // Extract URL parameters for filtering
