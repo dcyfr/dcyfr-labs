@@ -66,7 +66,7 @@ export const PRIMARY_NAV: NavItem[] = [
   },
   {
     href: "/work",
-    label: "Our Work",
+    label: "Work",
     icon: FolderGit2,
     shortcut: "g w",
   },
@@ -97,7 +97,7 @@ export const BOTTOM_NAV: NavItem[] = [
     href: "/work",
     label: "Work",
     icon: FolderGit2,
-  },
+  }
 ] as const;
 
 /**
@@ -111,8 +111,8 @@ export const BLOG_CATEGORIES: NavItem[] = [
   },
   {
     href: "/blog/series",
-    label: "Series",
-  },
+    label: "Blog Series",
+  }
 ] as const;
 
 /**
@@ -161,6 +161,10 @@ export const DEV_TOOLS_NAV: NavItem[] = [
  */
 export const FOOTER_NAV: NavItem[] = [
   {
+    href: "/about",
+    label: "About",
+  },
+  {
     href: "/activity",
     label: "Activity",
   },
@@ -182,7 +186,7 @@ export const FOOTER_NAV: NavItem[] = [
     icon: Rss,
   },
   {
-    href: "/sitemap",
+    href: "/sitemap.xml",
     label: "Sitemap",
   },
 ] as const;
@@ -197,29 +201,25 @@ export const MOBILE_NAV: NavItem[] = [
     exactMatch: true,
   },
   {
+    href: "/about",
+    label: "About",
+  },
+  {
     href: "/blog",
     label: "Blog",
   },
   {
-    href: "/blog/series",
-    label: "Series",
-  },
-  {
-    href: "/about",
-    label: "About Us",
-  },
-  {
     href: "/work",
-    label: "Our Work",
+    label: "Work",
   },
   {
     href: "/contact",
-    label: "Contact Us",
+    label: "Contact",
   },
   {
-    href: "/feeds",
-    label: "Feeds",
-  },
+    href: "/sponsors",
+    label: "Sponsors",
+  }
 ] as const;
 
 /**

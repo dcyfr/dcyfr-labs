@@ -14,12 +14,14 @@ import {
   getOgImageUrl,
 
 } from "@/lib/site-config";
+import { MOBILE_SAFE_PADDING } from "@/lib/design-tokens";
 import { SiteHeader, SiteFooter, BottomNav } from "@/components/navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { LayoutUtilities } from "@/components/features/layout-utilities";
 import { DevBanner } from "@/components/features/dev-banner";
 import { ScrollToAnchor } from "@/components/features/scroll-to-anchor";
 import { CommandPalette } from "@/components/app";
+import { NavigationShortcutsProvider } from "@/components/common/navigation-shortcuts-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AxiomWebVitals } from "next-axiom";
@@ -140,10 +142,11 @@ export default async function RootLayout({
             {process.env.NODE_ENV === 'development' && <DevBanner />}
             <ScrollToAnchor offset={80} />
             <CommandPalette />
+            <NavigationShortcutsProvider />
             <SiteHeader />
-            <main id="main-content" className="min-h-[calc(100dvh-128px)] pb-8">{children}</main>
+            <main id="main-content" className={`min-h-[calc(100dvh-128px)] ${MOBILE_SAFE_PADDING}`}>{children}</main>
             <SiteFooter />
-            {/* <BottomNav /> */}
+            <BottomNav />
             <Toaster richColors position="top-center" />
             {/* Vercel Analytics & Speed Insights - Only in production */}
             {process.env.NODE_ENV === 'production' && (
