@@ -34,12 +34,10 @@ export default function EmbedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${alegreya.variable}`}
-    >
-      <body className="min-h-screen bg-background antialiased">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${alegreya.variable} min-h-screen bg-background antialiased`}
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
