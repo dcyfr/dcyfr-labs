@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { DocSidebar, DocTableOfContents, MobileDocSidebar } from "@/components/dev";

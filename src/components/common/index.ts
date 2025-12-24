@@ -26,6 +26,9 @@ export { TransitionLink } from "./transition-link";
 export { ViewToggle } from "./view-toggle";
 export { default as DevToolsDropdown } from "./dev-tools-dropdown";
 
+// Search components
+export { SearchHighlight, SearchInput } from "./search";
+
 // Progressive content and depth styling
 export { 
   ProgressiveParagraph, 
@@ -101,6 +104,10 @@ export { TeamMemberCard, type TeamMemberCardLayout } from "./team-member-card";
 // Stats
 export { TrendingPosts } from "./stats/trending-posts";
 export { UnifiedTimeline } from "./stats/unified-timeline";
+
+// Cards (enhanced media cards)
+export { MediaCard, type MediaCardProps } from "./cards";
+export { QuoteCard, type QuoteCardProps } from "./cards";
 
 // Activity (replaces deprecated RecentActivity)
 export * from "../activity";

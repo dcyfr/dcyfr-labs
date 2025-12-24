@@ -48,11 +48,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'images.credly.com',
         pathname: '/**',
       },
@@ -91,6 +86,12 @@ const nextConfig: NextConfig = {
       {
         source: '/drew/resume',
         destination: '/about/drew/resume',
+        permanent: true,
+      },
+      // Resume to Services redirect
+      {
+        source: '/resume',
+        destination: '/services',
         permanent: true,
       },
       // Legacy RSS/Atom redirects already handled in app/rss.xml/route.ts and app/atom.xml/route.ts
