@@ -9,7 +9,7 @@
  */
 
 import type { Post } from "@/data/posts";
-import type { ActivityItem } from "./types";
+import type { ActivityItem, ActivitySource, ActivityVerb } from "./types";
 import type { CredlyBadge, CredlyBadgesResponse } from "@/types/credly";
 import { getMultiplePostViews } from "@/lib/views";
 import { getPostCommentsBulk } from "@/lib/comments";
@@ -277,8 +277,11 @@ export async function transformTrendingPosts(
     if (options?.after && postDate < options.after) continue;
     if (options?.before && postDate > options.before) continue;
 
-    // Build description with view stats
+    // Build description with view stats and time period
     let description: string;
+    const timestamp = new Date(post.updatedAt || post.publishedAt);
+    const trendingMonth = timestamp.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+    
     if (options?.description) {
       // Custom description base - add view stats if available
       if (item.recentViews > 0) {
@@ -287,10 +290,10 @@ export async function transformTrendingPosts(
         description = options.description;
       }
     } else {
-      // Default description
+      // Default description - always show the month for clarity
       description = item.recentViews > 0
-        ? `Trending with ${item.recentViews.toLocaleString()} views in the last 7 days`
-        : `Recently published`;
+        ? `Trending in ${trendingMonth} with ${item.recentViews.toLocaleString()} views in the last 7 days`
+        : `Recently published in ${trendingMonth}`;
     }
 
     // Use actual publication/update date for timestamp, not artificial trending period date
@@ -579,6 +582,60 @@ interface GitHubRelease {
   body: string;
   published_at: string;
   html_url: string;
+}
+
+/**
+ * Transform webhook-based GitHub commits from Redis into activity items
+ * These are commits received via webhook and stored by the /api/github/webhook endpoint
+ */
+export async function transformWebhookGitHubCommits(
+  limit?: number
+): Promise<ActivityItem[]> {
+  const redis = await getRedisClient();
+  if (!redis) return [];
+
+  try {
+    // Get the list of recent commit keys
+    const commitKeys = await redis.lRange("github:commits:recent", 0, limit ? limit - 1 : 999);
+    
+    if (commitKeys.length === 0) {
+      return [];
+    }
+
+    // Fetch all commit data in parallel
+    const commitDataList = await Promise.all(
+      commitKeys.map((key) => redis.get(key))
+    );
+
+    const activities: ActivityItem[] = [];
+    
+    for (const data of commitDataList) {
+      if (!data) continue;
+      try {
+        const commit = JSON.parse(data);
+        activities.push({
+          id: commit.id,
+          source: commit.source as ActivitySource,
+          verb: commit.verb as ActivityVerb,
+          title: commit.title,
+          description: commit.description,
+          timestamp: new Date(commit.timestamp),
+          href: commit.href,
+          meta: commit.meta,
+        });
+      } catch (error) {
+        console.error("[Activity] Failed to parse commit data:", error);
+      }
+    }
+
+    activities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+
+    await redis.quit();
+    return activities;
+  } catch (error) {
+    console.error("[Activity] Failed to fetch webhook GitHub commits:", error);
+    return [];
+  }
 }
 
 /**

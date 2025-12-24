@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock } from "lucide-react";
 import type { Post } from "@/data/posts";
-import { HOVER_EFFECTS, TYPOGRAPHY, ANIMATION } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY, SPACING, GRADIENTS } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 interface FeaturedPostHeroProps {
@@ -63,8 +63,11 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <Card className={`group relative overflow-hidden border-2 p-0 ${HOVER_EFFECTS.cardFeatured}`}>
-        {/* Background image - only if explicitly defined in post and not hidden */}
+      <div className={cn("group relative overflow-hidden rounded-xl border shadow-lg", HOVER_EFFECTS.cardFeatured)}>
+        {/* Gradient accent bar */}
+        <div className={cn("absolute inset-x-0 top-0 h-1 z-20 rounded-t-xl", GRADIENTS.brand.primary)} />
+        
+        {/* Background image - fills entire container */}
         {post.image && !post.image.hideCard && (
           <div className="absolute inset-0 z-0">
             <Image
@@ -72,17 +75,17 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
               alt={post.image.alt || post.title}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 100vw"
+              sizes="(max-width: 768px) 100vw, 1200px"
+              priority
             />
-            {/* Gradient overlay for text contrast */}
-            <div className="absolute inset-0 bg-linear-to-b from-background/75 via-background/85 to-background/95" />
+            {/* Dark overlay for text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/85 to-background/90" />
           </div>
         )}
-        {/* TODO: Re-enable holo effects after mouse-tracking implementation for dynamic pivoting */}
         
-        <div className="relative z-10 p-5 md:p-8 space-y-4">
+        <div className={cn("relative z-10 p-4 md:p-8", SPACING.content)}>
           {/* Featured Badge */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <Badge variant="default" className={cn("text-xs", "font-medium")}>
               Featured
             </Badge>
@@ -136,7 +139,7 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
             </div>
           </div>
         </div>
-      </Card>
+      </div>
     </Link>
   );
 }

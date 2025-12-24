@@ -1,9 +1,10 @@
 import { featuredProjects, projects } from "@/data/projects";
 import { posts, featuredPosts } from "@/data/posts";
-import { visibleChangelog } from "@/data/changelog";
+import { visibleChangelog, changelog } from "@/data/changelog";
 import { getSocialUrls } from "@/data/socials";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
 import { getMultiplePostViews } from "@/lib/views";
+import { calculateYearsWithCertifications } from "@/lib/years-calculator";
 import {
   SITE_URL,
   SITE_TITLE,
@@ -13,7 +14,6 @@ import {
 } from "@/lib/site-config";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
   TYPOGRAPHY,
@@ -21,30 +21,47 @@ import {
   PAGE_LAYOUT,
   CONTAINER_WIDTHS,
   SCROLL_BEHAVIOR,
-  getContainerClasses,
+  CONTAINER_VERTICAL_PADDING,
 } from "@/lib/design-tokens";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { PageLayout } from "@/components/layouts/page-layout";
 import { cn } from "@/lib/utils";
-import { PostList } from "@/components/blog";
 import {
   SectionHeader,
   SiteLogo,
   SectionNavigator,
   Section,
   TrendingPosts,
-  ScrollIndicator,
   SmoothScrollToHash,
 } from "@/components/common";
 import {
   transformPosts,
   transformProjects,
   transformChangelog,
-  aggregateActivities,
 } from "@/lib/activity";
-import { HomepageStats, HomepageHeroActions, HomepageHeroHeadline, FlippableAvatar } from "@/components/home";
+import type { ActivityItem } from "@/lib/activity/types";
+import {
+  transformPostsWithViews,
+  transformTrendingPosts,
+  transformMilestones,
+  transformHighEngagementPosts,
+  transformCommentMilestones,
+  transformGitHubActivity,
+  transformWebhookGitHubCommits,
+  transformCredlyBadges,
+  transformVercelAnalytics,
+  transformGitHubTraffic,
+  transformGoogleAnalytics,
+  transformSearchConsole,
+} from "@/lib/activity/sources.server";
+import {
+  HomepageStats,
+  HomepageHeroActions,
+  HomepageHeroHeadline,
+  FlippableAvatar,
+  QuickLinksRibbon,
+} from "@/components/home";
 import { ScrollReveal } from "@/components/features";
 
 // Lazy-loaded below-fold components for better initial load performance
@@ -52,12 +69,14 @@ const FeaturedPostHero = dynamic(
   () => import("@/components/home").then(mod => ({ default: mod.FeaturedPostHero })),
   {
     loading: () => (
-      <Card className="p-5 space-y-4 animate-pulse">
-        <div className="flex items-center gap-2">
-          <div className="h-5 w-16 bg-muted rounded" />
-          <div className="h-5 w-20 bg-muted rounded" />
+      <Card className="p-4 md:p-8 animate-pulse">
+        <div className={cn("flex items-center", SPACING.compact)}>
+          <div className="flex items-center gap-4">
+            <div className="h-5 w-16 bg-muted rounded" />
+            <div className="h-5 w-20 bg-muted rounded" />
+          </div>
         </div>
-        <div className="space-y-2">
+        <div className={cn("mt-4", SPACING.compact)}>
           <div className="h-8 bg-muted rounded w-3/4" />
           <div className="h-6 bg-muted rounded w-full" />
         </div>
@@ -67,13 +86,37 @@ const FeaturedPostHero = dynamic(
   }
 );
 
-const ActivityFeed = dynamic(
-  () => import("@/components/activity").then(mod => ({ default: mod.ActivityFeed })),
+const InfiniteActivitySection = dynamic(
+  () => import("@/components/home").then(mod => ({ default: mod.InfiniteActivitySection })),
   {
     loading: () => (
-      <div className="space-y-3">
-        {[...Array(3)].map((_, i) => (
+      <div className={SPACING.content}>
+        {[...Array(5)].map((_, i) => (
           <div key={i} className="h-20 bg-muted rounded-lg animate-pulse" />
+        ))}
+      </div>
+    ),
+    ssr: true,
+  }
+);
+
+const HomepageHeatmapMini = dynamic(
+  () => import("@/components/home").then(mod => ({ default: mod.HomepageHeatmapMini })),
+  {
+    loading: () => (
+      <div className="h-48 w-full bg-muted rounded-lg animate-pulse" />
+    ),
+    ssr: true,
+  }
+);
+
+const ExploreCards = dynamic(
+  () => import("@/components/home").then(mod => ({ default: mod.ExploreCards })),
+  {
+    loading: () => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
         ))}
       </div>
     ),
@@ -100,11 +143,11 @@ export default async function Home() {
   // Get featured post for hero section
   const featuredPost = featuredPosts[0];
   
-  // Prepare recent posts for homepage
+  // Prepare posts for homepage (all posts for infinite scroll timeline)
   const recentPosts = [...posts]
     .filter(p => !p.archived)
-    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
-    .slice(0, 5);
+    .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+    // No limit - use all posts for timeline
   
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
@@ -168,19 +211,99 @@ export default async function Home() {
     ],
   };
 
-  // Transform content into activity items
-  const blogActivities = await transformPosts(recentPosts);
-  const projectActivities = transformProjects([...featuredProjects]);
-  const changelogActivities = transformChangelog(visibleChangelog);
-  
-  const recentActivities = aggregateActivities(
-    [
-      ...blogActivities,
-      ...projectActivities,
-      ...changelogActivities,
-    ],
-    { limit: 7 }
+  // Gather activity from all sources (unified timeline)
+  const activities: ActivityItem[] = [];
+
+  await Promise.all([
+    // Blog posts with views
+    transformPostsWithViews(posts)
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Blog posts fetch failed:", err)),
+    
+    // Projects
+    Promise.resolve(transformProjects([...projects]))
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Projects fetch failed:", err)),
+    
+    // Changelog
+    Promise.resolve(transformChangelog(changelog))
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Changelog fetch failed:", err)),
+    
+    // Trending posts
+    transformTrendingPosts(posts)
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Trending posts fetch failed:", err)),
+    
+    // Milestones
+    transformMilestones(posts)
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Milestones fetch failed:", err)),
+    
+    // High engagement posts
+    transformHighEngagementPosts(posts)
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] High engagement posts fetch failed:", err)),
+    
+    // Comment milestones
+    transformCommentMilestones(posts)
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Comment milestones fetch failed:", err)),
+    
+    // GitHub activity
+    transformGitHubActivity("dcyfr", ["dcyfr-labs"])
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] GitHub activity fetch failed:", err)),
+    
+    // Webhook GitHub commits
+    transformWebhookGitHubCommits()
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Webhook commits fetch failed:", err)),
+    
+    // Credly badges
+    transformCredlyBadges("dcyfr")
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Credly badges fetch failed:", err)),
+    
+    // Vercel Analytics
+    transformVercelAnalytics()
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Vercel Analytics fetch failed:", err)),
+    
+    // GitHub Traffic
+    transformGitHubTraffic()
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] GitHub Traffic fetch failed:", err)),
+    
+    // Google Analytics
+    transformGoogleAnalytics()
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Google Analytics fetch failed:", err)),
+    
+    // Search Console
+    transformSearchConsole()
+      .then((items) => activities.push(...items))
+      .catch((err) => console.error("[Homepage] Search Console fetch failed:", err)),
+  ]);
+
+  // Sort by timestamp (most recent first)
+  const timelineActivities = activities.sort(
+    (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
   );
+
+  // All activities for heatmap
+  const allActivities = timelineActivities;
+
+  // Convert viewCounts to Map for TrendingPosts
+  const viewCountsMap = new Map(Object.entries(viewCounts).map(([k, v]) => [k, v as number]));
+
+  // Calculate stats for homepage
+  const activePosts = posts.filter(p => !p.archived);
+  const uniqueTechnologies = new Set(
+    projects.flatMap(p => p.tech || [])
+  );
+  // Calculate years including certifications from Credly
+  const yearsOfExperience = await calculateYearsWithCertifications();
 
   return (
     <PageLayout>
@@ -189,22 +312,28 @@ export default async function Home() {
 
       <SectionNavigator
         scrollOffset={SCROLL_BEHAVIOR.offset.standard}
-        className="space-y-10 md:space-y-14"
+        className={SPACING.section}
       >
-        {/* Hero Section */}
+        {/* 1. Hero Section */}
         <Section id="hero">
           <ScrollReveal animation="fade-up">
-            <div className={cn(PAGE_LAYOUT.hero.container, "flex flex-col items-center w-full")}>
+            <div
+              className={cn(
+                PAGE_LAYOUT.hero.container,
+                "flex flex-col items-center w-full"
+              )}
+            >
               <div
                 className={cn(
-                  "space-y-4",
+                  SPACING.content,
                   "text-center flex flex-col items-center w-full",
-                  `${CONTAINER_WIDTHS.narrow} mx-auto`
+                  CONTAINER_WIDTHS.narrow,
+                  "mx-auto"
                 )}
               >
                 {/* Avatar */}
                 <div
-                  className="flex justify-center w-full"
+                  className="flex justify-center w-full mb-4 md:mb-6"
                   role="img"
                   aria-label="Avatar - Click to flip"
                 >
@@ -212,55 +341,140 @@ export default async function Home() {
                 </div>
 
                 {/* Logo Title */}
-                <SiteLogo size="lg" showIcon={false} className="justify-center" />
-
-                {/* Professional Headline 
-                <HomepageHeroHeadline /> */}
+                <div className="mb-4 md:mb-6">
+                  <SiteLogo
+                    size="lg"
+                    showIcon={false}
+                    className="justify-center"
+                  />
+                </div>
 
                 {/* Description */}
                 <p
                   className={cn(
                     "text-muted-foreground leading-relaxed",
                     TYPOGRAPHY.description,
-                    CONTAINER_WIDTHS.narrow,
-                    "mx-auto w-full",
-                    "text-center"
+                    "mx-auto w-full text-center",
+                    "mb-6 md:mb-8"
                   )}
                 >
-                  Exploring cyber architecture, coding, and security insights to build a safer digital future.
+                  Exploring cyber architecture, coding, and security insights to
+                  build a safer digital future.
                 </p>
 
                 {/* Actions */}
-                <div className="w-full flex justify-center">
+                <div className="w-full flex justify-center mb-4 md:mb-6">
                   <HomepageHeroActions />
                 </div>
+
+                {/* Quick Links Ribbon */}
+                <QuickLinksRibbon />
               </div>
             </div>
           </ScrollReveal>
         </Section>
 
-        {/* featured article */}
-        <Section id="featured-post" className={PAGE_LAYOUT.section.container}>
+        {/* 2. Activity Heatmap 
+        <Section id="activity-heatmap" className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={50}>
+            <div className={SPACING.content}>
+              <HomepageHeatmapMini activities={allActivities} />
+            </div>
+          </ScrollReveal>
+        </Section> */}
+
+        {/* 3. Featured Article - Highlighted section */}
+        <Section
+          id="featured-post"
+          className={cn(
+            PAGE_LAYOUT.section.container,
+            CONTAINER_VERTICAL_PADDING
+          )}
+        >
           <ScrollReveal animation="fade-up" delay={100}>
             <div className={SPACING.content}>
+              {/* <SectionHeader title="Featured" /> */}
               <FeaturedPostHero post={featuredPost} />
             </div>
           </ScrollReveal>
         </Section>
 
-        {/* Recent Activity */}
-        <Section id="recent-activity" className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={215}>
+        {/* 4. Trending Now */}
+        <Section id="trending" className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={150}>
             <div className={SPACING.content}>
-              <SectionHeader title="Activity" />
-              <ActivityFeed
-                items={recentActivities}
-                variant="timeline"
-                viewAllHref="/activity"
+              {/* <SectionHeader
+                title="Trending"
+                actionHref="/blog"
+                actionLabel="View all posts"
+              /> */}
+              <TrendingPosts
+                posts={activePosts}
+                viewCounts={viewCountsMap}
+                limit={3}
               />
             </div>
           </ScrollReveal>
         </Section>
+
+        {/* 5. Recent Activity - Infinite Scroll Timeline */}
+        <Section id="recent-activity" className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={200}>
+            <div className={SPACING.content}>
+              {/* <SectionHeader
+                title="Recent Activity"
+                actionHref="/activity"
+                actionLabel="View all activity"
+              /> */}
+              <InfiniteActivitySection
+                items={timelineActivities}
+                totalActivities={timelineActivities.length}
+                initialCount={7}
+                pageSize={8}
+                showProgress
+                maxItemsBeforeCTA={20}
+                ctaText="View all activity"
+                ctaHref="/activity"
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* 6. Explore Cards - Highlighted section 
+        <Section
+          id="explore"
+          className={cn(
+            PAGE_LAYOUT.section.container,
+            CONTAINER_VERTICAL_PADDING,
+            "bg-muted/30 dark:bg-muted/10",
+            "border-y border-border/50"
+          )}
+        >
+          <ScrollReveal animation="fade-up" delay={250}>
+            <div className={SPACING.content}>
+              <SectionHeader title="Explore" />
+              <ExploreCards
+                postCount={activePosts.length}
+                projectCount={projects.length}
+                activityCount={allActivities.length}
+              />
+            </div>
+          </ScrollReveal>
+        </Section> */}
+
+        {/* 7. Stats Dashboard 
+        <Section id="stats" className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={300}>
+            <div className={SPACING.content}>
+              <HomepageStats
+                postsCount={activePosts.length}
+                projectsCount={projects.length}
+                yearsOfExperience={yearsOfExperience}
+                technologiesCount={uniqueTechnologies.size}
+              />
+            </div>
+          </ScrollReveal>
+        </Section> */}
       </SectionNavigator>
     </PageLayout>
   );

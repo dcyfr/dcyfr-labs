@@ -238,7 +238,7 @@ Just don't copy/redistribute the proprietary DCYFR architecture. Build your own.
 
 ---
 
-For detailed access controls, see [CODEOWNERS](./.CODEOWNERS)  
+For detailed access controls, see [CODEOWNERS](./CODEOWNERS)  
 For public patterns, see [docs/ai/](../../docs/ai/)  
 For contribution rules, see [CONTRIBUTING.md](../../CONTRIBUTING.md)  
-For agent reference, see [.github/agents/PUBLIC_REFERENCE.md](./agents/PUBLIC_REFERENCE.md)
+For agent reference, see [DCYFR.agent.md](./agents/DCYFR.agent.md)
