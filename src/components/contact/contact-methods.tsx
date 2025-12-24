@@ -3,6 +3,7 @@ import { sanitizeUrl } from "@/lib/utils";
 import { SPACING, TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
 import { AUTHOR_EMAIL } from "@/lib/site-config";
 import { getSocialLink } from "@/data/socials";
+import { cn } from "@/lib/utils";
 import {
   Mail,
   Calendar,
@@ -23,6 +24,7 @@ import {
  * - Hover effects for visual feedback
  * - External link indicators
  * - Responsive grid layout
+ * - Full design token compliance
  * 
  * @example
  * ```tsx
@@ -82,7 +84,7 @@ export function ContactMethods() {
     <div className={SPACING.content}>
       <div className="text-center mb-8">
         <h2 className={TYPOGRAPHY.h2.standard}>Other Ways to Connect</h2>
-        <p className="text-muted-foreground mt-2">
+        <p className={cn(TYPOGRAPHY.description, "mt-2")}>
           Choose the platform that works best for you
         </p>
       </div>
@@ -100,7 +102,7 @@ export function ContactMethods() {
               rel={isExternal ? "noopener noreferrer" : undefined}
               className="group"
             >
-              <Card className={`p-4 h-full ${HOVER_EFFECTS.cardSubtle}`}>
+              <Card className={cn("p-4 h-full", HOVER_EFFECTS.cardSubtle)}>
                 <div className="flex flex-col items-center text-center gap-3">
                   <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
                     <IconComponent

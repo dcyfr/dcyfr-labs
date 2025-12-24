@@ -76,7 +76,8 @@ test.describe('Homepage', () => {
     } else {
       // Click on blog dropdown button then "All Posts" in main header nav
       await page.locator('header nav').getByRole('button', { name: /blog/i }).click()
-      await page.getByRole('link', { name: /all posts/i }).click()
+      // Use first() to select the header nav link specifically (avoid conflict with hero/footer links)
+      await page.locator('header nav').getByRole('link', { name: /all posts/i }).first().click()
     }
 
     // Wait for navigation
@@ -98,5 +99,87 @@ test.describe('Homepage', () => {
     // Test desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 })
     await expect(page.locator('header a[href="/"]')).toBeVisible()
+  })
+
+  test('should display all homepage sections', async ({ page }) => {
+    await page.goto('/')
+
+    // 1. Hero section with avatar and actions
+    await expect(page.locator('#hero')).toBeVisible()
+    await expect(page.locator('#hero [role="img"][aria-label*="Avatar"]').first()).toBeVisible()
+
+    // 2. Activity heatmap
+    await expect(page.locator('#activity-heatmap')).toBeVisible()
+
+    // 3. Featured post section
+    await expect(page.locator('#featured-post')).toBeVisible()
+
+    // 4. Trending posts
+    await expect(page.locator('#trending')).toBeVisible()
+
+    // 5. Activity timeline
+    await expect(page.locator('#recent-activity')).toBeVisible()
+
+    // 6. Explore cards
+    await expect(page.locator('#explore')).toBeVisible()
+
+    // 7. Stats dashboard
+    await expect(page.locator('#stats')).toBeVisible()
+  })
+
+  test('should have working hero CTAs', async ({ page }) => {
+    await page.goto('/')
+
+    // Verify hero action buttons are visible and clickable
+    const heroSection = page.locator('#hero')
+    
+    // Primary CTA - View our work
+    const workButton = heroSection.getByRole('link', { name: /view our work/i })
+    await expect(workButton).toBeVisible()
+
+    // Secondary CTA - Read blog
+    const blogButton = heroSection.getByRole('link', { name: /read blog/i })
+    await expect(blogButton).toBeVisible()
+
+    // Tertiary CTA - Learn more (about)
+    const aboutButton = heroSection.getByRole('link', { name: /learn more/i })
+    await expect(aboutButton).toBeVisible()
+  })
+
+  test('should display responsive spacing on mobile', async ({ page }) => {
+    // Test mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 })
+    await page.goto('/')
+
+    // Verify key sections are visible and properly spaced on mobile
+    await expect(page.locator('#hero')).toBeVisible()
+    await expect(page.locator('#activity-heatmap')).toBeVisible()
+    await expect(page.locator('#featured-post')).toBeVisible()
+
+    // Check that sections don't overlap (basic layout check)
+    const hero = page.locator('#hero')
+    const heatmap = page.locator('#activity-heatmap')
+    
+    const heroBox = await hero.boundingBox()
+    const heatmapBox = await heatmap.boundingBox()
+    
+    // Heatmap should be below hero (y position greater)
+    expect(heatmapBox?.y).toBeGreaterThan(heroBox?.y ?? 0)
+  })
+
+  test('should have accessible hero section', async ({ page }) => {
+    await page.goto('/')
+
+    // Check avatar has proper ARIA label
+    const avatar = page.locator('[role="img"][aria-label*="Avatar"]')
+    await expect(avatar).toBeVisible()
+
+    // Check site logo/title is accessible
+    const logo = page.locator('header a[href="/"]')
+    await expect(logo).toBeVisible()
+
+    // Verify hero description is present
+    const description = page.locator('#hero').getByText(/exploring cyber architecture/i)
+    await expect(description).toBeVisible()
   })
 })
