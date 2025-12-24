@@ -14,6 +14,7 @@ import {
   getOgImageUrl,
 
 } from "@/lib/site-config";
+import { MOBILE_SAFE_PADDING } from "@/lib/design-tokens";
 import { SiteHeader, SiteFooter, BottomNav } from "@/components/navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { LayoutUtilities } from "@/components/features/layout-utilities";
@@ -143,7 +144,7 @@ export default async function RootLayout({
             <CommandPalette />
             <NavigationShortcutsProvider />
             <SiteHeader />
-            <main id="main-content" className="min-h-[calc(100dvh-128px)] pb-8">{children}</main>
+            <main id="main-content" className={`min-h-[calc(100dvh-128px)] ${MOBILE_SAFE_PADDING}`}>{children}</main>
             <SiteFooter />
             <BottomNav />
             <Toaster richColors position="top-center" />

@@ -59,6 +59,13 @@ export const ARCHIVE_CONTAINER_PADDING = "px-4 sm:px-6 md:px-8" as const;
 export const CONTAINER_VERTICAL_PADDING = "py-8 md:py-12" as const;
 
 /**
+ * Mobile-safe bottom padding that accounts for BottomNav (48px) + safe clearance
+ * - Mobile: 80px (BottomNav 48px + 32px clearance)
+ * - Desktop: 32px (standard padding, no BottomNav)
+ */
+export const MOBILE_SAFE_PADDING = "pb-20 md:pb-8" as const;
+
+/**
  * Utility function to build complete container classes
  * 
  * @param width - Container width variant

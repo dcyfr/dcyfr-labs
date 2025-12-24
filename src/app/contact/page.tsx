@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { getContactPageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import { headers } from "next/headers";
-import { PAGE_LAYOUT, TYPOGRAPHY, getContainerClasses } from "@/lib/design-tokens";
+import { SPACING, TYPOGRAPHY, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 import { createPageMetadata } from "@/lib/metadata";
 import dynamic from "next/dynamic";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { PageLayout } from "@/components/layouts";
 import { PageHero } from "@/components/layouts/page-hero";
 import { ContactForm, ContactFormErrorBoundary, SmoothScrollToHash } from "@/components/common";
 import { ContactMethods, ContactSocialLinks } from "@/components/contact";
+import { cn } from "@/lib/utils";
 
 const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
   loading: () => <div className="contents" />,
@@ -34,24 +35,23 @@ export default async function ContactPage() {
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <SmoothScrollToHash />
-      <div className={`space-y-10 md:space-y-14 ${getContainerClasses('narrow')}`}>
+      <div className="space-y-12 md:space-y-16">
         {/* Hero Section */}
         <section id="hero">
           <PageHero
             title="Contact Us"
             description="Whether you have questions, feedback, or collaboration ideas, we're here to help. Choose your preferred way to connect."
-            className="pt-8 md:pt-10 lg:pt-12"
+            align="center"
           />
         </section>
 
-        {/* Contact Form */}
-        <section id="contact-form" className={PAGE_LAYOUT.section.container}>
+        {/* Contact Form Section */}
+        <section id="contact-form" className={cn("mx-auto", CONTAINER_WIDTHS.standard, "px-4 sm:px-8 md:px-8")}>
           <ScrollReveal animation="fade-up" delay={100}>
             <div className="text-center mb-8">
               <h2 className={TYPOGRAPHY.h2.featured}>Send a Message</h2>
-              <p className="text-muted-foreground mt-2">
-                Fill out the form below and we&apos;ll get back to you as soon
-                as possible
+              <p className={cn(TYPOGRAPHY.description, "mt-2")}>
+                Fill out the form below and we&apos;ll get back to you as soon as possible
               </p>
             </div>
             <ContactFormErrorBoundary>
@@ -60,15 +60,15 @@ export default async function ContactPage() {
           </ScrollReveal>
         </section>
 
-        {/* Contact Methods - Primary options */}
-        <section id="contact-methods" className={PAGE_LAYOUT.section.container}>
+        {/* Contact Methods Section */}
+        <section id="contact-methods" className={cn("mx-auto", CONTAINER_WIDTHS.standard, "px-4 sm:px-8 md:px-8")}>
           <ScrollReveal animation="fade-up" delay={0}>
             <ContactMethods />
           </ScrollReveal>
         </section>
 
-        {/* Social Links - All platforms */}
-        <section id="social-links" className={PAGE_LAYOUT.section.container}>
+        {/* Social Links Section */}
+        <section id="social-links" className={cn("mx-auto", CONTAINER_WIDTHS.standard, "px-4 sm:px-8 md:px-8")}>
           <ScrollReveal animation="fade-up" delay={200}>
             <ContactSocialLinks />
           </ScrollReveal>

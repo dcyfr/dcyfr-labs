@@ -1,35 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Briefcase, Activity, Bookmark, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CONTAINER_WIDTHS, ANIMATION } from "@/lib/design-tokens";
-
-/**
- * Quick link item configuration
- */
-interface QuickLinkItem {
-  href: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  description?: string;
-}
-
-/**
- * Quick links for homepage navigation
- */
-const QUICK_LINKS: QuickLinkItem[] = [
-  { href: "/blog", label: "Blog", icon: BookOpen, description: "Read articles" },
-  { href: "/work", label: "Projects", icon: Briefcase, description: "View work" },
-  { href: "/activity", label: "Activity", icon: Activity, description: "See updates" },
-  { href: "/bookmarks", label: "Bookmarks", icon: Bookmark, description: "Curated links" },
-  { href: "/about", label: "About", icon: User, description: "Learn more" },
-];
+import { CONTAINER_WIDTHS, ANIMATION, TYPOGRAPHY } from "@/lib/design-tokens";
+import { SECONDARY_NAV_LINKS } from "@/lib/nav-links";
 
 /**
  * QuickLinksRibbon - Horizontal scrollable navigation pills
  *
- * Provides quick access to main content areas from the homepage hero.
+ * Provides quick access to secondary content areas from the homepage hero.
+ * Shows only Activity and Bookmarks (primary nav already in hero CTAs).
+ * Uses centralized navigation configuration for consistency.
+ * 
  * Features:
  * - Horizontal scroll on mobile with touch support
  * - Keyboard navigable
@@ -54,7 +36,7 @@ export function QuickLinksRibbon({ className }: { className?: string }) {
           "mx-auto"
         )}
       >
-        {QUICK_LINKS.map((link) => (
+        {SECONDARY_NAV_LINKS.map((link) => (
           <Link
             key={link.href}
             href={link.href}
@@ -64,7 +46,7 @@ export function QuickLinksRibbon({ className }: { className?: string }) {
               "rounded-full",
               "bg-muted/50 hover:bg-muted",
               "text-muted-foreground hover:text-foreground",
-              "text-sm font-medium",
+              TYPOGRAPHY.label.small,
               "whitespace-nowrap",
               ANIMATION.transition.theme,
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
@@ -73,7 +55,7 @@ export function QuickLinksRibbon({ className }: { className?: string }) {
             title={link.description}
           >
             <link.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span>{link.label}</span>
+            <span>{link.shortLabel || link.label}</span>
           </Link>
         ))}
       </div>

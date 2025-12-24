@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/metadata";
 import { PageLayout } from "@/components/layouts";
-import { InteractiveDecisionTree } from "@/components/dev";
 import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 import { Breadcrumbs } from "@/components/navigation";
 import { cn } from "@/lib/utils";
+import { DecisionTreeClient } from "./_decision-tree-client";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Interactive Decision Trees - Dev Docs",
@@ -288,9 +288,7 @@ export default function DecisionTreesPage() {
           </p>
         </div>
 
-        <InteractiveDecisionTree {...layoutDecisionTree} />
-        <InteractiveDecisionTree {...metadataDecisionTree} />
-        <InteractiveDecisionTree {...containerDecisionTree} />
+        <DecisionTreeClient layoutDecisionTree={layoutDecisionTree} metadataDecisionTree={metadataDecisionTree} containerDecisionTree={containerDecisionTree} />
       </div>
     </PageLayout>
   );
