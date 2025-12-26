@@ -173,6 +173,10 @@ export const FOOTER_NAV: NavItem[] = [
     label: "Bookmarks",
   },
   {
+    href: "/likes",
+    label: "Likes",
+  },
+  {
     href: "/contact",
     label: "Contact",
   },
