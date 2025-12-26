@@ -1,12 +1,13 @@
 /* eslint-disable no-restricted-syntax -- Chart visualization colors (activity heatmap) are intentional exceptions */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
 import { motion } from "framer-motion";
-import { Calendar, TrendingUp, Zap, Target } from "lucide-react";
+import { Calendar, TrendingUp, Zap, Target, Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { TYPOGRAPHY, SPACING, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import type { ActivityItem } from "@/lib/activity/types";
 import {
@@ -15,6 +16,7 @@ import {
   getHeatmapColorClass,
   type ActivityHeatmapDay,
 } from "@/lib/activity/heatmap";
+import { exportHeatmapAsImage } from "@/lib/activity/heatmap-export";
 
 // Import styles for react-calendar-heatmap
 import "react-calendar-heatmap/dist/styles.css";
@@ -69,6 +71,8 @@ export function ActivityHeatmapCalendar({
   className,
 }: ActivityHeatmapCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const heatmapRef = useRef<HTMLDivElement>(null);
 
   // Calculate date range based on monthsToShow
   const { startDate, endDate } = useMemo(() => {
@@ -113,6 +117,34 @@ export function ActivityHeatmapCalendar({
     });
   };
 
+  // Handle export as image
+  const handleExport = async () => {
+    if (!heatmapRef.current) {
+      alert("Export failed: Heatmap element not found. Please try again.");
+      return;
+    }
+
+    setIsExporting(true);
+
+    try {
+      const result = await exportHeatmapAsImage({
+        element: heatmapRef.current,
+        quality: 1.0,
+        scale: 2,
+      });
+
+      if (result.success) {
+        alert(`Export successful! Heatmap saved as ${result.filename}`);
+      } else {
+        alert(`Export failed: ${result.error || "An unknown error occurred."}`);
+      }
+    } catch (error) {
+      alert(`Export failed: ${error instanceof Error ? error.message : "An unknown error occurred."}`);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -121,13 +153,25 @@ export function ActivityHeatmapCalendar({
       className={className}
     >
       <Card>
-        <CardContent className={`p-${SPACING.section}`}>
+        <CardContent className={`p-${SPACING.section}`} ref={heatmapRef}>
           {/* Header */}
           <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
             <h3 className={TYPOGRAPHY.h3.standard}>Activity Heatmap</h3>
-            <Badge variant="secondary" className="text-xs">
-              {stats.totalActivities.toLocaleString()} activities in {monthsToShow} months
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-xs">
+                {stats.totalActivities.toLocaleString()} activities in {monthsToShow} months
+              </Badge>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExport}
+                disabled={isExporting}
+                className="gap-2"
+              >
+                <Download className="h-4 w-4" />
+                {isExporting ? "Exporting..." : "Export PNG"}
+              </Button>
+            </div>
           </div>
 
           {/* Statistics Grid */}
