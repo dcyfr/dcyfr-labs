@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert } from "@/components/common/alert";
 import { Award, ExternalLink } from "lucide-react";
 import { SPACING, TYPOGRAPHY, ANIMATION } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { cn, ensureAbsoluteUrl } from "@/lib/utils";
 import { useCredlyBadges } from "@/hooks/use-credly";
 import type { CredlyBadge } from "@/types/credly";
 
@@ -65,10 +65,11 @@ export function MiniBadgeList({
       {/* Minimalistic badge grid - just images */}
       <div className="flex flex-wrap gap-4">
         {badges.map((badge) => {
-          const issuerName = badge.issuer.entities.find(e => e.primary)?.entity.name || 
-            badge.issuer.entities[0]?.entity.name || 
+          const issuerName = badge.issuer.entities.find(e => e.primary)?.entity.name ||
+            badge.issuer.entities[0]?.entity.name ||
             "Unknown Issuer";
           const publicUrl = `https://www.credly.com/badges/${badge.id}`;
+          const safeUrl = ensureAbsoluteUrl(publicUrl);
           const issuedDate = new Date(badge.issued_at).toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
@@ -77,7 +78,7 @@ export function MiniBadgeList({
           return (
             <Link
               key={badge.id}
-              href={publicUrl}
+              href={safeUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative"
@@ -108,7 +109,7 @@ export function MiniBadgeList({
       {/* View on Credly link */}
       <div className="mt-6 pt-4 border-t">
         <Link
-          href={`https://www.credly.com/users/${username}/badges`}
+          href={ensureAbsoluteUrl(`https://www.credly.com/users/${username}/badges`)}
           target="_blank"
           rel="noopener noreferrer"
           className={cn(

@@ -22,6 +22,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { Eye, Lock, Zap } from "lucide-react";
 import { ThreadedActivityGroup } from "./ThreadedActivityGroup";
 import { Alert } from "@/components/common/alert";
 import { groupActivitiesIntoThreads } from "@/lib/activity/threading";
@@ -82,10 +83,30 @@ export function ThreadedActivityFeed({
 
             {/* Divider between threads (except last) */}
             {index < threads.length - 1 && (
-              <div className="my-12 border-t border-border/50" aria-hidden="true" />
+              <div
+                className="my-12 border-t border-border/50"
+                aria-hidden="true"
+              />
             )}
           </div>
         ))}
+
+        {/* End of Timeline Easter Egg 
+        <div className="mt-16 pt-12 border-t border-border/50 text-center space-y-6">
+          <div className="flex items-center justify-center gap-2 text-muted-foreground">
+            <Eye className="h-4 w-4" />
+            <span className="text-sm">observer.detected</span>
+          </div>
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground/60">
+              [achievement_locked: explorer_001]
+            </p>
+            <p className="text-xs text-muted-foreground/50 flex items-center justify-center gap-2">
+              <Zap className="h-3 w-3" />
+              collecting artifacts...
+            </p>
+          </div>
+        </div> */}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert } from "@/components/common/alert";
 import { Lightbulb, ExternalLink } from "lucide-react";
 import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { cn, ensureAbsoluteUrl } from "@/lib/utils";
 import { useCredlySkills } from "@/hooks/use-credly";
 import type { CredlySkill } from "@/types/credly";
 
@@ -112,7 +112,7 @@ export function MiniSkillsList({
               {skillTiers.core.map((item) => (
                 <Link
                   key={item.skill.id}
-                  href={`https://www.credly.com/skills/${item.skill.vanity_slug}`}
+                  href={ensureAbsoluteUrl(`https://www.credly.com/skills/${item.skill.vanity_slug}`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`${item.count} certifications`}
@@ -140,7 +140,7 @@ export function MiniSkillsList({
               {skillTiers.proficient.map((item) => (
                 <Link
                   key={item.skill.id}
-                  href={`https://www.credly.com/skills/${item.skill.vanity_slug}`}
+                  href={ensureAbsoluteUrl(`https://www.credly.com/skills/${item.skill.vanity_slug}`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`${item.count} certifications`}
@@ -168,7 +168,7 @@ export function MiniSkillsList({
               {skillTiers.familiar.map((item) => (
                 <Link
                   key={item.skill.id}
-                  href={`https://www.credly.com/skills/${item.skill.vanity_slug}`}
+                  href={ensureAbsoluteUrl(`https://www.credly.com/skills/${item.skill.vanity_slug}`)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -188,7 +188,7 @@ export function MiniSkillsList({
       {/* View all skills link */}
       <div className="mt-6 pt-4 border-t">
         <Link
-          href={`https://www.credly.com/users/${username}/badges`}
+          href={ensureAbsoluteUrl(`https://www.credly.com/users/${username}/badges`)}
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
