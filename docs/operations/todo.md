@@ -7,43 +7,46 @@ This document tracks operational priorities, feature development stages, and mai
 
 ---
 
-## ✅ Recently Completed: Blog Sidebar Accessibility Improvements (December 25, 2025)
+## ✅ Recently Completed: Heatmap Export Feature & Quality Assurance (December 25-26, 2025)
 
-**Completed three critical accessibility fixes for blog post layout:**
+**Implemented comprehensive heatmap export functionality + quality validation:**
 
-1. **DOM Order Optimization** - Swapped content and ToC positions using CSS Grid order
-   - Screen readers now access article content before navigation (WCAG 2.4.1)
-   - SEO improved: `<h1>` appears before ToC in DOM
-   - Keyboard users reach content faster
+1. **Heatmap Export Feature** - PNG download with high-resolution support
+   - Export button in heatmap header with download icon
+   - Auto-generated filenames with date (`activity-heatmap-2025-12-25.png`)
+   - html2canvas integration for DOM-to-canvas conversion
+   - 18 unit tests + 12 E2E test scenarios (100% passing)
 
-2. **Mobile ToC Placement** - Moved mobile ToC to bottom of content
-   - Article title/intro now appears above fold on mobile
-   - Better mobile-first indexing for Google
-   - Reduced bounce rate
+2. **Test Reliability Improvements** - Fixed dropdown navigation tests
+   - Updated site-header dropdown tests for role="menuitem" (not role="link")
+   - Added waitFor for dropdown content rendering
+   - Fixed back-to-top positioning class expectation (88px vs 72px)
+   - All dropdown tests now passing
 
-3. **Skip to Content Link** - Added keyboard navigation bypass
-   - WCAG 2.4.1 compliance (Bypass Blocks)
-   - Keyboard users skip to content with 1 Tab + Enter
-   - Zero visual impact (only appears on keyboard focus)
+3. **Documentation** - Comprehensive feature guide
+   - `/docs/features/heatmap-export-implementation.md`
+   - User guide, troubleshooting, browser compatibility
+   - Future enhancement roadmap
 
 **Files Modified:**
+- `src/components/activity/ActivityHeatmapCalendar.tsx`
+- `src/__tests__/components/navigation/site-header.test.tsx`
+- `src/__tests__/components/navigation/back-to-top.test.tsx`
+- `package.json` (added html2canvas dependency)
 
-- `src/app/blog/[slug]/page.tsx` - DOM order optimization
-- `src/components/blog/collapsible-blog-sidebar.tsx` - Added className prop
-- `src/components/layouts/article-layout.tsx` - Skip link implementation
+**New Files:**
+- `src/lib/activity/heatmap-export.ts`
+- `src/__tests__/lib/activity-heatmap-export.test.ts`
+- `e2e/activity-heatmap-export.spec.ts`
+- `docs/features/heatmap-export-implementation.md`
 
-**Documentation:**
-
-- [Sidebar Architecture Analysis](../features/sidebar-architecture-analysis.md)
-- [Implementation Summary](../features/sidebar-accessibility-improvements.md)
-
-**Build Status:** ✅ All checks passing (TypeScript, ESLint, Production Build)
+**Build Status:** ✅ TypeScript clean • ✅ ESLint clean • ✅ 2193/2202 tests passing (99.6%)
 
 ---
 
 ## 🎯 Active Development: Activity Feed Enhancement (5-Stage Plan)
 
-### Stage 1: Quick Wins ✅ IN PROGRESS
+### Stage 1: Quick Wins ✅ COMPLETE
 **Goal:** Improve UX clarity with minimal effort, high impact
 
 **Tasks:**
@@ -51,7 +54,7 @@ This document tracks operational priorities, feature development stages, and mai
 - [x] Update tests for dynamic date validation
 - [x] Add results count badge to filter bar
 - [x] Add "Clear all filters" button
-- [ ] Commit and deploy to preview
+- [x] Commit and deploy to preview
 
 **Success Metrics:**
 - All tests passing (4/4 trending tests ✅)

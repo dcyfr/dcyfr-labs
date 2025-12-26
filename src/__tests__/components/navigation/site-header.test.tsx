@@ -100,25 +100,30 @@ describe('SiteHeader', () => {
 
     it('opens Blog dropdown when clicked', async () => {
       render(<SiteHeader />);
-      const blogButton = screen.getByRole('button', { name: /Blog/i });
+      const blogButton = screen.getByRole('button', { name: /Blog menu/i });
 
       fireEvent.click(blogButton);
 
+      // Wait for button to show expanded state and dropdown to render
       await waitFor(() => {
         expect(blogButton).toHaveAttribute('aria-expanded', 'true');
       });
 
-      expect(screen.getByRole('link', { name: /Browse all blog articles/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Multi-part article collections/i })).toBeInTheDocument();
+      // Wait for dropdown menuitems to appear (they use role="menuitem" + aria-label)
+      const allPostsLink = await screen.findByRole('menuitem', { name: /Browse all blog articles/i });
+      const blogSeriesLink = screen.getByRole('menuitem', { name: /Multi-part article collections/i });
+
+      expect(allPostsLink).toBeInTheDocument();
+      expect(blogSeriesLink).toBeInTheDocument();
     });
 
     it('closes Blog dropdown when clicking a link', async () => {
       render(<SiteHeader />);
-      const blogButton = screen.getByRole('button', { name: /Blog/i });
+      const blogButton = screen.getByRole('button', { name: /Blog menu/i });
 
       fireEvent.click(blogButton);
 
-      const allPostsLink = await screen.findByRole('link', { name: /Browse all blog articles/i });
+      const allPostsLink = await screen.findByRole('menuitem', { name: /Browse all blog articles/i });
       fireEvent.click(allPostsLink);
 
       await waitFor(() => {
@@ -169,27 +174,34 @@ describe('SiteHeader', () => {
 
     it('opens Our Work dropdown when clicked', async () => {
       render(<SiteHeader />);
-      const workButton = screen.getByRole('button', { name: /Our Work/i });
+      const workButton = screen.getByRole('button', { name: /Our Work menu/i });
 
       fireEvent.click(workButton);
 
+      // Wait for button to show expanded state and dropdown to render
       await waitFor(() => {
         expect(workButton).toHaveAttribute('aria-expanded', 'true');
       });
 
-      expect(screen.getByRole('link', { name: /View complete portfolio/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Open source and community work/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Mission-driven partnerships/i })).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Early-stage product development/i })).toBeInTheDocument();
+      // Wait for dropdown menuitems to appear (they use role="menuitem" + aria-label)
+      const allProjectsLink = await screen.findByRole('menuitem', { name: /View complete portfolio/i });
+      const communityLink = screen.getByRole('menuitem', { name: /Open source and community work/i });
+      const nonprofitLink = screen.getByRole('menuitem', { name: /Mission-driven partnerships/i });
+      const startupLink = screen.getByRole('menuitem', { name: /Early-stage product development/i });
+
+      expect(allProjectsLink).toBeInTheDocument();
+      expect(communityLink).toBeInTheDocument();
+      expect(nonprofitLink).toBeInTheDocument();
+      expect(startupLink).toBeInTheDocument();
     });
 
     it('closes Our Work dropdown when clicking a link', async () => {
       render(<SiteHeader />);
-      const workButton = screen.getByRole('button', { name: /Our Work/i });
+      const workButton = screen.getByRole('button', { name: /Our Work menu/i });
 
       fireEvent.click(workButton);
 
-      const allProjectsLink = await screen.findByRole('link', { name: /View complete portfolio/i });
+      const allProjectsLink = await screen.findByRole('menuitem', { name: /View complete portfolio/i });
       fireEvent.click(allProjectsLink);
 
       await waitFor(() => {
@@ -217,13 +229,13 @@ describe('SiteHeader', () => {
 
     it('displays correct links in Our Work dropdown', async () => {
       render(<SiteHeader />);
-      const workButton = screen.getByRole('button', { name: /Our Work/i });
+      const workButton = screen.getByRole('button', { name: /Our Work menu/i });
 
       fireEvent.click(workButton);
 
-      const communityLink = await screen.findByRole('link', { name: /Open source and community work/i });
-      const nonprofitLink = screen.getByRole('link', { name: /Mission-driven partnerships/i });
-      const startupLink = screen.getByRole('link', { name: /Early-stage product development/i });
+      const communityLink = await screen.findByRole('menuitem', { name: /Open source and community work/i });
+      const nonprofitLink = screen.getByRole('menuitem', { name: /Mission-driven partnerships/i });
+      const startupLink = screen.getByRole('menuitem', { name: /Early-stage product development/i });
 
       expect(communityLink).toHaveAttribute('href', '/work?category=community');
       expect(nonprofitLink).toHaveAttribute('href', '/work?category=nonprofit');
