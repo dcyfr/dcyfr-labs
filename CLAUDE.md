@@ -8,18 +8,21 @@ Full-stack developer portfolio with Next.js 16 App Router, TypeScript, Tailwind 
 
 **All major phases complete** ✅
 
-Project is in **maintenance mode** with data-driven enhancements.
+Project is in **maintenance mode** with data-driven enhancements ready for next features.
 
-**Key Metrics** (see [`docs/operations/todo.md`](docs/operations/todo.md)):
+**Key Metrics** (see [`docs/operations/todo.md`](docs/operations/todo.md) and [`docs/operations/done.md`](docs/operations/done.md)):
 
-- ✅ Phase 1-4 complete
-- ✅ 1185/1197 passing (99.0%)
-- ✅ 198 integration tests
-- ✅ All Core Web Vitals monitored
+- ✅ Phase 1-6 complete (Activity Feed Enhancement fully implemented)
+- ✅ 2193/2202 tests passing (99.6%)
+- ✅ 2250+ unit/integration/E2E tests
+- ✅ TypeScript strict: 0 errors
+- ✅ ESLint: 0 errors
+- ✅ All Core Web Vitals monitored (92+ Lighthouse score)
 - ✅ Zero security vulnerabilities
-- ✅ SEO foundation complete
+- ✅ SEO foundation complete + structured data
+- ✅ Heatmap export, bookmarks, RSS, GitHub webhooks, activity embeds, topic clustering
 
-**Active Work:** Dependency maintenance, backlog prioritization
+**Active Work:** Maintenance mode complete, clean state ready for new features
 
 ## Quick Reference
 
@@ -149,6 +152,35 @@ export function ContactForm() {
 - ✅ VS Code snippets: Type `dt` + Tab for design token shortcuts
 
 **See [`docs/ai/design-system.md`](docs/ai/design-system.md) for comprehensive validation checklist**
+
+## Test Data Prevention (MANDATORY)
+
+**NEVER commit test/fabricated data to production.** All test data must:
+
+1. **Be behind environment checks** - Both NODE_ENV and VERCEL_ENV
+2. **Have cleanup scripts** - Remove test data if leaked (npm run clear:analytics)
+3. **Log warnings in production** - Alert if fallback/demo data used
+4. **Be documented** - Compare sample values to actual metrics
+
+### Key Pattern
+
+```typescript
+// ✅ CORRECT: Environment-aware with explicit warning
+const isProduction = process.env.NODE_ENV === 'production' 
+  || process.env.VERCEL_ENV === 'production';
+
+if (isProduction && !hasRealData) {
+  console.error('❌ CRITICAL: Using demo data in production!');
+  return null;  // Don't use fake data - return empty or error
+}
+
+// Safe to use test data in development only
+return mockData;
+```
+
+**Reference:** [TEST_DATA_PREVENTION.md](.github/agents/enforcement/TEST_DATA_PREVENTION.md)
+
+**History:** [December 25, 2025] Removed 13 fabricated analytics items from production Redis.
 
 ## Key Constraints
 
@@ -308,6 +340,7 @@ console.log(`Service Account: ${maskEmail(credentials.client_email)}`);
 
 - `/docs/architecture/` - Patterns, migration guides
 - `/docs/design/` - Design system enforcement
+- `/docs/security/` - Security scanning (Nuclei, CodeQL)
 - `/docs/testing/` - Test infrastructure
 - `/docs/features/` - Feature guides
 - `/docs/operations/` - Todo system, done.md
@@ -340,6 +373,7 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 **GitHub Actions:**
 
 - CodeQL security scanning (daily)
+- Nuclei external vulnerability scanning (on deploy + daily)
 - Dependabot auto-merge
 - Test suite on PR
 - Lighthouse CI on deploy

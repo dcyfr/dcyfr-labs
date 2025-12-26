@@ -81,12 +81,19 @@ export function loadReactions(): ReactionCollection {
 
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
+    console.debug("[Reactions] loadReactions() called - stored data:", stored ? `${stored.length} bytes` : "null");
 
     if (!stored) {
+      console.debug("[Reactions] No stored reactions found, returning empty collection");
       return createEmptyCollection();
     }
 
     const parsed = JSON.parse(stored) as ReactionCollection;
+    console.debug("[Reactions] Parsed reactions:", {
+      total: parsed.reactions.length,
+      activityIds: parsed.reactions.map(r => r.activityId),
+      lastUpdated: parsed.lastUpdated,
+    });
 
     // Validate schema
     if (!isValidCollection(parsed)) {
@@ -96,6 +103,7 @@ export function loadReactions(): ReactionCollection {
 
     // Schema migration if needed
     if (parsed.version < SCHEMA_VERSION) {
+      console.info("[Reactions] Schema migration needed", { oldVersion: parsed.version, newVersion: SCHEMA_VERSION });
       return migrateSchema(parsed);
     }
 
@@ -116,13 +124,22 @@ export function saveReactions(collection: ReactionCollection): boolean {
   }
 
   try {
+    console.debug("[Reactions] saveReactions() called with:", {
+      reactionsCount: collection.reactions.length,
+      activityIds: collection.reactions.map(r => r.activityId),
+      lastUpdated: collection.lastUpdated,
+    });
+
     // Trim if exceeding max size
     if (collection.reactions.length > MAX_REACTIONS) {
+      console.warn("[Reactions] Trimming reactions from", collection.reactions.length, "to", MAX_REACTIONS);
       collection.reactions = collection.reactions.slice(-MAX_REACTIONS);
     }
 
     const serialized = JSON.stringify(collection);
+    console.debug("[Reactions] Serialized size:", `${serialized.length} bytes`);
     window.localStorage.setItem(STORAGE_KEY, serialized);
+    console.info("[Reactions] Successfully saved to localStorage");
     return true;
   } catch (error) {
     // Likely quota exceeded
@@ -130,13 +147,16 @@ export function saveReactions(collection: ReactionCollection): boolean {
 
     // Try to save with reduced dataset
     try {
+      console.warn("[Reactions] Attempting to save with reduced dataset (500 items)");
       const reduced: ReactionCollection = {
         ...collection,
         reactions: collection.reactions.slice(-500), // Keep most recent 500
       };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(reduced));
+      console.info("[Reactions] Successfully saved reduced dataset");
       return true;
-    } catch {
+    } catch (retryError) {
+      console.error("[Reactions] Failed to save even with reduced dataset:", retryError);
       return false;
     }
   }
@@ -156,6 +176,13 @@ export function toggleReaction(
   type: ReactionType = "like"
 ): ReactionCollection {
   const isCurrentlyLiked = isActivityLiked(activityId, currentCollection, type);
+  console.debug("[Reactions] toggleReaction() called:", {
+    activityId,
+    type,
+    isCurrentlyLiked,
+    action: isCurrentlyLiked ? "remove" : "add",
+    beforeCount: currentCollection.reactions.length,
+  });
 
   const updatedReactions = isCurrentlyLiked
     ? // Remove reaction
@@ -172,6 +199,11 @@ export function toggleReaction(
         },
       ];
 
+  console.debug("[Reactions] toggleReaction() result:", {
+    afterCount: updatedReactions.length,
+    changeType: isCurrentlyLiked ? "removed" : "added",
+  });
+
   return {
     ...currentCollection,
     reactions: updatedReactions,
@@ -187,9 +219,14 @@ export function isActivityLiked(
   collection: ReactionCollection,
   type: ReactionType = "like"
 ): boolean {
-  return collection.reactions.some(
+  const result = collection.reactions.some(
     (r) => r.activityId === activityId && r.type === type
   );
+  // Only log if true to reduce noise
+  if (result) {
+    console.debug("[Reactions] isActivityLiked():", { activityId, type, result });
+  }
+  return result;
 }
 
 /**
@@ -248,26 +285,22 @@ export function clearAllReactions(): ReactionCollection {
 // ============================================================================
 
 /**
- * Gets a simulated reaction count for display purposes
- * Combines actual user reaction + a base simulated count
+ * Gets the real reaction count for an activity
+ * Returns only actual user interactions (0 if not reacted, 1 if reacted)
+ * No simulated/fake counts - only real data
  *
- * This creates the illusion of engagement while remaining honest
- * (the user's own reactions are real, the baseline is simulated)
- *
- * @param activityId - Activity ID
+ * @param activityId - Activity ID  
  * @param collection - Reaction collection
  * @param type - Reaction type
- * @returns Simulated total count for display
+ * @returns Real count (0 or 1 based on user's actual interaction)
  */
 export function getSimulatedReactionCount(
   activityId: string,
   collection: ReactionCollection,
   type: ReactionType = "like"
 ): number {
-  const userReacted = isActivityLiked(activityId, collection, type);
-  const baseCount = generateBaseCount(activityId);
-
-  return userReacted ? baseCount + 1 : baseCount;
+  // Return only real user reaction: 1 if user reacted, 0 if not
+  return isActivityLiked(activityId, collection, type) ? 1 : 0;
 }
 
 /**

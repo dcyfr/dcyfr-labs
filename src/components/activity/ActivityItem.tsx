@@ -27,7 +27,7 @@ import {
   BookmarkCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ANIMATION, NEON_COLORS } from "@/lib/design-tokens";
+import { ANIMATION, NEON_COLORS, TOUCH_TARGET } from "@/lib/design-tokens";
 import { useBookmarks } from "@/hooks/use-bookmarks";
 import {
   type ActivityItem as ActivityItemType,
@@ -162,10 +162,21 @@ export function ActivityItem({
   const sourceLabel = ACTIVITY_SOURCE_LABELS[activity.source] || "Activity";
   const { isBookmarked, toggle } = useBookmarks();
 
+  // Extract slug from href for blog posts to match BookmarkButton behavior
+  // Blog posts have href like "/blog/owasp-top-10-agentic-ai"
+  const getBookmarkId = () => {
+    if (activity.source === "blog" && activity.href.startsWith("/blog/")) {
+      return activity.href.replace("/blog/", "");
+    }
+    return activity.id;
+  };
+
+  const bookmarkId = getBookmarkId();
+
   const handleBookmarkToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggle(activity.id);
+    toggle(bookmarkId);
   };
 
   if (variant === "minimal") {
@@ -199,20 +210,23 @@ export function ActivityItem({
       )}
     >
       <CardContent className="p-4 relative">
-        {/* Bookmark button */}
+        {/* Bookmark button - Mobile-first touch target sizing */}
         <Button
           variant="ghost"
           size="icon"
           onClick={handleBookmarkToggle}
           className={cn(
-            "absolute top-3 right-3 h-8 w-8 opacity-0 group-hover:opacity-100",
+            "absolute top-3 right-3",
+            // Mobile-first: 44x44px minimum, scale down on tablet+
+            TOUCH_TARGET.close,
+            "opacity-0 group-hover:opacity-100",
             ANIMATION.transition.movement,
             // eslint-disable-next-line no-restricted-syntax -- Bookmark status color (icon color, not semantic)
-            isBookmarked(activity.id) && "opacity-100 text-amber-500 hover:text-amber-600"
+            isBookmarked(bookmarkId) && "opacity-100 text-amber-500 hover:text-amber-600"
           )}
-          aria-label={isBookmarked(activity.id) ? "Remove bookmark" : "Add bookmark"}
+          aria-label={isBookmarked(bookmarkId) ? "Remove bookmark" : "Add bookmark"}
         >
-          {isBookmarked(activity.id) ? (
+          {isBookmarked(bookmarkId) ? (
             <BookmarkCheck className="h-4 w-4" />
           ) : (
             <Bookmark className="h-4 w-4" />
@@ -484,10 +498,20 @@ function TimelineItem({
   const sourceLabel = ACTIVITY_SOURCE_LABELS[activity.source] || "Activity";
   const { isBookmarked, toggle } = useBookmarks();
 
+  // Extract slug from href for blog posts to match BookmarkButton behavior  // Blog posts have href like "/blog/owasp-top-10-agentic-ai"
+  const getBookmarkId = () => {
+    if (activity.source === "blog" && activity.href.startsWith("/blog/")) {
+      return activity.href.replace("/blog/", "");
+    }
+    return activity.id;
+  };
+
+  const bookmarkId = getBookmarkId();
+
   const handleBookmarkToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggle(activity.id);
+    toggle(bookmarkId);
   };
 
   return (
@@ -524,13 +548,15 @@ function TimelineItem({
 
       {/* Content */}
       <div className="flex-1 pb-6 min-w-0 relative">
-        {/* Bookmark button with bounce animation */}
+        {/* Bookmark button with bounce animation - Mobile-first sizing */}
         <Button
           variant="ghost"
           size="icon"
           onClick={handleBookmarkToggle}
           className={cn(
-            "absolute top-0 right-0 h-8 w-8",
+            "absolute top-0 right-0",
+            // Mobile-first: 44x44px minimum, scale down on tablet+
+            TOUCH_TARGET.close,
             // Fade in/out with scale
             "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100",
             cn(ANIMATION.transition.base, ANIMATION.duration.fast),
@@ -538,11 +564,11 @@ function TimelineItem({
             "active:scale-90",
             // Bookmarked state: always visible with amber color
             // eslint-disable-next-line no-restricted-syntax -- Bookmark status color (icon color, not semantic)
-            isBookmarked(activity.id) && "opacity-100 scale-100 text-amber-500 hover:text-amber-600"
+            isBookmarked(bookmarkId) && "opacity-100 scale-100 text-amber-500 hover:text-amber-600"
           )}
-          aria-label={isBookmarked(activity.id) ? "Remove bookmark" : "Add bookmark"}
+          aria-label={isBookmarked(bookmarkId) ? "Remove bookmark" : "Add bookmark"}
         >
-          {isBookmarked(activity.id) ? (
+          {isBookmarked(bookmarkId) ? (
             <BookmarkCheck className={cn("h-4 w-4 animate-in zoom-in-50", ANIMATION.duration.fast)} />
           ) : (
             <Bookmark className="h-4 w-4" />
