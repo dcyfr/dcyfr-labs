@@ -27,10 +27,11 @@ export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActi
   const { getShareCount } = useShare();
   const { isLiked, toggleLike, getCount } = useActivityReactions();
   const [isHydrated, setIsHydrated] = React.useState(false);
-  
-  // Use same activity ID format as PostInteractions: "blog-{slug}"
-  const activityId = slug ? `blog-${slug}` : undefined;
-  
+
+  // Use normalized activity ID format (just slug, matching ThreadActions normalization)
+  // Blog posts are normalized from "blog-slug" to "slug" on homepage for consistency
+  const activityId = slug;
+
   const bookmarked = isHydrated && activityId ? isBookmarked(activityId) : false;
   const bookmarkCount = isHydrated && activityId ? getBookmarkCount(activityId) : 0;
   const shareCount = isHydrated && activityId ? getShareCount(activityId) : 0;
@@ -80,14 +81,24 @@ export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActi
 
   const handleBookmark = () => {
     if (!activityId) return;
-    
+
+    console.debug("[PostQuickActions] Toggling bookmark:", {
+      activityId,
+      wasBookmarked: bookmarked,
+    });
+
     toggle(activityId);
     toast.success(bookmarked ? "Bookmark removed" : "Bookmarked for later");
   };
 
   const handleLike = () => {
     if (!activityId) return;
-    
+
+    console.debug("[PostQuickActions] Toggling like:", {
+      activityId,
+      wasLiked: liked,
+    });
+
     toggleLike(activityId);
     toast.success(liked ? "Like removed" : "Liked!");
   };
