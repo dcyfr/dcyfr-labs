@@ -3,7 +3,6 @@
  *
  * Displays inline engagement actions for activity threads:
  * - Like button with count
- * - Share button
  * - Bookmark button
  * - Timestamp
  *
@@ -13,8 +12,6 @@
  * ```tsx
  * <ThreadActions
  *   activityId="post-123"
- *   activityHref="/blog/my-post"
- *   activityTitle="My Blog Post"
  *   timestamp={new Date()}
  * />
  * ```
@@ -23,12 +20,15 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Heart, Share2, Bookmark } from "lucide-react";
+import { Heart, Bookmark, Share2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useActivityReactions } from "@/hooks/use-activity-reactions";
 import { useBookmarks } from "@/hooks/use-bookmarks";
+import { useShare } from "@/hooks/use-share";
+import { useGlobalEngagementCounts } from "@/hooks/use-global-engagement-counts";
+import { ThreadShareButton } from "./ThreadShareButton";
 import { ANIMATION, TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 // ============================================================================
@@ -38,22 +38,24 @@ import { ANIMATION, TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 export interface ThreadActionsProps {
   /** Activity ID */
   activityId: string;
-  /** Activity URL (for sharing) */
-  activityHref: string;
-  /** Activity title (for sharing) */
-  activityTitle: string;
-  /** Activity description (for sharing) */
-  activityDescription?: string;
   /** Activity timestamp */
   timestamp: Date;
+  /** Activity data for sharing */
+  activity?: {
+    title: string;
+    description?: string;
+    href: string;
+  };
   /** Optional CSS class */
   className?: string;
   /** Size variant */
   size?: "default" | "compact";
-  /** Show share button (for opening share menu) */
-  onShareClick?: () => void;
   /** Hide timestamp display */
   hideTimestamp?: boolean;
+  /** Show bookmark count */
+  showBookmarkCount?: boolean;
+  /** Show share count */
+  showShareCount?: boolean;
 }
 
 // ============================================================================
@@ -61,21 +63,49 @@ export interface ThreadActionsProps {
 // ============================================================================
 
 /**
- * Thread action buttons (like, share, bookmark) + timestamp
+ * Thread action buttons (like, bookmark, share) + timestamp
  */
 export function ThreadActions({
   activityId,
-  activityHref,
-  activityTitle,
-  activityDescription,
   timestamp,
+  activity,
   className,
   size = "default",
-  onShareClick,
   hideTimestamp = false,
+  showBookmarkCount = false,
+  showShareCount = false,
 }: ThreadActionsProps) {
   const { isLiked, toggleLike, getCount } = useActivityReactions();
-  const { isBookmarked, toggle: toggleBookmark } = useBookmarks();
+  const { isBookmarked, toggle: toggleBookmark, getBookmarkCount } = useBookmarks();
+  const { getShareCount } = useShare();
+
+  // Normalize activity ID for blog posts to match /likes and /bookmarks pages
+  // Blog posts in activity feed have id="blog-slug" but we check them by slug only
+  // This ensures likes/bookmarks sync across homepage and dedicated pages
+  const normalizedId = (() => {
+    if (activity?.href.startsWith("/blog/")) {
+      const extracted = activity.href.replace("/blog/", "");
+      console.debug("[ThreadActions] ID normalization:", {
+        originalId: activityId,
+        href: activity.href,
+        normalizedId: extracted,
+        isBlogPost: true,
+      });
+      return extracted;
+    }
+    console.debug("[ThreadActions] ID normalization:", {
+      originalId: activityId,
+      normalizedId: activityId,
+      isBlogPost: false,
+    });
+    return activityId;
+  })();
+
+  // Fetch global engagement counts
+  const { globalLikes, globalBookmarks } = useGlobalEngagementCounts({
+    slug: normalizedId,
+    contentType: "activity",
+  });
 
   // Use useSyncExternalStore for proper client-side hydration without ESLint warnings
   const isHydrated = useSyncExternalStore(
@@ -85,9 +115,22 @@ export function ThreadActions({
   );
 
   // Only show actual values after hydration
-  const liked = isHydrated ? isLiked(activityId) : false;
-  const bookmarked = isHydrated ? isBookmarked(activityId) : false;
-  const likeCount = isHydrated ? getCount(activityId) : 0;
+  const liked = isHydrated ? isLiked(normalizedId) : false;
+  const bookmarked = isHydrated ? isBookmarked(normalizedId) : false;
+  const likeCount = isHydrated ? getCount(normalizedId) : 0;
+  const bookmarkCount = isHydrated && showBookmarkCount ? getBookmarkCount(normalizedId) : 0;
+  const shareCount = isHydrated && showShareCount ? getShareCount(normalizedId) : 0;
+
+  // Log engagement state after checks
+  if (isHydrated) {
+    console.debug("[ThreadActions] Engagement state after checks:", {
+      normalizedId,
+      liked,
+      bookmarked,
+      likeCount,
+      bookmarkCount,
+    });
+  }
 
   const isCompact = size === "compact";
 
@@ -102,31 +145,49 @@ export function ThreadActions({
       {/* Like Button */}
       <ActionButton
         icon={Heart}
-        label={likeCount > 0 ? String(likeCount) : undefined}
+        label={globalLikes > 0 ? `${globalLikes}${globalLikes > 1 ? '+' : ''}` : undefined}
+        globalCount={globalLikes}
         active={liked}
-        onClick={() => toggleLike(activityId)}
+        onClick={() => toggleLike(normalizedId)}
         ariaLabel={liked ? "Unlike" : "Like"}
         size={size}
-        activeColor={SEMANTIC_COLORS.alert.critical.icon}
-      />
-
-      {/* Share Button */}
-      <ActionButton
-        icon={Share2}
-        onClick={onShareClick}
-        ariaLabel="Share"
-        size={size}
+        activeColor={SEMANTIC_COLORS.activity.action.liked}
       />
 
       {/* Bookmark Button */}
       <ActionButton
         icon={Bookmark}
+        label={globalBookmarks > 0 ? `${globalBookmarks}${globalBookmarks > 1 ? '+' : ''}` : undefined}
+        globalCount={globalBookmarks}
         active={bookmarked}
-        onClick={() => toggleBookmark(activityId)}
+        onClick={() => toggleBookmark(normalizedId)}
         ariaLabel={bookmarked ? "Remove bookmark" : "Bookmark"}
         size={size}
-        activeColor={SEMANTIC_COLORS.alert.warning.icon}
+        activeColor={SEMANTIC_COLORS.activity.action.bookmarked}
       />
+
+      {/* Share Button (if activity data provided) */}
+      {activity && (
+        <div className="relative">
+          <ThreadShareButton
+            activity={{ id: activityId, ...activity }}
+            variant="ghost"
+            size="sm"
+          />
+          {shareCount > 0 && (
+            <span
+              className={cn(
+                TYPOGRAPHY.label.xs,
+                SEMANTIC_COLORS.activity.action.default,
+                "ml-1"
+              )}
+              suppressHydrationWarning
+            >
+              {shareCount}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Timestamp */}
       {!hideTimestamp && (
@@ -152,6 +213,7 @@ export function ThreadActions({
 interface ActionButtonProps {
   icon: React.ElementType;
   label?: string;
+  globalCount?: number;
   active?: boolean;
   onClick?: () => void;
   ariaLabel: string;
@@ -162,6 +224,7 @@ interface ActionButtonProps {
 function ActionButton({
   icon: Icon,
   label,
+  globalCount = 0,
   active = false,
   onClick,
   ariaLabel,
@@ -180,6 +243,7 @@ function ActionButton({
       className={cn(
         "group/action h-auto gap-1.5 px-2 py-1",
         ANIMATION.transition.base,
+        ANIMATION.activity.like,
         "hover:bg-accent/50"
       )}
       suppressHydrationWarning
@@ -188,7 +252,7 @@ function ActionButton({
         className={cn(
           iconSize,
           ANIMATION.transition.base,
-          active ? [activeColor, "fill-current"] : "text-muted-foreground",
+          active ? [activeColor, "fill-current"] : SEMANTIC_COLORS.activity.action.default,
           active && "group-hover/action:scale-110"
         )}
         aria-hidden="true"
@@ -197,7 +261,7 @@ function ActionButton({
         <span
           className={cn(
             textSize,
-            active ? activeColor : "text-muted-foreground"
+            active ? activeColor : SEMANTIC_COLORS.activity.action.default
           )}
           suppressHydrationWarning
         >

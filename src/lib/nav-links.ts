@@ -35,7 +35,7 @@ export const PRIMARY_NAV_LINKS: NavLinkConfig[] = [
   },
   {
     href: "/blog",
-    label: "Read the blog",
+    label: "Read our blog",
     shortLabel: "Blog",
     icon: BookOpen,
     description: "Read articles on security and development",

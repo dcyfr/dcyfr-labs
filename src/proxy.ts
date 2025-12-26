@@ -253,8 +253,8 @@ export default function proxy(request: NextRequest) {
     // In development, allow webpack/turbopack HMR websockets
     `connect-src 'self'${isDevelopment ? " ws://localhost:* wss://localhost:*" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://*.sentry.io https://sitesapi.io https://vercel.live https://*.pusher.com wss://*.pusher.com`,
     
-    // Frame: allow self (own domain), Vercel Live for preview feedback, Giscus for blog comments, and Vercel Analytics for fingerprinting
-    "frame-src 'self' https://vercel.live https://giscus.app https://*.vercel-insights.com",
+    // Frame: allow self (own domain), Vercel Live for preview feedback, Giscus for blog comments, Credly embeds, and Vercel Analytics for fingerprinting
+    "frame-src 'self' https://vercel.live https://giscus.app https://*.credly.com https://*.vercel-insights.com",
     
     // Worker: allow blob URIs for Sentry session replay
     "worker-src 'self' blob:",
@@ -282,9 +282,12 @@ export default function proxy(request: NextRequest) {
 
   // Clone response headers
   const requestHeaders = new Headers(request.headers);
-  
+
   // Pass nonce to components via custom header (in request headers for server components)
   requestHeaders.set("x-nonce", nonce);
+
+  // Pass pathname to layouts for conditional rendering (embed detection)
+  requestHeaders.set("x-pathname", pathname);
 
   const response = NextResponse.next({
     request: {

@@ -150,12 +150,7 @@ export const WORK_NAV: NavItem[] = [
     href: "/work?category=startup",
     label: "Startup",
     description: "Early-stage product development",
-  },
-  {
-    href: "/services",
-    label: "Services",
-    description: "Our capabilities and services",
-  },
+  }
 ];
 
 // ============================================================================
@@ -227,6 +222,12 @@ export const MOBILE_NAV_SECTIONS: NavSection[] = [
         label: "Bookmarks",
         icon: Bookmark,
         description: "Curated resources and links",
+      },
+      {
+        href: "/likes",
+        label: "Likes",
+        icon: Heart,
+        description: "Content you've liked",
       },
       {
         href: "/feeds",
@@ -325,6 +326,11 @@ export const FOOTER_NAV_SECTIONS: NavSection[] = [
         href: "/bookmarks",
         label: "Bookmarks",
         description: "Curated resources",
+      },
+      {
+        href: "/likes",
+        label: "Likes",
+        description: "Content you liked",
       },
     ],
   },

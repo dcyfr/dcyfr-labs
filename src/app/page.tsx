@@ -1,5 +1,5 @@
 import { featuredProjects, projects } from "@/data/projects";
-import { posts, featuredPosts } from "@/data/posts";
+import { posts, featuredPosts, allSeries } from "@/data/posts";
 import { visibleChangelog, changelog } from "@/data/changelog";
 import { getSocialUrls } from "@/data/socials";
 import { getPostBadgeMetadata } from "@/lib/post-badges";
@@ -22,6 +22,7 @@ import {
   CONTAINER_WIDTHS,
   SCROLL_BEHAVIOR,
   CONTAINER_VERTICAL_PADDING,
+  ANIMATION,
 } from "@/lib/design-tokens";
 import { Card } from "@/components/ui/card";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
@@ -47,8 +48,8 @@ import {
   transformMilestones,
   transformHighEngagementPosts,
   transformCommentMilestones,
-  transformGitHubActivity,
-  transformWebhookGitHubCommits,
+  // transformGitHubActivity, (DISABLED)
+  // transformWebhookGitHubCommits, (DISABLED)
   transformCredlyBadges,
   transformVercelAnalytics,
   transformGitHubTraffic,
@@ -62,7 +63,7 @@ import {
   FlippableAvatar,
   QuickLinksRibbon,
 } from "@/components/home";
-import { ScrollReveal } from "@/components/features";
+import { ScrollReveal, ScrollProgressIndicator } from "@/components/features";
 
 // Lazy-loaded below-fold components for better initial load performance
 const FeaturedPostHero = dynamic(
@@ -114,9 +115,37 @@ const ExploreCards = dynamic(
   () => import("@/components/home").then(mod => ({ default: mod.ExploreCards })),
   {
     loading: () => (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => (
           <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
+        ))}
+      </div>
+    ),
+    ssr: true,
+  }
+);
+
+const TopicNavigator = dynamic(
+  () => import("@/components/home").then(mod => ({ default: mod.TopicNavigator })),
+  {
+    loading: () => (
+      <div className="flex flex-wrap gap-2 justify-center">
+        {[...Array(12)].map((_, i) => (
+          <div key={i} className="h-8 w-20 bg-muted rounded-full animate-pulse" />
+        ))}
+      </div>
+    ),
+    ssr: true,
+  }
+);
+
+const SeriesShowcase = dynamic(
+  () => import("@/components/home").then(mod => ({ default: mod.SeriesShowcase })),
+  {
+    loading: () => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="h-48 bg-muted rounded-lg animate-pulse" />
         ))}
       </div>
     ),
@@ -230,11 +259,11 @@ export default async function Home() {
       .then((items) => activities.push(...items))
       .catch((err) => console.error("[Homepage] Changelog fetch failed:", err)),
     
-    // Trending posts
-    transformTrendingPosts(posts)
-      .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Trending posts fetch failed:", err)),
-    
+    // Trending posts - DISABLED: Now shown as badges on published events
+    // transformTrendingPosts(posts)
+    //   .then((items) => activities.push(...items))
+    //   .catch((err) => console.error("[Homepage] Trending posts fetch failed:", err)),
+
     // Milestones
     transformMilestones(posts)
       .then((items) => activities.push(...items))
@@ -250,15 +279,15 @@ export default async function Home() {
       .then((items) => activities.push(...items))
       .catch((err) => console.error("[Homepage] Comment milestones fetch failed:", err)),
     
-    // GitHub activity
-    transformGitHubActivity("dcyfr", ["dcyfr-labs"])
-      .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] GitHub activity fetch failed:", err)),
+    // GitHub activity (DISABLED)
+    // transformGitHubActivity("dcyfr", ["dcyfr-labs"])
+    //   .then((items) => activities.push(...items))
+    //   .catch((err) => console.error("[Homepage] GitHub activity fetch failed:", err)),
     
-    // Webhook GitHub commits
-    transformWebhookGitHubCommits()
-      .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Webhook commits fetch failed:", err)),
+    // Webhook GitHub commits (DISABLED)
+    // transformWebhookGitHubCommits()
+    //   .then((items) => activities.push(...items))
+    //   .catch((err) => console.error("[Homepage] Webhook commits fetch failed:", err)),
     
     // Credly badges
     transformCredlyBadges("dcyfr")
@@ -305,22 +334,52 @@ export default async function Home() {
   // Calculate years including certifications from Credly
   const yearsOfExperience = await calculateYearsWithCertifications();
 
+  // Calculate topic data for TopicNavigator
+  const tagCounts = new Map<string, number>();
+  activePosts.forEach(post => {
+    post.tags.forEach(tag => {
+      tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+    });
+  });
+
+  // Convert to array and sort by frequency
+  const sortedTopics = Array.from(tagCounts.entries())
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count);
+
+  // Assign color variants (cycles through colors)
+  const colorVariants = ["cyan", "lime", "orange", "purple", "magenta"] as const;
+  const topTopics = sortedTopics.slice(0, 12).map((topic, index) => ({
+    ...topic,
+    colorVariant: colorVariants[index % colorVariants.length],
+  }));
+
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <SmoothScrollToHash />
+      <ScrollProgressIndicator />
 
       <SectionNavigator
         scrollOffset={SCROLL_BEHAVIOR.offset.standard}
         className={SPACING.section}
       >
         {/* 1. Hero Section */}
-        <Section id="hero">
+        <Section id="hero" className="relative">
+          {/* Gradient background overlay */}
+          <div
+            className="absolute inset-0 opacity-10 dark:opacity-5 pointer-events-none"
+            style={{
+              background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
+            }}
+            aria-hidden="true"
+          />
+
           <ScrollReveal animation="fade-up">
             <div
               className={cn(
                 PAGE_LAYOUT.hero.container,
-                "flex flex-col items-center w-full"
+                "flex flex-col items-center w-full relative z-10"
               )}
             >
               <div
@@ -333,7 +392,10 @@ export default async function Home() {
               >
                 {/* Avatar */}
                 <div
-                  className="flex justify-center w-full mb-4 md:mb-6"
+                  className={cn(
+                    "flex justify-center w-full",
+                    ANIMATION.effects.pulse
+                  )}
                   role="img"
                   aria-label="Avatar - Click to flip"
                 >
@@ -341,7 +403,7 @@ export default async function Home() {
                 </div>
 
                 {/* Logo Title */}
-                <div className="mb-4 md:mb-6">
+                <div>
                   <SiteLogo
                     size="lg"
                     showIcon={false}
@@ -355,7 +417,7 @@ export default async function Home() {
                     "text-muted-foreground leading-relaxed",
                     TYPOGRAPHY.description,
                     "mx-auto w-full text-center",
-                    "mb-6 md:mb-8"
+                    "text-sm md:text-base"
                   )}
                 >
                   Exploring cyber architecture, coding, and security insights to
@@ -363,7 +425,7 @@ export default async function Home() {
                 </p>
 
                 {/* Actions */}
-                <div className="w-full flex justify-center mb-4 md:mb-6">
+                <div className="w-full flex justify-center">
                   <HomepageHeroActions />
                 </div>
 
@@ -374,7 +436,7 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* 2. Activity Heatmap 
+        {/* 2. TODO: Activity Heatmap -- needs work
         <Section id="activity-heatmap" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={50}>
             <div className={SPACING.content}>
@@ -383,64 +445,19 @@ export default async function Home() {
           </ScrollReveal>
         </Section> */}
 
-        {/* 3. Featured Article - Highlighted section */}
+        {/* 2. Featured Article - Highlighted section */}
         <Section
           id="featured-post"
-          className={cn(
-            PAGE_LAYOUT.section.container,
-            CONTAINER_VERTICAL_PADDING
-          )}
+          className={cn(PAGE_LAYOUT.section.container)}
         >
           <ScrollReveal animation="fade-up" delay={100}>
             <div className={SPACING.content}>
-              {/* <SectionHeader title="Featured" /> */}
               <FeaturedPostHero post={featuredPost} />
             </div>
           </ScrollReveal>
         </Section>
 
-        {/* 4. Trending Now */}
-        <Section id="trending" className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={150}>
-            <div className={SPACING.content}>
-              {/* <SectionHeader
-                title="Trending"
-                actionHref="/blog"
-                actionLabel="View all posts"
-              /> */}
-              <TrendingPosts
-                posts={activePosts}
-                viewCounts={viewCountsMap}
-                limit={3}
-              />
-            </div>
-          </ScrollReveal>
-        </Section>
-
-        {/* 5. Recent Activity - Infinite Scroll Timeline */}
-        <Section id="recent-activity" className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={200}>
-            <div className={SPACING.content}>
-              {/* <SectionHeader
-                title="Recent Activity"
-                actionHref="/activity"
-                actionLabel="View all activity"
-              /> */}
-              <InfiniteActivitySection
-                items={timelineActivities}
-                totalActivities={timelineActivities.length}
-                initialCount={7}
-                pageSize={8}
-                showProgress
-                maxItemsBeforeCTA={20}
-                ctaText="View all activity"
-                ctaHref="/activity"
-              />
-            </div>
-          </ScrollReveal>
-        </Section>
-
-        {/* 6. Explore Cards - Highlighted section 
+        {/* 3. Explore Cards - Primary navigation hub */}
         <Section
           id="explore"
           className={cn(
@@ -450,7 +467,7 @@ export default async function Home() {
             "border-y border-border/50"
           )}
         >
-          <ScrollReveal animation="fade-up" delay={250}>
+          <ScrollReveal animation="fade-up" delay={125}>
             <div className={SPACING.content}>
               <SectionHeader title="Explore" />
               <ExploreCards
@@ -460,11 +477,107 @@ export default async function Home() {
               />
             </div>
           </ScrollReveal>
-        </Section> */}
+        </Section>
 
-        {/* 7. Stats Dashboard 
+        {/* 4. Trending Now */}
+        <Section
+          id="trending"
+          className={cn(
+            PAGE_LAYOUT.section.container,
+            CONTAINER_VERTICAL_PADDING
+          )}
+        >
+          <ScrollReveal animation="fade-up" delay={150}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Trending"
+                actionHref="/blog"
+                actionLabel="View all posts"
+              />
+              <TrendingPosts
+                posts={activePosts.filter((p) => p.id !== featuredPost?.id)}
+                viewCounts={viewCountsMap}
+                limit={3}
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* 5. Topic Navigator - Discover content by topic */}
+        <Section
+          id="topics"
+          className={cn(
+            PAGE_LAYOUT.section.container,
+            CONTAINER_VERTICAL_PADDING
+          )}
+        >
+          <ScrollReveal animation="fade-up" delay={175}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Popular Topics"
+                actionHref="/blog"
+                actionLabel="Browse all topics"
+              />
+              <TopicNavigator
+                topics={topTopics}
+                maxTopics={12}
+                variant="homepage"
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* 6. Blog Series - Organized content paths */}
+        {allSeries.length > 0 && (
+          <Section
+            id="series"
+            className={cn(
+              PAGE_LAYOUT.section.container,
+              CONTAINER_VERTICAL_PADDING
+            )}
+          >
+            <ScrollReveal animation="fade-up" delay={200}>
+              <div className={SPACING.content}>
+                <SectionHeader
+                  title="Featured Series"
+                  actionHref="/blog/series"
+                  actionLabel="View all series"
+                />
+                <SeriesShowcase series={allSeries} maxSeries={3} />
+              </div>
+            </ScrollReveal>
+          </Section>
+        )}
+
+        {/* 7. Recent Activity - Updates feed */}
+        <Section
+          id="recent-activity"
+          className={cn(PAGE_LAYOUT.section.container)}
+        >
+          <ScrollReveal animation="fade-up" delay={225}>
+            <div className={SPACING.content}>
+              <SectionHeader
+                title="Recent Activity"
+                actionHref="/activity"
+                actionLabel="View all activity"
+              />
+              <InfiniteActivitySection
+                items={timelineActivities}
+                totalActivities={timelineActivities.length}
+                initialCount={3}
+                pageSize={0}
+                showProgress
+                maxItemsBeforeCTA={3}
+                ctaText="View all activity"
+                ctaHref="/activity"
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* 8. TODO: Stats Dashboard -- needs validation
         <Section id="stats" className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={300}>
+          <ScrollReveal animation="fade-up" delay={350}>
             <div className={SPACING.content}>
               <HomepageStats
                 postsCount={activePosts.length}
