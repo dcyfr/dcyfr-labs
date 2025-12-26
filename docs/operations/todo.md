@@ -429,10 +429,46 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 
 ---
 
+## ✅ Recently Completed: Heatmap Export Feature (December 25, 2025)
+
+**Implemented comprehensive heatmap export functionality:**
+
+1. **PNG Export** - High-resolution image download (2x retina scale)
+   - Export button in heatmap header with download icon
+   - Auto-generated filenames with date (`activity-heatmap-2025-12-25.png`)
+   - Loading states and user feedback via alerts
+   - Transparent background, 100% quality
+
+2. **Implementation** - Production-ready with full test coverage
+   - `src/lib/activity/heatmap-export.ts` - Export utilities
+   - `src/components/activity/ActivityHeatmapCalendar.tsx` - UI integration
+   - html2canvas library for DOM-to-canvas conversion
+   - 18 unit tests (100% passing)
+   - 12 E2E test scenarios
+
+3. **Documentation** - Comprehensive feature guide
+   - `/docs/features/heatmap-export-implementation.md`
+   - User guide, troubleshooting, browser compatibility
+   - Future enhancement roadmap (SVG, clipboard, Web Share API)
+
+**Files Modified:**
+- `src/components/activity/ActivityHeatmapCalendar.tsx`
+- `package.json` (added html2canvas dependency)
+
+**New Files:**
+- `src/lib/activity/heatmap-export.ts`
+- `src/__tests__/lib/activity-heatmap-export.test.ts`
+- `e2e/activity-heatmap-export.spec.ts`
+- `docs/features/heatmap-export-implementation.md`
+
+**Build Status:** ✅ All checks passing (TypeScript, ESLint, Unit Tests)
+
+---
+
 ## 📦 Backlog (Future Consideration)
 
 ### Activity Feed Enhancements
-- Export heatmap as image (PNG/SVG)
+- Export heatmap as SVG (vector graphics, infinite zoom)
 - Real-time activity updates (WebSocket/Polling)
 - Activity detail modal with deep context
 - Collaborative filtering ("Similar to you" recommendations)
