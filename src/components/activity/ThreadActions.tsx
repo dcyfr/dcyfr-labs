@@ -83,8 +83,20 @@ export function ThreadActions({
   // This ensures likes/bookmarks sync across homepage and dedicated pages
   const normalizedId = (() => {
     if (activity?.href.startsWith("/blog/")) {
-      return activity.href.replace("/blog/", "");
+      const extracted = activity.href.replace("/blog/", "");
+      console.debug("[ThreadActions] ID normalization:", {
+        originalId: activityId,
+        href: activity.href,
+        normalizedId: extracted,
+        isBlogPost: true,
+      });
+      return extracted;
     }
+    console.debug("[ThreadActions] ID normalization:", {
+      originalId: activityId,
+      normalizedId: activityId,
+      isBlogPost: false,
+    });
     return activityId;
   })();
 
@@ -101,6 +113,17 @@ export function ThreadActions({
   const likeCount = isHydrated ? getCount(normalizedId) : 0;
   const bookmarkCount = isHydrated && showBookmarkCount ? getBookmarkCount(normalizedId) : 0;
   const shareCount = isHydrated && showShareCount ? getShareCount(normalizedId) : 0;
+
+  // Log engagement state after checks
+  if (isHydrated) {
+    console.debug("[ThreadActions] Engagement state after checks:", {
+      normalizedId,
+      liked,
+      bookmarked,
+      likeCount,
+      bookmarkCount,
+    });
+  }
 
   const isCompact = size === "compact";
 
