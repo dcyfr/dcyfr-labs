@@ -312,7 +312,7 @@ describe('BackToTop', () => {
         const container = button.parentElement;
 
         expect(container?.className).toContain('fixed');
-        expect(container?.className).toContain('bottom-[72px]');
+        expect(container?.className).toContain('bottom-[88px]');
         expect(container?.className).toContain('right-4');
         expect(container?.className).toContain('z-40');
       });
