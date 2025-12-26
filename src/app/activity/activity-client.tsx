@@ -2,21 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ActivityFilters, EmbedGenerator } from "@/components/activity";
+import { ActivityFilters } from "@/components/activity";
 import { ThreadedActivityFeed } from "@/components/activity/ThreadedActivityFeed";
-import { TopicCloud } from "@/components/activity/TopicCloud";
-import { RelatedTopics } from "@/components/activity/RelatedTopics";
 import type { ActivityItem, ActivitySource } from "@/lib/activity";
 import { searchActivities, createSearchIndex } from "@/lib/activity/search";
-import {
-  extractTopics,
-  filterByTopics,
-  buildCooccurrenceMatrix,
-} from "@/lib/activity/topics";
 import { useBookmarks } from "@/hooks/use-bookmarks";
-import { SPACING } from "@/lib/design-tokens";
+import { SPACING, CONTAINER_WIDTHS, CONTAINER_PADDING } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-import { Code } from "lucide-react";
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -37,9 +29,11 @@ interface ActivityPageClientProps {
 // ============================================================================
 
 /**
- * Client component for the activity page with interactive filters
+ * Client component for the activity page with interactive search and timeline
  */
-export function ActivityPageClient({ activities }: ActivityPageClientProps) {
+export function ActivityPageClient({
+  activities,
+}: ActivityPageClientProps) {
   // Hooks
   const { filterActivities: filterBookmarkedActivities } = useBookmarks();
   
@@ -49,8 +43,6 @@ export function ActivityPageClient({ activities }: ActivityPageClientProps) {
     useState<TimeRangeFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isBookmarksFilter, setIsBookmarksFilter] = useState(false);
-  const [showEmbedGenerator, setShowEmbedGenerator] = useState(false);
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
   // Deserialize activities once
   const deserializedActivities = useMemo<ActivityItem[]>(() => {
@@ -65,17 +57,6 @@ export function ActivityPageClient({ activities }: ActivityPageClientProps) {
     return createSearchIndex(deserializedActivities);
   }, [deserializedActivities]);
 
-  // Extract topics and build co-occurrence matrix
-  const topics = useMemo(() => {
-    return extractTopics(deserializedActivities, {
-      minCount: 2, // Only show topics that appear in at least 2 activities
-      includeKeywords: false, // Only use tags and categories (more accurate)
-    });
-  }, [deserializedActivities]);
-
-  const topicCooccurrence = useMemo(() => {
-    return buildCooccurrenceMatrix(deserializedActivities);
-  }, [deserializedActivities]);
 
   // Filter activities
   const filteredActivities = useMemo(() => {
@@ -90,11 +71,6 @@ export function ActivityPageClient({ activities }: ActivityPageClientProps) {
     if (searchQuery.trim()) {
       const searchResults = searchActivities(result, searchQuery, searchIndex);
       result = searchResults.map((r) => r.item);
-    }
-
-    // Filter by topics
-    if (selectedTopics.length > 0) {
-      result = filterByTopics(result, selectedTopics);
     }
 
     // Filter by sources (only if not using bookmarks filter)
@@ -132,7 +108,6 @@ export function ActivityPageClient({ activities }: ActivityPageClientProps) {
     deserializedActivities,
     searchQuery,
     selectedSources,
-    selectedTopics,
     selectedTimeRange,
     searchIndex,
     isBookmarksFilter,
@@ -146,48 +121,18 @@ export function ActivityPageClient({ activities }: ActivityPageClientProps) {
     return Array.from(sources);
   }, [activities]);
 
-  // Handle preset application (including bookmarks)
-  const handlePresetApply = (presetId: string, filters: { sources: ActivitySource[]; timeRange: TimeRangeFilter }) => {
-    if (presetId === "bookmarks") {
-      setIsBookmarksFilter(true);
-      setSelectedSources([]);  // Clear source filters for bookmarks
-    } else {
-      setIsBookmarksFilter(false);
-      setSelectedSources(filters.sources);
-    }
-    setSelectedTimeRange(filters.timeRange);
-  };
-
   // Handle manual source filter changes (disable bookmarks mode)
   const handleSourcesChange = (sources: ActivitySource[]) => {
     setIsBookmarksFilter(false);
     setSelectedSources(sources);
   };
 
-  // Handle topic click (toggle topic selection)
-  const handleTopicClick = (topic: string) => {
-    setSelectedTopics((prev) => {
-      if (prev.includes(topic)) {
-        // Remove topic if already selected
-        return prev.filter((t) => t !== topic);
-      } else {
-        // Add topic if not selected
-        return [...prev, topic];
-      }
-    });
-  };
-
   // No longer split activities into chunks - render as unified timeline
   // Interruptions are disabled to maintain consistent threading across pages
 
   return (
-    <motion.div
-      className={cn("space-y-12")}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-    >
-      {/* Filters - Modern, threads-like design */}
+    <>
+      {/* Search & Filter Section */}
       <ActivityFilters
         selectedSources={isBookmarksFilter ? [] : selectedSources}
         onSourcesChange={handleSourcesChange}
@@ -200,57 +145,27 @@ export function ActivityPageClient({ activities }: ActivityPageClientProps) {
         filteredCount={filteredActivities.length}
       />
 
-      {/* TODO: Topic Cloud - Interactive topic filtering  -- needs refinement
-      {topics.length > 0 && (
+      <div className={`${CONTAINER_WIDTHS.standard} mx-auto ${CONTAINER_PADDING} py-12 md:py-16`}>
+        {/* Timeline Feed - Unified threading across all activities */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          <TopicCloud
-            topics={topics}
-            selectedTopics={selectedTopics}
-            onTopicClick={handleTopicClick}
-            maxTopics={50}
-          />
+          {filteredActivities.length === 0 ? (
+            <div className={cn("text-center py-12", SPACING.content)}>
+              <p className="text-muted-foreground">
+                No activities match your filters
+              </p>
+            </div>
+          ) : (
+            <ThreadedActivityFeed
+              activities={filteredActivities}
+              emptyMessage="No activities match your filters"
+            />
+          )}
         </motion.div>
-      )} */}
-
-      {/* TODO: Related Topics - Show recommendations based on selected topics -- needs refinement
-      {selectedTopics.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.15 }}
-        >
-          <RelatedTopics
-            selectedTopics={selectedTopics}
-            cooccurrenceMatrix={topicCooccurrence}
-            onTopicClick={handleTopicClick}
-            maxPerTopic={5}
-          />
-        </motion.div>
-      )} */}
-
-      {/* Timeline Feed - Unified threading across all activities */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.2, ease: "easeOut" }}
-      >
-        {filteredActivities.length === 0 ? (
-          <div className={cn("text-center py-12", SPACING.content)}>
-            <p className="text-muted-foreground">
-              No activities match your filters
-            </p>
-          </div>
-        ) : (
-          <ThreadedActivityFeed
-            activities={filteredActivities}
-            emptyMessage="No activities match your filters"
-          />
-        )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </>
   );
 }
