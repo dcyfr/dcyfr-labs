@@ -30,15 +30,16 @@ export function QuickLinksRibbon({ className }: { className?: string }) {
       className={cn(
         "w-full overflow-x-auto scrollbar-hide",
         "-webkit-overflow-scrolling-touch",
+        "flex justify-center",
         className
       )}
     >
       <div
         className={cn(
-          "flex items-center justify-center gap-2 md:gap-3",
-          "py-2",
-          CONTAINER_WIDTHS.standard,
-          "mx-auto"
+          "flex items-center gap-2 md:gap-3",
+          "py-1 md:py-2",
+          "px-4 md:px-8",
+          "flex-nowrap"
         )}
       >
         {links.map((link) => {
@@ -55,7 +56,9 @@ export function QuickLinksRibbon({ className }: { className?: string }) {
                 "text-muted-foreground hover:text-foreground",
                 TYPOGRAPHY.label.small,
                 "whitespace-nowrap",
-                ANIMATION.transition.theme,
+                ANIMATION.transition.base,
+                "hover:scale-105 active:scale-95",
+                "hover:shadow-md",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 "min-h-11" // Touch target (44px)
               )}

@@ -8,7 +8,8 @@ import { groupPostsByCategory, sortCategoriesByCount } from "@/lib/blog-grouping
 import { createArchivePageMetadata, createCollectionSchema, getJsonLdScriptProps } from "@/lib/metadata";
 import { AUTHOR_NAME, SITE_URL } from "@/lib/site-config";
 import { headers } from "next/headers";
-import { CONTAINER_WIDTHS, CONTAINER_PADDING, SPACING } from "@/lib/design-tokens";
+import { getMultiplePostViews } from "@/lib/views";
+import { CONTAINER_WIDTHS, CONTAINER_PADDING, SPACING, MOBILE_SAFE_PADDING } from "@/lib/design-tokens";
 import { ArchivePagination } from "@/components/layouts/archive-pagination";
 import {
   PostList,
@@ -19,13 +20,63 @@ import {
   MobileFilterBar,
   DynamicBlogContent,
   BlogListSkeleton,
+  ModernBlogGrid,
+  RSSFeedButton,
 } from "@/components/blog";
 import { ViewToggle, SmoothScrollToHash } from "@/components/common";
-import { PageLayout, PageHero } from "@/components/layouts";
+import { PageLayout } from "@/components/layouts";
+import { ArchiveHero } from "@/components/layouts/archive-hero";
 
 const pageTitle = "Blog";
 const pageDescription = "Blog posts on software development, cybersecurity, emerging technologies, and more.";
 const POSTS_PER_PAGE = 12;
+
+/**
+ * Wrapper for ModernBlogGrid that fetches view counts
+ * Similar pattern to DynamicBlogContent but simplified for modern cards
+ */
+async function ModernBlogGridWrapper({
+  posts,
+  latestSlug,
+  hottestSlug,
+  query,
+  sortedArchiveData,
+}: {
+  posts: Post[];
+  latestSlug?: string;
+  hottestSlug?: string;
+  query: string;
+  sortedArchiveData: any;
+}) {
+  // Fetch view counts for all posts
+  const postIds = posts.map((post) => post.id);
+  const viewCounts = await getMultiplePostViews(postIds);
+
+  return (
+    <div className={SPACING.section}>
+      <ModernBlogGrid
+        posts={posts}
+        latestSlug={latestSlug}
+        hottestSlug={hottestSlug}
+        viewCounts={viewCounts}
+        searchQuery={query}
+        variant="elevated"
+      />
+
+      {/* Pagination */}
+      {sortedArchiveData.totalPages > 1 && (
+        <div className="mt-12">
+          <ArchivePagination
+            currentPage={sortedArchiveData.currentPage}
+            totalPages={sortedArchiveData.totalPages}
+            hasPrevPage={sortedArchiveData.currentPage > 1}
+            hasNextPage={sortedArchiveData.currentPage < sortedArchiveData.totalPages}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 export const metadata: Metadata = {
   ...createArchivePageMetadata({
@@ -75,6 +126,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     return Array.isArray(value) ? value[0] ?? "" : value ?? "";
   };
   
+  // A/B test parameter for modern cards
+  const modern = getParam("modern") === "true";
+
   // Support category filter (primary classification - lowercase in URL)
   const categoryParam = getParam("category");
   const selectedCategory = categoryParam ? categoryParam.toLowerCase() : "";
@@ -264,20 +318,20 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       {/* Layout preference manager */}
       <BlogLayoutManager />
 
-      {/* Hero section with full-width background */}
-      <PageHero
-        variant="homepage"
+      {/* Hero section with RSS Feed button */}
+      <ArchiveHero
+        variant="full"
         title={pageTitle}
         description={pageDescription}
-        itemCount={sortedArchiveData.totalItems}
-        fullWidth
+        stats={`${sortedArchiveData.totalItems} ${sortedArchiveData.totalItems === 1 ? 'article' : 'articles'} across ${sortedArchiveData.availableTags.length} ${sortedArchiveData.availableTags.length === 1 ? 'topic' : 'topics'}`}
+        actions={<RSSFeedButton />}
       />
 
       {/* Blog layout with sidebar on desktop */}
-      <div className={`mx-auto ${CONTAINER_WIDTHS.archive} ${CONTAINER_PADDING}`}>
+      <div className={`mx-auto ${CONTAINER_WIDTHS.archive} ${CONTAINER_PADDING} ${MOBILE_SAFE_PADDING}`}>
         {/* Main grid: Sidebar + Content */}
         <BlogLayoutWrapper>
-          {/* Sidebar (desktop only) */}
+          {/* Sidebar (desktop only) - positioned on left */}
           <div className="hidden lg:block">
             <div className="sticky top-24">
               <BlogSidebar
@@ -298,24 +352,34 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
           {/* Main content area with Suspense for PPR */}
           <Suspense fallback={<BlogListSkeleton layout={layout} itemCount={3} />}>
-            <DynamicBlogContent
-              sortedArchiveData={sortedArchiveData}
-              mainListPosts={mainListPosts}
-              latestSlug={latestSlug ?? undefined}
-              hottestSlug={hottestSlug ?? undefined}
-              selectedCategory={selectedCategory}
-              selectedTags={selectedTags}
-              readingTime={readingTime}
-              availableCategories={availableCategories}
-              categoryDisplayMap={categoryDisplayMap}
-              availableTagsWithCounts={availableTagsWithCounts}
-              query={query}
-              sortBy={sortBy}
-              dateRange={dateRange}
-              layout={layout}
-              hasActiveFilters={hasActiveFilters}
-              groupedCategories={layout === "grouped" ? sortedCategories : undefined}
-            />
+            {modern ? (
+              <ModernBlogGridWrapper
+                posts={mainListPosts}
+                latestSlug={latestSlug ?? undefined}
+                hottestSlug={hottestSlug ?? undefined}
+                query={query}
+                sortedArchiveData={sortedArchiveData}
+              />
+            ) : (
+              <DynamicBlogContent
+                sortedArchiveData={sortedArchiveData}
+                mainListPosts={mainListPosts}
+                latestSlug={latestSlug ?? undefined}
+                hottestSlug={hottestSlug ?? undefined}
+                selectedCategory={selectedCategory}
+                selectedTags={selectedTags}
+                readingTime={readingTime}
+                availableCategories={availableCategories}
+                categoryDisplayMap={categoryDisplayMap}
+                availableTagsWithCounts={availableTagsWithCounts}
+                query={query}
+                sortBy={sortBy}
+                dateRange={dateRange}
+                layout={layout}
+                hasActiveFilters={hasActiveFilters}
+                groupedCategories={layout === "grouped" ? sortedCategories : undefined}
+              />
+            )}
           </Suspense>
         </BlogLayoutWrapper>
       </div>

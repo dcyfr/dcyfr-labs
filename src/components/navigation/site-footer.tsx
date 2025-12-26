@@ -6,12 +6,12 @@ import { NAVIGATION } from "@/lib/navigation-config";
 export function SiteFooter() {
   return (
     <>
-      {/* Mobile footer - minimalistic */}
-      {/* <footer className="md:hidden mt-16 site-footer">
+      {/* Mobile footer - hidden on mobile since bottom nav is used */}
+      <footer className="hidden md:hidden mt-8 site-footer border-t pb-2">
         <div className="mx-auto px-4 sm:px-8 h-16 flex items-center justify-center text-sm text-muted-foreground gap-2">
-          <SiteLogo size="sm" showIcon={false} />
-        </div> 
-      </footer> */}
+          <SiteLogo size="md" />
+        </div>
+      </footer>
 
       {/* Desktop footer */}
       <footer className="hidden md:block border-t mt-16 site-footer">
@@ -37,7 +37,7 @@ export function SiteFooter() {
         >
           <div className="flex items-center justify-center text-sm text-muted-foreground gap-2">
             &copy; {new Date().getFullYear()}
-            <SiteLogo size="sm" iconClassName="opacity-80" showIcon={false} />
+            <SiteLogo size="sm" iconClassName="opacity-80" />
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             {NAVIGATION.footer.map((item) => (

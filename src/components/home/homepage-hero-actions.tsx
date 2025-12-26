@@ -14,6 +14,7 @@ import { trackEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { ANIMATION } from '@/lib/design-tokens';
 import { PRIMARY_NAV_LINKS, getAnalyticsSource } from '@/lib/nav-links';
+import { ArrowRight } from 'lucide-react';
 
 export function HomepageHeroActions() {
   const handleLinkClick = (href: string) => {
@@ -27,10 +28,10 @@ export function HomepageHeroActions() {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 justify-center items-center">
+    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center w-full sm:w-auto">
       {PRIMARY_NAV_LINKS.map((link) => {
         // Determine button variant based on link variant
-        const buttonVariant = 
+        const buttonVariant =
           link.variant === 'primary' ? 'cta' :
           link.variant === 'secondary' ? 'cta-outline' :
           'secondary';
@@ -40,15 +41,18 @@ export function HomepageHeroActions() {
             key={link.href}
             variant={buttonVariant}
             asChild
-            size="default"
+            size="sm"
             className={cn(
-              "gap-4 hover:scale-105 transition-transform",
-              ANIMATION.duration.fast
+              "gap-2 sm:gap-3 text-sm sm:text-base",
+              ANIMATION.transition.base,
+              "hover:scale-105 active:scale-95",
+              "group relative overflow-hidden"
             )}
           >
             <Link href={link.href} onClick={() => handleLinkClick(link.href)}>
               <link.icon className="h-4 w-4" />
               <span>{link.label}</span>
+              <ArrowRight className={cn("h-4 w-4 group-hover:translate-x-1", ANIMATION.transition.movement)} />
             </Link>
           </Button>
         );

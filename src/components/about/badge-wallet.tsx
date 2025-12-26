@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert } from "@/components/common/alert";
 import { Award, ExternalLink, Clock } from "lucide-react";
 import { SPACING, TYPOGRAPHY, HOVER_EFFECTS, ANIMATION } from "@/lib/design-tokens";
-import { cn } from "@/lib/utils";
+import { cn, ensureAbsoluteUrl } from "@/lib/utils";
 import { useCredlyBadges } from "@/hooks/use-credly";
 import type { CredlyBadge } from "@/types/credly";
 
@@ -50,10 +50,11 @@ function BadgeCard({ badge }: BadgeCardProps) {
 
   // Construct public URL from badge ID
   const publicUrl = `https://www.credly.com/badges/${badge.id}`;
+  const safeUrl = ensureAbsoluteUrl(publicUrl);
 
   return (
     <Link
-      href={publicUrl}
+      href={safeUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="block group"
