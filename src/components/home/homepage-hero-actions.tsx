@@ -27,10 +27,10 @@ export function HomepageHeroActions() {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 justify-center items-center">
+    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center w-full sm:w-auto">
       {PRIMARY_NAV_LINKS.map((link) => {
         // Determine button variant based on link variant
-        const buttonVariant = 
+        const buttonVariant =
           link.variant === 'primary' ? 'cta' :
           link.variant === 'secondary' ? 'cta-outline' :
           'secondary';
@@ -40,9 +40,9 @@ export function HomepageHeroActions() {
             key={link.href}
             variant={buttonVariant}
             asChild
-            size="default"
+            size="sm"
             className={cn(
-              "gap-4 hover:scale-105 transition-transform",
+              "gap-2 sm:gap-3 hover:scale-105 transition-transform text-sm sm:text-base",
               ANIMATION.duration.fast
             )}
           >

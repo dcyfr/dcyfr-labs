@@ -1522,16 +1522,16 @@ export const PAGE_LAYOUT = {
   
   /** Hero section spacing - larger than standard sections */
   hero: {
-    /** Container for hero content - top padding accounts for sticky header */
-    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-24 md:pt-28 lg:pt-32 pb-8 md:pb-12`,
+    /** Container for hero content - responsive top padding (mobile-first, scales up) */
+    container: `mx-auto ${CONTAINER_WIDTHS.standard} ${CONTAINER_PADDING} pt-16 md:pt-24 lg:pt-32 pb-8 md:pb-12`,
     /** Hero title + description wrapper */
     content: SPACING.proseHero,
   },
-  
+
   /** Archive page hero (blog, work, portfolio listings) - matches standard hero spacing */
   archiveHero: {
     /** Container for archive hero - consistent with standard hero for unified layout */
-    container: `mx-auto ${CONTAINER_WIDTHS.archive} ${ARCHIVE_CONTAINER_PADDING} pt-24 md:pt-28 lg:pt-32 pb-8 md:pb-12`,
+    container: `mx-auto ${CONTAINER_WIDTHS.archive} ${ARCHIVE_CONTAINER_PADDING} pt-16 md:pt-24 lg:pt-32 pb-8 md:pb-12`,
     /** Archive hero title + description wrapper */
     content: SPACING.proseHero,
   },
