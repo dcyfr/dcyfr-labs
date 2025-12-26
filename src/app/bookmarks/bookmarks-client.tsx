@@ -58,29 +58,23 @@ export function BookmarksClient({ posts, activities }: BookmarksClientProps) {
   const [viewMode, setViewMode] = React.useState<"posts" | "activities" | "all">("all");
 
   // Get recommended posts that aren't already bookmarked
-  // Check both slug formats for backward compatibility
   const recommendedPosts = React.useMemo(() => {
     if (!isMounted || !posts || !collection) return [];
     return posts.filter(post => {
       const inRecommended = RECOMMENDED_BOOKMARKS.includes(post.slug);
       if (!inRecommended) return false;
-      
-      // Check both slug formats
-      const slugBookmarked = isBookmarked(post.slug);
-      const blogSlugBookmarked = isBookmarked(`blog-${post.slug}`);
-      return !slugBookmarked && !blogSlugBookmarked;
+
+      // Use normalized slug format (consistent with ThreadActions normalization)
+      return !isBookmarked(post.slug);
     });
   }, [posts, collection, isBookmarked, isMounted]);
 
   // Filter posts to only show bookmarked ones (only after mount to prevent hydration mismatch)
-  // Handle both slug formats: "slug" and "blog-slug" for backward compatibility
   const bookmarkedPosts = React.useMemo(() => {
     if (!isMounted || !posts || !collection) return [];
     return posts.filter(post => {
-      // Check both slug formats for compatibility
-      const slugBookmarked = isBookmarked(post.slug);
-      const blogSlugBookmarked = isBookmarked(`blog-${post.slug}`);
-      return slugBookmarked || blogSlugBookmarked;
+      // Use normalized slug format (consistent with ThreadActions normalization)
+      return isBookmarked(post.slug);
     });
   }, [posts, collection, isBookmarked, isMounted]);
 
@@ -119,22 +113,19 @@ export function BookmarksClient({ posts, activities }: BookmarksClientProps) {
   }, [bookmarkedActivities, isMounted]);
 
   // Clean up stale bookmarks for posts that no longer exist
-  // Handle both slug formats: "slug" and "blog-slug"
   // IMPORTANT: Only run once after initial mount to avoid deleting bookmarks on every state change
   React.useEffect(() => {
     if (!isMounted || !posts || posts.length === 0 || !collection || collection.bookmarks.length === 0) {
       return;
     }
 
+    // Use normalized slug format (consistent with ThreadActions normalization)
     const existingPostSlugs = new Set(posts.map(post => post.slug));
-    const existingBlogSlugs = new Set(posts.map(post => `blog-${post.slug}`));
 
     const staleBookmarks = collection.bookmarks.filter(
       bookmark => {
-        // Keep bookmarks that match either format
-        const isValidSlug = existingPostSlugs.has(bookmark.activityId);
-        const isValidBlogSlug = existingBlogSlugs.has(bookmark.activityId);
-        return !isValidSlug && !isValidBlogSlug;
+        // Keep bookmarks that match normalized slug format
+        return !existingPostSlugs.has(bookmark.activityId);
       }
     );
 
