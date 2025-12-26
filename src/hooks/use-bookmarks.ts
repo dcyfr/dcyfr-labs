@@ -133,15 +133,40 @@ export function useBookmarks(): UseBookmarksReturn {
   // Mutation operations
   const toggle = useCallback(
     (activityId: string, options?: { notes?: string; tags?: string[] }) => {
+      console.debug("[useBookmarks] toggle() called:", {
+        activityId,
+        options,
+        currentBookmarksCount: collection.bookmarks.length,
+      });
+
       // Check if currently bookmarked before toggling
       const wasBookmarked = isBookmarked(activityId, collection);
+      console.debug("[useBookmarks] toggle() before update:", {
+        activityId,
+        wasBookmarked,
+        action: wasBookmarked ? "remove" : "add",
+      });
 
       // Optimistic localStorage update
-      setCollection((prev) => toggleBookmark(activityId, prev, options));
+      setCollection((prev) => {
+        const updated = toggleBookmark(activityId, prev, options);
+        console.debug("[useBookmarks] toggle() state updated:", {
+          beforeCount: prev.bookmarks.length,
+          afterCount: updated.bookmarks.length,
+          action: wasBookmarked ? "removed" : "added",
+        });
+        return updated;
+      });
 
       // Sync with Redis analytics (fire and forget)
       const contentType = "activity";
       const action = wasBookmarked ? "unbookmark" : "bookmark";
+
+      console.debug("[useBookmarks] Syncing with Redis:", {
+        slug: activityId,
+        contentType,
+        action,
+      });
 
       fetch("/api/engagement/bookmark", {
         method: "POST",
@@ -151,12 +176,16 @@ export function useBookmarks(): UseBookmarksReturn {
           contentType,
           action,
         }),
-      }).catch((error) => {
-        // Silently fail - localStorage state is source of truth
-        if (process.env.NODE_ENV === "development") {
-          console.warn("[useBookmarks] Failed to sync bookmark to Redis:", error);
-        }
-      });
+      })
+        .then(() => {
+          console.debug("[useBookmarks] Successfully synced bookmark to Redis:", { slug: activityId, action });
+        })
+        .catch((error) => {
+          console.error("[useBookmarks] Failed to sync bookmark to Redis:", { slug: activityId, action, error });
+          if (process.env.NODE_ENV === "development") {
+            console.warn("[useBookmarks] Sync error details:", error);
+          }
+        });
     },
     [collection]
   );
