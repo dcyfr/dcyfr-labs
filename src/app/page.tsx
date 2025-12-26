@@ -333,7 +333,7 @@ export default async function Home() {
               >
                 {/* Avatar */}
                 <div
-                  className="flex justify-center w-full mb-4 md:mb-6"
+                  className="flex justify-center w-full"
                   role="img"
                   aria-label="Avatar - Click to flip"
                 >
@@ -341,7 +341,7 @@ export default async function Home() {
                 </div>
 
                 {/* Logo Title */}
-                <div className="mb-4 md:mb-6">
+                <div>
                   <SiteLogo
                     size="lg"
                     showIcon={false}
@@ -355,7 +355,7 @@ export default async function Home() {
                     "text-muted-foreground leading-relaxed",
                     TYPOGRAPHY.description,
                     "mx-auto w-full text-center",
-                    "mb-6 md:mb-8"
+                    "text-sm md:text-base"
                   )}
                 >
                   Exploring cyber architecture, coding, and security insights to
@@ -363,7 +363,7 @@ export default async function Home() {
                 </p>
 
                 {/* Actions */}
-                <div className="w-full flex justify-center mb-4 md:mb-6">
+                <div className="w-full flex justify-center">
                   <HomepageHeroActions />
                 </div>
 
@@ -434,10 +434,10 @@ export default async function Home() {
               <InfiniteActivitySection
                 items={timelineActivities}
                 totalActivities={timelineActivities.length}
-                initialCount={7}
-                pageSize={8}
+                initialCount={6}
+                pageSize={0}
                 showProgress
-                maxItemsBeforeCTA={12}
+                maxItemsBeforeCTA={6}
                 ctaText="View all activity"
                 ctaHref="/activity"
               />

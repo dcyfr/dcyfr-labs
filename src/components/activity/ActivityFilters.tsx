@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY, SPACING, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 import { type ActivitySource } from "@/lib/activity";
-import { Search } from "lucide-react";
 import { Logo } from "@/components/common/logo";
 
 // ============================================================================
@@ -47,9 +46,10 @@ interface ActivityFiltersProps {
 // ============================================================================
 
 /**
- * Simplified Activity Filters - Search only
+ * Activity Search & Results
  *
- * Minimal search bar for the activity feed.
+ * Renders search bar with syntax hints and results counter.
+ * Search is prominent and easy to access.
  */
 export function ActivityFilters({
   searchQuery = "",
@@ -80,13 +80,13 @@ export function ActivityFilters({
   };
 
   return (
-    <div className={cn(SPACING.content, className)}>
+    <div className={className}>
       {/* Search input - Prominent, centered */}
       {onSearchChange && (
-        <div className="relative">
+        <div className="relative py-8 md:py-10">
           <div className={cn("relative mx-auto", CONTAINER_WIDTHS.thread, SPACING.content)}>
             <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
-              <Logo width={20} height={20} className="text-muted-foreground" />
+              <Logo width={18} height={18} className="text-muted-foreground" />
             </div>
             <Input
               ref={searchInputRef}
@@ -95,25 +95,25 @@ export function ActivityFilters({
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
               className={cn(
-                "pl-12 pr-4 h-12 rounded-full border-border/50 focus:border-border bg-background/50 backdrop-blur-sm text-base"
+                "pl-11 pr-4 h-10 rounded-full border-border/50 focus:border-border bg-background/50 backdrop-blur-sm text-sm"
               )}
             />
           </div>
 
           {/* Search syntax hint */}
-          <p className={cn(TYPOGRAPHY.metadata, "text-center mt-4 mx-auto", CONTAINER_WIDTHS.thread, SPACING.content)}>
+          <p className={cn(TYPOGRAPHY.metadata, "text-center mt-2 mx-auto text-xs", CONTAINER_WIDTHS.thread, SPACING.content)}>
             Try:{" "}
-            <code className="px-1.5 py-0.5 rounded-md bg-muted/50 text-foreground/80">tag:typescript</code>{" "}
-            <code className="px-1.5 py-0.5 rounded-md bg-muted/50 text-foreground/80">source:blog</code>{" "}
-            <code className="px-1.5 py-0.5 rounded-md bg-muted/50 text-foreground/80">-github</code>
+            <code className="px-1 py-0.5 rounded bg-muted/50 text-foreground/70 text-xs">tag:typescript</code>{" "}
+            <code className="px-1 py-0.5 rounded bg-muted/50 text-foreground/70 text-xs">source:blog</code>{" "}
+            <code className="px-1 py-0.5 rounded bg-muted/50 text-foreground/70 text-xs">-github</code>
           </p>
         </div>
       )}
 
       {/* Results count - Simplified */}
       {totalCount !== undefined && filteredCount !== undefined && (
-        <div className="text-center mt-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="text-center py-4 px-4">
+          <p className="text-xs text-muted-foreground">
             <span className="font-medium text-foreground">{filteredCount}</span>
             {" of "}
             <span className="font-medium text-foreground">{totalCount}</span>

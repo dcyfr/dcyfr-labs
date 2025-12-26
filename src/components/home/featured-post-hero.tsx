@@ -109,22 +109,22 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
           </div>
 
           {/* Title & Summary */}
-          <div className="space-y-2">
+          <div className="space-y-2 md:space-y-3">
             <h2 className={cn(TYPOGRAPHY.h2.featured, "md:text-4xl text-foreground")}>
               {post.title}
             </h2>
             {post.subtitle && (
-              <p className="text-lg md:text-xl text-foreground/80 font-medium">
+              <p className="text-base md:text-lg lg:text-xl text-foreground/80 font-medium">
                 {post.subtitle}
               </p>
             )}
-            <p className="text-lg text-foreground/70 leading-relaxed">
+            <p className="text-base md:text-lg text-foreground/70 leading-relaxed">
               {post.summary}
             </p>
           </div>
 
           {/* Metadata & CTA */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-3 md:pt-4">
             <div className="flex items-center gap-4 text-sm">
               <time dateTime={post.publishedAt} className="text-foreground/60">{publishedDate}</time>
               <span className="flex items-center gap-1 text-foreground/60">

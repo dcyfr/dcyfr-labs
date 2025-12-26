@@ -30,15 +30,16 @@ export function QuickLinksRibbon({ className }: { className?: string }) {
       className={cn(
         "w-full overflow-x-auto scrollbar-hide",
         "-webkit-overflow-scrolling-touch",
+        "flex justify-center",
         className
       )}
     >
       <div
         className={cn(
-          "flex items-center justify-center gap-2 md:gap-3",
-          "py-2",
-          CONTAINER_WIDTHS.standard,
-          "mx-auto"
+          "flex items-center gap-2 md:gap-3",
+          "py-1 md:py-2",
+          "px-4 md:px-8",
+          "flex-nowrap"
         )}
       >
         {links.map((link) => {
