@@ -142,6 +142,35 @@ This document archives completed features and improvements across all phases.
 
 ## Recent Improvements: December 26, 2025
 
+### ESLint & TypeScript Fixes ✅ **COMPLETE**
+
+**Resolved design token violations and type errors blocking commits:**
+
+- [x] Fixed TYPOGRAPHY violations (use tokens instead of hardcoded classes)
+- [x] Fixed SPACING violations (use SPACING.content for py-6)
+- [x] Fixed React hooks setState-in-effect violation (lazy initializer pattern)
+- [x] Fixed unescaped quotes in JSX (&quot; instead of ")
+- [x] Fixed TypeScript spread args type annotation
+
+**Quality Checks:**
+
+- ✅ ESLint: 0 errors, 0 warnings
+- ✅ TypeScript: 0 compilation errors
+- ✅ Tests: 2193/2193 passing (100%)
+- ✅ Pre-commit hooks: All passing
+
+**Files Fixed:**
+
+- `src/components/search/search-button.tsx:48` - TYPOGRAPHY.label.small
+- `src/components/search/search-command.tsx:38-49` - Lazy initializer
+- `src/components/search/search-command.tsx:192` - SPACING.content
+- `src/components/search/search-command.tsx:281` - &quot; escape
+- `src/__tests__/integration/api-research.test.ts:19` - Type annotation
+
+**Completed:** December 26, 2025
+
+---
+
 ### Test Fixes & SEO Audit ✅ **COMPLETE**
 
 **Fixed failing tests and conducted comprehensive SEO audit:**
@@ -170,7 +199,7 @@ This document archives completed features and improvements across all phases.
 
 **New Documentation:**
 
-- `docs/features/seo-audit-results.md` (comprehensive audit report)
+- [docs/features/seo-audit-results.md](docs/features/seo-audit-results.md) (comprehensive audit report)
 
 **Completed:** December 26, 2025
 
