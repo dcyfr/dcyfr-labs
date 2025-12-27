@@ -65,6 +65,7 @@ import {
   NetworkBackground,
   FeaturedCVEBanner,
 } from "@/components/home";
+import { SearchButton } from "@/components/search";
 import { ScrollReveal, ScrollProgressIndicator } from "@/components/features";
 
 // Lazy-loaded below-fold components for better initial load performance
@@ -367,7 +368,10 @@ export default async function Home() {
         className={SPACING.section}
       >
         {/* 1. Hero Section */}
-        <Section id="hero" className="relative overflow-hidden min-h-[600px] md:min-h-[700px]">
+        <Section
+          id="hero"
+          className="relative overflow-hidden min-h-[600px] md:min-h-[700px]"
+        >
           {/* 3D Network Background */}
           <NetworkBackground />
 
@@ -420,6 +424,11 @@ export default async function Home() {
                   build a safer digital future.
                 </p>
 
+                {/* Search Bar */}
+                <div className="w-full flex justify-center">
+                  <SearchButton variant="input" />
+                </div>
+
                 {/* Actions */}
                 <div className="w-full flex justify-center">
                   <HomepageHeroActions />
@@ -432,7 +441,7 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* 1.5. Featured CVE Alert - Cybersecurity focus */}
+        {/* TODO: 1.5. Featured CVE Alert - Cybersecurity focus -- needs something
         <Section
           id="cve-alert"
           className={cn(PAGE_LAYOUT.section.container)}
@@ -442,7 +451,7 @@ export default async function Home() {
               <FeaturedCVEBanner />
             </div>
           </ScrollReveal>
-        </Section>
+        </Section> */}
 
         {/* 2. TODO: Activity Heatmap -- needs work
         <Section id="activity-heatmap" className={PAGE_LAYOUT.section.container}>
