@@ -62,6 +62,8 @@ import {
   HomepageHeroHeadline,
   FlippableAvatar,
   QuickLinksRibbon,
+  NetworkBackground,
+  FeaturedCVEBanner,
 } from "@/components/home";
 import { ScrollReveal, ScrollProgressIndicator } from "@/components/features";
 
@@ -365,15 +367,9 @@ export default async function Home() {
         className={SPACING.section}
       >
         {/* 1. Hero Section */}
-        <Section id="hero" className="relative">
-          {/* Gradient background overlay */}
-          <div
-            className="absolute inset-0 opacity-10 dark:opacity-5 pointer-events-none"
-            style={{
-              background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
-            }}
-            aria-hidden="true"
-          />
+        <Section id="hero" className="relative overflow-hidden min-h-[600px] md:min-h-[700px]">
+          {/* 3D Network Background */}
+          <NetworkBackground />
 
           <ScrollReveal animation="fade-up">
             <div
@@ -432,6 +428,18 @@ export default async function Home() {
                 {/* Quick Links Ribbon */}
                 <QuickLinksRibbon />
               </div>
+            </div>
+          </ScrollReveal>
+        </Section>
+
+        {/* 1.5. Featured CVE Alert - Cybersecurity focus */}
+        <Section
+          id="cve-alert"
+          className={cn(PAGE_LAYOUT.section.container)}
+        >
+          <ScrollReveal animation="fade-up" delay={75}>
+            <div className={SPACING.content}>
+              <FeaturedCVEBanner />
             </div>
           </ScrollReveal>
         </Section>
@@ -527,7 +535,7 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* 6. Blog Series - Organized content paths */}
+        {/* 6. TODO: Blog Series - Organized content paths -- needs more series
         {allSeries.length > 0 && (
           <Section
             id="series"
@@ -547,7 +555,7 @@ export default async function Home() {
               </div>
             </ScrollReveal>
           </Section>
-        )}
+        )} */}
 
         {/* 7. Recent Activity - Updates feed */}
         <Section
