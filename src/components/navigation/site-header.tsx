@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { ThemeToggle } from "@/components/features/theme/theme-toggle";
 import { SiteLogo } from "@/components/common/site-logo";
 import { MobileNav } from "@/components/navigation/mobile-nav";
+import { SearchButton } from "@/components/search";
 import DevToolsDropdown from "@/components/common/dev-tools-dropdown";
 import { cn } from "@/lib/utils";
 import { CONTAINER_WIDTHS, ANIMATION } from "@/lib/design-tokens";
@@ -180,12 +181,14 @@ export function SiteHeader() {
             )}
           </div>
 
+          <SearchButton variant="default" />
           <ThemeToggle />
           {process.env.NODE_ENV === "development" && <DevToolsDropdown />}
         </nav>
 
         {/* Mobile Navigation - visible on mobile, hidden md and up */}
         <div className="flex md:hidden items-center gap-2">
+          <SearchButton variant="default" />
           <ThemeToggle />
           <MobileNav />
         </div>
