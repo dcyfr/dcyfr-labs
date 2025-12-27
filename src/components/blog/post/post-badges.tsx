@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import type { Post } from "@/data/posts";
 import { POST_CATEGORY_LABEL } from "@/lib/post-categories";
+import { NEON_COLORS } from "@/lib/design-tokens";
 
 interface PostBadgesProps {
   post: Post;
@@ -29,7 +30,7 @@ export function PostBadges({
     badges.push(
       <Badge
         key="draft"
-        className={`${size === "sm" ? "text-xs" : ""} pointer-events-none bg-blue-500/40 text-blue-100 dark:text-blue-200 border border-blue-400/60`}
+        className={`${size === "sm" ? "text-xs" : ""} pointer-events-none ${NEON_COLORS.blue.badge}`}
       >
         Draft
       </Badge>
@@ -54,7 +55,7 @@ export function PostBadges({
     badges.push(
       <Badge
         key="new"
-        className={`${size === "sm" ? "text-xs" : ""} pointer-events-none bg-emerald-500/40 text-emerald-100 dark:text-emerald-200 border border-emerald-400/60`}
+        className={`${size === "sm" ? "text-xs" : ""} pointer-events-none ${NEON_COLORS.lime.badge}`}
       >
         New
       </Badge>
@@ -66,7 +67,7 @@ export function PostBadges({
     badges.push(
       <Badge
         key="hot"
-        className={`${size === "sm" ? "text-xs" : ""} pointer-events-none bg-orange-500/40 text-orange-100 dark:text-orange-200 border border-orange-400/60`}
+        className={`${size === "sm" ? "text-xs" : ""} pointer-events-none ${NEON_COLORS.red.badge}`}
       >
         Hot
       </Badge>

@@ -60,13 +60,6 @@ export function useBlogKeyboardShortcuts({
         target.tagName === "TEXTAREA" ||
         target.isContentEditable;
 
-      // Search focus: / (but not when already typing or with modifiers)
-      if (e.key === "/" && !isTyping && !e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey) {
-        e.preventDefault();
-        searchInputRef?.current?.focus();
-        return;
-      }
-
       // Help dialog: ? (but not with modifiers)
       if (e.key === "?" && !isTyping && !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
