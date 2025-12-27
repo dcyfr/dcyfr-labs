@@ -10,3 +10,7 @@ export { ExploreCards } from "./explore-cards";
 export { InfiniteActivitySection } from "./infinite-activity-section";
 export { TopicNavigator } from "./TopicNavigator";
 export { SeriesShowcase } from "./SeriesShowcase";
+
+// Modern enhancements
+export { NetworkBackground } from "./network-background";
+export { FeaturedCVEBanner } from "./featured-cve-banner";
