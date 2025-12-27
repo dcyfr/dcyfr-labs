@@ -6,7 +6,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
  * SearchProvider Context
  *
  * Global state for search modal (open/close).
- * Handles keyboard shortcuts (Cmd+K, Ctrl+K, /)
+ * Handles keyboard shortcut (/)
  */
 
 interface SearchContextValue {
@@ -20,24 +20,24 @@ const SearchContext = createContext<SearchContextValue | undefined>(undefined);
 export function SearchProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
-  // Keyboard shortcuts
+  // Keyboard shortcut: / (forward slash)
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      // Cmd+K or Ctrl+K
-      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
-        // Don't trigger if typing in input/textarea
-        if (
-          e.target instanceof HTMLElement &&
-          (e.target.tagName === "INPUT" ||
-            e.target.tagName === "TEXTAREA" ||
-            e.target.contentEditable === "true")
-        ) {
-          return;
-        }
+      // Only listen for forward slash key
+      if (e.key !== "/") return;
 
-        e.preventDefault();
-        setOpen((prevOpen) => !prevOpen);
+      // Don't trigger if typing in input/textarea
+      if (
+        e.target instanceof HTMLElement &&
+        (e.target.tagName === "INPUT" ||
+          e.target.tagName === "TEXTAREA" ||
+          e.target.contentEditable === "true")
+      ) {
+        return;
       }
+
+      e.preventDefault();
+      setOpen((prevOpen) => !prevOpen);
     };
 
     document.addEventListener("keydown", down);

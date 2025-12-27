@@ -13,7 +13,7 @@
  * - Recent searches
  * - Responsive design
  *
- * Triggered by: Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+ * Triggered by: / (forward slash - universal across all OS and keyboards)
  */
 
 "use client";
@@ -113,12 +113,12 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   // Get reading progress for "Continue Reading"
   const { inProgress } = useReadingProgressList({ limit: 3, minProgress: 5, maxProgress: 95 });
 
-  // Register Cmd+K shortcut
+  // Register / shortcut (universal search)
   useKeyboardShortcut([
     {
-      key: "k",
-      metaKey: true,
+      key: "/",
       callback: () => onOpenChange(!open),
+      preventInInput: true,
       description: "Open unified command palette",
     },
   ]);
