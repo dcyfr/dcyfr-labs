@@ -24,11 +24,6 @@ interface SearchButtonProps {
 export function SearchButton({ variant = "default", className }: SearchButtonProps) {
   const { setOpen } = useSearch();
 
-  // Detect OS for keyboard shortcut display
-  // Uses suppressHydrationWarning to avoid mismatch between server and client
-  const isMac = typeof window !== "undefined" && navigator.platform.startsWith("Mac");
-  const shortcutKey = isMac ? "⌘" : "Ctrl";
-
   if (variant === "input") {
     return (
       <button
@@ -47,10 +42,7 @@ export function SearchButton({ variant = "default", className }: SearchButtonPro
         <Search className="h-4 w-4 shrink-0" />
         <span className="text-sm">Search posts, tags, topics...</span>
         <kbd className={cn("ml-auto hidden sm:inline-flex h-6 select-none items-center gap-1 rounded border bg-background px-2 font-mono opacity-70 group-hover:opacity-100", TYPOGRAPHY.label.small)}>
-          <span className="text-xs" suppressHydrationWarning>
-            {shortcutKey}
-          </span>
-          K
+          /
         </kbd>
       </button>
     );
@@ -65,7 +57,7 @@ export function SearchButton({ variant = "default", className }: SearchButtonPro
       aria-label="Search"
     >
       <Search className="h-5 w-5" />
-      <span className="sr-only">Search (⌘K)</span>
+      <span className="sr-only">Search (/)</span>
     </Button>
   );
 }
