@@ -88,21 +88,6 @@ export function SearchInput({
     }
   }, [value, resultCount, historyStorageKey]);
 
-  // Keyboard shortcut (Cmd/Ctrl + K)
-  useEffect(() => {
-    if (!keyboardShortcut) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [keyboardShortcut]);
-
   const handleClear = () => {
     onChange("");
     inputRef.current?.focus();
