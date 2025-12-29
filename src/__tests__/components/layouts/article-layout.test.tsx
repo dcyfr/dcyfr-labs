@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import type React from 'react'
-import { ArticleLayout } from '@/components/layouts/article-layout'
+import { ArticleLayout } from '@/components/layouts'
 
 describe('ArticleLayout', () => {
   describe('Basic Rendering', () => {

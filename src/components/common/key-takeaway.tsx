@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Lightbulb } from "lucide-react";
-import { SEMANTIC_COLORS, BORDERS } from "@/lib/design-tokens";
+import { SEMANTIC_COLORS, BORDERS, SPACING } from "@/lib/design-tokens";
 
 /**
  * Key Takeaway Component for MDX
@@ -47,11 +47,11 @@ export function KeyTakeaway({ children, className = '' }: KeyTakeawayProps) {
 
   return (
     <div 
-      className={`${BORDERS.card} ${colors.border} ${colors.container} p-4 sm:p-5 my-6 ${className}`}
+      className={`${BORDERS.card} ${colors.border} ${colors.container} p-${SPACING.md} sm:p-${SPACING.lg} my-${SPACING.lg} ${className}`}
       role="note"
       aria-label="Key takeaway"
     >
-      <div className="flex items-start gap-3 sm:gap-4">
+      <div className={`flex items-start gap-${SPACING.sm} sm:gap-${SPACING.md}`}>
         <Lightbulb className={`h-5 w-5 sm:h-6 sm:w-6 mt-0.5 shrink-0 ${colors.icon}`} aria-hidden="true" />
         <div className={`flex-1 text-sm sm:text-base leading-relaxed max-w-none ${colors.text}`}>
           <span className={`font-semibold ${colors.label}`}>Key Takeaway:</span>{' '}

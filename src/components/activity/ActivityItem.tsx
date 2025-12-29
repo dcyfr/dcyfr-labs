@@ -221,7 +221,7 @@ export function ActivityItem({
             TOUCH_TARGET.close,
             "opacity-0 group-hover:opacity-100",
             ANIMATION.transition.movement,
-            // eslint-disable-next-line no-restricted-syntax -- Bookmark status color (icon color, not semantic)
+             
             isBookmarked(bookmarkId) && "opacity-100 text-amber-500 hover:text-amber-600"
           )}
           aria-label={isBookmarked(bookmarkId) ? "Remove bookmark" : "Add bookmark"}
@@ -353,7 +353,7 @@ export function ActivityItem({
                   <span className="text-xs text-muted-foreground">•</span>
                   <Badge
                     variant="secondary"
-                    className={cn("text-xs px-1.5 py-0", SEMANTIC_COLORS.status.warning.badge)}
+                    className={cn("text-xs px-1.5 py-0", SEMANTIC_COLORS.status.warning)}
                   >
                     <Trophy className="h-3 w-3 mr-1" />
                     {activity.meta.milestone.toLocaleString()} milestone
@@ -563,7 +563,7 @@ function TimelineItem({
             // Active state: slight bounce
             "active:scale-90",
             // Bookmarked state: always visible with amber color
-            // eslint-disable-next-line no-restricted-syntax -- Bookmark status color (icon color, not semantic)
+             
             isBookmarked(bookmarkId) && "opacity-100 scale-100 text-amber-500 hover:text-amber-600"
           )}
           aria-label={isBookmarked(bookmarkId) ? "Remove bookmark" : "Add bookmark"}

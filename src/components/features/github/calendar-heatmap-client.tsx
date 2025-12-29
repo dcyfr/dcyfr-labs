@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax -- Chart visualization colors (GitHub contribution heatmap) are intentional exceptions */
+ 
 "use client";
 
 import { useMemo } from "react";
@@ -187,28 +187,27 @@ export function ClientGitHubHeatmap({
         <span>Less</span>
         <div className="flex items-center gap-1">
           <motion.div 
-            className="w-2.5 h-2.5 rounded-sm bg-muted"
-            whileHover={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          />
-          {/* GitHub contribution heatmap colors - chart visualization exception */}
-          <motion.div 
-            className="w-2.5 h-2.5 rounded-sm bg-green-200 dark:bg-green-900"
+            className="w-2.5 h-2.5 rounded-sm bg-muted border border-border"
             whileHover={{ scale: 1.2 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           />
           <motion.div 
-            className="w-2.5 h-2.5 rounded-sm bg-green-300 dark:bg-green-800"
+            className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.75_0_0)] dark:bg-[oklch(0.35_0_0)]"
             whileHover={{ scale: 1.2 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           />
           <motion.div 
-            className="w-2.5 h-2.5 rounded-sm bg-green-400 dark:bg-green-700"
+            className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.58_0_0)] dark:bg-[oklch(0.48_0_0)]"
             whileHover={{ scale: 1.2 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           />
           <motion.div 
-            className="w-2.5 h-2.5 rounded-sm bg-green-500 dark:bg-green-600"
+            className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.45_0_0)] dark:bg-[oklch(0.60_0_0)]"
+            whileHover={{ scale: 1.2 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          />
+          <motion.div 
+            className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.32_0_0)] dark:bg-[oklch(0.72_0_0)]"
             whileHover={{ scale: 1.2 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           />

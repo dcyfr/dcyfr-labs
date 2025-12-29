@@ -35,7 +35,7 @@ import { Button } from "@/components/ui/button";
 import { useActivityReactions } from "@/hooks/use-activity-reactions";
 import { useBookmarks } from "@/hooks/use-bookmarks";
 import { useGlobalEngagementCounts } from "@/hooks/use-global-engagement-counts";
-import { ThreadShareButton } from "@/components/activity/ThreadShareButton";
+import { ThreadShareButton } from '@/components/activity';
 import { ANIMATION, TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 // ============================================================================
@@ -83,13 +83,13 @@ export function PostInteractions({
   // contentId is already the slug (e.g., "my-post" or "my-project")
   const activityId = contentId;
 
-  const { isLiked, toggleLike, getCount } = useActivityReactions();
-  const { isBookmarked, toggle: toggleBookmark, getBookmarkCount } = useBookmarks();
+  const { isLiked, toggleLike, getCount } = useActivityReactions(contentType);
+  const { isBookmarked, toggle: toggleBookmark, getBookmarkCount } = useBookmarks(contentType);
 
   // Fetch global engagement counts
   const { globalLikes, globalBookmarks } = useGlobalEngagementCounts({
     slug: activityId,
-    contentType: "activity",
+    contentType,
   });
 
   // Use useSyncExternalStore for proper client-side hydration
@@ -121,7 +121,7 @@ export function PostInteractions({
         icon={Heart}
         label={showCounts && globalLikes > 0 ? `${globalLikes}${globalLikes > 1 ? '+' : ''}` : undefined}
         active={liked}
-        onClick={() => toggleLike(activityId)}
+        onClick={() => toggleLike(activityId, "like", contentType)}
         ariaLabel={liked ? "Unlike" : "Like"}
         variant={variant}
         activeColor={SEMANTIC_COLORS.activity.action.liked}
@@ -132,7 +132,7 @@ export function PostInteractions({
         icon={Bookmark}
         label={showCounts && globalBookmarks > 0 ? `${globalBookmarks}${globalBookmarks > 1 ? '+' : ''}` : undefined}
         active={bookmarked}
-        onClick={() => toggleBookmark(activityId)}
+        onClick={() => toggleBookmark(activityId, { contentType })}
         ariaLabel={bookmarked ? "Remove bookmark" : "Bookmark"}
         variant={variant}
         activeColor={SEMANTIC_COLORS.activity.action.bookmarked}

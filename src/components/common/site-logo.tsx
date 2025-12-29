@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "@/components/common/logo";
+import { Logo } from "@/components/common";
 import { LOGO_CONFIG } from "@/lib/logo-config";
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/lib/design-tokens";

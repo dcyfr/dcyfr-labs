@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ThreadedActivityFeed } from "@/components/activity/ThreadedActivityFeed";
+import { ThreadedActivityFeed } from '@/components/activity';
 import { useInfiniteActivity } from "@/hooks/use-infinite-activity";
 import { cn } from "@/lib/utils";
 import type { ActivityItem } from "@/lib/activity";

@@ -20,7 +20,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, RefreshCw, ExternalLink, TrendingUp } from "lucide-react";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
+import { DashboardLayout } from "@/components/dashboard";
 import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 // Import components

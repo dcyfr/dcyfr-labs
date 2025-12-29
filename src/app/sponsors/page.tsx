@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { PageHero } from "@/components/layouts/page-hero";
+import { PageLayout } from "@/components/layouts";
+import { PageHero } from "@/components/layouts";
 import { Section, TeamMemberCard, SmoothScrollToHash } from "@/components/common";
 import {
   TYPOGRAPHY,
@@ -10,7 +10,7 @@ import {
   CONTAINER_WIDTHS,
   HOVER_EFFECTS,
 } from "@/lib/design-tokens";
-import { getGitHubSponsors } from "@/lib/sponsors/github-sponsors";
+import { getGitHubSponsors } from "@/lib/sponsors";
 import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";

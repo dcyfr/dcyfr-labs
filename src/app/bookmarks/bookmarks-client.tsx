@@ -3,11 +3,11 @@
 import * as React from "react";
 import Link from "next/link";
 import type { Post } from "@/data/posts";
-import type { ActivityItem } from "@/lib/activity/types";
-import { PostList } from "@/components/blog/post/post-list";
+import type { ActivityItem } from "@/lib/activity";
+import { PostList } from '@/components/blog';
 import { ActivityFeed } from "@/components/activity";
 import { Button } from "@/components/ui/button";
-import { PageHero } from "@/components/layouts/page-hero";
+import { PageHero } from "@/components/layouts";
 import { Alert } from "@/components/common";
 import {
   Dialog,
@@ -130,7 +130,7 @@ export function BookmarksClient({ posts, activities }: BookmarksClientProps) {
     );
 
     if (staleBookmarks.length > 0) {
-      console.log(`[BookmarksClient] Cleaning up ${staleBookmarks.length} stale bookmarks from ${collection.bookmarks.length} total`);
+      console.warn(`[BookmarksClient] Cleaning up ${staleBookmarks.length} stale bookmarks from ${collection.bookmarks.length} total`);
       // Remove stale bookmarks using the hook's remove method
       staleBookmarks.forEach(staleBookmark => {
         remove(staleBookmark.activityId);

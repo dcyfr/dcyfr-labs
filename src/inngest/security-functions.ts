@@ -95,18 +95,18 @@ export const securityAdvisoryMonitor = inngest.createFunction(
   async ({ step }) => {
     // Step 1: Fetch advisories from GHSA
     const advisories = await step.run("fetch-ghsa-advisories", async () => {
-      console.log(`[security-advisory-monitor] Starting GHSA fetch for ${MONITORED_PACKAGES.length} packages`);
+      console.warn(`[security-advisory-monitor] Starting GHSA fetch for ${MONITORED_PACKAGES.length} packages`);
       const results: SecurityAdvisory[] = [];
       
       for (const packageName of MONITORED_PACKAGES) {
         try {
-          console.log(`[security-advisory-monitor] Fetching advisories for: ${packageName}`);
+          console.warn(`[security-advisory-monitor] Fetching advisories for: ${packageName}`);
           // Query GHSA API for npm advisories using a helper that implements
           // exponential backoff for transient (5xx/network) failures but
           // special-cases 422/4xx (don't aggressively retry which may be
           // treated as spam by the GHSA endpoint).
           const data = await fetchGhsaAdvisories(packageName);
-          console.log(`[security-advisory-monitor] Fetched ${data.length} total advisories for ${packageName}`);
+          console.warn(`[security-advisory-monitor] Fetched ${data.length} total advisories for ${packageName}`);
           
           for (const adv of data) {
             // Only include recent advisories (last 7 days for hourly check)
@@ -127,7 +127,7 @@ export const securityAdvisoryMonitor = inngest.createFunction(
                 url: adv.html_url,
                 publishedAt: adv.published_at,
               });
-              console.log(`[security-advisory-monitor] Included advisory for ${packageName}: ${adv.ghsa_id} (${adv.severity})`);
+              console.warn(`[security-advisory-monitor] Included advisory for ${packageName}: ${adv.ghsa_id} (${adv.severity})`);
             }
           }
         } catch (error) {
@@ -174,7 +174,7 @@ export const securityAdvisoryMonitor = inngest.createFunction(
         adv.affectsInstalledVersion = versionCheck.isVulnerable;
 
         if (!versionCheck.isVulnerable) {
-          console.log(
+          console.warn(
             `Filtered out advisory ${adv.ghsaId} for ${adv.package}: ` +
             `${versionCheck.reason}`
           );
@@ -305,12 +305,12 @@ export async function fetchGhsaAdvisories(packageName: string) {
 
   while (attempt < maxRetries) {
     try {
-      console.log(`[fetchGhsaAdvisories] Attempting to fetch ${packageName} (attempt ${attempt + 1}/${maxRetries})`);
+      console.warn(`[fetchGhsaAdvisories] Attempting to fetch ${packageName} (attempt ${attempt + 1}/${maxRetries})`);
       const response = await fetch(url, { headers });
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`[fetchGhsaAdvisories] Successfully fetched ${packageName}: ${Array.isArray(data) ? data.length : data?.length ?? '?'} advisories`);
+        console.warn(`[fetchGhsaAdvisories] Successfully fetched ${packageName}: ${Array.isArray(data) ? data.length : data?.length ?? '?'} advisories`);
         return data;
       }
 
@@ -381,10 +381,10 @@ export const securityAdvisoryHandler = inngest.createFunction(
 
     // Log the detection
     await step.run("log-detection", async () => {
-      console.log(`Security advisory detected from ${source}:`);
-      console.log(`- ${advisories.length} advisories`);
+      console.warn(`Security advisory detected from ${source}:`);
+      console.warn(`- ${advisories.length} advisories`);
       advisories.forEach((adv: SecurityAdvisory) => {
-        console.log(`  - ${adv.package}: ${adv.severity} (${adv.ghsaId})`);
+        console.warn(`  - ${adv.package}: ${adv.severity} (${adv.ghsaId})`);
       });
     });
 
@@ -603,7 +603,7 @@ export const dailySecurityTest = inngest.createFunction(
     };
 
     // Log summary for monitoring
-    console.log("Daily Security Test Summary:", JSON.stringify(summary, null, 2));
+    console.warn("Daily Security Test Summary:", JSON.stringify(summary, null, 2));
 
     return summary;
   }

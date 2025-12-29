@@ -13,6 +13,7 @@
 /test-results/*
 /scripts/reports/*
 /scripts/__tests__/*
+/.playwright-mcp/*
 /playwright-report/*
 /playwright/.cache/
 /lighthouse/

@@ -35,10 +35,10 @@ import {
   TableOfContents,
 } from "@/components/common";
 import { Breadcrumbs } from "@/components/navigation";
-import { ReadingProgress } from "@/components/features/reading-progress";
-import { ShareButtons } from "@/components/features/sharing/share-buttons";
-import { LazyGiscusComments } from "@/components/features/comments/lazy-giscus-comments";
-import { ViewTracker } from "@/components/features/view-tracker";
+import { ReadingProgress } from "@/components/features";
+import { ShareButtons } from "@/components/features";
+import { LazyGiscusComments } from "@/components/features";
+import { ViewTracker } from "@/components/features";
 import { PostBadges } from "@/components/blog";
 
 // Enable Incremental Static Regeneration with 1 hour revalidation

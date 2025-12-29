@@ -8,7 +8,10 @@
 "use client";
 
 import * as React from "react";
-import { useShortcutIndicator, getAvailableShortcuts } from "@/hooks/use-navigation-shortcuts";
+import {
+  useShortcutIndicator,
+  getAvailableShortcuts,
+} from "@/hooks/use-navigation-shortcuts";
 import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 import {
   Dialog,
@@ -89,7 +92,12 @@ export function KeyboardShortcutsHelp() {
         <div className="space-y-4 mt-4">
           {/* Navigation Shortcuts */}
           <section>
-            <h3 className={cn(TYPOGRAPHY.label.small, "mb-3 text-muted-foreground uppercase tracking-wide")}>
+            <h3
+              className={cn(
+                TYPOGRAPHY.label.small,
+                "mb-3 text-muted-foreground uppercase tracking-wide"
+              )}
+            >
               Navigation
             </h3>
             <div className="space-y-2">
@@ -126,7 +134,12 @@ export function KeyboardShortcutsHelp() {
 
           {/* General Shortcuts */}
           <section>
-            <h3 className={cn(TYPOGRAPHY.label.small, "mb-3 text-muted-foreground uppercase tracking-wide")}>
+            <h3
+              className={cn(
+                TYPOGRAPHY.label.small,
+                "mb-3 text-muted-foreground uppercase tracking-wide"
+              )}
+            >
               General
             </h3>
             <div className="space-y-2">

@@ -36,7 +36,8 @@ const BADGE_CONFIG = {
   top: {
     icon: Star,
     label: "Top",
-    color: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
+    color:
+      "bg-neutral-500/10 text-neutral-700 dark:text-neutral-300 border-neutral-500/20",
     description: "Highest in category",
   },
   accelerating: {

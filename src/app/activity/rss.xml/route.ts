@@ -8,8 +8,8 @@
  */
 
 import { NextResponse } from "next/server";
-import type { ActivityItem } from "@/lib/activity/types";
-import { generateRSSFeed, filterActivitiesForRSS } from "@/lib/activity/rss";
+import type { ActivityItem } from "@/lib/activity";
+import { generateRSSFeed, filterActivitiesForRSS } from "@/lib/activity";
 import { createClient } from "redis";
 
 // ============================================================================
@@ -61,7 +61,7 @@ export async function GET() {
         const cached = await redis.get("activity:feed:all");
         if (cached) {
           activities = JSON.parse(cached);
-          console.log(`[RSS Feed] ✅ Loaded ${activities.length} items from cache`);
+          console.warn(`[RSS Feed] ✅ Loaded ${activities.length} items from cache`);
         } else {
           console.warn("[RSS Feed] ⚠️ Cache miss - returning empty feed");
         }
