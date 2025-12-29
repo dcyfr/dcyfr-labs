@@ -28,10 +28,16 @@ function PostItemSkeleton({
   if (layout === "list") {
     return (
       <div className="py-4 border-b border-gray-200 dark:border-gray-800 animate-pulse">
-        <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2" />
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 mb-3" />
-        <div className="flex gap-3">
+        <div
+          className={`h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-${SPACING.sm}`}
+        />
+        <div
+          className={`h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-${SPACING.sm}`}
+        />
+        <div
+          className={`h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 mb-${SPACING.md}`}
+        />
+        <div className={`flex gap-${SPACING.md}`}>
           <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24" />
           <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20" />
         </div>
@@ -42,9 +48,15 @@ function PostItemSkeleton({
   if (layout === "magazine") {
     return (
       <article className="animate-pulse">
-        <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg mb-4" />
-        <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2" />
+        <div
+          className={`aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg mb-${SPACING.md}`}
+        />
+        <div
+          className={`h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-${SPACING.sm}`}
+        />
+        <div
+          className={`h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-${SPACING.sm}`}
+        />
         <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5" />
       </article>
     );
@@ -53,8 +65,10 @@ function PostItemSkeleton({
   if (layout === "compact") {
     return (
       <div className="py-3 border-b border-gray-200 dark:border-gray-800 animate-pulse">
-        <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-4/5 mb-1" />
-        <div className="flex gap-2 text-sm">
+        <div
+          className={`h-5 bg-gray-200 dark:bg-gray-700 rounded w-4/5 mb-${SPACING.xs}`}
+        />
+        <div className={`flex gap-${SPACING.sm} text-sm`}>
           <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16" />
           <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-12" />
         </div>
@@ -65,11 +79,19 @@ function PostItemSkeleton({
   // Default: grid layout
   return (
     <article className="animate-pulse">
-      <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg mb-3" />
-      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-4/5 mb-2" />
-      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2" />
-      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3" />
-      <div className="flex gap-2">
+      <div
+        className={`aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg mb-${SPACING.md}`}
+      />
+      <div
+        className={`h-6 bg-gray-200 dark:bg-gray-700 rounded w-4/5 mb-${SPACING.sm}`}
+      />
+      <div
+        className={`h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-${SPACING.sm}`}
+      />
+      <div
+        className={`h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-${SPACING.md}`}
+      />
+      <div className={`flex gap-${SPACING.sm}`}>
         <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20" />
         <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16" />
       </div>
@@ -88,13 +110,13 @@ export function BlogListSkeleton({
   return (
     <div id="blog-posts" className={`px-2 sm:px-4 lg:px-8 w-full`}>
       {/* Mobile filters skeleton (below lg breakpoint) */}
-      <div className="lg:hidden mb-6">
+      <div className={`lg:hidden mb-${SPACING.lg}`}>
         <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
       </div>
 
       {/* Post list skeleton - grid layout */}
       {layout === "grid" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-${SPACING.lg}`}>
           {Array.from({ length: itemCount }).map((_, i) => (
             <PostItemSkeleton key={i} layout="grid" />
           ))}
@@ -112,7 +134,7 @@ export function BlogListSkeleton({
 
       {/* Post list skeleton - magazine layout */}
       {layout === "magazine" && (
-        <div className="space-y-8">
+        <div className={`space-y-${SPACING.xl}`}>
           {Array.from({ length: Math.min(itemCount, 2) }).map((_, i) => (
             <PostItemSkeleton key={i} layout="magazine" />
           ))}
@@ -133,7 +155,9 @@ export function BlogListSkeleton({
         <div className={SPACING.subsection}>
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="border-b pb-4 last:border-b-0">
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4 animate-pulse" />
+              <div
+                className={`h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-${SPACING.md} animate-pulse`}
+              />
               <div className={SPACING.content}>
                 {Array.from({ length: 4 }).map((_, j) => (
                   <PostItemSkeleton key={j} layout="compact" />
@@ -145,8 +169,8 @@ export function BlogListSkeleton({
       )}
 
       {/* Pagination skeleton */}
-      <div className="mt-8">
-        <div className="flex justify-center gap-2">
+      <div className={`mt-${SPACING.xl}`}>
+        <div className={`flex justify-center gap-${SPACING.sm}`}>
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}

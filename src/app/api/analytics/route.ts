@@ -175,7 +175,7 @@ function logAccess(request: Request, status: "success" | "denied", reason?: stri
   };
 
   // Structured JSON logging for Axiom/Vercel logs
-  console.log(JSON.stringify(logData));
+  console.warn(JSON.stringify(logData));
 
   // Send security events to Sentry for alerting
   if (status === "denied") {

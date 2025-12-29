@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Alert } from "@/components/common/alert";
+import { Alert } from "@/components/common";
 import { Lightbulb, TrendingUp, ExternalLink } from "lucide-react";
 import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 import { cn, ensureAbsoluteUrl } from "@/lib/utils";
@@ -27,11 +27,11 @@ interface SkillWithCount {
 
 /**
  * SkillsWallet Component
- * 
+ *
  * Aggregates and displays all skills from Credly badges.
  * Shows skill name, number of certifications that include it,
  * and links to Credly's skill pages.
- * 
+ *
  * @example
  * <SkillsWallet username="dcyfr" />
  */
@@ -118,7 +118,9 @@ export function SkillsWallet({
         {displayedSkills.map((item) => (
           <Link
             key={item.skill.id}
-            href={ensureAbsoluteUrl(`https://www.credly.com/skills/${item.skill.vanity_slug}`)}
+            href={ensureAbsoluteUrl(
+              `https://www.credly.com/skills/${item.skill.vanity_slug}`
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="block group"

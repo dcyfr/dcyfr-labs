@@ -85,7 +85,7 @@ export function ThreadActions({
   const normalizedId = (() => {
     if (activity?.href.startsWith("/blog/")) {
       const extracted = activity.href.replace("/blog/", "");
-      console.debug("[ThreadActions] ID normalization:", {
+      console.warn("[ThreadActions] ID normalization:", {
         originalId: activityId,
         href: activity.href,
         normalizedId: extracted,
@@ -93,7 +93,7 @@ export function ThreadActions({
       });
       return extracted;
     }
-    console.debug("[ThreadActions] ID normalization:", {
+    console.warn("[ThreadActions] ID normalization:", {
       originalId: activityId,
       normalizedId: activityId,
       isBlogPost: false,
@@ -123,7 +123,7 @@ export function ThreadActions({
 
   // Log engagement state after checks
   if (isHydrated) {
-    console.debug("[ThreadActions] Engagement state after checks:", {
+    console.warn("[ThreadActions] Engagement state after checks:", {
       normalizedId,
       liked,
       bookmarked,

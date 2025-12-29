@@ -8,23 +8,29 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeKatex from "rehype-katex";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
-import { CopyCodeButton } from "@/components/common/copy-code-button";
-import { HorizontalRule } from "@/components/common/horizontal-rule";
-import { ZoomableImage } from "@/components/common/zoomable-image";
-import { Alert } from "@/components/common/alert";
-import { KeyTakeaway } from "@/components/common/key-takeaway";
-import { ContextClue } from "@/components/common/context-clue";
-import { Figure, FigureProvider } from "@/components/common/figure-caption";
-import { TableCaption } from "@/components/common/table-caption";
-import { CodePlayground } from "@/components/common/code-playground";
-import { 
-  MDXMCPArchitecture, 
-  MDXAuthenticationFlow, 
-  MDXPipelineFlow, 
-  MDXCVEDecisionTree 
-} from "@/components/common/mdx-diagram-wrapper";
-import { FAQ } from "@/components/common/faq";
-import { ProgressiveParagraph, ContrastText } from "@/components/common/progressive-content";
+import {
+  CopyCodeButton,
+  HorizontalRule,
+  ZoomableImage,
+  Alert,
+  KeyTakeaway,
+  ContextClue,
+  Figure,
+  FigureProvider,
+  TableCaption,
+  CodePlayground,
+} from "@/components/common";
+import {
+  MDXMCPArchitecture,
+  MDXAuthenticationFlow,
+  MDXPipelineFlow,
+  MDXCVEDecisionTree,
+} from "@/components/common";
+import { FAQ } from "@/components/common";
+import {
+  ProgressiveParagraph,
+  ContrastText,
+} from "@/components/common";
 import {
   Check,
   X,
@@ -34,11 +40,22 @@ import {
   Lightbulb,
   Zap,
   Lock,
-  Rocket
+  Star,
+  Rocket,
 } from "lucide-react";
-import { TYPOGRAPHY, SPACING, PROGRESSIVE_TEXT, FONT_CONTRAST, ANIMATION } from "@/lib/design-tokens";
+import {
+  TYPOGRAPHY,
+  SPACING,
+  PROGRESSIVE_TEXT,
+  FONT_CONTRAST,
+  ANIMATION,
+} from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-import { MDXProgressionContext, MDXProgressionProvider, MDXParagraphComponent } from "@/components/common/mdx-progression-context";
+import {
+  MDXProgressionContext,
+  MDXProgressionProvider,
+  MDXParagraphComponent,
+} from "@/components/common";
 
 /**
  * MDX Paragraph Component with Progressive Styling
@@ -56,18 +73,20 @@ import { MDXProgressionContext, MDXProgressionProvider, MDXParagraphComponent } 
 function TableWrapper(props: React.HTMLAttributes<HTMLTableElement>) {
   const tableId = React.useId();
   return (
-    <figure className="my-8 w-full group" role="table" aria-labelledby={`${tableId}-caption`}>
-      <div className={cn(
-        "relative overflow-hidden rounded-xl border border-border bg-card shadow-sm",
-        ANIMATION.transition.theme,
-        "hover:shadow-md"
-      )}>
+    <figure
+      className="my-8 w-full group"
+      role="table"
+      aria-labelledby={`${tableId}-caption`}
+    >
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-xl border border-border bg-card shadow-sm",
+          ANIMATION.transition.theme,
+          "hover:shadow-md"
+        )}
+      >
         <div className="overflow-x-auto">
-          <table 
-            {...props} 
-            className="w-full border-collapse" 
-            id={tableId}
-          />
+          <table {...props} className="w-full border-collapse" id={tableId} />
         </div>
       </div>
     </figure>
@@ -76,12 +95,8 @@ function TableWrapper(props: React.HTMLAttributes<HTMLTableElement>) {
 
 /**
  * Configuration for the rehype-pretty-code plugin
- * Enables syntax highlighting with Shiki using custom neon cyberpunk themes:
- * - Dark theme: github-dark with CSS variable overrides for neon effects
- * - Light theme: github-light for subtle colors
- *
- * Features:
- * - Custom neon cyberpunk colors via CSS variable overrides
+ * Enables minimal syntax highlighting with monochrome theme:
+ * - Single gray shade for keywords (planning to reintroduce color later)
  * - Automatic theme switching based on user's theme preference
  * - Line and character highlighting support
  * - Empty line prevention in grid layout
@@ -89,7 +104,7 @@ function TableWrapper(props: React.HTMLAttributes<HTMLTableElement>) {
  *
  * @type {RehypePrettyCodeOptions}
  */
-// Configure syntax highlighting with built-in themes + CSS overrides
+// Configure syntax highlighting with minimal monochrome style
 const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
   theme: {
     dark: "github-dark",
@@ -124,14 +139,13 @@ function rehypeReplaceFootnoteEmoji() {
         // Look for footnote backref links (they have specific class patterns)
         if (node.properties?.href?.toString().includes("user-content-fnref")) {
           // Check if the link contains the ↩ emoji
-          const hasEmoji = node.children?.some((child: any) =>
-            child.type === "text" && child.value?.includes("↩")
+          const hasEmoji = node.children?.some(
+            (child: any) => child.type === "text" && child.value?.includes("↩")
           );
-          
+
           if (hasEmoji) {
             // Replace text children containing ↩ with a marker we can target
             node.children = node.children?.map((child: any) =>
-
               child.type === "text" && child.value?.includes("↩")
                 ? { type: "text", value: "FOOTNOTE_BACKREF" }
                 : child
@@ -142,13 +156,13 @@ function rehypeReplaceFootnoteEmoji() {
           }
         }
       }
-      
+
       // Recursively visit children
       if (node.children && Array.isArray(node.children)) {
         node.children.forEach(visit);
       }
     };
-    
+
     visit(tree);
   };
 }
@@ -189,7 +203,10 @@ function extractTextFromChildren(children: React.ReactNode): string {
 // Map a few elements to tailwind-styled components
 const components: NonNullable<MDXRemoteProps["components"]> = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 {...props} className={`${TYPOGRAPHY.h1.mdx} mt-8 first:mt-0 scroll-mt-20 group`} />
+    <h1
+      {...props}
+      className={`${TYPOGRAPHY.h1.mdx} mt-8 first:mt-0 scroll-mt-20 group`}
+    />
   ),
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2 {...props} className={`${TYPOGRAPHY.h2.mdx} mt-8 scroll-mt-20 group`} />
@@ -208,41 +225,41 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   ),
   p: MDXParagraphComponent,
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote 
-      {...props} 
+    <blockquote
+      {...props}
       className="mt-6 border-l-4 border-primary/30 pl-4 italic text-muted-foreground not:first:mt-0"
     />
   ),
   table: TableWrapper,
   thead: (props: React.HTMLAttributes<HTMLTableSectionElement>) => (
-    <thead 
-      {...props} 
-      className="bg-gradient-to-r from-muted/80 to-muted/60 backdrop-blur-sm" 
+    <thead
+      {...props}
+      className="bg-gradient-to-r from-muted/80 to-muted/60 backdrop-blur-sm"
     />
   ),
   tbody: (props: React.HTMLAttributes<HTMLTableSectionElement>) => (
     <tbody {...props} />
   ),
   tr: (props: React.HTMLAttributes<HTMLTableRowElement>) => (
-    <tr 
-      {...props} 
-      className="border-b border-border/50 transition-colors hover:bg-muted/30 last:border-b-0" 
+    <tr
+      {...props}
+      className="border-b border-border/50 transition-colors hover:bg-muted/30 last:border-b-0"
     />
   ),
   th: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
-    <th 
-      {...props} 
+    <th
+      {...props}
       className={cn(
         "px-4 py-4 text-left font-semibold",
         TYPOGRAPHY.label.small,
         "text-foreground/90 tracking-wide"
-      )} 
+      )}
     />
   ),
   td: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
-    <td 
-      {...props} 
-      className="px-4 py-4 text-sm leading-relaxed text-foreground/90" 
+    <td
+      {...props}
+      className="px-4 py-4 text-sm leading-relaxed text-foreground/90"
     />
   ),
   strong: (props: React.HTMLAttributes<HTMLElement>) => (
@@ -263,8 +280,8 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     const isInline = !props["data-language" as keyof typeof props];
     if (isInline) {
       return (
-        <code 
-          {...props} 
+        <code
+          {...props}
           className="rounded-md bg-primary/10 px-2 py-1 text-[0.875em] font-mono font-semibold border border-primary/20 text-primary"
         />
       );
@@ -296,42 +313,47 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   },
   hr: () => <HorizontalRule />,
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    const isHeaderAnchor = props.className?.includes('no-underline');
-    const href = props.href || '';
-    const isExternal = href.startsWith('http://') || href.startsWith('https://');
-    const isFootnoteBackref = href.includes('user-content-fnref');
-    
+    const isHeaderAnchor = props.className?.includes("no-underline");
+    const href = props.href || "";
+    const isExternal =
+      href.startsWith("http://") || href.startsWith("https://");
+    const isFootnoteBackref = href.includes("user-content-fnref");
+
     // Handle footnote backref links - replace emoji with icon
     if (isFootnoteBackref) {
       return (
-        <a 
+        <a
           {...props}
           href={href}
           className="no-underline inline-flex items-center pl-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors"
           title="Back to note reference"
         >
-          <ArrowUpLeft className="inline-block w-3 h-3" aria-label="Back to note" />
+          <ArrowUpLeft
+            className="inline-block w-3 h-3"
+            aria-label="Back to note"
+          />
         </a>
       );
     }
-    
+
     // Convert relative docs links to proper /dev/docs/ paths
     let adjustedHref = href;
-    if (href.startsWith('./')) {
+    if (href.startsWith("./")) {
       adjustedHref = `/dev/docs/${href.slice(2)}`;
     }
-    
+
     return (
-      <a 
-        {...props} 
+      <a
+        {...props}
         href={adjustedHref}
-        className={isHeaderAnchor 
-          ? "hover:text-primary" 
-          : "inline-flex items-center gap-1 underline underline-offset-4 hover:text-primary"
+        className={
+          isHeaderAnchor
+            ? "hover:text-primary"
+            : "inline-flex items-center gap-1 underline underline-offset-4 hover:text-primary"
         }
         {...(isExternal && {
           target: "_blank",
-          rel: "noopener noreferrer"
+          rel: "noopener noreferrer",
         })}
       >
         {props.children}
@@ -355,24 +377,75 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     );
   },
   img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
-    <ZoomableImage 
-      {...props} 
+    <ZoomableImage
+      {...props}
       className={`${SPACING.image} rounded-lg max-w-full h-auto`}
     />
   ),
   // Icon components for consistent styling across the site
-  // Note: Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
-  /* eslint-disable no-restricted-syntax -- MDX icon components use accent colors */
-  CheckIcon: () => <Check className="inline-block w-5 h-5 align-text-bottom text-green-600 dark:text-green-400" aria-label="Check" />,
-  XIcon: () => <X className="inline-block w-5 h-5 align-text-bottom text-red-600 dark:text-red-400" aria-label="Cross" />,
-  ReturnIcon: () => <ArrowUpLeft className="inline-block w-5 h-5 align-text-bottom text-muted-foreground" aria-label="Return" />,
-  WarningIcon: () => <AlertTriangle className="inline-block w-5 h-5 align-text-bottom text-yellow-600 dark:text-yellow-400" aria-label="Warning" />,
-  InfoIcon: () => <Info className="inline-block w-5 h-5 align-text-bottom text-blue-600 dark:text-blue-400" aria-label="Information" />,
-  IdeaIcon: () => <Lightbulb className="inline-block w-5 h-5 align-text-bottom text-yellow-600 dark:text-yellow-400" aria-label="Idea" />,
-  ZapIcon: () => <Zap className="inline-block w-5 h-5 align-text-bottom text-purple-600 dark:text-purple-400" aria-label="Lightning" />,
-  LockIcon: () => <Lock className="inline-block w-5 h-5 align-text-bottom text-muted-foreground" aria-label="Lock" />,
-  RocketIcon: () => <Rocket className="inline-block w-5 h-5 align-text-bottom text-blue-600 dark:text-blue-400" aria-label="Rocket" />,
-  /* eslint-enable no-restricted-syntax */
+  // Note: Icon colors converted to monochrome (text-muted-foreground)
+
+  CheckIcon: () => (
+    <Check
+      className="inline-block w-5 h-5 align-text-bottom text-green-600"
+      aria-label="Check"
+    />
+  ),
+  XIcon: () => (
+    <X
+      className="inline-block w-5 h-5 align-text-bottom text-red-600"
+      aria-label="Cross"
+    />
+  ),
+  ReturnIcon: () => (
+    <ArrowUpLeft
+      className="inline-block w-5 h-5 align-text-bottom text-muted-foreground"
+      aria-label="Return"
+    />
+  ),
+  WarningIcon: () => (
+    <AlertTriangle
+      className="inline-block w-5 h-5 align-text-bottom text-muted-foreground"
+      aria-label="Warning"
+    />
+  ),
+  InfoIcon: () => (
+    <Info
+      className="inline-block w-5 h-5 align-text-bottom text-blue-600"
+      aria-label="Information"
+    />
+  ),
+  IdeaIcon: () => (
+    <Lightbulb
+      className="inline-block w-5 h-5 align-text-bottom text-muted-foreground"
+      aria-label="Idea"
+    />
+  ),
+  ZapIcon: () => (
+    <Zap
+      className="inline-block w-5 h-5 align-text-bottom text-muted-foreground"
+      aria-label="Lightning"
+    />
+  ),
+  LockIcon: () => (
+    <Lock
+      className="inline-block w-5 h-5 align-text-bottom text-muted-foreground"
+      aria-label="Lock"
+    />
+  ),
+  StarIcon: () => (
+    <Star
+      className="inline-block w-5 h-5 align-text-bottom text-muted-foreground"
+      aria-label="Star"
+    />
+  ),
+  RocketIcon: () => (
+    <Rocket
+      className="inline-block w-5 h-5 align-text-bottom text-muted-foreground"
+      aria-label="Rocket"
+    />
+  ),
+
   // Diagram presets (using ReactFlow) - imported from client-side wrapper
   // These use "use client" to prevent SSR bailout errors
   MCPArchitecture: MDXMCPArchitecture as any,
@@ -398,27 +471,33 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     // Check if this contains a link (footnote reference) or has footnote-related attributes
     const children = React.Children.toArray(props.children);
     const hasLink = children.some(
-      child => React.isValidElement(child) && child?.type === 'a'
+      (child) => React.isValidElement(child) && child?.type === "a"
     );
-    
+
     if (hasLink) {
       // This is a footnote reference - replace the content with our icon
       // Get the href from the link to preserve navigation
       const linkChild = children.find(
-        child => React.isValidElement(child) && child?.type === 'a'
+        (child) => React.isValidElement(child) && child?.type === "a"
       ) as React.ReactElement | undefined;
-      
+
       const href = (linkChild?.props as { href?: string })?.href;
-      
+
       return (
         <sup {...props} className="ml-0.5 inline-flex items-center">
-          <a href={href} className="no-underline hover:opacity-70 transition-opacity">
-            <ArrowUpLeft className="inline-block w-3 h-3 text-primary" aria-label="Footnote reference" />
+          <a
+            href={href}
+            className="no-underline hover:opacity-70 transition-opacity"
+          >
+            <ArrowUpLeft
+              className="inline-block w-3 h-3 text-primary"
+              aria-label="Footnote reference"
+            />
           </a>
         </sup>
       );
     }
-    
+
     // Default superscript for non-footnote uses
     return <sup {...props} />;
   },
@@ -477,11 +556,11 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
  *
  * @see /docs/components/mdx.md for detailed documentation
  */
-export function MDX({ 
-  source, 
-  useFontContrast = false 
-}: { 
-  source: string; 
+export function MDX({
+  source,
+  useFontContrast = false,
+}: {
+  source: string;
   useFontContrast?: boolean;
 }) {
   return (
@@ -501,14 +580,15 @@ export function MDX({
               rehypeKatex, // Render math with KaTeX
               rehypeReplaceFootnoteEmoji, // Replace footnote emoji with icon
               [
-                rehypeAutolinkHeadings, 
-                { 
+                rehypeAutolinkHeadings,
+                {
                   behavior: "wrap",
                   properties: {
-                    className: "no-underline hover:text-primary transition-colors"
-                  }
-                }
-              ]
+                    className:
+                      "no-underline hover:text-primary transition-colors",
+                  },
+                },
+              ],
             ],
           },
         }}

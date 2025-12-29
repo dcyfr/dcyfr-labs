@@ -97,13 +97,16 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
         onMouseEnter={handleMouseEnter}
         style={{
           transform: `perspective(1000px) rotateX(${isHovered ? tiltX : 0}deg) rotateY(${isHovered ? tiltY : 0}deg) scale(${isHovered ? 1.01 : 1})`,
-          transition: 'transform 0.2s ease-out',
-          willChange: isHovered ? 'transform' : 'auto',
+          transition: "transform 0.2s ease-out",
+          willChange: isHovered ? "transform" : "auto",
         }}
       >
         {/* Animated gradient glow following mouse */}
         <div
-          className={cn("absolute inset-0 z-10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none", ANIMATION.duration.normal)}
+          className={cn(
+            "absolute inset-0 z-10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none",
+            ANIMATION.duration.normal
+          )}
           style={{
             background: `radial-gradient(600px circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, hsl(var(--primary) / 0.1), transparent 40%)`,
           }}
@@ -111,16 +114,20 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
 
         {/* Animated border gradient */}
         <div
-          className={cn("absolute inset-0 z-20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none", ANIMATION.duration.normal)}
+          className={cn(
+            "absolute inset-0 z-20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none",
+            ANIMATION.duration.normal
+          )}
           style={{
             background: `linear-gradient(${Math.atan2(mousePosition.y - 0.5, mousePosition.x - 0.5) * (180 / Math.PI)}deg, hsl(var(--primary) / 0.5), hsl(var(--primary) / 0.2), transparent)`,
-            maskImage: 'linear-gradient(black, black) padding-box, linear-gradient(black, black)',
-            WebkitMaskComposite: 'xor',
-            maskComposite: 'exclude',
-            padding: '2px',
+            maskImage:
+              "linear-gradient(black, black) padding-box, linear-gradient(black, black)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            padding: "2px",
           }}
         />
-        
+
         {/* Background image - fills entire container */}
         {post.image && !post.image.hideCard && (
           <div className="absolute inset-0 z-0">
@@ -136,16 +143,18 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70" />
           </div>
         )}
-        
+
         <div className={cn("relative z-10 p-4 md:p-8", SPACING.content)}>
           {/* Featured Badge */}
-          <div className="flex items-center gap-4">
-            <Badge 
-              variant="default" 
-              className={cn(TYPOGRAPHY.label.xs, "backdrop-blur-sm", 
-                post.image && post.image.url && !post.image.hideCard 
-                  ? 'bg-white/20 text-white border border-white/30' 
-                  : 'bg-white/10 text-foreground border border-border/40'
+          <div className={`flex items-center gap-${SPACING.md}`}>
+            <Badge
+              variant="default"
+              className={cn(
+                TYPOGRAPHY.label.xs,
+                "backdrop-blur-sm",
+                post.image && post.image.url && !post.image.hideCard
+                  ? "bg-white/20 text-white border border-white/30"
+                  : "bg-white/10 text-foreground border border-border/40"
               )}
             >
               Featured
@@ -159,12 +168,13 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
                 }}
                 className="cursor-pointer"
               >
-                <Badge 
-                  variant="outline" 
-                  className={cn("text-xs backdrop-blur-sm transition-colors cursor-pointer",
-                    post.image && post.image.url && !post.image.hideCard 
-                      ? 'bg-white/20 text-white border-white/30 hover:bg-white/30' 
-                      : 'text-foreground hover:bg-accent'
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "text-xs backdrop-blur-sm transition-colors cursor-pointer",
+                    post.image && post.image.url && !post.image.hideCard
+                      ? "bg-white/20 text-white border-white/30 hover:bg-white/30"
+                      : "text-foreground hover:bg-accent"
                   )}
                 >
                   {tag}
@@ -174,54 +184,77 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
           </div>
 
           {/* Title & Summary */}
-          <div className="space-y-2 md:space-y-3">
-            <h2 className={cn(TYPOGRAPHY.h2.featured, "md:text-4xl", 
-              post.image && post.image.url && !post.image.hideCard 
-                ? 'text-white' 
-                : 'text-foreground'
-            )}>
+          <div className={`space-y-${SPACING.sm} md:space-y-${SPACING.md}`}>
+            <h2
+              className={cn(
+                TYPOGRAPHY.h2.featured,
+                "md:text-4xl",
+                post.image && post.image.url && !post.image.hideCard
+                  ? "text-white"
+                  : "text-foreground"
+              )}
+            >
               {post.title}
             </h2>
             {post.subtitle && (
-              <p className={cn(TYPOGRAPHY.h3.standard,
-                post.image && post.image.url && !post.image.hideCard 
-                  ? 'text-white/80' 
-                  : 'text-foreground/80'
-              )}>
+              <p
+                className={cn(
+                  TYPOGRAPHY.h3.standard,
+                  post.image && post.image.url && !post.image.hideCard
+                    ? "text-white/80"
+                    : "text-foreground/80"
+                )}
+              >
                 {post.subtitle}
               </p>
             )}
-            <p className={cn(TYPOGRAPHY.description,
-              post.image && post.image.url && !post.image.hideCard 
-                ? 'text-white/80' 
-                : 'text-foreground/70'
-            )}>
+            <p
+              className={cn(
+                TYPOGRAPHY.description,
+                post.image && post.image.url && !post.image.hideCard
+                  ? "text-white/80"
+                  : "text-foreground/70"
+              )}
+            >
               {post.summary}
             </p>
           </div>
 
           {/* Metadata & CTA */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-3 md:pt-4">
-            <div className={cn("flex items-center gap-4 text-sm",
-              post.image && post.image.url && !post.image.hideCard 
-                ? 'text-white/70' 
-                : 'text-foreground/60'
-            )}>
+          <div
+            className={`flex flex-col sm:flex-row sm:items-center justify-between gap-${SPACING.md} sm:gap-${SPACING.md} pt-${SPACING.md} md:pt-${SPACING.md}`}
+          >
+            <div
+              className={cn(
+                `flex items-center gap-${SPACING.md} text-sm`,
+                post.image && post.image.url && !post.image.hideCard
+                  ? "text-white/70"
+                  : "text-foreground/60"
+              )}
+            >
               <time dateTime={post.publishedAt}>{publishedDate}</time>
               <span className="flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
                 {post.readingTime.text}
               </span>
             </div>
-            
-            <div className={cn("inline-flex items-center gap-1 font-medium hover:underline group-hover:gap-2", 
-              ANIMATION.transition.base,
-              post.image && post.image.url && !post.image.hideCard 
-                ? 'text-white' 
-                : 'text-primary'
-            )}>
+
+            <div
+              className={cn(
+                "inline-flex items-center gap-1 font-medium hover:underline group-hover:gap-2",
+                ANIMATION.transition.base,
+                post.image && post.image.url && !post.image.hideCard
+                  ? "text-white"
+                  : "text-primary"
+              )}
+            >
               Read post
-              <ArrowRight className={cn("h-4 w-4 group-hover:translate-x-1", ANIMATION.transition.movement)} />
+              <ArrowRight
+                className={cn(
+                  "h-4 w-4 group-hover:translate-x-1",
+                  ANIMATION.transition.movement
+                )}
+              />
             </div>
           </div>
         </div>

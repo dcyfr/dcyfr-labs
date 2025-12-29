@@ -49,11 +49,11 @@ function getMcpServers() {
     const vscodePath = join(ROOT, ".vscode/mcp.json");
     const rootPath = join(ROOT, "mcp.json");
     let cfg = null;
-    if (fs.existsSync(vscodePath)) {
+    if (existsSync(vscodePath)) {
       cfg = JSON.parse(readFileSync(vscodePath, "utf-8"));
       return Object.keys(cfg.servers || {});
     }
-    if (fs.existsSync(rootPath)) {
+    if (existsSync(rootPath)) {
       cfg = JSON.parse(readFileSync(rootPath, "utf-8"));
       // support both `servers` and `mcpServers`
       return Object.keys(cfg.servers || cfg.mcpServers || {});
@@ -88,8 +88,8 @@ function updateTestCount(content, stats) {
 }
 
 function updateMcpList(content, servers) {
-  // Update MCP servers list
-  const mcpPattern = /## MCP Servers.*?\n\n[^\n#]+/s;
+  // Update MCP servers list - matches section until next section or note
+  const mcpPattern = /## MCP Servers.*?\n\n[^\n*]+(?=\n\*|\n#|\n---|$)/s;
   const newMcpSection = `## MCP Servers (Chat)\n\n${servers.join(", ")}`;
 
   if (mcpPattern.test(content)) {

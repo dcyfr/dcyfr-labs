@@ -264,8 +264,8 @@ export const ACTIVITY_SOURCE_COLORS: Record<
     border: "border-l-amber-600",
   },
   trending: {
-    // eslint-disable-next-line no-restricted-syntax -- Icon accent color configuration
-    icon: "text-orange-600 dark:text-orange-400",
+     
+    icon: "text-muted-foreground",
     border: "border-l-orange-600",
   },
   engagement: {
@@ -277,18 +277,18 @@ export const ACTIVITY_SOURCE_COLORS: Record<
     border: "border-l-muted-foreground",
   },
   analytics: {
-    // eslint-disable-next-line no-restricted-syntax -- Icon accent color configuration
-    icon: "text-blue-600 dark:text-blue-400",
+     
+    icon: "text-muted-foreground",
     border: "border-l-blue-600",
   },
   "github-traffic": {
      
-    icon: "text-purple-600 dark:text-purple-400",
+    icon: "text-muted-foreground",
     border: "border-l-purple-600",
   },
   seo: {
-    // eslint-disable-next-line no-restricted-syntax -- Icon accent color configuration
-    icon: "text-green-600 dark:text-green-400",
+     
+    icon: "text-muted-foreground",
     border: "border-l-green-600",
   },
 } as const;

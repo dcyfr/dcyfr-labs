@@ -124,7 +124,7 @@ export function ResumeStats() {
                     <div className={`${TYPOGRAPHY.display.stat} tabular-nums mb-1`} suppressHydrationWarning>{stat.value}</div>
                   </>
                 )}
-                {/* eslint-disable-next-line no-restricted-syntax */}
+                { }
                 <p className="text-sm font-medium text-foreground mb-0.5" suppressHydrationWarning>{stat.label}</p>
                 <p className="text-xs text-muted-foreground leading-tight">{stat.description}</p>
               </div>

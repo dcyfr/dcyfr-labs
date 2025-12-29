@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useState, createContext, useContext } from "react";
-import { BlogKeyboardProvider } from "@/components/blog/blog-keyboard-provider";
+import { BlogKeyboardProvider } from '@/components/blog';
 
 interface BlogLayoutContextType {
   sidebarVisible: boolean;

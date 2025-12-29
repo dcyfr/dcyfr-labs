@@ -7,7 +7,7 @@ This page documents recommended checks for MCP (Model Context Protocol) servers,
 
 Why this matters
 -----------------
-- MCP servers provide runtime context and services used by the AI agents this repository integrates with (e.g., Perplexity, Context, Axiom, Filesystem). Monitoring them improves developer ergonomics and reduces flaky CI runs.
+- MCP servers provide runtime context and services used by the AI agents this repository integrates with (e.g., Perplexity, Context, Axiom, Filesystem, arXiv, Octocode, Google Scholar, OpenReview, DBLP). Monitoring them improves developer ergonomics and reduces flaky CI runs.
 
 Local validation
 ----------------
@@ -22,9 +22,12 @@ npm run sync:ai
 
 Recommended MCP health checks (manual)
 ------------------------------------
-- Perplexity: If a token is present, send a minimal request (or run `isPerplexityConfigured()` helper in `src/lib/perplexity.ts`).
-- Context: Confirm the Context MCP server is accessible if it uses an http URL.
-- Axiom / Sentry / Vercel: Confirm public endpoints respond with 200/401 (401 is okay if token required) and that the host resolves.
+- **Perplexity**: If a token is present, send a minimal request (or run `isPerplexityConfigured()` helper in `src/lib/perplexity.ts`).
+- **Context**: Confirm the Context MCP server is accessible if it uses an http URL.
+- **Axiom / Sentry / Vercel**: Confirm public endpoints respond with 200/401 (401 is okay if token required) and that the host resolves.
+- **arXiv / Google Scholar / OpenReview / DBLP**: Free research servers - verify npx can resolve packages. No auth required.
+- **Octocode**: GitHub CLI auth (`gh auth login`) or Personal Access Token. Verify with `/research` command; no validation endpoint required.
+- **Analytics (Custom)**: Local MCP server requiring Redis credentials (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`). Test with `npm run mcp:inspect:analytics` or verify startup with `npm run mcp:analytics` (stdio mode).
 
 Recommended `check-mcp-servers.mjs` script
 ----------------------------------------

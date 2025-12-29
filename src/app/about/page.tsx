@@ -10,22 +10,33 @@ import {
   SCROLL_BEHAVIOR,
 } from "@/lib/design-tokens";
 import { createPageMetadata } from "@/lib/metadata";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { PageHero } from "@/components/layouts/page-hero";
+import { PageLayout, PageHero } from "@/components/layouts";
 import {
   SectionNavigator,
   Section,
   SmoothScrollToHash,
 } from "@/components/common";
-import { TeamSpotlights, ConnectWithUs, AboutDcyfrLabs, BadgeWallet } from "@/components/about";
+import {
+  TeamSpotlights,
+  ConnectWithUs,
+  AboutDcyfrLabs,
+  BadgeWallet,
+} from "@/components/about";
 
-const ScrollReveal = dynamic(() => import("@/components/features/scroll-reveal").then(mod => ({ default: mod.ScrollReveal })), {
-  loading: () => <div className="contents" />,
-  ssr: true,
-});
+const ScrollReveal = dynamic(
+  () =>
+    import("@/components/features/scroll-reveal").then((mod) => ({
+      default: mod.ScrollReveal,
+    })),
+  {
+    loading: () => <div className="contents" />,
+    ssr: true,
+  }
+);
 
 const pageTitle = "About DCYFR Labs";
-const pageDescription = "Learn about DCYFR Labs, our team, and our mission to build secure, innovative solutions for the modern web.";
+const pageDescription =
+  "Learn about DCYFR Labs, our team, and our mission to build secure, innovative solutions for the modern web.";
 
 export const metadata: Metadata = createPageMetadata({
   title: pageTitle,
@@ -36,7 +47,7 @@ export const metadata: Metadata = createPageMetadata({
 export default async function AboutPage() {
   // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
-  
+
   // JSON-LD structured data for about page
   const socialImage = getOgImageUrl(pageTitle, pageDescription);
   const jsonLd = getAboutPageSchema(pageDescription, socialImage);
@@ -63,7 +74,10 @@ export default async function AboutPage() {
         </Section>
 
         {/* Organization Philosophy */}
-        <Section id="our-philosophy" className={`${PAGE_LAYOUT.proseSection.container}`}>
+        <Section
+          id="our-philosophy"
+          className={`${PAGE_LAYOUT.proseSection.container}`}
+        >
           <ScrollReveal animation="fade-up" delay={125}>
             <AboutDcyfrLabs />
           </ScrollReveal>
@@ -79,9 +93,9 @@ export default async function AboutPage() {
         {/* Latest Badges */}
         <Section id="badges" className={PAGE_LAYOUT.section.container}>
           <ScrollReveal animation="fade-up" delay={100}>
-            <BadgeWallet 
-              showLatestOnly 
-              limit={3} 
+            <BadgeWallet
+              showLatestOnly
+              limit={3}
               viewMoreUrl="/about/drew/resume#badges"
               viewMoreText="View all badges on my resume"
             />

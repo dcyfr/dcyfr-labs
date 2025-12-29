@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { transformTrendingPosts } from "@/lib/activity/sources.server";
+import { transformTrendingPosts } from "@/lib/activity";
 import type { Post } from "@/data/posts";
 
 // Mock posts

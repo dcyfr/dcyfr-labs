@@ -3,11 +3,11 @@
 import * as React from "react";
 import Link from "next/link";
 import type { Post } from "@/data/posts";
-import type { ActivityItem } from "@/lib/activity/types";
-import { PostList } from "@/components/blog/post/post-list";
+import type { ActivityItem } from "@/lib/activity";
+import { PostList } from '@/components/blog';
 import { ActivityFeed } from "@/components/activity";
 import { Button } from "@/components/ui/button";
-import { PageHero } from "@/components/layouts/page-hero";
+import { PageHero } from "@/components/layouts";
 import { Alert } from "@/components/common";
 import {
   Dialog,

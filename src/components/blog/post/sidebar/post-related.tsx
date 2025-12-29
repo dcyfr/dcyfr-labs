@@ -34,7 +34,7 @@ export function PostRelated({ posts }: PostRelatedProps) {
             className="block group"
           >
             <div className="space-y-1.5">
-              {/* eslint-disable-next-line no-restricted-syntax */}
+              { }
               <h3 className="text-xs font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
                 {post.title}
               </h3>

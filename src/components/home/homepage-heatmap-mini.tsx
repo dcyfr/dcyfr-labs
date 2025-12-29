@@ -9,12 +9,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TYPOGRAPHY, SPACING, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-import type { ActivityItem } from "@/lib/activity/types";
+import type { ActivityItem } from "@/lib/activity";
 import {
   aggregateActivitiesByDate,
   calculateHeatmapStats,
   getHeatmapColorClass,
-} from "@/lib/activity/heatmap";
+} from "@/lib/activity";
 
 // Import styles for react-calendar-heatmap
 import "react-calendar-heatmap/dist/styles.css";
@@ -68,10 +68,15 @@ export function HomepageHeatmapMini({
   );
 
   // Calculate statistics
-  const stats = useMemo(() => calculateHeatmapStats(heatmapData), [heatmapData]);
+  const stats = useMemo(
+    () => calculateHeatmapStats(heatmapData),
+    [heatmapData]
+  );
 
   // Handle date click - navigate to activity page with date filter
-  const handleDateClick = (value: { date: string; count?: number } | undefined) => {
+  const handleDateClick = (
+    value: { date: string; count?: number } | undefined
+  ) => {
     if (!value || !value.count) {
       // If empty day, just go to activity page
       router.push("/activity");
@@ -101,9 +106,19 @@ export function HomepageHeatmapMini({
       <Card className="overflow-hidden">
         <CardContent className="p-4 md:p-8">
           {/* Header with View All */}
-          <div className={cn("flex items-center justify-between gap-4 mb-4 md:mb-6")}>
+          <div
+            className={cn(
+              "flex items-center justify-between gap-4 mb-4 md:mb-6"
+            )}
+          >
             <div className="flex items-center gap-4">
-              <span className={cn("h-2 w-2 rounded-full animate-pulse", SEMANTIC_COLORS.status.success)} aria-hidden="true" />
+              <span
+                className={cn(
+                  "h-2 w-2 rounded-full animate-pulse",
+                  SEMANTIC_COLORS.status.success
+                )}
+                aria-hidden="true"
+              />
               <h3 className={TYPOGRAPHY.h3.standard}>Activity</h3>
             </div>
             <Button
@@ -174,8 +189,18 @@ export function HomepageHeatmapMini({
                 showWeekdayLabels={false}
                 showMonthLabels={true}
                 monthLabels={[
-                  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
                 ]}
                 showOutOfRangeDays={true}
                 gutterSize={3}
@@ -186,7 +211,7 @@ export function HomepageHeatmapMini({
             <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
               <span>Less</span>
               <div className="flex items-center gap-4">
-                { }
+                {}
                 <div className="w-2 h-2 rounded-sm bg-muted border border-border" />
                 <div className="w-2 h-2 rounded-sm bg-chart-1/20 dark:bg-chart-1/30" />
                 <div className="w-2 h-2 rounded-sm bg-chart-1/40 dark:bg-chart-1/50" />

@@ -15,7 +15,7 @@ import { Zap, Code, Brain, Shield, FileText } from "lucide-react";
 
 /**
  * About DCYFR Profile Component
- * 
+ *
  * Comprehensive profile for DCYFR AI Lab Assistant, designed for future
  * dedicated /about/dcyfr page. Includes hero section with avatar and summary,
  * followed by detailed capabilities, philosophy, and integration information.
@@ -27,7 +27,7 @@ export function AboutDcyfrProfile() {
       <Section id="dcyfr-hero" className={PAGE_LAYOUT.hero.container}>
         <div
           className={cn(
-            "flex flex-col md:flex-row items-center md:items-start gap-4",
+            `flex flex-col md:flex-row items-center md:items-start gap-${SPACING.md}`,
             SPACING.content
           )}
         >
@@ -37,7 +37,7 @@ export function AboutDcyfrProfile() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 space-y-4">
+          <div className={`flex-1 space-y-${SPACING.md}`}>
             <div>
               <h2 className={cn(TYPOGRAPHY.h1.hero, "font-serif")}>
                 {dcyfr.name}
@@ -46,7 +46,7 @@ export function AboutDcyfrProfile() {
               <p className="text-sm text-muted-foreground">{dcyfr.subtitle}</p>
             </div>
             <p className={TYPOGRAPHY.description}>{dcyfr.summary}</p>
-            <div className="flex flex-wrap gap-2">
+            <div className={`flex flex-wrap gap-${SPACING.sm}`}>
               <Badge variant="secondary" className="gap-1">
                 <Zap className="w-3 h-3" />
                 AI-Powered
@@ -73,11 +73,10 @@ export function AboutDcyfrProfile() {
           <h3 className={TYPOGRAPHY.h2.standard}>Core Capabilities</h3>
           <div className="grid gap-4 md:grid-cols-2">
             {dcyfr.capabilities.map((capability, idx) => (
-              <Card key={idx} className={cn(
-                "p-8 space-y-3",
-                SHADOWS.card.rest,
-                BORDERS.card
-              )}>
+              <Card
+                key={idx}
+                className={cn("p-8 space-y-3", SHADOWS.card.rest, BORDERS.card)}
+              >
                 <div className="flex items-start gap-3">
                   <div className="shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                     {capability.name === "Code Development" && (
@@ -108,7 +107,10 @@ export function AboutDcyfrProfile() {
                 </p>
                 <ul className="space-y-1.5 text-sm text-muted-foreground">
                   {capability.examples.map((example, exIdx) => (
-                    <li key={exIdx} className="flex items-start gap-2">
+                    <li
+                      key={exIdx}
+                      className={`flex items-start gap-${SPACING.sm}`}
+                    >
                       <span className="text-primary mt-1">•</span>
                       <span>{example}</span>
                     </li>
@@ -124,15 +126,13 @@ export function AboutDcyfrProfile() {
       <Section id="dcyfr-philosophy" className={PAGE_LAYOUT.section.container}>
         <div className={SPACING.content}>
           <h3 className={TYPOGRAPHY.h2.standard}>Guiding Philosophy</h3>
-          <Card className={cn(
-            "p-8",
-            SHADOWS.card.rest,
-            BORDERS.card
-          )}>
-            <ul className="space-y-3">
+          <Card
+            className={cn(`p-${SPACING.xl}`, SHADOWS.card.rest, BORDERS.card)}
+          >
+            <ul className={`space-y-${SPACING.md}`}>
               {dcyfr.philosophy.map((principle, idx) => (
-                <li key={idx} className="flex items-start gap-3">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Decorative bullet point, not heading text */}
+                <li key={idx} className={`flex items-start gap-${SPACING.md}`}>
+                  {}
                   <span className="text-primary text-xl font-bold mt-0.5">
                     •
                   </span>
@@ -150,13 +150,16 @@ export function AboutDcyfrProfile() {
           <h3 className={TYPOGRAPHY.h2.standard}>
             Integration with DCYFR Labs
           </h3>
-          <div className="space-y-4">
+          <div className={`space-y-${SPACING.md}`}>
             {dcyfr.integration.map((item, idx) => (
-              <Card key={idx} className={cn(
-                "p-8 space-y-2",
-                SHADOWS.tier3.combined,
-                BORDERS.card
-              )}>
+              <Card
+                key={idx}
+                className={cn(
+                  `p-${SPACING.xl} space-y-${SPACING.sm}`,
+                  SHADOWS.tier3.combined,
+                  BORDERS.card
+                )}
+              >
                 <h4 className={cn(TYPOGRAPHY.h3.standard, "text-foreground")}>
                   {item.aspect}
                 </h4>
@@ -171,12 +174,14 @@ export function AboutDcyfrProfile() {
       <Section id="dcyfr-approach" className={PAGE_LAYOUT.section.container}>
         <div className={SPACING.content}>
           <h3 className={TYPOGRAPHY.h2.standard}>Development Approach</h3>
-          <Card className={cn("p-8", SHADOWS.card.rest, BORDERS.card)}>
+          <Card
+            className={cn(`p-${SPACING.xl}`, SHADOWS.card.rest, BORDERS.card)}
+          >
             <ul className="space-y-2.5">
               {dcyfr.approach.map((principle, idx) => (
                 <li
                   key={idx}
-                  className="flex items-start gap-3 text-muted-foreground"
+                  className={`flex items-start gap-${SPACING.md} text-muted-foreground`}
                 >
                   <span className="text-primary font-mono text-sm mt-0.5">
                     →

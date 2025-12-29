@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
-import { PageLayout } from "@/components/layouts/page-layout";
-import { PageHero } from "@/components/layouts/page-hero";
+import { PageLayout } from "@/components/layouts";
+import { PageHero } from "@/components/layouts";
 import { Section, SmoothScrollToHash } from "@/components/common";
 import { SPACING, PAGE_LAYOUT } from "@/lib/design-tokens";
 import { inviteCodes, INVITE_CODE_CATEGORY_LABELS } from "@/data/invites";

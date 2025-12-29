@@ -118,7 +118,7 @@ export function clearCredlyCache(): void {
       cache.delete(key);
     }
   }
-  console.log("[Credly Cache] ✅ Cache cleared");
+  console.warn("[Credly Cache] ✅ Cache cleared");
 }
 
 /**
@@ -170,7 +170,7 @@ export async function preloadCredlyData(
       fetchCredlyBadgesCached(username, 10), // Top 10
       fetchCredlyBadgesCached(username, 3), // Top 3
     ]);
-    console.log(`[Credly Cache] ✅ Preloaded data for ${username}`);
+    console.warn(`[Credly Cache] ✅ Preloaded data for ${username}`);
   } catch (error) {
     console.error(`[Credly Cache] ❌ Preload failed for ${username}:`, error);
   }

@@ -169,6 +169,41 @@ function getMetrics() {
 
 **See:** [TEST_DATA_PREVENTION.md](.github/agents/enforcement/TEST_DATA_PREVENTION.md)
 
+### 6. Never Use Emojis in Public Content
+
+```typescript
+// ❌ WRONG: Emoji in blog post MDX content
+## Features Overview
+- 🚀 Fast performance
+- ✅ Full type safety
+- 📊 Built-in analytics
+
+// ✅ CORRECT: Use React icons from lucide-react
+import { Rocket, CheckCircle, BarChart } from 'lucide-react';
+
+## Features Overview
+- <Rocket className="inline-block" /> Fast performance
+- <CheckCircle className="inline-block" /> Full type safety  
+- <BarChart className="inline-block" /> Built-in analytics
+
+// ✅ ACCEPTABLE: Emojis in code comments and console.log
+// 🚨 CRITICAL: Check production status before proceeding
+console.log('✅ Validation passed');
+```
+
+**Where emojis are prohibited:**
+- Blog posts (`src/content/blog/*.mdx`)
+- Project descriptions (`src/content/projects/*.mdx`)
+- Public-facing UI components
+- User-visible text and labels
+
+**Where emojis are acceptable:**
+- Internal documentation (`docs/`, `.github/`)
+- Code comments (`//`, `/* */`)
+- Console.log statements
+- Test files
+- AI instruction files (AGENTS.md, CLAUDE.md)
+
 ---
 
 ## 🔍 Finding Information Fast

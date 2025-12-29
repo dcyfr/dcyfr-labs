@@ -123,7 +123,7 @@ export function EmbedGenerator() {
       <div className="space-y-4 mb-8">
         {/* Source Filter */}
         <div>
-          {/* eslint-disable-next-line no-restricted-syntax */}
+          { }
           <label htmlFor="embed-source" className="block mb-2 text-sm font-medium">
             Filter by Source (optional)
           </label>
@@ -151,7 +151,7 @@ export function EmbedGenerator() {
 
         {/* Time Range */}
         <div>
-          {/* eslint-disable-next-line no-restricted-syntax */}
+          { }
           <label htmlFor="embed-timeRange" className="block mb-2 text-sm font-medium">
             Time Range (optional)
           </label>
@@ -176,7 +176,7 @@ export function EmbedGenerator() {
 
         {/* Limit */}
         <div>
-          {/* eslint-disable-next-line no-restricted-syntax */}
+          { }
           <label htmlFor="embed-limit" className="block mb-2 text-sm font-medium">
             Number of Items
           </label>
@@ -195,7 +195,7 @@ export function EmbedGenerator() {
 
         {/* Width */}
         <div>
-          {/* eslint-disable-next-line no-restricted-syntax */}
+          { }
           <label htmlFor="embed-width" className="block mb-2 text-sm font-medium">
             Width
           </label>
@@ -213,7 +213,7 @@ export function EmbedGenerator() {
 
         {/* Height */}
         <div>
-          {/* eslint-disable-next-line no-restricted-syntax */}
+          { }
           <label htmlFor="embed-height" className="block mb-2 text-sm font-medium">
             Height
           </label>
@@ -231,7 +231,7 @@ export function EmbedGenerator() {
 
         {/* Theme */}
         <div>
-          {/* eslint-disable-next-line no-restricted-syntax */}
+          { }
           <label htmlFor="embed-theme" className="block mb-2 text-sm font-medium">
             Theme
           </label>
@@ -262,7 +262,7 @@ export function EmbedGenerator() {
           href={embedUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700" // eslint-disable-line no-restricted-syntax
+          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"  
         >
           <ExternalLink className="w-4 h-4" />
           Preview embed in new window
@@ -271,7 +271,7 @@ export function EmbedGenerator() {
 
       {/* Generated Code */}
       <div className="relative">
-        {/* eslint-disable-next-line no-restricted-syntax */}
+        { }
         <label className="block mb-2 text-sm font-medium">
           Embed Code
         </label>
