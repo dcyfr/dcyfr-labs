@@ -22,6 +22,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SPACING } from '@/lib/design-tokens';
 
 export interface ArchivePaginationProps {
   /** Current page number (1-indexed) */
@@ -136,7 +137,7 @@ export function ArchivePagination({
 
   return (
     <nav
-      className={cn("flex items-center justify-center gap-2", className)}
+      className={cn(`flex items-center justify-center gap-${SPACING.sm}`, className)}
       aria-label="Pagination"
     >
       {/* Previous Button */}
@@ -145,7 +146,7 @@ export function ArchivePagination({
         size="default"
         asChild
         disabled={!hasPrevPage}
-        className="gap-1"
+        className={`gap-${SPACING.xs}`}
       >
         {hasPrevPage ? (
           <Link
@@ -165,7 +166,7 @@ export function ArchivePagination({
       </Button>
 
       {/* Page Numbers */}
-      <div className="hidden sm:flex items-center gap-1">
+      <div className={`hidden sm:flex items-center gap-${SPACING.xs}`}>
         {pageNumbers.map((pageNum, index) => {
           if (pageNum === 'ellipsis') {
             return (

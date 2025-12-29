@@ -6,7 +6,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import { highlightSearchTerms } from "@/lib/activity/search";
+import { highlightSearchTerms } from "@/lib/activity";
 import { SEMANTIC_COLORS } from "@/lib/design-tokens";
 
 // ============================================================================

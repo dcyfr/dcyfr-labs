@@ -89,7 +89,7 @@ export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActi
   const handleBookmark = () => {
     if (!activityId) return;
 
-    console.debug("[PostQuickActions] Toggling bookmark:", {
+    console.warn("[PostQuickActions] Toggling bookmark:", {
       activityId,
       wasBookmarked: bookmarked,
     });
@@ -101,7 +101,7 @@ export function PostQuickActions({ slug, postTitle, publishedAt }: PostQuickActi
   const handleLike = () => {
     if (!activityId) return;
 
-    console.debug("[PostQuickActions] Toggling like:", {
+    console.warn("[PostQuickActions] Toggling like:", {
       activityId,
       wasLiked: liked,
     });

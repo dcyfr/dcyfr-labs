@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ArticleLayout } from '@/components/layouts/article-layout'
-import { ArticleHeader } from '@/components/layouts/article-header'
-import { ArticleFooter } from '@/components/layouts/article-footer'
+import { ArticleLayout } from '@/components/layouts'
+import { ArticleHeader } from '@/components/layouts'
+import { ArticleFooter } from '@/components/layouts'
 
 describe('Print Styles - ArticleLayout', () => {
   describe('CSS Import', () => {

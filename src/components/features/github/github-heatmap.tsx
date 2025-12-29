@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax -- Chart visualization and icon colors are intentional exceptions */
+ 
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ExternalLink, Flame, TrendingUp, Calendar, Target, FolderGit2, Star, GitFork } from "lucide-react";
-import { GitHubHeatmapSkeleton } from "@/components/common/skeletons/github-heatmap-skeleton";
+import { GitHubHeatmapSkeleton } from "@/components/common";
 import { sanitizeUrl, cn } from "@/lib/utils";
 import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
 import "react-calendar-heatmap/dist/styles.css";
@@ -430,7 +430,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-300 dark:border-[oklch(0.38_0.13_145)] bg-[oklch(0.75_0.12_145)] dark:bg-[oklch(0.48_0.13_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.75_0_0)] dark:bg-[oklch(0.35_0_0)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{
                         type: "spring",
@@ -439,7 +439,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-400 dark:border-[oklch(0.50_0.17_145)] bg-[oklch(0.58_0.18_145)] dark:bg-[oklch(0.60_0.17_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.58_0_0)] dark:bg-[oklch(0.48_0_0)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{
                         type: "spring",
@@ -448,7 +448,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-500 dark:border-[oklch(0.62_0.20_145)] bg-[oklch(0.45_0.22_145)] dark:bg-[oklch(0.72_0.20_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.45_0_0)] dark:bg-[oklch(0.60_0_0)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{
                         type: "spring",
@@ -457,7 +457,7 @@ export function GitHubHeatmap({ username = DEFAULT_GITHUB_USERNAME }: GitHubHeat
                       }}
                     />
                     <motion.div
-                      className="w-2.5 h-2.5 rounded-sm border border-green-700 dark:border-[oklch(0.72_0.23_145)] bg-[oklch(0.32_0.26_145)] dark:bg-[oklch(0.82_0.23_145)]"
+                      className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.32_0_0)] dark:bg-[oklch(0.72_0_0)]"
                       whileHover={{ scale: 1.2 }}
                       transition={{
                         type: "spring",

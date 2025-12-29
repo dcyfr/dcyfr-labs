@@ -190,7 +190,7 @@ export function ShareButtons({ url, title, postId, initialShareCount = 0 }: Shar
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         {/* Share label - not a semantic heading */}
-        {/* eslint-disable-next-line no-restricted-syntax */}
+        { }
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
           <Share2 className="h-4 w-4" aria-hidden="true" />
           <span>Share this post</span>

@@ -5,21 +5,27 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
-import { ThemeToggle } from "@/components/features/theme/theme-toggle";
-import { MobileNav } from "@/components/navigation/mobile-nav";
+import { ThemeToggle } from "@/components/features";
+import { MobileNav } from "@/components/navigation";
 import { SearchButton } from "@/components/search";
-import DevToolsDropdown from "@/components/common/dev-tools-dropdown";
+import { DevToolsDropdown } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { CONTAINER_WIDTHS, ANIMATION, TOUCH_TARGET } from "@/lib/design-tokens";
-import { NAVIGATION, BLOG_NAV, WORK_NAV, isNavItemActive, getAriaCurrent } from "@/lib/navigation";
+import {
+  NAVIGATION,
+  BLOG_NAV,
+  WORK_NAV,
+  isNavItemActive,
+  getAriaCurrent,
+} from "@/lib/navigation";
 import { useDropdown } from "@/hooks/use-dropdown";
 import { useLogoClick } from "@/hooks/use-navigation";
 
 /**
  * Site Header Component
- * 
+ *
  * Main navigation header with responsive design and accessibility
- * 
+ *
  * Features:
  * - Desktop: Horizontal nav with dropdowns for Blog and Work
  * - Mobile: Hamburger menu
@@ -37,23 +43,74 @@ export function SiteHeader() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY > 0;
+      // Calculate threshold based on header height + top margin
+      const isMobile = window.innerWidth < 768;
+      const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+
+      let threshold = isMobile ? 56 : 64; // Base header height (h-14 = 56px, md:h-16 = 64px)
+
+      // Add top margin (now applied to all pages)
+      if (isMobile) {
+        threshold += 32; // mt-8 = 2rem = 32px
+      } else if (isTablet) {
+        threshold += 48; // md:mt-12 = 3rem = 48px
+      } else {
+        threshold += 64; // lg:mt-16 = 4rem = 64px
+      }
+
+      const scrolled = window.scrollY > threshold;
       setHasScrolled(scrolled);
     };
 
+    handleScroll(); // Check on mount
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   /* eslint-disable react-hooks/refs -- dropdown.ref/isOpen/toggle are hook return values, not ref.current access */
   return (
-    <header className={cn(
-      "sticky top-0 z-40 site-header transition-colors", ANIMATION.duration.fast,
-      hasScrolled ? "backdrop-blur supports-backdrop-filter:bg-background/60 border-b" : "bg-transparent"
-    )}>
-      <div className={cn("mx-auto", CONTAINER_WIDTHS.dashboard, "px-4", "sm:px-8", "md:px-8", "h-14", "md:h-16", "flex", "items-center", "justify-between", "gap-2")}>
+    <header
+      className={cn(
+        "sticky top-0 z-40 site-header transition-colors mt-8 md:mt-12 lg:mt-16",
+        ANIMATION.duration.fast,
+        hasScrolled
+          ? "backdrop-blur supports-backdrop-filter:bg-background/60 border-b"
+          : "bg-transparent"
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto",
+          CONTAINER_WIDTHS.dashboard,
+          "px-4",
+          "sm:px-8",
+          "md:px-8",
+          "h-14",
+          "md:h-16",
+          "flex",
+          "items-center",
+          "gap-2",
+          "lg:relative"
+        )}
+      >
         {/* Logo - always visible */}
-        <Link href="/" onClick={handleLogoClick} className={cn("touch-target", "shrink-0", "-ml-2")} aria-label="DCYFR Labs Home">
+        <Link
+          href="/"
+          onClick={handleLogoClick}
+          className={cn(
+            "touch-target",
+            "shrink-0",
+            "-ml-2",
+            "flex",
+            "items-center",
+            "lg:mr-auto"
+          )}
+          aria-label="DCYFR Labs Home"
+        >
           <Image
             src="/images/dcyfr-avatar.svg"
             alt="DCYFR Labs Logo"
@@ -65,7 +122,10 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop Navigation - hidden on mobile, visible md and up */}
-        <nav aria-label="Main navigation" className="hidden md:flex items-center gap-1 sm:gap-3 md:gap-4 text-sm">
+        <nav
+          aria-label="Main navigation"
+          className="hidden md:flex items-center justify-center gap-1 sm:gap-3 md:gap-4 text-sm h-full lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2"
+        >
           {/* Direct links (About, Sponsors, Contact) */}
           {NAVIGATION.header
             .filter((item) => !["Blog", "Our Work"].includes(item.label))
@@ -78,11 +138,15 @@ export function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "hover:underline underline-offset-4 will-change-auto touch-target px-1.5 sm:px-2",
+                    "flex items-center justify-center h-full px-1.5 sm:px-2 hover:underline underline-offset-4 will-change-auto touch-target",
                     ANIMATION.transition.base,
                     isActive && "text-primary font-medium"
                   )}
-                  aria-current={getAriaCurrent(item.href, pathname, item.exactMatch)}
+                  aria-current={getAriaCurrent(
+                    item.href,
+                    pathname,
+                    item.exactMatch
+                  )}
                   aria-label={item.description}
                   prefetch={item.prefetch}
                 >
@@ -96,7 +160,7 @@ export function SiteHeader() {
             <button
               {...blogDropdown.triggerProps}
               className={cn(
-                "flex items-center gap-1 hover:underline underline-offset-4 will-change-auto touch-target px-1.5 sm:px-2",
+                "flex items-center justify-center h-full gap-1 px-1.5 sm:px-2 hover:underline underline-offset-4 will-change-auto touch-target",
                 ANIMATION.transition.base,
                 pathname.startsWith("/blog") && "text-primary font-medium"
               )}
@@ -105,7 +169,14 @@ export function SiteHeader() {
               aria-haspopup="menu"
             >
               Blog
-              <ChevronDown className={cn("h-4 w-4", ANIMATION.transition.fast, blogDropdown.isOpen && "rotate-180")} aria-hidden="true" />
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4",
+                  ANIMATION.transition.fast,
+                  blogDropdown.isOpen && "rotate-180"
+                )}
+                aria-hidden="true"
+              />
             </button>
             {blogDropdown.isOpen && (
               <div
@@ -150,7 +221,7 @@ export function SiteHeader() {
             <button
               {...workDropdown.triggerProps}
               className={cn(
-                "flex items-center gap-1 hover:underline underline-offset-4 will-change-auto touch-target px-1.5 sm:px-2",
+                "flex items-center justify-center h-full gap-1 px-1.5 sm:px-2 hover:underline underline-offset-4 will-change-auto touch-target",
                 ANIMATION.transition.base,
                 pathname.startsWith("/work") && "text-primary font-medium"
               )}
@@ -159,7 +230,14 @@ export function SiteHeader() {
               aria-haspopup="menu"
             >
               Our Work
-              <ChevronDown className={cn("h-4 w-4", ANIMATION.transition.fast, workDropdown.isOpen && "rotate-180")} aria-hidden="true" />
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4",
+                  ANIMATION.transition.fast,
+                  workDropdown.isOpen && "rotate-180"
+                )}
+                aria-hidden="true"
+              />
             </button>
             {workDropdown.isOpen && (
               <div
@@ -203,14 +281,17 @@ export function SiteHeader() {
               </div>
             )}
           </div>
+        </nav>
 
+        {/* Desktop Icon Links - visible md and up */}
+        <div className="hidden md:flex items-center gap-2 shrink-0 ml-auto lg:ml-0">
           <SearchButton variant="default" />
           <ThemeToggle />
           {process.env.NODE_ENV === "development" && <DevToolsDropdown />}
-        </nav>
+        </div>
 
         {/* Mobile Navigation - visible on mobile, hidden md and up */}
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex md:hidden items-center gap-2 ml-auto">
           <SearchButton variant="default" />
           <ThemeToggle />
           <MobileNav />

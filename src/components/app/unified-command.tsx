@@ -44,8 +44,8 @@ import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
 import { useReadingProgressList } from "@/hooks/use-reading-progress";
 import { useSearch } from "@/components/search";
 import { NAVIGATION } from "@/lib/navigation-config";
-import type { SearchIndex, SearchablePost } from "@/lib/search/fuse-config";
-import { fuseOptions } from "@/lib/search/fuse-config";
+import type { SearchIndex, SearchablePost } from "@/lib/search";
+import { fuseOptions } from "@/lib/search";
 
 export interface UnifiedCommandProps {
   open?: boolean;
@@ -64,15 +64,17 @@ interface ActionCommand {
 }
 
 export function UnifiedCommand(props?: UnifiedCommandProps) {
-  const { open: controlledOpen, onOpenChange: controlledOnOpenChange } = props || {};
-  
+  const { open: controlledOpen, onOpenChange: controlledOnOpenChange } =
+    props || {};
+
   // Get context from SearchProvider for global search state
-  const { open: searchProviderOpen, setOpen: setSearchProviderOpen } = useSearch();
-  
+  const { open: searchProviderOpen, setOpen: setSearchProviderOpen } =
+    useSearch();
+
   // Support both controlled mode (from props) and uncontrolled mode (from SearchProvider)
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
-  
+
   // Determine which open state to use
   // Priority: props > SearchProvider > internal state
   let open: boolean;
@@ -81,16 +83,19 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   } else {
     open = searchProviderOpen || internalOpen;
   }
-  
-  const onOpenChange = useCallback((value: boolean) => {
-    if (isControlled) {
-      controlledOnOpenChange?.(value);
-    } else {
-      // Update both SearchProvider and internal state
-      setSearchProviderOpen(value);
-      setInternalOpen(value);
-    }
-  }, [isControlled, controlledOnOpenChange, setSearchProviderOpen]);
+
+  const onOpenChange = useCallback(
+    (value: boolean) => {
+      if (isControlled) {
+        controlledOnOpenChange?.(value);
+      } else {
+        // Update both SearchProvider and internal state
+        setSearchProviderOpen(value);
+        setInternalOpen(value);
+      }
+    },
+    [isControlled, controlledOnOpenChange, setSearchProviderOpen]
+  );
 
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -98,7 +103,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   const [fuse, setFuse] = useState<Fuse<SearchablePost> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
-    if (typeof window === 'undefined') return [];
+    if (typeof window === "undefined") return [];
     const stored = localStorage.getItem("dcyfr-recent-searches");
     if (stored) {
       try {
@@ -112,7 +117,11 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Get reading progress for "Continue Reading"
-  const { inProgress } = useReadingProgressList({ limit: 3, minProgress: 5, maxProgress: 95 });
+  const { inProgress } = useReadingProgressList({
+    limit: 3,
+    minProgress: 5,
+    maxProgress: 95,
+  });
 
   // Register / shortcut (universal search)
   useKeyboardShortcut([
@@ -133,7 +142,9 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
           setSearchIndex(data);
           setFuse(new Fuse(data.posts, fuseOptions));
         })
-        .catch((err) => console.error("[Command] Failed to load search index:", err));
+        .catch((err) =>
+          console.error("[Command] Failed to load search index:", err)
+        );
     }
   }, [open, searchIndex]);
 
@@ -177,11 +188,11 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
     const html = document.documentElement;
     const currentTheme = html.classList.contains("dark") ? "dark" : "light";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
-    
+
     html.classList.remove("light", "dark");
     html.classList.add(newTheme);
     localStorage.setItem("theme", newTheme);
-    
+
     onOpenChange(false);
   }, [onOpenChange]);
 
@@ -208,7 +219,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
 
     const fuseResults = fuse.search(search);
     let filtered = fuseResults.map((r) => r.item);
-    
+
     if (selectedTags.length > 0) {
       filtered = filtered.filter((post) =>
         selectedTags.some((tag) => post.tags.includes(tag))
@@ -265,7 +276,9 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
       keywords: ["theme", "system", "auto"],
       onSelect: () => {
         const html = document.documentElement;
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
         html.classList.remove("light", "dark");
         html.classList.add(prefersDark ? "dark" : "light");
         localStorage.setItem("theme", "system");
@@ -275,14 +288,16 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   ];
 
   // Filter commands by search
-  const filteredNavCommands = navCommands.filter((cmd) =>
-    cmd.label.toLowerCase().includes(search.toLowerCase()) ||
-    cmd.keywords?.some((kw) => kw.includes(search.toLowerCase()))
+  const filteredNavCommands = navCommands.filter(
+    (cmd) =>
+      cmd.label.toLowerCase().includes(search.toLowerCase()) ||
+      cmd.keywords?.some((kw) => kw.includes(search.toLowerCase()))
   );
 
-  const filteredActionCommands = actionCommands.filter((cmd) =>
-    cmd.label.toLowerCase().includes(search.toLowerCase()) ||
-    cmd.keywords?.some((kw) => kw.includes(search.toLowerCase()))
+  const filteredActionCommands = actionCommands.filter(
+    (cmd) =>
+      cmd.label.toLowerCase().includes(search.toLowerCase()) ||
+      cmd.keywords?.some((kw) => kw.includes(search.toLowerCase()))
   );
 
   const filteredContinueReading = inProgress.filter((article) =>
@@ -291,8 +306,11 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
 
   // Determine what to show
   const hasSearchQuery = search.trim().length > 0;
-  const hasResults = searchResults.length > 0 || filteredNavCommands.length > 0 || 
-                     filteredActionCommands.length > 0 || filteredContinueReading.length > 0;
+  const hasResults =
+    searchResults.length > 0 ||
+    filteredNavCommands.length > 0 ||
+    filteredActionCommands.length > 0 ||
+    filteredContinueReading.length > 0;
 
   if (!open) return null;
 
@@ -310,7 +328,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <Command 
+        <Command
           className={cn(
             "rounded-xl border border-border shadow-2xl",
             "bg-muted/80 dark:bg-muted/40",
@@ -343,7 +361,12 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
             {/* Loading State */}
             {!searchIndex && (
               <Command.Loading>
-                <div className={cn("text-center text-sm text-muted-foreground", SPACING.content)}>
+                <div
+                  className={cn(
+                    "text-center text-sm text-muted-foreground",
+                    SPACING.content
+                  )}
+                >
                   Loading...
                 </div>
               </Command.Loading>
@@ -352,8 +375,15 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
             {/* Empty State */}
             {searchIndex && !hasSearchQuery && recentSearches.length === 0 && (
               <Command.Empty>
-                <div className={cn("text-center text-primary/70 dark:text-muted-foreground", SPACING.content)}>
-                  <p className="mb-2">Search posts, navigate, or switch theme</p>
+                <div
+                  className={cn(
+                    "text-center text-primary/70 dark:text-muted-foreground",
+                    SPACING.content
+                  )}
+                >
+                  <p className="mb-2">
+                    Search posts, navigate, or switch theme
+                  </p>
                   <p className="text-xs">Type to get started...</p>
                 </div>
               </Command.Empty>
@@ -386,30 +416,38 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
             )}
 
             {/* Continue Reading */}
-            {!hasSearchQuery && filteredContinueReading.length === 0 && inProgress.length > 0 && (
-              <Command.Group heading="Continue Reading">
-                {inProgress.map((article) => (
-                  <Command.Item
-                    key={article.articleId}
-                    onSelect={() => {
-                      router.push(`/blog/${article.articleId}`);
-                      onOpenChange(false);
-                    }}
-                    className={cn(
-                      "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2",
-                      "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                      "hover:bg-accent/50 transition-colors"
-                    )}
-                  >
-                    <BookOpen className="h-4 w-4 text-primary/60" />
-                    <div className="flex-1 min-w-0">
-                      <div className={TYPOGRAPHY.depth.primary}>{article.title}</div>
-                      <div className={cn(TYPOGRAPHY.depth.tertiary, "text-xs")}>{Math.round(article.progress)}% complete</div>
-                    </div>
-                  </Command.Item>
-                ))}
-              </Command.Group>
-            )}
+            {!hasSearchQuery &&
+              filteredContinueReading.length === 0 &&
+              inProgress.length > 0 && (
+                <Command.Group heading="Continue Reading">
+                  {inProgress.map((article) => (
+                    <Command.Item
+                      key={article.articleId}
+                      onSelect={() => {
+                        router.push(`/blog/${article.articleId}`);
+                        onOpenChange(false);
+                      }}
+                      className={cn(
+                        "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2",
+                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                        "hover:bg-accent/50 transition-colors"
+                      )}
+                    >
+                      <BookOpen className="h-4 w-4 text-primary/60" />
+                      <div className="flex-1 min-w-0">
+                        <div className={TYPOGRAPHY.depth.primary}>
+                          {article.title}
+                        </div>
+                        <div
+                          className={cn(TYPOGRAPHY.depth.tertiary, "text-xs")}
+                        >
+                          {Math.round(article.progress)}% complete
+                        </div>
+                      </div>
+                    </Command.Item>
+                  ))}
+                </Command.Group>
+              )}
 
             {/* Search Results - Blog Posts */}
             {hasSearchQuery && searchResults.length > 0 && (
@@ -440,10 +478,13 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
                     <div className="flex items-center gap-3 mt-1">
                       <div className="flex items-center gap-1 text-xs text-primary/60 dark:text-muted-foreground">
                         <Calendar className="h-3 w-3" />
-                        {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
+                        {new Date(post.publishedAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}
                       </div>
                       {post.tags.length > 0 && (
                         <div className="flex items-center gap-1">

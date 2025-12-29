@@ -1,9 +1,83 @@
 # Operations TODO
 
-**Last Updated:** December 27, 2025 (Stage 7: Unified Trending Section - Phase 1 & 2 COMPLETE)
-**Status:** Active Development - All High Priority Tasks Complete
+**Last Updated:** December 29, 2025 (Batch 9 Design Token Implementation Complete + MCP Setup)
+**Status:** Active Development - Phase 2 Design Tokens in Progress (Batch 9 of ~19 planned)
 
 This document tracks operational priorities, feature development stages, and maintenance tasks for dcyfr-labs.
+
+---
+
+## ✅ Recently Completed: Batch 9 Design Token Implementation (December 29, 2025)
+
+**Record-breaking progress on Phase 2 design token migration:**
+
+1. **Batch 9 Results** - Single-session record: 86 violations eliminated
+   - Starting violations: 1,485 (post-Batch 8)
+   - Ending violations: 1,399 (confirmed via npm run find:token-violations)
+   - Files converted: 30+ component files across analytics, company, activity, UI, and common sections
+   - Violation reduction: -5.8% (highest single-batch elimination to date)
+
+2. **Conversions Completed**
+   - **Analytics components:** analytics-recommendations, analytics-trending, analytics-charts, analytics-overview, analytics-insights, analytics-export, analytics-filters, vercel-insights, conversion-metrics
+   - **Company resume:** technical-capabilities, company-overview, case-studies
+   - **Activity/Presets:** PresetManager, ActivityHeatmapCalendar
+   - **Invites:** invites-stats, invites-cta, invites-category-section
+   - **UI/Demo:** demos/varying-depth-demo, blog-search-form, keyboard-shortcuts components, dashboard-layout, skills-wallet
+   - **Common:** faq, cta, trending-posts, blog-filters, contact-form, archive-filters, github-heatmap-skeleton, figure-caption
+
+3. **Pattern Conversions**
+   - `space-y-*` → `space-y-${SPACING.token}` (9 files)
+   - `gap-2/3/4` → `gap-${SPACING.sm/md/md}` (15+ files)
+   - `p-*` and `pb-*` → padding template literals (20+ files)
+   - `mb-*` and `mt-*` → margin template literals (10+ files)
+   - All SPACING imports properly added/verified
+
+4. **Quality Assurance**
+   - ✅ TypeScript compilation: 0 errors throughout
+   - ✅ npm run find:token-violations: 4 validation checkpoints
+   - ✅ Formatter compatibility: 100% template literal preservation
+   - ✅ Build stability: All changes compile successfully
+   - ✅ Test validation: Pre-commit checks passing
+
+**Detailed Report:** [BATCH_9_COMPLETION_REPORT.md](BATCH_9_COMPLETION_REPORT.md)
+
+**Build Status:** ✅ TypeScript clean • ✅ ESLint clean • ✅ 1,399 violations remaining
+
+---
+
+## ✅ Recently Completed: MCP Implementation & Documentation (December 29, 2025)
+
+**Comprehensive setup of 11 MCPs (8 external + 3 custom):**
+
+1. **External MCPs - All Configured & Active**
+   - ✅ Octocode MCP - Code research across GitHub (Dec 28)
+   - ✅ Perplexity MCP - Advanced reasoning & web search (Dec 28)
+   - ✅ Context7 MCP - Library documentation lookup
+   - ✅ Sentry MCP - Error tracking & analysis
+   - ✅ Vercel MCP - Deployment management
+   - ✅ Axiom MCP - Monitoring & dashboards
+   - ✅ arXiv MCP - Academic paper discovery
+   - ✅ GitHub MCP - Repository & PR management
+
+2. **Custom DCyfr MCPs - Ready for Activation**
+   - ✅ Analytics MCP - Production metrics & engagement (src/mcp/analytics-server.ts)
+   - ✅ Design Tokens MCP - Token validation & compliance (src/mcp/design-token-server.ts)
+   - ✅ Content MCP - MDX management & link validation (src/mcp/content-server.ts)
+
+3. **Documentation Created**
+   - Comprehensive MCP Implementation Guide: [MCP_IMPLEMENTATION_GUIDE.md](../ai/MCP_IMPLEMENTATION_GUIDE.md)
+   - Setup instructions for each MCP
+   - Verification procedures and troubleshooting
+   - Integration testing guidelines
+   - Production deployment steps
+
+4. **Configuration**
+   - `.vscode/mcp.json` - All 8 external MCPs configured
+   - package.json - MCP npm scripts ready (run, dev, inspect)
+   - Environment variables documented (.env.local setup)
+   - Health check automation via npm run mcp:check
+
+**Next:** Activate Design Tokens & Content MCPs in `.vscode/mcp.json`
 
 ---
 
@@ -75,12 +149,14 @@ This document tracks operational priorities, feature development stages, and mai
    - Future enhancement roadmap
 
 **Files Modified:**
+
 - `src/components/activity/ActivityHeatmapCalendar.tsx`
 - `src/__tests__/components/navigation/site-header.test.tsx`
 - `src/__tests__/components/navigation/back-to-top.test.tsx`
 - `package.json` (added html2canvas dependency)
 
 **New Files:**
+
 - `src/lib/activity/heatmap-export.ts`
 - `src/__tests__/lib/activity-heatmap-export.test.ts`
 - `e2e/activity-heatmap-export.spec.ts`
@@ -93,9 +169,11 @@ This document tracks operational priorities, feature development stages, and mai
 ## 🎯 Active Development: Activity Feed Enhancement (5-Stage Plan)
 
 ### Stage 1: Quick Wins ✅ COMPLETE
+
 **Goal:** Improve UX clarity with minimal effort, high impact
 
 **Tasks:**
+
 - [x] Implement month-based trending labels ("Trending in December 2025")
 - [x] Update tests for dynamic date validation
 - [x] Add results count badge to filter bar
@@ -103,6 +181,7 @@ This document tracks operational priorities, feature development stages, and mai
 - [x] Commit and deploy to preview
 
 **Success Metrics:**
+
 - All tests passing (4/4 trending tests ✅)
 - TypeScript validation clean ✅
 - User feedback on clarity improvement
@@ -113,9 +192,11 @@ This document tracks operational priorities, feature development stages, and mai
 ---
 
 ### Stage 2: Saved Filter Presets ✅ COMPLETE
+
 **Goal:** Enable user-curated filter combinations for power users
 
 **Tasks:**
+
 - [x] Design filter preset data structure (localStorage)
 - [x] Add "Save current filters" button to ActivityFilters
 - [x] Create preset management UI (rename, delete, reorder)
@@ -131,12 +212,14 @@ This document tracks operational priorities, feature development stages, and mai
 - [ ] Add E2E tests for preset creation/application (future enhancement)
 
 **Implementation Details:**
+
 - `src/lib/activity/presets.ts` - Core preset logic with localStorage
 - `src/components/activity/PresetManager.tsx` - Preset management UI
 - `src/components/activity/ActivityFilters.tsx` - Integrated preset dropdown
 - `src/__tests__/lib/activity-presets.test.ts` - Comprehensive unit tests
 
 **Success Metrics:**
+
 - ✅ localStorage persistence with version control
 - ✅ Export/import functionality implemented
 - ✅ 4 default presets configured
@@ -151,9 +234,11 @@ This document tracks operational priorities, feature development stages, and mai
 ---
 
 ### Stage 3: Full-Text Search ✅ COMPLETE
+
 **Goal:** Search within descriptions, not just titles, with fuzzy matching
 
 **Tasks:**
+
 - [x] Evaluate search libraries (Fuse.js vs MiniSearch vs custom)
   - **Decision:** MiniSearch - Better suited for advanced query syntax, lighter weight (6KB), built-in fuzzy matching
 - [x] Implement client-side fuzzy search with typo tolerance
@@ -199,6 +284,7 @@ This document tracks operational priorities, feature development stages, and mai
     - Filter combinations
 
 **Implementation Details:**
+
 - `src/lib/activity/search.ts` - Search engine with MiniSearch
 - `src/components/activity/SearchHighlight.tsx` - Highlight component
 - `src/components/activity/ActivityFilters.tsx` - Integrated search UI
@@ -207,12 +293,14 @@ This document tracks operational priorities, feature development stages, and mai
 - `e2e/activity-search.spec.ts` - 15 E2E tests
 
 **Success Metrics:**
+
 - ✅ Search response time <100ms for 1000 items (verified in tests)
 - 📊 ≥95% of searches return relevant results (TBD after deployment)
 - ✅ Fuzzy matching catches typos (verified in tests)
 - 📊 Advanced syntax adoption ≥30% (TBD after deployment)
 
 **Performance Achieved:**
+
 - Average search time: ~14ms for 1000 items (86ms under target)
 - Complex query time: ~9ms for 1000 items (91ms under target)
 
@@ -221,9 +309,11 @@ This document tracks operational priorities, feature development stages, and mai
 ---
 
 ### Stage 4: Activity Heatmap Visualization ✅ COMPLETE
+
 **Goal:** Calendar view showing activity intensity by day
 
 **Tasks:**
+
 - [x] Design heatmap data structure (date → count aggregation)
 - [x] Create HeatmapCalendar component (12-month view)
 - [x] Implement color intensity scale (0-10+ activities)
@@ -240,18 +330,21 @@ This document tracks operational priorities, feature development stages, and mai
 - [x] Add performance monitoring (render time <500ms)
 
 **Implementation Details:**
+
 - `src/lib/activity/heatmap.ts` - Data aggregation utilities
 - `src/components/activity/ActivityHeatmapCalendar.tsx` - Heatmap component
 - `src/app/activity/activity-client.tsx` - Tab integration
 - `src/__tests__/lib/activity-heatmap.test.ts` - 21 unit tests (100% passing)
 
 **Success Metrics:**
+
 - ✅ Heatmap loads in <500ms for 1 year of data (verified with useMemo optimization)
 - 📊 ≥50% of users switch to heatmap view at least once (TBD after deployment)
 - 📊 Click-to-filter engagement ≥30% (TBD after deployment)
 - 📊 Lighthouse Performance ≥90 (TBD after deployment)
 
 **Performance Achieved:**
+
 - Aggregation logic optimized with useMemo
 - React-calendar-heatmap handles 365+ cells efficiently
 - Responsive breakpoints: 3/6/12 months based on viewport
@@ -264,10 +357,12 @@ This document tracks operational priorities, feature development stages, and mai
 ---
 
 ### Stage 5: Virtual Scrolling for Performance ✅
+
 **Goal:** Only render visible items for feeds with 1000+ items  
 **Status:** COMPLETE (December 2025)
 
 **Tasks:**
+
 - [x] Evaluate virtual scrolling libraries (@tanstack/react-virtual chosen)
 - [x] Implement VirtualActivityFeed component with useVirtualizer hook
 - [x] Handle variable item heights (blog: 250px, project: 200px, default: 150px)
@@ -283,6 +378,7 @@ This document tracks operational priorities, feature development stages, and mai
 - [ ] Performance benchmarking with 5000+ items (deferred - optional)
 
 **Success Metrics Achieved:**
+
 - ✅ Initial render <200ms for 1000 items (vs ~800ms baseline) - **5.3x faster**
 - ✅ Memory usage <10MB for 1000 items (vs ~50MB baseline) - **84% reduction**
 - ✅ Scroll FPS = 60 (smooth scrolling at 5000+ items)
@@ -296,33 +392,36 @@ This document tracks operational priorities, feature development stages, and mai
 
 ## 📊 Performance Targets (Post Stage 5)
 
-| Metric | Before | After Stage 5 | Improvement |
-|--------|--------|---------------|-------------|
-| Activity Feed Load Time | ~800ms | <200ms | **5.3x faster** |
-| Filter Application Time | ~100ms | <50ms | **2x faster** |
-| Search Response Time | ~50ms | ~50ms | Maintained |
-| Memory Usage (1000 items) | ~50MB | <10MB | **84% reduction** |
-| DOM Nodes (1000 items) | ~3000 | <100 | **97% reduction** |
-| Lighthouse Performance | 92 | ≥95 | Stage 5 |
-| Accessibility Score | 95 | ≥98 | Stage 4 |
+| Metric                    | Before | After Stage 5 | Improvement       |
+| ------------------------- | ------ | ------------- | ----------------- |
+| Activity Feed Load Time   | ~800ms | <200ms        | **5.3x faster**   |
+| Filter Application Time   | ~100ms | <50ms         | **2x faster**     |
+| Search Response Time      | ~50ms  | ~50ms         | Maintained        |
+| Memory Usage (1000 items) | ~50MB  | <10MB         | **84% reduction** |
+| DOM Nodes (1000 items)    | ~3000  | <100          | **97% reduction** |
+| Lighthouse Performance    | 92     | ≥95           | Stage 5           |
+| Accessibility Score       | 95     | ≥98           | Stage 4           |
 
 ---
 
 ## 🔄 Ongoing Maintenance
 
 ### Weekly
+
 - [ ] Review Dependabot PRs (auto-merge enabled)
 - [ ] Monitor Lighthouse CI reports
 - [ ] Check CodeQL security alerts
 - [ ] Review activity feed usage analytics
 
 ### Monthly
+
 - [ ] Update AI agent instructions (quarterly sync)
 - [ ] Review and archive completed features
 - [ ] Analyze activity feed engagement metrics
 - [ ] Update this TODO with new priorities
 
 ### Quarterly
+
 - [ ] Comprehensive performance audit
 - [ ] Update documentation
 - [ ] Review and update filter presets
@@ -339,12 +438,14 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 ## 📝 Notes
 
 **Activity Feed Enhancement Strategy:**
+
 - Focus on incremental value delivery (Stage 1 done in 1 day)
 - Each stage delivers standalone value
 - Performance optimizations deferred to Stage 5 (when data volume justifies)
 - User research drives Stage 2-4 feature prioritization
 
 **Success Criteria:**
+
 - ≥90% test coverage maintained throughout
 - Design token compliance ≥95%
 - No breaking changes to existing API
@@ -354,9 +455,11 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 ---
 
 ### Stage 6: Content Extensions & Integrations 🎯 NEXT
+
 **Goal:** Expand activity feed ecosystem with RSS, bookmarks, and external integrations
 
 **Priority Features:**
+
 1. **RSS Feed Generation** (#51) - Syndication for feed readers
 2. **Bookmarking System** (#47) - Save activities for later
 3. **Real-time GitHub Commit Feed** (#123) - Live repository activity
@@ -364,6 +467,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 5. **AI-Powered Topic Clustering** (#31) - Automatic categorization
 
 **Tasks:**
+
 - [x] **RSS Feed** (Priority: HIGH) ✅ COMPLETE
   - [x] Create `/activity/rss.xml` route with Next.js API
   - [x] Generate RSS 2.0 compliant XML feed
@@ -444,6 +548,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
   - [x] Document implementation (docs/features/activity-topic-clustering.md)
 
 **Success Metrics:**
+
 - ✅ RSS feed validates with W3C Feed Validator
 - ✅ Bookmark system supports 1000+ bookmarks
 - ✅ GitHub commits tested with 23 passing tests (webhook + transformer coverage)
@@ -453,6 +558,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 - ✅ All features maintain ≥96% test coverage (2149/2222 tests passing)
 
 **Completed Features (Stage 6):**
+
 - ✅ RSS Feed Generation (December 2025)
 - ✅ Bookmarking System (December 23, 2025)
 - ✅ Real-time GitHub Commits (December 23, 2025)
@@ -479,15 +585,18 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 ---
 
 ### Stage 7: Unified Trending Section 🎯 IN PROGRESS
+
 **Goal:** Consolidate "Trending Posts" and "Popular Topics" into unified showcase with tabs
 
 **Priority Features:**
+
 1. **Phase 1: Consolidation (MVP)** ✅ COMPLETE
 2. **Phase 2: Enhanced Data (Trending Projects)** ✅ COMPLETE
 3. **Phase 2: Enhanced Data (Technologies & Series)** - TODO
 4. **Phase 3: Advanced Features** - TODO
 
 **Completed Tasks:**
+
 - [x] **Phase 1: Consolidation** (December 27, 2025)
   - [x] Create `TrendingSection` component with tabs
   - [x] Create `TrendingPostsPanel` component
@@ -506,6 +615,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
   - [x] Support both accurate (Stargazers API) and approximate scoring
 
 **Remaining Tasks:**
+
 - [x] **Tests** (Priority: HIGH) - ✅ COMPLETE (December 27, 2025)
   - [x] Unit tests for `getTrendingProjects` function (20/20 passing)
   - [x] Unit tests for `TrendingSection` component (15/19 passing - async tab switching edge cases deferred to E2E)
@@ -542,6 +652,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
   - [ ] Display indicators in trending cards
 
 **Implementation Details:**
+
 - `src/components/home/trending-section.tsx` - Main unified component ✅
 - `src/components/home/trending-posts-panel.tsx` - Posts tab content ✅
 - `src/components/home/trending-topics-panel.tsx` - Topics tab content ✅
@@ -550,6 +661,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 - `src/app/page.tsx` - Homepage integration (lines 496-510) ✅
 
 **Success Metrics:**
+
 - ✅ Design token compliance (0 violations)
 - ✅ TypeScript strict mode (0 errors)
 - ✅ Component structure follows existing patterns
@@ -588,10 +700,12 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
    - Future enhancement roadmap (SVG, clipboard, Web Share API)
 
 **Files Modified:**
+
 - `src/components/activity/ActivityHeatmapCalendar.tsx`
 - `package.json` (added html2canvas dependency)
 
 **New Files:**
+
 - `src/lib/activity/heatmap-export.ts`
 - `src/__tests__/lib/activity-heatmap-export.test.ts`
 - `e2e/activity-heatmap-export.spec.ts`
@@ -604,6 +718,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 ## 📦 Backlog (Future Consideration)
 
 ### Activity Feed Enhancements
+
 - Export heatmap as SVG (vector graphics, infinite zoom)
 - Real-time activity updates (WebSocket/Polling)
 - Activity detail modal with deep context
@@ -614,6 +729,7 @@ _No critical bugs currently tracked. Check GitHub Issues for community-reported 
 - Social sharing with preview cards
 
 ### Other Features
+
 - Design system component library
 - Blog comment system
 - Project case study templates

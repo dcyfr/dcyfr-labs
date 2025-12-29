@@ -147,9 +147,10 @@ interface BlackHoleNode {
 
 /**
  * Compute derived visual properties from physics
+ * @param scale - Optional scale factor (responsive to viewport size)
  */
-function computeBlackHoleVisuals(node: BlackHoleNode) {
-  const rs = schwarzschildRadius(node.mass);
+function computeBlackHoleVisuals(node: BlackHoleNode, scale?: number) {
+  const rs = schwarzschildRadius(node.mass, scale);
   const isco = iscoRadius(rs, node.spin);
   const photonSphere = photonSphereRadius(rs, node.spin);
   const ergosphere = ergosphereRadius(rs, node.spin);
@@ -179,15 +180,15 @@ const getThemeColor = (): string => {
 };
 
 const getAccentColor = (): string => {
-  if (typeof document === 'undefined') return '#6366f1';
+  if (typeof document === 'undefined') return '#a1a1aa';
   const isDark = document.documentElement.classList.contains('dark');
-  return isDark ? '#818cf8' : '#4f46e5'; // Indigo for accretion glow
+  return isDark ? '#d4d4d8' : '#71717a'; // Monochrome for accretion glow
 };
 
 const getJetColor = (): string => {
-  if (typeof document === 'undefined') return '#60a5fa';
+  if (typeof document === 'undefined') return '#a1a1aa';
   const isDark = document.documentElement.classList.contains('dark');
-  return isDark ? '#93c5fd' : '#3b82f6'; // Blue for relativistic jets
+  return isDark ? '#d4d4d8' : '#71717a'; // Monochrome for relativistic jets
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -531,6 +532,25 @@ function NetworkNodes() {
   const [accentColor, setAccentColor] = useState('#6366f1');
   const [jetColor, setJetColor] = useState('#60a5fa');
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [scaleFactor, setScaleFactor] = useState(0.04);
+
+  // Update scale factor based on viewport size
+  useEffect(() => {
+    const updateScale = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setScaleFactor(0.04);  // Mobile: base scale
+      } else if (width < 1024) {
+        setScaleFactor(0.05);  // Tablet: +25% larger
+      } else {
+        setScaleFactor(0.06);  // Desktop: +50% larger
+      }
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
 
   // Update colors on mount and theme changes
   useEffect(() => {
@@ -570,7 +590,7 @@ function NetworkNodes() {
     // Ultramassive black hole powering central cluster galaxy
     {
       name: 'PhoenixA',
-      basePosition: [-0.98, 0.72, 0.54],
+      basePosition: [1.98, 0.72, 0.54],
       color: themeColor,
       mass: 18.0,                           // ~100 billion solar masses
       spin: 0.75,                          // Active nucleus implies high spin
@@ -585,7 +605,7 @@ function NetworkNodes() {
     // Extreme accretion, powerful relativistic jets
     {
       name: 'TON618',
-      basePosition: [-2.41, 2.88, 3.12],
+      basePosition: [-2.41, 2.38, 3.12],
       color: themeColor,
       mass: 16.5,                           // ~40-66 billion solar masses
       spin: 0.92,                          // Very high spin (extreme luminosity)
@@ -600,7 +620,7 @@ function NetworkNodes() {
     // One of largest directly measured, unusually large for its galaxy
     {
       name: 'Holm15A',
-      basePosition: [2.98, 1.12, -2.25],
+      basePosition: [-2.98, 2.52, -2.25],
       color: themeColor,
       mass: 10.0,                           // ~40 billion solar masses
       spin: 0.15,                          // Low spin (dormant)
@@ -630,7 +650,7 @@ function NetworkNodes() {
     // Famous for quasi-periodic optical outbursts every ~12 years
     {
       name: 'OJ287',
-      basePosition: [0.84, 2.86, -3.02],
+      basePosition: [-0.84, 2.86, -3.02],
       color: themeColor,
       mass: 4.5,                           // ~18 billion solar masses (primary)
       spin: 0.85,                          // High spin (blazar)

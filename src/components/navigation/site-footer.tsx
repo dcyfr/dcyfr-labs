@@ -1,4 +1,4 @@
-import { SiteLogo } from "@/components/common/site-logo";
+import { SiteLogo } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { CONTAINER_WIDTHS } from "@/lib/design-tokens";
 import { NAVIGATION } from "@/lib/navigation-config";

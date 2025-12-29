@@ -99,12 +99,12 @@ export function TrendingProjectsPanel({
   // Empty state
   if (sortedProjects.length === 0) {
     return (
-      <Card className="border-dashed p-8 text-center">
-        <FolderGit2 className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
+      <Card className={`border-dashed p-${SPACING.xl} text-center`}>
+        <FolderGit2 className={`h-8 w-8 text-muted-foreground/30 mx-auto mb-${SPACING.sm}`} />
         <p className={cn(TYPOGRAPHY.label.standard, "text-muted-foreground")}>
           Trending projects will appear here
         </p>
-        <p className={cn(TYPOGRAPHY.body.small, "text-muted-foreground/70 mt-1")}>
+        <p className={cn(TYPOGRAPHY.body.small, `text-muted-foreground/70 mt-${SPACING.xs}`)}>
           Projects are ranked by GitHub activity
         </p>
       </Card>
@@ -127,7 +127,7 @@ export function TrendingProjectsPanel({
             <Link href={`/projects/${project.slug}`}>
               <Card
                 className={cn(
-                  "p-4 border cursor-pointer group",
+                  `p-${SPACING.md} border cursor-pointer group`,
                   ANIMATION.transition.base,
                   HOVER_EFFECTS.cardGlow,
                   "hover:bg-muted/30 hover:border-primary/50 hover:-translate-y-0.5"
@@ -135,8 +135,8 @@ export function TrendingProjectsPanel({
               >
                 <div className={SPACING.compact}>
                   {/* Header: Rank + Trending Badge + Category */}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                  <div className={`flex items-center justify-between gap-${SPACING.sm}`}>
+                    <div className={`flex items-center gap-${SPACING.sm}`}>
                       <Badge
                         variant="outline"
                         className={cn(

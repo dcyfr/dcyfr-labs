@@ -2,10 +2,23 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, Briefcase, Activity, ArrowRight, Bookmark, Heart, Rss } from "lucide-react";
+import {
+  BookOpen,
+  Briefcase,
+  Activity,
+  ArrowRight,
+  Bookmark,
+  Heart,
+  Rss,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TYPOGRAPHY, HOVER_EFFECTS, ANIMATION, SPACING } from "@/lib/design-tokens";
+import {
+  TYPOGRAPHY,
+  HOVER_EFFECTS,
+  ANIMATION,
+  SPACING,
+} from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { NAVIGATION } from "@/lib/navigation";
 
@@ -43,7 +56,7 @@ interface ExploreCardsProps {
  *
  * Unified explore section with three primary content cards (Activity, Blog, Projects)
  * followed by secondary discovery links (Bookmarks, Likes, RSS Feeds).
- * 
+ *
  * Consolidated to eliminate duplicate navigation paths while maintaining
  * discoverability of all content areas.
  *
@@ -89,23 +102,23 @@ export function ExploreCards({
       count: projectCount,
       countLabel: "projects",
       accentColor: "border-primary",
-    }
+    },
   ];
 
   // Get secondary discover links (excluding Activity, Blog, Projects to avoid duplicates)
   const discoverSection = NAVIGATION.mobile.find(
     (section) => section.id === "discover"
   );
-  const secondaryLinks = discoverSection?.items.filter(
-    item => !["Activity", "Blog", "Projects"].some(name => item.label === name)
-  ) || [];
+  const secondaryLinks =
+    discoverSection?.items.filter(
+      (item) =>
+        !["Activity", "Blog", "Projects"].some((name) => item.label === name)
+    ) || [];
 
   return (
     <div className={cn("flex flex-col", SPACING.subsection, className)}>
       {/* Primary Content Cards */}
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {cards.map((card, index) => (
           <motion.div
             key={card.href}
@@ -123,7 +136,11 @@ export function ExploreCards({
               >
                 {/* Accent border */}
                 <div
-                  className={cn("absolute inset-x-0 top-0 h-0.5 z-20 opacity-0 group-hover:opacity-100 border-t-2", card.accentColor, ANIMATION.transition.appearance)}
+                  className={cn(
+                    "absolute inset-x-0 top-0 h-0.5 z-20 opacity-0 group-hover:opacity-100 border-t-2",
+                    card.accentColor,
+                    ANIMATION.transition.appearance
+                  )}
                 />
 
                 <CardContent className="p-4 md:p-5 flex flex-col h-full">
@@ -131,14 +148,26 @@ export function ExploreCards({
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <div
-                        className={cn("p-2 rounded-lg bg-muted/50 group-hover:bg-muted group-hover:scale-110", ANIMATION.transition.base)}
+                        className={cn(
+                          "p-2 rounded-lg bg-muted/50 group-hover:bg-muted group-hover:scale-110",
+                          ANIMATION.transition.base
+                        )}
                       >
                         <card.icon
-                          className={cn("h-5 w-5 text-muted-foreground group-hover:text-foreground", ANIMATION.transition.theme)}
+                          className={cn(
+                            "h-5 w-5 text-muted-foreground group-hover:text-foreground",
+                            ANIMATION.transition.theme
+                          )}
                           aria-hidden="true"
                         />
                       </div>
-                      <h3 className={cn(TYPOGRAPHY.h3.standard, "text-base group-hover:text-foreground", ANIMATION.transition.theme)}>
+                      <h3
+                        className={cn(
+                          TYPOGRAPHY.h3.standard,
+                          "text-base group-hover:text-foreground",
+                          ANIMATION.transition.theme
+                        )}
+                      >
                         {card.label}
                       </h3>
                     </div>
@@ -162,10 +191,18 @@ export function ExploreCards({
                   </p>
 
                   {/* Arrow indicator */}
-                  <div className={cn("flex items-center gap-1 mt-3 text-sm text-muted-foreground group-hover:text-foreground", ANIMATION.transition.theme)}>
+                  <div
+                    className={cn(
+                      "flex items-center gap-1 mt-3 text-sm text-muted-foreground group-hover:text-foreground",
+                      ANIMATION.transition.theme
+                    )}
+                  >
                     <span>Explore</span>
                     <ArrowRight
-                      className={cn("h-4 w-4 group-hover:translate-x-1", ANIMATION.transition.movement)}
+                      className={cn(
+                        "h-4 w-4 group-hover:translate-x-1",
+                        ANIMATION.transition.movement
+                      )}
                       aria-hidden="true"
                     />
                   </div>

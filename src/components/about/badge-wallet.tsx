@@ -5,9 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Alert } from "@/components/common/alert";
+import { Alert } from "@/components/common";
 import { Award, ExternalLink, Clock } from "lucide-react";
-import { SPACING, TYPOGRAPHY, HOVER_EFFECTS, ANIMATION } from "@/lib/design-tokens";
+import {
+  SPACING,
+  TYPOGRAPHY,
+  HOVER_EFFECTS,
+  ANIMATION,
+} from "@/lib/design-tokens";
 import { cn, ensureAbsoluteUrl } from "@/lib/utils";
 import { useCredlyBadges } from "@/hooks/use-credly";
 import type { CredlyBadge } from "@/types/credly";
@@ -27,7 +32,7 @@ interface BadgeCardProps {
 
 /**
  * BadgeCard Component
- * 
+ *
  * Displays a single Credly badge with image, title, issuer, and metadata.
  */
 function BadgeCard({ badge }: BadgeCardProps) {
@@ -44,8 +49,9 @@ function BadgeCard({ badge }: BadgeCardProps) {
     : null;
 
   // Extract issuer name from entities array (find primary entity)
-  const issuerName = badge.issuer.entities.find(e => e.primary)?.entity.name || 
-    badge.issuer.entities[0]?.entity.name || 
+  const issuerName =
+    badge.issuer.entities.find((e) => e.primary)?.entity.name ||
+    badge.issuer.entities[0]?.entity.name ||
     "Unknown Issuer";
 
   // Construct public URL from badge ID
@@ -59,8 +65,10 @@ function BadgeCard({ badge }: BadgeCardProps) {
       rel="noopener noreferrer"
       className="block group"
     >
-      <Card className={cn("p-4 h-full", HOVER_EFFECTS.card)}>
-        <div className="flex flex-col items-center text-center gap-4">
+      <Card className={cn(`p-${SPACING.md} h-full`, HOVER_EFFECTS.card)}>
+        <div
+          className={`flex flex-col items-center text-center gap-${SPACING.md}`}
+        >
           {/* Badge Image */}
           <div className="relative w-36 h-36 shrink-0">
             <Image
@@ -75,7 +83,7 @@ function BadgeCard({ badge }: BadgeCardProps) {
           </div>
 
           {/* Badge Info */}
-          <div className="flex-1 space-y-2">
+          <div className={`flex-1 space-y-${SPACING.sm}`}>
             <h3
               className={cn(
                 TYPOGRAPHY.h3.standard,
@@ -89,11 +97,13 @@ function BadgeCard({ badge }: BadgeCardProps) {
               Issued by {issuerName}
             </p>
 
-            <div className={cn(
-              "flex flex-col items-center gap-1",
-              TYPOGRAPHY.label.xs,
-              "text-muted-foreground"
-            )}>
+            <div
+              className={cn(
+                "flex flex-col items-center gap-1",
+                TYPOGRAPHY.label.xs,
+                "text-muted-foreground"
+              )}
+            >
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5" />
                 <span>Issued {issuedDate}</span>
@@ -103,12 +113,14 @@ function BadgeCard({ badge }: BadgeCardProps) {
           </div>
 
           {/* View Badge Link */}
-          <div className={cn(
-            "flex items-center gap-1.5",
-            TYPOGRAPHY.label.small,
-            "text-primary group-hover:gap-2",
-            ANIMATION.transition.movement
-          )}>
+          <div
+            className={cn(
+              "flex items-center gap-1.5",
+              TYPOGRAPHY.label.small,
+              "text-primary group-hover:gap-2",
+              ANIMATION.transition.movement
+            )}
+          >
             <span>View Badge</span>
             <ExternalLink className="h-4 w-4" />
           </div>
@@ -120,14 +132,14 @@ function BadgeCard({ badge }: BadgeCardProps) {
 
 /**
  * BadgeWallet Component
- * 
+ *
  * Displays a collection of Credly badges for a user.
  * Can show all badges or just the latest few.
- * 
+ *
  * @example
  * // Show all badges
  * <BadgeWallet username="dcyfr" />
- * 
+ *
  * @example
  * // Show latest 3 badges
  * <BadgeWallet username="dcyfr" limit={3} showLatestOnly />
@@ -156,8 +168,10 @@ export function BadgeWallet({
 
   if (loading) {
     return (
-      <div className={cn("space-y-4", className)}>
-        <div className="flex items-center gap-2 text-muted-foreground">
+      <div className={cn(`space-y-${SPACING.md}`, className)}>
+        <div
+          className={`flex items-center gap-${SPACING.sm} text-muted-foreground`}
+        >
           <Award className="h-5 w-5 animate-pulse" />
           <span>Loading badges...</span>
         </div>
@@ -185,7 +199,7 @@ export function BadgeWallet({
     <div className={cn(SPACING.subsection, className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-${SPACING.sm}`}>
           <Award className="h-5 w-5 text-primary" />
           <h3 className={TYPOGRAPHY.h3.standard}>
             {showLatestOnly ? "Latest Badges" : "Badges"}
@@ -197,7 +211,9 @@ export function BadgeWallet({
       </div>
 
       {/* Badge Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-${SPACING.md}`}
+      >
         {displayedBadges.map((badge) => (
           <BadgeCard key={badge.id} badge={badge} />
         ))}
@@ -209,7 +225,7 @@ export function BadgeWallet({
           <Link
             href="/about/drew/resume#certifications"
             className={cn(
-              "inline-flex items-center gap-2 text-primary",
+              `inline-flex items-center gap-${SPACING.sm} text-primary`,
               HOVER_EFFECTS.link
             )}
           >

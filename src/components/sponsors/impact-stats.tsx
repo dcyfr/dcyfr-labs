@@ -20,8 +20,10 @@ interface ImpactStatsProps {
  */
 export function ImpactStats({ className }: ImpactStatsProps) {
   // Calculate stats from data
-  const blogPostCount = posts.filter(p => !p.draft && !p.archived).length;
-  const projectCount = visibleProjects.filter(p => p.status === "active" || p.status === "in-progress").length;
+  const blogPostCount = posts.filter((p) => !p.draft && !p.archived).length;
+  const projectCount = visibleProjects.filter(
+    (p) => p.status === "active" || p.status === "in-progress"
+  ).length;
   const totalViews = posts.reduce((sum, post) => {
     // This is a placeholder - in production, you'd fetch real view counts
     // For now, we'll use a rough estimate based on published posts
@@ -32,18 +34,18 @@ export function ImpactStats({ className }: ImpactStatsProps) {
     {
       value: blogPostCount,
       label: "Blog Posts Published",
-      description: "Educational content helping developers learn"
+      description: "Educational content helping developers learn",
     },
     {
       value: projectCount,
       label: "Active Projects",
-      description: "Open source tools and experiments"
+      description: "Open source tools and experiments",
     },
     {
       value: `${Math.round(totalViews / 1000)}K+`,
       label: "Community Reach",
-      description: "Developers reading and engaging"
-    }
+      description: "Developers reading and engaging",
+    },
   ];
 
   return (
@@ -53,9 +55,7 @@ export function ImpactStats({ className }: ImpactStatsProps) {
           <Card key={index} className="text-center">
             <CardContent className="p-8">
               <div className={TYPOGRAPHY.display.stat}>{stat.value}</div>
-              <p className="font-semibold text-foreground mt-2">
-                {stat.label}
-              </p>
+              <p className="font-semibold text-foreground mt-2">{stat.label}</p>
               <p className="text-sm text-muted-foreground mt-1">
                 {stat.description}
               </p>

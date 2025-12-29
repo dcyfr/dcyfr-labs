@@ -12,7 +12,7 @@ import {
   getAcronymLabel,
   getAcronymExplanation,
   validateAcronymPronunciations,
-} from '@/lib/accessibility/acronym-pronunciation';
+} from '@/lib';
 
 /**
  * Example 1: Logo with pronunciation hint

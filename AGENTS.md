@@ -229,6 +229,101 @@ npm run check               # Type + lint check
 
 ---
 
+## 🌐 External Context Sources: Octocode-MCP
+
+**Status:** ✅ Integrated December 28, 2025  
+**Repository:** [bgauryy/octocode-mcp](https://github.com/bgauryy/octocode-mcp)  
+**Version:** Latest (`octocode-mcp@latest`)  
+**Configuration:** [`.vscode/mcp.json`](./.vscode/mcp.json)
+
+### What Octocode Provides
+
+Octocode is an **agentic code research MCP server** that gives AI assistants intelligent access to GitHub repositories for deep code research and pattern discovery.
+
+**Core Tools:**
+- `githubSearchCode` - Find code patterns across repositories
+- `githubSearchRepositories` - Discover repos by topic/keywords  
+- `githubViewRepoStructure` - Explore directory structures
+- `githubGetFileContent` - Read files with smart extraction
+- `githubSearchPullRequests` - Analyze PR changes and discussions
+
+**AI Commands:**
+- `/research` - Deep code investigation (patterns, flows, best practices)
+- `/plan` - Research → Plan → Implement complex features
+- `/review_pull_request` - Expert-level PR analysis
+- `/review_security` - Security audit of reference implementations
+
+### When to Use Octocode
+
+✅ **Use Octocode for:**
+- Researching production patterns from high-quality codebases
+- Understanding how popular projects solve architectural problems  
+- Learning security best practices and auth implementations
+- Finding reference implementations for complex features
+- Cross-repository flow analysis and pattern comparison
+
+❌ **Don't use Octocode for:**
+- Quick code fixes (use Copilot)
+- Internal dcyfr-labs code analysis (use GitHub MCP or local tools)
+- General conversations (use Claude)
+- When Perplexity/GitHub MCP are sufficient
+
+### Setup & Authentication
+
+**GitHub CLI (Recommended):**
+```bash
+brew install gh          # or your package manager
+gh auth login           # Authenticate with your GitHub account
+```
+
+**Personal Access Token (Alternative):**
+1. Create token at [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Scopes: `repo`, `read:user`, `read:org`
+3. Add to `.env.local` (never commit)
+
+### Usage Examples
+
+**Research Production Patterns:**
+```
+/research How do popular Next.js portfolios (vercel/next.js, examples) 
+structure design tokens and metadata generation?
+```
+
+**Plan Implementation:**
+```
+/plan Implement an Inngest integration similar to production codebases.
+Research best practices first, then create implementation plan.
+```
+
+**Security Review:**
+```
+/review_security https://github.com/popular-auth-lib/repo
+Analyze authentication and authorization patterns.
+```
+
+**PR Analysis:**
+```
+/review_pull_request https://github.com/facebook/react/pull/28000
+Spot potential issues, performance concerns, and design decisions.
+```
+
+### Integration with DCYFR
+
+Octocode is available to DCYFR agents as `mcp_octocode/*` tools. When building features or researching patterns:
+
+1. **Research Phase**: Use `/research` to discover production implementations
+2. **Planning Phase**: Use `/plan` to synthesize research into implementation strategy  
+3. **Building Phase**: Reference findings from Octocode in code comments
+4. **Validation Phase**: Use `/review_pull_request` for pre-merge analysis
+
+### Documentation & Support
+
+- **Official Docs:** [octocode.ai](https://octocode.ai/)
+- **GitHub Discussions:** [bgauryy/octocode-mcp discussions](https://github.com/bgauryy/octocode-mcp/discussions)
+- **Video Tutorials:** [YouTube Channel](https://www.youtube.com/@Octocode-ai)
+
+---
+
 ## 🔄 Agent Selection Logic
 
 ### Decision Tree: Which Instructions to Use?
@@ -247,7 +342,41 @@ START: "I need AI help with dcyfr-labs"
   ├─ Building feature following strict patterns?
   │  └─ YES → Use DCYFR (VS Code Mode)
   │     └─ Reference: .github/agents/DCYFR.agent.md
+  │     └─ May use: Octocode /research for pattern discovery
   │
+  ├─ Need to research production implementations?
+  │  └─ YES → Use Octocode MCP
+  │     └─ Commands: /research, /plan, /review_security
+  │
+  ├─ Bug fix with compliance enforcement?
+  │  └─ YES → Use DCYFR (VS Code Mode)
+  │     └─ Reference: .github/agents/DCYFR.agent.md
+  │
+  └─ General investigation/documentation?
+     └─ Use Claude (General)
+        └─ Reference: CLAUDE.md + docs/
+```
+
+**When to use Octocode in DCYFR work:**
+- Research existing patterns before implementing new features
+- Understand security best practices from production codebases
+- Discover how high-quality projects structure similar features
+- Validate architectural decisions against real implementations
+
+### Quick Rules
+
+| Scenario | Agent | Tool | Why |
+|----------|-------|------|-----|
+| "Complete this code snippet" | Copilot | - | Real-time, inline |
+| "I need design token suggestions" | Copilot | - | Quick patterns |
+| "Refactor this function" | Copilot | - | Line-level edits |
+| "What's our architecture pattern?" | Claude | - | Deep context needed |
+| "How should we approach X?" | Claude | Octocode | Investigation + pattern research |
+| "Create new /bookmarks page" | DCYFR | Octocode | Pattern enforcement + research |
+| "Research auth patterns" | DCYFR | Octocode | `/research` command |
+| "Fix SPACING token violation" | Quick Fix | - | Fast compliance |
+| "Bug in PostCard component" | DCYFR | - | Root cause + test fix |
+| "Tests failing after changes" | Test Specialist | - | Test coverage focus |
   ├─ Bug fix with compliance enforcement?
   │  └─ YES → Use DCYFR (VS Code Mode)
   │     └─ Reference: .github/agents/DCYFR.agent.md
@@ -568,6 +697,25 @@ Each instruction file maintains this metadata:
 ## 📋 Recent Updates
 
 ## 📋 Recent Updates
+
+### December 28, 2025
+- ✅ **Integrated Octocode-MCP as external context source**
+  - Added Octocode to `.vscode/mcp.json` MCP server configuration
+  - Updated DCYFR.agent.md tools list to include `mcp_octocode/*`
+  - Added "External Context Sources" section to DCYFR.agent.md with Octocode documentation
+  - Updated `docs/ai/mcp-checks.md` to include Octocode health checks and authentication guidance
+  - Documented `/research`, `/plan`, `/review_pull_request`, `/review_security` commands
+  - Configured for GitHub CLI auth (recommended) or Personal Access Token
+  - Use case: Research production patterns, architecture decisions, security implementations from GitHub codebases
+
+### December 28, 2025 (Earlier)
+- ✅ **Added emoji prohibition rule to all AI instructions**
+  - Created `scripts/analyze-emoji-usage.mjs` for comprehensive emoji analysis
+  - Updated `.github/copilot-instructions.md` with emoji prohibition rule
+  - Updated `CLAUDE.md` with emoji usage guidelines
+  - Added rule to `.github/agents/DCYFR.agent.md`
+  - Identified 17 emojis in public content requiring replacement with React icons
+  - Documented acceptable emoji locations (internal docs, comments, logs, tests)
 
 ### December 25, 2025
 - ✅ **Created comprehensive Test Data Prevention enforcement**

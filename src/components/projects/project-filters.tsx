@@ -10,7 +10,7 @@ import {
   useActiveFilters,
   FilterSearchInput,
   FilterClearButton,
-} from "@/components/common/filters";
+} from "@/components/common";
 import { Button } from "@/components/ui/button";
 import {
   ProjectSort,

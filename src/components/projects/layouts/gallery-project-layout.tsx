@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { sanitizeUrl } from "@/lib/utils";
 import { TYPOGRAPHY } from "@/lib/design-tokens";
 import { ProjectsCTA } from "@/components/common";
-import { OtherProjectCard } from "@/components/projects/other-project-card";
+import { OtherProjectCard } from "@/components/projects";
 import { ArticleHeader } from "@/components/layouts";
-import { PhotoGrid } from "@/components/projects/photo-grid";
-import { PostInteractions } from "@/components/common/PostInteractions";
+import { PhotoGrid } from "@/components/projects";
+import { PostInteractions } from '@/components/common';
 
 const STATUS_LABEL: Record<Project["status"], string> = {
   "active": "Active",

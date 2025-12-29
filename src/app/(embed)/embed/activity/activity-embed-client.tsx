@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { ThreadedActivityFeed } from "@/components/activity/ThreadedActivityFeed";
+import { ThreadedActivityFeed } from '@/components/activity';
 import type { ActivityItem, ActivitySource } from "@/lib/activity";
-import { searchActivities, createSearchIndex } from "@/lib/activity/search";
+import { searchActivities, createSearchIndex } from "@/lib/activity";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -107,7 +107,7 @@ export function ActivityEmbedClient({
 
   if (error) {
     return (
-      // eslint-disable-next-line no-restricted-syntax
+       
       <div className="p-4 border rounded-lg text-sm bg-red-50 border-red-200 text-red-800">
         <p className="font-semibold">Failed to load activity feed</p>
         <p className="mt-1">{error}</p>

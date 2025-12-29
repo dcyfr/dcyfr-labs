@@ -16,17 +16,17 @@ import {
 
 /**
  * Social Links Grid Component
- * 
+ *
  * Displays social media and professional profile links in a responsive grid layout.
  * All links are external and open in a new tab with proper security attributes.
- * 
+ *
  * Features:
  * - Responsive grid (1 col mobile, 2 cols desktop)
  * - Platform-specific icons
  * - Hover effects with border/icon color transitions
  * - External link indicators
  * - URL sanitization for security
- * 
+ *
  * @example
  * ```tsx
  * <SocialLinksGrid />

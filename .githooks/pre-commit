@@ -96,6 +96,37 @@ else
   echo -e "${GREEN}PASS${NC}"
 fi
 
+# Check 7: Design token compliance (NEW)
+echo -n "  Checking design token compliance... "
+if command -v node &> /dev/null; then
+  if node scripts/find-token-violations.mjs --check 2>/dev/null | grep -q "violations"; then
+    echo -e "${YELLOW}WARN${NC}"
+    echo -e "${YELLOW}⚠️  WARNING: Design token violations detected${NC}"
+    echo "   Run: npm run find:token-violations (to review)"
+    echo "   Or: npm run fix:tokens (to auto-fix common patterns)"
+    WARNINGS=$((WARNINGS+1))
+  else
+    echo -e "${GREEN}PASS${NC}"
+  fi
+else
+  echo -e "${YELLOW}SKIP${NC} (node not available)"
+fi
+
+# Check 8: Test data in production code (NEW)
+echo -n "  Checking for test data in production... "
+if command -v node &> /dev/null; then
+  if node scripts/check-test-data.mjs 2>/dev/null | grep -q "CRITICAL"; then
+    echo -e "${RED}FAIL${NC}"
+    echo -e "${RED}❌ ERROR: Test data detected in production code${NC}"
+    node scripts/check-test-data.mjs 2>&1 | head -10 | sed 's/^/      /'
+    ERRORS=$((ERRORS+1))
+  else
+    echo -e "${GREEN}PASS${NC}"
+  fi
+else
+  echo -e "${YELLOW}SKIP${NC} (node not available)"
+fi
+
 # Summary
 echo ""
 echo "📊 Summary:"
