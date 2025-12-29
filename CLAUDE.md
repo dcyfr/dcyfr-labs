@@ -13,7 +13,7 @@ Project is in **maintenance mode** with data-driven enhancements ready for next 
 **Key Metrics** (see [`docs/operations/todo.md`](docs/operations/todo.md) and [`docs/operations/done.md`](docs/operations/done.md)):
 
 - ✅ Phase 1-6 complete (Activity Feed Enhancement fully implemented)
-- ✅ 2193/2202 tests passing (99.6%)
+- ✅ 1185/1197 passing (99.0%)
 - ✅ 2250+ unit/integration/E2E tests
 - ✅ TypeScript strict: 0 errors
 - ✅ ESLint: 0 errors
@@ -181,6 +181,36 @@ return mockData;
 **Reference:** [TEST_DATA_PREVENTION.md](.github/agents/enforcement/TEST_DATA_PREVENTION.md)
 
 **History:** [December 25, 2025] Removed 13 fabricated analytics items from production Redis.
+
+### 6. Never Use Emojis in Public Content
+
+```typescript
+// ❌ WRONG: Emoji in blog post
+Emojis work great: 🚀 ✅ ❌ ⚠️ 💡
+
+// ✅ CORRECT: Use React icons
+import { Rocket, CheckCircle, XCircle, AlertTriangle, Lightbulb } from 'lucide-react';
+
+<div className="flex gap-2">
+  <Rocket className="w-4 h-4" />
+  <CheckCircle className="w-4 h-4" />
+  <XCircle className="w-4 h-4" />
+  <AlertTriangle className="w-4 h-4" />
+  <Lightbulb className="w-4 h-4" />
+</div>
+```
+
+**Prohibited locations:**
+- Blog posts (`src/content/blog/*.mdx`)
+- Projects (`src/content/projects/*.mdx`)
+- Public UI components
+- User-facing text
+
+**Acceptable locations:**
+- Internal docs (`docs/`, `.github/`)
+- Code comments (`//`, `/* */`)
+- Console.log statements
+- Test files
 
 ## Key Constraints
 
@@ -380,11 +410,7 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 
 ## MCP Servers (Chat)
 
-
-- Context7 (library documentation)
-- Playwright (browser automation, E2E testing)
-- Axiom (log queries, monitoring)
-- Filesystem, GitHub, Vercel, Sentry
+Perplexity, Context, Axiom, Filesystem, GitHub, Vercel, Sentry, arXiv
 
 *Note: Memory and Sequential Thinking MCPs removed Dec 2025 - replaced by native Claude/Copilot capabilities and built-in memory tools.*
 

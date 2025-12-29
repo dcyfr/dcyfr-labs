@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { Post } from "@/data/posts";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
-import { TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, HOVER_EFFECTS, SPACING } from "@/lib/design-tokens";
 import { trackRelatedPostClick } from "@/lib/analytics";
 import { ensurePostImage } from "@/lib/default-images";
 
@@ -74,7 +74,7 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
   if (posts.length === 0) {
     return null;
   }
-  
+
   const handleClick = (toSlug: string, position: number) => {
     if (currentSlug) {
       trackRelatedPostClick(currentSlug, toSlug, position);
@@ -84,13 +84,13 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
   return (
     <aside className="mt-12 border-t pt-6">
       <h2 className={`${TYPOGRAPHY.h2.standard} mb-4`}>Related Posts</h2>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={`grid gap-${SPACING.md} sm:grid-cols-2`}>
         {posts.map((post, index) => {
           const featuredImage = ensurePostImage(post.image, {
             title: post.title,
             tags: post.tags,
           });
-          
+
           return (
             <Link
               key={post.slug}
@@ -98,7 +98,7 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
               onClick={() => handleClick(post.slug, index)}
               className={`group block rounded-lg border overflow-hidden relative bg-card ${HOVER_EFFECTS.card}`}
             >
-              <div className="space-y-2 p-4">
+              <div className={`space-y-${SPACING.sm} p-${SPACING.md}`}>
                 <h3 className="font-medium leading-tight group-hover:text-primary transition-colors">
                   {post.title}
                 </h3>

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import { TrendingSection } from "@/components/home/trending-section";
+import { TrendingSection } from "@/components/home";
 import type { Post } from "@/data/posts";
 import type { Project } from "@/data/projects";
 
@@ -12,12 +12,16 @@ import type { Project } from "@/data/projects";
 vi.mock("@/components/home/trending-posts-panel", () => ({
   __esModule: true,
   TrendingPostsPanel: ({ posts, viewCounts, limit }: any) => {
-    const entries = viewCounts ? Array.from(viewCounts.entries()) as [string, number][] : [];
+    const entries = viewCounts
+      ? (Array.from(viewCounts.entries()) as [string, number][])
+      : [];
     return (
       <div data-testid="trending-posts-panel" data-limit={limit}>
         <div data-testid="posts-count">{posts.length}</div>
         {entries.map(([id, count]) => (
-          <div key={id} data-testid={`post-views-${id}`}>{count}</div>
+          <div key={id} data-testid={`post-views-${id}`}>
+            {count}
+          </div>
         ))}
       </div>
     );
@@ -85,9 +89,9 @@ const mockViewCounts = new Map([
 ]);
 
 const mockTopics = [
-  { tag: "react", count: 10, colorVariant: "cyan" as const },
-  { tag: "typescript", count: 8, colorVariant: "purple" as const },
-  { tag: "nextjs", count: 6, colorVariant: "blue" as const },
+  { tag: "react", count: 10 },
+  { tag: "typescript", count: 8 },
+  { tag: "nextjs", count: 6 },
 ];
 
 const mockProjects = [
@@ -141,7 +145,9 @@ describe("TrendingSection", () => {
       expect(screen.getByRole("tablist")).toBeInTheDocument();
       expect(screen.getByRole("tab", { name: /posts/i })).toBeInTheDocument();
       expect(screen.getByRole("tab", { name: /topics/i })).toBeInTheDocument();
-      expect(screen.getByRole("tab", { name: /projects/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole("tab", { name: /projects/i })
+      ).toBeInTheDocument();
     });
 
     it("should render tab icons", () => {
@@ -222,7 +228,7 @@ describe("TrendingSection", () => {
 
       // Topics tab should be selected
       await waitFor(() => {
-        expect(topicsTab).toHaveAttribute("aria-selected", "true");
+        expect(topicsTab).toHaveAttribute("data-state", "active");
       });
 
       // Topics panel content should be in the document
@@ -245,7 +251,7 @@ describe("TrendingSection", () => {
 
       // Projects tab should be selected
       await waitFor(() => {
-        expect(projectsTab).toHaveAttribute("aria-selected", "true");
+        expect(projectsTab).toHaveAttribute("data-state", "active");
       });
 
       // Projects panel content should be in the document
@@ -270,21 +276,21 @@ describe("TrendingSection", () => {
       // Switch to Topics
       fireEvent.click(topicsTab);
       await waitFor(() => {
-        expect(topicsTab).toHaveAttribute("aria-selected", "true");
+        expect(topicsTab).toHaveAttribute("data-state", "active");
       });
       expect(screen.getByTestId("trending-topics-panel")).toBeInTheDocument();
 
       // Switch to Projects
       fireEvent.click(projectsTab);
       await waitFor(() => {
-        expect(projectsTab).toHaveAttribute("aria-selected", "true");
+        expect(projectsTab).toHaveAttribute("data-state", "active");
       });
       expect(screen.getByTestId("trending-projects-panel")).toBeInTheDocument();
 
       // Switch back to Posts
       fireEvent.click(postsTab);
       await waitFor(() => {
-        expect(postsTab).toHaveAttribute("aria-selected", "true");
+        expect(postsTab).toHaveAttribute("data-state", "active");
       });
       expect(screen.getByTestId("trending-posts-panel")).toBeInTheDocument();
     });
@@ -319,8 +325,12 @@ describe("TrendingSection", () => {
       expect(screen.getByTestId("trending-topics-panel")).toBeInTheDocument();
       expect(screen.getByTestId("topics-count")).toHaveTextContent("3");
       expect(screen.getByTestId("topic-react")).toHaveTextContent("react (10)");
-      expect(screen.getByTestId("topic-typescript")).toHaveTextContent("typescript (8)");
-      expect(screen.getByTestId("topic-nextjs")).toHaveTextContent("nextjs (6)");
+      expect(screen.getByTestId("topic-typescript")).toHaveTextContent(
+        "typescript (8)"
+      );
+      expect(screen.getByTestId("topic-nextjs")).toHaveTextContent(
+        "nextjs (6)"
+      );
     });
 
     it("should pass projects to TrendingProjectsPanel", () => {
@@ -336,8 +346,12 @@ describe("TrendingSection", () => {
 
       expect(screen.getByTestId("trending-projects-panel")).toBeInTheDocument();
       expect(screen.getByTestId("projects-count")).toHaveTextContent("2");
-      expect(screen.getByTestId("project-project-1")).toHaveTextContent("Awesome Project (Score: 150)");
-      expect(screen.getByTestId("project-project-2")).toHaveTextContent("Cool Project (Score: 75)");
+      expect(screen.getByTestId("project-project-1")).toHaveTextContent(
+        "Awesome Project (Score: 150)"
+      );
+      expect(screen.getByTestId("project-project-2")).toHaveTextContent(
+        "Cool Project (Score: 75)"
+      );
     });
 
     it("should handle empty projects array", () => {
@@ -428,7 +442,7 @@ describe("TrendingSection", () => {
       expect(screen.getAllByRole("tab")).toHaveLength(3);
     });
 
-    it("should mark active tab with aria-selected", async () => {
+    it("should mark active tab with data-state", async () => {
       render(
         <TrendingSection
           posts={mockPosts}
@@ -438,16 +452,16 @@ describe("TrendingSection", () => {
       );
 
       const postsTab = screen.getByRole("tab", { name: /posts/i });
-      expect(postsTab).toHaveAttribute("aria-selected", "true");
+      expect(postsTab).toHaveAttribute("data-state", "active");
 
       // Switch to Topics
       const topicsTab = screen.getByRole("tab", { name: /topics/i });
       fireEvent.click(topicsTab);
 
       await waitFor(() => {
-        expect(topicsTab).toHaveAttribute("aria-selected", "true");
+        expect(topicsTab).toHaveAttribute("data-state", "active");
       });
-      expect(postsTab).toHaveAttribute("aria-selected", "false");
+      expect(postsTab).toHaveAttribute("data-state", "inactive");
     });
 
     it("should support keyboard navigation between tabs", () => {

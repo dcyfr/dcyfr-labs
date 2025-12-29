@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Alert } from "@/components/common/alert";
+import { Alert } from "@/components/common";
 import { Award, ExternalLink } from "lucide-react";
 import { SPACING, TYPOGRAPHY, ANIMATION } from "@/lib/design-tokens";
 import { cn, ensureAbsoluteUrl } from "@/lib/utils";

@@ -3,14 +3,14 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { ActivityItem } from "@/lib/activity/types";
+import type { ActivityItem } from "@/lib/activity";
 import {
   aggregateActivitiesByDate,
   calculateHeatmapStats,
   getHeatmapColorClass,
   getHeatmapIntensity,
   type ActivityHeatmapDay,
-} from "@/lib/activity/heatmap";
+} from "@/lib/activity";
 
 // ============================================================================
 // TEST DATA
@@ -146,9 +146,7 @@ describe("aggregateActivitiesByDate", () => {
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
-    const activities: ActivityItem[] = [
-      createMockActivity("1", now),
-    ];
+    const activities: ActivityItem[] = [createMockActivity("1", now)];
 
     const result = aggregateActivitiesByDate(activities);
 

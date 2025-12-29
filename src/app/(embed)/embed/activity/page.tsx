@@ -10,7 +10,7 @@ import {
   transformProjects,
   transformChangelog,
   aggregateActivities,
-} from "@/lib/activity/sources";
+} from "@/lib/activity";
 import {
   transformPostsWithViews,
   transformTrendingPosts,
@@ -24,8 +24,8 @@ import {
   transformGitHubTraffic,
   transformGoogleAnalytics,
   transformSearchConsole,
-} from "@/lib/activity/sources.server";
-import type { ActivityItem } from "@/lib/activity/types";
+} from "@/lib/activity";
+import type { ActivityItem } from "@/lib/activity";
 import { ActivityEmbedClient } from "./activity-embed-client";
 
 // ============================================================================

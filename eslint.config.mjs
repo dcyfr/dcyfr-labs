@@ -126,6 +126,62 @@ const eslintConfig = [
       "no-restricted-syntax": "off",
     },
   },
+  {
+    // Barrel Export Enforcement
+    // Prevents direct imports from component/lib directories
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+    },
+  },
+  {
+    // Test Data Prevention Detection
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "warn",
+        {
+          selector: "ObjectExpression[properties.0.key.name='stars'][properties.0.value.value=/^(0|1|5|10|15|100)$/]",
+          message: "⚠️  Suspicious hardcoded analytics value detected. This might be test/demo data. Ensure real data is used in production. See TEST_DATA_PREVENTION.md",
+        },
+        {
+          selector: "ObjectExpression[properties.0.key.name='forks'][properties.0.value.value=0]",
+          message: "⚠️  Suspicious zero value for 'forks'. This may be test data. Verify with real GitHub data. See TEST_DATA_PREVENTION.md",
+        },
+      ],
+    },
+  },
+  {
+    // Barrel Export Enforcement
+    // RULE: Must import from barrel exports (@/components/*, @/lib/*)
+    // This prevents deep imports that bypass re-exports
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/components/*/index", "@/components/*/index.ts", "@/components/*/index.tsx"],
+              message: "❌ WRONG: Don't import from explicit index files. Use barrel export shorthand.\n\n❌ import Component from '@/components/layouts/index';\n✅ import { PageLayout } from '@/components/layouts';\n\nWhy: Barrel exports (index.ts/tsx) handle re-exports. Import from the directory only.\nSee: docs/ai/component-patterns.md#barrel-exports",
+            },
+            {
+              group: ["@/components/*/*", "!@/components/ui/*"],
+              message: "❌ WRONG: Don't import from component subdirectories directly. Use barrel exports.\n\n❌ import PostCard from '@/components/blog/post-card';\n✅ import { PostCard } from '@/components/blog';\n\nWhy: Barrel exports maintain encapsulation and allow refactoring without breaking imports.\nSee: docs/ai/component-patterns.md#barrel-exports",
+            },
+            {
+              group: ["@/lib/*/index", "@/lib/*/index.ts", "@/lib/*/index.tsx"],
+              message: "❌ WRONG: Don't import from explicit index files. Use barrel export shorthand.\n\n❌ import { getMetadata } from '@/lib/metadata/index';\n✅ import { getMetadata } from '@/lib/metadata';\n\nWhy: Barrel exports (index.ts) handle re-exports. Import from the directory only.\nSee: docs/ai/component-patterns.md#barrel-exports",
+            },
+            {
+              group: ["@/lib/*/*", "!@/lib/*/index"],
+              message: "❌ WRONG: Don't import from lib subdirectories directly. Use barrel exports.\n\n❌ import { createPageMetadata } from '@/lib/metadata/create';\n✅ import { createPageMetadata } from '@/lib/metadata';\n\nWhy: Barrel exports maintain encapsulation and allow refactoring without breaking imports.\nSee: docs/ai/component-patterns.md#barrel-exports",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
 
 export default eslintConfig;

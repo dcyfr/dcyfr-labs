@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { sanitizeUrl } from "@/lib/utils";
 import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 import { ProjectsCTA } from "@/components/common";
-import { OtherProjectCard } from "@/components/projects/other-project-card";
+import { OtherProjectCard } from "@/components/projects";
 import { ArticleHeader } from "@/components/layouts";
-import { MDX } from "@/components/common/mdx";
-import { PostInteractions } from "@/components/common/PostInteractions";
+import { MDX } from "@/components/common";
+import { PostInteractions } from '@/components/common';
 
 const STATUS_LABEL: Record<Project["status"], string> = {
   "active": "Active",

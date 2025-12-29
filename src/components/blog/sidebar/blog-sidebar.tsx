@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { SPACING } from "@/lib/design-tokens";
-import { useBlogKeyboard } from "@/components/blog/blog-keyboard-provider";
+import { useBlogKeyboard } from '@/components/blog';
 import { SidebarFilters } from "./sidebar-filters";
 import { SidebarCategories } from "./sidebar-categories";
 import { SidebarTopics } from "./sidebar-topics";

@@ -27,7 +27,7 @@ import {
 } from "@/lib/design-tokens";
 import { Card } from "@/components/ui/card";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
-import { PageLayout } from "@/components/layouts/page-layout";
+import { PageLayout } from "@/components/layouts";
 import { cn } from "@/lib/utils";
 import {
   SectionHeader,
@@ -41,7 +41,7 @@ import {
   transformProjects,
   transformChangelog,
 } from "@/lib/activity";
-import type { ActivityItem } from "@/lib/activity/types";
+import type { ActivityItem } from "@/lib/activity";
 import {
   transformPostsWithViews,
   transformTrendingPosts,
@@ -55,32 +55,36 @@ import {
   transformGitHubTraffic,
   transformGoogleAnalytics,
   transformSearchConsole,
-} from "@/lib/activity/sources.server";
+} from "@/lib/activity";
 import {
   HomepageStats,
+  CombinedStatsExplore,
   HomepageHeroHeadline,
   FlippableAvatar,
   NetworkBackground,
   TrendingSection,
   QuickLinksRibbon,
 } from "@/components/home";
-import { getTrendingProjects } from "@/lib/activity/trending-projects";
+import { getTrendingProjects } from "@/lib/activity";
 import { SearchButton } from "@/components/search";
-import { ScrollReveal, ScrollProgressIndicator } from "@/components/features";
+import { ScrollReveal } from "@/components/features";
 
 // Lazy-loaded below-fold components for better initial load performance
 const FeaturedPostHero = dynamic(
-  () => import("@/components/home").then(mod => ({ default: mod.FeaturedPostHero })),
+  () =>
+    import("@/components/home").then((mod) => ({
+      default: mod.FeaturedPostHero,
+    })),
   {
     loading: () => (
-      <Card className="p-4 md:p-8 animate-pulse">
+      <Card className={`p-${SPACING.md} md:p-${SPACING.xl} animate-pulse`}>
         <div className={cn("flex items-center", SPACING.compact)}>
-          <div className="flex items-center gap-4">
+          <div className={`flex items-center gap-${SPACING.md}`}>
             <div className="h-5 w-16 bg-muted rounded" />
             <div className="h-5 w-20 bg-muted rounded" />
           </div>
         </div>
-        <div className={cn("mt-4", SPACING.compact)}>
+        <div className={cn(`mt-${SPACING.md}`, SPACING.compact)}>
           <div className="h-8 bg-muted rounded w-3/4" />
           <div className="h-6 bg-muted rounded w-full" />
         </div>
@@ -90,7 +94,10 @@ const FeaturedPostHero = dynamic(
 );
 
 const InfiniteActivitySection = dynamic(
-  () => import("@/components/home").then(mod => ({ default: mod.InfiniteActivitySection })),
+  () =>
+    import("@/components/home").then((mod) => ({
+      default: mod.InfiniteActivitySection,
+    })),
   {
     loading: () => (
       <div className={SPACING.content}>
@@ -103,7 +110,10 @@ const InfiniteActivitySection = dynamic(
 );
 
 const HomepageHeatmapMini = dynamic(
-  () => import("@/components/home").then(mod => ({ default: mod.HomepageHeatmapMini })),
+  () =>
+    import("@/components/home").then((mod) => ({
+      default: mod.HomepageHeatmapMini,
+    })),
   {
     loading: () => (
       <div className="h-48 w-full bg-muted rounded-lg animate-pulse" />
@@ -112,10 +122,13 @@ const HomepageHeatmapMini = dynamic(
 );
 
 const ExploreCards = dynamic(
-  () => import("@/components/home").then(mod => ({ default: mod.ExploreCards })),
+  () =>
+    import("@/components/home").then((mod) => ({ default: mod.ExploreCards })),
   {
     loading: () => (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-${SPACING.md}`}
+      >
         {[...Array(3)].map((_, i) => (
           <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
         ))}
@@ -125,10 +138,15 @@ const ExploreCards = dynamic(
 );
 
 const SeriesShowcase = dynamic(
-  () => import("@/components/home").then(mod => ({ default: mod.SeriesShowcase })),
+  () =>
+    import("@/components/home").then((mod) => ({
+      default: mod.SeriesShowcase,
+    })),
   {
     loading: () => (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-${SPACING.md}`}
+      >
         {[...Array(3)].map((_, i) => (
           <div key={i} className="h-48 bg-muted rounded-lg animate-pulse" />
         ))}
@@ -138,7 +156,8 @@ const SeriesShowcase = dynamic(
 );
 
 // Optimized meta description for homepage (157 characters)
-const pageDescription = "Discover insights on cyber architecture, coding, and security at DCYFR Labs. Stay updated with our latest articles and projects.";
+const pageDescription =
+  "Discover insights on cyber architecture, coding, and security at DCYFR Labs. Stay updated with our latest articles and projects.";
 
 export const metadata: Metadata = createPageMetadata({
   title: SITE_TITLE_PLAIN,
@@ -152,22 +171,22 @@ export const revalidate = 3600; // 1 hour
 export default async function Home() {
   // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
-  
+
   // Get featured post for hero section
   const featuredPost = featuredPosts[0];
-  
+
   // Prepare posts for homepage (all posts for infinite scroll timeline)
   const recentPosts = [...posts]
-    .filter(p => !p.archived)
+    .filter((p) => !p.archived)
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
-    // No limit - use all posts for timeline
-  
+  // No limit - use all posts for timeline
+
   // Get badge metadata (latest and hottest posts)
   const { latestSlug, hottestSlug } = await getPostBadgeMetadata(posts);
-  
+
   // Get view counts for trending posts
-  const viewCounts = await getMultiplePostViews(posts.map(p => p.id));
-  
+  const viewCounts = await getMultiplePostViews(posts.map((p) => p.id));
+
   const socialImage = getOgImageUrl();
   // JSON-LD structured data for home page
   const jsonLd = {
@@ -231,18 +250,20 @@ export default async function Home() {
     // Blog posts with views
     transformPostsWithViews(posts)
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Blog posts fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] Blog posts fetch failed:", err)
+      ),
+
     // Projects
     Promise.resolve(transformProjects([...projects]))
       .then((items) => activities.push(...items))
       .catch((err) => console.error("[Homepage] Projects fetch failed:", err)),
-    
+
     // Changelog
     Promise.resolve(transformChangelog(changelog))
       .then((items) => activities.push(...items))
       .catch((err) => console.error("[Homepage] Changelog fetch failed:", err)),
-    
+
     // Trending posts - DISABLED: Now shown as badges on published events
     // transformTrendingPosts(posts)
     //   .then((items) => activities.push(...items))
@@ -251,52 +272,68 @@ export default async function Home() {
     // Milestones
     transformMilestones(posts)
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Milestones fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] Milestones fetch failed:", err)
+      ),
+
     // High engagement posts
     transformHighEngagementPosts(posts)
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] High engagement posts fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] High engagement posts fetch failed:", err)
+      ),
+
     // Comment milestones
     transformCommentMilestones(posts)
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Comment milestones fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] Comment milestones fetch failed:", err)
+      ),
+
     // GitHub activity (DISABLED)
     // transformGitHubActivity("dcyfr", ["dcyfr-labs"])
     //   .then((items) => activities.push(...items))
     //   .catch((err) => console.error("[Homepage] GitHub activity fetch failed:", err)),
-    
+
     // Webhook GitHub commits (DISABLED)
     // transformWebhookGitHubCommits()
     //   .then((items) => activities.push(...items))
     //   .catch((err) => console.error("[Homepage] Webhook commits fetch failed:", err)),
-    
+
     // Credly badges
     transformCredlyBadges("dcyfr")
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Credly badges fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] Credly badges fetch failed:", err)
+      ),
+
     // Vercel Analytics
     transformVercelAnalytics()
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Vercel Analytics fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] Vercel Analytics fetch failed:", err)
+      ),
+
     // GitHub Traffic
     transformGitHubTraffic()
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] GitHub Traffic fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] GitHub Traffic fetch failed:", err)
+      ),
+
     // Google Analytics
     transformGoogleAnalytics()
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Google Analytics fetch failed:", err)),
-    
+      .catch((err) =>
+        console.error("[Homepage] Google Analytics fetch failed:", err)
+      ),
+
     // Search Console
     transformSearchConsole()
       .then((items) => activities.push(...items))
-      .catch((err) => console.error("[Homepage] Search Console fetch failed:", err)),
+      .catch((err) =>
+        console.error("[Homepage] Search Console fetch failed:", err)
+      ),
   ]);
 
   // Sort by timestamp (most recent first)
@@ -307,21 +344,30 @@ export default async function Home() {
   // All activities for heatmap
   const allActivities = timelineActivities;
 
+  // Calculate total likes from all activities with likes metadata
+  const totalLikes = allActivities.reduce((sum, activity) => {
+    return sum + (activity.meta?.stats?.likes || 0);
+  }, 0);
+
+  // Note: Bookmarks are stored in localStorage on client side
+  // For now, we'll pass 0 and can be updated if server-side bookmark tracking is added
+  const totalBookmarks = 0;
+
   // Convert viewCounts to Map for TrendingPosts
-  const viewCountsMap = new Map(Object.entries(viewCounts).map(([k, v]) => [k, v as number]));
+  const viewCountsMap = new Map(
+    Object.entries(viewCounts).map(([k, v]) => [k, v as number])
+  );
 
   // Calculate stats for homepage
-  const activePosts = posts.filter(p => !p.archived);
-  const uniqueTechnologies = new Set(
-    projects.flatMap(p => p.tech || [])
-  );
+  const activePosts = posts.filter((p) => !p.archived);
+  const uniqueTechnologies = new Set(projects.flatMap((p) => p.tech || []));
   // Calculate years including certifications from Credly
   const yearsOfExperience = await calculateYearsWithCertifications();
 
   // Calculate topic data for TopicNavigator
   const tagCounts = new Map<string, number>();
-  activePosts.forEach(post => {
-    post.tags.forEach(tag => {
+  activePosts.forEach((post) => {
+    post.tags.forEach((tag) => {
       tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
     });
   });
@@ -331,37 +377,33 @@ export default async function Home() {
     .map(([tag, count]) => ({ tag, count }))
     .sort((a, b) => b.count - a.count);
 
-  // Assign color variants (cycles through colors)
-  const colorVariants = ["cyan", "lime", "orange", "purple", "magenta"] as const;
-  const topTopics = sortedTopics.slice(0, 12).map((topic, index) => ({
-    ...topic,
-    colorVariant: colorVariants[index % colorVariants.length],
-  }));
+  const topTopics = sortedTopics.slice(0, 12);
 
   // Calculate trending projects with real GitHub stats
-  const trendingProjects = await getTrendingProjects([...projects], { limit: 5 });
+  const trendingProjects = await getTrendingProjects([...projects], {
+    limit: 5,
+  });
 
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <SmoothScrollToHash />
-      <ScrollProgressIndicator />
 
       <SectionNavigator
         scrollOffset={SCROLL_BEHAVIOR.offset.standard}
         className={SPACING.section}
       >
-        {/* 1. Hero Section - Full-screen immersive experience with navigation overlay */}
+        {/* Hero Section - Full-screen immersive experience with navigation overlay */}
         <Section
           id="hero"
-          className="relative overflow-hidden min-h-screen -mt-14 md:-mt-16 pt-14 md:pt-16"
+          className="relative overflow-hidden min-h-screen -mt-[calc(3.5rem+2rem)] md:-mt-[calc(4rem+3rem)] lg:-mt-[calc(4rem+4rem)] pt-[calc(3.5rem+2rem)] md:pt-[calc(4rem+3rem)] lg:pt-[calc(4rem+4rem)]"
         >
-          {/* Optimized Network Background */}
+          {/* Hero background */}
           <div className="bg-accent/25 *:backdrop-blur-lg *:backdrop-filter absolute inset-0 z-0 *:pointer-events-none">
             <NetworkBackground />
           </div>
 
-          {/* Centered Content Container */}
+          {/* Hero content */}
           <div className="absolute inset-0 flex items-center justify-center z-10 pb-18">
             <div
               className={cn(
@@ -395,7 +437,7 @@ export default async function Home() {
           </div>
         </Section>
 
-        {/* TODO: 1.5. Featured CVE Alert - Cybersecurity focus -- needs something
+        {/* TODO: Featured CVE Alert - Cybersecurity focus -- needs something
         <Section
           id="cve-alert"
           className={cn(PAGE_LAYOUT.section.container)}
@@ -416,7 +458,7 @@ export default async function Home() {
           </ScrollReveal>
         </Section> */}
 
-        {/* 2. Featured Article - Highlighted section */}
+        {/* Featured Article - Highlighted section */}
         <Section
           id="featured-post"
           className={cn(PAGE_LAYOUT.section.container)}
@@ -428,7 +470,29 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* 4. Unified Trending Section - Posts, Topics, and Projects */}
+        {/* TODO: Blog Series - Organized content paths -- pending more series 
+        {allSeries.length > 0 && (
+          <Section
+            id="series"
+            className={cn(
+              PAGE_LAYOUT.section.container,
+              CONTAINER_VERTICAL_PADDING
+            )}
+          >
+            <ScrollReveal>
+              <div className={SPACING.content}>
+                <SectionHeader
+                  title="Featured Series"
+                  actionHref="/blog/series"
+                  actionLabel="View all series"
+                />
+                <SeriesShowcase series={allSeries} maxSeries={3} />
+              </div>
+            </ScrollReveal>
+          </Section>
+        )} */}
+
+        {/* Trending Section - Posts, Topics, and Projects */}
         <Section
           id="trending"
           className={cn(
@@ -454,29 +518,33 @@ export default async function Home() {
           </ScrollReveal>
         </Section>
 
-        {/* 6. TODO: Blog Series - Organized content paths -- pending more series 
-        {allSeries.length > 0 && (
-          <Section
-            id="series"
-            className={cn(
-              PAGE_LAYOUT.section.container,
-              CONTAINER_VERTICAL_PADDING
-            )}
-          >
-            <ScrollReveal>
-              <div className={SPACING.content}>
-                <SectionHeader
-                  title="Featured Series"
-                  actionHref="/blog/series"
-                  actionLabel="View all series"
-                />
-                <SeriesShowcase series={allSeries} maxSeries={3} />
-              </div>
-            </ScrollReveal>
-          </Section>
-        )} */}
+        {/* Combined Stats & Explore - Unified dashboard section */}
+        <Section
+          id="explore"
+          className={cn(
+            PAGE_LAYOUT.section.container,
+            CONTAINER_VERTICAL_PADDING,
+            "bg-muted/30 dark:bg-muted/10",
+            "border-y border-border/50"
+          )}
+        >
+          <ScrollReveal>
+            <div className={SPACING.content}>
+              <SectionHeader title="Explore More" />
+              <CombinedStatsExplore
+                postsCount={activePosts.length}
+                projectsCount={projects.length}
+                yearsOfExperience={yearsOfExperience}
+                technologiesCount={uniqueTechnologies.size}
+                activityCount={allActivities.length}
+                totalLikes={totalLikes}
+                totalBookmarks={totalBookmarks}
+              />
+            </div>
+          </ScrollReveal>
+        </Section>
 
-        {/* 7. Recent Activity - Updates feed */}
+        {/* Recent Activity - Updates feed */}
         <Section
           id="recent-activity"
           className={cn(PAGE_LAYOUT.section.container)}
@@ -497,42 +565,6 @@ export default async function Home() {
                 maxItemsBeforeCTA={3}
                 ctaText="View all activity"
                 ctaHref="/activity"
-              />
-            </div>
-          </ScrollReveal>
-        </Section>
-
-        {/* 8. TODO: Stats Dashboard -- needs validation
-        <Section id="stats" className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={350}>
-            <div className={SPACING.content}>
-              <HomepageStats
-                postsCount={activePosts.length}
-                projectsCount={projects.length}
-                yearsOfExperience={yearsOfExperience}
-                technologiesCount={uniqueTechnologies.size}
-              />
-            </div>
-          </ScrollReveal>
-        </Section> */}
-
-        {/* 3. Explore Cards - Primary navigation hub (consolidated) */}
-        <Section
-          id="explore"
-          className={cn(
-            PAGE_LAYOUT.section.container,
-            CONTAINER_VERTICAL_PADDING,
-            "bg-muted/30 dark:bg-muted/10",
-            "border-y border-border/50"
-          )}
-        >
-          <ScrollReveal>
-            <div className={SPACING.content}>
-              <SectionHeader title="Explore More" />
-              <ExploreCards
-                postCount={activePosts.length}
-                projectCount={projects.length}
-                activityCount={allActivities.length}
               />
             </div>
           </ScrollReveal>

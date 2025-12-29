@@ -15,8 +15,8 @@ import {
   loadSearchHistory,
   saveSearchToHistory,
   clearSearchHistory,
-} from "@/lib/activity/search";
-import type { ActivityItem } from "@/lib/activity/types";
+} from "@/lib/activity";
+import type { ActivityItem } from "@/lib/activity";
 
 // ============================================================================
 // TEST DATA

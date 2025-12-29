@@ -7,7 +7,7 @@
 
 import { Metadata } from "next";
 import { PageLayout } from "@/components/layouts";
-import { PageHero } from "@/components/layouts/page-hero";
+import { PageHero } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
 import { createPageMetadata } from "@/lib/metadata";
 import { SITE_URL, SITE_TITLE } from "@/lib/site-config";

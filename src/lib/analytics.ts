@@ -305,7 +305,7 @@ export async function trackEvent(event: AnalyticsEvent): Promise<void> {
 
   // Debug mode in development
   if (process.env.NODE_ENV === "development") {
-    console.log("[Analytics]", event.name, event.properties);
+    console.warn("[Analytics]", event.name, event.properties);
   }
 
   try {
@@ -350,7 +350,7 @@ export async function trackServerEvent(event: AnalyticsEvent): Promise<void> {
 
   // Debug mode in development
   if (process.env.NODE_ENV === "development") {
-    console.log("[Analytics Server]", event.name, event.properties);
+    console.warn("[Analytics Server]", event.name, event.properties);
   }
 
   try {

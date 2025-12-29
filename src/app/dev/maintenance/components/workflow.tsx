@@ -34,8 +34,8 @@ export function WorkflowStatusBadge({
 
   if (conclusion === "success") {
     return (
-      <Badge variant="outline" className={cn("gap-1", SEMANTIC_COLORS.status.success.badge)}>
-        <span className={cn("h-2 w-2 rounded-full", SEMANTIC_COLORS.status.success.dot)} />
+      <Badge variant="outline" className={cn("gap-1", SEMANTIC_COLORS.status.success)}>
+        <span className="h-2 w-2 rounded-full bg-success" />
         Success
       </Badge>
     );
@@ -43,8 +43,8 @@ export function WorkflowStatusBadge({
 
   if (conclusion === "failure" || conclusion === "timed_out" || conclusion === "action_required") {
     return (
-      <Badge variant="outline" className={cn("gap-1", SEMANTIC_COLORS.status.error.badge)}>
-        <span className={cn("h-2 w-2 rounded-full", SEMANTIC_COLORS.status.error.dot)} />
+      <Badge variant="outline" className={cn("gap-1", SEMANTIC_COLORS.status.error)}>
+        <span className="h-2 w-2 rounded-full bg-error" />
         Failed
       </Badge>
     );
@@ -52,8 +52,8 @@ export function WorkflowStatusBadge({
 
   if (conclusion === "cancelled" || conclusion === "skipped") {
     return (
-      <Badge variant="outline" className={cn("gap-1", SEMANTIC_COLORS.status.warning.badge)}>
-        <span className={cn("h-2 w-2 rounded-full", SEMANTIC_COLORS.status.warning.dot)} />
+      <Badge variant="outline" className={cn("gap-1", SEMANTIC_COLORS.status.warning)}>
+        <span className="h-2 w-2 rounded-full bg-warning" />
         {conclusion === "cancelled" ? "Cancelled" : "Skipped"}
       </Badge>
     );

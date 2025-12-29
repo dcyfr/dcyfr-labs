@@ -1,7 +1,7 @@
 "use client";
 
-import { useBlogLayout } from "@/components/blog/blog-layout-wrapper";
-import { BlogSidebar, type BlogSidebarProps } from "@/components/blog/sidebar";
+import { useBlogLayout } from '@/components/blog';
+import { BlogSidebar, type BlogSidebarProps } from '@/components/blog';
 
 /**
  * Blog Sidebar Wrapper

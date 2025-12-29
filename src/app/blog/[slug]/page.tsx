@@ -38,13 +38,13 @@ import {
   TableOfContentsSidebar,
 } from "@/components/common";
 import { Breadcrumbs } from "@/components/navigation";
-import { ReadingProgress } from "@/components/features/reading-progress";
+import { ReadingProgress } from "@/components/features";
 import { ArticleReadingProgress } from "@/components/app";
-import { ShareButtons } from "@/components/features/sharing/share-buttons";
-import { LazyGiscusComments } from "@/components/features/comments/lazy-giscus-comments";
-import { ViewTracker } from "@/components/features/view-tracker";
+import { ShareButtons } from "@/components/features";
+import { LazyGiscusComments } from "@/components/features";
+import { ViewTracker } from "@/components/features";
 import { PostBadges } from "@/components/blog";
-import { PostInteractions } from "@/components/common/PostInteractions";
+import { PostInteractions } from '@/components/common';
 
 // Enable Incremental Static Regeneration with 1 hour revalidation
 export const revalidate = 3600; // 1 hour in seconds

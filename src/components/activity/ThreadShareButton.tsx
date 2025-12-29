@@ -99,7 +99,7 @@ export function ThreadShareButton({
   const handleNativeShare = () => {
     if (!isShareable) return;
     share(shareData, {
-      onSuccess: () => console.log("[Share] Native share succeeded"),
+      onSuccess: () => console.warn("[Share] Native share succeeded"),
       onError: (error) => console.error("[Share] Native share failed:", error),
     });
   };

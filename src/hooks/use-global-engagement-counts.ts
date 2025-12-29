@@ -70,7 +70,7 @@ export function useGlobalEngagementCounts({
       // Check cache first
       const cached = countCache.get(cacheKey);
       if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-        console.debug("[useGlobalEngagementCounts] Using cached counts:", {
+        console.warn("[useGlobalEngagementCounts] Using cached counts:", {
           slug,
           contentType,
           likes: cached.likes,
@@ -82,7 +82,7 @@ export function useGlobalEngagementCounts({
         return;
       }
 
-      console.debug("[useGlobalEngagementCounts] Fetching counts from API:", {
+      console.warn("[useGlobalEngagementCounts] Fetching counts from API:", {
         slug,
         contentType,
       });
@@ -107,7 +107,7 @@ export function useGlobalEngagementCounts({
       const likes = likesData.count || 0;
       const bookmarks = bookmarksData.count || 0;
 
-      console.debug("[useGlobalEngagementCounts] Fetched counts:", {
+      console.warn("[useGlobalEngagementCounts] Fetched counts:", {
         slug,
         contentType,
         likes,
