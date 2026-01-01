@@ -49,7 +49,7 @@ describe("ThemeAwareLogo", () => {
 
     const logo = screen.getByTestId("theme-aware-logo");
     expect(logo.className).toContain("text-foreground");
-    expect(logo.className).toContain("transition-colors");
+    expect(logo.className).toContain("transition-theme");
   });
 
   it("accepts custom dimensions", () => {
