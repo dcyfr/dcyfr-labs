@@ -52,7 +52,7 @@ export function ContextClue({ children, className = "" }: ContextClueProps) {
       containerOverride="bg-primary/5 dark:bg-primary/10"
       className={className}
     >
-      {children}
+      <span className="font-semibold">Context:</span> {children}
     </Alert>
   );
 }

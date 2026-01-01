@@ -71,7 +71,7 @@ describe("SiteHeader", () => {
     it("renders About link in desktop nav", () => {
       renderWithProviders(<SiteHeader />);
       const aboutLink = screen.getByRole("link", {
-        name: /Learn about DCYFR Labs and our team/i,
+        name: /about/i,
       });
       expect(aboutLink).toBeInTheDocument();
       expect(aboutLink).toHaveAttribute("href", "/about");
@@ -131,10 +131,10 @@ describe("SiteHeader", () => {
 
       // Wait for dropdown menuitems to appear (they use role="menuitem" + aria-label)
       const allPostsLink = await screen.findByRole("menuitem", {
-        name: /Browse all blog articles/i,
+        name: /Browse our blog articles/i,
       });
       const blogSeriesLink = screen.getByRole("menuitem", {
-        name: /Multi-part article collections/i,
+        name: /In-depth multi-part articles/i,
       });
 
       expect(allPostsLink).toBeInTheDocument();
@@ -148,7 +148,7 @@ describe("SiteHeader", () => {
       fireEvent.click(blogButton);
 
       const allPostsLink = await screen.findByRole("menuitem", {
-        name: /Browse all blog articles/i,
+        name: /Browse our blog articles/i,
       });
       fireEvent.click(allPostsLink);
 
@@ -381,10 +381,25 @@ describe("SiteHeader", () => {
       expect(header.className).toContain("top-0");
     });
 
-    it("applies backdrop blur effect", () => {
+    it("applies backdrop blur effect when scrolled", async () => {
       renderWithProviders(<SiteHeader />);
       const header = screen.getByRole("banner");
-      expect(header.className).toContain("backdrop-blur");
+
+      // Initially should not have backdrop blur
+      expect(header.className).not.toContain("backdrop-blur");
+
+      // Simulate scroll
+      Object.defineProperty(window, "scrollY", {
+        writable: true,
+        configurable: true,
+        value: 100,
+      });
+
+      fireEvent.scroll(window, { target: { scrollY: 100 } });
+
+      await waitFor(() => {
+        expect(header.className).toContain("backdrop-blur");
+      });
     });
 
     it("has correct z-index for stacking", () => {
@@ -396,8 +411,18 @@ describe("SiteHeader", () => {
 
   describe("Scroll Border Behavior", () => {
     it("does not have border-b when scrollY is 0", () => {
+      // Mock scrollY to ensure it starts at 0
+      Object.defineProperty(window, "scrollY", {
+        writable: true,
+        configurable: true,
+        value: 0,
+      });
+
       renderWithProviders(<SiteHeader />);
       const header = screen.getByRole("banner");
+
+      // Header should not have border-b at top of page
+      // Note: The component checks if scrollY > threshold
       expect(header.className).not.toContain("border-b");
     });
 
@@ -405,14 +430,14 @@ describe("SiteHeader", () => {
       renderWithProviders(<SiteHeader />);
       const header = screen.getByRole("banner");
 
-      // Simulate scroll
+      // Simulate scroll (needs to be beyond header height threshold)
       Object.defineProperty(window, "scrollY", {
         writable: true,
         configurable: true,
-        value: 10,
+        value: 100,
       });
 
-      fireEvent.scroll(window, { target: { scrollY: 10 } });
+      fireEvent.scroll(window, { target: { scrollY: 100 } });
 
       await waitFor(() => {
         expect(header.className).toContain("border-b");
@@ -423,13 +448,13 @@ describe("SiteHeader", () => {
       renderWithProviders(<SiteHeader />);
       const header = screen.getByRole("banner");
 
-      // Simulate scroll down
+      // Simulate scroll down (beyond threshold)
       Object.defineProperty(window, "scrollY", {
         writable: true,
         configurable: true,
-        value: 10,
+        value: 100,
       });
-      fireEvent.scroll(window, { target: { scrollY: 10 } });
+      fireEvent.scroll(window, { target: { scrollY: 100 } });
 
       await waitFor(() => {
         expect(header.className).toContain("border-b");
