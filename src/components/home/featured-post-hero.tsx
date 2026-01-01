@@ -164,8 +164,8 @@ export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
                 TYPOGRAPHY.label.xs,
                 "backdrop-blur-sm",
                 post.image && post.image.url && !post.image.hideCard
-                  ? "bg-white/20 text-white border border-white/30"
-                  : "bg-white/10 text-foreground border border-border/40"
+                  ? "bg-zinc-500/30 text-white border border-zinc-400/30"
+                  : "bg-zinc-700 text-white border-none"
               )}
             >
               Featured

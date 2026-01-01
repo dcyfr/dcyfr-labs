@@ -71,11 +71,12 @@ describe("PostCategorySection", () => {
     expect(screen.getByText("1 post")).toBeInTheDocument();
   });
 
-  it("should render post count badge with primary/10 background", () => {
+  it("should render post count badge with glass morphism background", () => {
     render(<PostCategorySection category="AI" label="AI" posts={mockPosts} />);
 
     const badge = screen.getByText("2 posts").closest("span");
-    expect(badge).toHaveClass("bg-primary/10", "text-primary");
+    expect(badge).toHaveClass("bg-white/10");
+    expect(badge).toHaveClass("backdrop-blur-sm");
   });
 
   it("should render chevron icon for expand/collapse", () => {
