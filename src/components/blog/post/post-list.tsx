@@ -446,7 +446,7 @@ export function PostList({
                       <div className="flex flex-nowrap items-center gap-x-2.5 text-sm text-muted-foreground mb-2.5 overflow-x-auto">
                         {/* Featured badge */}
                         {p.featured && (
-                          <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white border-none flex-shrink-0 text-xs">
+                          <Badge className="bg-zinc-700 text-white border-none flex-shrink-0 text-xs">
                             Featured
                           </Badge>
                         )}
@@ -590,7 +590,7 @@ export function PostList({
                         <div className="flex flex-nowrap items-center gap-x-3 text-sm mb-4 text-zinc-300 dark:text-zinc-300 overflow-x-auto">
                           {/* Featured badge */}
                           {p.featured && (
-                            <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white border-none flex-shrink-0">
+                            <Badge className="bg-zinc-700 text-white border-none flex-shrink-0">
                               Featured
                             </Badge>
                           )}
@@ -780,7 +780,7 @@ export function PostList({
             {/* Featured badge - only show if post is featured */}
             {posts[0].featured && (
               <div className="absolute top-4 left-4 z-20">
-                <Badge className="bg-linear-to-r from-amber-500 to-orange-500 text-white border-none">
+                <Badge className="bg-zinc-700 text-white border-none">
                   Featured
                 </Badge>
               </div>

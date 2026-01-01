@@ -45,12 +45,7 @@ describe('Print Styles - ArticleLayout', () => {
       const { container } = render(
         <ArticleLayout
           header={<ArticleHeader title="Test" />}
-          footer={
-            <ArticleFooter
-              shareUrl="https://example.com"
-              tags={['test']}
-            />
-          }
+          footer={<ArticleFooter />}
         >
           <p>Content</p>
         </ArticleLayout>
@@ -64,7 +59,7 @@ describe('Print Styles - ArticleLayout', () => {
       const { container } = render(
         <ArticleLayout
           header={<ArticleHeader title="Test" />}
-          footer={<ArticleFooter shareUrl="https://example.com" />}
+          footer={<ArticleFooter />}
         >
           <div data-testid="article-content">Test Content</div>
         </ArticleLayout>
@@ -180,7 +175,7 @@ describe('Print Styles - ArticleLayout', () => {
       const { container } = render(
         <ArticleLayout
           header={<ArticleHeader title="Article Title" />}
-          footer={<ArticleFooter shareUrl="https://example.com" />}
+          footer={<ArticleFooter />}
         >
           <p>Article body content</p>
         </ArticleLayout>

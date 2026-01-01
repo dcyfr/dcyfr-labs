@@ -45,7 +45,7 @@ export interface KeyTakeawayProps {
 export function KeyTakeaway({ children, className = "" }: KeyTakeawayProps) {
   return (
     <Alert type="info" icon={Lightbulb} role="note" className={className}>
-      {children}
+      <span className="font-semibold">Key Takeaway:</span> {children}
     </Alert>
   );
 }
