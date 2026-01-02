@@ -39,17 +39,6 @@ interface UseCredlySkillsResult {
 /**
  * Hook for fetching Credly badges with caching
  */
-/**
- * Check if cache entry exists (even if expired)
- */
-function getCachedDataStale<T>(cacheKey: string): T | null {
-  const entry = cache.get(cacheKey);
-  return entry ? entry.data : null;
-}
-
-/**
- * Hook for fetching Credly badges with caching and stale-while-revalidate pattern
- */
 export function useCredlyBadges({
   username = "dcyfr",
   limit,
