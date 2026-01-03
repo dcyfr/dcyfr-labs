@@ -98,6 +98,7 @@ describe.skip("handleApiError", () => {
     expect(result.shouldRetry).toBe(false);
     expect(result.statusCode).toBe(499);
     expect(result.logLevel).toBe("debug");
+    // eslint-disable-next-line no-console -- Testing console.debug mock
     expect(console.debug).toHaveBeenCalledWith(
       expect.stringContaining("Client connection closed"),
       expect.any(String)

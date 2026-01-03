@@ -314,7 +314,7 @@ server.addTool({
     code: z.string().describe("Code snippet to validate (JSX/TSX)"),
     filePath: z.string().optional().describe("Optional file path for context"),
   }),
-  execute: async ({ code, filePath }) => {
+  execute: async ({ code, filePath }: { code: string; filePath?: string }) => {
     const cacheKey = `validate:${code}`;
     const cached = validationCache.get(cacheKey);
     if (cached) return cached;
@@ -347,7 +347,7 @@ server.addTool({
       .optional()
       .describe("Token category to search in"),
   }),
-  execute: async ({ hardcodedValue, category }) => {
+  execute: async ({ hardcodedValue, category }: { hardcodedValue: string; category?: "spacing" | "typography" | "containers" | "breakpoints" }) => {
     const suggestions = suggestToken(hardcodedValue, category);
 
     const output = {
@@ -372,7 +372,7 @@ server.addTool({
       .optional()
       .describe("Optional file path (omit for global compliance)"),
   }),
-  execute: async ({ filePath }) => {
+  execute: async ({ filePath }: { filePath?: string }) => {
     const result = await calculateCompliance(filePath);
 
     const output = {
@@ -399,7 +399,7 @@ server.addTool({
         "Token name to search for (e.g., 'SPACING.content', 'TYPOGRAPHY.h1')"
       ),
   }),
-  execute: async ({ tokenName }) => {
+  execute: async ({ tokenName }: { tokenName: string }) => {
     // Simplified implementation - would use grep or AST search in production
     const output = {
       tokenName,
@@ -420,7 +420,7 @@ server.addTool({
   parameters: z.object({
     filePath: z.string().describe("File path to analyze"),
   }),
-  execute: async ({ filePath }) => {
+  execute: async ({ filePath }: { filePath: string }) => {
     try {
       const fullPath = path.isAbsolute(filePath)
         ? filePath
@@ -642,7 +642,7 @@ server.addResource({
 // Start Server
 // ============================================================================
 
-server.start({ transportType: "stdio" }).catch((error) => {
+server.start({ transportType: "stdio" }).catch((error: unknown) => {
   console.error("❌ Failed to start Design Token MCP server:", error);
   process.exit(1);
 });

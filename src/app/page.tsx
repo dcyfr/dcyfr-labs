@@ -26,7 +26,6 @@ import {
   ANIMATION,
   CONTAINER_PADDING,
 } from "@/lib/design-tokens";
-import { Card } from "@/components/ui/card";
 import { createPageMetadata, getJsonLdScriptProps } from "@/lib/metadata";
 import { PageLayout } from "@/components/layouts";
 import { cn } from "@/lib/utils";
@@ -37,6 +36,14 @@ import {
   Section,
   SmoothScrollToHash,
 } from "@/components/common";
+// Import components for loading fallbacks (using loading prop pattern)
+import {
+  FeaturedPostHero as FeaturedPostHeroComponent,
+  InfiniteActivitySection as InfiniteActivitySectionComponent,
+  HomepageHeatmapMini as HomepageHeatmapMiniComponent,
+  ExploreCards as ExploreCardsComponent,
+  SeriesShowcase as SeriesShowcaseComponent,
+} from "@/components/home";
 import {
   transformPosts,
   transformProjects,
@@ -72,26 +79,14 @@ import { SearchButton } from "@/components/search";
 import { ScrollReveal } from "@/components/features";
 
 // Lazy-loaded below-fold components for better initial load performance
+// Using new loading prop pattern - components render their own skeletons
 const FeaturedPostHero = dynamic(
   () =>
     import("@/components/home").then((mod) => ({
       default: mod.FeaturedPostHero,
     })),
   {
-    loading: () => (
-      <Card className="p-4 md:p-8 animate-pulse">
-        <div className={cn("flex items-center", SPACING.compact)}>
-          <div className="flex items-center gap-4">
-            <div className="h-5 w-16 bg-muted rounded" />
-            <div className="h-5 w-20 bg-muted rounded" />
-          </div>
-        </div>
-        <div className={cn("mt-4", SPACING.compact)}>
-          <div className="h-8 bg-muted rounded w-3/4" />
-          <div className="h-6 bg-muted rounded w-full" />
-        </div>
-      </Card>
-    ),
+    loading: () => <FeaturedPostHeroComponent loading />,
   }
 );
 
@@ -101,13 +96,7 @@ const InfiniteActivitySection = dynamic(
       default: mod.InfiniteActivitySection,
     })),
   {
-    loading: () => (
-      <div className={SPACING.content}>
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-20 bg-muted rounded-lg animate-pulse" />
-        ))}
-      </div>
-    ),
+    loading: () => <InfiniteActivitySectionComponent loading initialCount={3} />,
   }
 );
 
@@ -117,9 +106,7 @@ const HomepageHeatmapMini = dynamic(
       default: mod.HomepageHeatmapMini,
     })),
   {
-    loading: () => (
-      <div className="h-48 w-full bg-muted rounded-lg animate-pulse" />
-    ),
+    loading: () => <HomepageHeatmapMiniComponent loading />,
   }
 );
 
@@ -127,13 +114,7 @@ const ExploreCards = dynamic(
   () =>
     import("@/components/home").then((mod) => ({ default: mod.ExploreCards })),
   {
-    loading: () => (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
-        ))}
-      </div>
-    ),
+    loading: () => <ExploreCardsComponent loading />,
   }
 );
 
@@ -143,13 +124,7 @@ const SeriesShowcase = dynamic(
       default: mod.SeriesShowcase,
     })),
   {
-    loading: () => (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-48 bg-muted rounded-lg animate-pulse" />
-        ))}
-      </div>
-    ),
+    loading: () => <SeriesShowcaseComponent loading maxSeries={3} />,
   }
 );
 
