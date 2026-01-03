@@ -87,13 +87,18 @@ describe("SkillsWallet", () => {
   });
 
   it("renders loading state initially", () => {
-    mockFetch.mockImplementation(
-      () => new Promise(() => {}) // Never resolves
-    );
+    const { container } = render(<SkillsWallet username="dcyfr" loading limit={3} />);
 
-    render(<SkillsWallet username="dcyfr" />);
+    // Check that skeleton is rendered (no actual skill links)
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
 
-    expect(screen.getByText("Loading skills...")).toBeInTheDocument();
+    // Skeleton should have grid layout with skeleton cards
+    const gridContainer = container.querySelector(".grid");
+    expect(gridContainer).toBeInTheDocument();
+
+    // Should have 3 skeleton cards (matching limit)
+    const skeletonCards = container.querySelectorAll(".rounded-lg.border");
+    expect(skeletonCards).toHaveLength(3);
   });
 
   it("fetches and aggregates skills successfully", async () => {

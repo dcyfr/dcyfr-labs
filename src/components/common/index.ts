@@ -121,6 +121,10 @@ export { GitHubHeatmapErrorBoundary } from "./error-boundaries/github-heatmap-er
 
 // Skeletons
 export { GitHubHeatmapSkeleton } from "./skeletons/github-heatmap-skeleton";
+export { FormSkeleton } from "./skeletons/form-skeleton";
+export { ChartSkeleton } from "./skeletons/chart-skeleton";
+export { CommentSectionSkeleton } from "./skeletons/comment-section-skeleton";
+export { DiagramSkeleton } from "./skeletons/diagram-skeleton";
 
 // Team
 export { TeamMemberCard, type TeamMemberCardLayout } from "./team-member-card";

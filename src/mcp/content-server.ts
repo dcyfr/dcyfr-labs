@@ -291,7 +291,7 @@ server.addTool({
       .describe("Search query (searches title, description, tags, content)"),
     limit: z.number().default(20).describe("Maximum results to return"),
   }),
-  execute: async ({ type, query, limit }) => {
+  execute: async ({ type, query, limit }: { type: "blog" | "project"; query?: string; limit?: number }) => {
     const results = await queryContent(type, query, limit);
 
     return {
@@ -326,7 +326,7 @@ server.addTool({
   parameters: z.object({
     filePath: z.string().describe("Path to MDX file to analyze"),
   }),
-  execute: async ({ filePath }) => {
+  execute: async ({ filePath }: { filePath: string }) => {
     const analysis = await analyzeContent(filePath);
 
     return {
@@ -351,7 +351,7 @@ server.addTool({
     filePath: z.string().describe("Path to reference content file"),
     limit: z.number().default(5).describe("Maximum related items to return"),
   }),
-  execute: async ({ filePath, limit }) => {
+  execute: async ({ filePath, limit }: { filePath: string; limit?: number }) => {
     const related = await findRelatedContent(filePath, limit);
 
     return {
@@ -384,7 +384,7 @@ server.addTool({
       .optional()
       .describe("Filter by content type"),
   }),
-  execute: async ({ type }) => {
+  execute: async ({ type }: { type?: "blog" | "project" }) => {
     const taxonomy = await getTopicTaxonomy(type);
 
     const sorted = Object.entries(taxonomy)
@@ -417,7 +417,7 @@ server.addTool({
       .optional()
       .describe("Filter by content type"),
   }),
-  execute: async ({ query, type }) => {
+  execute: async ({ query, type }: { query: string; type?: "blog" | "project" }) => {
     const types: ("blog" | "project")[] = type ? [type] : ["blog", "project"];
     const results: ContentItem[] = [];
 
@@ -464,7 +464,7 @@ server.addTool({
   parameters: z.object({
     filePath: z.string().describe("Path to MDX file to validate"),
   }),
-  execute: async ({ filePath }) => {
+  execute: async ({ filePath }: { filePath: string }) => {
     const fullPath = path.isAbsolute(filePath)
       ? filePath
       : path.join(process.cwd(), filePath);
@@ -511,7 +511,7 @@ server.addTool({
 // Start Server
 // ============================================================================
 
-server.start({ transportType: "stdio" }).catch((error) => {
+server.start({ transportType: "stdio" }).catch((error: unknown) => {
   console.error("❌ Failed to start Content Manager MCP server:", error);
   process.exit(1);
 });

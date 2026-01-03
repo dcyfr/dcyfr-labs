@@ -5,13 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonText } from "@/components/ui/skeleton-primitives";
 import { ArrowRight, Clock } from "lucide-react";
 import type { Post } from "@/data/posts";
 import { TYPOGRAPHY, SPACING, ANIMATION } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 interface FeaturedPostHeroProps {
-  post: Post;
+  post?: Post;
+  /** Loading state - renders skeleton version */
+  loading?: boolean;
 }
 
 /**
@@ -20,6 +24,10 @@ interface FeaturedPostHeroProps {
  * Large hero card showcasing a featured blog post.
  * Designed to be visually prominent on the homepage between
  * the hero section and regular post listings.
+ *
+ * **Loading State:**
+ * Pass `loading={true}` to render skeleton version that matches the real component structure.
+ * This ensures loading states never drift from the actual component layout.
  *
  * **Why this uses CSS instead of Framer Motion:**
  * This component implements 3D perspective transforms (rotateX + rotateY combined)
@@ -52,6 +60,10 @@ interface FeaturedPostHeroProps {
  *   <FeaturedPostHero post={featuredPost} />
  * }
  *
+ * @example
+ * // Show loading skeleton
+ * <FeaturedPostHero loading />
+ *
  * @accessibility
  * - Semantic HTML with proper heading levels
  * - ARIA labels on interactive elements
@@ -64,10 +76,52 @@ interface FeaturedPostHeroProps {
  * - 3D perspective tilt (rotateX + rotateY) for interactivity
  * - Responsive padding and spacing
  */
-export function FeaturedPostHero({ post }: FeaturedPostHeroProps) {
+export function FeaturedPostHero({ post, loading = false }: FeaturedPostHeroProps) {
   const router = useRouter();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+
+  // Loading state - skeleton version matching real component structure
+  if (loading) {
+    return (
+      <div className={cn("group relative overflow-hidden rounded-xl border shadow-lg", ANIMATION.transition.base)}>
+        {/* Background skeleton */}
+        <div className="absolute inset-0 z-0">
+          <Skeleton className="h-full w-full" />
+        </div>
+
+        <div className={cn("relative z-10 p-4 md:p-8", SPACING.content)}>
+          {/* Featured Badge skeleton */}
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-5 w-20 rounded-md" />
+            <Skeleton className="h-5 w-24 rounded-md" />
+            <Skeleton className="h-5 w-28 rounded-md" />
+          </div>
+
+          {/* Title & Summary skeleton */}
+          <div className={cn(SPACING.subsection)}>
+            <Skeleton className="h-10 md:h-12 w-3/4 mb-4" />
+            <div className="space-y-2">
+              <SkeletonText lines={3} />
+            </div>
+          </div>
+
+          {/* Metadata & CTA skeleton */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <Skeleton className="h-5 w-24" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return null;
+  }
 
   const publishedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
     year: "numeric",

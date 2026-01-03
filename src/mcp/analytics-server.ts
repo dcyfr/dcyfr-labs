@@ -70,7 +70,7 @@ server.addTool({
     readOnlyHint: true,
     openWorldHint: false,
   },
-  execute: async (args, { log }) => {
+  execute: async (args: { path?: string; timeRange?: "24h" | "7d" | "30d" | "all" }, { log }: { log: any }) => {
     try {
       const { result, durationMs } = await measurePerformance(async () => {
         const cacheKey = `pageviews:${args.path || "all"}:${args.timeRange}`;
@@ -109,13 +109,13 @@ server.addTool({
             data = {
               path: args.path,
               views,
-              timeRange: args.timeRange,
+              timeRange: args.timeRange || "7d",
             };
           } else {
             data = {
               path: args.path,
               views: 0,
-              timeRange: args.timeRange,
+              timeRange: args.timeRange || "7d",
             };
           }
         } else {
@@ -129,7 +129,7 @@ server.addTool({
           data = {
             path: "all",
             views: totalViews,
-            timeRange: args.timeRange,
+            timeRange: args.timeRange || "7d",
           };
         }
 
@@ -171,7 +171,7 @@ server.addTool({
     readOnlyHint: true,
     openWorldHint: false,
   },
-  execute: async (args, { log }) => {
+  execute: async (args: { limit?: number; timeRange?: "24h" | "7d" | "30d" | "all" }, { log }: { log: any }) => {
     try {
       const { result, durationMs } = await measurePerformance(async () => {
         const cacheKey = `trending:${args.timeRange}:${args.limit}`;
@@ -254,7 +254,7 @@ server.addTool({
     readOnlyHint: true,
     openWorldHint: false,
   },
-  execute: async (args, { log }) => {
+  execute: async (args: { contentType?: string; timeRange?: "1h" | "24h" | "7d" | "30d" | "all" }, { log }: { log: any }) => {
     try {
       const { result, durationMs } = await measurePerformance(async () => {
         const cacheKey = `engagement:${args.contentType || "all"}:${args.timeRange}`;
@@ -369,7 +369,7 @@ server.addTool({
     readOnlyHint: true,
     openWorldHint: false,
   },
-  execute: async (args, { log }) => {
+  execute: async (args: { query?: string; activityType?: string; timeRange?: "1h" | "24h" | "7d" | "30d" | "all"; limit?: number }, { log }: { log: any }) => {
     try {
       const { result, durationMs } = await measurePerformance(async () => {
         const cacheKey = `activity:${args.query || ""}:${args.activityType || ""}:${args.timeRange}`;
@@ -402,7 +402,7 @@ server.addTool({
 
           // Get recent entries from sorted set (within time range)
           const now = Date.now();
-          const timeRangeMs = getTimeRangeMs(args.timeRange);
+          const timeRangeMs = getTimeRangeMs(args.timeRange || "24h");
           const minScore = now - timeRangeMs;
 
           // zRangeByScore returns members with scores between min and max
@@ -478,7 +478,7 @@ server.addTool({
     readOnlyHint: true,
     openWorldHint: false,
   },
-  execute: async (args, { log }) => {
+  execute: async (args: { includeTest?: boolean }, { log }: { log: any }) => {
     try {
       const { result, durationMs } = await measurePerformance(async () => {
         const cacheKey = `milestones:${args.includeTest}`;
