@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { ThreadedActivityFeed } from "@/components/activity";
 import { useInfiniteActivity } from "@/hooks/use-infinite-activity";
@@ -16,7 +17,7 @@ import { SPACING } from "@/lib/design-tokens";
 
 interface InfiniteActivitySectionProps {
   /** All activity items */
-  items: ActivityItem[];
+  items?: ActivityItem[];
   /** Total count of all activities (before limiting) */
   totalActivities?: number;
   /** Initial number of items to show */
@@ -33,6 +34,8 @@ interface InfiniteActivitySectionProps {
   ctaHref?: string;
   /** Additional class names */
   className?: string;
+  /** Loading state - renders skeleton version */
+  loading?: boolean;
 }
 
 // ============================================================================
@@ -55,6 +58,10 @@ const SCROLL_HINT_HIDE_DELAY = 5000; // Hide scroll hint after 5s
  * As the user scrolls down the page, more items load automatically using
  * Intersection Observer API.
  *
+ * **Loading State:**
+ * Pass `loading={true}` to render skeleton version that matches the real component structure.
+ * This ensures loading states never drift from the actual component layout.
+ *
  * Features:
  * - Dynamic loading as user scrolls (no constrained container)
  * - Threaded conversation-style grouping
@@ -70,9 +77,13 @@ const SCROLL_HINT_HIDE_DELAY = 5000; // Hide scroll hint after 5s
  *   pageSize={8}
  * />
  * ```
+ *
+ * @example
+ * // Show loading skeleton
+ * <InfiniteActivitySection loading initialCount={10} />
  */
 export function InfiniteActivitySection({
-  items,
+  items = [],
   totalActivities,
   initialCount = 10,
   pageSize = 5,
@@ -81,11 +92,12 @@ export function InfiniteActivitySection({
   ctaText = "View full activity timeline",
   ctaHref = "/activity",
   className,
+  loading = false,
 }: InfiniteActivitySectionProps) {
   const loadTriggerRef = useRef<HTMLDivElement>(null);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
-  // Infinite scroll pagination
+  // Infinite scroll pagination (call hooks before returns)
   const {
     visibleItems,
     hasMore,
@@ -134,6 +146,56 @@ export function InfiniteActivitySection({
       observer.disconnect();
     };
   }, [hasMore, isLoadingMore, loadMore]);
+
+  // Loading state - skeleton version matching real component structure
+  if (loading) {
+    return (
+      <div className={cn("relative w-full", className)}>
+        {/* Progress indicator skeleton */}
+        {showProgress && (
+          <div className="mb-12 text-xs text-muted-foreground -mt-8">
+            <Skeleton className="h-4 w-48" />
+          </div>
+        )}
+
+        {/* Timeline wrapper with activity skeletons */}
+        <div className="relative space-y-4">
+          {[...Array(initialCount)].map((_, index) => (
+            <div
+              key={index}
+              className="flex gap-4"
+              style={{
+                animationDelay: `${index * 50}ms`, // Stagger effect
+              }}
+            >
+              {/* Avatar skeleton */}
+              <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+
+              {/* Content skeleton */}
+              <div className="flex-1 space-y-2">
+                {/* Header (name + time) */}
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+
+                {/* Content */}
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+
+                {/* Actions */}
+                <div className="flex items-center gap-4 pt-2">
+                  <Skeleton className="h-4 w-12" />
+                  <Skeleton className="h-4 w-12" />
+                  <Skeleton className="h-4 w-12" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("relative w-full", className)}>

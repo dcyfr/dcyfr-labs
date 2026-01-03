@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert } from "@/components/common";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonHeading } from "@/components/ui/skeleton-primitives";
 import { Lightbulb, TrendingUp, ExternalLink } from "lucide-react";
 import { SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 import { cn, ensureAbsoluteUrl } from "@/lib/utils";
@@ -18,6 +20,8 @@ interface SkillsWalletProps {
   viewMoreText?: string;
   className?: string;
   excludeSkills?: string[];
+  /** Loading state - renders skeleton version */
+  loading?: boolean;
 }
 
 interface SkillWithCount {
@@ -33,8 +37,16 @@ interface SkillWithCount {
  * Shows skill name, number of certifications that include it,
  * and links to Credly's skill pages.
  *
+ * **Loading State:**
+ * Pass `loading={true}` to render skeleton version that matches the real component structure.
+ * This ensures loading states never drift from the actual component layout.
+ *
  * @example
  * <SkillsWallet username="dcyfr" />
+ *
+ * @example
+ * // Show loading skeleton
+ * <SkillsWallet loading limit={6} />
  */
 export function SkillsWallet({
   username = "dcyfr",
@@ -43,9 +55,10 @@ export function SkillsWallet({
   viewMoreText = "View all skills",
   className,
   excludeSkills = [],
+  loading: loadingProp = false,
 }: SkillsWalletProps) {
   // Use the cached hook for better performance and automatic skill aggregation
-  const { skills, loading, error } = useCredlySkills({ username });
+  const { skills, loading: hookLoading, error } = useCredlySkills({ username });
 
   // Memoize displayed skills to prevent unnecessary re-renders
   const displayedSkills = useMemo(() => {
@@ -64,12 +77,34 @@ export function SkillsWallet({
     return limit ? filtered.slice(0, limit) : filtered;
   }, [skills, limit, excludeSkills]);
 
+  // Combine prop and hook loading states
+  const loading = loadingProp || hookLoading;
+
+  // Loading state - skeleton version matching real component structure
   if (loading) {
     return (
-      <div className={cn("space-y-4", className)}>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Lightbulb className="h-5 w-5 animate-pulse" />
-          <span>Loading skills...</span>
+      <div className={cn(SPACING.subsection, className)}>
+        {/* Header skeleton - matches real component structure */}
+        <div className="mb-6 flex items-center gap-2">
+          <Skeleton className="h-5 w-5 rounded-md" />
+          <SkeletonHeading level="h3" width="w-32" />
+          <Skeleton className="h-6 w-20 rounded-md" />
+        </div>
+
+        {/* Skills grid skeleton - matches real component structure */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(limit || 6)].map((_, i) => (
+            <div key={i} className="rounded-lg border p-4">
+              {/* Skill name + count */}
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <Skeleton className="h-5 flex-1" />
+                <Skeleton className="h-5 w-12 rounded-md" />
+              </div>
+
+              {/* Badge count text */}
+              <Skeleton className="h-4 w-20" />
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -87,33 +122,6 @@ export function SkillsWallet({
     return (
       <Alert type="info" className={className}>
         No skills found for this user.
-      </Alert>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className={cn("space-y-4", className)}>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Lightbulb className="h-5 w-5 animate-pulse" />
-          <span>Loading skills...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert type="critical" className={className}>
-        {error}
-      </Alert>
-    );
-  }
-
-  if (skills.length === 0) {
-    return (
-      <Alert type="info" className={className}>
-        No skills found.
       </Alert>
     );
   }

@@ -1545,24 +1545,138 @@ export const ANIMATION = {
 } as const;
 
 /**
- * @deprecated Use ANIMATION.duration instead. This constant will be removed in a future version.
+ * Animation Timing & Easing Constants
  *
- * Migration guide:
- * - `ANIMATIONS.fast` → `ANIMATION.duration.fast`
- * - `ANIMATIONS.standard` → `ANIMATION.duration.normal`
- * - `ANIMATIONS.slow` → `ANIMATION.duration.slow`
+ * Centralized animation configuration for consistent motion design.
+ * All animations respect `prefers-reduced-motion` via globals.css.
  *
- * @see ANIMATION.duration for the current implementation
+ * Replaces deprecated Tailwind utility-based ANIMATIONS constant.
+ *
+ * Usage:
+ * ```tsx
+ * // In component styles
+ * style={{ animation: ANIMATIONS.types.fadeIn }}
+ *
+ * // For transitions
+ * style={{ transition: ANIMATIONS.transition.colors }}
+ *
+ * // With stagger effect
+ * style={{ animationDelay: `${ANIMATIONS.stagger.normal * index}ms` }}
+ * ```
+ *
+ * @see /src/app/globals.css - Animation keyframes and reduced-motion support
  */
 export const ANIMATIONS = {
-  /** @deprecated Use ANIMATION.duration.fast instead */
-  fast: "duration-200",
+  /**
+   * Animation durations
+   * Based on Material Design motion guidelines
+   */
+  duration: {
+    /** Instant feedback (150ms) - Micro-interactions, hovers */
+    instant: "150ms",
 
-  /** @deprecated Use ANIMATION.duration.normal instead */
-  standard: "duration-300",
+    /** Fast response (300ms) - UI state changes, tooltips, dropdowns */
+    fast: "300ms",
 
-  /** @deprecated Use ANIMATION.duration.slow instead */
-  slow: "duration-500",
+    /** Normal transition (500ms) - Content reveals, page transitions */
+    normal: "500ms",
+
+    /** Slow ambient (2s) - Background animations, shimmer effects */
+    slow: "2s",
+
+    /** Extended ambient (3s) - Floating animations, parallax */
+    extended: "3s",
+  },
+
+  /**
+   * Easing functions
+   * Matches Tailwind's built-in easing curves
+   */
+  easing: {
+    /** Default easing - Most transitions */
+    default: "cubic-bezier(0.4, 0, 0.2, 1)", // ease-out
+
+    /** Smooth easing - Organic movement */
+    smooth: "ease-in-out",
+
+    /** Bounce easing - Playful interactions */
+    bounce: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+
+    /** Linear - Constant speed (shimmer, loading bars) */
+    linear: "linear",
+
+    /** Sharp entry - Emphasize arrival */
+    sharp: "cubic-bezier(0.4, 0, 0.6, 1)", // ease-in-out but sharper
+  },
+
+  /**
+   * Pre-composed animation strings
+   * Ready to use with CSS `animation` property
+   */
+  types: {
+    /** Shimmer effect for skeleton loaders (2s linear infinite) */
+    shimmer: "shimmer 2s linear infinite",
+
+    /** Fade in content (500ms ease-out) */
+    fadeIn: "fade-in 0.5s ease-out forwards",
+
+    /** Fade in with upward slide (500ms ease-out) */
+    fadeInUp: "fade-in-up 0.5s ease-out forwards",
+
+    /** Single pulse effect (300ms ease-in-out) */
+    pulseOnce: "pulse-once 300ms ease-in-out",
+
+    /** Subtle continuous pulse (2s ease-in-out infinite) */
+    pulseSubtle: "pulse-subtle 2s ease-in-out infinite",
+
+    /** Floating parallax effect (3s ease-in-out infinite) */
+    float: "float 3s ease-in-out infinite",
+
+    /** Highlight flash for TOC navigation (2s ease-in-out) */
+    highlightPulse: "highlight-pulse 2s ease-in-out",
+
+    /** Count-up number reveal (500ms ease-out) */
+    countUp: "count-up 500ms ease-out forwards",
+
+    /** Loading bar progress (500ms ease-in-out) */
+    loadingBar: "loading-bar 0.5s ease-in-out forwards",
+  },
+
+  /**
+   * Transition utilities
+   * For use with Tailwind's transition classes
+   */
+  transition: {
+    /** All properties with normal duration */
+    all: "all 500ms cubic-bezier(0.4, 0, 0.2, 1)",
+
+    /** Colors only (backgrounds, borders, text) */
+    colors: "background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+
+    /** Transform only (scale, translate, rotate) */
+    transform: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+
+    /** Opacity only */
+    opacity: "opacity 200ms ease",
+
+    /** Box shadow (for hover effects) */
+    shadow: "box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+  },
+
+  /**
+   * Stagger delays for list animations
+   * Multiply by index: `style={{ animationDelay: `${ANIMATIONS.stagger.normal * index}ms` }}`
+   */
+  stagger: {
+    /** 50ms between items - Fast reveal */
+    fast: 50,
+
+    /** 100ms between items - Standard reveal */
+    normal: 100,
+
+    /** 150ms between items - Slow reveal */
+    slow: 150,
+  },
 } as const;
 
 // ============================================================================

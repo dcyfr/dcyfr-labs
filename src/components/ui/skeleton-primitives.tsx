@@ -1,5 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { ANIMATIONS } from "@/lib/design-tokens";
 
 /**
  * Design-Token-Aware Skeleton Primitives
@@ -321,6 +322,8 @@ export interface SkeletonCardProps {
   showImage?: boolean;
   /** Additional classes */
   className?: string;
+  /** Inline styles (for animation delays, etc.) */
+  style?: React.CSSProperties;
 }
 
 /**
@@ -331,10 +334,11 @@ export function SkeletonCard({
   variant = "simple",
   showImage = true,
   className,
+  style,
 }: SkeletonCardProps) {
   if (variant === "post") {
     return (
-      <div className={cn("rounded-lg border overflow-hidden", className)}>
+      <div className={cn("rounded-lg border overflow-hidden", className)} style={style}>
         {showImage && <SkeletonImage aspectRatio="video" />}
         <div className="p-4 space-y-3">
           <SkeletonMetadata />
@@ -350,6 +354,7 @@ export function SkeletonCard({
     return (
       <div
         className={cn("rounded-lg border overflow-hidden relative", className)}
+        style={style}
       >
         {/* Background */}
         <div className="absolute inset-0 bg-muted/20" />
@@ -370,7 +375,7 @@ export function SkeletonCard({
 
   // Simple card
   return (
-    <div className={cn("rounded-lg border p-4 space-y-3", className)}>
+    <div className={cn("rounded-lg border p-4 space-y-3", className)} style={style}>
       <SkeletonHeading level="h3" width="w-2/3" />
       <SkeletonText lines={2} />
     </div>
@@ -390,18 +395,33 @@ export interface SkeletonListProps<T extends SkeletonCardProps["variant"]> {
   layout?: "list" | "grid";
   /** Grid columns */
   columns?: 1 | 2 | 3;
+  /** Enable stagger animation (items appear sequentially) */
+  stagger?: boolean | "fast" | "normal" | "slow";
   /** Additional classes */
   className?: string;
 }
 
 /**
- * List of skeleton cards with configurable layout.
+ * List of skeleton cards with configurable layout and optional stagger animation.
+ *
+ * Stagger animation creates a sequential reveal effect where each skeleton
+ * appears slightly after the previous one, providing better visual feedback.
+ *
+ * @example
+ * ```tsx
+ * // With stagger animation
+ * <SkeletonList count={5} stagger="normal" variant="post" />
+ *
+ * // Without stagger
+ * <SkeletonList count={5} variant="post" />
+ * ```
  */
 export function SkeletonList({
   count = 3,
   variant = "simple",
   layout = "list",
   columns = 2,
+  stagger = false,
   className,
 }: SkeletonListProps<SkeletonCardProps["variant"]>) {
   const layoutClass =
@@ -409,10 +429,25 @@ export function SkeletonList({
       ? `grid gap-4 ${columns === 1 ? "" : columns === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"}`
       : "space-y-4";
 
+  // Get stagger delay value
+  const getStaggerDelay = (index: number): string | undefined => {
+    if (!stagger) return undefined;
+
+    const speed = stagger === true ? "normal" : stagger;
+    const delay = ANIMATIONS.stagger[speed] * index;
+    return `${delay}ms`;
+  };
+
   return (
     <div className={cn(layoutClass, className)}>
       {Array.from({ length: count }).map((_, i) => (
-        <SkeletonCard key={i} variant={variant} />
+        <SkeletonCard
+          key={i}
+          variant={variant}
+          style={{
+            animationDelay: getStaggerDelay(i),
+          }}
+        />
       ))}
     </div>
   );

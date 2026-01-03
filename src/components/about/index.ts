@@ -29,3 +29,7 @@ export { ProfileCapabilityCard } from "./profile-capability-card";
 export { ProfileListSection } from "./profile-list-section";
 export { DcyfrActivityStats } from "./dcyfr-activity-stats";
 export { FocusAreaCard } from "./focus-area-card";
+
+// Loading skeletons
+export { BadgeWalletSkeleton } from "./badge-wallet-skeleton";
+export { SkillsWalletSkeleton } from "./skills-wallet-skeleton";
