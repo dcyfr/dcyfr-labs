@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonText } from "@/components/ui/skeleton-primitives";
 import {
   TYPOGRAPHY,
   HOVER_EFFECTS,
@@ -37,13 +39,15 @@ interface ExploreCardData {
 
 interface ExploreCardsProps {
   /** Number of blog posts */
-  postCount: number;
+  postCount?: number;
   /** Number of projects */
-  projectCount: number;
+  projectCount?: number;
   /** Number of activities */
-  activityCount: number;
+  activityCount?: number;
   /** Class name for container */
   className?: string;
+  /** Loading state - renders skeleton version */
+  loading?: boolean;
 }
 
 // ============================================================================
@@ -59,6 +63,10 @@ interface ExploreCardsProps {
  * Consolidated to eliminate duplicate navigation paths while maintaining
  * discoverability of all content areas.
  *
+ * **Loading State:**
+ * Pass `loading={true}` to render skeleton version that matches the real component structure.
+ * This ensures loading states never drift from the actual component layout.
+ *
  * **Animation approach:** Uses CSS animations (Tailwind animate-in) instead of Framer Motion.
  * Stagger effects use CSS delay for smooth card entrance animations.
  *
@@ -70,13 +78,86 @@ interface ExploreCardsProps {
  *   activityCount={156}
  * />
  * ```
+ *
+ * @example
+ * // Show loading skeleton
+ * <ExploreCards loading />
  */
 export function ExploreCards({
-  postCount,
-  projectCount,
-  activityCount,
+  postCount = 0,
+  projectCount = 0,
+  activityCount = 0,
   className,
+  loading = false,
 }: ExploreCardsProps) {
+  // Loading state - skeleton version matching real component structure
+  if (loading) {
+    return (
+      <div className={cn("flex flex-col", SPACING.subsection, className)}>
+        {/* Primary Content Cards Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(3)].map((_, index) => (
+            <Card
+              key={index}
+              className="h-full"
+              style={{
+                animationDelay: `${index * 100}ms`, // Stagger effect
+              }}
+            >
+              <CardContent className="p-4 md:p-5 flex flex-col h-full">
+                {/* Icon + Label + Count skeleton */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-9 w-9 rounded-lg" />
+                    <Skeleton className="h-5 w-20" />
+                  </div>
+                  <Skeleton className="h-6 w-24 rounded-md" />
+                </div>
+
+                {/* Description skeleton */}
+                <div className="flex-1 mb-3">
+                  <SkeletonText lines={2} />
+                </div>
+
+                {/* Arrow indicator skeleton */}
+                <Skeleton className="h-5 w-20" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Secondary Discovery Links Skeleton */}
+        <nav
+          aria-label="Discover additional content"
+          className={cn(
+            "w-full overflow-x-auto scrollbar-hide",
+            "-webkit-overflow-scrolling-touch",
+            "flex justify-center"
+          )}
+        >
+          <div
+            className={cn(
+              "flex items-center gap-2 md:gap-3",
+              "py-1 md:py-2",
+              "px-4 md:px-8",
+              "flex-nowrap"
+            )}
+          >
+            {[...Array(3)].map((_, index) => (
+              <Skeleton
+                key={index}
+                className="h-11 w-28 rounded-full"
+                style={{
+                  animationDelay: `${300 + index * 50}ms`, // Start after primary cards
+                }}
+              />
+            ))}
+          </div>
+        </nav>
+      </div>
+    );
+  }
+
   const cards: ExploreCardData[] = [
     {
       href: "/activity",

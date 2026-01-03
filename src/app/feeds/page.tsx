@@ -216,7 +216,8 @@ interface FeedCardProps {
 
 function FeedCard({ feed, index }: FeedCardProps) {
   const Icon = feed.icon;
-  const animationDelay = index * 100; // Stagger animations
+  // Start feed cards after the format options finish animating for top-to-bottom flow
+  const animationDelay = 400 + index * 120;
 
   return (
     <div
@@ -319,13 +320,13 @@ interface FormatOptionProps {
 }
 
 function FormatOption({ title, description, index }: FormatOptionProps) {
-  const animationDelay = index * 100;
+  const animationDelay = index * 120;
 
   return (
     <div
       className="animate-fade-in-up"
       style={{
-        animationDelay: `${animationDelay + 400}ms`,
+        animationDelay: `${animationDelay}ms`,
       }}
     >
       <div

@@ -28,7 +28,7 @@ export { FeedDropdown } from "./feed-dropdown";
 export { BlogSearchClient, useBlogSearch } from "./blog-search-client";
 
 // Partial Prerendering components
-export { BlogListSkeleton } from "./blog-list-skeleton";
+export { PostListSkeleton as BlogListSkeleton } from "./post/post-list-skeleton";
 
 // Blog post components
 export { BlogPostSidebar } from "./post/blog-post-sidebar";

@@ -26,3 +26,6 @@ export type {
 
 // Modern enhancements
 export { NetworkBackground } from "./network-background";
+
+// Loading skeletons removed - components now use loading prop pattern
+// See docs/ai/skeleton-consolidation-pattern.md
