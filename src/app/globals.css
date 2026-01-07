@@ -440,9 +440,9 @@
 }
 
 .dark {
-  --background: oklch(0.1 0 0);
+  --background: oklch(.1 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.10 0 0);
+  --card: oklch(.1 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
@@ -836,12 +836,15 @@
   /* CSS fallback for browsers without View Transitions API */
   /* Selective transitions for better performance - only target elements that change during theme switch */
   html:not(.view-transitions-supported) {
+
     /* Main background transition */
-    transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1),
-      background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    body {
+      @apply bg-background text-foreground;
+      transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
     /* Target specific UI elements for theme transitions */
-    body,
     nav,
     header,
     footer,
