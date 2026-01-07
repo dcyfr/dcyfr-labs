@@ -449,6 +449,47 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 **Secondary: GitHub Copilot** (~8K context) → Inline suggestions, quick edits
 **Fallback: OpenCode.ai** (75+ providers) → Token exhaustion, cost optimization, offline work
 
+**NEW:** See [AI Agent Architecture Improvements](docs/operations/AI_AGENT_ARCHITECTURE_IMPROVEMENTS_2026-01-06.md) for complete system documentation.
+
+### Agent Operational Systems (NEW - January 2026)
+
+**Three systems ensure continuous, data-driven development:**
+
+1. **Session Recovery System** - Auto-checkpoint every 30 minutes
+   - `npm run checkpoint:start <agent>` - Start background checkpointing
+   - `npm run session:recover <agent> latest` - Recover from interruption
+   - Prevents data loss from crashes, rate limits, network failures
+   - See: [SESSION_RECOVERY_SYSTEM.md](docs/operations/SESSION_RECOVERY_SYSTEM.md)
+
+2. **Provider Fallback Manager** - Automatic failover on rate limits
+   - `npm run fallback:status` - Check provider health
+   - `npm run fallback:health` - Monitor all providers
+   - Seamless switch: Claude → Groq → Ollama
+   - See: [PROVIDER_FALLBACK_SYSTEM.md](docs/operations/PROVIDER_FALLBACK_SYSTEM.md)
+
+3. **Agent Telemetry System** - Track usage, quality, costs
+   - `npm run telemetry:stats <agent> 7d` - Agent-specific metrics
+   - `npm run telemetry:compare` - Compare all agents
+   - `npm run telemetry:handoffs` - Handoff analytics
+   - See: [agent-telemetry.ts](src/lib/agents/agent-telemetry.ts)
+
+**Quick Start Workflow:**
+
+```bash
+# 1. Start development with auto-recovery
+npm run dev &
+npm run checkpoint:start claude &
+
+# 2. Work normally - failover is automatic
+# ... develop features ...
+
+# 3. If interrupted, recover instantly
+npm run session:recover claude latest
+
+# 4. View analytics
+npm run telemetry:compare
+```
+
 ### When to Use OpenCode.ai
 
 **Trigger Conditions:**
