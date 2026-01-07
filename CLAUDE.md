@@ -381,7 +381,6 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 ## MCP Servers (Chat)
 
 
-- Playwright (browser automation, E2E testing)
 - Axiom (log queries, monitoring)
 - Filesystem, GitHub, Vercel, Sentry
 
