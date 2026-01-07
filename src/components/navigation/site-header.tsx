@@ -69,12 +69,17 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 site-header transition-theme duration-300 mt-0 md:mt-4",
+        "sticky top-0 z-40 site-header mt-0 md:mt-4",
         ANIMATION.duration.fast,
         hasScrolled
-          ? "backdrop-blur supports-backdrop-filter:bg-background/60 border-b"
+          ? "backdrop-blur supports-backdrop-filter:bg-background/95 border-b"
           : "bg-transparent"
       )}
+      style={{
+        transition: hasScrolled
+          ? "border-color 150ms cubic-bezier(0.4, 0, 0.2, 1)"
+          : "none",
+      }}
     >
       <div
         className={cn(
