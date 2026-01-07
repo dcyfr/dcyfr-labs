@@ -32,7 +32,8 @@ fi
 # Check 2: Credentials in code
 echo -n "  Checking for hardcoded credentials... "
 # Look for actual credential assignments, not just keyword mentions
-SECRETS=$(git diff --cached -U0 2>/dev/null | grep -E "^\+" | grep -E "(API_KEY|SECRET|PASSWORD|TOKEN|CREDENTIAL|PRIVATE_KEY|ACCESS_KEY)\s*[:=]\s*['\"]" | grep -v "^+++\|#\|//\|/\*" || true)
+# Exclude hook files from this check (they contain these keywords intentionally)
+SECRETS=$(git diff --cached -U0 2>/dev/null | grep -v "^\+\+\+ b/.husky/" | grep -E "^\+" | grep -E "(API_KEY|SECRET|PASSWORD|TOKEN|CREDENTIAL|PRIVATE_KEY|ACCESS_KEY)\s*[:=]\s*['\"][^'\"]*['\"]" | grep -v "^+++" || true)
 
 if [ -n "$SECRETS" ]; then
   echo -e "${RED}FAIL${NC}"

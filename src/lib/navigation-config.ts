@@ -151,6 +151,10 @@ export const DEV_TOOLS_NAV: NavItem[] = [
     label: "Analytics",
   },
   {
+    href: "/dev/agents",
+    label: "AI Agents",
+  },
+  {
     href: "/dev/maintenance",
     label: "Maintenance",
   },
