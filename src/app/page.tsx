@@ -423,10 +423,7 @@ export default async function Home() {
       >
         {/* Hero Section - Full-screen immersive experience with navigation overlay */}
         {/* ⚡ OPTIMIZATION: Hero renders IMMEDIATELY - no data dependencies */}
-        <Section
-          id="hero"
-          className="relative overflow-hidden min-h-screen -mt-16 pt-16 md:pt-24 lg:pt-32"
-        >
+        <Section id="hero" className="relative overflow-hidden min-h-screen">
           {/* Hero background 
           <div className="*:backdrop-blur-lg *:backdrop-filter absolute inset-0 z-0 *:pointer-events-none">
             <NetworkBackground />
@@ -436,7 +433,7 @@ export default async function Home() {
           <div className="relative z-10 flex flex-col">
             <div
               className={cn(
-                "flex flex-col items-center justify-center w-full min-h-[60vh] py-12 md:py-16 lg:py-20",
+                "flex flex-col items-center justify-center w-full min-h-[60vh]",
                 CONTAINER_PADDING
               )}
             >
@@ -464,7 +461,7 @@ export default async function Home() {
                 {/* Search Bar - Prominent, wide placement with delayed entrance animation */}
                 <div
                   className={cn(
-                    `w-full mt-4 md:mt-6 *:md:w-3/4 lg:w-2/3`,
+                    `w-full mt-4 md:mt-6`,
                     "opacity-0 translate-y-3 animate-fade-in-up"
                   )}
                   style={{
@@ -475,11 +472,10 @@ export default async function Home() {
                   <div className="w-full mx-auto" style={{ maxWidth: "28rem" }}>
                     <SearchButton variant="input" />
                   </div>
-                </div>
-
-                {/* Quick Links Ribbon - Key sections for immediate access */}
-                <div className="mt-6 md:mt-8 w-full">
-                  <QuickLinksRibbon />
+                  {/* Quick Links Ribbon - Key sections for immediate access */}
+                  <div className="mt-4 md:mt-6">
+                    <QuickLinksRibbon />
+                  </div>
                 </div>
               </div>
             </div>
