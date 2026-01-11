@@ -906,6 +906,13 @@
     }
   }
 
+  /* Prevent horizontal overflow on mobile - critical for viewport width */
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
   body {
     @apply bg-background text-foreground;
   }

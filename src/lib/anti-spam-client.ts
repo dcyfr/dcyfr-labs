@@ -1,6 +1,6 @@
 /**
  * Client-safe anti-spam utilities
- * 
+ *
  * This file contains utilities that can be safely used in client-side code.
  * Server-side utilities (Redis, request validation) are in anti-spam.ts
  */
@@ -15,7 +15,7 @@ export function generateSessionId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return crypto.randomUUID();
   }
-  
+
   // Fallback for older browsers
   // lgtm[js/insecure-randomness] - Session IDs are for analytics tracking only,
   // not authentication or security-sensitive operations. These IDs are used to
@@ -29,7 +29,7 @@ export function generateSessionId(): string {
 export function isValidSessionId(sessionId: unknown): boolean {
   if (typeof sessionId !== "string") return false;
   if (sessionId.length < 10 || sessionId.length > 100) return false;
-  
+
   // Allow alphanumeric, hyphens, and underscores only
   return /^[a-zA-Z0-9\-_]+$/.test(sessionId);
 }
