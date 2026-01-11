@@ -40,7 +40,7 @@ export function ViewCountSkeleton() {
   return (
     <>
       <span aria-hidden="true">·</span>
-      <span className="inline-block w-16 h-4 bg-muted rounded animate-pulse" />
+      <span className="inline-block w-16 h-4 skeleton-shimmer rounded" />
     </>
   );
 }

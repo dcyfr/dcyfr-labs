@@ -253,7 +253,7 @@ function ActionButton({
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(
-        "group/action h-auto px-2 py-1.5 items-center",
+        "group/action h-auto px-2 py-2 flex justify-center items-center",
         "gap-1.5",
         ANIMATION.transition.base,
         ANIMATION.activity.like,
