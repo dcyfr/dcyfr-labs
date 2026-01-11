@@ -33,10 +33,7 @@ Sentry.init({
     }
 
     // Health/monitoring routes: sample at 1%
-    if (
-      name.includes("/api/health") ||
-      name.includes("/monitoring")
-    ) {
+    if (name.includes("/api/health") || name.includes("/monitoring")) {
       return 0.01;
     }
 
