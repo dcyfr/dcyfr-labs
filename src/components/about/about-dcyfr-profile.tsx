@@ -9,7 +9,17 @@ import {
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/common";
-import { Zap, Code, Brain, Shield, FileText } from "lucide-react";
+import {
+  Zap,
+  Code,
+  Brain,
+  Shield,
+  FileText,
+  Focus,
+  GitBranch,
+  CheckCircle,
+  HelpCircle,
+} from "lucide-react";
 import { ProfileHero } from "./profile-hero";
 import { ProfileCapabilityCard } from "./profile-capability-card";
 import { ProfileListSection } from "./profile-list-section";
@@ -34,6 +44,16 @@ export function AboutDcyfrProfile() {
     "Architecture & Planning": <Brain className="w-4 h-4 text-primary" />,
   };
 
+  // Icon mapping for approach items
+  const approachIcons: Record<string, React.ReactNode> = {
+    Focus: <Focus className="w-5 h-5" />,
+    GitBranch: <GitBranch className="w-5 h-5" />,
+    CheckCircle: <CheckCircle className="w-5 h-5" />,
+    FileText: <FileText className="w-5 h-5" />,
+    HelpCircle: <HelpCircle className="w-5 h-5" />,
+    Code: <Code className="w-5 h-5" />,
+  };
+
   return (
     <>
       {/* DCYFR Hero Section */}
@@ -49,7 +69,10 @@ export function AboutDcyfrProfile() {
             icon: <Shield className="w-3 h-3" />,
             label: "Innovation by Design",
           },
-          { icon: <Code className="w-3 h-3" />, label: "Full-Stack Automation" },
+          {
+            icon: <Code className="w-3 h-3" />,
+            label: "Full-Stack Automation",
+          },
         ]}
       />
 
@@ -95,7 +118,12 @@ export function AboutDcyfrProfile() {
             {dcyfr.integration.map((item, idx) => (
               <Card
                 key={idx}
-                className={cn("p-8", SHADOWS.card.rest, BORDERS.card, SPACING.compact)}
+                className={cn(
+                  "p-8",
+                  SHADOWS.card.rest,
+                  BORDERS.card,
+                  SPACING.compact
+                )}
               >
                 <h4 className={cn(TYPOGRAPHY.h3.standard, "text-foreground")}>
                   {item.aspect}
@@ -111,7 +139,11 @@ export function AboutDcyfrProfile() {
       <Section id="dcyfr-approach" className={PAGE_LAYOUT.section.container}>
         <div className={SPACING.content}>
           <h3 className={TYPOGRAPHY.h2.standard}>Development Approach</h3>
-          <ProfileListSection items={dcyfr.approach} bulletStyle="arrow" />
+          <ProfileListSection
+            items={dcyfr.approach}
+            bulletStyle="arrow"
+            iconMap={approachIcons}
+          />
         </div>
       </Section>
     </>

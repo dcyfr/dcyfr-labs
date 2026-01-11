@@ -178,6 +178,73 @@ function rehypeReplaceFootnoteEmoji() {
 }
 
 /**
+ * Custom rehype plugin to capture code block language from rehype-pretty-code
+ *
+ * Problem: rehype-pretty-code v0.10+ changed behavior - it doesn't always add
+ * data-language to the code element in a way React can access.
+ *
+ * Solution: This plugin runs after rehypePrettyCode and extracts the language
+ * from the pre element's data-language attribute (if present) and ensures
+ * the code child has it accessible to React components.
+ */
+function rehypeCaptureCodeLanguage() {
+  return (tree: any) => {
+    const visit = (node: any) => {
+      // Look for pre elements
+      if (node.type === "element" && node.tagName === "pre") {
+        const codeChild = node.children?.find(
+          (child: any) => child.type === "element" && child.tagName === "code"
+        );
+
+        if (codeChild && codeChild.properties) {
+          // The pre element itself should have language info from rehypePrettyCode
+          // Check various possible attributes where language might be stored
+          let language =
+            node.properties?.["data-language"] || // pre element might have it
+            codeChild.properties["data-language"] || // code element might have it
+            node.properties?.["data-meta"]?.[0] || // meta might contain language
+            undefined;
+
+          // If we still don't have a language but the code was highlighted,
+          // we can infer it was processed by rehypePrettyCode
+          // Check if code child has any span children with style attributes (syntax highlighting)
+          const hasHighlight =
+            codeChild.children?.some(
+              (child: any) =>
+                child.type === "element" &&
+                child.tagName === "span" &&
+                child.properties?.style
+            ) || codeChild.properties?.style;
+
+          // Ensure data-language is set
+          if (
+            !codeChild.properties["data-language"] ||
+            codeChild.properties["data-language"] === ""
+          ) {
+            codeChild.properties["data-language"] = language || "plaintext";
+          }
+
+          // Also ensure the pre element has it for reference
+          if (!node.properties) {
+            node.properties = {};
+          }
+          if (!node.properties["data-language"]) {
+            node.properties["data-language"] = language || "plaintext";
+          }
+        }
+      }
+
+      // Recursively visit children
+      if (node.children && Array.isArray(node.children)) {
+        node.children.forEach(visit);
+      }
+    };
+
+    visit(tree);
+  };
+}
+
+/**
  * Helper function to extract text content from React children recursively
  */
 function extractTextFromChildren(children: React.ReactNode): string {
@@ -307,14 +374,20 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   },
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => {
     // Extract language from the code child element's data-language attribute
+    // or from the pre element itself (fallback)
     const codeChild = React.Children.toArray(props.children).find(
       (child): child is React.ReactElement =>
         React.isValidElement(child) && child.type === "code"
     );
 
-    const language = codeChild?.props
+    let language = codeChild?.props
       ? ((codeChild.props as any)["data-language"] as string | undefined)
       : undefined;
+
+    // Fallback: check if language is on the pre element itself
+    if (!language && props["data-language" as keyof typeof props]) {
+      language = props["data-language" as keyof typeof props] as string;
+    }
 
     return (
       <CodeBlockWithHeader language={language}>
@@ -629,6 +702,7 @@ export function MDX({
             rehypePlugins: [
               rehypeSlug,
               [rehypePrettyCode, rehypePrettyCodeOptions],
+              rehypeCaptureCodeLanguage, // Capture language from rehypePrettyCode output
               rehypeKatex, // Render math with KaTeX
               rehypeReplaceFootnoteEmoji, // Replace footnote emoji with icon
               [
