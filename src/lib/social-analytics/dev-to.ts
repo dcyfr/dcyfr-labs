@@ -86,10 +86,10 @@ export interface DevToError {
 // ============================================================================
 
 /** DEV.to API base URL */
-const DEV_TO_API_BASE = 'https://dev.to/api';
+const DEV_TO_API_BASE = "https://dev.to/api";
 
 /** Default DEV.to username */
-const DEFAULT_USERNAME = 'dcyfr';
+const DEFAULT_USERNAME = "dcyfr";
 
 /** Rate limit buffer (requests per minute) */
 const RATE_LIMIT = 10;
@@ -120,46 +120,49 @@ export async function fetchDevToArticle(
   // Validate inputs to prevent SSRF - only allow alphanumeric, hyphens, underscores
   const safeUsernamePattern = /^[a-zA-Z0-9_-]+$/;
   const safeSlugPattern = /^[a-zA-Z0-9_-]+$/;
-  
+
   if (!safeUsernamePattern.test(username)) {
-    console.error('[DEV.to] Invalid username format');
+    console.error("[DEV.to] Invalid username format");
     return null;
   }
-  
+
   if (!safeSlugPattern.test(slug)) {
-    console.error('[DEV.to] Invalid slug format');
+    console.error("[DEV.to] Invalid slug format");
     return null;
   }
-  
+
   try {
     // lgtm[js/request-forgery] - URL is constructed from validated inputs (username/slug validated above)
     // using strict alphanumeric pattern. DEV_TO_API_BASE is a hardcoded constant.
-    const response = await fetch(`${DEV_TO_API_BASE}/articles/${username}/${slug}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        // No API key needed for public article endpoints
-      },
-      next: {
-        revalidate: 3600, // Cache for 1 hour
-      },
-    });
+    const response = await fetch(
+      `${DEV_TO_API_BASE}/articles/${username}/${slug}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          // No API key needed for public article endpoints
+        },
+        next: {
+          revalidate: 3600, // Cache for 1 hour
+        },
+      }
+    );
 
     if (!response.ok) {
       if (response.status === 404) {
         // Inputs already validated above, safe to log
-        console.warn('[DEV.to] Article not found:', { username, slug });
+        console.warn("[DEV.to] Article not found:", { username, slug });
         return null;
       }
 
       const error = await response.text();
-      console.error('[DEV.to] API error:', { status: response.status, error });
+      console.error("[DEV.to] API error:", { status: response.status, error });
       return null;
     }
 
     const data = await response.json();
     return data as DevToArticle;
   } catch (error) {
-    console.error('[DEV.to] Fetch error:', error);
+    console.error("[DEV.to] Fetch error:", error);
     return null;
   }
 }
@@ -254,7 +257,7 @@ export async function fetchDevToMetricsBatch(
     // Wait 60 seconds before next batch (rate limit)
     if (i + batchSize < articles.length) {
       console.warn(`[DEV.to] Rate limit wait: 60 seconds...`);
-      await new Promise(resolve => setTimeout(resolve, 60000));
+      await new Promise((resolve) => setTimeout(resolve, 60000));
     }
   }
 

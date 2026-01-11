@@ -126,7 +126,8 @@ async function checkUrlServer(
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     // lgtm[js/file-access-to-http] - URLs come from trusted MCP server configuration loaded from
     // version-controlled .vscode/mcp.json file, not user input. Build-time CI utility only.
-    const res = await fetch(url, { // lgtm[js/file-access-to-http]
+    const res = await fetch(url, {
+      // lgtm[js/file-access-to-http]
       method: "HEAD",
       headers,
       signal: controller.signal,
@@ -139,7 +140,8 @@ async function checkUrlServer(
       const timer2 = setTimeout(() => controller2.abort(), timeoutMs * 2);
       // lgtm[js/file-access-to-http] - Same as above: URLs from trusted MCP server config,
       // never from user input. Fallback for servers that don't support HEAD method.
-      const res2 = await fetch(url, { // lgtm[js/file-access-to-http]
+      const res2 = await fetch(url, {
+        // lgtm[js/file-access-to-http]
         method: "GET",
         headers,
         signal: controller2.signal,
@@ -188,7 +190,8 @@ async function checkUrlServer(
       const timer3 = setTimeout(() => controller3.abort(), timeoutMs * 2);
       // lgtm[js/file-access-to-http] - Same as above: URLs from trusted MCP server config,
       // never from user input. Second-level fallback when HEAD/GET timeout.
-      const res3 = await fetch(url, { // lgtm[js/file-access-to-http]
+      const res3 = await fetch(url, {
+        // lgtm[js/file-access-to-http]
         method: "GET",
         headers,
         signal: controller3.signal,
