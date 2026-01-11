@@ -69,7 +69,7 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 site-header mt-0 md:mt-4",
+        "sticky top-0 z-40 site-header",
         ANIMATION.duration.fast,
         hasScrolled
           ? "backdrop-blur supports-backdrop-filter:bg-background/95 border-b"

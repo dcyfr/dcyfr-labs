@@ -7,6 +7,33 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
 
 **Breaking changes** are marked with ⚠️ BREAKING in the version header.
 
+## [2026.01.11]
+
+### Added
+
+- **Environment Variable Documentation** - Comprehensive setup for academic research and AI development tools
+  - `SEMANTIC_SCHOLAR_API_KEY` documentation for academic research and citation analysis
+  - Multiple AI provider API keys (OpenAI, Groq, Google, etc.) for multi-provider fallback via OpenCode.ai
+  - Advanced setup instructions in `.env.example`
+
+### Changed
+
+- **DCYFR Agent Documentation Overhaul** - Major improvements to `.github/agents/DCYFR.agent.md`
+  - Expanded tool support including arxiv, octocode, and dcyfr-\* modules
+  - Updated references to core patterns, enforcement rules, and learning resources
+  - Clarified best practices for component patterns, design tokens, API routes, and testing
+  - Added explicit guidance prohibiting emojis in public content with React icon requirements
+  - Updated all documentation links to point to new or reorganized locations
+  - Enhanced DCYFR philosophy section emphasizing consistency, validation, and test-driven development
+- Updated `.github/ISSUE_TEMPLATE/gitleaks-critical-secret.md` to reference new PI/PII policy documentation location
+- Improved formatting and clarity of automated workflow messages in security templates
+
+### Removed
+
+- **Pre-commit Hook Removal** - Removed `.githooks/pre-commit` script
+  - Previously enforced documentation governance checks, sensitive file detection, and pre-commit validations
+  - Decision made to streamline local development workflow
+
 ## [2026.01.05]
 
 ### Added
@@ -42,6 +69,7 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
 ## [2026.01.02]
 
 ### Added
+
 - **Bookmark/Reading List Feature** - Complete bookmark functionality for blog posts
   - `useBookmarks` hook with localStorage persistence and cross-tab sync
   - `BookmarkButton` component for all post layouts (grid, list, magazine, compact)
@@ -53,11 +81,12 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
 - Production readiness validation and deployment runbook
 
 ### Changed
+
 - Updated testing documentation to reflect 99.5% pass rate (1339/1346 tests)
 - Clarified that 7 "failing" tests are strategic skips, not failures
 - Enhanced deployment checklist with pre/post production deployment steps
 - Updated environment variables documentation for December 2025
- - Temporarily disabled Vercel BotID in `/api/contact` due to false positives; added `ENABLE_BOTID` env var to toggle check and added tests + documentation to re-enable safely when Vercel configuration validated
+- Temporarily disabled Vercel BotID in `/api/contact` due to false positives; added `ENABLE_BOTID` env var to toggle check and added tests + documentation to re-enable safely when Vercel configuration validated
 - Improve robustness of `security-advisory-monitor`:
   - Implemented fetch helper with exponential backoff and special-case handling for 422 responses
   - Added a small delay between package requests to reduce spam/validation errors from the GHSA API
@@ -80,12 +109,14 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
 ### Validated
 
 **Testing:**
+
 - All 198 integration tests passing
 - All critical E2E tests passing (with strategic WebKit skips)
 - All unit tests passing (with 5 skipped tests for component refactors)
 - Test health automation active (weekly reports)
 
 **Deployment Infrastructure:**
+
 - Vercel deployment workflow configured and validated
 - Preview deployments tested and working
 - Environment variable requirements documented
@@ -93,6 +124,7 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
 - Monitoring integrations ready (Sentry, Vercel Analytics, Inngest)
 
 **Documentation:**
+
 - Production deployment runbook created
 - Test skip strategy documented
 - Environment variables guide updated
@@ -108,11 +140,13 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
 ## [2025.12.06]
 
 ### Added
+
 - Repository documentation templates (PR template, issue templates, code of conduct)
 - MIT license
 - Vercel Blob integration plan for future asset storage
 
 ### Changed
+
 - Updated all repository documentation to reflect Phase 4 completion
 - Updated test metrics across documentation (1339/1346 tests passing, 99.5%)
 - Optimized GitHub Actions workflows with concurrency and timeouts
@@ -127,6 +161,7 @@ Production-ready Next.js 16 portfolio with comprehensive testing, security, and 
 ### Added
 
 **Core Features:**
+
 - MDX-powered blog system with syntax highlighting, TOC, and related posts
 - Real-time analytics with Redis and Inngest background jobs
 - GitHub contribution heatmap integration
@@ -135,6 +170,7 @@ Production-ready Next.js 16 portfolio with comprehensive testing, security, and 
 - Dark mode support with next-themes
 
 **Testing Infrastructure:**
+
 - 1185/1197 tests passing (99.0% pass rate)
 - 198 integration tests
 - Unit tests with Vitest and Testing Library
@@ -142,6 +178,7 @@ Production-ready Next.js 16 portfolio with comprehensive testing, security, and 
 - Test coverage reporting
 
 **Security Features:**
+
 - Content Security Policy (CSP) with nonce-based implementation
 - Redis-backed rate limiting with in-memory fallback
 - Input validation on all API endpoints
@@ -149,6 +186,7 @@ Production-ready Next.js 16 portfolio with comprehensive testing, security, and 
 - Zero security vulnerabilities (CodeQL + Dependabot)
 
 **Performance Optimizations:**
+
 - Server components by default
 - Image optimization with Next.js Image
 - Edge caching and ISR
@@ -156,6 +194,7 @@ Production-ready Next.js 16 portfolio with comprehensive testing, security, and 
 - Core Web Vitals monitoring
 
 **Developer Experience:**
+
 - Comprehensive documentation (14 directories, 300+ files)
 - AI contributor guides (Claude Code + GitHub Copilot)
 - Design system with reusable components and design tokens
@@ -163,6 +202,7 @@ Production-ready Next.js 16 portfolio with comprehensive testing, security, and 
 - ESLint + Prettier configuration
 
 **Documentation:**
+
 - Architecture guides and migration patterns
 - Component documentation (26 components)
 - Security implementation guides
@@ -184,6 +224,7 @@ Production-ready Next.js 16 portfolio with comprehensive testing, security, and 
 ### Dependencies
 
 **Major Version Updates (Nov 26, 2025):**
+
 - Next.js 16.0.3 → 16.0.4
 - Vitest 4.0.10 → 4.0.14
 - @playwright/test 1.56.1 → 1.57.0
