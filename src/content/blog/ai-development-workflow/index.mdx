@@ -3,15 +3,15 @@ id: "post-20251111-446fbfc7"
 title: "Building with AI"
 subtitle: "How Model Context Protocol is Transforming AI-Assisted Development"
 summary: "Exploring the Model Context Protocol (MCP) and how it's enabling new patterns for AI-assisted development with practical examples from real projects."
-authors: ["drew","dcyfr"]
+authors: ["drew", "dcyfr"]
 publishedAt: "2025-11-11T12:00:00Z"
 updatedAt: "2025-11-18T12:00:00Z"
 category: "AI"
 tags: ["AI", "MCP", "Developer Tools", "Productivity", "Architecture"]
 image:
   url: "/blog/ai-development-workflow/assets/hero.webp"
-  alt: "AI Development Workflow Hero Image"
-  caption: "AI Development Workflow Hero Image"
+  alt: "Illustration of AI-assisted development workflow with interconnected tools and data sources"
+  caption: "Building with AI"
   credit: "Perplexity Labs"
   width: 1200
   height: 630
@@ -38,6 +38,7 @@ MCP follows a client-server model:
 <MCPArchitecture height={300} />
 
 **Key benefits:**
+
 - **Security**: Credentials stay server-side; AI never sees your tokens
 - **Standardization**: One protocol for many tools
 - **Composability**: Mix and match servers for your workflow
@@ -51,11 +52,13 @@ This portfolio uses several MCP servers in the development workflow. Here's the 
 
 ```markdown
 ### Core MCPs
+
 - **Memory** - Maintains project context across conversations
 - **Sequential Thinking** - Complex problem-solving and planning
 - **Context7** - Documentation lookup for libraries
 
-### Integration MCPs  
+### Integration MCPs
+
 - **Sentry** - Production error monitoring
 - **Vercel** - Deployment management and build logs
 - **GitHub** - Repository operations and PR management
@@ -70,12 +73,12 @@ Instead of copying error traces into chat, the AI can directly query production 
 ```typescript
 // AI can analyze real production errors
 const issues = await mcp_sentry_search_issues({
-  naturalLanguageQuery: "database errors from last hour"
+  naturalLanguageQuery: "database errors from last hour",
 });
 
 // Then get detailed stack traces
 const details = await mcp_sentry_get_issue_details({
-  issueId: "PROJECT-123"
+  issueId: "PROJECT-123",
 });
 ```
 
@@ -89,7 +92,7 @@ When working with a library, the AI can fetch current docs:
 // Get up-to-date Next.js documentation
 const docs = await mcp_context7_get_library_docs({
   context7CompatibleLibraryID: "/vercel/next.js",
-  topic: "server actions"
+  topic: "server actions",
 });
 ```
 
@@ -103,13 +106,13 @@ The AI can check build status and logs:
 // Check deployment status
 const deployment = await mcp_vercel_get_deployment({
   idOrUrl: "my-app-abc123.vercel.app",
-  teamId: "team_xyz"
+  teamId: "team_xyz",
 });
 
 // Get build logs if something fails
 const logs = await mcp_vercel_get_deployment_build_logs({
   idOrUrl: "my-app-abc123.vercel.app",
-  teamId: "team_xyz"
+  teamId: "team_xyz",
 });
 ```
 
@@ -189,10 +192,10 @@ await mcp_memory_create_entities({
       observations: [
         "Uses MDX with next-mdx-remote",
         "Syntax highlighting via Shiki",
-        "View counts stored in Redis"
-      ]
-    }
-  ]
+        "View counts stored in Redis",
+      ],
+    },
+  ],
 });
 ```
 
@@ -208,7 +211,7 @@ await mcp_thinking_sequentialthinking({
   thought: "First, analyze the current rate limiting implementation...",
   thoughtNumber: 1,
   totalThoughts: 5,
-  nextThoughtNeeded: true
+  nextThoughtNeeded: true,
 });
 ```
 
@@ -221,7 +224,7 @@ Never upload credentials or sensitive files. MCP filesystem servers let AI read 
 ```typescript
 // AI reads local files securely
 const config = await mcp_filesystem_read_file({
-  path: "./.env.local"
+  path: "./.env.local",
 });
 ```
 
@@ -234,6 +237,7 @@ The file contents stay on your machine.
 Here's what a typical workflow looks like:
 
 **Before MCP:**
+
 1. Check production errors in Sentry (browser)
 2. Copy error message
 3. Search codebase for relevant files
@@ -244,6 +248,7 @@ Here's what a typical workflow looks like:
 8. Iterate...
 
 **With MCP:**
+
 1. Ask AI: "What's causing the database errors in production?"
 2. AI fetches errors from Sentry, finds relevant code, checks docs
 3. Get specific fix with context from your actual system
@@ -335,10 +340,14 @@ If you're building AI tools or just trying to improve your development workflow,
 
 ---
 
-*This post was written with assistance from GitHub Copilot using MCP servers for Memory, Sequential Thinking, and Context7 documentation lookup. The irony is not lost on me.*
+_This post was written with assistance from GitHub Copilot using MCP servers for Memory, Sequential Thinking, and Context7 documentation lookup. The irony is not lost on me._
 
 [^mcp-intro]: [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) - Anthropic
+
 [^mcp-wiki]: [Model Context Protocol - Wikipedia](https://en.wikipedia.org/wiki/Model_Context_Protocol)
+
 [^mcp-code-execution]: [Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp) - Anthropic Engineering
+
 [^mcp-github]: [MCP GitHub Organization](https://github.com/modelcontextprotocol)
+
 [^nextjs-15]: [Next.js 15 Release Notes](https://nextjs.org/blog/next-15)
