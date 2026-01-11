@@ -26,7 +26,7 @@ Sentry.init({
     if (
       name.includes("/api/contact") ||
       name.includes("/api/csp-report") ||
-      op === "http.server" && name.includes("POST")
+      (op === "http.server" && name.includes("POST"))
     ) {
       return 0.2;
     }
@@ -41,11 +41,7 @@ Sentry.init({
     }
 
     // High-traffic pages: sample at 5%
-    if (
-      name === "/" ||
-      name === "/blog" ||
-      name.startsWith("/blog/")
-    ) {
+    if (name === "/" || name === "/blog" || name.startsWith("/blog/")) {
       return 0.05;
     }
 

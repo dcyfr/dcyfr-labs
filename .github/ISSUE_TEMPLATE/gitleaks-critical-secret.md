@@ -73,6 +73,7 @@ See the workflow run link below for detailed list of files and line numbers.
 ### Important Notes
 
 🚨 **Do NOT bypass this detection via allowlist without:**
+
 1. Verifying the secret is truly a placeholder/example (not real credentials)
 2. Adding detailed justification in `.pii-allowlist.json` with specific reason (e.g., "Placeholder AWS credentials for API documentation")
 3. Discussing with security contact if unsure
@@ -81,4 +82,4 @@ See the workflow run link below for detailed list of files and line numbers.
 
 ---
 
-*Automated by `pii-scan` workflow • See workflow run link below for details*
+_Automated by `pii-scan` workflow • See workflow run link below for details_
