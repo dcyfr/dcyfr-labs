@@ -13,6 +13,7 @@ export { SearchHighlight } from "./SearchHighlight";
 export { ActivityHeatmapCalendar } from "./ActivityHeatmapCalendar";
 export { VirtualActivityFeed } from "./VirtualActivityFeed";
 export { ThreadedActivityFeed } from "./ThreadedActivityFeed";
+export { ThreadedActivityGroup } from "./ThreadedActivityGroup";
 export { BookmarkManager } from "./BookmarkManager";
 export { EmbedGenerator } from "./EmbedGenerator";
 export { TopicCloud } from "./TopicCloud";

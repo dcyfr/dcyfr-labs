@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 import { createClient } from 'redis';
+import { config } from 'dotenv';
+
+config({ path: '.env.local' });
 
 async function clearActivityCache() {
   const redisUrl = process.env.REDIS_URL;
