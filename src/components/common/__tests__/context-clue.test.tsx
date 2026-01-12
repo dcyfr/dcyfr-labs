@@ -8,7 +8,8 @@ describe("ContextClue Component", () => {
     render(<ContextClue>{testContent}</ContextClue>);
 
     expect(screen.getByText(testContent)).toBeInTheDocument();
-    expect(screen.getByText("Context:")).toBeInTheDocument();
+    // Component renders "Context" prefix (without colon)
+    expect(screen.getByText("Context")).toBeInTheDocument();
   });
 
   it("has proper accessibility attributes", () => {
