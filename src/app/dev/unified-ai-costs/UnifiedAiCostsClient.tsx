@@ -56,7 +56,7 @@ export default function UnifiedAiCostsClient() {
     lastRefresh: new Date(),
   });
 
-  // Fetch cost data
+  // Fetch cost data (used for manual refresh)
   const fetchData = async (period: TimeRange) => {
     try {
       setState((prev) => ({ ...prev, loading: true, error: null }));
@@ -80,11 +80,45 @@ export default function UnifiedAiCostsClient() {
     }
   };
 
-  // Initial fetch and auto-refresh
+  // Real-time updates via Server-Sent Events
   useEffect(() => {
-    fetchData(state.period);
-    const interval = setInterval(() => fetchData(state.period), 60000);
-    return () => clearInterval(interval);
+    // Create EventSource for real-time streaming
+    const eventSource = new EventSource(
+      `/api/dev/ai-costs/unified/stream?period=${state.period}`,
+    );
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data: UnifiedCostData = JSON.parse(event.data);
+        setState((prev) => ({
+          ...prev,
+          data,
+          loading: false,
+          error: null,
+          lastRefresh: new Date(),
+        }));
+      } catch (error) {
+        setState((prev) => ({
+          ...prev,
+          error: "Failed to parse update",
+          loading: false,
+        }));
+      }
+    };
+
+    eventSource.onerror = () => {
+      setState((prev) => ({
+        ...prev,
+        error: "Connection lost. Reconnecting...",
+        loading: false,
+      }));
+      eventSource.close();
+    };
+
+    // Cleanup on unmount or period change
+    return () => {
+      eventSource.close();
+    };
   }, [state.period]);
 
   // Manual refresh handler
