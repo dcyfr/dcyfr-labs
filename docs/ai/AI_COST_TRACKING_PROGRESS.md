@@ -10,11 +10,11 @@
 
 ### Unified AI Cost Dashboard
 A comprehensive tracking and analytics system for all AI tooling used in dcyfr-labs:
-- **Claude Code** (Sonnet/Haiku) - Premium tier ($480/month budget, $3 per 1M tokens)
-- **GitHub Copilot** - Included subscription ($20/month flat fee)
-- **OpenCode.ai** - Free GitHub Copilot models ($20 fallback budget)
+- **Claude Pro** - Primary AI assistant ($17/month billed annually)
+- **GitHub Pro** - Development tools with unlimited Copilot models ($4/month)
+- **OpenCode.ai** - Multi-provider fallback using included GitHub Pro models (GPT-5-mini, Raptor - unlimited, $0 additional cost)
 
-**Total Monthly Budget:** $520
+**Total Monthly Budget:** $21
 
 ---
 

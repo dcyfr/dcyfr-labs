@@ -4,13 +4,13 @@
 
 The **Unified AI Cost Dashboard** combines cost and usage metrics from all three AI sources into a single, comprehensive view:
 
-- **Claude Code** - Primary development agent (tracked via telemetry system)
-- **GitHub Copilot** - Secondary real-time assistant in VS Code (included with subscription)
-- **OpenCode.ai** - Fallback multi-provider system (GitHub Copilot integration, 16K context, $0 cost)
+- **Claude Pro** - Primary AI assistant ($17/month billed annually)
+- **GitHub Pro** - Development tools including unlimited Copilot models ($4/month)
+- **OpenCode.ai** - Multi-provider fallback using included GitHub Pro models (GPT-5-mini, Raptor - unlimited, $0 additional cost)
 
 This dashboard helps you:
 - Track spending across all AI tools
-- Optimize cost allocation ($480 Claude + $20 Copilot + $20 OpenCode = $520/month budget)
+- Optimize cost allocation ($17 Claude Pro + $4 GitHub Pro = $21/month total)
 - Identify cost optimization opportunities
 - Monitor quality metrics and compliance
 - Make data-driven decisions about tool usage
@@ -67,27 +67,27 @@ Unified AI Cost Dashboard (30d)
 
 Summary
 ----------------------------------------
-Total Cost:    $20.00 (3.8% of budget)
-Sessions:       2 ($10.00/session)
+Total Cost:    $21.00 (100% of budget)
+Sessions:       2 ($10.50/session)
 Tokens:         0K (0.0K/session)
 Most Used:      OPENCODE
-Est. Monthly:    $600.00
+Est. Monthly:    $21.00
 
-Claude Code
+Claude Pro
 ----------------------------------------
   Sessions:    0
   Success:     0.0%
   Tokens:      0
-  Cost:        $0.00
+  Cost:        $17.00 (flat fee)
   Token Compliance: 0.0%
   Test Pass Rate:  0.0%
 
-GitHub Copilot
+GitHub Pro
 ----------------------------------------
   Sessions:    1
   Tokens:      0
-  Monthly:     $20.00 (flat fee)
-  Per Session: $20.00
+  Monthly:     $4.00 (flat fee)
+  Per Session: $4.00
   Quality:     5.0/5
   Violations:  0.0%
 
@@ -95,15 +95,15 @@ OpenCode.ai
 ----------------------------------------
   Sessions:    1
   Tokens:      0
-  Cost:        $0.00 (free GitHub models)
-  Free Models: $0.00
+  Cost:        $0.00 (included GitHub Pro models)
+  Free Models: $0.00 (GPT-5-mini, Raptor)
   Premium:     $0.00
   Quality:     5.0/5
 
 Cost Breakdown by Source
 ----------------------------------------
-  Claude Code          $0.00
-  GitHub Copilot       $20.00
+  Claude Pro           $17.00
+  GitHub Pro           $4.00
   OpenCode             $0.00
 ```
 
@@ -131,22 +131,22 @@ curl http://localhost:3000/api/dev/ai-costs/unified?period=all
   "timestamp": "2026-01-12T07:16:00.514Z",
   "period": "30d",
   "sources": {
-    "claudeCode": { /* Claude Code metrics */ },
-    "copilotVSCode": { /* GitHub Copilot metrics */ },
+    "claudeCode": { /* Claude Pro metrics */ },
+    "copilotVSCode": { /* GitHub Pro metrics */ },
     "opencode": { /* OpenCode.ai metrics */ }
   },
   "summary": {
-    "totalCost": 20.00,
+    "totalCost": 21.00,
     "totalSessions": 2,
     "totalTokens": 0,
-    "averageCostPerSession": 10.00,
-    "monthlyBudgetUsed": 3.85,
-    "estimatedMonthlyTotal": 600.00,
+    "averageCostPerSession": 10.50,
+    "monthlyBudgetUsed": 100.00,
+    "estimatedMonthlyTotal": 21.00,
     "costBySource": {
-      "claude-code": 0.00,
-      "copilot-vscode": 20.00,
+      "claude-code": 17.00,
+      "copilot-vscode": 4.00,
       "opencode": 0.00,
-      "all": 20.00
+      "all": 21.00
     }
   },
   "trends": { /* Historical spending trends */ },
@@ -174,21 +174,21 @@ curl http://localhost:3000/api/dev/ai-costs/unified?period=all
 Cost = Total Tokens / 1,000,000 × $3.00
 ```
 
-### GitHub Copilot
+### GitHub Pro
 
 **Sources:** OpenCode session logs (`.opencode/.session-log.jsonl`)
 
 **Key Metrics:**
 - **Sessions** - Number of Copilot invocations
 - **Total Tokens** - Estimated based on code snippet length
-- **Cost Per Month** - Flat $20/month subscription
+- **Cost Per Month** - Flat $4/month subscription
 - **Cost Per Session** - Monthly cost divided by session count
 - **Quality Rating** - 1-5 scale (estimated from violation rate)
 - **Violation Rate** - % of sessions with DCYFR compliance violations
 
 **Cost Calculation:**
 ```
-Cost = $20.00 / Month (flat rate, regardless of usage)
+Cost = $4.00 / Month (flat rate, regardless of usage)
 ```
 
 ### OpenCode.ai
@@ -198,16 +198,16 @@ Cost = $20.00 / Month (flat rate, regardless of usage)
 **Key Metrics:**
 - **Sessions** - Number of OpenCode invocations
 - **Total Tokens** - Estimated from text length
-- **Free Models** - Tokens using GitHub Copilot models ($0 cost)
-- **Premium Models** - Tokens using Claude Sonnet ($3/1M)
-- **Estimated Cost** - Only charged for premium models
+- **Free Models** - Tokens using GitHub Pro models ($0 cost - unlimited)
+- **Premium Models** - Tokens using Claude Pro (included in subscription)
+- **Estimated Cost** - $0 (all models included in subscriptions)
 - **Quality Rating** - 1-5 scale (user-provided)
 
 **Cost Calculation:**
 ```
-Free Models (GPT-5 Mini, Raptor Mini) = $0.00
-Premium Models (Claude) = Tokens / 1,000,000 × $3.00
-Total = Free + Premium
+Free Models (GPT-5-mini, Raptor) = $0.00 (included in GitHub Pro)
+Premium Models (Claude Pro) = $0.00 (included in subscription)
+Total = $0.00
 ```
 
 ## Budget Tracking
@@ -215,10 +215,10 @@ Total = Free + Premium
 Your monthly budget allocation:
 
 ```
-Total Monthly Budget: $520.00
-  ├─ Claude Code:    $480.00 (92.3%)
-  ├─ GitHub Copilot: $20.00  (3.8%)
-  └─ OpenCode.ai:    $20.00  (3.8%)
+Total Monthly Budget: $21.00
+  ├─ Claude Pro:     $17.00 (81.0%)
+  ├─ GitHub Pro:     $4.00  (19.0%)
+  └─ OpenCode.ai:    $0.00  (0.0% - included models)
 ```
 
 **Budget Status Indicators:**
