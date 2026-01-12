@@ -11,7 +11,7 @@
    - **Web UI:** Open `http://localhost:3000/dev/unified-ai-costs`
    - **Terminal:** Run `npm run ai:costs`
 
-3. **That's it!** The dashboard displays live cost data across Claude Code, GitHub Copilot, and OpenCode.
+3. **That's it!** The dashboard displays live cost data across Claude Pro, GitHub Pro, and OpenCode.
 
 ## Common Tasks
 
@@ -47,23 +47,23 @@ The dashboard shows:
 - **Total Cost** - Sum of all AI tool spending
 - **Sessions** - Number of times each tool was used
 - **Tokens** - Language model tokens consumed
-- **Budget Used** - Percentage of $520/month budget
+- **Budget Used** - Percentage of $21/month budget
 - **Recommendations** - Cost optimization suggestions
 
 ## Key Metrics at a Glance
 
 | Tool | Cost Model | Budget |
 |------|-----------|--------|
-| Claude Code | $3 per 1M tokens | $480/mo |
-| GitHub Copilot | Flat $20/month | $20/mo |
-| OpenCode.ai | $0 (free models) | $20/mo |
-| **Total** | **Mix** | **$520/mo** |
+| Claude Pro | Flat $17/month (annual) | $17/mo |
+| GitHub Pro | Flat $4/month | $4/mo |
+| OpenCode.ai | $0 (included models) | $0/mo |
+| **Total** | **Fixed** | **$21/mo** |
 
 ## Cost Optimization Tips
 
-1. **Use OpenCode for routine work** → Saves $3.00 vs Claude
-2. **Reserve Claude for complex tasks** → Higher quality output
-3. **Monitor violation rates** → Lower = better cost efficiency
+1. **Use OpenCode for routine work** → $0 cost (included GitHub Pro models)
+2. **Reserve Claude for complex tasks** → Higher quality, included in subscription
+3. **Monitor violation rates** → Lower = better efficiency
 4. **Check recommendations** → Dashboard suggests improvements
 
 ## Dashboard Tour
@@ -94,25 +94,25 @@ Unified AI Cost Dashboard (30d)
 ═══════════════════════════════════════════════════════════
 Summary
 ───────────────────────────────
-Total Cost:    $20.00 (3.8% of budget)
-Sessions:       2 ($10.00/session)
+Total Cost:    $21.00 (100% of budget)
+Sessions:       2 ($10.50/session)
 Tokens:         0K (0.0K/session)
 Most Used:      OPENCODE
-Est. Monthly:    $600.00
+Est. Monthly:    $21.00
 
-Claude Code
+Claude Pro
 ───────────────────────────────
   Sessions:    0
   Success:     0.0%
   Tokens:      0
-  Cost:        $0.00
+  Cost:        $17.00 (flat fee)
 
 [... more details ...]
 
 Recommendations
 ───────────────────────────────
 ✓ OpenCode Optimized for Cost
-  All sessions use free models. Continue this strategy.
+  All sessions use included models. Continue this strategy.
 ```
 
 ## Files & Locations
@@ -142,7 +142,7 @@ Recommendations
 ## Next Steps
 
 1. **Monitor your costs** - Check dashboard weekly
-2. **Set budget alerts** - Track spending against $520/mo limit
+2. **Set budget alerts** - Track spending against $21/mo fixed cost
 3. **Review recommendations** - Implement cost optimizations
 4. **Export reports** - Archive monthly CSV for analysis
 
