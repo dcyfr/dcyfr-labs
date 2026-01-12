@@ -109,6 +109,7 @@
     "ai:costs:export:json": "node scripts/unified-ai-costs.mjs export:json",
     "ai:costs:export:csv": "node scripts/unified-ai-costs.mjs export:csv",
     "ai:costs:help": "node scripts/unified-ai-costs.mjs help",
+    "ai:costs:archive": "node scripts/archive-ai-costs.mjs",
     "session:save": "bash scripts/save-session-state.sh",
     "session:restore": "bash scripts/restore-session-state.sh",
     "session:handoff": "bash .opencode/scripts/session-handoff.sh",
