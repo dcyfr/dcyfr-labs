@@ -67,7 +67,7 @@
       ],
       "series": null,
       "publishedAt": "2025-12-19T12:00:00Z",
-      "readingTime": 21,
+      "readingTime": 20,
       "url": "/blog/owasp-top-10-agentic-ai"
     },
     {
@@ -125,7 +125,7 @@
       "series": null,
       "publishedAt": "2025-11-11T12:00:00Z",
       "readingTime": 5,
-      "url": "/blog/ai-development-workflow"
+      "url": "/blog/building-with-ai"
     },
     {
       "id": "post-20251109-7c4f3e2a",
@@ -183,7 +183,7 @@
       "id": "post-20200108-647bfe00",
       "title": "Code Examples & Syntax Highlighting",
       "summary": "Complete showcase of syntax highlighting with code examples in 20+ programming languages supported by Shiki, featuring React 19 and Next.js 16 patterns.",
-      "content": "This page showcases syntax highlighting for code examples across all major programming languages supported by Shiki via . Code blocks automatically receive theme-aware syntax highlighting with support for light and dark modes. --- TypeScript Complete TypeScript examples with types, interfaces, and generics: --- React & TSX React components with TypeScript, React 19 features, and modern hooks: --- JavaScript Modern JavaScript with ES6+ features: github-light github-dark-dimmed Examples: - for Pyt",
+      "content": "This page showcases syntax highlighting for code examples across all major programming languages supported by Shiki via . Code blocks automatically receive theme-aware syntax highlighting with support for light and dark modes. --- TypeScript Complete TypeScript examples with types, interfaces, and generics: --- React & TSX React components with TypeScript, React 19 features, and modern hooks: --- JavaScript Modern JavaScript with ES6+ features: --- Python Python with decorators, type hints, and ",
       "tags": [
         "Code",
         "Syntax Highlighting",
@@ -276,5 +276,5 @@
     "Features",
     "Portfolio"
   ],
-  "generatedAt": "2026-01-11T14:04:57.821Z"
+  "generatedAt": "2026-01-12T01:52:07.560Z"
 }

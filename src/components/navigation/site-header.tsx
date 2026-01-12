@@ -105,9 +105,9 @@ export function SiteHeader() {
           aria-label="DCYFR Labs Home"
         >
           <ThemeAwareLogo
-            width={40}
-            height={40}
-            className="w-[clamp(2rem,2.5vw+1.25rem,2rem)] h-[clamp(2rem,2.5vw+1.25rem,2rem)] rounded-full"
+            width={28}
+            height={28}
+            className="w-[clamp(1.75rem,2vw+1rem,1.75rem)] h-[clamp(1.75rem,2vw+1rem,1.75rem)] rounded-full"
           />
         </Link>
 

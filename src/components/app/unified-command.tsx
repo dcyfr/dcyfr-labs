@@ -29,14 +29,9 @@ import {
   BookOpen,
   Calendar,
   Home,
-  Briefcase,
-  User,
-  Rss,
   Moon,
   Sun,
   Monitor,
-  Settings,
-  Settings2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
@@ -114,7 +109,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
     }
     return [];
   });
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTags] = useState<string[]>([]);
 
   // Get reading progress for "Continue Reading"
   const { inProgress } = useReadingProgressList({
@@ -182,19 +177,6 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
       }, 0);
     }
   }, [open]);
-
-  // Theme toggle
-  const toggleTheme = useCallback(() => {
-    const html = document.documentElement;
-    const currentTheme = html.classList.contains("dark") ? "dark" : "light";
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-
-    html.classList.remove("light", "dark");
-    html.classList.add(newTheme);
-    localStorage.setItem("theme", newTheme);
-
-    onOpenChange(false);
-  }, [onOpenChange]);
 
   // Save search to history
   const saveSearch = useCallback((query: string) => {
@@ -347,7 +329,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
               placeholder="Search posts, navigate, or toggle theme..."
               autoFocus
               className={cn(
-                "flex h-14 w-full bg-transparent py-3 text-sm outline-none",
+                "flex h-14 w-full bg-transparent py-3 text-base outline-none",
                 "placeholder:text-muted-foreground",
                 "disabled:cursor-not-allowed disabled:opacity-50"
               )}

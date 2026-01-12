@@ -1,20 +1,20 @@
-import React from 'react';
-import { LOGO_CONFIG } from '@/lib/logo-config';
+import React from "react";
+import { LOGO_CONFIG } from "@/lib/logo-config";
 
 /**
  * Logo Component - Sparkle/Star SVG
- * 
+ *
  * A reusable SVG logo component that displays a decorative sparkle/star symbol.
  * Supports customizable size, color, and styling through props.
- * 
+ *
  * @example
  * ```tsx
  * // Default usage
  * <Logo />
- * 
+ *
  * // With custom size and color
  * <Logo width={32} height={32} className="text-primary" />
- * 
+ *
  * // Inline with text
  * <span className="flex items-center gap-2">
  *   <Logo width={24} height={24} />
@@ -37,31 +37,31 @@ interface LogoProps extends React.SVGProps<SVGSVGElement> {
 }
 
 export const Logo: React.FC<LogoProps> = ({
-  className = '',
+  className = "",
   style = {},
-  fill = 'currentColor',
+  fill = "currentColor",
   width = LOGO_CONFIG.defaultSize,
   height = LOGO_CONFIG.defaultSize,
   ...props
 }) => {
   return (
     <svg
-        className={className}
-        style={{
-          display: 'inline-block',
-          verticalAlign: 'middle',
-          shapeRendering: 'geometricPrecision',
-          ...style
-        }}
-        fill={fill}
-        width={width}
-        height={height}
-        viewBox={LOGO_CONFIG.viewBox}
-        role="img"
-        aria-label="DCYFR (Decipher) Labs"
-        {...props}
+      className={className}
+      style={{
+        display: "inline-block",
+        verticalAlign: "middle",
+        shapeRendering: "geometricPrecision",
+        ...style,
+      }}
+      fill={fill}
+      width={width}
+      height={height}
+      viewBox={LOGO_CONFIG.viewBox}
+      role="img"
+      aria-label="DCYFR Labs"
+      {...props}
     >
-        <path d={LOGO_CONFIG.path} />
+      <path d={LOGO_CONFIG.path} />
     </svg>
   );
 };

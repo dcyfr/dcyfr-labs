@@ -105,10 +105,11 @@ export function ThreadActions({
     return activityId;
   })();
 
-  // Fetch global engagement counts
-  const { globalLikes, globalBookmarks } = useGlobalEngagementCounts({
+  // Fetch global engagement counts (lazy load to reduce initial API waterfall)
+  const { globalLikes, globalBookmarks, ref: engagementRef } = useGlobalEngagementCounts({
     slug: normalizedId,
     contentType: "activity",
+    lazy: true, // Only fetch when component is visible
   });
 
   // Use useSyncExternalStore for proper client-side hydration without ESLint warnings
@@ -142,6 +143,7 @@ export function ThreadActions({
 
   return (
     <div
+      ref={engagementRef}
       className={cn(
         "flex items-center gap-4",
         isCompact ? "gap-3" : "gap-4",
