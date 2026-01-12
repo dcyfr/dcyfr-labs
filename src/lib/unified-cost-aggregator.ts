@@ -2,9 +2,9 @@
  * Unified AI Cost Aggregator
  *
  * Combines cost and usage data from all AI sources:
- * - Claude Code (sessions tracked via telemetry)
- * - GitHub Copilot/VS Code (tracked via OpenCode)
- * - OpenCode.ai (native tracking)
+ * - Claude Pro ($17/month billed annually)
+ * - GitHub Pro ($4/month)
+ * - OpenCode.ai (unlimited GitHub Pro models - GPT-5-mini, Raptor, etc.)
  *
  * Provides unified view of spending, token usage, and cost efficiency
  */
@@ -53,7 +53,7 @@ export interface ClaudeCodeCost {
 export interface CopilotCost {
   sessions: number;
   totalTokens: number;
-  costPerMonth: number; // Flat $20/month
+  costPerMonth: number; // Flat $4/month for GitHub Pro
   costPerSession: number;
   averageTokensPerSession: number;
   qualityRating: number; // 1-5
@@ -64,11 +64,11 @@ export interface CopilotCost {
 export interface OpencodeCost {
   sessions: number;
   totalTokens: number;
-  estimatedCost: number; // If using premium models
+  estimatedCost: number; // $0 (included unlimited GitHub Pro models)
   costByModel: {
-    'gpt-5-mini': number; // $0 (included)
-    'raptor-mini': number; // $0 (included)
-    'claude-sonnet': number; // $X if used
+    'gpt-5-mini': number; // $0 (included in GitHub Pro)
+    'raptor-mini': number; // $0 (included in GitHub Pro)
+    'claude-sonnet': number; // $0 if using Claude Pro for premium needs
   };
   qualityMetrics: {
     averageQuality: number; // 1-5
@@ -116,10 +116,10 @@ export interface CostRecommendation {
 // ============================================================================
 
 export class UnifiedCostAggregator {
-  private readonly monthlyBudgetClaude = 480; // $480/month for Claude at full usage
-  private readonly monthlyBudgetCopilot = 20; // $20/month flat fee
-  private readonly monthlyBudgetOpencode = 20; // $20/month GitHub Copilot (free models)
-  private readonly monthlyBudgetTotal = 520; // Total budget
+  private readonly monthlyBudgetClaude = 17; // $17/month for Claude Pro (billed annually)
+  private readonly monthlyBudgetCopilot = 4; // $4/month for GitHub Pro
+  private readonly monthlyBudgetOpencode = 0; // $0/month (included unlimited GitHub Pro models)
+  private readonly monthlyBudgetTotal = 21; // Total budget ($17 Claude Pro + $4 GitHub Pro)
 
   /**
    * Get unified cost data across all sources
