@@ -22,12 +22,14 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { ContentType } from "@/lib/engagement-analytics";
 
 export interface GlobalEngagementCountsParams {
   slug: string;
   contentType: ContentType;
+  /** If true, delays fetch until component is visible (reduces initial API load) */
+  lazy?: boolean;
 }
 
 export interface UseGlobalEngagementCountsReturn {
@@ -41,6 +43,8 @@ export interface UseGlobalEngagementCountsReturn {
   error: string | null;
   /** Manually refresh counts */
   refetch: () => Promise<void>;
+  /** Ref to attach to element for lazy loading (only when lazy=true) */
+  ref: React.RefObject<HTMLDivElement | null>;
 }
 
 // In-memory cache for global counts (across component instances)
@@ -57,11 +61,14 @@ const CACHE_TTL = 60 * 1000; // 1 minute
 export function useGlobalEngagementCounts({
   slug,
   contentType,
+  lazy = false,
 }: GlobalEngagementCountsParams): UseGlobalEngagementCountsReturn {
   const [globalLikes, setGlobalLikes] = useState(0);
   const [globalBookmarks, setGlobalBookmarks] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!lazy); // Start as not loading if lazy
   const [error, setError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(!lazy); // Treat as visible if not lazy
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const cacheKey = `${slug}:${contentType}`;
 
@@ -168,10 +175,38 @@ export function useGlobalEngagementCounts({
     }
   }, [slug, contentType, cacheKey]);
 
-  // Fetch counts on mount and when slug/contentType changes
+  // Setup Intersection Observer for lazy loading
   useEffect(() => {
-    fetchCounts();
-  }, [fetchCounts]);
+    if (!lazy || !ref.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !isVisible) {
+          console.warn("[useGlobalEngagementCounts] Element visible, fetching counts:", {
+            slug,
+            contentType,
+          });
+          setIsVisible(true);
+        }
+      },
+      {
+        rootMargin: "100px", // Start fetching slightly before visible
+        threshold: 0.01,
+      }
+    );
+
+    observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, [lazy, slug, contentType, isVisible]);
+
+  // Fetch counts when visible (or immediately if not lazy)
+  useEffect(() => {
+    if (isVisible) {
+      fetchCounts();
+    }
+  }, [isVisible, fetchCounts]);
 
   return {
     globalLikes,
@@ -179,5 +214,6 @@ export function useGlobalEngagementCounts({
     loading,
     error,
     refetch: fetchCounts,
+    ref,
   };
 }

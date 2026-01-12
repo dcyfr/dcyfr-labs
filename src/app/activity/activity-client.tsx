@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { ActivityFilters } from "@/components/activity";
-import { ThreadedActivityFeed } from '@/components/activity';
+import { ActivityFilters, ThreadedActivityGroup } from "@/components/activity";
 import type { ActivityItem, ActivitySource } from "@/lib/activity";
-import { searchActivities, createSearchIndex } from "@/lib/activity";
+import { searchActivities, createSearchIndex, groupActivitiesIntoThreads } from "@/lib/activity";
 import { useBookmarks } from "@/hooks/use-bookmarks";
 import { SPACING, CONTAINER_WIDTHS, CONTAINER_PADDING } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
+import { Alert } from "@/components/common";
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -58,8 +57,8 @@ export function ActivityPageClient({
   }, [deserializedActivities]);
 
 
-  // Filter activities
-  const filteredActivities = useMemo(() => {
+  // Filter activities and group into threads in a single pass
+  const threads = useMemo(() => {
     let result = deserializedActivities;
 
     // Apply bookmarks filter first if active
@@ -103,7 +102,8 @@ export function ActivityPageClient({
       result = result.filter((a) => a.timestamp >= cutoff);
     }
 
-    return result;
+    // Group into threads immediately after filtering
+    return groupActivitiesIntoThreads(result);
   }, [
     deserializedActivities,
     searchQuery,
@@ -127,8 +127,12 @@ export function ActivityPageClient({
     setSelectedSources(sources);
   };
 
-  // No longer split activities into chunks - render as unified timeline
-  // Interruptions are disabled to maintain consistent threading across pages
+  // Calculate filtered activity count from threads
+  const filteredActivityCount = useMemo(() => {
+    return threads.reduce((total, thread) => {
+      return total + 1 + thread.replies.length;
+    }, 0);
+  }, [threads]);
 
   return (
     <>
@@ -142,29 +146,33 @@ export function ActivityPageClient({
         onSearchChange={setSearchQuery}
         availableSources={availableSources}
         totalCount={activities.length}
-        filteredCount={filteredActivities.length}
+        filteredCount={filteredActivityCount}
       />
 
       <div className={`${CONTAINER_WIDTHS.standard} mx-auto ${CONTAINER_PADDING} py-12 md:py-16 pb-24 md:pb-16`}>
-        {/* Timeline Feed - Unified threading across all activities */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          {filteredActivities.length === 0 ? (
-            <div className={cn("text-center py-12", SPACING.content)}>
-              <p className="text-muted-foreground">
-                No activities match your filters
-              </p>
+        {/* Timeline Feed - Render threads directly */}
+        {threads.length === 0 ? (
+          <div className={cn(CONTAINER_WIDTHS.thread, "mx-auto")}>
+            <Alert type="info">No activities match your filters</Alert>
+          </div>
+        ) : (
+          <div className={cn(CONTAINER_WIDTHS.thread, "mx-auto")}>
+            <div className={SPACING.subsection}>
+              {threads.map((thread, index) => (
+                <div key={thread.id}>
+                  <ThreadedActivityGroup thread={thread} />
+                  {/* Divider between threads (except last) */}
+                  {index < threads.length - 1 && (
+                    <div
+                      className="my-12 border-t border-border/50"
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
+              ))}
             </div>
-          ) : (
-            <ThreadedActivityFeed
-              activities={filteredActivities}
-              emptyMessage="No activities match your filters"
-            />
-          )}
-        </motion.div>
+          </div>
+        )}
       </div>
     </>
   );
