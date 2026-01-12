@@ -34,37 +34,7 @@ import {
   transformSearchConsole,
 } from "@/lib/activity/server";
 import type { ActivityItem } from "@/lib/activity";
-import { createClient } from "redis";
-// ============================================================================
-// REDIS CLIENT HELPER
-// ============================================================================
-
-async function getRedisClient() {
-  const redisUrl = process.env.REDIS_URL;
-  if (!redisUrl) return null;
-
-  try {
-    const client = createClient({
-      url: redisUrl,
-      socket: {
-        connectTimeout: 5000,
-        reconnectStrategy: (retries) => {
-          if (retries > 3) return new Error("Max retries exceeded");
-          return Math.min(retries * 100, 3000);
-        },
-      },
-    });
-
-    if (!client.isOpen) {
-      await client.connect();
-    }
-
-    return client;
-  } catch (error) {
-    console.error("[Activity Page] Redis connection failed:", error);
-    return null;
-  }
-}
+import { activityFeedCache } from "@/lib/cache-versioning";
 
 const pageTitle = "Activity";
 const pageDescription =
@@ -100,24 +70,13 @@ export default async function ActivityPage() {
   let error: string | null = null;
 
   try {
-    // STEP 1: Try cache first
-    const redis = await getRedisClient();
-    if (redis) {
-      try {
-        const cached = await redis.get("activity:feed:all");
-        if (cached) {
-          allActivities = JSON.parse(cached);
-          console.warn(
-            `[Activity Page] ✅ Loaded from cache: ${allActivities.length} items`
-          );
-        } else {
-          console.warn("[Activity Page] ⚠️ Cache miss, fetching directly");
-        }
-        await redis.quit();
-      } catch (cacheError) {
-        console.error("[Activity Page] Cache read error:", cacheError);
-        // Continue to direct fetch on cache error
-      }
+    // STEP 1: Try versioned cache first
+    const cached = await activityFeedCache.get("feed:all");
+    if (cached) {
+      allActivities = cached;
+      console.warn(
+        `[Activity Page] ✅ Loaded from versioned cache: ${allActivities.length} items`
+      );
     }
 
     // STEP 2: Fallback to direct fetch if cache miss

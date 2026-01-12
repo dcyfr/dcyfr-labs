@@ -343,7 +343,8 @@ describe("CopyCodeButton Component", () => {
       await flushPromises();
 
        
-      const checkIcon = container.querySelector('[class*="text-emerald-500"]');
+      // Uses semantic design token for success color
+      const checkIcon = container.querySelector('[class*="text-success-light"]');
       expect(checkIcon).toBeInTheDocument();
     });
 
