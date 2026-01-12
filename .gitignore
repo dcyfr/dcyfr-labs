@@ -121,6 +121,9 @@ mcp.json
 .opencode/.cache/
 .opencode/.sessions/
 
+# AI cost archives (historical data snapshots)
+.ai-costs-archive/
+
 # IDE & Editor Configs
 # ========================================
 # VS Code (allow workspace settings, block user settings)
