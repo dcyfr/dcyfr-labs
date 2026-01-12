@@ -59,35 +59,39 @@ describe("TrendingBadge", () => {
       render(<TrendingBadge variant="hot" />);
 
       const badge = screen.getByRole("status");
-      expect(badge).toHaveClass("bg-red-500/10");
-      expect(badge).toHaveClass("text-red-500");
-      expect(badge).toHaveClass("border-red-500/20");
+      // Uses semantic design tokens
+      expect(badge).toHaveClass("bg-error-subtle");
+      expect(badge).toHaveClass("text-error");
+      expect(badge).toHaveClass("border-error-light");
     });
 
     it("should apply Rising badge styling", () => {
       render(<TrendingBadge variant="rising" />);
 
       const badge = screen.getByRole("status");
-      expect(badge).toHaveClass("bg-blue-500/10");
-      expect(badge).toHaveClass("text-blue-500");
-      expect(badge).toHaveClass("border-blue-500/20");
+      // Uses semantic design tokens
+      expect(badge).toHaveClass("bg-info-subtle");
+      expect(badge).toHaveClass("text-info");
+      expect(badge).toHaveClass("border-info-light");
     });
 
     it("should apply Top badge styling", () => {
       render(<TrendingBadge variant="top" />);
 
       const badge = screen.getByRole("status");
-      expect(badge).toHaveClass("bg-neutral-500/10");
-      expect(badge).toHaveClass("border-neutral-500/20");
+      // Uses semantic design tokens
+      expect(badge).toHaveClass("bg-muted");
+      expect(badge).toHaveClass("border-border");
     });
 
     it("should apply Accelerating badge styling", () => {
       render(<TrendingBadge variant="accelerating" />);
 
       const badge = screen.getByRole("status");
-      expect(badge).toHaveClass("bg-purple-500/10");
-      expect(badge).toHaveClass("text-purple-500");
-      expect(badge).toHaveClass("border-purple-500/20");
+      // Uses semantic purple token
+      expect(badge).toHaveClass("bg-semantic-purple/10");
+      expect(badge).toHaveClass("text-semantic-purple");
+      expect(badge).toHaveClass("border-semantic-purple/20");
     });
 
     it("should apply custom className", () => {
@@ -154,7 +158,8 @@ describe("TrendingBadge", () => {
 
       const badge = screen.getByRole("status");
       expect(badge).toHaveClass("border");
-      expect(badge).toHaveClass("border-red-500/20");
+      // Uses semantic design token for error color
+      expect(badge).toHaveClass("border-error-light");
     }); // Verify variant-specific border color
   });
 });
