@@ -426,17 +426,81 @@ For issues or questions:
 3. Check browser console (F12 → Console)
 4. Run CLI commands with `--debug` flag (if available)
 
-## Cost History
+## Cost History & Archival
 
-Keep cost data for auditing:
+### Automated Archival System
+
+The dashboard includes an automated archival system for historical tracking:
+
+**Features:**
+- 📅 **Daily Snapshots**: Captures complete cost data daily
+- 📊 **Monthly Summaries**: Aggregates daily data into monthly reports
+- 🗑️ **90-Day Retention**: Automatically cleans up old daily snapshots
+- ♾️ **Forever Monthly**: Monthly summaries retained indefinitely
+- 🤖 **GitHub Action**: Runs automatically at midnight UTC
+
+**Manual Archival:**
 
 ```bash
-# Archive monthly costs
-npm run ai:costs:export:json 30d archives/costs-$(date +%Y-%m).json
+# Run archival manually
+npm run ai:costs:archive
 
-# Keep CSV for spreadsheet analysis
-npm run ai:costs:export:csv 30d archives/costs-$(date +%Y-%m).csv
+# Archive files stored in:
+# .ai-costs-archive/daily/YYYY-MM-DD.json    (90-day retention)
+# .ai-costs-archive/monthly/YYYY-MM.json     (forever)
 ```
+
+**Archive Structure:**
+
+```json
+// Daily snapshot (.ai-costs-archive/daily/2026-01-12.json)
+{
+  "timestamp": "2026-01-12T00:00:00.000Z",
+  "period": "30d",
+  "sources": {
+    "claudeCode": { /* telemetry data */ },
+    "copilotVSCode": { /* session data */ },
+    "opencode": { /* usage data */ }
+  },
+  "summary": { /* aggregated totals */ },
+  "trends": { /* trend analysis */ },
+  "recommendations": [ /* cost optimization suggestions */ ]
+}
+
+// Monthly summary (.ai-costs-archive/monthly/2026-01.json)
+{
+  "month": "2026-01",
+  "dailySnapshots": [
+    { "date": "2026-01-12", "cost": 20, "sessions": 2, "tokens": 0 }
+  ],
+  "totals": { "cost": 20, "sessions": 2, "tokens": 0 },
+  "averages": { "costPerDay": 20, "sessionsPerDay": 2, "tokensPerDay": 0 }
+}
+```
+
+**GitHub Action:**
+
+The workflow runs daily and:
+1. Archives current cost data
+2. Commits snapshots to repository
+3. Cleans up archives older than 90 days
+4. Generates summary report
+
+**Manual Export (Alternative):**
+
+```bash
+# Export for external analysis
+npm run ai:costs:export:json 30d custom-export.json
+npm run ai:costs:export:csv 30d custom-export.csv
+```
+
+**Using Historical Data:**
+
+The dashboard will automatically use archived data for:
+- 30-day trend charts (coming soon)
+- Month-over-month comparisons (coming soon)
+- Cost forecasting (coming soon)
+- Budget variance analysis (coming soon)
 
 ---
 
@@ -444,3 +508,4 @@ npm run ai:costs:export:csv 30d archives/costs-$(date +%Y-%m).csv
 **Dashboard Status:** ✅ Production Ready
 **API Status:** ✅ Tested and Working
 **CLI Status:** ✅ All Commands Functional
+**Archival System:** ✅ Automated and Active
