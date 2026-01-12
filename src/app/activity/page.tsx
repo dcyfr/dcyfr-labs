@@ -27,8 +27,6 @@ import {
   transformMilestones,
   transformHighEngagementPosts,
   transformCommentMilestones,
-  // transformGitHubActivity, (DISABLED)
-  // transformWebhookGitHubCommits, (DISABLED)
   transformCredlyBadges,
   transformVercelAnalytics,
   transformGitHubTraffic,
@@ -102,26 +100,25 @@ export default async function ActivityPage() {
   let error: string | null = null;
 
   try {
-    // STEP 1: Try cache first (TEMPORARILY DISABLED FOR DEBUG - committed activity removal)
-    // const redis = await getRedisClient();
-    // if (redis) {
-    //   try {
-    //     const cached = await redis.get("activity:feed:all");
-    //     if (cached) {
-    //       allActivities = JSON.parse(cached);
-    //       loadSource = "cache";
-    //       console.warn(
-    //         `[Activity Page] ✅ Loaded from cache: ${allActivities.length} items`
-    //       );
-    //     } else {
-    //       console.warn("[Activity Page] ⚠️ Cache miss, fetching directly");
-    //     }
-    //     await redis.quit();
-    //   } catch (cacheError) {
-    //     console.error("[Activity Page] Cache read error:", cacheError);
-    //     // Continue to direct fetch on cache error
-    //   }
-    // }
+    // STEP 1: Try cache first
+    const redis = await getRedisClient();
+    if (redis) {
+      try {
+        const cached = await redis.get("activity:feed:all");
+        if (cached) {
+          allActivities = JSON.parse(cached);
+          console.warn(
+            `[Activity Page] ✅ Loaded from cache: ${allActivities.length} items`
+          );
+        } else {
+          console.warn("[Activity Page] ⚠️ Cache miss, fetching directly");
+        }
+        await redis.quit();
+      } catch (cacheError) {
+        console.error("[Activity Page] Cache read error:", cacheError);
+        // Continue to direct fetch on cache error
+      }
+    }
 
     // STEP 2: Fallback to direct fetch if cache miss
     if (allActivities.length === 0) {
@@ -189,16 +186,6 @@ export default async function ActivityPage() {
               err
             )
           ),
-
-        // GitHub activity - all (DISABLED)
-        // transformGitHubActivity("dcyfr", ["dcyfr-labs"])
-        //   .then((items) => activities.push(...items))
-        //   .catch((err) => console.error("[Activity Page] GitHub activity fetch failed:", err)),
-
-        // Webhook GitHub commits - real-time from Redis (DISABLED)
-        // transformWebhookGitHubCommits()
-        //   .then((items) => activities.push(...items))
-        //   .catch((err) => console.error("[Activity Page] Webhook GitHub commits fetch failed:", err)),
 
         // Credly badges - all
         transformCredlyBadges("dcyfr")

@@ -27,6 +27,12 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
   - Enhanced DCYFR philosophy section emphasizing consistency, validation, and test-driven development
 - Updated `.github/ISSUE_TEMPLATE/gitleaks-critical-secret.md` to reference new PI/PII policy documentation location
 - Improved formatting and clarity of automated workflow messages in security templates
+- **Content & SEO Standards** - Standardized punctuation guidelines for descriptions
+  - Established rule: Always end descriptions with periods (meta and hero descriptions)
+  - Updated homepage hero description for consistency ("Emerging technology, security insights, and practical code.")
+  - Added content guidelines to CLAUDE.md and design system documentation
+  - Based on 2026 SEO best practices research (Google preference for complete sentences)
+  - Improves readability, professionalism, and SEO performance
 
 ### Removed
 

@@ -14,8 +14,6 @@ import {
   transformMilestones,
   transformHighEngagementPosts,
   transformCommentMilestones,
-  // transformGitHubActivity, (DISABLED)
-  // transformWebhookGitHubCommits, (DISABLED)
   transformCredlyBadges,
   transformVercelAnalytics,
   transformGitHubTraffic,
@@ -108,12 +106,9 @@ export default async function ActivityEmbedPage({
     if (cachedActivities.length === 0) {
       const [
         postsWithViews,
-        // trending - DISABLED: Now shown as badges on published events
         milestones,
         highEngagement,
         commentMilestones,
-        // githubActivity, (DISABLED)
-        // webhookCommits, (DISABLED)
         credlyBadges,
         vercelAnalytics,
         githubTraffic,
@@ -121,12 +116,9 @@ export default async function ActivityEmbedPage({
         searchConsole,
       ] = await Promise.all([
         transformPostsWithViews(posts),
-        // transformTrendingPosts(posts), - DISABLED
         transformMilestones(posts),
         transformHighEngagementPosts(posts),
         transformCommentMilestones(posts),
-        // transformGitHubActivity(), (DISABLED)
-        // transformWebhookGitHubCommits(), (DISABLED)
         transformCredlyBadges(),
         transformVercelAnalytics(),
         transformGitHubTraffic(),
@@ -143,12 +135,9 @@ export default async function ActivityEmbedPage({
         ...staticProjects,
         ...staticChangelog,
         ...postsWithViews,
-        // ...trending, - DISABLED: Now shown as badges
         ...milestones,
         ...highEngagement,
         ...commentMilestones,
-        // ...githubActivity, (DISABLED)
-        // ...webhookCommits, (DISABLED)
         ...credlyBadges,
         ...vercelAnalytics,
         ...githubTraffic,

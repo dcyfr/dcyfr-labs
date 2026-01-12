@@ -170,7 +170,7 @@ export default async function Home() {
                 "text-muted-foreground mb-4"
               )}
             >
-              Security insights, AI research, and practical code
+              Emerging technology, security insights, and practical code.
             </p>
 
             {/* Search - Primary CTA */}
