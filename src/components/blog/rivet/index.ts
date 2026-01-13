@@ -14,10 +14,27 @@
  *   - KeyTakeaway
  *   - TLDRSummary
  *
+ * - **interactive/** - Interactive elements (I)
+ *   - GlossaryTooltip
+ *   - SectionShare
+ *   - CollapsibleSection
+ *
+ * - **engagement/** - Enhanced discoverability (E)
+ *   - RoleBasedCTA
+ *
+ * - **tiered/** - Tiered content depth (T)
+ *   - (Future: Role-based content depth)
+ *
  * ## Usage
  *
  * ```tsx
- * import { ReadingProgressBar, KeyTakeaway, TLDRSummary } from "@/components/blog/rivet";
+ * import {
+ *   ReadingProgressBar,
+ *   KeyTakeaway,
+ *   TLDRSummary,
+ *   GlossaryTooltip,
+ *   RoleBasedCTA,
+ * } from "@/components/blog/rivet";
  *
  * export default function BlogPost() {
  *   return (
@@ -30,6 +47,13 @@
  *       <KeyTakeaway variant="security">
  *         Always validate user input
  *       </KeyTakeaway>
+ *       <GlossaryTooltip term="Term" definition="Definition">
+ *         term
+ *       </GlossaryTooltip>
+ *       <RoleBasedCTA
+ *         executive={{ title: "...", description: "...", buttonText: "...", buttonHref: "..." }}
+ *         developer={{ title: "...", description: "...", buttonText: "...", buttonHref: "..." }}
+ *       />
  *     </>
  *   );
  * }
@@ -41,3 +65,10 @@ export { ReadingProgressBar } from "./navigation";
 
 // Visual (V - Visual density)
 export { KeyTakeaway, TLDRSummary } from "./visual";
+
+// Interactive (I - Interactive elements)
+export { GlossaryTooltip, SectionShare, CollapsibleSection } from "./interactive";
+
+// Engagement (E - Enhanced discoverability)
+export { RoleBasedCTA } from "./engagement";
+export type { RoleBasedCTAProps, RoleConfig } from "./engagement";
