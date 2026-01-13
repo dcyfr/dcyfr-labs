@@ -33,12 +33,13 @@ export const contactFormSubmitted = inngest.createFunction(
   },
   { event: "contact/form.submitted" },
   async ({ event, step }) => {
-    const { name, email, message, submittedAt } = event.data;
+    const { name, email, message, role, submittedAt } = event.data;
 
     // Log function execution for debugging
     console.warn("[Contact Function] Processing submission:", {
       fromEmail: email,
       messageLength: message.length,
+      role: role || "not-specified",
       emailConfigured: isEmailConfigured,
       resendFromEmail: FROM_EMAIL,
     });
@@ -57,13 +58,14 @@ export const contactFormSubmitted = inngest.createFunction(
         const result = await resend.emails.send({
           from: FROM_EMAIL,
           to: AUTHOR_EMAIL,
-          subject: `Contact form: ${name}`,
+          subject: `Contact form: ${name}${role ? ` (${role})` : ""}`,
           replyTo: email,
-          text: `From: ${name} <${email}>\nSubmitted: ${new Date(submittedAt).toLocaleString()}\n\n${message}`,
+          text: `From: ${name} <${email}>${role ? `\nRole: ${role}` : ""}\nSubmitted: ${new Date(submittedAt).toLocaleString()}\n\n${message}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px;">
               <h2>New Contact Form Submission</h2>
               <p><strong>From:</strong> ${name} &lt;${email}&gt;</p>
+              ${role ? `<p><strong>Role:</strong> ${role}</p>` : ""}
               <p><strong>Submitted:</strong> ${new Date(submittedAt).toLocaleString()}</p>
               <hr style="border: 1px solid #eee; margin: 20px 0;" />
               <p style="white-space: pre-wrap;">${message}</p>
@@ -81,6 +83,7 @@ export const contactFormSubmitted = inngest.createFunction(
         // Track in Vercel Analytics
         await track('contact_form_submitted', {
           emailDomain: email.split('@')[1],
+          role: role || 'not-specified',
           hasMessage: !!message,
           success: true,
         });

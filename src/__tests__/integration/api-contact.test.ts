@@ -385,5 +385,120 @@ describe('Contact API Integration', () => {
         expect(data.error).toBeTruthy()
       })
     })
+
+    describe('Role Parameter', () => {
+      it('accepts and includes optional role parameter', async () => {
+        vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
+
+        const request = new NextRequest('http://localhost:3000/api/contact', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: 'John Doe',
+            email: 'john@example.com',
+            message: 'Test message that is long enough',
+            role: 'executive',
+          }),
+        })
+
+        const response = await POST(request)
+        expect(response.status).toBe(200)
+
+        const sendCall = vi.mocked(inngest.send).mock.calls[0][0]
+        const eventData = Array.isArray(sendCall) ? sendCall[0].data : sendCall.data
+
+        expect(eventData.role).toBe('executive')
+      })
+
+      it('works without role parameter', async () => {
+        vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
+
+        const request = new NextRequest('http://localhost:3000/api/contact', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: 'John Doe',
+            email: 'john@example.com',
+            message: 'Test message that is long enough',
+          }),
+        })
+
+        const response = await POST(request)
+        expect(response.status).toBe(200)
+
+        const sendCall = vi.mocked(inngest.send).mock.calls[0][0]
+        const eventData = Array.isArray(sendCall) ? sendCall[0].data : sendCall.data
+
+        expect(eventData.role).toBeUndefined()
+      })
+
+      it('sanitizes role parameter', async () => {
+        vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
+
+        const request = new NextRequest('http://localhost:3000/api/contact', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: 'John Doe',
+            email: 'john@example.com',
+            message: 'Test message that is long enough',
+            role: '  developer  ',
+          }),
+        })
+
+        const response = await POST(request)
+        expect(response.status).toBe(200)
+
+        const sendCall = vi.mocked(inngest.send).mock.calls[0][0]
+        const eventData = Array.isArray(sendCall) ? sendCall[0].data : sendCall.data
+
+        expect(eventData.role).toBe('developer')
+      })
+
+      it('accepts all valid role values', async () => {
+        vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
+
+        const validRoles = ['executive', 'developer', 'security', 'other']
+
+        for (const role of validRoles) {
+          const request = new NextRequest('http://localhost:3000/api/contact', {
+            method: 'POST',
+            body: JSON.stringify({
+              name: 'John Doe',
+              email: 'john@example.com',
+              message: 'Test message that is long enough',
+              role,
+            }),
+          })
+
+          const response = await POST(request)
+          expect(response.status).toBe(200)
+
+          const sendCall = vi.mocked(inngest.send).mock.calls[vi.mocked(inngest.send).mock.calls.length - 1][0]
+          const eventData = Array.isArray(sendCall) ? sendCall[0].data : sendCall.data
+
+          expect(eventData.role).toBe(role)
+        }
+      })
+
+      it('accepts arbitrary role strings', async () => {
+        vi.mocked(inngest.send).mockResolvedValue({ ids: ['test-id'] })
+
+        const request = new NextRequest('http://localhost:3000/api/contact', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: 'John Doe',
+            email: 'john@example.com',
+            message: 'Test message that is long enough',
+            role: 'custom-role',
+          }),
+        })
+
+        const response = await POST(request)
+        expect(response.status).toBe(200)
+
+        const sendCall = vi.mocked(inngest.send).mock.calls[0][0]
+        const eventData = Array.isArray(sendCall) ? sendCall[0].data : sendCall.data
+
+        expect(eventData.role).toBe('custom-role')
+      })
+    })
   })
 })
