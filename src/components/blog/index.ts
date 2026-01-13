@@ -57,6 +57,8 @@ export {
   SectionShare,
   CollapsibleSection,
 } from "./rivet/interactive";
+export { RoleBasedCTA } from "./rivet/engagement";
+export type { RoleBasedCTAProps, RoleConfig } from "./rivet/engagement";
 export {
   SidebarVisibilityProvider,
   useSidebarVisibility,
