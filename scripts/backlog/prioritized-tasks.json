@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-13T04:12:57.168Z",
+  "generated_at": "2026-01-13T04:37:14.292Z",
   "version": "1.0.0",
   "filters": {
     "time": "all",
@@ -14,7 +14,7 @@
   },
   "tasks": [
     {
-      "id": "test-flaky-zl2unl929",
+      "id": "test-flaky-ewswv5hmw",
       "title": "Fix date boundary issues in heatmap tests",
       "description": "Flaky test at src/__tests__/lib/activity-heatmap.test.ts:144",
       "category": "Test Infrastructure",
@@ -38,7 +38,7 @@
       "priority_score": 7.1
     },
     {
-      "id": "test-flaky-2o4qzj4sh",
+      "id": "test-flaky-vmvmdses1",
       "title": "Fix Radix Tabs async behavior in tests",
       "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:216",
       "category": "Test Infrastructure",
@@ -62,7 +62,7 @@
       "priority_score": 7.1
     },
     {
-      "id": "test-flaky-pz9gwor62",
+      "id": "test-flaky-s5o0vv4yq",
       "title": "Fix performance tests (environment-dependent, flaky in CI)",
       "description": "Flaky test at src/__tests__/lib/activity-search.test.ts:240",
       "category": "Test Infrastructure",
@@ -86,7 +86,7 @@
       "priority_score": 6.7
     },
     {
-      "id": "test-flaky-17x1x94ao",
+      "id": "test-flaky-e0c9o1v3o",
       "title": "Fix aria-selected not updating in tests",
       "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:448",
       "category": "Test Infrastructure",
