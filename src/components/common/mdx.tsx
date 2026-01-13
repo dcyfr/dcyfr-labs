@@ -32,6 +32,7 @@ import {
   SectionShare,
   CollapsibleSection,
   RoleBasedCTA,
+  Footnotes,
 } from "@/components/blog";
 import {
   MDXMCPArchitecture,
@@ -137,6 +138,33 @@ const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
     node.properties.className = ["word"];
   },
 };
+
+/**
+ * Custom rehype plugin to add a wrapper component marker to footnotes section
+ * This allows us to wrap the entire footnotes section with the Footnotes component in MDX
+ */
+function rehypeWrapFootnotes() {
+  return (tree: any) => {
+    const visit = (node: any) => {
+      if (
+        node.type === "element" &&
+        node.tagName === "section" &&
+        node.properties?.dataFootnotes === true
+      ) {
+        // Mark this node as a footnotes section
+        node.properties = node.properties || {};
+        node.properties["data-mdx-footnotes-wrapper"] = "true";
+      }
+
+      // Recursively visit children
+      if (node.children && Array.isArray(node.children)) {
+        node.children.forEach(visit);
+      }
+    };
+
+    visit(tree);
+  };
+}
 
 /**
  * Custom rehype plugin to replace footnote backref emoji (↩) with an accessible element
@@ -641,6 +669,23 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
     // Default superscript for non-footnote uses
     return <sup {...props} />;
   },
+  // Footnotes section handler - wrap footnotes in collapsible component
+  section: (props: React.HTMLAttributes<HTMLElement>) => {
+    const hasDataFootnotes =
+      (props as any)["data-footnotes"] === true ||
+      (props as any)["data-mdx-footnotes-wrapper"] === "true";
+
+    if (hasDataFootnotes) {
+      return (
+        <Footnotes>
+          <section {...props} data-footnotes={undefined} />
+        </Footnotes>
+      );
+    }
+
+    // Default section for non-footnote uses
+    return <section {...props} />;
+  },
 };
 
 /**
@@ -719,6 +764,7 @@ export function MDX({
               [rehypePrettyCode, rehypePrettyCodeOptions],
               rehypeCaptureCodeLanguage, // Capture language from rehypePrettyCode output
               rehypeKatex, // Render math with KaTeX
+              rehypeWrapFootnotes, // Mark footnotes sections for collapsible wrapping
               rehypeReplaceFootnoteEmoji, // Replace footnote emoji with icon
               [
                 rehypeAutolinkHeadings,
