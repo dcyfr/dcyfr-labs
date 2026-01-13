@@ -70,9 +70,11 @@ function getTimeWindow(timeOption) {
  */
 function calculatePriorityScore(task, context = {}) {
   // Effort score (inverse - lower effort = higher score)
-  // Max effort: 80h, so lowest possible score is (10 - 80) = -70
-  // Clamp to 0-10 range
-  const effortScore = Math.max(0, Math.min(10, 10 - task.effort_hours / 8));
+  // Validate effort hours (default to 5 if missing)
+  const effortHours = Math.max(0, task.effort_hours || 5);
+  // Max effort: 80h, map to 0-10 scale inversely
+  // 0h = 10, 40h = 5, 80h = 0
+  const effortScore = Math.max(0, Math.min(10, 10 - effortHours / 8));
 
   // Impact score (0-10, already provided)
   const impactScore = task.impact_score || 5;
@@ -81,15 +83,15 @@ function calculatePriorityScore(task, context = {}) {
   let urgencyScore = 5; // Default neutral
   if (task.status === "in_progress") urgencyScore = 9;
   if (task.status === "completed") urgencyScore = 0;
-  if (task.blockers && task.blockers.length > 0) urgencyScore -= 3;
+  if (task.blockers && task.blockers.length > 0) urgencyScore = Math.max(0, urgencyScore - 3);
 
   // Readiness score (no blockers = ready)
   const readinessScore =
-    task.blockers && task.blockers.length === 0 ? 10 : Math.max(0, 10 - task.blockers.length * 2);
+    !task.blockers || task.blockers.length === 0 ? 10 : Math.max(0, 10 - task.blockers.length * 2);
 
   // Context fit score
   let contextScore = 5; // Default neutral
-  if (context.preferredTags) {
+  if (context?.preferredTags) {
     const matchingTags = task.tags?.filter((t) => context.preferredTags.includes(t)) || [];
     if (matchingTags.length > 0) {
       contextScore = Math.min(10, 5 + matchingTags.length);
