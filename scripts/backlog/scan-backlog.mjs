@@ -58,7 +58,7 @@ function scanTodoMarkdown() {
     }
 
     // Detect task lines (- [ ] or - [x])
-    const checkboxMatch = line.match(/^\s*-\s+\[([ xX])\]\s+(.+?)(\s*\((\d+(?:[hHwW]|hours?))\))?$/);
+    const checkboxMatch = line.match(/^\s*-\s+\[([ xX])\]\s+(.+?)(\s*\((\d+(?:\.\d+)?(?:[hHwW]|hours?))\))?$/);
 
     if (checkboxMatch) {
       if (currentTask) {
@@ -69,10 +69,10 @@ function scanTodoMarkdown() {
       let title = checkboxMatch[2].trim();
       let effortStr = checkboxMatch[4] || "0h";
 
-      // Parse effort - handle "h", "hours", "w", "weeks"
+      // Parse effort - handle "h", "hours", "w", "weeks" (supports decimals like 1.5h)
       let effortHours = 0;
       if (effortStr) {
-        const num = parseInt(effortStr) || 0;
+        const num = parseFloat(effortStr) || 0;
         if (effortStr.match(/w|weeks?/i)) {
           effortHours = num * 40; // 1 week = 40 hours
         } else {
@@ -160,17 +160,18 @@ function scanCodeTodos() {
       if (match) {
         const [, filePath, lineNum, type, description] = match;
 
+        const relativePath = path.relative(rootDir, filePath);
         tasks.push({
           id: `code-todo-${Math.random().toString(36).substr(2, 9)}`,
           title: `${type}: ${description}`,
-          description: `Found in ${path.relative(rootDir, filePath)}:${lineNum}`,
+          description: `Found in ${relativePath}:${lineNum}`,
           category: "Code TODOs",
           effort_hours: 0.5, // Unknown, estimate conservatively
           impact_score: 4,
           priority: "low",
           status: "pending",
           blockers: [],
-          files_affected: [filePath],
+          files_affected: [relativePath],
           related_docs: [],
           tags: ["code-todo", type.toLowerCase()],
           created_at: new Date().toISOString().split("T")[0],

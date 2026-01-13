@@ -171,8 +171,7 @@ function printDailyRecommendations(prioritized) {
     year: "numeric",
   });
 
-  console.clear();
-  console.log("┌" + "─".repeat(68) + "┐");
+  console.log("\n┌" + "─".repeat(68) + "┐");
   console.log(
     `│ 🎯 ${dayName.toUpperCase()}'S TASK QUEUE${" ".repeat(68 - dayName.length - 18)} │`
   );
