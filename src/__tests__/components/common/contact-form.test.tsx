@@ -127,7 +127,7 @@ describe("ContactForm - Role Parameter", () => {
 
       render(<ContactForm />);
 
-      // Wait for useEffect to run and populate the field
+      // Wait for the role input to be populated
       await waitFor(() => {
         const roleInput = document.querySelector('input[name="role"]') as HTMLInputElement;
         expect(roleInput).toBeInTheDocument();
