@@ -71,4 +71,4 @@ export { GlossaryTooltip, SectionShare, CollapsibleSection } from "./interactive
 
 // Engagement (E - Enhanced discoverability)
 export { RoleBasedCTA } from "./engagement";
-export type { RoleBasedCTAProps, RoleConfig } from "./engagement";
+export type { RoleBasedCTAProps } from "./engagement";
