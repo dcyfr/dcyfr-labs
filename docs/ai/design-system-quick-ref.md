@@ -85,6 +85,34 @@ import { cn } from '@/lib/utils'
 <div className={`mx-auto ${CONTAINER_WIDTHS.archive} px-4 sm:px-6 md:px-8`}>
 ```
 
+### Content & SEO
+
+```tsx
+// ❌ NEVER - Missing periods in descriptions
+<PageHero
+  title="About Me"
+  description="Full-stack developer passionate about building"
+/>
+const pageDescription = "Browse our portfolio of projects"
+
+// ✅ ALWAYS - End descriptions with periods
+<PageHero
+  title="About Me"
+  description="Full-stack developer passionate about building."
+/>
+const pageDescription = "Browse our portfolio of projects."
+
+// ✅ OK - Exclamation points for CTAs
+<Button>Get started now!</Button>
+```
+
+**Rules**:
+
+- **Always end descriptions with periods** (both meta and hero descriptions)
+- Use exclamation points only for calls-to-action
+- Keep meta descriptions 150-160 characters
+- Use complete sentences with proper grammar
+
 ---
 
 ## Complete Component Examples
@@ -100,7 +128,7 @@ export default function Page() {
   return (
     <PageHero
       title="About Me"
-      description="Full-stack developer passionate about building great experiences"
+      description="Full-stack developer passionate about building great experiences."
       variant="standard"
     />
   )
@@ -163,7 +191,7 @@ export default function AboutPage() {
     <PageLayout>
       <PageHero
         title="About"
-        description="Learn more about my background"
+        description="Learn more about my background."
       />
 
       <section className={`mx-auto ${CONTAINER_WIDTHS.standard} px-4 sm:px-6 md:px-8 pb-8 md:pb-12`}>
@@ -314,7 +342,7 @@ export default function NewPage() {
   return (
     <PageLayout>
       {/* Hero section */}
-      <PageHero title="Page Title" description="Page description" />
+      <PageHero title="Page Title" description="Page description." />
 
       {/* Main content */}
       <section className={`mx-auto ${CONTAINER_WIDTHS.standard} px-4 sm:px-6 md:px-8 pb-8 md:pb-12`}>

@@ -158,6 +158,18 @@ export const DEV_TOOLS_NAV: NavItem[] = [
     href: "/dev/maintenance",
     label: "Maintenance",
   },
+  {
+    href: "/dev/mcp-health",
+    label: "MCP Health",
+  },
+  {
+    href: "/dev/api-costs",
+    label: "API Costs",
+  },
+  {
+    href: "/dev/unified-ai-costs",
+    label: "AI Cost Dashboard",
+  },
 ] as const;
 
 /**

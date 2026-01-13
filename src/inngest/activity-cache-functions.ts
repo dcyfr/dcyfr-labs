@@ -10,6 +10,7 @@
  * - Reduced server CPU (no concurrent aggregations)
  * - Better caching strategy (5-minute TTL)
  * - Graceful fallback on cache miss
+ * - Versioned caching prevents drift on schema changes
  */
 
 import { inngest } from "./client";
@@ -36,6 +37,7 @@ import {
   transformSearchConsole,
  } from "@/lib/activity/server";
 
+import { activityFeedCache } from "@/lib/cache-versioning";
 import { createClient } from "redis";
 
 // ============================================================================
@@ -145,22 +147,23 @@ export const refreshActivityFeed = inngest.createFunction(
       return sorted;
     });
 
-    // Step 2: Cache aggregated feed
+    // Step 2: Cache aggregated feed (versioned)
     const cached = await step.run("cache-feed", async () => {
-      const cacheKey = "activity:feed:all";
-      const ttl = 3600; // 1 hour (matches cron frequency)
-
       try {
-        await redis.setEx(cacheKey, ttl, JSON.stringify(activities));
+        const success = await activityFeedCache.set("feed:all", activities);
+
+        if (!success) {
+          throw new Error("Failed to write to versioned cache");
+        }
 
         console.warn(
-          `[Activity Cache] ✅ Cached ${activities.length} activities (TTL: ${ttl}s)`
+          `[Activity Cache] ✅ Cached ${activities.length} activities (versioned cache)`
         );
 
         return {
           success: true,
           count: activities.length,
-          ttl,
+          ttl: 3600,
           timestamp: new Date().toISOString(),
         };
       } catch (error) {
@@ -203,14 +206,12 @@ export const invalidateActivityFeed = inngest.createFunction(
       throw new Error("Redis client unavailable - REDIS_URL not configured");
     }
 
-    // Step 1: Delete cache
+    // Step 1: Delete cache (all versions to ensure clean slate)
     await step.run("delete-cache", async () => {
-      const cacheKey = "activity:feed:all";
-
       try {
-        const deleted = await redis.del(cacheKey);
+        const deleted = await activityFeedCache.deleteAllVersions("feed:all");
         console.warn(
-          `[Activity Cache] Cache invalidated (reason: ${event.data.reason || "manual"})`
+          `[Activity Cache] Cache invalidated - ${deleted} version(s) deleted (reason: ${event.data.reason || "manual"})`
         );
         return { deleted: deleted > 0 };
       } catch (error) {

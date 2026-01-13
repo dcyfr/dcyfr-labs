@@ -200,7 +200,7 @@ export default function MyPage() {
     <PageLayout>
       <PageHero
         title="Page Title"
-        description="Page description"
+        description="Page description."
         variant="default"  // or "compact" or "centered"
       />
       <PageSection>

@@ -37,16 +37,17 @@ npm run check               # Type + lint check
   - ~8K token context
 
 - **🟢 FALLBACK: OpenCode.ai** (Token exhaustion scenarios)
-  - 75+ AI provider options (OpenAI, Anthropic, Gemini, Groq, local models)
-  - Cost optimization (10-100x cheaper with budget providers)
-  - Extended context windows (up to 2M with Gemini)
-  - Offline support via Ollama
+  - 75+ AI provider options (OpenAI, Anthropic, Gemini, GitHub Copilot, local models)
+  - GitHub Copilot integration (GPT-5 Mini + Raptor Mini included with subscription)
+  - Cost optimization (0 multiplier for GitHub Copilot models)
+  - Extended context windows (16K GitHub Copilot, up to 2M with Gemini)
   - VS Code extension with keyboard shortcuts
   - **Trigger conditions:** Rate limits, budget exhaustion, extended sessions (6+ hours)
 
 - **🔵 SUPPORTING: Claude General + VS Code Mode**
-  - Research, architecture decisions, deep exploration
-  - Pattern validation in conversation mode
+   - Research, architecture decisions, deep exploration
+   - Pattern validation in conversation mode
+   - **CLAUDE.md has extended capability:** Contains production-level knowledge suitable for extended development sessions (when PRIMARY is rate-limited)
 
 **Rationale:** [See `docs/ai/AGENT_UNIFICATION_ANALYSIS.md`](docs/ai/AGENT_UNIFICATION_ANALYSIS.md) for detailed feasibility analysis and why unification isn't viable.
 
@@ -59,8 +60,10 @@ npm run check               # Type + lint check
 | **DCYFR (Claude Code)**  | 🔴 **PRIMARY**   | Production enforcement with auto-delegation                   | Feature work, testing, quick fixes, complex tasks | [`.claude/agents/`](./.claude/agents/) - 3 specialized agents                            |
 | **GitHub Copilot**       | 🟡 **SECONDARY** | Real-time code completion & quick suggestions                 | Inline coding, auto-fix, quick patterns           | [`.github/copilot-instructions.md`](./.github/copilot-instructions.md)                   |
 | **OpenCode.ai**          | 🟢 **FALLBACK**  | Multi-provider AI fallback (75+ models)                       | Token exhaustion, cost optimization, offline work | [`docs/ai/opencode-fallback-architecture.md`](docs/ai/opencode-fallback-architecture.md) |
-| **Claude (General)**     | 🔵 SUPPORTING    | Deep research, architecture, complex debugging                | System design, documentation, investigation       | [`CLAUDE.md`](./CLAUDE.md)                                                               |
+| **Claude (General)**     | 🔵 SUPPORTING*  | Deep research, architecture, complex debugging                | System design, documentation, investigation       | [`CLAUDE.md`](./CLAUDE.md)                                                               |
 | **DCYFR (VS Code Mode)** | 🔵 SUPPORTING    | Production enforcement, pattern validation, strict compliance | Feature work, bug fixes, detailed exploration     | [`.github/agents/DCYFR.agent.md`](./.github/agents/DCYFR.agent.md)                       |
+
+*CLAUDE.md also contains semi-PRIMARY capability for extended sessions when Claude Code is rate-limited
 
 ---
 
@@ -260,22 +263,22 @@ npm run check               # Type + lint check
 
 ---
 
-### 5. OpenCode.ai Fallback System (v1.0.0)
+### 5. OpenCode.ai Fallback System (v2.0.0)
 
 **Hub Directory:** `.opencode/`  
-**Last Updated:** January 5, 2026  
+**Last Updated:** January 11, 2026  
 **Audience:** All developers (fallback tier when primary/secondary exhausted)  
 **Format:** Modular documentation with provider-specific guides
 
-**Hub File:** [`.opencode/DCYFR.opencode.md`](./.opencode/DCYFR.opencode.md) (212 lines)
+**Hub File:** [`.opencode/DCYFR.opencode.md`](./.opencode/DCYFR.opencode.md) (257 lines)
 
-**Purpose**: Multi-provider AI fallback supporting 75+ models for cost optimization and offline development.
+**Purpose**: Multi-provider AI fallback with GitHub Copilot integration (GPT-5 Mini + Raptor Mini).
 
 **Core Components:**
 
 | Directory        | Files   | Purpose                                                                  |
 | ---------------- | ------- | ------------------------------------------------------------------------ |
-| **patterns/**    | 3 files | Provider selection, VS Code integration, offline development             |
+| **patterns/**    | 2 files | Provider selection, VS Code integration             |
 | **enforcement/** | 3 files | Hybrid enforcement (STRICT/FLEXIBLE), enhanced validation, quality gates |
 | **workflows/**   | 3 files | Session handoff, cost optimization, troubleshooting                      |
 | **scripts/**     | 3 files | Validation, health checks, session management                            |
@@ -288,14 +291,13 @@ npm run check               # Type + lint check
 | --------------------------------------------------------- | ----- | -------------------------------------------------------------------------------- |
 | [PROVIDER_SELECTION.md](patterns/PROVIDER_SELECTION.md)   | 200+  | Decision tree, free model optimization, when to use each provider                |
 | [VS_CODE_INTEGRATION.md](patterns/VS_CODE_INTEGRATION.md) | 150+  | Extension setup, keyboard shortcuts (Cmd+Esc), provider configuration            |
-| [OFFLINE_DEVELOPMENT.md](patterns/OFFLINE_DEVELOPMENT.md) | 300+  | Ollama setup, model selection (CodeLlama 34B, Qwen2.5 Coder 7B), hybrid workflow |
 
 #### Enforcement Directory (.opencode/enforcement/)
 
 | File                                                         | Lines | Covers                                                                                                                                      |
 | ------------------------------------------------------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [HYBRID_ENFORCEMENT.md](enforcement/HYBRID_ENFORCEMENT.md)   | 400+  | STRICT rules (hard block): design tokens, PageLayout, barrel exports, test data, emojis; FLEXIBLE rules (warn): API patterns, test coverage |
-| [VALIDATION_ENHANCED.md](enforcement/VALIDATION_ENHANCED.md) | 450+  | Manual checklists for free/offline models, escalation triggers, provider capability matrix                                                  |
+| [VALIDATION_ENHANCED.md](enforcement/VALIDATION_ENHANCED.md) | 450+  | Manual checklists for GitHub Copilot models, escalation triggers, provider capability matrix                                                  |
 | [QUALITY_GATES.md](enforcement/QUALITY_GATES.md)             | 500+  | Pre-commit validation by provider tier, security gates, performance gates                                                                   |
 
 #### Workflows Directory (.opencode/workflows/)
@@ -304,7 +306,7 @@ npm run check               # Type + lint check
 | ------------------------------------------------------ | ----- | --------------------------------------------------------------------------------- |
 | [SESSION_HANDOFF.md](workflows/SESSION_HANDOFF.md)     | 400+  | Claude ↔ OpenCode switching, session state schema v2.0, git workflow integration |
 | [COST_OPTIMIZATION.md](workflows/COST_OPTIMIZATION.md) | 450+  | 80/20 strategy (80% free, 20% premium), monthly cost tracking, ROI analysis       |
-| [TROUBLESHOOTING.md](workflows/TROUBLESHOOTING.md)     | 600+  | Provider-specific issues (Groq rate limits, Ollama OOM, validation failures)      |
+| [TROUBLESHOOTING.md](workflows/TROUBLESHOOTING.md)     | 600+  | Provider-specific issues (GitHub Copilot auth, rate limits, validation failures)      |
 
 #### Scripts Directory (.opencode/scripts/)
 
@@ -312,7 +314,7 @@ npm run check               # Type + lint check
 | ---------------------------- | ------------------------------------------ | ------------------------- |
 | `validate-after-fallback.sh` | STRICT rules hard block, FLEXIBLE warnings | `npm run check:opencode`  |
 | `session-handoff.sh`         | Combined save + restore + validation       | `npm run session:handoff` |
-| `check-provider-health.sh`   | Groq/Ollama/Claude connectivity            | `npm run opencode:health` |
+| `check-provider-health.sh`   | GitHub Copilot/Claude connectivity         | `npm run opencode:health` |
 
 **Session State System (Universal v2.0):**
 
@@ -325,19 +327,16 @@ npm run check               # Type + lint check
 
 ```json
 {
-  "groq_primary": "llama-3.3-70b-versatile (free tier)",
-  "groq_speed": "llama-3.3-70b-specdec (fast free tier)",
-  "offline_primary": "codellama:34b (requires 64GB RAM)",
-  "offline_balanced": "qwen2.5-coder:7b (requires 16GB RAM)",
-  "claude": "claude-3-5-sonnet-20241022 (premium)"
+  "primary": "gpt-5-mini (GitHub Copilot, 16K context, 0 multiplier)",
+  "speed": "raptor-mini (GitHub Copilot, 8K context, 0 multiplier)",
+  "claude": "claude-sonnet-4 (premium, 200K context, 1 multiplier)"
 }
 ```
 
 **Recommended Allocation:**
 
-- **Groq (free)**: 70-80% of tasks (bug fixes, refactoring, UI updates)
-- **Ollama (offline)**: 5-10% of tasks (drafting when offline)
-- **Claude (premium)**: 15-25% of tasks (security, architecture, complex debugging)
+- **GitHub Copilot (included)**: 80% of tasks (features, bug fixes, refactoring, UI updates)
+- **Claude (premium)**: 20% of tasks (security, architecture, complex debugging)
 
 **When to update:**
 
@@ -352,14 +351,14 @@ npm run check               # Type + lint check
 {
   "file": ".opencode/",
   "format": "modular-fallback-system",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scope": "multi-provider-fallback",
-  "coverage": "Free models (Groq), offline (Ollama), premium (Claude)",
-  "last_updated": "2026-01-05",
+  "coverage": "GitHub Copilot (free), premium (Claude)",
+  "last_updated": "2026-01-11",
   "source_of_truth": "AGENTS.md",
   "modular_structure": {
-    "hub": ".opencode/DCYFR.opencode.md (212 lines)",
-    "patterns": 3,
+    "hub": ".opencode/DCYFR.opencode.md (257 lines)",
+    "patterns": 2,
     "enforcement": 3,
     "workflows": 3,
     "scripts": 3,
@@ -562,6 +561,46 @@ START: "I need AI help with dcyfr-labs"
 | "Bug in PostCard component"        | DCYFR (Claude Code/VS Code)   | Root cause + test fix    |
 | "Tests failing after changes"      | Test Specialist (Claude Code) | Test coverage focus      |
 | "Should I use PageLayout?"         | DCYFR (any mode)              | Decision trees available |
+
+---
+
+## 🟢 When CLAUDE.md Becomes PRIMARY-Level Tool
+
+**CLAUDE.md is positioned as SUPPORTING tier but contains semi-PRIMARY-level knowledge suitable for extended development sessions:**
+
+### Scenarios Where CLAUDE.md Is Primary-Capable
+
+- ✅ **Extended sessions** (4+ hours) when Claude Code rate limits near
+- ✅ **Security vulnerability analysis** - Contains production vulnerability procedures
+- ✅ **Architecture decisions** - System design and pattern enforcement guidance
+- ✅ **Project maintenance** - Health monitoring, cleanup procedures, maintenance playbooks
+- ✅ **Deep research** - Comprehensive project context and constraints
+- ✅ **Operational knowledge** - Session recovery systems, provider fallback strategies
+
+### How CLAUDE.md Differs from PRIMARY Tier
+
+| Aspect | PRIMARY (Claude Code) | CLAUDE.md (SUPPORTING) |
+|--------|----------------------|----------------------|
+| **Automation** | Auto-delegation to sub-agents | Manual validation gates |
+| **Speed** | Fast execution (Sonnet) | Research-oriented (extended context) |
+| **Enforcement** | Proactive pattern enforcement | Guidance + examples |
+| **Scope** | Single tasks, features | Deep investigation, architecture |
+| **When to Use** | Quick fixes, features, bugs | When PRIMARY is rate-limited or unavailable |
+
+### Recommended Workflow
+
+```
+START: Need to implement feature
+  │
+  ├─ Claude Code available? → YES → Use PRIMARY
+  │                        → NO  → Check CLAUDE.md capability
+  │
+  ├─ CLAUDE.md can handle? → YES → Use CLAUDE.md (semi-PRIMARY mode)
+  │                       → NO  → Wait for PRIMARY or use OpenCode + enhanced validation
+  │
+  └─ Extended session (6+ hours)? → YES → Preemptively switch to CLAUDE.md (cheaper)
+                                 → NO  → Stay in PRIMARY
+```
 
 ---
 
@@ -847,6 +886,24 @@ Each instruction file maintains this metadata:
 ---
 
 ## 📋 Recent Updates
+
+### January 11, 2026
+
+- ✅ **Migrated OpenCode.ai to GitHub Copilot integration (v2.0.0)**
+  - Removed Groq provider entirely (llama-3.3-70b-versatile, llama-3.1-70b, specdec)
+  - Removed Ollama offline support (codellama:34b, qwen2.5-coder:7b)
+  - Added GitHub Copilot models (GPT-5 Mini, Raptor Mini, GPT-4o)
+  - Updated authentication (Groq API keys → GitHub Copilot device code flow)
+  - Cost optimization (free tier → included with GitHub Copilot subscription, 0 multiplier)
+  - Context windows (8K → 16K for primary model)
+  - Updated `.opencode/config.json` with GitHub Copilot provider configuration
+  - Updated `.env.example` to remove Groq API key instructions
+  - Complete rewrite of `.opencode/DCYFR.opencode.md` (257 lines)
+  - Complete rewrite of `.opencode/README.md` (347 lines)
+  - Complete rewrite of `.opencode/patterns/PROVIDER_SELECTION.md` (400+ lines)
+  - Updated `AGENTS.md` OpenCode.ai Fallback System section (v2.0.0)
+  - Created Msty.ai backlog task for future offline support
+  - Updated all provider references throughout documentation
 
 ### January 10, 2026
 

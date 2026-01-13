@@ -95,6 +95,16 @@ npm run tasks:stats
 - Import `SPACING`, `TYPOGRAPHY`, `CONTAINER_WIDTHS`
 - Never hardcode spacing or typography
 
+**Content & SEO Guidelines**:
+
+- **Always end descriptions with periods** (both meta descriptions and hero section descriptions)
+  - Meta descriptions: Required for SEO optimization (Google preference)
+  - Hero descriptions: Required for consistency and professionalism
+  - Exception: Use exclamation points for calls-to-action when appropriate
+  - Rationale: Improves readability, professionalism, and SEO performance
+- Keep meta descriptions 150-160 characters for optimal display in search results
+- Use complete sentences with proper grammar and punctuation
+
 ## Component Examples (Copy-Paste Ready)
 
 **Quick Reference**: See [`/docs/ai/design-system-quick-ref.md`](/docs/ai/design-system-quick-ref.md) for comprehensive AI-optimized patterns
@@ -111,7 +121,7 @@ import { SPACING, CONTAINER_WIDTHS } from "@/lib/design-tokens";
 export default function NewPage() {
   return (
     <PageLayout>
-      <PageHero title="Page Title" description="Page description" />
+      <PageHero title="Page Title" description="Page description." />
 
       <section
         className={`mx-auto ${CONTAINER_WIDTHS.standard} px-4 sm:px-6 md:px-8 pb-8 md:pb-12`}
@@ -270,18 +280,19 @@ import { Rocket, CheckCircle, XCircle, AlertTriangle, Lightbulb } from 'lucide-r
 ```
 
 **Prohibited locations:**
-
 - Blog posts (`src/content/blog/*.mdx`)
 - Projects (`src/content/projects/*.mdx`)
 - Public UI components
 - User-facing text
 
 **Acceptable locations:**
-
 - Internal docs (`docs/`, `.github/`)
 - Code comments (`//`, `/* */`)
 - Console.log statements
 - Test files
+
+**For comprehensive emoji enforcement and additional context, see:**
+[.github/agents/DCYFR.agent.md - Never Use Emojis Section](./.github/agents/DCYFR.agent.md)
 
 ## Key Constraints
 

@@ -209,26 +209,23 @@ describe("MDX Component", () => {
       render(<MDX source="<CheckIcon />" />);
       const icon = screen.getByLabelText("Check");
       expect(icon).toBeInTheDocument();
-      // Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
-
-      expect(icon.className).toContain("text-green-600");
+      // Uses semantic design token for success color
+      expect(icon.className).toContain("text-success");
     });
 
     it("should render XIcon component", () => {
       render(<MDX source="<XIcon />" />);
       const icon = screen.getByLabelText("Cross");
       expect(icon).toBeInTheDocument();
-      // Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
-
-      expect(icon.className).toContain("text-red-600");
+      // Uses semantic design token for error color
+      expect(icon.className).toContain("text-error");
     });
     it("should render InfoIcon component", () => {
       render(<MDX source="<InfoIcon />" />);
       const icon = screen.getByLabelText("Information");
       expect(icon).toBeInTheDocument();
-      // Icon colors (text-*-500/600) are excluded from SEMANTIC_COLORS enforcement
-
-      expect(icon.className).toContain("text-blue-600");
+      // Uses semantic design token for info color
+      expect(icon.className).toContain("text-info");
     });
   });
 

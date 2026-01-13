@@ -11,6 +11,10 @@ import {
   type TaskContext,
 } from '../provider-fallback-manager';
 
+// Mock fetch globally to avoid actual network calls
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
+
 describe('ProviderFallbackManager', () => {
   let manager: ProviderFallbackManager;
 
@@ -29,6 +33,14 @@ describe('ProviderFallbackManager', () => {
   };
 
   beforeEach(() => {
+    // Reset fetch mock and make all providers appear healthy
+    mockFetch.mockReset();
+    mockFetch.mockResolvedValue({
+      ok: true,
+      headers: new Headers({
+        'x-ratelimit-remaining': '100',
+      }),
+    });
     manager = new ProviderFallbackManager(mockConfig);
   });
 

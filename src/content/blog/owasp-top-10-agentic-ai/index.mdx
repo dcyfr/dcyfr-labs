@@ -34,33 +34,11 @@ previousSlugs: ["owasp-top-10-agentic-ai-2026"]
   newly released framework for securing agentic AI systems.
 </ContextClue>
 
-<TLDRSummary
-  title="30-Second Security Brief"
-  mostCommon={[
-    "ASI01 Goal Hijack - Prompt injection attacks redirecting agent objectives",
-    "ASI02 Tool Misuse - Legitimate tools weaponized through agent manipulation",
-    "ASI06 Memory Poisoning - Long-term context corruption influencing future decisions",
-  ]}
-  mostDangerous={[
-    "ASI10 Rogue Agents - Persistent malicious behavior outlasting initial compromise",
-    "ASI09 Cascading Failures - Errors propagating across autonomous agent networks",
-    "ASI04 Privilege Abuse - Agents exceeding authorized access boundaries",
-  ]}
-  hardestToDetect={[
-    "ASI06 Memory Poisoning - Subtle context manipulation with delayed effects",
-    "ASI08 Training Data Poisoning - Backdoors embedded during model training",
-    "ASI07 Multi-Agent Threats - Coordinated attacks across distributed systems",
-  ]}
-  jumpLink="#the-owasp-agentic-top-10-a-breakdown"
-/>
-
 **Agentic AI** refers to autonomous AI systems that go beyond simple chatbots to plan multi-step workflows, invoke tools and APIs independently, and make decisions without human intervention. These AI agents now book travel, manage calendars, approve expenses, deploy code, and handle customer service autonomously--creating an entirely new category of **AI agent security** risks.
 
 The Open Web Application Security Project (OWASP), the global authority on application security, just released its first-ever **Top 10 for Agentic Applications for 2026**. Developed by over 100 security experts, this framework identifies the most critical threats facing autonomous AI systems: from goal hijacking and memory poisoning to rogue agents and cascading failures.
 
 Whether you're a security professional implementing AI safeguards, a business leader evaluating autonomous agents, or a developer building agentic systems, this comprehensive guide covers the risks you need to understand and the controls you need to implement.
-
----
 
 ## What Makes Agentic AI Different (and Riskier)?
 
@@ -96,13 +74,25 @@ Major companies already deploy these systems at scale. Salesforce's Agentforce h
 
 According to Gartner, by 2028, 33% of enterprise software will incorporate agentic AI, and 15% of daily business decisions will be handled autonomously. That's up from less than 1% in 2024.[^3] The challenge: the same capabilities that make agents powerful make them dangerous when compromised. A single vulnerability can cascade across interconnected systems, amplifying traditional security risks and introducing new attack vectors.
 
----
+<RoleBasedCTA
+  role="executive"
+  title="For Business Leaders"
+  description="Schedule a consultation to assess your organization's agentic AI security posture."
+  buttonText="Request Assessment"
+  buttonHref="/contact?role=executive"
+/>
 
 ## What This Means for Your Organization
 
 The OWASP Agentic Top 10 reflects real incidents already happening in production environments. From the EchoLeak attack on Microsoft Copilot to supply chain compromises in Amazon Q, attackers are actively exploiting these vulnerabilities.
 
 According to Forrester's 2026 Cybersecurity Predictions, agentic AI deployments will likely trigger major security breaches and lead to employee dismissals if organizations fail to implement proper safeguards. The research firm emphasizes that these breaches stem from "cascading failures" in autonomous systems, not individual mistakes.[^10] Yet according to PwC and McKinsey surveys, 79% of organizations report at least some level of AI agent adoption, with 62% already experimenting with or scaling agentic AI systems.[^11]
+
+<KeyTakeaway variant="security" title="Defense in Depth for AI">
+  No single control prevents all attacks. Layer **least agency** (minimize
+  autonomy) + **observability** (monitor everything) + **zero trust** (assume
+  compromise) + **human oversight** (approve high-impact actions).
+</KeyTakeaway>
 
 The OWASP framework emphasizes foundational principles organizations must implement:
 
@@ -111,13 +101,13 @@ The OWASP framework emphasizes foundational principles organizations must implem
 - **Zero Trust Architecture:** Design systems assuming components will fail or be exploited. Implement blast-radius controls, sandboxing, and policy enforcement to contain failures.
 - **Human-in-the-Loop for High-Impact Actions:** Require human approval for privileged operations, irreversible changes, or goal-changing decisions.
 
-<KeyTakeaway variant="security" title="Defense in Depth for AI">
-  No single control prevents all attacks. Layer **least agency** (minimize
-  autonomy) + **observability** (monitor everything) + **zero trust** (assume
-  compromise) + **human oversight** (approve high-impact actions).
-</KeyTakeaway>
-
----
+<RoleBasedCTA
+  role="developer"
+  title="For Developers"
+  description="Access implementation guides and secure coding patterns for agentic systems."
+  buttonText="Read Developer Resources"
+  buttonHref="/blog?category=DevSecOps"
+/>
 
 ## How This Relates to Broader AI Security Frameworks
 
@@ -132,9 +122,34 @@ It aligns with other major frameworks:
 
 OWASP has also mapped the Agentic Top 10 to its **Non-Human Identities (NHI) Top 10**, recognizing that agents are autonomous non-human identities requiring dedicated security controls around credential management, privilege scoping, and lifecycle governance.
 
----
+<RoleBasedCTA
+  role="security"
+  title="For Security Teams"
+  description="Download the full OWASP Top 10 for Agentic Applications framework to guide your AI security strategy."
+  buttonText="Download the Security Framework"
+  buttonHref="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+/>
 
-## The OWASP Agentic Top 10: A Breakdown
+## OWASP Agentic Top 10 Breakdown
+
+<TLDRSummary
+  title="30-Second Security Brief"
+  mostCommon={[
+    "ASI01 Goal Hijack - Prompt injection attacks redirecting agent objectives",
+    "ASI02 Tool Misuse - Legitimate tools weaponized through agent manipulation",
+    "ASI06 Memory Poisoning - Long-term context corruption influencing future decisions",
+  ]}
+  mostDangerous={[
+    "ASI10 Rogue Agents - Persistent malicious behavior outlasting initial compromise",
+    "ASI09 Cascading Failures - Errors propagating across autonomous agent networks",
+    "ASI04 Privilege Abuse - Agents exceeding authorized access boundaries",
+  ]}
+  hardestToDetect={[
+    "ASI06 Memory Poisoning - Subtle context manipulation with delayed effects",
+    "ASI08 Training Data Poisoning - Backdoors embedded during model training",
+    "ASI07 Multi-Agent Threats - Coordinated attacks across distributed systems",
+  ]}
+/>
 
 The OWASP Top 10 for Agentic Applications identifies the most critical security risks organizations face when deploying autonomous AI. Explore each risk below—expand the sections that matter most to your security posture.
 
@@ -420,8 +435,6 @@ Researchers demonstrated that compromised agents continue scanning and transmitt
 </RiskAccordion>
 
 </RiskAccordionGroup>
-
----
 
 ## The Security Imperative for Autonomous AI
 
