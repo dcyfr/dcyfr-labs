@@ -31,6 +31,7 @@ import {
   GlossaryTooltip,
   SectionShare,
   CollapsibleSection,
+  RoleBasedCTA,
 } from "@/components/blog";
 import {
   MDXMCPArchitecture,
@@ -590,6 +591,8 @@ const components: NonNullable<MDXRemoteProps["components"]> = {
   SectionShare,
   // Collapsible Section component for expandable content
   CollapsibleSection,
+  // Role-based CTA component for audience segmentation
+  RoleBasedCTA,
   // Context Clue component for background information
   ContextClue,
   // Figure caption component for automatic figure numbering
