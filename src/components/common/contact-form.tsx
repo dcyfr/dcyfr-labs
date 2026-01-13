@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +13,9 @@ import { SPACING } from "@/lib/design-tokens";
 import { useFormValidation, validators } from "@/hooks/use-form-validation";
 
 export function ContactForm() {
+  const searchParams = useSearchParams();
+  const roleInitialized = useRef(false);
+  
   const {
     values,
     fieldStates,
@@ -24,6 +29,7 @@ export function ContactForm() {
       name: "",
       email: "",
       message: "",
+      role: "",
       website: "", // Honeypot field
     },
     validationRules: {
@@ -46,6 +52,7 @@ export function ContactForm() {
         name: formValues.name,
         email: formValues.email,
         message: formValues.message,
+        role: formValues.role || undefined, // Optional, exclude if empty
         website: formValues.website, // Honeypot
       };
 
@@ -101,6 +108,28 @@ export function ContactForm() {
       }
     },
   });
+
+  // Read role from URL parameter and set it on component mount (only once)
+  useEffect(() => {
+    if (roleInitialized.current) return;
+    
+    const roleParam = searchParams.get("role");
+    if (roleParam) {
+      // Validate role parameter against known values
+      const validRoles = ["executive", "developer", "security", "other"];
+      const normalizedRole = roleParam.toLowerCase();
+      
+      if (validRoles.includes(normalizedRole)) {
+        setValue("role", normalizedRole);
+      } else {
+        // If unknown role, set to "other"
+        setValue("role", "other");
+      }
+      
+      roleInitialized.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   return (
     <div>
@@ -165,6 +194,14 @@ export function ContactForm() {
             success={fieldStates.email.showSuccess}
           />
         </div>
+
+        {/* Role field - hidden but captures URL parameter */}
+        <input
+          type="hidden"
+          name="role"
+          value={values.role}
+          aria-hidden="true"
+        />
 
         {/* Message field with validation */}
         <div className="space-y-2">

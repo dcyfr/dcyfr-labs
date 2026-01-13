@@ -19,6 +19,7 @@ type ContactFormData = {
   name: string;
   email: string;
   message: string;
+  role?: string; // Optional role field
   website?: string; // Honeypot field
 };
 
@@ -182,7 +183,7 @@ export async function POST(request: NextRequest) {
 
     // Extract form data (body was already parsed from request.text() above)
     // Extract form data (body was already parsed from request.text() above)
-    const { name, email, message, website } = body || {};
+    const { name, email, message, role, website } = body || {};
 
     // Honeypot validation - if filled, it's likely a bot
     if (website && website.trim() !== "") {
@@ -218,6 +219,7 @@ export async function POST(request: NextRequest) {
       name: sanitizeInput(name),
       email: sanitizeInput(email),
       message: sanitizeInput(message),
+      role: role ? sanitizeInput(role) : undefined,
     };
 
     // Validate lengths
@@ -244,6 +246,7 @@ export async function POST(request: NextRequest) {
           name: sanitizedData.name,
           email: sanitizedData.email,
           message: sanitizedData.message,
+          role: sanitizedData.role,
           submittedAt: new Date().toISOString(),
           ip: clientIp,
         },
