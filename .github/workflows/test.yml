@@ -2,7 +2,7 @@ name: Test
 
 on:
   push:
-    branches: [main, preview]
+    branches: [main]
     paths:
       - 'src/**'
       - 'e2e/**'
@@ -10,7 +10,7 @@ on:
       - 'package*.json'
       - '.github/workflows/test.yml'
   pull_request:
-    branches: [main, preview]
+    branches: [main]
 
 # Cancel in-progress runs for same workflow on same PR/branch
 concurrency:
