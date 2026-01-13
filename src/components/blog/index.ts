@@ -56,6 +56,7 @@ export {
   GlossaryTooltip,
   SectionShare,
   CollapsibleSection,
+  Footnotes,
 } from "./rivet/interactive";
 export { RoleBasedCTA } from "./rivet/engagement";
 export type { RoleBasedCTAProps } from "./rivet/engagement";
