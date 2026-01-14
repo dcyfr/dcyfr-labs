@@ -34,14 +34,14 @@ export default defineConfig({
         'src/proxy.ts', // Tested separately with E2E
       ],
       thresholds: {
-        // Temporary thresholds during Phase 1 coverage buildout
-        // Current: 0.63% → Target: Phase 1 (25%), Phase 2 (50%), Phase 3 (80%)
-        // Will raise incrementally as tests are added
-        // See: docs/testing/coverage-roadmap.md
-        lines: 0.5,
-        functions: 0.5,
-        branches: 0.4,
-        statements: 0.5,
+        // Updated: January 13, 2026
+        // Thresholds now match actual coverage (~15-20%)
+        // See: docs/testing/coverage-roadmap.md for Phase targets
+        // Phase 1 (Current): 15% → Phase 2: 50% → Phase 3: 80%
+        lines: 15,
+        functions: 15,
+        branches: 12,
+        statements: 15,
       },
     },
     globals: true,
