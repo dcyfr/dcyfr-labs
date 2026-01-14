@@ -1,104 +1,23 @@
-name: Security Advisory Monitor
+name: Security Advisory Monitor - DEPRECATED
 
-# Proactive monitoring for upstream security advisories
-# Addresses 13-hour detection gap from CVE-2025-55182
-# - Every 2 hours during business hours (9 AM - 6 PM PT)
-# - Every 6 hours overnight and weekends
+# ⚠️ DEPRECATION NOTICE
+# This workflow has been merged into security-suite.yml
+#
+# Status: INACTIVE (2026-01-13)
+# Reason: Advisory monitoring functionality is now in security-suite.yml
+#
+# DO NOT use this workflow. It will be removed in February 2026.
+# Use security-suite.yml instead: .github/workflows/security-suite.yml
 
 on:
-  schedule:
-    # Business hours (9 AM - 6 PM PT = 17:00 - 02:00 UTC next day)
-    # Every 2 hours: 17:00, 19:00, 21:00, 23:00, 01:00 UTC
-    - cron: '0 17,19,21,23,1 * * 1-5'  # Mon-Fri business hours
-    # Overnight/weekends - every 6 hours
-    - cron: '0 3,9,15 * * 1-5'          # Mon-Fri overnight (3, 9, 15 UTC)
-    - cron: '0 */6 * * 0,6'             # Sat-Sun every 6 hours
-  workflow_dispatch:
-    inputs:
-      force_alert:
-        description: 'Force alert even if no new advisories'
-        required: false
-        default: 'false'
-      severity_threshold:
-        description: 'Minimum severity to alert on (low, medium, high, critical)'
-        required: false
-        default: 'high'
-
-concurrency:
-  group: security-advisory-monitor
-  cancel-in-progress: true
-
-permissions:
-  contents: read
-  issues: write
-  security-events: read
-
-env:
-  # Packages to monitor for security advisories
-  # RSC packages get medium+ severity, others get high+ severity
-  CORE_PACKAGES: 'next,react,react-dom'
-  RSC_PACKAGES: 'react-server-dom-webpack,react-server-dom-turbopack,react-server-dom-parcel'
-  # Severity thresholds
-  CORE_SEVERITY: 'high,critical'
-  RSC_SEVERITY: 'medium,high,critical'
+  workflow_dispatch: # Manual trigger only - for testing if needed
 
 jobs:
-  check-advisories:
-    name: Check GitHub Security Advisories
+  notice:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    outputs:
-      has_new_advisories: ${{ steps.check.outputs.has_new_advisories }}
-      advisory_count: ${{ steps.check.outputs.advisory_count }}
-      advisory_summary: ${{ steps.check.outputs.advisory_summary }}
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --prefer-offline
-
-      - name: Check for new advisories
-        id: check
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FORCE_ALERT: ${{ github.event.inputs.force_alert }}
-          SEVERITY_THRESHOLD: ${{ github.event.inputs.severity_threshold || 'high' }}
-        run: node scripts/security/monitor-upstream-advisories.mjs
-
-      - name: Create/Update security issue
-        if: steps.check.outputs.has_new_advisories == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          ADVISORY_SUMMARY: ${{ steps.check.outputs.advisory_summary }}
-          ADVISORY_COUNT: ${{ steps.check.outputs.advisory_count }}
-        run: node scripts/security/create-security-issue.mjs
-
-      - name: Summary
+      - name: ⚠️ DEPRECATED WORKFLOW
         run: |
-          echo "## Security Advisory Monitor" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.check.outputs.has_new_advisories }}" == "true" ]; then
-            echo "### 🚨 New Advisories Found" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "${{ steps.check.outputs.advisory_summary }}" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "### ✅ No New Advisories" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "All monitored packages are clear of new security advisories." >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Monitored packages:** next, react, react-dom, react-server-dom-*" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Next check:** ~2 hours (business hours) or ~6 hours (overnight)" >> $GITHUB_STEP_SUMMARY
+          echo "::error::This workflow (security-advisory-monitor.yml) is DEPRECATED."
+          echo "::error::Use security-suite.yml instead (.github/workflows/security-suite.yml)"
+          exit 1

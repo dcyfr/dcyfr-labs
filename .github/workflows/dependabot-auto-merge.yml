@@ -643,19 +643,12 @@ jobs:
             echo "This PR will be automatically merged once CI checks pass." >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "**Reason:** ${{ steps.check.outputs.reason }}" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "### ⚠️ Manual review required" >> $GITHUB_STEP_SUMMARY
-            echo "This PR requires manual review before merging." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Reason:** ${{ steps.check.outputs.reason }}" >> $GITHUB_STEP_SUMMARY
-          fi
-            echo "**Reason:** ${{ steps.check.outputs.reason }}" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "### ⚠️ Manual review required" >> $GITHUB_STEP_SUMMARY
-            echo "This PR requires manual review before merging." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Reason:** ${{ steps.check.outputs.reason }}" >> $GITHUB_STEP_SUMMARY
-          fi
+           else
+             echo "### ⚠️ Manual review required" >> $GITHUB_STEP_SUMMARY
+             echo "This PR requires manual review before merging." >> $GITHUB_STEP_SUMMARY
+             echo "" >> $GITHUB_STEP_SUMMARY
+             echo "**Reason:** ${{ steps.check.outputs.reason }}" >> $GITHUB_STEP_SUMMARY
+           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Update details:**" >> $GITHUB_STEP_SUMMARY
           echo "- Dependency: ${{ steps.metadata.outputs.dependency-names }}" >> $GITHUB_STEP_SUMMARY
