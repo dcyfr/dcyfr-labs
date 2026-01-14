@@ -171,10 +171,10 @@ export function ActivityPageClient({
            </div>
          ) : (
            <div className={cn(CONTAINER_WIDTHS.thread, "mx-auto")}>
-             <div className={SPACING.subsection}>
-               {displayedThreads.map((thread, index) => (
-                 <div key={thread.id}>
-                   <ThreadedActivityGroup thread={thread} />
+              <div className={SPACING.subsection}>
+                {displayedThreads.map((thread, index) => (
+                  <div key={thread.id} data-testid="activity-thread">
+                    <ThreadedActivityGroup thread={thread} />
                    {/* Divider between threads (except last) */}
                    {index < displayedThreads.length - 1 && (
                      <div
