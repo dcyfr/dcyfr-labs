@@ -286,6 +286,55 @@ All original functionality preserved in consolidated workflows - no feature loss
 
 ## Additional Notes
 
+### ⚠️ Action Required: Node.js Version Update (January 2026)
+
+**Date Added:** 2026-01-14  
+**Priority:** Medium  
+**Status:** ⏳ Pending Implementation
+
+**Issue:**  
+- Local development updated to Node.js v24.13.0 (security patches)
+- CI/CD workflows still use Node.js v20 (hardcoded)
+- Version drift between local and CI/CD environments
+
+**Security Context:**  
+- Node.js v24.13.0 addresses 8 CVEs (3 HIGH, 4 MEDIUM, 1 LOW)
+- Most critical: HTTP/2 DoS and AsyncLocalStorage crashes
+- See `docs/security/private/NODEJS_JAN2026_VULNERABILITIES.md` for details
+
+**Recommendation:**  
+Update all GitHub Actions workflows to use `.nvmrc` file instead of hardcoded versions:
+
+```yaml
+# ❌ Current (hardcoded)
+- uses: actions/setup-node@v4
+  with:
+    node-version: '20'
+
+# ✅ Recommended (use .nvmrc)
+- uses: actions/setup-node@v4
+  with:
+    node-version-file: '.nvmrc'
+```
+
+**Benefits:**
+1. Automatic version sync with local development
+2. Single source of truth (`.nvmrc` file)
+3. Easier to update in future (one file vs. 20+ workflows)
+4. Prevents "works on my machine" issues
+
+**Files to Update:**
+- `.github/workflows/test.yml` (5 occurrences)
+- `.github/workflows/test-optimized.yml`
+- `.github/workflows/deploy.yml`
+- All other workflows with `node-version: '20'`
+
+**References:**
+- Node.js security release: https://nodejs.org/en/blog/vulnerability/december-2025-security-releases
+- Lessons learned: `docs/security/private/NODEJS_JAN2026_VULNERABILITIES.md`
+
+---
+
 ### Best Practices Maintained
 - ✅ Concurrency groups (cancel stale runs)
 - ✅ Path filters (run only when relevant)
