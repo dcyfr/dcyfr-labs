@@ -1,6 +1,31 @@
 import '@testing-library/jest-dom'
 import { cleanup, configure } from '@testing-library/react'
-import { afterEach, vi } from 'vitest'
+import { afterEach, beforeAll, afterAll, vi } from 'vitest'
+import { setupServer } from 'msw/node'
+import { handlers } from './msw-handlers'
+
+/**
+ * MSW (MOCK SERVICE WORKER) SETUP
+ * Intercepts network requests during tests for reliable mocking
+ * 
+ * @see https://mswjs.io/docs/getting-started/integrate/node
+ */
+const server = setupServer(...handlers)
+
+// Start MSW server before any tests run
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'warn' })
+})
+
+// Reset handlers between tests (but keep server running)
+afterEach(() => {
+  server.resetHandlers()
+})
+
+// Clean up after all tests
+afterAll(() => {
+  server.close()
+})
 
 /**
  * TESTING LIBRARY OPTIMIZATIONS
