@@ -1,6 +1,25 @@
 {
   "posts": [
     {
+      "id": "post-20260114-nodejs-security-cves",
+      "title": "Node.js January 2026 Security Release: 8 CVEs Explained",
+      "summary": "On January 13, 2026, Node.js released security patches for 8 vulnerabilities (3 HIGH, 4 MEDIUM, 1 LOW) affecting all active release lines. This post breaks down each CVE, explains who is affected, and provides actionable remediation guidance.",
+      "content": "Upgrade Required: Node.js released security patches on January 13, 2026 for 8 vulnerabilities affecting all active release lines (20.x, 22.x, 24.x, 25.x). Upgrade immediately to v20.20.0, v22.22.0, v24.13.0, or v25.3.0. --- TL;DR On January 13, 2026, the Node.js project released security patches addressing: - 3 HIGH severity vulnerabilities (buffer memory leak, symlink bypass, HTTP/2 DoS) - 4 MEDIUM severity vulnerabilities (AsyncLocalStorage crashes, TLS memory leak, UDS bypass, TLS callback Do",
+      "tags": [
+        "Node.js",
+        "Security",
+        "CVE",
+        "HTTP/2",
+        "AsyncLocalStorage",
+        "Next.js",
+        "React"
+      ],
+      "series": null,
+      "publishedAt": "2026-01-14T12:00:00Z",
+      "readingTime": 9,
+      "url": "/blog/nodejs-jan2026-security"
+    },
+    {
       "id": "post-20260115-7b4e92c1",
       "title": "Building Event-Driven Architecture with Inngest",
       "summary": "Implement event-driven architecture with Inngest for instant API responses, automatic retries, and production-grade background processing. Real code from a live portfolio.",
@@ -240,6 +259,7 @@
     "Accessibility",
     "Agentic AI",
     "Architecture",
+    "AsyncLocalStorage",
     "Autonomous Systems",
     "Background Jobs",
     "CVE",
@@ -256,6 +276,7 @@
     "Diagrams",
     "Equations",
     "Event-Driven",
+    "HTTP/2",
     "Hooks",
     "IT Career",
     "Inngest",
@@ -270,6 +291,7 @@
     "Math",
     "Next.js",
     "Next.js 16",
+    "Node.js",
     "OWASP",
     "Performance",
     "Portfolio",
@@ -297,5 +319,5 @@
     "Features",
     "Portfolio"
   ],
-  "generatedAt": "2026-01-14T06:37:51.436Z"
+  "generatedAt": "2026-01-14T21:13:26.397Z"
 }
