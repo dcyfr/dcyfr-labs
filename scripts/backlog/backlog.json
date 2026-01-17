@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-16T17:43:55.332Z",
+  "generated_at": "2026-01-16T23:22:27.292Z",
   "version": "1.0.0",
   "categories": [
     {
@@ -10,7 +10,7 @@
       "total_effort_hours": 4.5,
       "tasks": [
         {
-          "id": "test-flaky-0xkrlxhd0",
+          "id": "test-flaky-a54p5jgvj",
           "title": "Fix date boundary issues in heatmap tests",
           "description": "Flaky test at src/__tests__/lib/activity-heatmap.test.ts:144",
           "category": "Test Infrastructure",
@@ -33,7 +33,7 @@
           "last_updated": "2026-01-16"
         },
         {
-          "id": "test-flaky-kfnr8l4h4",
+          "id": "test-flaky-13xt9wnvj",
           "title": "Fix performance tests (environment-dependent, flaky in CI)",
           "description": "Flaky test at src/__tests__/lib/activity-search.test.ts:240",
           "category": "Test Infrastructure",
@@ -56,7 +56,7 @@
           "last_updated": "2026-01-16"
         },
         {
-          "id": "test-flaky-zm0p1pjnl",
+          "id": "test-flaky-jo5vammiu",
           "title": "Fix Radix Tabs async behavior in tests",
           "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:216",
           "category": "Test Infrastructure",
@@ -79,7 +79,7 @@
           "last_updated": "2026-01-16"
         },
         {
-          "id": "test-flaky-pjjhou7kc",
+          "id": "test-flaky-43ejs0jnp",
           "title": "Fix aria-selected not updating in tests",
           "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:448",
           "category": "Test Infrastructure",
@@ -105,14 +105,16 @@
     }
   ],
   "statistics": {
-    "total_tasks": 252,
+    "total_tasks": 256,
     "ready_to_start": 124,
     "blocked": 0,
     "in_progress": 0,
-    "completed": 128,
+    "completed": 132,
     "total_effort_hours": 4.5
   },
   "recent_git_activity": [
+    "fefbe03d fix: resolve all test failures (MDX link styling and Badge Wallet async rendering)",
+    "0696e0a5 docs: fix governance violations - move bundle analysis to private, update pre-commit hook exclusions",
     "46ea5d52 fix: stack blog CTAs vertically on mobile with responsive layout",
     "2498fb7b fix: improve nuclei scan timeout and reliability",
     "f9b78c5c chore(deps)(deps): bump next in the nextjs-core group (#202)",
@@ -120,8 +122,6 @@
     "57b7c5e0 chore(deps-dev)(deps-dev): bump @types/node (#204)",
     "bc1b77ce chore(deps)(deps): bump framer-motion in the ui-framework group (#205)",
     "d9282fdf chore: format security-fixed scripts with prettier",
-    "932cc8d5 security: resolve CodeQL command injection vulnerabilities in CLI scripts",
-    "4ecacbe4 chore: standardize quotes and formatting in event-driven architecture blog post",
-    "9b54f593 feat: add Node.js January 2026 security post and update search index"
+    "932cc8d5 security: resolve CodeQL command injection vulnerabilities in CLI scripts"
   ]
 }
