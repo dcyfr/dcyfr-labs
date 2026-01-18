@@ -603,6 +603,108 @@ This document tracks operational priorities, feature development stages, and mai
 
 ---
 
+## 📚 Content Curation & Link Collection (Q2 2026)
+
+### Web Link Library 📋 BACKLOG
+
+**Inspiration Sources:**
+- [Library of Babel](https://libraryofbabel.info) - Infinite library concept
+- [Awesome Useful Websites](https://github.com/atakanaltok/awesome-useful-websites) - Curated list of 1000+ useful websites
+- Other awesome lists ecosystem
+
+**Priority:** Medium | **Effort:** 2-3 weeks | **Target:** Q2 2026
+
+**Goals:**
+
+- Build a curated collection of interesting and useful web links
+- Categorize links by topic, purpose, and audience
+- Create discovery mechanisms for exploring links
+- Enable community contributions and curation
+- Integrate with existing activity feed and content system
+
+**Phase 1: Core Infrastructure (Week 1)**
+
+- [ ] Design link data schema (URL, title, description, tags, category, curator, timestamp)
+- [ ] Create link storage system (Redis cache + database persistence)
+- [ ] Build link submission API (`/api/links/submit`)
+- [ ] Create basic link validation (URL checker, metadata extraction)
+- [ ] Design link taxonomy (categories inspired by awesome-useful-websites)
+
+**Phase 2: Curation Interface (Week 2)**
+
+- [ ] Create `/links` page with PageLayout
+- [ ] Build link browsing interface with filtering/search
+- [ ] Create link submission form (authenticated users)
+- [ ] Add moderation queue for submitted links
+- [ ] Implement link upvoting/favoriting system
+- [ ] Create category pages (`/links/tools`, `/links/learning`, etc.)
+
+**Phase 3: Discovery Features (Week 3)**
+
+- [ ] Add "Random Link" feature (like StumbleUpon)
+- [ ] Create "Link of the Day" spotlight
+- [ ] Build recommendation engine (based on user activity)
+- [ ] Add link collections/playlists (curated sets)
+- [ ] Integrate with activity feed (show new links)
+- [ ] Create RSS feed for new links
+
+**Inspiration Categories (from awesome-useful-websites):**
+
+- Tools (white board, diagrams, file sharing, visual editing)
+- Learning (MOOC platforms, coding practice, language learning)
+- Science & Academia (arXiv, research tools, calculators)
+- Development (web dev tools, coding resources, cheat sheets)
+- Design (colors, fonts, icons, stock images)
+- Privacy & Security (VPN, encryption, password managers)
+- Productivity (note-taking, time management, automation)
+- Entertainment (music, movies, games)
+
+**Technical Implementation:**
+
+- `src/types/link.ts` - Link data types and schema
+- `src/lib/links/` - Link utilities (validation, categorization, recommendations)
+- `src/app/links/page.tsx` - Main links directory page
+- `src/app/links/[category]/page.tsx` - Category pages
+- `src/components/links/` - Link cards, filters, submission form
+- `src/app/api/links/` - Link submission and management APIs
+
+**Integration Points:**
+
+- Activity feed: New links as activity items (source: "link")
+- Search: Include links in global search
+- Bookmarks: Cross-link with bookmark system
+- Social sharing: Share individual links or collections
+- Analytics: Track link clicks and engagement
+
+**Success Metrics:**
+
+- Link submissions: ≥50 high-quality links in first month
+- User engagement: ≥30% of visitors click through to at least one link
+- Category coverage: ≥10 well-populated categories
+- Community curation: ≥5 active curators contributing regularly
+- Search discoverability: Links appear in relevant searches
+- Mobile experience: ≥90 Lighthouse Performance score
+
+**Future Enhancements:**
+
+- [ ] Browser extension for quick link submission
+- [ ] Link archiving (prevent dead links via Wayback Machine)
+- [ ] Link health monitoring (check for broken URLs)
+- [ ] Collaborative collections (multiple curators)
+- [ ] API for third-party integrations
+- [ ] Import from awesome lists (GitHub automation)
+
+**Dependencies:**
+
+- Requires user authentication system
+- Moderation workflow (or AI-assisted validation)
+- Redis for caching popular links
+- Database for persistent storage
+
+**Status:** Backlog - Awaiting Q2 2026 planning
+
+---
+
 ## 🔄 Ongoing Maintenance
 
 ### Weekly
