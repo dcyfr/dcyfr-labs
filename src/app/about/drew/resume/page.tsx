@@ -73,6 +73,7 @@ export default async function DrewResumePage() {
           title={pageTitle}
           description={getSummary()}
           align="center"
+          contentClassName="pb-4 md:pb-6"
         />
       </section>
 
