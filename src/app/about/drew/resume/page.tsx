@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { resume, getSummary } from "@/data/resume";
-import { TYPOGRAPHY, PAGE_LAYOUT, SPACING } from "@/lib/design-tokens";
+import {
+  TYPOGRAPHY,
+  PAGE_LAYOUT,
+  SPACING,
+  CONTAINER_WIDTHS,
+  BORDERS,
+} from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { createPageMetadata } from "@/lib/metadata";
 import { getResumePageSchema, getJsonLdScriptProps } from "@/lib/json-ld";
 import dynamic from "next/dynamic";
 import { PageLayout, PageHero } from "@/components/layouts";
-import { ResumeStats } from "@/components/resume";
+import { ResumeStats, ResumeSectionNav, DownloadResumeButton } from "@/components/resume";
 import { UnifiedTimeline, SmoothScrollToHash } from "@/components/common";
 import { BackToTop } from "@/components/navigation";
 import { MiniBadgeList, MiniSkillsList } from "@/components/about";
@@ -60,20 +66,50 @@ export default async function DrewResumePage() {
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
       <SmoothScrollToHash />
-      <div className={SPACING.section}>
-        <section id="hero">
-          <PageHero
-            title="Drew's Resume"
-            description={getSummary()}
-            align="center"
-          />
-        </section>
 
+      {/* Hero Section */}
+      <section id="hero" className={PAGE_LAYOUT.hero.container}>
+        <PageHero
+          title={pageTitle}
+          description={getSummary()}
+          align="center"
+        />
+      </section>
+
+      {/* Resume Navigation & Download */}
+      <section id="nav" className={cn(PAGE_LAYOUT.section.container, "py-4")}>
+        <div className={cn("mx-auto", CONTAINER_WIDTHS.standard)}>
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <ResumeSectionNav />
+            <DownloadResumeButton />
+          </div>
+        </div>
+      </section>
+
+      <div className={SPACING.section}>
         {/* Stats Overview */}
-        <section id="stats" className={PAGE_LAYOUT.section.container}>
+        <section
+          id="stats"
+          className={PAGE_LAYOUT.section.container}
+          aria-labelledby="stats-heading"
+        >
           <ScrollReveal animation="fade-up" delay={1}>
-            <div className={cn(SPACING.content, "p-4", "bg-card")}>
-              <ResumeStats />
+            <div className={cn("mx-auto", CONTAINER_WIDTHS.standard)}>
+              <h2
+                id="stats-heading"
+                className={cn(TYPOGRAPHY.h2.standard, "mb-6")}
+              >
+                Career Metrics
+              </h2>
+              <div
+                className={cn(
+                  "p-4 md:p-6 rounded-lg border",
+                  BORDERS.card,
+                  "bg-card/50 backdrop-blur-sm"
+                )}
+              >
+                <ResumeStats />
+              </div>
             </div>
           </ScrollReveal>
         </section>
@@ -85,15 +121,26 @@ export default async function DrewResumePage() {
           aria-labelledby="timeline-heading"
         >
           <ScrollReveal animation="fade-up" delay={2}>
-            <div className={cn(SPACING.content, "p-4", "bg-card")}>
-              <h2 id="timeline-heading" className={TYPOGRAPHY.h2.standard}>
+            <div className={cn("mx-auto", CONTAINER_WIDTHS.standard)}>
+              <h2
+                id="timeline-heading"
+                className={cn(TYPOGRAPHY.h2.standard, "mb-6")}
+              >
                 Professional Timeline
               </h2>
-              <UnifiedTimeline
-                experiences={resume.experience}
-                education={resume.education}
-                companyUrls={companyUrls}
-              />
+              <div
+                className={cn(
+                  "p-4 md:p-6 rounded-lg border",
+                  BORDERS.card,
+                  "bg-card/50 backdrop-blur-sm"
+                )}
+              >
+                <UnifiedTimeline
+                  experiences={resume.experience}
+                  education={resume.education}
+                  companyUrls={companyUrls}
+                />
+              </div>
             </div>
           </ScrollReveal>
         </section>
@@ -105,8 +152,22 @@ export default async function DrewResumePage() {
           aria-labelledby="badges-heading"
         >
           <ScrollReveal animation="fade-up" delay={3}>
-            <div className={cn(SPACING.content, "p-4", "bg-card")}>
-              <MiniBadgeList username="dcyfr" />
+            <div className={cn("mx-auto", CONTAINER_WIDTHS.standard)}>
+              <h2
+                id="badges-heading"
+                className={cn(TYPOGRAPHY.h2.standard, "mb-6")}
+              >
+                Professional Badges & Certifications
+              </h2>
+              <div
+                className={cn(
+                  "p-4 md:p-6 rounded-lg border",
+                  BORDERS.card,
+                  "bg-card/50 backdrop-blur-sm"
+                )}
+              >
+                <MiniBadgeList username="dcyfr" />
+              </div>
             </div>
           </ScrollReveal>
         </section>
@@ -118,8 +179,22 @@ export default async function DrewResumePage() {
           aria-labelledby="skills-heading"
         >
           <ScrollReveal animation="fade-up" delay={4}>
-            <div className={cn(SPACING.content, "p-4", "bg-card")}>
-              <MiniSkillsList username="dcyfr" />
+            <div className={cn("mx-auto", CONTAINER_WIDTHS.standard)}>
+              <h2
+                id="skills-heading"
+                className={cn(TYPOGRAPHY.h2.standard, "mb-6")}
+              >
+                Technical Skills & Expertise
+              </h2>
+              <div
+                className={cn(
+                  "p-4 md:p-6 rounded-lg border",
+                  BORDERS.card,
+                  "bg-card/50 backdrop-blur-sm"
+                )}
+              >
+                <MiniSkillsList username="dcyfr" />
+              </div>
             </div>
           </ScrollReveal>
         </section>
