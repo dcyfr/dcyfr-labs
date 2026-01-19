@@ -61,13 +61,9 @@ export {
 } from "./rivet/interactive";
 export { RoleBasedCTA } from "./rivet/engagement";
 export type { RoleBasedCTAProps } from "./rivet/engagement";
-export {
-  SeverityLabel,
-  CVELink,
-  CVETracker,
-  CVEFootnote,
-} from "./rivet/security";
-export type { SeverityLevel } from "./rivet/security";
+// CVE components temporarily disabled - see blog post updates
+// export { SeverityLabel, CVELink, CVETracker, CVEFootnote } from "./rivet/security";
+// export type { SeverityLevel } from "./rivet/security";
 export {
   SidebarVisibilityProvider,
   useSidebarVisibility,

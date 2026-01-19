@@ -33,10 +33,10 @@ import {
   CollapsibleSection,
   RoleBasedCTA,
   Footnotes,
-  SeverityLabel,
-  CVELink,
-  CVETracker,
-  CVEFootnote,
+  // SeverityLabel,
+  // CVELink,
+  // CVETracker,
+  // CVEFootnote,
 } from '@/components/blog';
 import {
   MDXMCPArchitecture,
@@ -619,11 +619,11 @@ const components: NonNullable<MDXRemoteProps['components']> = {
   RiskAccordionGroup,
   // Reading Progress Tracker for engagement tracking
   ReadingProgressTracker,
-  // Security components for vulnerability information
-  SeverityLabel,
-  CVELink,
-  CVETracker,
-  CVEFootnote,
+  // CVE/Security components temporarily disabled - see blog post updates
+  // SeverityLabel,
+  // CVELink,
+  // CVETracker,
+  // CVEFootnote,
   // Footnote superscripts with icon
   sup: (props: React.HTMLAttributes<HTMLElement>) => {
     // Check if this contains a link (footnote reference) or has footnote-related attributes
