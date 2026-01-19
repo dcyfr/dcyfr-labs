@@ -18,21 +18,26 @@ image:
   height: 630
 ---
 
-<CVETracker>
-
 <Alert type="critical">
   **Upgrade Required:** Node.js released security patches on January 13, 2026 for **8
   vulnerabilities** affecting all active release lines (20.x, 22.x, 24.x, 25.x). Upgrade immediately
   to **v20.20.0**, **v22.22.0**, **v24.13.0**, or **v25.3.0**.
 </Alert>
 
-**Vulnerability Summary:**
+---
 
-<div className="flex flex-wrap gap-2 my-4">
-  <SeverityLabel severity="HIGH" count={3} />
-  <SeverityLabel severity="MEDIUM" count={4} />
-  <SeverityLabel severity="LOW" count={1} />
-</div>
+## Affected Versions Matrix
+
+| CVE            | Severity | v20.x | v22.x | v24.x | v25.x | Notes                   |
+| -------------- | -------- | :---: | :---: | :---: | :---: | ----------------------- |
+| CVE-2025-55131 | High     |  Yes  |  Yes  |  Yes  |  Yes  | Buffer memory leak      |
+| CVE-2025-55130 | High     |  Yes  |  Yes  |  Yes  |  Yes  | Permissions model only  |
+| CVE-2025-59465 | High     |  Yes  |  Yes  |  Yes  |  Yes  | HTTP/2 servers          |
+| CVE-2025-59466 | Medium   |  Yes  |  Yes  |  Yes  |  Yes  | AsyncLocalStorage users |
+| CVE-2025-59464 | Medium   |  Yes  |  Yes  |  Yes  |  No   | TLS cert processing     |
+| CVE-2026-21636 | Medium   |  No   |  No   |  No   |  Yes  | v25 permissions model   |
+| CVE-2026-21637 | Medium   |  Yes  |  Yes  |  Yes  |  Yes  | PSK/ALPN callback users |
+| CVE-2025-55132 | Low      |  Yes  |  Yes  |  Yes  |  Yes  | Permissions model only  |
 
 ---
 
@@ -53,9 +58,9 @@ image:
 
 On January 13, 2026, the Node.js project released security patches addressing:
 
-- **3 HIGH severity** vulnerabilities (buffer memory leak, symlink bypass, HTTP/2 DoS)
-- **4 MEDIUM severity** vulnerabilities (AsyncLocalStorage crashes, TLS memory leak, UDS bypass, TLS callback DoS)
-- **1 LOW severity** vulnerability (timestamp permissions bypass)
+- **3 High Severity** vulnerabilities (buffer memory leak, symlink bypass, HTTP/2 DoS)
+- **4 Medium Severity** vulnerabilities (AsyncLocalStorage crashes, TLS memory leak, UDS bypass, TLS callback DoS)
+- **1 Low Severity** vulnerability (timestamp permissions bypass)
 
 ### Permissions Model Scope
 
@@ -85,12 +90,10 @@ These dependency patches are automatically included in the Node.js security rele
 
 ---
 
-## HIGH Severity Vulnerabilities
+## High Severity Vulnerabilities
 
 ### CVE-2025-55131: Buffer Memory Leak via Race Condition
 
-**Severity:** <SeverityLabel severity="HIGH" />  
-**CVE ID:** <CVELink cve="CVE-2025-55131" />  
 **Affected Versions:** 20.x, 22.x, 24.x, 25.x  
 **Reporter:** Nikita Skovoroda
 
@@ -120,7 +123,6 @@ const result = runInNewContext('Buffer.alloc(1024)', {}, { timeout: 100 });
 
 ### CVE-2025-55130: File System Permissions Bypass via Symlinks
 
-**Severity:** HIGH  
 **Affected Versions:** 20.x, 22.x, 24.x, 25.x (permissions model users)  
 **Reporter:** natann  
 **Fix By:** RafaelGSS
@@ -152,7 +154,6 @@ Only users of the Node.js permission model (`--experimental-permission` or `--pe
 
 ### CVE-2025-59465: HTTP/2 Server Crash via Malformed HEADERS
 
-**Severity:** HIGH  
 **Affected Versions:** 20.x, 22.x, 24.x, 25.x  
 **Reporter:** dantt  
 **Fix By:** RafaelGSS
@@ -206,11 +207,10 @@ Any Node.js application using HTTP/2 without explicit TLS socket error handlers.
 
 ---
 
-## MEDIUM Severity Vulnerabilities
+## Medium Severity Vulnerabilities
 
 ### CVE-2025-59466: AsyncLocalStorage Stack Overflow Crashes
 
-**Severity:** MEDIUM  
 **Affected Versions:** 20.x, 22.x, 24.x, 25.x  
 **Reporter:** Andrew MacPherson (AndrewMohawk), aaron_vercel  
 **Fix By:** mcollina
@@ -274,7 +274,6 @@ The Node.js patch improves recoverability in one edge case, but the documentatio
 
 ### CVE-2025-59464: TLS Certificate Memory Leak
 
-**Severity:** MEDIUM  
 **Affected Versions:** 20.x, 22.x, 24.x  
 **Reporter:** giant_anteater  
 **Fix By:** RafaelGSS
@@ -304,7 +303,6 @@ Applications that process TLS client certificates, particularly <GlossaryTooltip
 
 ### CVE-2026-21636: Unix Domain Socket Permissions Bypass
 
-**Severity:** MEDIUM  
 **Affected Versions:** v25.x only  
 **Reporter:** mufeedvh  
 **Fix By:** RafaelGSS
@@ -325,7 +323,6 @@ Only users of the Node.js permission model on version v25.x. If you're using v20
 
 ### CVE-2026-21637: TLS PSK/ALPN Callback DoS
 
-**Severity:** MEDIUM  
 **Affected Versions:** All versions using PSK or ALPN callbacks  
 **Reporter:** 0xmaxhax  
 **Fix By:** mcollina
@@ -342,11 +339,10 @@ TLS servers using Pre-Shared Key (PSK) authentication or Application-Layer Proto
 
 ---
 
-## LOW Severity Vulnerability
+## Low Severity Vulnerability
 
 ### CVE-2025-55132: fs.futimes() Permissions Bypass
 
-**Severity:** LOW  
 **Affected Versions:** 20.x, 22.x, 24.x, 25.x (permissions model users)  
 **Reporter:** oriotie  
 **Fix By:** RafaelGSS
@@ -360,21 +356,6 @@ File metadata can be modified in read-only directories. This behavior could be u
 **Who Is Affected:**
 
 Only users of the Node.js permission model. Low impact for most deployments.
-
----
-
-## Affected Versions Matrix
-
-| CVE            | Severity | v20.x | v22.x | v24.x | v25.x | Notes                       |
-| -------------- | -------- | ----- | ----- | ----- | ----- | --------------------------- |
-| CVE-2025-55131 | HIGH     | Yes   | Yes   | Yes   | Yes   | Buffer memory leak          |
-| CVE-2025-55130 | HIGH     | Yes   | Yes   | Yes   | Yes   | Permissions model only      |
-| CVE-2025-59465 | HIGH     | Yes   | Yes   | Yes   | Yes   | HTTP/2 servers              |
-| CVE-2025-59466 | MEDIUM   | Yes   | Yes   | Yes   | Yes   | AsyncLocalStorage users     |
-| CVE-2025-59464 | MEDIUM   | Yes   | Yes   | Yes   | No    | TLS cert processing         |
-| CVE-2026-21636 | MEDIUM   | No    | No    | No    | Yes   | v25 only, permissions model |
-| CVE-2026-21637 | MEDIUM   | Yes   | Yes   | Yes   | Yes   | PSK/ALPN callback users     |
-| CVE-2025-55132 | LOW      | Yes   | Yes   | Yes   | Yes   | Permissions model only      |
 
 ---
 
@@ -585,68 +566,6 @@ Update your GitHub Actions workflows to use version pinning:
 
 ---
 
-## CVE Details
-
-<CVEFootnote
-  cve="CVE-2025-55131"
-  description="Buffer Memory Leak via Race Condition in Node.js VM module"
-  cvssScore={7.5}
-  severity="HIGH"
-/>
-
-<CVEFootnote
-  cve="CVE-2025-55130"
-  description="Symlink Bypass in Permissions Model for File System Access"
-  cvssScore={7.3}
-  severity="HIGH"
-/>
-
-<CVEFootnote
-  cve="CVE-2025-55133"
-  description="HTTP/2 Denial of Service via Error Handling Flaw"
-  cvssScore={7.5}
-  severity="HIGH"
-/>
-
-<CVEFootnote
-  cve="CVE-2025-59466"
-  description="AsyncLocalStorage DoS via Unrecoverable Stack Exhaustion"
-  cvssScore={6.5}
-  severity="MEDIUM"
-/>
-
-<CVEFootnote
-  cve="CVE-2026-21637"
-  description="TLS Memory Leak in Session Renegotiation"
-  cvssScore={5.9}
-  severity="MEDIUM"
-/>
-
-<CVEFootnote
-  cve="CVE-2026-21636"
-  description="Unix Domain Socket Bypass in Permissions Model"
-  cvssScore={6.3}
-  severity="MEDIUM"
-/>
-
-<CVEFootnote
-  cve="CVE-2026-21638"
-  description="TLS DoS via Callback Re-entry"
-  cvssScore={5.3}
-  severity="MEDIUM"
-/>
-
-<CVEFootnote
-  cve="CVE-2025-55132"
-  description="Timestamp-based Permissions Bypass"
-  cvssScore={3.1}
-  severity="LOW"
-/>
-
-</CVETracker>
-
----
-
 ## References
 
 [^1]: [Node.js 20 Released, Features Experimental Permission Model](https://www.infoq.com/news/2023/04/node-20-new-permission-model/) - InfoQ
@@ -681,17 +600,3 @@ Update your GitHub Actions workflows to use version pinning:
 ### Security Mailing List
 
 Subscribe to the low-volume, announcement-only nodejs-sec mailing list: [groups.google.com/forum/#!forum/nodejs-sec](https://groups.google.com/forum/#!forum/nodejs-sec)
-
----
-
-## Stay Informed
-
-**Subscribe to Security Updates:**
-
-- **Node.js official:** [nodejs-sec mailing list](https://groups.google.com/forum/#!forum/nodejs-sec) (low-volume, announcement-only)
-- **DCYFR Labs Feeds:** Subscribe to our [Web Feeds](/feeds) for more in-depth CVE analysis and mitigation strategies
-- **Related reading:** [CVE-2025-55182 (React2Shell): Critical RCE Analysis](/blog/cve-2025-55182-react2shell)
-
----
-
-**Stay safe. Upgrade today.**

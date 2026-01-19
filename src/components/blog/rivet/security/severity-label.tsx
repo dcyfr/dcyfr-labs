@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ANIMATION } from "@/lib/design-tokens";
@@ -88,7 +87,31 @@ export function SeverityLabel({
   count,
   className,
 }: SeverityLabelProps) {
-  const styles = severityStyles[severity];
+  // Normalize severity to lowercase for case-insensitive matching
+  const normalizedSeverity = severity.toLowerCase() as SeverityLevel;
+  const styles = severityStyles[normalizedSeverity];
+
+  // Fallback to 'info' if severity is invalid
+  if (!styles) {
+    const fallbackStyles = severityStyles.info;
+    const displayText = count !== undefined ? `${count} ${severity.toUpperCase()}` : severity.toUpperCase();
+    return (
+      <Badge
+        className={cn(
+          fallbackStyles.bg,
+          fallbackStyles.text,
+          fallbackStyles.border,
+          "font-semibold uppercase tracking-wide",
+          ANIMATION.transition.theme,
+          className
+        )}
+        aria-label={`Severity: ${severity}${count ? `, Count: ${count}` : ""}`}
+      >
+        {displayText}
+      </Badge>
+    );
+  }
+
   const displayText = count !== undefined ? `${count} ${styles.label}` : styles.label;
 
   return (
