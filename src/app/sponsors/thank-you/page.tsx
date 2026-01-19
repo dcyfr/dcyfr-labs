@@ -109,7 +109,6 @@ export default async function SponsorThankYouPage({ searchParams }: PageProps) {
       />
 
       <div className={SPACING.section}>
-
         {/* What's Next Section */}
         <Section className={PAGE_LAYOUT.section.container}>
           <div className={SPACING.subsection}>
@@ -133,17 +132,21 @@ export default async function SponsorThankYouPage({ searchParams }: PageProps) {
                   )}
                 >
                   <div className="flex items-start gap-4">
-                    <div className={cn(
-                      'p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors',
-                      'flex-shrink-0'
-                    )}>
+                    <div
+                      className={cn(
+                        'p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors',
+                        'flex-shrink-0'
+                      )}
+                    >
                       <step.icon className="w-6 h-6 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className={cn(
-                        'font-semibold text-foreground group-hover:text-primary transition-colors',
-                        'mb-2'
-                      )}>
+                      <h3
+                        className={cn(
+                          'font-semibold text-foreground group-hover:text-primary transition-colors',
+                          'mb-2'
+                        )}
+                      >
                         {step.title}
                       </h3>
                       <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
@@ -164,18 +167,13 @@ export default async function SponsorThankYouPage({ searchParams }: PageProps) {
           <div className="text-center">
             <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
               <CardHeader className={cn('text-center', SPACING.content)}>
-                <CardTitle className={TYPOGRAPHY.h2.featured}>
-                  Join the Community
-                </CardTitle>
+                <CardTitle className={TYPOGRAPHY.h2.featured}>Join the Community</CardTitle>
                 <CardDescription className="text-base">
                   {sponsorCount > 0 ? (
                     <>
                       You&apos;re one of{' '}
-                      <span className="font-semibold text-primary">
-                        {sponsorCount}
-                      </span>{' '}
-                      {sponsorCount === 1 ? 'sponsor' : 'sponsors'} supporting
-                      our work
+                      <span className="font-semibold text-primary">{sponsorCount}</span>{' '}
+                      {sponsorCount === 1 ? 'sponsor' : 'sponsors'} supporting our work
                     </>
                   ) : (
                     'Be part of a community supporting secure open source development'
