@@ -39,7 +39,6 @@ export { PostThumbnail } from './post/post-thumbnail';
 export { PostHeroImage } from './post/post-hero-image';
 export { PostBadges } from './post/post-badges';
 export { SeriesBadge } from './post/series-badge';
-export { SeriesNavigation } from './post/series-navigation';
 export { SeriesHeader } from './series-header';
 export { SeriesCard } from './series-card';
 export { ContentTypeToggle } from './content-type-toggle';
@@ -48,10 +47,19 @@ export { AnchorExpansionWrapper } from './anchor-expansion-wrapper';
 // Sidebar context for hiding duplicate content
 
 // RIVET framework components
+// P0 - Core reading experience
 export { ReadingProgressBar, SeriesBackgroundNote } from './rivet/navigation';
-export { KeyTakeaway, TLDRSummary } from './rivet/visual';
-export { GlossaryTooltip, SectionShare, CollapsibleSection, Footnotes } from './rivet/interactive';
-export { RoleBasedCTA } from './rivet/engagement';
+export { SeriesNavigation as RivetSeriesNavigation } from './rivet/navigation';
+export { SeriesNavigation } from './post/series-navigation';
+export { KeyTakeaway, TLDRSummary, RiskMatrix } from './rivet/visual';
+export {
+  GlossaryTooltip,
+  SectionShare,
+  CollapsibleSection,
+  Footnotes,
+  TabInterface,
+} from './rivet/interactive';
+export { RoleBasedCTA, FAQSchema, NewsletterSignup, DownloadableAsset } from './rivet/engagement';
 export type { RoleBasedCTAProps } from './rivet/engagement';
 export {
   SidebarVisibilityProvider,

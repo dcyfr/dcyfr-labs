@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { SPACING, BORDERS, TYPOGRAPHY, ANIMATION } from "@/lib/design-tokens";
+import * as React from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { SPACING, BORDERS, TYPOGRAPHY, ANIMATION } from '@/lib/design-tokens';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import Script from "next/script";
+} from '@/components/ui/accordion';
+import Script from 'next/script';
 
 /**
  * FAQSchema Component
@@ -55,8 +55,8 @@ import Script from "next/script";
  */
 
 export interface FAQItem {
-  /** Unique identifier (used for URL hash) */
-  id: string;
+  /** Unique identifier (used for URL hash) - auto-generated if not provided */
+  id?: string;
   /** Question text */
   question: string;
   /** Answer text (supports plain text or React nodes) */
@@ -78,46 +78,66 @@ export interface FAQSchemaProps {
 
 export function FAQSchema({
   items,
-  title = "Frequently Asked Questions",
+  title = 'Frequently Asked Questions',
   showGroupControls = true,
   defaultExpanded = [],
   className,
 }: FAQSchemaProps) {
+  // Helper function to generate ID from question text
+  const generateId = (question: string, index: number): string => {
+    return (
+      question
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .substring(0, 50) + // Limit length
+      `-${index}`
+    ); // Ensure uniqueness
+  };
+
+  // Process items to ensure they have unique IDs
+  const processedItems = React.useMemo(() => {
+    return items.map((item, index) => ({
+      ...item,
+      id: item.id || generateId(item.question, index),
+    }));
+  }, [items]);
+
   const [expandedItems, setExpandedItems] = React.useState<string[]>(defaultExpanded);
 
   // Generate schema.org JSON-LD
   const schemaData = React.useMemo(() => {
     return {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": items.map((item) => ({
-        "@type": "Question",
-        "name": item.question,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": typeof item.answer === "string" ? item.answer : "",
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: processedItems.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: typeof item.answer === 'string' ? item.answer : '',
         },
       })),
     };
-  }, [items]);
+  }, [processedItems]);
 
   // Handle URL hash on mount
   React.useEffect(() => {
-    if (typeof window === "undefined") return;
-    
-    const hash = window.location.hash.replace("#", "");
-    if (hash && items.some((item) => item.id === hash)) {
+    if (typeof window === 'undefined') return;
+
+    const hash = window.location.hash.replace('#', '');
+    if (hash && processedItems.some((item) => item.id === hash)) {
       setExpandedItems((prev) => [...prev, hash]);
       // Scroll to element after a brief delay
       setTimeout(() => {
         const element = document.getElementById(hash);
-        element?.scrollIntoView({ behavior: "smooth", block: "start" });
+        element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }
-  }, [items]);
+  }, [processedItems]);
 
   const handleExpandAll = () => {
-    setExpandedItems(items.map((item) => item.id));
+    setExpandedItems(processedItems.map((item) => item.id));
   };
 
   const handleCollapseAll = () => {
@@ -137,28 +157,20 @@ export function FAQSchema({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      <div
-        className={cn(
-          "faq-schema-container",
-          `my-${SPACING.lg}`,
-          className
-        )}
-      >
+      <div className={cn('faq-schema-container', `my-${SPACING.lg}`, className)}>
         {/* Header */}
-        <div className={cn("flex items-center justify-between", `mb-${SPACING.md}`)}>
-          <h2 className={cn(TYPOGRAPHY.h2.standard, "m-0")}>
-            {title}
-          </h2>
+        <div className={cn('flex items-center justify-between', `mb-${SPACING.md}`)}>
+          <h2 className={cn(TYPOGRAPHY.h2.standard, 'm-0')}>{title}</h2>
 
           {/* Group Controls */}
           {showGroupControls && items.length > 1 && (
-            <div className={cn("flex gap-2")}>
+            <div className={cn('flex gap-2')}>
               <button
                 onClick={handleExpandAll}
                 className={cn(
-                  "text-sm font-medium text-primary hover:underline",
-                  "flex items-center gap-1",
-                  "transition-colors"
+                  'text-sm font-medium text-primary hover:underline',
+                  'flex items-center gap-1',
+                  'transition-colors'
                 )}
                 type="button"
                 aria-label="Expand all FAQs"
@@ -170,9 +182,9 @@ export function FAQSchema({
               <button
                 onClick={handleCollapseAll}
                 className={cn(
-                  "text-sm font-medium text-primary hover:underline",
-                  "flex items-center gap-1",
-                  "transition-colors"
+                  'text-sm font-medium text-primary hover:underline',
+                  'flex items-center gap-1',
+                  'transition-colors'
                 )}
                 type="button"
                 aria-label="Collapse all FAQs"
@@ -189,38 +201,22 @@ export function FAQSchema({
           type="multiple"
           value={expandedItems}
           onValueChange={handleValueChange}
-          className={cn(
-            "border rounded-lg",
-            BORDERS.card,
-            "divide-y"
-          )}
+          className={cn('border rounded-lg', BORDERS.card, 'divide-y')}
         >
-          {items.map((item) => (
-            <AccordionItem
-              key={item.id}
-              value={item.id}
-              id={item.id}
-              className="border-0"
-            >
+          {processedItems.map((item) => (
+            <AccordionItem key={item.id} value={item.id} id={item.id} className="border-0">
               <AccordionTrigger
-               className={cn(
-                   "px-4 py-4 text-left",
-                   "hover:bg-muted/50",
-                   "transition-colors",
-                   ANIMATION.duration.fast
-                 )}
+                className={cn(
+                  'px-4 py-4 text-left',
+                  'hover:bg-muted/50',
+                  'transition-colors',
+                  ANIMATION.duration.fast
+                )}
               >
-                <span className="font-semibold">
-                  {item.question}
-                </span>
+                <span className="font-semibold">{item.question}</span>
               </AccordionTrigger>
-              <AccordionContent
-               className={cn(
-                   "px-4 pb-4",
-                   "text-muted-foreground"
-                 )}
-              >
-                {typeof item.answer === "string" ? (
+              <AccordionContent className={cn('px-4 pb-4', 'text-muted-foreground')}>
+                {typeof item.answer === 'string' ? (
                   <p className="m-0 leading-relaxed">{item.answer}</p>
                 ) : (
                   item.answer
