@@ -22,6 +22,8 @@ import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import rehypeStringify from 'rehype-stringify';
 import { visit } from 'unist-util-visit';
 import type { Root } from 'hast';
+import type { Link, Image } from 'mdast';
+import { SITE_URL } from '@/lib/site-config';
 
 // ============================================================================
 // Text-Based Component Transformers
@@ -92,7 +94,6 @@ function preprocessMDXComponents(content: string): string {
 
   // SeriesBackgroundNote → <blockquote> with series context
   // Simplified transformation - just include description and context
-  // The links are already handled by remarkAbsoluteUrls plugin
   processed = processed.replace(/<SeriesBackgroundNote\s+([^>]+)\s*\/>/g, (match, attrsStr) => {
     const attrs = extractAttributes(attrsStr || '');
     const description = attrs.description || '';
@@ -186,8 +187,23 @@ function preprocessMDXComponents(content: string): string {
 }
 
 // ============================================================================
-// Rehype Plugins
+// Remark/Rehype Plugins
 // ============================================================================
+
+/**
+ * Remark plugin to convert relative URLs to absolute URLs
+ * Handles both links and images for RSS/Atom feeds
+ */
+function remarkAbsoluteUrls() {
+  return (tree: any) => {
+    visit(tree, ['link', 'image'], (node: Link | Image) => {
+      if (node.url && node.url.startsWith('/')) {
+        // Convert relative URLs to absolute
+        node.url = `${SITE_URL}${node.url}`;
+      }
+    });
+  };
+}
 
 /**
  * Rehype plugin to remove problematic attributes from HTML
@@ -243,6 +259,7 @@ export async function transformMDXForRSS(content: string): Promise<string> {
   const file = await unified()
     .use(remarkParse) // Parse markdown
     .use(remarkGfm) // Support GitHub Flavored Markdown
+    .use(remarkAbsoluteUrls) // Convert relative URLs (links and images) to absolute
     .use(remarkRehype, { allowDangerousHtml: true }) // Convert to HTML AST (allow HTML)
     .use(rehypeRaw) // Parse raw HTML in markdown
     .use(rehypeStripFeedAttributes) // Remove feed-incompatible attributes
