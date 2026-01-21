@@ -74,7 +74,7 @@
       "id": "post-20251219-7f3a9c2e",
       "title": "OWASP Top 10 for Agentic AI: What You Need to Know in 2026",
       "summary": "OWASP's first Top 10 for Agentic Applications (2026): Learn the 10 critical security risks facing autonomous AI systems—from goal hijacking to rogue agents. Expert analysis with real-world CVEs and mitigation strategies.",
-      "content": "As AI agents become more autonomous and capable of taking real-world actions, the security landscape is evolving rapidly. This guide breaks down OWASP's newly released framework for securing agentic AI systems. Agentic AI refers to autonomous AI systems that go beyond simple chatbots to plan multi-step workflows, invoke tools and APIs independently, and make decisions without human intervention. These AI agents now book travel, manage calendars, approve expenses, deploy code, and handle customer",
+      "content": "Agentic AI refers to autonomous AI systems that go beyond simple chatbots to plan multi-step workflows, invoke tools and APIs independently, and make decisions without human intervention. These AI agents now book travel, manage calendars, approve expenses, deploy code, and handle customer service autonomously--creating an entirely new category of AI agent security risks. The Open Web Application Security Project (OWASP), the global authority on application security, just released its first-ever ",
       "tags": [
         "AI Security",
         "OWASP",
@@ -319,5 +319,5 @@
     "Features",
     "Portfolio"
   ],
-  "generatedAt": "2026-01-20T04:38:07.169Z"
+  "generatedAt": "2026-01-21T04:43:21.306Z"
 }
