@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Download } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { SPACING, BORDERS, TYPOGRAPHY } from "@/lib/design-tokens";
-import { Button } from "@/components/ui/button";
+import * as React from 'react';
+import { Download } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { SPACING, BORDERS, TYPOGRAPHY } from '@/lib/design-tokens';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 /**
  * RiskMatrix Component
@@ -53,7 +53,7 @@ import {
  * - High contrast colors
  */
 
-export type RiskLevel = "low" | "medium" | "high" | "critical";
+export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 
 export interface RiskItem {
   /** Unique identifier */
@@ -93,25 +93,25 @@ const LEVEL_POSITION: Record<RiskLevel, number> = {
 
 // Risk level labels
 const LEVEL_LABELS: Record<RiskLevel, string> = {
-  low: "Low",
-  medium: "Medium",
-  high: "High",
-  critical: "Critical",
+  low: 'Low',
+  medium: 'Medium',
+  high: 'High',
+  critical: 'Critical',
 };
 
 // Color mapping for risk severity
 const getRiskColor = (likelihood: RiskLevel, impact: RiskLevel): string => {
   const score = LEVEL_POSITION[likelihood] + LEVEL_POSITION[impact];
-  
-  if (score <= 1) return "#22c55e"; // green-500 (low risk)
-  if (score <= 3) return "#eab308"; // yellow-500 (medium risk)
-  if (score <= 5) return "#f97316"; // orange-500 (high risk)
-  return "#ef4444"; // red-500 (critical risk)
+
+  if (score <= 1) return '#22c55e'; // green-500 (low risk)
+  if (score <= 3) return '#eab308'; // yellow-500 (medium risk)
+  if (score <= 5) return '#f97316'; // orange-500 (high risk)
+  return '#ef4444'; // red-500 (critical risk)
 };
 
 export function RiskMatrix({
   risks,
-  title = "Risk Assessment Matrix",
+  title = 'Risk Assessment Matrix',
   showLegend = true,
   showExport = true,
   interactive = true,
@@ -131,23 +131,23 @@ export function RiskMatrix({
 
     try {
       // For now, just alert (would need html2canvas for real implementation)
-      alert("PNG export feature: Install html2canvas for full implementation");
+      alert('PNG export feature: Install html2canvas for full implementation');
     } catch (err) {
-      console.error("Export failed:", err);
+      console.error('Export failed:', err);
     }
   };
 
   const handleExportSVG = () => {
-    const svgElement = matrixRef.current?.querySelector("svg");
+    const svgElement = matrixRef.current?.querySelector('svg');
     if (!svgElement) return;
 
     const svgData = new XMLSerializer().serializeToString(svgElement);
-    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
     const svgUrl = URL.createObjectURL(svgBlob);
 
-    const downloadLink = document.createElement("a");
+    const downloadLink = document.createElement('a');
     downloadLink.href = svgUrl;
-    downloadLink.download = `risk-matrix-${new Date().toISOString().split("T")[0]}.svg`;
+    downloadLink.download = `risk-matrix-${new Date().toISOString().split('T')[0]}.svg`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
@@ -161,13 +161,13 @@ export function RiskMatrix({
   const svgHeight = cellSize * gridSize + padding * 2;
 
   return (
-    <div className={cn("risk-matrix-container", `my-${SPACING.lg}`, className)}>
+    <div className={cn('risk-matrix-container', `my-${SPACING.content}`, className)}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className={cn('flex items-center justify-between', `mb-${SPACING.md}`)}>
         <h2 className={`${TYPOGRAPHY.h2.standard} m-0`}>{title}</h2>
-        
+
         {showExport && (
-          <div className="flex gap-2">
+          <div className={cn('flex', `gap-${SPACING.xs}`)}>
             <Button
               onClick={handleExportPNG}
               variant="outline"
@@ -178,11 +178,7 @@ export function RiskMatrix({
               <Download className="h-4 w-4 mr-2" />
               PNG
             </Button>
-            <Button
-              onClick={handleExportSVG}
-              variant="outline"
-              size="sm"
-            >
+            <Button onClick={handleExportSVG} variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
               SVG
             </Button>
@@ -194,9 +190,10 @@ export function RiskMatrix({
       <div
         ref={matrixRef}
         className={cn(
-          "border rounded-lg p-4 bg-card",
+          'rounded-lg bg-card',
           BORDERS.card,
-          "flex items-center justify-center overflow-x-auto"
+          `p-${SPACING.md}`,
+          'flex items-center justify-center overflow-x-auto'
         )}
       >
         <svg
@@ -213,10 +210,10 @@ export function RiskMatrix({
               const x = padding + j * cellSize;
               const y = padding + (gridSize - 1 - i) * cellSize;
               const score = i + j;
-              let fill = "#dcfce7"; // green-100
-              if (score > 1 && score <= 3) fill = "#fef9c3"; // yellow-100
-              if (score > 3 && score <= 5) fill = "#fed7aa"; // orange-100
-              if (score > 5) fill = "#fee2e2"; // red-100
+              let fill = '#dcfce7'; // green-100
+              if (score > 1 && score <= 3) fill = '#fef9c3'; // yellow-100
+              if (score > 3 && score <= 5) fill = '#fed7aa'; // orange-100
+              if (score > 5) fill = '#fee2e2'; // red-100
 
               return (
                 <rect
@@ -249,11 +246,11 @@ export function RiskMatrix({
             transform={`rotate(-90 15 ${svgHeight / 2})`}
             className="text-sm font-medium fill-foreground"
           >
-            ← Impact
+            Impact ↑
           </text>
 
           {/* Axis tick labels */}
-          {["Low", "Medium", "High", "Critical"].map((label, i) => (
+          {['Low', 'Medium', 'High', 'Critical'].map((label, i) => (
             <React.Fragment key={`labels-${i}`}>
               {/* X-axis labels */}
               <text
@@ -280,7 +277,8 @@ export function RiskMatrix({
           {/* Plot risks */}
           {risks.map((risk) => {
             const x = padding + LEVEL_POSITION[risk.likelihood] * cellSize + cellSize / 2;
-            const y = padding + (gridSize - 1 - LEVEL_POSITION[risk.impact]) * cellSize + cellSize / 2;
+            const y =
+              padding + (gridSize - 1 - LEVEL_POSITION[risk.impact]) * cellSize + cellSize / 2;
             const color = getRiskColor(risk.likelihood, risk.impact);
 
             return (
@@ -294,17 +292,17 @@ export function RiskMatrix({
                   stroke="#fff"
                   strokeWidth="2"
                   className={cn(
-                    interactive && "cursor-pointer hover:scale-110 transition-transform",
-                    "risk-dot"
+                    interactive && 'cursor-pointer hover:scale-110 transition-transform',
+                    'risk-dot'
                   )}
                   onClick={() => handleRiskClick(risk)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
+                    if (e.key === 'Enter' || e.key === ' ') {
                       handleRiskClick(risk);
                     }
                   }}
                   tabIndex={interactive ? 0 : -1}
-                  role={interactive ? "button" : undefined}
+                  role={interactive ? 'button' : undefined}
                   aria-label={`${risk.name}: ${LEVEL_LABELS[risk.likelihood]} likelihood, ${LEVEL_LABELS[risk.impact]} impact`}
                 />
               </g>
@@ -315,22 +313,29 @@ export function RiskMatrix({
 
       {/* Legend */}
       {showLegend && (
-        <div className="mt-4 p-4 border rounded-lg bg-muted/50">
-          <h3 className="text-sm font-semibold mb-2">Risk Levels</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="flex items-center gap-2">
+        <div
+          className={cn(
+            'rounded-lg bg-muted/50',
+            BORDERS.card,
+            `mt-${SPACING.content}`,
+            `p-${SPACING.md}`
+          )}
+        >
+          <h3 className={cn(TYPOGRAPHY.h3.standard, `mb-${SPACING.sm}`)}>Risk Levels</h3>
+          <div className={cn('grid grid-cols-2 sm:grid-cols-4', `gap-${SPACING.sm}`, 'text-sm')}>
+            <div className={cn('flex items-center', `gap-${SPACING.xs}`)}>
               <div className="w-4 h-4 rounded-full bg-[#22c55e]" />
               <span>Low Risk</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className={cn('flex items-center', `gap-${SPACING.xs}`)}>
               <div className="w-4 h-4 rounded-full bg-[#eab308]" />
               <span>Medium Risk</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className={cn('flex items-center', `gap-${SPACING.xs}`)}>
               <div className="w-4 h-4 rounded-full bg-[#f97316]" />
               <span>High Risk</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className={cn('flex items-center', `gap-${SPACING.xs}`)}>
               <div className="w-4 h-4 rounded-full bg-[#ef4444]" />
               <span>Critical Risk</span>
             </div>
@@ -345,17 +350,17 @@ export function RiskMatrix({
             <DialogHeader>
               <DialogTitle>{selectedRisk.name}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-2">
+            <div className={`space-y-${SPACING.xs}`}>
               <div>
-                <span className="font-medium">Likelihood:</span>{" "}
+                <span className="font-medium">Likelihood:</span>{' '}
                 <span className="capitalize">{selectedRisk.likelihood}</span>
               </div>
               <div>
-                <span className="font-medium">Impact:</span>{" "}
+                <span className="font-medium">Impact:</span>{' '}
                 <span className="capitalize">{selectedRisk.impact}</span>
               </div>
               {selectedRisk.description && (
-                <div className="mt-4">
+                <div className={`mt-${SPACING.md}`}>
                   <p className="text-sm text-muted-foreground">{selectedRisk.description}</p>
                 </div>
               )}
