@@ -1,18 +1,13 @@
-import type { Metadata } from "next";
-import { PageLayout } from "@/components/layouts";
-import { createPageMetadata } from "@/lib/metadata";
-import { CONTAINER_WIDTHS, SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
-import {
-  ReadingProgressBar,
-  KeyTakeaway,
-  TLDRSummary,
-} from "@/components/blog";
+import type { Metadata } from 'next';
+import { PageLayout } from '@/components/layouts';
+import { createPageMetadata } from '@/lib/metadata';
+import { CONTAINER_WIDTHS, SPACING, TYPOGRAPHY } from '@/lib/design-tokens';
+import { ReadingProgressBar, KeyTakeaway, TLDRSummary } from '@/components/blog';
 
 export const metadata: Metadata = createPageMetadata({
-  title: "RIVET Components Demo",
-  description:
-    "Interactive demonstration of RIVET framework components for blog modernization",
-  path: "/dev/rivet-demo",
+  title: 'RIVET Components Demo',
+  description: 'Interactive demonstration of RIVET framework components for blog modernization',
+  path: '/dev/rivet-demo',
 });
 
 export default function RIVETDemoPage() {
@@ -26,28 +21,39 @@ export default function RIVETDemoPage() {
         <header className={`mb-${SPACING.section}`}>
           <h1 className={TYPOGRAPHY.h1.standard}>RIVET Components Demo</h1>
           <p className="text-muted-foreground mt-4">
-            Interactive showcase of RIVET framework components built in Week 1.
-            Scroll to see ReadingProgressBar in action.
+            Interactive showcase of RIVET framework components built in Week 1. Scroll to see
+            ReadingProgressBar in action.
           </p>
         </header>
 
         {/* TLDRSummary Component */}
         <TLDRSummary
           title="Component Overview"
-          mostCommon={[
-            "ReadingProgressBar - Scroll indicator with percentage",
-            "KeyTakeaway - Callout boxes with variants",
-            "TLDRSummary - Executive summary sections",
-          ]}
-          mostDangerous={[
-            "All components use design tokens (no hardcoded values)",
-            "Full TypeScript strict mode compliance",
-            "71 tests passing with ≥80% coverage",
-          ]}
-          hardestToDetect={[
-            "Framer Motion animations for smooth UX",
-            "Accessibility features (WCAG AA compliant)",
-            "Mobile-first responsive design",
+          sections={[
+            {
+              title: 'Most Common',
+              items: [
+                'ReadingProgressBar - Scroll indicator with percentage',
+                'KeyTakeaway - Callout boxes with variants',
+                'TLDRSummary - Executive summary sections',
+              ],
+            },
+            {
+              title: 'Key Features',
+              items: [
+                'All components use design tokens (no hardcoded values)',
+                'Full TypeScript strict mode compliance',
+                '71 tests passing with ≥80% coverage',
+              ],
+            },
+            {
+              title: 'Technical Details',
+              items: [
+                'Framer Motion animations for smooth UX',
+                'Accessibility features (WCAG AA compliant)',
+                'Mobile-first responsive design',
+              ],
+            },
           ]}
           jumpLink="#components"
         />
@@ -60,9 +66,8 @@ export default function RIVETDemoPage() {
           <div className={`mt-${SPACING.content}`}>
             <h3 className={TYPOGRAPHY.h3.standard}>1. ReadingProgressBar</h3>
             <p className="text-muted-foreground mt-2">
-              The progress bar at the top of this page shows your reading
-              progress (0-100%). It uses Framer Motion for smooth animation and
-              supports multiple color variants.
+              The progress bar at the top of this page shows your reading progress (0-100%). It uses
+              Framer Motion for smooth animation and supports multiple color variants.
             </p>
 
             <KeyTakeaway variant="insight" title="Key Features">
@@ -76,8 +81,8 @@ export default function RIVETDemoPage() {
             </KeyTakeaway>
 
             <KeyTakeaway variant="insight">
-              Use this for general important information that readers should
-              remember. Perfect for &ldquo;aha!&rdquo; moments and key concepts.
+              Use this for general important information that readers should remember. Perfect for
+              &ldquo;aha!&rdquo; moments and key concepts.
             </KeyTakeaway>
           </div>
 
@@ -85,30 +90,28 @@ export default function RIVETDemoPage() {
           <div className={`mt-${SPACING.section}`}>
             <h3 className={TYPOGRAPHY.h3.standard}>2. KeyTakeaway Variants</h3>
             <p className="text-muted-foreground mt-2">
-              Four distinct variants for different content types. Each includes
-              contextual icons from Lucide React.
+              Four distinct variants for different content types. Each includes contextual icons
+              from Lucide React.
             </p>
 
             <KeyTakeaway variant="insight" title="Insight Variant">
-              Use this for general important information that readers should
-              remember. Perfect for &ldquo;aha!&rdquo; moments and key concepts.
+              Use this for general important information that readers should remember. Perfect for
+              &ldquo;aha!&rdquo; moments and key concepts.
             </KeyTakeaway>
 
             <KeyTakeaway variant="security" title="Security Variant">
-              Highlight security-related guidance, best practices, and critical
-              security considerations. Always validate user input before
-              processing.
+              Highlight security-related guidance, best practices, and critical security
+              considerations. Always validate user input before processing.
             </KeyTakeaway>
 
             <KeyTakeaway variant="warning" title="Warning Variant">
-              Call out potential issues, gotchas, or things to avoid. This
-              variant draws attention to cautionary information that could
-              prevent mistakes.
+              Call out potential issues, gotchas, or things to avoid. This variant draws attention
+              to cautionary information that could prevent mistakes.
             </KeyTakeaway>
 
             <KeyTakeaway variant="tip" title="Tip Variant">
-              Share helpful suggestions, pro tips, and optimization techniques.
-              Great for actionable advice that improves outcomes.
+              Share helpful suggestions, pro tips, and optimization techniques. Great for actionable
+              advice that improves outcomes.
             </KeyTakeaway>
           </div>
 
@@ -116,23 +119,20 @@ export default function RIVETDemoPage() {
           <div className={`mt-${SPACING.section}`}>
             <h3 className={TYPOGRAPHY.h3.standard}>3. TLDRSummary Component</h3>
             <p className="text-muted-foreground mt-2">
-              Executive summary boxes for top-of-post content. Features
-              three-section format with gradient backgrounds and jump links.
+              Executive summary boxes for top-of-post content. Features three-section format with
+              gradient backgrounds and jump links.
             </p>
 
             <KeyTakeaway variant="tip" title="Best Practices">
               <ul>
                 <li>
-                  <strong>Most Common:</strong> Items readers encounter most
-                  frequently
+                  <strong>Most Common:</strong> Items readers encounter most frequently
                 </li>
                 <li>
-                  <strong>Most Dangerous:</strong> Critical risks or high-impact
-                  issues
+                  <strong>Most Dangerous:</strong> Critical risks or high-impact issues
                 </li>
                 <li>
-                  <strong>Hardest to Detect:</strong> Subtle problems requiring
-                  expertise
+                  <strong>Hardest to Detect:</strong> Subtle problems requiring expertise
                 </li>
                 <li>Keep items concise (1-2 lines max) for scannability</li>
                 <li>Use jump links to direct readers to detailed sections</li>
@@ -180,16 +180,16 @@ export default function RIVETDemoPage() {
             <KeyTakeaway variant="tip" title="Week 1 Results">
               <ul>
                 <li>
-                  <strong>ReadingProgressBar:</strong> 18 tests passing
-                  (rendering, progress calculation, variants, accessibility)
+                  <strong>ReadingProgressBar:</strong> 18 tests passing (rendering, progress
+                  calculation, variants, accessibility)
                 </li>
                 <li>
-                  <strong>KeyTakeaway:</strong> 25 tests passing (variants,
-                  icons, titles, accessibility)
+                  <strong>KeyTakeaway:</strong> 25 tests passing (variants, icons, titles,
+                  accessibility)
                 </li>
                 <li>
-                  <strong>TLDRSummary:</strong> 28 tests passing (sections, jump
-                  links, responsive grid, accessibility)
+                  <strong>TLDRSummary:</strong> 28 tests passing (sections, jump links, responsive
+                  grid, accessibility)
                 </li>
                 <li>
                   <strong>Total:</strong> 71 tests passing in 172ms
@@ -203,16 +203,11 @@ export default function RIVETDemoPage() {
             <h2 className={TYPOGRAPHY.h2.standard}>Next Steps</h2>
             <KeyTakeaway variant="warning" title="Week 2 Plan">
               <ul>
-                <li>
-                  Integrate P0 components into OWASP Top 10 Agentic AI post
-                </li>
+                <li>Integrate P0 components into OWASP Top 10 Agentic AI post</li>
                 <li>Add 10+ KeyTakeaway boxes strategically placed</li>
                 <li>Add TLDRSummary at top with categorized risk highlights</li>
                 <li>Enable ReadingProgressBar globally for all blog posts</li>
-                <li>
-                  Build P1 components (GlossaryTooltip, RoleBasedCTA,
-                  SectionShare)
-                </li>
+                <li>Build P1 components (GlossaryTooltip, RoleBasedCTA, SectionShare)</li>
                 <li>Complete OWASP full RIVET implementation</li>
               </ul>
             </KeyTakeaway>
