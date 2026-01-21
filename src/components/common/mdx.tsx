@@ -34,6 +34,12 @@ import {
   RoleBasedCTA,
   Footnotes,
   SeriesBackgroundNote,
+  RiskMatrix,
+  DownloadableAsset,
+  FAQSchema,
+  NewsletterSignup,
+  TabInterface,
+  SeriesNavigation,
 } from '@/components/blog';
 import {
   MDXMCPArchitecture,
@@ -605,6 +611,19 @@ const components: NonNullable<MDXRemoteProps['components']> = {
   RoleBasedCTA,
   // Series Background Note component for series context with previous post links
   SeriesBackgroundNote,
+  // P2 Advanced Features
+  // Risk Matrix component for visual risk assessment
+  RiskMatrix,
+  // Downloadable Asset component for lead capture with file delivery
+  DownloadableAsset,
+  // FAQ Schema component for SEO-optimized FAQ sections
+  FAQSchema,
+  // Newsletter Signup component for email capture
+  NewsletterSignup,
+  // Tab Interface component for interactive tabbed content
+  TabInterface,
+  // Series Navigation component for multi-part series navigation
+  SeriesNavigation,
   // Context Clue component for background information
   ContextClue,
   // Figure caption component for automatic figure numbering

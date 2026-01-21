@@ -29,11 +29,36 @@ image:
 previousSlugs: ['owasp-top-10-agentic-ai-2026']
 ---
 
-<ContextClue>
-  As AI agents become more autonomous and capable of taking real-world actions, the security
-  landscape is evolving rapidly. This guide breaks down OWASP's newly released framework for
-  securing agentic AI systems.
-</ContextClue>
+<TLDRSummary
+  title="OWASP Agentic Top 10 Brief"
+  sections={[
+    {
+      title: 'Most Common',
+      items: [
+        'ASI01 Goal Hijack: Prompt injection attacks redirecting agent objectives',
+        'ASI02 Tool Misuse: Legitimate tools weaponized through agent manipulation',
+        'ASI06 Memory Poisoning: Long-term context corruption influencing future decisions',
+      ],
+    },
+    {
+      title: 'Most Dangerous',
+      items: [
+        'ASI10 Rogue Agents: Persistent malicious behavior outlasting initial compromise',
+        'ASI09 Cascading Failures: Errors propagating across autonomous agent networks',
+        'ASI04 Privilege Abuse: Agents exceeding authorized access boundaries',
+      ],
+    },
+    {
+      title: 'Hardest to Detect',
+      items: [
+        'ASI06 Memory Poisoning: Subtle context manipulation with delayed effects',
+        'ASI08 Training Data Poisoning: Backdoors embedded during model training',
+        'ASI07 Multi-Agent Threats: Coordinated attacks across distributed systems',
+      ],
+    },
+  ]}
+  jumpLink="#the-owasp-agentic-top-10-breakdown"
+/>
 
 **Agentic AI** refers to autonomous AI systems that go beyond simple chatbots to plan multi-step workflows, invoke tools and APIs independently, and make decisions without human intervention. These AI agents now book travel, manage calendars, approve expenses, deploy code, and handle customer service autonomously--creating an entirely new category of **AI agent security** risks.
 
@@ -41,24 +66,11 @@ The Open Web Application Security Project (OWASP), the global authority on appli
 
 Whether you're a security professional implementing AI safeguards, a business leader evaluating autonomous agents, or a developer building agentic systems, this comprehensive guide covers the risks you need to understand and the controls you need to implement.
 
-<TLDRSummary
-  title="OWASP Agentic Top 10 Brief"
-  mostCommon={[
-    'ASI01 Goal Hijack: Prompt injection attacks redirecting agent objectives',
-    'ASI02 Tool Misuse: Legitimate tools weaponized through agent manipulation',
-    'ASI06 Memory Poisoning: Long-term context corruption influencing future decisions',
-  ]}
-  mostDangerous={[
-    'ASI10 Rogue Agents: Persistent malicious behavior outlasting initial compromise',
-    'ASI09 Cascading Failures: Errors propagating across autonomous agent networks',
-    'ASI04 Privilege Abuse: Agents exceeding authorized access boundaries',
-  ]}
-  hardestToDetect={[
-    'ASI06 Memory Poisoning: Subtle context manipulation with delayed effects',
-    'ASI08 Training Data Poisoning: Backdoors embedded during model training',
-    'ASI07 Multi-Agent Threats: Coordinated attacks across distributed systems',
-  ]}
-/>
+<ContextClue>
+  As AI agents become more autonomous and capable of taking real-world actions, the security
+  landscape is evolving rapidly. This guide breaks down OWASP's newly released framework for
+  securing agentic AI systems.
+</ContextClue>
 
 ---
 
@@ -79,12 +91,6 @@ Traditional AI systems are reactive: you ask a question, they answer. Agentic AI
 | **Tools**  | None / Read-only      | Active Execution (API/DB) |
 | **Memory** | Session-limited       | Persistent / Long-term    |
 | **Risk**   | Misinformation        | System Compromise         |
-
-<KeyTakeaway variant="security" title="Critical Difference">
-  Traditional AI risks center on misinformation. Agentic AI risks involve **system
-  compromise**--agents with legitimate access to databases, APIs, and cloud infrastructure that
-  attackers can weaponize.
-</KeyTakeaway>
 
 Major companies already deploy these systems at scale. Salesforce's Agentforce handles customer service workflows autonomously. Microsoft's <GlossaryTooltip term="Copilot Studio" definition="Copilot Studio - Microsoft's platform for building custom AI agents that integrate with Microsoft 365, Azure, and third-party services to automate business workflows">Copilot Studio</GlossaryTooltip> creates agents accessing sensitive business data across Microsoft 365. ServiceNow's AI agents automate IT and HR processes, reducing manual workloads by up to 60%.[^1] Amazon uses agentic AI to optimize delivery routes, saving an estimated $100 million annually by replacing manual analyst modifications with AI-driven optimization.[^2]
 
@@ -111,6 +117,12 @@ The challenge is clear: **we're deploying these systems faster than we're securi
 
 According to Gartner, by 2028, 33% of enterprise software will incorporate agentic AI, and 15% of daily business decisions will be handled autonomously. That's up from less than 1% in 2024.[^3] The challenge: the same capabilities that make agents powerful make them dangerous when compromised. A single vulnerability can cascade across interconnected systems, amplifying traditional security risks and introducing new attack vectors.
 
+<KeyTakeaway variant="security" title="Critical Difference">
+  Traditional AI risks center on misinformation. Agentic AI risks involve **system
+  compromise**--agents with legitimate access to databases, APIs, and cloud infrastructure that
+  attackers can weaponize.
+</KeyTakeaway>
+
 <RoleBasedCTA
   role="executive"
   title="Business Leaders"
@@ -127,18 +139,18 @@ The OWASP Agentic Top 10 reflects real incidents already happening in production
 
 Yet according to Forrester, most organizations lack the security controls to prevent what the firm predicts will be "major breaches and employee dismissals" stemming from agentic AI compromises in 2026. The research firm emphasizes that these breaches stem from "cascading failures" in autonomous systems, not individual mistakes.[^10] Meanwhile, according to PwC and McKinsey surveys, 79% of organizations report at least some level of AI agent adoption, with 62% already experimenting with or scaling agentic AI systems.[^11]
 
-<KeyTakeaway variant="security" title="Defense in Depth for AI">
-  No single control prevents all attacks. Layer **least agency** (minimize autonomy) +
-  **observability** (monitor everything) + **zero trust** (assume compromise) + **human oversight**
-  (approve high-impact actions).
-</KeyTakeaway>
-
 The OWASP framework emphasizes foundational principles organizations must implement:
 
 - **Least Agency:** Avoid deploying agentic behavior where unnecessary. Unnecessary autonomy expands your attack surface without adding value.
 - **Strong Observability:** Maintain clear visibility into what agents are doing, why they're doing it, and which tools they're invoking. Without comprehensive logging and monitoring, minor issues quietly cascade into system-wide failures.
 - **Zero Trust Architecture:** Design systems assuming components will fail or be exploited. Implement blast-radius controls, sandboxing, and policy enforcement to contain failures.
 - **Human-in-the-Loop for High-Impact Actions:** Require human approval for privileged operations, irreversible changes, or goal-changing decisions.
+
+<KeyTakeaway variant="security" title="Defense in Depth for AI">
+  No single control prevents all attacks. Layer **least agency** (minimize autonomy) +
+  **observability** (monitor everything) + **zero trust** (assume compromise) + **human oversight**
+  (approve high-impact actions).
+</KeyTakeaway>
 
 <RoleBasedCTA
   role="developer"
@@ -542,12 +554,6 @@ The future of work, productivity, and innovation increasingly depends on autonom
 
 Organizations that treat agentic security as an afterthought will learn through costly breaches. Those that embed these principles from design through deployment will unlock AI's potential while containing its risks.
 
-<KeyTakeaway variant="insight" title="The Autonomy Paradox">
-  Every capability that makes agentic AI powerful--autonomous planning, tool execution, persistent
-  memory, multi-agent coordination--is also an attack vector. Security must evolve alongside
-  capability.
-</KeyTakeaway>
-
 **The autonomy that makes agents powerful is precisely what makes them dangerous.** That paradox demands our full attention, our best security thinking, and our commitment to building systems that are both capable and trustworthy.
 
 The choice is yours: be proactive, or become a cautionary tale.
@@ -590,6 +596,12 @@ The choice is yours: be proactive, or become a cautionary tale.
 - Budget for agent-specific security controls, not just traditional application security
 
 </CollapsibleSection>
+
+<KeyTakeaway variant="insight" title="The Autonomy Paradox">
+  Every capability that makes agentic AI powerful--autonomous planning, tool execution, persistent
+  memory, multi-agent coordination--is also an attack vector. Security must evolve alongside
+  capability.
+</KeyTakeaway>
 
 ---
 
@@ -755,8 +767,6 @@ These real-world CVEs demonstrate that agentic AI attack vectors are not theoret
 - **[Snyk - Supply Chain Security for AI](https://snyk.io/blog/malicious-mcp-server-on-npm-postmark-mcp-harvests-emails/)**: Analysis of malicious MCP servers and dependencies
 
 </CollapsibleSection>
-
----
 
 [^1]: LMTEQ. "Reduce Manual Work By 70% With ServiceNow Automation." _LMTEQ Blog_, May 2025. [lmteq.com](https://www.lmteq.com/blogs/servicenow/servicenow-to-reduce-manual-workloads-in-industries/)
 
