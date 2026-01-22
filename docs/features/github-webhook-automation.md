@@ -245,7 +245,7 @@ function detectAutomationTriggers(changedFiles: string[]): {
 
 **Required:**
 ```bash
-GITHUB_WEBHOOK_SECRET="***REMOVED***"
+GITHUB_WEBHOOK_SECRET="<your-secret-here>"  # Generate with: openssl rand -base64 32
 ```
 
 **Optional (for enhanced features):**
@@ -261,7 +261,7 @@ REDIS_URL=                 # Metrics storage (future)
 2. **Add webhook:**
    - **Payload URL:** `https://www.dcyfr.ai/api/github/webhook`
    - **Content type:** `application/json`
-   - **Secret:** `***REMOVED***`
+   - **Secret:** `<same-as-GITHUB_WEBHOOK_SECRET>`
    - **Events:** ☑️ Just the push event
    - **Active:** ✅ Active
 
