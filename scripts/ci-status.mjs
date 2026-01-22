@@ -22,11 +22,24 @@ try {
   }
 
   // Get recent workflow runs
-  const command = workflow
-    ? `gh run list --workflow="${workflow}" --limit 10`
-    : 'gh run list --limit 15';
+  let command;
 
-  // lgtm [js/command-line-injection] - Workflow name from npm script arguments, not user input
+  if (workflow) {
+    // Validate workflow name to prevent command injection
+    // Workflow filenames should be alphanumeric with dashes, underscores, and .yml/.yaml extension
+    const validWorkflowPattern = /^[a-z0-9._-]+\.ya?ml$/i;
+
+    if (!validWorkflowPattern.test(workflow)) {
+      console.error(`❌ Invalid workflow name: ${workflow}`);
+      console.error('Workflow names must be valid YAML filenames (e.g., test.yml)');
+      process.exit(1);
+    }
+
+    command = `gh run list --workflow="${workflow}" --limit 10`;
+  } else {
+    command = 'gh run list --limit 15';
+  }
+
   const output = execSync(command, { encoding: 'utf-8' });
   console.log(output);
 

@@ -98,6 +98,7 @@
     "deploy:invalidate:force": "node scripts/invalidate-cache-on-deploy.mjs --force",
     "check:emoji": "node scripts/analyze-emoji-usage.mjs",
     "check:emoji:strict": "node scripts/analyze-emoji-usage.mjs --strict",
+    "audit:suppressions": "bash scripts/audit-suppressions.sh",
     "scan:pi": "node scripts/ci/check-for-pii.mjs",
     "scan:pi:all": "node scripts/ci/check-for-pii.mjs --all",
     "scan:reports": "node scripts/validation/check-reports-for-pii.mjs",
