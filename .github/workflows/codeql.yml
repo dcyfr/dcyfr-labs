@@ -63,3 +63,24 @@ jobs:
           category: "/language:javascript-typescript"
           upload: true
           output: sarif-latest
+
+      - name: Check LGTM Suppression Count
+        run: |
+          BASELINE=2
+          CURRENT=$(grep -r "lgtm \[" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" --include="*.mjs" . | wc -l | tr -d ' ')
+
+          echo "📊 LGTM Suppression Count"
+          echo "Baseline: $BASELINE"
+          echo "Current: $CURRENT"
+
+          if [ "$CURRENT" -gt "$BASELINE" ]; then
+            echo "❌ LGTM suppression count increased from $BASELINE to $CURRENT"
+            echo "Review suppressions and attempt to fix vulnerabilities instead."
+            echo "See: docs/security/LGTM_APPROVAL_PROCESS.md"
+            exit 1
+          elif [ "$CURRENT" -lt "$BASELINE" ]; then
+            echo "✅ LGTM suppression count decreased from $BASELINE to $CURRENT"
+            echo "Consider updating BASELINE in .github/workflows/codeql.yml"
+          else
+            echo "✅ LGTM suppression count unchanged ($CURRENT)"
+          fi

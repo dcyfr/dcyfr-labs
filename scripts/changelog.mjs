@@ -7,17 +7,20 @@
 
 import { execSync } from 'child_process';
 
-// Validate count argument
+// Validate count argument (allowlist pattern to prevent command injection)
 const countArg = process.argv[2] || '10';
-const count = Math.max(1, parseInt(countArg));
+const validCountPattern = /^\d+$/;
 
-if (isNaN(count)) {
-  console.error('Error: Count must be a positive number');
+if (!validCountPattern.test(countArg)) {
+  console.error('❌ Error: Count must be a positive number (digits only)');
   console.error(`Received: "${countArg}"`);
+  console.error('Example: npm run changelog 20');
   process.exit(1);
 }
 
-// Validate format argument
+const count = Math.max(1, parseInt(countArg, 10));
+
+// Validate format argument (allowlist validation)
 const formatArg = (process.argv[3] || 'oneline').toLowerCase();
 const formats = {
   oneline: '--oneline',
@@ -25,16 +28,17 @@ const formats = {
   full: '--pretty=format:"%C(yellow)%h%Creset - %C(bold)%s%Creset%n%C(dim)Author: %an <%ae>%Creset%n%C(dim)Date: %ar%Creset%n"',
 };
 
-if (!formats[formatArg]) {
-  console.warn(`Warning: Format "${formatArg}" not recognized. Using "oneline".`);
-  console.warn(`Available formats: ${Object.keys(formats).join(', ')}\n`);
+const allowedFormats = Object.keys(formats);
+if (!allowedFormats.includes(formatArg)) {
+  console.warn(`⚠️  Warning: Format "${formatArg}" not recognized. Using "oneline".`);
+  console.warn(`Available formats: ${allowedFormats.join(', ')}\n`);
 }
 
 const gitFormat = formats[formatArg] || formats.oneline;
 
 try {
   const command = `git log ${gitFormat} -${count}`;
-  // lgtm [js/command-line-injection] - Count and format from npm script arguments, not user input
+  // Safe: count validated with allowlist pattern (/^\d+$/), format validated against allowlist
   const output = execSync(command, { encoding: 'utf-8' });
 
   console.log('\nRecent Changes\n');

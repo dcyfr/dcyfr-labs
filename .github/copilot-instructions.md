@@ -1,6 +1,6 @@
 # AI Contributor Guide
 
-Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + MDX portfolio.  
+Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + MDX portfolio.
 **Status:** Production ready (1659/1717 tests passing, 96.6%)
 
 **Note on test count:** 58 tests are intentionally skipped for strategic reasons (component refactors, CI timing issues, environment-specific tests). These are strategic skips, not failures. See `docs/testing/README.md` for details.
@@ -84,9 +84,9 @@ export default function Page() {
 
 ### Quick Decision Making
 
-**Which layout?** → `PageLayout` (90% of pages)  
-**Which container?** → `CONTAINER_WIDTHS.standard` (80% of content)  
-**Which metadata helper?** → `createPageMetadata()` (standard pages)  
+**Which layout?** → `PageLayout` (90% of pages)
+**Which container?** → `CONTAINER_WIDTHS.standard` (80% of content)
+**Which metadata helper?** → `createPageMetadata()` (standard pages)
 **Need error boundary?** → Only for external APIs or forms
 
 **See:** [Interactive Decision Trees](/dev/docs/decision-trees) for detailed flowcharts
@@ -106,11 +106,11 @@ These 5 rules are enforced across all development. For comprehensive details and
    ```
 
 2. **PageLayout by Default** - 90% of pages use PageLayout
-   
+
 3. **Barrel Imports** - `import { Component } from "@/components/blog"`
-   
+
 4. **Test Data Protection** - Environment checks: `NODE_ENV + VERCEL_ENV`
-   
+
 5. **No Emojis in Public Content** - Use `lucide-react` icons instead
 
 6. **Documentation in `/docs` Only** - All .md files go in docs/ folder
@@ -121,12 +121,36 @@ These 5 rules are enforced across all development. For comprehensive details and
    ❌ report.md (root - BLOCKED)
    ```
    Categories: accessibility, analysis, api, architecture, authentication, automation, backlog, blog, components, content, debugging, design, design-system, features, governance, maintenance, mcp, operations, optimization, performance, platform, proposals, refactoring, research, security, sessions, templates, testing, troubleshooting
-   
+
    When creating docs:
    - Determine category and create in `docs/[category]/FILENAME.md`
    - Sensitive content: `docs/[category]/private/FILENAME.md`
    - Never create in root directory
    - See: `docs/governance/AGENT_DOCUMENTATION_ENFORCEMENT.md`
+
+7. **Security: Fix > Suppress** - Always attempt to fix security findings
+
+   When CodeQL or security scanners report an issue:
+
+   ✅ **DO:** Try to fix the underlying issue first
+   - Validate inputs with allowlist patterns: `/^[a-z0-9._-]+$/i`
+   - Remove ALL control characters, not just newlines
+   - Use multi-pass sanitization for HTML/user input
+   - Restructure code to avoid unsafe patterns
+
+   ❌ **DON'T:** Add LGTM suppression comments without attempting a fix
+
+   **Examples of proper fixes:**
+   - Command injection → Allowlist validation before `execSync()`
+   - Log injection → Remove `[\x00-\x1F\x7F-\x9F]` + ANSI codes + normalize
+   - HTML sanitization → Multi-pass: remove `<script>`, strip tags, decode entities
+
+   **Only suppress if:**
+   - Confirmed false positive with technical proof
+   - Fix is infeasible (documented why)
+   - Safeguards referenced by line number
+
+   See: `docs/security/private/CODEQL_FINDINGS_RESOLVED.md` for complete examples
 
 ---
 
@@ -142,8 +166,8 @@ These 5 rules are enforced across all development. For comprehensive details and
 
 ## ✅ Validation
 
-**Pre-commit:** ESLint auto-fix, design token warnings  
-**CI/CD:** ESLint (0 errors), TypeScript (0 errors), Tests (≥99% pass rate), Lighthouse (≥90%)  
+**Pre-commit:** ESLint auto-fix, design token warnings
+**CI/CD:** ESLint (0 errors), TypeScript (0 errors), Tests (≥99% pass rate), Lighthouse (≥90%)
 **Manual:** Design tokens (≥90% compliance)
 
 For detailed validation checklist: [VALIDATION_CHECKLIST.md](./.github/agents/enforcement/VALIDATION_CHECKLIST.md)
@@ -152,8 +176,8 @@ For detailed validation checklist: [VALIDATION_CHECKLIST.md](./.github/agents/en
 
 ## 📦 Tech Stack
 
-**Framework:** Next.js 16 (App Router) + React 19  
-**Styling:** Tailwind v4 + shadcn/ui  
+**Framework:** Next.js 16 (App Router) + React 19
+**Styling:** Tailwind v4 + shadcn/ui
 **Content:** MDX with `<KeyTakeaway>`, `<Alert>`, `<SectionShare>`, `<CollapsibleSection>`, `<GlossaryTooltip>`
 
 ---

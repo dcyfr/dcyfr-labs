@@ -61,6 +61,53 @@ function expandObject(obj, root) {
   return out;
 }
 
+/**
+ * Validates that a URL is safe for MCP server connections.
+ * Defense in depth - even though URLs come from version-controlled config,
+ * we validate at runtime to prevent accidents or config compromise.
+ *
+ * @param {string} url - URL to validate
+ * @returns {boolean} True if URL is safe for MCP server connections
+ */
+function isValidMCPServerURL(url) {
+  try {
+    const parsed = new URL(url);
+
+    // Only allow HTTPS and localhost HTTP (for development)
+    const isHTTPS = parsed.protocol === 'https:';
+    const isLocalHTTP =
+      parsed.protocol === 'http:' &&
+      (parsed.hostname === 'localhost' ||
+        parsed.hostname === '127.0.0.1' ||
+        parsed.hostname === '0.0.0.0');
+
+    if (!isHTTPS && !isLocalHTTP) {
+      console.warn(`⚠️  Invalid MCP server URL protocol: ${url}`);
+      console.warn('   Only HTTPS or localhost HTTP allowed');
+      return false;
+    }
+
+    // Reject suspicious paths or query params that could be exploitation attempts
+    const suspiciousPatterns = [
+      /\.\.\//, // Directory traversal
+      /[<>"'`]/, // HTML/JS injection attempts
+      /file:\/\//i, // File protocol
+    ];
+
+    for (const pattern of suspiciousPatterns) {
+      if (pattern.test(url)) {
+        console.warn(`⚠️  Suspicious pattern in MCP server URL: ${url}`);
+        return false;
+      }
+    }
+
+    return true;
+  } catch (err) {
+    console.warn(`⚠️  Invalid MCP server URL format: ${url}`);
+    return false;
+  }
+}
+
 function readMcpConfig(configPath = path.join(ROOT, '.vscode', 'mcp.json')) {
   try {
     const raw = fs.readFileSync(configPath, 'utf8');
@@ -111,14 +158,25 @@ async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {
     }
   }
 
+  // SECURITY: Validate URL before making request (defense in depth)
+  if (!isValidMCPServerURL(url)) {
+    return {
+      name,
+      ok: false,
+      status: 0,
+      statusText: 'INVALID_URL',
+      method: 'BLOCKED',
+      tokenNameUsed,
+      elapsedMs: 0,
+    };
+  }
+
   // Try HEAD first; fallback to GET if HEAD is not allowed, or if it times out
   const startTime = Date.now();
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
-    // URLs come from trusted MCP server configuration loaded from version-controlled
-    // .vscode/mcp.json file, not user input. Build-time CI utility only.
-    // lgtm [js/file-access-to-http]
+    // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
     const res = await fetch(url, {
       method: 'HEAD',
       headers,
@@ -130,9 +188,8 @@ async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {
       // Try GET fallback
       const controller2 = new AbortController();
       const timer2 = setTimeout(() => controller2.abort(), timeoutMs * 2);
-      // URLs from trusted MCP server config, never from user input.
+      // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
       // Fallback for servers that don't support HEAD method.
-      // lgtm [js/file-access-to-http]
       const res2 = await fetch(url, {
         method: 'GET',
         headers,
@@ -180,9 +237,8 @@ async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {
     try {
       const controller3 = new AbortController();
       const timer3 = setTimeout(() => controller3.abort(), timeoutMs * 2);
-      // URLs from trusted MCP server config, never from user input.
+      // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
       // Second-level fallback when HEAD/GET timeout.
-      // lgtm [js/file-access-to-http]
       const res3 = await fetch(url, {
         method: 'GET',
         headers,

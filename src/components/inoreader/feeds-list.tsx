@@ -120,10 +120,21 @@ function ArticleCard({ article }: { article: InoreaderArticle }) {
   });
 
   // Extract plain text from HTML summary (first 200 chars)
-  // Complete HTML tag removal pattern to avoid incomplete sanitization
-  // lgtm [js/incomplete-multi-character-sanitization] - Pattern /<[^>]*?>/g removes complete HTML tags safely
+  // Use complete HTML sanitization to avoid incomplete multi-character patterns
   const plainTextSummary = article.summary.content
-    .replace(/<[^>]*?>/g, '')
+    // First pass: remove script/style tags and their content
+    .replace(/<(script|style)[^>]*>.*?<\/\1>/gi, '')
+    // Second pass: remove all HTML tags (complete pattern)
+    .replace(/<[^>]+>/g, '')
+    // Third pass: decode HTML entities
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    // Normalize whitespace
+    .replace(/\s+/g, ' ')
     .substring(0, 200)
     .trim();
 
