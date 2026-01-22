@@ -6,8 +6,8 @@ tools:
 
 # DCYFR AI Lab Assistant
 
-**Version:** 2.0.0 (Modular)  
-**Last Updated:** December 8, 2025  
+**Version:** 2.0.0 (Modular)
+**Last Updated:** December 8, 2025
 **Purpose:** Production-ready feature implementation with mandatory pattern enforcement and quality validation
 
 ---
@@ -29,7 +29,7 @@ DCYFR is a **specialized AI agent** for building production-grade features in th
 
 ## 🚀 When to Use This Agent
 
-✅ **Use DCYFR for:** New pages, components, bug fixes with root cause analysis, design token compliance, test coverage  
+✅ **Use DCYFR for:** New pages, components, bug fixes with root cause analysis, design token compliance, test coverage
 ❌ **Don't use for:** Quick suggestions (use Copilot), architectural research (use Claude), documentation (use Claude)
 
 See [AGENTS.md](../../AGENTS.md) for detailed decision tree.
@@ -112,7 +112,7 @@ export default function Page() {
 }
 ```
 
-**Special cases only:** ArticleLayout (blog posts), ArchiveLayout (collections)  
+**Special cases only:** ArticleLayout (blog posts), ArchiveLayout (collections)
 **See:** [Component Patterns](../../docs/ai/component-patterns.md)
 
 ### 3. **Imports (Barrel Exports Only)**
@@ -214,7 +214,78 @@ DCYFR **pauses and requests approval** for:
 
 ---
 
-## 📋 Workflow Examples
+## � Security Rule: Fix-First Policy for CodeQL Findings
+
+When encountering a CodeQL security finding or considering a LGTM suppression:
+
+### MANDATORY Process
+
+1. **MUST attempt a fix first** (minimum 30 minutes effort)
+   - Try input validation with allowlist patterns
+   - Consider restructuring code to avoid unsafe patterns
+   - Look for alternative approaches that eliminate the warning
+
+2. **Document fix attempts** in commit message or PR
+   - What approaches were tried
+   - Why each approach didn't work
+   - Technical barriers to fixing
+
+3. **Only suppress if ALL of these are true:**
+   - ✅ Confirmed false positive (with technical proof)
+   - ✅ Fix is technically infeasible (documented why)
+   - ✅ Safeguards are in place (referenced by line number)
+   - ✅ Approved by security reviewer
+
+### Examples of Proper Fixes (January 2026)
+
+**✅ Command Injection:** Validate inputs with allowlist patterns
+```typescript
+const validPattern = /^[a-z0-9._-]+$/i;
+if (!validPattern.test(userInput)) {
+  console.error(`❌ Invalid input: ${userInput}`);
+  process.exit(1);
+}
+```
+
+**✅ Log Injection:** Remove ALL control characters, not just newlines
+```typescript
+const safe = error.message
+  .replace(/[\x00-\x1F\x7F-\x9F]/g, '')  // Control chars
+  .replace(/[\r\n\t]/g, ' ')             // Whitespace
+  .replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '') // ANSI codes
+  .replace(/\s+/g, ' ')                  // Normalize
+  .trim()
+  .substring(0, 200);                    // Limit length
+```
+
+**✅ HTML Sanitization:** Multi-pass approach with entity decoding
+```typescript
+const text = html
+  .replace(/<(script|style)[^>]*>.*?<\/\1>/gi, '')  // Remove dangerous tags
+  .replace(/<[^>]+>/g, '')                          // Remove all tags
+  .replace(/&nbsp;/g, ' ')                          // Decode entities
+  .replace(/&amp;/g, '&')
+  .replace(/\s+/g, ' ')                             // Normalize
+  .trim();
+```
+
+### Red Flags (NEVER Do This)
+
+❌ **REJECTED SUPPRESSIONS:**
+- Comments claiming "not user input" without validation proof
+- "Safe because..." without technical justification
+- "TODO fix later" (fix it now or don't merge)
+- No explanation at all
+- Copying justification from another suppression
+
+**See Full Details:**
+- [`docs/security/private/CODEQL_FINDINGS_RESOLVED.md`](../../docs/security/private/CODEQL_FINDINGS_RESOLVED.md) - Complete fix examples
+- [`docs/security/private/LGTM_SUPPRESSION_ANALYSIS.md`](../../docs/security/private/LGTM_SUPPRESSION_ANALYSIS.md) - Remaining suppressions analysis
+- [`.github/agents/patterns/CODEQL_SUPPRESSIONS.md`](patterns/CODEQL_SUPPRESSIONS.md) - Suppression patterns guide
+
+---
+
+## �📋 Workflow Examples
 
 ### Example 1: Creating a New Page
 
@@ -386,9 +457,9 @@ Before marking work complete, DCYFR validates:
 
 ---
 
-**Status:** Production Ready (Modular v2.0)  
-**Scope:** dcyfr-labs production codebase  
+**Status:** Production Ready (Modular v2.0)
+**Scope:** dcyfr-labs production codebase
 **Maintained By:** DCYFR Labs Team
 
-For agent selection guidance, see [AGENTS.md](../../AGENTS.md)  
+For agent selection guidance, see [AGENTS.md](../../AGENTS.md)
 For this file's modular structure, see `.github/agents/patterns/`, `enforcement/`, `learning/`

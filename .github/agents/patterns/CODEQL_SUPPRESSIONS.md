@@ -1,8 +1,27 @@
 # CodeQL Suppression Patterns
 
-**File:** `.github/agents/patterns/CODEQL_SUPPRESSIONS.md`  
-**Last Updated:** December 9, 2025  
+**File:** `.github/agents/patterns/CODEQL_SUPPRESSIONS.md`
+**Last Updated:** January 21, 2026
 **Scope:** False positive handling, suppression syntax, when to suppress vs dismiss
+
+---
+
+## ⚠️ Important: Fix > Suppress
+
+**Primary Strategy:** Always prefer fixing the underlying security issue over suppressing the alert.
+
+**When to fix instead of suppress:**
+- ✅ **Always** for High severity findings
+- ✅ **Prefer** for Medium severity findings
+- ✅ When the fix improves code quality
+- ✅ When the fix is straightforward
+
+**Only suppress when:**
+- ❌ Issue is a confirmed false positive
+- ❌ Fix would require major refactoring
+- ❌ Code is intentionally using pattern for valid reason
+
+**See:** [`docs/security/private/CODEQL_FINDINGS_RESOLVED.md`](../../../docs/security/private/CODEQL_FINDINGS_RESOLVED.md) for examples of proper fixes vs suppression.
 
 ---
 
@@ -78,8 +97,8 @@ const value = unsafeOperation();
 
 ### Pattern 1: js/file-access-to-http
 
-**Rule:** `js/file-access-to-http`  
-**Severity:** Warning  
+**Rule:** `js/file-access-to-http`
+**Severity:** Warning
 **False Positive When:**
 
 - URLs from trusted configuration (not user input)
@@ -99,8 +118,8 @@ const res = await fetch(url, { method: "HEAD" });
 
 ### Pattern 2: js/stored-xss
 
-**Rule:** `js/stored-xss`  
-**Severity:** High  
+**Rule:** `js/stored-xss`
+**Severity:** High
 **False Positive When:**
 
 - Data from trusted sources (MDX files, version-controlled content)
@@ -121,8 +140,8 @@ return <Image src={image} alt={post.title} />;
 
 ### Pattern 3: js/insecure-randomness
 
-**Rule:** `js/insecure-randomness`  
-**Severity:** High  
+**Rule:** `js/insecure-randomness`
+**Severity:** High
 **False Positive When:**
 
 - Not used for security-sensitive decisions (not auth)
@@ -143,8 +162,8 @@ const sessionId =
 
 ### Pattern 4: js/missing-origin-check
 
-**Rule:** `js/missing-origin-check`  
-**Severity:** Warning/Medium  
+**Rule:** `js/missing-origin-check`
+**Severity:** Warning/Medium
 **False Positive When:**
 
 - Origin check exists within the message handler function body
@@ -175,8 +194,8 @@ const handleMessage = (event: MessageEvent) => {
 
 ### Pattern 5: actions/missing-workflow-permissions
 
-**Rule:** `actions/missing-workflow-permissions`  
-**Severity:** Warning  
+**Rule:** `actions/missing-workflow-permissions`
+**Severity:** Warning
 **False Positive When:**
 
 - Workflow has explicit permissions block
@@ -309,6 +328,94 @@ gh code-scanning alerts list
  * 3. What safeguards are in place
  */
 ```
+
+---
+
+## Examples of Proper Fixes (January 2026)
+
+### js/incomplete-multi-character-sanitization
+
+**❌ Wrong Approach: Suppress**
+```typescript
+// lgtm [js/incomplete-multi-character-sanitization]
+const text = html.replace(/<[^>]*?>/g, '');
+```
+
+**✅ Right Approach: Fix with Multi-Pass Sanitization**
+```typescript
+const text = html
+  // Remove script/style tags and content first
+  .replace(/<(script|style)[^>]*>.*?<\/\1>/gi, '')
+  // Remove all remaining HTML tags
+  .replace(/<[^>]+>/g, '')
+  // Decode HTML entities
+  .replace(/&nbsp;/g, ' ')
+  .replace(/&amp;/g, '&')
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  // Normalize whitespace
+  .replace(/\s+/g, ' ')
+  .trim();
+```
+
+### js/missing-anchor
+
+**❌ Wrong Approach: Suppress**
+```typescript
+// lgtm [js/missing-anchor]
+expect(screen.getByText(/some text/)).toBeVisible();
+```
+
+**✅ Right Approach: Use String Matching Instead of Regex**
+```typescript
+expect(screen.getByText((content, element) =>
+  content.includes('some text')
+)).toBeVisible();
+```
+
+### js/log-injection
+
+**❌ Wrong Approach: Suppress with Basic Sanitization**
+```typescript
+// lgtm [js/log-injection]
+const safe = error.message.replace(/[\r\n]/g, ' ');
+```
+
+**✅ Right Approach: Comprehensive Control Character Removal**
+```typescript
+const safe = error.message
+  // Remove all control characters (0x00-0x1F, 0x7F-0x9F)
+  .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
+  // Remove newlines and tabs
+  .replace(/[\r\n\t]/g, ' ')
+  // Remove ANSI escape codes
+  .replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '')
+  // Normalize whitespace
+  .replace(/\s+/g, ' ')
+  .trim()
+  .substring(0, 200);
+```
+
+### js/command-line-injection
+
+**❌ Wrong Approach: Suppress with Comment About "Trusted Input"**
+```javascript
+// lgtm [js/command-line-injection] - Input is from npm scripts
+execSync(`command ${userInput}`);
+```
+
+**✅ Right Approach: Validate with Allowlist Pattern**
+```javascript
+// Validate input against allowlist
+const validPattern = /^[a-z0-9._-]+$/i;
+if (!validPattern.test(userInput)) {
+  console.error(`❌ Invalid input: ${userInput}`);
+  process.exit(1);
+}
+execSync(`command ${userInput}`);
+```
+
+**See Full Details:** [`docs/security/private/CODEQL_FINDINGS_RESOLVED.md`](../../../docs/security/private/CODEQL_FINDINGS_RESOLVED.md)
 
 ---
 

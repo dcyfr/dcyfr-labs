@@ -98,18 +98,28 @@ export async function GET(request: NextRequest) {
     // Also capture the exception for detailed error tracking
     Sentry.captureException(error);
 
-    // Sanitize error message to prevent log injection
-    // Only include safe, controlled error information in response
+    // Comprehensively sanitize error message to prevent log injection
+    // Remove all control characters, newlines, and potentially dangerous sequences
     const safeErrorMessage =
       error instanceof Error
-        ? error.message.replace(/[\r\n]/g, ' ').substring(0, 200)
+        ? error.message
+            // Remove all control characters (0x00-0x1F, 0x7F-0x9F)
+            .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
+            // Remove any remaining newlines and carriage returns
+            .replace(/[\r\n\t]/g, ' ')
+            // Remove ANSI escape codes
+            .replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '')
+            // Normalize whitespace
+            .replace(/\s+/g, ' ')
+            .trim()
+            // Limit length
+            .substring(0, 200)
         : 'Unknown error occurred';
 
     return NextResponse.json(
       {
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
-        // lgtm [js/log-injection] - Error message sanitized: newlines removed, length limited
         error: safeErrorMessage,
       },
       {
