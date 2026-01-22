@@ -222,10 +222,16 @@ describe('FAQSchema', () => {
       await user.click(expandAllButton);
 
       await waitFor(() => {
-        // lgtm [js/missing-anchor] - Test assertions for partial text matching in UI content
-        expect(screen.getByText(/RIVET stands for/)).toBeVisible();
-        expect(screen.getByText(/Import the component/)).toBeVisible();
-        expect(screen.getByText(/schema\.org\/FAQPage/)).toBeVisible();
+        // Use partial matching with exact substring checks to avoid regex anchor issues
+        expect(
+          screen.getByText((content, element) => content.includes('RIVET stands for'))
+        ).toBeVisible();
+        expect(
+          screen.getByText((content, element) => content.includes('Import the component'))
+        ).toBeVisible();
+        expect(
+          screen.getByText((content, element) => content.includes('schema.org/FAQPage'))
+        ).toBeVisible();
       });
     });
 
@@ -255,10 +261,16 @@ describe('FAQSchema', () => {
       render(<FAQSchema items={defaultItems} defaultExpanded={['faq-1', 'faq-3']} />);
 
       await waitFor(() => {
-        // lgtm [js/missing-anchor] - Test assertions for partial text matching in UI content
-        expect(screen.getByText(/RIVET stands for/)).toBeVisible();
-        expect(screen.getByText(/schema\.org\/FAQPage/)).toBeVisible();
-        expect(screen.queryByText(/Import the component/)).not.toBeInTheDocument();
+        // Use partial matching with exact substring checks to avoid regex anchor issues
+        expect(
+          screen.getByText((content, element) => content.includes('RIVET stands for'))
+        ).toBeVisible();
+        expect(
+          screen.getByText((content, element) => content.includes('schema.org/FAQPage'))
+        ).toBeVisible();
+        expect(
+          screen.queryByText((content, element) => content.includes('Import the component'))
+        ).not.toBeInTheDocument();
       });
     });
   });

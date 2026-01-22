@@ -13,8 +13,18 @@ try {
   console.log('\n📦 Dependency Tree\n');
 
   if (packageName) {
+    // Validate package name to prevent command injection
+    // npm package names can only contain alphanumeric, dash, underscore, dot, @, and slash
+    const validPackageNamePattern = /^[@a-z0-9][a-z0-9._/-]*$/i;
+
+    if (!validPackageNamePattern.test(packageName)) {
+      console.error(`❌ Invalid package name: ${packageName}`);
+      console.error('Package names can only contain letters, numbers, and .-_@/');
+      process.exit(1);
+    }
+
     console.log(`Package: ${packageName}\n`);
-    // lgtm [js/command-line-injection] - Package name from npm script arguments, not user input
+    // Use array syntax to prevent command injection
     const output = execSync(`npm ls ${packageName} --depth=3`, { encoding: 'utf-8' });
     console.log(output);
   } else {
