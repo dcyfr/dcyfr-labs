@@ -12,6 +12,12 @@ on:
   push:
     branches: [main, preview]
 
+# Explicit permissions (least privilege principle)
+permissions:
+  contents: read        # Required: checkout repository
+  pull-requests: write  # Required: post scan results as PR comments
+  issues: write         # Required: create remediation issues for critical secrets
+
 # Cancel in-progress runs for same PR/branch
 concurrency:
   group: privacy-scan-${{ github.ref }}
