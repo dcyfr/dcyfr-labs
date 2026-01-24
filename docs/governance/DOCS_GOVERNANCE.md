@@ -571,45 +571,70 @@ docs/security/VULNERABILITY_DETAILS.md (should be in docs/security/private/)
 - `*_ANALYSIS.md` - Detailed analysis
 - `*_TRACKING.md` - Sensitive tracking
 
-### 3. Pre-Commit Hook
+### 3. Pre-Commit Hook (5-Layer Validation)
 
-Prevents accidental commits:
+**Enhanced governance enforcement** prevents violations before commits:
 
+**Installation:**
 ```bash
-#!/bin/bash
-# .git/hooks/pre-commit
-
-# Check for sensitive files in wrong location
-if git diff --cached --name-only | grep -E "^docs/[^/]+/.*\.(FINDINGS|REPORT|AUDIT|ANALYSIS|METRICS)" | grep -v "/private/"; then
-  echo "❌ ERROR: Sensitive file detected in public docs/"
-  echo "   Move to appropriate docs/[category]/private/ folder before committing"
-  exit 1
-fi
-
-# Check for accidentally committed secrets
-if git diff --cached | grep -E "PRIVATE_KEY|API_KEY|PASSWORD|SECRET"; then
-  echo "❌ ERROR: Possible credential detected in code"
-  echo "   Use environment variables or .env.local instead"
-  exit 1
-fi
-
-exit 0
+cp scripts/hooks/pre-commit-governance .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
 ```
 
-### 4. CI/CD Validation
+**Validation Layers:**
 
-GitHub Actions workflow validates docs structure:
+1. **Layer 1: LGTM Suppression Validation** (existing)
+   - Requires 30+ minutes of fix attempts
+   - Confirms false positive before suppression
+   - Documents fix attempts in commit message
 
-```yaml
-- name: Validate docs structure
-  run: |
-    # Check for sensitive files in public docs (outside private/ folders)
-    if find docs -type f \( -name "*FINDINGS*" -o -name "*AUDIT*" \) -not -path "*/private/*"; then
-      echo "❌ Sensitive files found in public docs"
-      echo "   Move to appropriate docs/[category]/private/ folder"
-      exit 1
-    fi
+2. **Layer 2: Sensitive File Location Check** (CRITICAL BLOCK)
+   - Detects files with sensitive keywords (FINDINGS, REPORT, AUDIT, ANALYSIS, METRICS, STATUS, SUMMARY)
+   - Blocks commits if found outside `private/` subdirectories
+   - Enforces correct placement in `docs/[category]/private/`
+
+3. **Layer 3: AI Configuration Check** (CRITICAL BLOCK)
+   - Prevents `.claude/` files from being committed (proprietary/internal only)
+   - Blocks session state files (`.session-state.json`)
+   - Prevents OpenCode dependencies (`.opencode/node_modules/`)
+
+4. **Layer 4: API Key & Credential Detection** (CRITICAL BLOCK)
+   - Scans for hardcoded credentials in staged files
+   - Detects patterns like `API_KEY=`, `TOKEN=`, `SECRET=`
+   - Interactive prompt to confirm environment variable references
+
+5. **Layer 5: Private Docs Validation** (MEDIUM WARN)
+   - Validates files in `private/` subdirectories are gitignored
+   - Confirms intentional commits (e.g., `src/app/private/route.ts` honeypot)
+   - Prevents accidental exposure of sensitive documentation
+
+**See:** `scripts/hooks/pre-commit-governance` for full implementation
+
+### 4. CI/CD Validation (GitHub Actions)
+
+**Comprehensive automated validation** runs on every PR:
+
+**Workflow:** `.github/workflows/governance-validation.yml`
+
+**Validation Steps:**
+
+1. **Documentation Structure** - Validates no sensitive files in public `docs/`
+2. **AI Configuration** - Ensures no proprietary `.claude/` files in PR
+3. **Gitignore Coverage** - Verifies required patterns exist (.claude/, **/private/**, etc.)
+4. **Private File References** - Checks for broken references to private files
+5. **Governance Compliance** - Runs comprehensive validation script
+6. **Secret Scanning** - Detects accidentally committed credentials
+7. **VS Code Workspace** - Validates workspace files exist
+
+**Manual Validation:**
+```bash
+npm run check:governance      # Run comprehensive governance check
+npm run check:private-refs    # Validate private file references
 ```
+
+**See:**
+- `.github/workflows/governance-validation.yml` - GitHub Actions workflow
+- `scripts/validate-governance.mjs` - Comprehensive validation script
 
 ### 5. File Header Requirements
 
