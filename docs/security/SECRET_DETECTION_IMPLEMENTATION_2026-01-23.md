@@ -9,6 +9,7 @@
 Implemented a comprehensive multi-layer secret detection system to prevent incidents like the GITHUB_WEBHOOK_SECRET exposure on January 21, 2026.
 
 **Root Cause of Original Incident:**
+
 - Pre-commit hook regex too narrow (required quotes, didn't match webhook secret format)
 - Gitleaks only ran in GitHub Actions AFTER push
 - Documentation files (.md) intentionally allowed in commits
@@ -21,13 +22,16 @@ Implemented a comprehensive multi-layer secret detection system to prevent incid
 ### 1. Local Gitleaks Integration
 
 **File Created:** `.gitleaksignore`
+
 - Allowlist for legitimate test keys (Cloudflare, Stripe test keys)
 - Placeholder patterns (<your-secret-here>)
 - Documentation examples
 - Process environment variable references
 
 **Files Modified:**
+
 - `package.json` - Added 4 new scripts:
+
   ```json
   "scan:gitleaks:local": "gitleaks protect --staged --redact"
   "scan:gitleaks:all": "gitleaks detect --source . --redact"
@@ -46,6 +50,7 @@ Implemented a comprehensive multi-layer secret detection system to prevent incid
   ```
 
 **Installation Required:**
+
 ```bash
 # macOS
 brew install gitleaks
@@ -59,6 +64,7 @@ brew install gitleaks
 **File Modified:** `.husky/pre-commit` (CHECK #2)
 
 **Before (too narrow):**
+
 ```bash
 grep -E "(API_KEY|SECRET|...)[:=]\s*['\"][^'\"]*['\"]"
 # Only matched quoted values
@@ -66,6 +72,7 @@ grep -E "(API_KEY|SECRET|...)[:=]\s*['\"][^'\"]*['\"]"
 ```
 
 **After (comprehensive):**
+
 ```bash
 # Detects 5 patterns:
 1. Quoted: API_KEY="value" or API_KEY='value'
@@ -76,6 +83,7 @@ grep -E "(API_KEY|SECRET|...)[:=]\s*['\"][^'\"]*['\"]"
 ```
 
 **Exclusions:**
+
 - Placeholders: `<your-secret-here>`, `your-api-key-here`
 - Environment vars: `process.env.`
 - Hook files themselves
@@ -88,9 +96,10 @@ grep -E "(API_KEY|SECRET|...)[:=]\s*['\"][^'\"]*['\"]"
 **Scans:** `docs/**/*.md`, `src/content/**/*.md`, `README.md`
 
 **Detects:**
+
 - Webhook secrets (32-byte base64)
-- GitHub tokens (ghp_, gho_, etc.)
-- Stripe keys (sk_live_)
+- GitHub tokens (ghp*, gho*, etc.)
+- Stripe keys (sk*live*)
 - AWS access keys (AKIA...)
 - Google API keys (AIza...)
 - High-entropy base64 strings >40 chars
@@ -99,6 +108,7 @@ grep -E "(API_KEY|SECRET|...)[:=]\s*['\"][^'\"]*['\"]"
 - Private keys (-----BEGIN <TYPE> KEY-----)
 
 **Safe Patterns (skipped):**
+
 - Placeholders: `<your-secret-here>`
 - Environment vars: `process.env.`, `${WEBHOOK_SECRET}`
 - Official test keys: `1x0000...` (Cloudflare), `pk_test_`, `sk_test_`
@@ -106,6 +116,7 @@ grep -E "(API_KEY|SECRET|...)[:=]\s*['\"][^'\"]*['\"]"
 - Content inside code blocks (```)
 
 **File Modified:** `.husky/pre-commit` (Added CHECK #13)
+
 - Runs only when .md files changed
 - Scans with documentation scanner
 - Blocks commit if secrets found
@@ -218,25 +229,27 @@ Commit succeeds ✅
 
 ## Success Metrics
 
-| Metric | Before | After |
-|--------|--------|-------|
-| Pre-commit secret detection | Narrow regex only | Gitleaks + Enhanced regex + Doc scanner |
-| Patterns detected | ~8 types | 100+ types (gitleaks) + 9 custom |
-| Documentation scanning | ❌ None | ✅ Dedicated scanner |
-| False positives | High (no allowlist) | Low (.gitleaksignore) |
-| Detection timing | Post-push (GitHub Actions) | Pre-commit (local) |
-| Webhook secret coverage | ❌ Missed | ✅ Detected |
+| Metric                      | Before                     | After                                   |
+| --------------------------- | -------------------------- | --------------------------------------- |
+| Pre-commit secret detection | Narrow regex only          | Gitleaks + Enhanced regex + Doc scanner |
+| Patterns detected           | ~8 types                   | 100+ types (gitleaks) + 9 custom        |
+| Documentation scanning      | ❌ None                    | ✅ Dedicated scanner                    |
+| False positives             | High (no allowlist)        | Low (.gitleaksignore)                   |
+| Detection timing            | Post-push (GitHub Actions) | Pre-commit (local)                      |
+| Webhook secret coverage     | ❌ Missed                  | ✅ Detected                             |
 
 ---
 
 ## Files Created/Modified
 
 ### Created (3 files)
+
 1. `.gitleaksignore` - Allowlist for legitimate patterns
 2. `scripts/ci/check-docs-secrets.mjs` - Documentation scanner
 3. `docs/security/SECRET_DETECTION_IMPLEMENTATION_2026-01-23.md` - This file
 
 ### Modified (2 files)
+
 1. `package.json` - Added 4 security scan scripts
 2. `.husky/pre-commit` - Added CHECK #0 and #13, enhanced CHECK #2
 
@@ -247,12 +260,14 @@ Commit succeeds ✅
 ### Immediate (Required)
 
 1. **Install gitleaks locally:**
+
    ```bash
    brew install gitleaks  # macOS
    # or see: https://github.com/gitleaks/gitleaks#installation
    ```
 
 2. **Test the system:**
+
    ```bash
    # Test gitleaks
    npm run scan:gitleaks:all
@@ -274,11 +289,13 @@ Commit succeeds ✅
 ### Phase 2: Agent Guardrails (Week 1)
 
 **Files to create:**
+
 - `.claude/agents/secret-validator.md` - Validation agent
 - `.opencode/enforcement/SECRET_DETECTION.md` - OpenCode rules
 - `.gitleaks.toml` - Custom gitleaks configuration
 
 **Files to modify:**
+
 - `.claude/agents/security-specialist.md` - Add pre-modification validation
 - `.opencode/DCYFR.opencode.md` - Add secret detection checks
 - `.github/copilot-instructions.md` - Add secret handling section
@@ -286,9 +303,11 @@ Commit succeeds ✅
 ### Phase 3: CI/CD Enhancements (Week 2)
 
 **Files to modify:**
+
 - `.github/workflows/pii-scan.yml` - Change to `fail: true`
 
 **Files to create:**
+
 - `.gitleaks.toml` - Gitleaks configuration
 - `.github/workflows/secret-incident-response.yml` - Incident automation
 - `docs/security/SAFE_SECRET_PATTERNS.md` - Documentation guide
@@ -315,11 +334,13 @@ npm run scan:gitleaks:all
 ## Incident Response (If Secret Detected)
 
 ### Step 1: Immediate (0-5 minutes)
+
 1. **Stop** - Do not push to remote
 2. **Identify** - What secret was exposed?
 3. **Assess** - Is it production? Already pushed?
 
 ### Step 2: Containment (5-15 minutes)
+
 1. **Rotate secret immediately**
    ```bash
    NEW_SECRET=$(openssl rand -base64 32)
@@ -329,6 +350,7 @@ npm run scan:gitleaks:all
 3. **Verify rotation** - Test application with new secret
 
 ### Step 3: Remediation (15-60 minutes)
+
 1. **Clean git history** (if already pushed):
    ```bash
    git filter-repo --replace-text <(echo "OLD_SECRET==>REDACTED")
@@ -338,6 +360,7 @@ npm run scan:gitleaks:all
 3. **Add pattern to .gitleaks.toml**
 
 ### Step 4: Prevention (1-2 hours)
+
 1. **Root cause analysis** - Why did hooks fail?
 2. **Update detection patterns**
 3. **Document incident** in `docs/security/private/INCIDENT_*.md`
@@ -347,11 +370,13 @@ npm run scan:gitleaks:all
 ## Maintenance
 
 **Monthly:**
+
 - Run full repository scan: `npm run scan:gitleaks:all`
 - Review .gitleaksignore for obsolete entries
 - Test pre-commit hooks with known patterns
 
 **Quarterly:**
+
 - Update .gitleaks.toml with new patterns
 - Review false positive rate
 - Update documentation
@@ -361,11 +386,13 @@ npm run scan:gitleaks:all
 ## Resources
 
 **Documentation:**
+
 - Gitleaks: https://github.com/gitleaks/gitleaks
 - Pre-commit hooks: https://git-scm.com/docs/githooks
 - Secret scanning best practices: https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_password
 
 **Internal Documentation:**
+
 - Plan: `/Users/drew/.claude/plans/unified-weaving-hollerith.md`
 - Security audit: `docs/security/private/GIT_HISTORY_SECRET_SCAN_2026-01-21.md`
 
@@ -376,6 +403,7 @@ npm run scan:gitleaks:all
 **Phase 1 Status:** ✅ COMPLETE
 
 The secret detection system now provides **multi-layer defense-in-depth**:
+
 1. **Primary:** Local gitleaks (100+ patterns)
 2. **Secondary:** Enhanced regex fallback (5 pattern types)
 3. **Tertiary:** Documentation-specific scanner (9 patterns)
