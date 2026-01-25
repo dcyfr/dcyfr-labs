@@ -8,20 +8,54 @@
 
 This project is fully configured with:
 
-✅ **14 MCP Servers** - Memory, Filesystem, GitHub, Context7, Octocode, Perplexity, Vercel, Sentry, Axiom, 3 custom DCYFR MCPs  
-✅ **3 DCYFR Skills** - Design tokens, component patterns, quick fixes  
-✅ **GitHub Copilot Integration** - GPT-5 Mini + Raptor Mini (free with subscription)  
+✅ **14 MCP Servers** - Memory, Filesystem, GitHub, Context7, Octocode, Perplexity, Vercel, Sentry, Axiom, 3 custom DCYFR MCPs
+✅ **3 DCYFR Skills** - Design tokens, component patterns, quick fixes
+✅ **GitHub Copilot Integration** - GPT-5 Mini + Raptor Mini (free with subscription)
 ✅ **Automated Validation** - Enhanced OpenCode-specific quality checks
 
 **Configuration Files:**
-- `opencode.json` - MCP servers, tools, agent permissions, formatters
+- **`opencode.jsonc`** - ✨ NEW JSONC config with comments, variables, best practices
+- `opencode.json` - Legacy JSON config (kept for reference)
 - `.opencode/skill/*/SKILL.md` - DCYFR-specific reusable skills
+
+**Setup Guides:**
+- [OPENCODE_SETUP_GUIDE.md](../docs/ai/OPENCODE_SETUP_GUIDE.md) - Phase 1 migration & environment setup
+- [OPENCODE_BEST_PRACTICES_ANALYSIS.md](../docs/ai/OPENCODE_BEST_PRACTICES_ANALYSIS.md) - Gap analysis & recommendations
+- [OPENCODE_GLOBAL_CONFIG_TEMPLATE.jsonc](../docs/ai/OPENCODE_GLOBAL_CONFIG_TEMPLATE.jsonc) - Team global config
+
+---
+
+## ⚡ Phase 1 Complete: Enhanced Configuration
+
+Your OpenCode config has been upgraded to JSONC format with:
+- ✅ Variable substitution for environment variables (`{env:VAR}`)
+- ✅ Comprehensive comments explaining each setting
+- ✅ Enhanced MCP server configuration (autoRestart, auth)
+- ✅ Global config template for team setup
+- ✅ Environment variable documentation
+
+See [OPENCODE_SETUP_GUIDE.md](../docs/ai/OPENCODE_SETUP_GUIDE.md) for implementation steps.
 
 ---
 
 ## Quick Start
 
-### 1. Install OpenCode CLI
+### 1. Setup Environment Variables
+
+```bash
+# Copy environment template
+cp .env.opencode.example .env.opencode.local
+
+# Add your API keys (NEVER commit this file)
+# REQUIRED: ANTHROPIC_API_KEY
+# OPTIONAL: PERPLEXITY_API_KEY, OPENCODE_MODEL
+
+nano .env.opencode.local
+```
+
+See [.env.opencode.example](../.env.opencode.example) for all available variables.
+
+### 2. Install OpenCode CLI
 
 ```bash
 # Using npm (recommended)
@@ -34,7 +68,7 @@ brew install anomalyco/tap/opencode
 curl -fsSL https://opencode.ai/install | bash
 ```
 
-### 2. Authenticate with GitHub Copilot
+### 3. Authenticate with GitHub Copilot (Optional)
 
 OpenCode uses device code authentication (no API key required):
 
@@ -59,11 +93,16 @@ opencode
 
 **No API key needed** - Uses your existing GitHub Copilot subscription.
 
-### 3. Verify Setup
+### 4. Verify Setup
 
 ```bash
 # Health check
 npm run opencode:health
+
+# Expected: ✅ GitHub Copilot connected
+```
+
+### 5. Start Using OpenCode
 
 # Expected: ✅ GitHub Copilot connected
 ```

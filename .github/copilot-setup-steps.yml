@@ -1,0 +1,37 @@
+# Copilot Development Environment Setup
+# This file configures the environment for GitHub Copilot coding agent
+# to pre-install dependencies and verify setup before working on tasks.
+
+install_steps:
+  - run: node --version
+    description: Verify Node.js is available (required 18+)
+
+  - run: npm --version
+    description: Verify npm package manager
+
+  - run: npm ci
+    description: Install dependencies using package-lock.json (deterministic, production-ready)
+
+  - run: npm run build
+    description: Build Next.js project to verify TypeScript compilation and catch errors early
+
+  - run: npm run lint
+    description: Verify ESLint configuration and check for linting issues
+
+  - run: npm run test:run --silent
+    description: Run full test suite to ensure baseline passes (silent mode to reduce output)
+
+build_step: npm run build
+test_step: npm run test:run
+lint_step: npm run lint
+
+# Pre-built environment saves time on each task:
+# ✅ All npm dependencies installed (no trial/error discovery)
+# ✅ TypeScript configuration verified
+# ✅ Build system working correctly
+# ✅ Linter configured properly
+# ✅ Test suite baseline passing
+# ✅ Quick iteration on actual task work
+
+# Expected execution time: ~2-3 minutes for full setup
+# Without pre-install: Copilot would spend 5-10 minutes discovering/installing dependencies
