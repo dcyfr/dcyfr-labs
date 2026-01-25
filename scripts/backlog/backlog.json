@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-20T02:07:08.401Z",
+  "generated_at": "2026-01-25T10:08:23.436Z",
   "version": "1.0.0",
   "categories": [
     {
@@ -10,7 +10,7 @@
       "total_effort_hours": 4.5,
       "tasks": [
         {
-          "id": "test-flaky-bg0xgoa17",
+          "id": "test-flaky-sxkvsedpv",
           "title": "Fix date boundary issues in heatmap tests",
           "description": "Flaky test at src/__tests__/lib/activity-heatmap.test.ts:144",
           "category": "Test Infrastructure",
@@ -30,10 +30,10 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-20"
+          "last_updated": "2026-01-25"
         },
         {
-          "id": "test-flaky-6h4mabmxa",
+          "id": "test-flaky-xcmbed7ot",
           "title": "Fix performance tests (environment-dependent, flaky in CI)",
           "description": "Flaky test at src/__tests__/lib/activity-search.test.ts:240",
           "category": "Test Infrastructure",
@@ -53,10 +53,10 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-20"
+          "last_updated": "2026-01-25"
         },
         {
-          "id": "test-flaky-agjrur24r",
+          "id": "test-flaky-i5wgjwnwd",
           "title": "Fix Radix Tabs async behavior in tests",
           "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:216",
           "category": "Test Infrastructure",
@@ -76,10 +76,10 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-20"
+          "last_updated": "2026-01-25"
         },
         {
-          "id": "test-flaky-xi68lt0ff",
+          "id": "test-flaky-5o9o8lfzu",
           "title": "Fix aria-selected not updating in tests",
           "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:448",
           "category": "Test Infrastructure",
@@ -99,29 +99,29 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-20"
+          "last_updated": "2026-01-25"
         }
       ]
     }
   ],
   "statistics": {
-    "total_tasks": 271,
-    "ready_to_start": 139,
+    "total_tasks": 286,
+    "ready_to_start": 138,
     "blocked": 0,
     "in_progress": 0,
-    "completed": 132,
+    "completed": 148,
     "total_effort_hours": 4.5
   },
   "recent_git_activity": [
-    "89e29a46 fix: correct exploitation timeline and summary for CVE-2025-55182 blog post",
-    "55cd9b20 feat: add engagement data consolidation and verification scripts",
-    "4ce6decd Merge branch 'preview' of https://github.com/dcyfr/dcyfr-labs",
-    "c127cdf3 refactor: standardize quote styles and improve tooltip close functionality",
-    "65b21dde refactor: standardize import quotes and improve component styling in glossary tooltip and search button",
-    "1082ad7a refactor: clean up spacing and improve layout in thank you page",
-    "b437f172 refactor: clean up spacing and improve layout across multiple pages",
-    "4b42aabb Refactor components for consistency and improved layout",
-    "f11dc01f fix: reduce hero header bottom padding on resume page",
-    "6a4e2021 refactor: resume page styling and timeline alignment"
+    "2a0fda04 feat: add comprehensive Upstash data analysis and cleanup scripts",
+    "c1d8924c feat: migrate from standard Redis client to Upstash Redis client",
+    "f6b3cb67 feat: implement agent delegation and validation scripts; optimize MCP configurations",
+    "6b3fe27b fix: properly gitignore all private/ directories",
+    "7f56a5dc docs: update private files to TLP:AMBER classification",
+    "0ea456d4 fix(docs): convert TLP tag to HTML comment in animation-decision-matrix.md",
+    "6e845f70 fix(docs): add TLP tags and improve TLP validation",
+    "b2ed0bd4 fix: update documentation placement validation in pre-commit hook",
+    "2ffcf034 docs(governance): enforce operational documentation placement policy",
+    "5de79181 Merge branch 'preview' of https://github.com/dcyfr/dcyfr-labs into preview"
   ]
 }
