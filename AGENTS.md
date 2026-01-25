@@ -1159,6 +1159,19 @@ git status --ignored | grep -E "\.(claude|opencode|private)"
 
 ## 📋 Recent Updates
 
+### January 24, 2026
+
+- ✅ **Removed redundant MCP servers for performance optimization**
+  - Removed `Memory` MCP from `.vscode/mcp.json` - Duplicate of VS Code built-in `memory` tool
+  - Removed `Filesystem` MCP from `.vscode/mcp.json` - Duplicate of VS Code built-in `read`, `edit`, `create_file` tools
+  - **KEPT in `opencode.json`** - OpenCode.ai requires these MCPs (no built-in alternatives)
+  - **Performance gains:** ~200ms faster startup, 2 fewer NPX spawns, 18% simpler VS Code config
+  - **Active MCP servers:** 9 in VS Code (down from 11), 14 in OpenCode (unchanged)
+  - **Key finding:** Each AI tool uses separate MCP configuration (VS Code ≠ OpenCode)
+  - Created comprehensive analysis: `docs/ai/mcp-overlap-analysis-2026-01-24.md`
+  - Updated `.vscode/mcp.json` with removal notes and analysis reference
+  - Updated `docs/ai/mcp-checks.md` to reflect current MCP inventory
+
 ### January 17, 2026
 
 - ✅ **Integrated OpenSkills universal skill distribution (v1.5.0)**

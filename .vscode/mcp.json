@@ -19,23 +19,9 @@
     // =========================================================================
     // TIER 1: ALWAYS ON - Essential for all development
     // =========================================================================
-
-    // Cognitive ability - session memory and context persistence
-    "Memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"],
-      "_tier": "1-essential",
-      "_description": "Session memory for context persistence across conversations"
-    },
-
-    // Local filesystem - file operations
-    "Filesystem": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
-      "type": "stdio",
-      "_tier": "1-essential",
-      "_description": "Local filesystem access for reading/writing files"
-    },
+    // NOTE: Memory and Filesystem MCPs removed (2026-01-24)
+    // Reason: VS Code provides built-in 'memory', 'read', 'edit' tools
+    // Analysis: docs/ai/mcp-overlap-analysis-2026-01-24.md
 
     // Code repo and issue trackers
     "GitHub": {
