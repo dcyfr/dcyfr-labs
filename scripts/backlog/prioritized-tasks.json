@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-20T02:07:09.238Z",
+  "generated_at": "2026-01-25T10:08:24.259Z",
   "version": "1.0.0",
   "filters": {
     "time": "quick",
@@ -14,7 +14,7 @@
   },
   "tasks": [
     {
-      "id": "test-flaky-bg0xgoa17",
+      "id": "test-flaky-sxkvsedpv",
       "title": "Fix date boundary issues in heatmap tests",
       "description": "Flaky test at src/__tests__/lib/activity-heatmap.test.ts:144",
       "category": "Test Infrastructure",
@@ -34,11 +34,11 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-20",
+      "last_updated": "2026-01-25",
       "priority_score": 7.1
     },
     {
-      "id": "test-flaky-agjrur24r",
+      "id": "test-flaky-i5wgjwnwd",
       "title": "Fix Radix Tabs async behavior in tests",
       "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:216",
       "category": "Test Infrastructure",
@@ -58,11 +58,11 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-20",
+      "last_updated": "2026-01-25",
       "priority_score": 7.1
     },
     {
-      "id": "test-flaky-6h4mabmxa",
+      "id": "test-flaky-xcmbed7ot",
       "title": "Fix performance tests (environment-dependent, flaky in CI)",
       "description": "Flaky test at src/__tests__/lib/activity-search.test.ts:240",
       "category": "Test Infrastructure",
@@ -82,11 +82,11 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-20",
+      "last_updated": "2026-01-25",
       "priority_score": 6.7
     },
     {
-      "id": "test-flaky-xi68lt0ff",
+      "id": "test-flaky-5o9o8lfzu",
       "title": "Fix aria-selected not updating in tests",
       "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:448",
       "category": "Test Infrastructure",
@@ -106,7 +106,7 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-20",
+      "last_updated": "2026-01-25",
       "priority_score": 6.7
     }
   ]

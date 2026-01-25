@@ -138,9 +138,20 @@ export function aggregateActivitiesByDate(
   const result: ActivityHeatmapDay[] = [];
 
   // Fill in all dates in range (including empty days)
-  // Use UTC date manipulation to avoid DST issues
-  const currentDate = new Date(startDateNormalized);
-  while (currentDate <= endDateNormalized) {
+  // Use millisecond-based iteration for more predictable date handling
+  // Calculate number of days in range (inclusive)
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const dayCount =
+    Math.floor(
+      (endDateNormalized.getTime() - startDateNormalized.getTime()) /
+        millisecondsPerDay
+    ) + 1; // +1 to include end date
+
+  for (let i = 0; i < dayCount; i++) {
+    // Create new date object for each iteration instead of mutating
+    const currentDate = new Date(
+      startDateNormalized.getTime() + i * millisecondsPerDay
+    );
     const dateStr = formatDateToISO(currentDate);
     const dayEntry = dateMap.get(dateStr);
 
@@ -166,9 +177,6 @@ export function aggregateActivitiesByDate(
         activityIds: [],
       });
     }
-
-    // Move to next day using UTC methods to avoid DST issues
-    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
   }
 
   return result;

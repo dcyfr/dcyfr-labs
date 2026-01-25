@@ -6,6 +6,17 @@ import type { Post } from "@/data/posts";
 import type { Project } from "@/data/projects";
 
 // ============================================================================
+// TEST HELPERS
+// ============================================================================
+
+// Helper to flush React microtask queue for Radix UI state updates
+// This ensures all pending state updates complete before assertions
+const flushPromises = () =>
+  act(async () => {
+    await Promise.resolve();
+  });
+
+// ============================================================================
 // MOCKS
 // ============================================================================
 
@@ -226,14 +237,11 @@ describe("TrendingSection", () => {
 
       const topicsTab = screen.getByRole("tab", { name: /topics/i });
       await userEvent.click(topicsTab);
+      await flushPromises();
 
-      // Wait for content visibility
+      // Wait for complete state update (content visibility + aria-selected)
       await waitFor(() => {
         expect(screen.getByTestId("trending-topics-panel")).toBeInTheDocument();
-      });
-
-      // Wait for aria-selected attribute update
-      await waitFor(() => {
         expect(topicsTab).toHaveAttribute("aria-selected", "true");
       });
 
@@ -252,14 +260,11 @@ describe("TrendingSection", () => {
 
       const projectsTab = screen.getByRole("tab", { name: /projects/i });
       await userEvent.click(projectsTab);
+      await flushPromises();
 
-      // Wait for content visibility
+      // Wait for complete state update (content visibility + aria-selected)
       await waitFor(() => {
         expect(screen.getByTestId("trending-projects-panel")).toBeInTheDocument();
-      });
-
-      // Wait for aria-selected attribute update
-      await waitFor(() => {
         expect(projectsTab).toHaveAttribute("aria-selected", "true");
       });
 
@@ -282,6 +287,7 @@ describe("TrendingSection", () => {
 
       // Switch to Topics
       await userEvent.click(topicsTab);
+      await flushPromises();
       await waitFor(() => {
         expect(screen.getByTestId("trending-topics-panel")).toBeInTheDocument();
         expect(topicsTab).toHaveAttribute("aria-selected", "true");
@@ -289,6 +295,7 @@ describe("TrendingSection", () => {
 
       // Switch to Projects
       await userEvent.click(projectsTab);
+      await flushPromises();
       await waitFor(() => {
         expect(screen.getByTestId("trending-projects-panel")).toBeInTheDocument();
         expect(projectsTab).toHaveAttribute("aria-selected", "true");
@@ -296,6 +303,7 @@ describe("TrendingSection", () => {
 
       // Switch back to Posts
       await userEvent.click(postsTab);
+      await flushPromises();
       await waitFor(() => {
         expect(screen.getByTestId("trending-posts-panel")).toBeInTheDocument();
         expect(postsTab).toHaveAttribute("aria-selected", "true");

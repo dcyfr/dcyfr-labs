@@ -154,6 +154,83 @@ describe("aggregateActivitiesByDate", () => {
     expect(result[result.length - 1].count).toBe(1);
     expect(result[result.length - 1].date).toBe("2025-06-15");
   });
+
+  it("should handle month boundary transitions correctly", () => {
+    const activities: ActivityItem[] = [
+      createMockActivity("1", new Date("2025-01-31")),
+      createMockActivity("2", new Date("2025-02-01")),
+    ];
+
+    const result = aggregateActivitiesByDate(
+      activities,
+      new Date("2025-01-31"),
+      new Date("2025-02-01")
+    );
+
+    expect(result).toHaveLength(2);
+    expect(result[0].date).toBe("2025-01-31");
+    expect(result[0].count).toBe(1);
+    expect(result[1].date).toBe("2025-02-01");
+    expect(result[1].count).toBe(1);
+  });
+
+  it("should handle year boundary transitions correctly", () => {
+    const activities: ActivityItem[] = [
+      createMockActivity("1", new Date("2024-12-31")),
+      createMockActivity("2", new Date("2025-01-01")),
+    ];
+
+    const result = aggregateActivitiesByDate(
+      activities,
+      new Date("2024-12-31"),
+      new Date("2025-01-01")
+    );
+
+    expect(result).toHaveLength(2);
+    expect(result[0].date).toBe("2024-12-31");
+    expect(result[0].count).toBe(1);
+    expect(result[1].date).toBe("2025-01-01");
+    expect(result[1].count).toBe(1);
+  });
+
+  it("should handle leap year February correctly", () => {
+    const activities: ActivityItem[] = [
+      createMockActivity("1", new Date("2024-02-28")),
+      createMockActivity("2", new Date("2024-02-29")),
+      createMockActivity("3", new Date("2024-03-01")),
+    ];
+
+    const result = aggregateActivitiesByDate(
+      activities,
+      new Date("2024-02-28"),
+      new Date("2024-03-01")
+    );
+
+    expect(result).toHaveLength(3);
+    expect(result[0].date).toBe("2024-02-28");
+    expect(result[1].date).toBe("2024-02-29"); // Leap day
+    expect(result[2].date).toBe("2024-03-01");
+  });
+
+  it("should handle DST transitions without losing days", () => {
+    // Test across DST spring forward (March) and fall back (November) in 2025
+    const activities: ActivityItem[] = [
+      createMockActivity("1", new Date("2025-03-08")), // Day before DST spring forward
+      createMockActivity("2", new Date("2025-03-09")), // DST spring forward
+      createMockActivity("3", new Date("2025-03-10")), // Day after
+    ];
+
+    const result = aggregateActivitiesByDate(
+      activities,
+      new Date("2025-03-08"),
+      new Date("2025-03-10")
+    );
+
+    expect(result).toHaveLength(3);
+    expect(result[0].date).toBe("2025-03-08");
+    expect(result[1].date).toBe("2025-03-09");
+    expect(result[2].date).toBe("2025-03-10");
+  });
 });
 
 // ============================================================================
