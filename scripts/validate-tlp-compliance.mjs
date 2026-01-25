@@ -106,12 +106,12 @@ function isInPrivateDir(filePath) {
 }
 
 /**
- * Read first 50 lines of file to check for TLP marker
+ * Read first 10 lines of file to check for TLP marker
  */
 function checkTLPMarker(filePath) {
   try {
     const content = readFileSync(filePath, 'utf-8');
-    const lines = content.split('\n').slice(0, 50).join('\n');
+    const lines = content.split('\n').slice(0, 10).join('\n');
 
     if (TLP_MARKERS.CLEAR.test(lines)) {
       return 'CLEAR';

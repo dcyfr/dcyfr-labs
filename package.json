@@ -26,6 +26,8 @@
     "validate:doc-location": "node scripts/validate-doc-location.mjs",
     "docs:add-tlp-markers": "node scripts/add-tlp-markers.mjs",
     "docs:add-tlp-markers:dry-run": "node scripts/add-tlp-markers.mjs --dry-run",
+    "docs:fix-private-markers": "node scripts/fix-private-tlp-markers.mjs",
+    "docs:fix-private-markers:dry-run": "node scripts/fix-private-tlp-markers.mjs --dry-run",
     "parse:gitleaks-report": "node scripts/ci/parse-gitleaks-report.mjs gitleaks-report.json",
     "dev": "next dev --turbopack",
     "dev:fast": "NODE_ENV=development next dev --turbopack --port 3000",
