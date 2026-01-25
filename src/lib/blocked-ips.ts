@@ -210,7 +210,7 @@ export class BlockedIPsManager {
 
       // Add to block history for analytics
       const historyKey = `${IP_BLOCK_HISTORY_KEY}:${new Date().toISOString().split("T")[0]}`;
-      await this.client.lPush(
+      await this.client.lpush(
         historyKey,
         JSON.stringify({
           ...entry,
@@ -269,7 +269,7 @@ export class BlockedIPsManager {
       if (removed) {
         // Add to unblock history
         const historyKey = `${IP_BLOCK_HISTORY_KEY}:${new Date().toISOString().split("T")[0]}`;
-        await this.client.lPush(
+        await this.client.lpush(
           historyKey,
           JSON.stringify({
             ip,

@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
 
     if (redis) {
       try {
-        const cached = await redis.lRange(OBSERVATIONS_KEY, 0, -1);
+        const cached = await redis.lrange(OBSERVATIONS_KEY, 0, -1);
         const cachedLength = Array.isArray(cached) ? cached.length : 0;
         console.warn(`[Redis LRANGE] Retrieved ${cachedLength} items from ${OBSERVATIONS_KEY}`);
 
@@ -211,11 +211,11 @@ export async function POST(request: NextRequest) {
       try {
         // Add to front of list (most recent first)
         console.warn(`[Redis] Attempting to store observation: ${observation.id}`);
-        const pushResult = await redis.lPush(OBSERVATIONS_KEY, JSON.stringify(observation));
+        const pushResult = await redis.lpush(OBSERVATIONS_KEY, JSON.stringify(observation));
         console.warn(`[Redis LPUSH] Success. New list length: ${pushResult}`);
 
         // Trim to keep only last MAX_OBSERVATIONS
-        const trimResult = await redis.lTrim(OBSERVATIONS_KEY, 0, MAX_OBSERVATIONS - 1);
+        const trimResult = await redis.ltrim(OBSERVATIONS_KEY, 0, MAX_OBSERVATIONS - 1);
         console.warn(`[Redis LTRIM] Success. Trimmed to max ${MAX_OBSERVATIONS}`);
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : String(err);

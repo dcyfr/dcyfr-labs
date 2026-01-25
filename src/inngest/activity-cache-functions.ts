@@ -13,15 +13,11 @@
  * - Versioned caching prevents drift on schema changes
  */
 
-import { inngest } from "./client";
-import { posts } from "@/data/posts";
-import { projects } from "@/data/projects";
-import { changelog } from "@/data/changelog";
-import {
-  transformProjects,
-  transformChangelog,
-  aggregateActivities,
-} from "@/lib/activity";
+import { inngest } from './client';
+import { posts } from '@/data/posts';
+import { projects } from '@/data/projects';
+import { changelog } from '@/data/changelog';
+import { transformProjects, transformChangelog, aggregateActivities } from '@/lib/activity';
 
 import {
   transformPostsWithViews,
@@ -35,41 +31,10 @@ import {
   transformGitHubTraffic,
   transformGoogleAnalytics,
   transformSearchConsole,
- } from "@/lib/activity/server";
+} from '@/lib/activity/server';
 
-import { activityFeedCache } from "@/lib/cache-versioning";
-import { createClient } from "redis";
-
-// ============================================================================
-// REDIS CLIENT
-// ============================================================================
-
-async function getRedisClient() {
-  const redisUrl = process.env.REDIS_URL;
-  if (!redisUrl) return null;
-
-  try {
-    const client = createClient({
-      url: redisUrl,
-      socket: {
-        connectTimeout: 5000,
-        reconnectStrategy: (retries) => {
-          if (retries > 3) return new Error("Max retries exceeded");
-          return Math.min(retries * 100, 3000);
-        },
-      },
-    });
-
-    if (!client.isOpen) {
-      await client.connect();
-    }
-
-    return client;
-  } catch (error) {
-    console.error("[Activity Cache] Redis connection failed:", error);
-    return null;
-  }
-}
+import { activityFeedCache } from '@/lib/cache-versioning';
+import { redis } from '@/mcp/shared/redis-client';
 
 // ============================================================================
 // REFRESH ACTIVITY FEED CACHE
@@ -91,22 +56,22 @@ async function getRedisClient() {
  */
 export const refreshActivityFeed = inngest.createFunction(
   {
-    id: "refresh-activity-feed",
+    id: 'refresh-activity-feed',
     retries: 2,
   },
-  { cron: "0 * * * *" }, // Every hour on the hour
+  { cron: '0 * * * *' }, // Every hour on the hour
   async ({ step }) => {
-    const redis = await getRedisClient();
+    // Redis client imported from shared module
     if (!redis) {
-      throw new Error("Redis client unavailable - REDIS_URL not configured");
+      throw new Error('Redis client unavailable - REDIS_URL not configured');
     }
 
     // Step 1: Gather all activities in parallel
-    const activities = await step.run("gather-activities", async () => {
+    const activities = await step.run('gather-activities', async () => {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-      console.warn("[Activity Cache] Gathering activities from all sources...");
+      console.warn('[Activity Cache] Gathering activities from all sources...');
 
       const results = await Promise.allSettled([
         transformPostsWithViews(posts),
@@ -117,7 +82,7 @@ export const refreshActivityFeed = inngest.createFunction(
         transformHighEngagementPosts(posts), // All high engagement posts
         transformCommentMilestones(posts), // All comment milestones
         // transformGitHubActivity(), // All GitHub activity (DISABLED)
-        transformCredlyBadges("dcyfr"), // All Credly certifications
+        transformCredlyBadges('dcyfr'), // All Credly certifications
         transformVercelAnalytics(), // Vercel Analytics traffic milestones
         transformGitHubTraffic(), // GitHub repository traffic milestones
         transformGoogleAnalytics(), // Google Analytics visitor achievements
@@ -126,11 +91,11 @@ export const refreshActivityFeed = inngest.createFunction(
 
       // Collect successful results
       const allActivities = results
-        .filter((r) => r.status === "fulfilled")
+        .filter((r) => r.status === 'fulfilled')
         .flatMap((r) => (r as PromiseFulfilledResult<any>).value);
 
       // Log any failures
-      const failures = results.filter((r) => r.status === "rejected");
+      const failures = results.filter((r) => r.status === 'rejected');
       if (failures.length > 0) {
         console.warn(
           `[Activity Cache] ${failures.length} source(s) failed:`,
@@ -139,21 +104,19 @@ export const refreshActivityFeed = inngest.createFunction(
       }
 
       // Sort by timestamp - no filtering, no aggregation
-      const sorted = allActivities.sort(
-        (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
-      );
+      const sorted = allActivities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
       console.warn(`[Activity Cache] Sorted ${sorted.length} activities`);
 
       return sorted;
     });
 
     // Step 2: Cache aggregated feed (versioned)
-    const cached = await step.run("cache-feed", async () => {
+    const cached = await step.run('cache-feed', async () => {
       try {
-        const success = await activityFeedCache.set("feed:all", activities);
+        const success = await activityFeedCache.set('feed:all', activities);
 
         if (!success) {
-          throw new Error("Failed to write to versioned cache");
+          throw new Error('Failed to write to versioned cache');
         }
 
         console.warn(
@@ -167,12 +130,12 @@ export const refreshActivityFeed = inngest.createFunction(
           timestamp: new Date().toISOString(),
         };
       } catch (error) {
-        console.error("[Activity Cache] Failed to write to Redis:", error);
+        console.error('[Activity Cache] Failed to write to Redis:', error);
         throw error;
       }
     });
 
-    await redis.quit();
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
     return cached;
   }
 );
@@ -197,36 +160,36 @@ export const refreshActivityFeed = inngest.createFunction(
  */
 export const invalidateActivityFeed = inngest.createFunction(
   {
-    id: "invalidate-activity-feed",
+    id: 'invalidate-activity-feed',
   },
-  { event: "activity/cache.invalidate" },
+  { event: 'activity/cache.invalidate' },
   async ({ step, event }) => {
-    const redis = await getRedisClient();
+    // Redis client imported from shared module
     if (!redis) {
-      throw new Error("Redis client unavailable - REDIS_URL not configured");
+      throw new Error('Redis client unavailable - REDIS_URL not configured');
     }
 
     // Step 1: Delete cache (all versions to ensure clean slate)
-    await step.run("delete-cache", async () => {
+    await step.run('delete-cache', async () => {
       try {
-        const deleted = await activityFeedCache.deleteAllVersions("feed:all");
+        const deleted = await activityFeedCache.deleteAllVersions('feed:all');
         console.warn(
-          `[Activity Cache] Cache invalidated - ${deleted} version(s) deleted (reason: ${event.data.reason || "manual"})`
+          `[Activity Cache] Cache invalidated - ${deleted} version(s) deleted (reason: ${event.data.reason || 'manual'})`
         );
         return { deleted: deleted > 0 };
       } catch (error) {
-        console.error("[Activity Cache] Failed to delete cache:", error);
+        console.error('[Activity Cache] Failed to delete cache:', error);
         throw error;
       }
     });
 
-    await redis.quit();
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
 
     // Step 2: Trigger immediate refresh
     // Note: This sends an event to schedule the refresh function
     // The actual refresh will happen asynchronously
-    await step.run("trigger-refresh", async () => {
-      console.warn("[Activity Cache] Triggering immediate refresh...");
+    await step.run('trigger-refresh', async () => {
+      console.warn('[Activity Cache] Triggering immediate refresh...');
       // The cron job will pick this up in the next cycle
       // For truly immediate refresh, you could call the function directly
       // or implement a separate on-demand refresh function
@@ -235,7 +198,7 @@ export const invalidateActivityFeed = inngest.createFunction(
 
     return {
       invalidated: true,
-      reason: event.data.reason || "manual",
+      reason: event.data.reason || 'manual',
       timestamp: new Date().toISOString(),
     };
   }

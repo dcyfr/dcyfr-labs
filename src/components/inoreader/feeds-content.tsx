@@ -5,10 +5,10 @@
  * Shows articles in card grid with filtering and search capabilities.
  */
 
-import { InoreaderClient } from "@/lib/inoreader-client";
-import { redis } from "@/lib/redis";
-import { FeedsList } from "./feeds-list";
-import type { InoreaderArticle } from "@/types/inoreader";
+import { InoreaderClient } from '@/lib/inoreader-client';
+import { redis } from '@/lib/redis';
+import { FeedsList } from './feeds-list';
+import type { InoreaderArticle } from '@/types/inoreader';
 
 export async function FeedsContent() {
   const articles = await fetchFeeds();
@@ -33,17 +33,17 @@ export async function FeedsContent() {
 async function fetchFeeds(): Promise<InoreaderArticle[]> {
   try {
     if (!process.env.INOREADER_CLIENT_ID || !process.env.INOREADER_CLIENT_SECRET) {
-      console.error("Inoreader credentials not configured");
+      console.error('Inoreader credentials not configured');
       return [];
     }
 
     if (!redis) {
-      console.error("Redis not configured for Inoreader caching");
+      console.error('Redis not configured for Inoreader caching');
       return [];
     }
 
     // Check cache first (5-minute TTL)
-    const cacheKey = "inoreader:feeds:latest";
+    const cacheKey = 'inoreader:feeds:latest';
     const cached = await redis.get(cacheKey);
 
     if (cached) {
@@ -51,9 +51,9 @@ async function fetchFeeds(): Promise<InoreaderArticle[]> {
     }
 
     // Get stored tokens
-    const tokensJson = await redis.get("inoreader:tokens");
+    const tokensJson = await redis.get('inoreader:tokens');
     if (!tokensJson) {
-      console.error("No Inoreader tokens found");
+      console.error('No Inoreader tokens found');
       return [];
     }
 
@@ -67,7 +67,7 @@ async function fetchFeeds(): Promise<InoreaderArticle[]> {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
         expiresAt: tokens.expiresAt,
-      },
+      }
     );
 
     // Fetch latest unread articles (limit 50)
@@ -75,12 +75,12 @@ async function fetchFeeds(): Promise<InoreaderArticle[]> {
 
     // Cache results for 5 minutes
     await redis.set(cacheKey, JSON.stringify(articles), {
-      EX: 60 * 5, // 5 minutes
+      ex: 60 * 5, // 5 minutes
     });
 
     return articles;
   } catch (error) {
-    console.error("Error fetching Inoreader feeds:", error);
+    console.error('Error fetching Inoreader feeds:', error);
     return [];
   }
 }
