@@ -1,3 +1,5 @@
+{/* TLP:CLEAR */}
+
 # Documentation Classification & TLP Implementation
 
 **Implementation Date:** December 12, 2025
