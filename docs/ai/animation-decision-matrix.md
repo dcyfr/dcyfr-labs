@@ -4,7 +4,7 @@
 
 **Purpose**: Guide AI agents and developers on when to use CSS animations vs Framer Motion (or future graphics engines).
 
-**Last Updated**: January 15, 2026  
+**Last Updated**: January 15, 2026
 **Status**: Production Standard
 
 ---
@@ -40,6 +40,7 @@ Need animation?
 ### When to Use
 
 **✅ Use CSS for:**
+
 - Fade in/out
 - Slide up/down/left/right
 - Scale (single axis or uniform)
@@ -142,32 +143,35 @@ import { ScrollReveal } from '@/components/features';
 ### Performance Tips
 
 1. **Only animate transform and opacity** (GPU-accelerated)
+
    ```tsx
    // ✅ Good - GPU accelerated
-   className="transition-opacity transition-transform"
-   
+   className = 'transition-opacity transition-transform';
+
    // ❌ Bad - CPU-bound, causes reflow
-   className="transition-all" // Avoid this!
+   className = 'transition-all'; // Avoid this!
    ```
 
 2. **Use appropriate transition durations**
+
    ```tsx
    import { ANIMATION } from '@/lib/design-tokens';
-   
-   ANIMATION.duration.fast    // 150ms - UI responses
-   ANIMATION.duration.normal  // 300ms - Standard transitions
-   ANIMATION.duration.slow    // 500ms - Dramatic effects
+
+   ANIMATION.duration.fast; // 150ms - UI responses
+   ANIMATION.duration.normal; // 300ms - Standard transitions
+   ANIMATION.duration.slow; // 500ms - Dramatic effects
    ```
 
 3. **Prefer transition utilities over transition-all**
+
    ```tsx
    // ✅ Good - specific properties
-   ANIMATION.transition.movement   // transform only
-   ANIMATION.transition.theme      // colors only
-   ANIMATION.transition.appearance // opacity + transform
-   
+   ANIMATION.transition.movement; // transform only
+   ANIMATION.transition.theme; // colors only
+   ANIMATION.transition.appearance; // opacity + transform
+
    // ❌ Bad - animates everything
-   className="transition-all"
+   className = 'transition-all';
    ```
 
 ---
@@ -177,6 +181,7 @@ import { ScrollReveal } from '@/components/features';
 ### When to Use
 
 **⚠️ Use Framer Motion ONLY for:**
+
 - 3D transforms with multiple axes (rotateX + rotateY + perspective)
 - Spring physics (momentum, bounce, inertia)
 - Gesture interactions (drag, swipe, pinch)
@@ -199,7 +204,7 @@ import { motion } from 'framer-motion';
 
 /**
  * Uses Framer Motion for 3D coin-flip animation.
- * 
+ *
  * Justification: CSS cannot achieve multi-axis 3D transforms with spring physics.
  * Alternative CSS: Simple 2D flip (rotateY only, no spring).
  * Decision: Framer Motion justified for enhanced UX.
@@ -227,7 +232,7 @@ import { motion } from 'framer-motion';
 
 /**
  * Uses Framer Motion for spring-based toggle.
- * 
+ *
  * Justification: CSS easing cannot replicate spring physics (overshoot, bounce).
  * Alternative CSS: ease-in-out (less engaging).
  * Decision: Framer Motion justified for polished interaction.
@@ -253,7 +258,7 @@ import { motion } from 'framer-motion';
 
 /**
  * Uses Framer Motion for draggable nodes.
- * 
+ *
  * Justification: CSS cannot detect drag gestures or provide drag constraints.
  * Alternative CSS: None (not possible).
  * Decision: Framer Motion required.
@@ -281,7 +286,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 
 /**
  * Uses Framer Motion for scroll progress indicator.
- * 
+ *
  * Justification: CSS cannot link animations to scroll position dynamically.
  * Alternative CSS: Static position indicator (less engaging).
  * Decision: Framer Motion justified for dynamic feedback.
@@ -289,13 +294,8 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 export function ReadingProgressBar() {
   const { scrollYProgress } = useScroll();
   const width = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-  
-  return (
-    <motion.div
-      className="h-1 bg-primary"
-      style={{ width }}
-    />
-  );
+
+  return <motion.div className="h-1 bg-primary" style={{ width }} />;
 }
 ```
 
@@ -309,7 +309,7 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 export function AnimatedComponent() {
   const prefersReducedMotion = useReducedMotion();
-  
+
   return (
     <motion.div
       initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
@@ -329,16 +329,16 @@ export function AnimatedComponent() {
 ```tsx
 /**
  * Component description
- * 
+ *
  * **Animation Engine**: Framer Motion
- * 
+ *
  * **Justification**: [Explain why CSS is insufficient]
  * - Specific feature needed (3D, spring, gestures, scroll-linked)
  * - Alternative CSS approach considered
  * - Why Framer Motion provides better UX
- * 
+ *
  * **Bundle Cost**: +60-80 KB (already included globally)
- * 
+ *
  * **Accessibility**: Manual reduced motion handling via useReducedMotion hook
  */
 ```
@@ -354,6 +354,7 @@ When planning enhanced web graphics, consider these alternatives to Framer Motio
 **Best for**: Complex timelines, professional animations, performance-critical work
 
 **Pros**:
+
 - Smaller bundle than Framer Motion (~30-40 KB for core)
 - Better performance for complex sequences
 - Extensive easing library
@@ -361,11 +362,13 @@ When planning enhanced web graphics, consider these alternatives to Framer Motio
 - Industry standard for web animations
 
 **Cons**:
+
 - Commercial license required for some features
 - Steeper learning curve
 - No React-specific API (though compatible)
 
 **Use when**:
+
 - Need complex animation timelines
 - Require professional-grade easing
 - Performance is critical
@@ -376,18 +379,21 @@ When planning enhanced web graphics, consider these alternatives to Framer Motio
 **Best for**: 3D graphics, WebGL rendering, immersive experiences
 
 **Pros**:
+
 - Full 3D rendering capabilities
 - React Three Fiber provides React integration
 - Extensive ecosystem (drei, postprocessing)
 - Industry standard for 3D web
 
 **Cons**:
+
 - Large bundle size (~600 KB for Three.js + React Three Fiber)
 - GPU-intensive
 - Complex learning curve
 - Accessibility challenges
 
 **Use when**:
+
 - Need 3D graphics (models, scenes, cameras)
 - Creating immersive experiences
 - WebGL rendering required
@@ -398,17 +404,20 @@ When planning enhanced web graphics, consider these alternatives to Framer Motio
 **Best for**: Designer-created animations from After Effects
 
 **Pros**:
+
 - JSON-based animations
 - Smaller file size than video/GIF
 - Vector-based (scales perfectly)
 - Easy designer handoff
 
 **Cons**:
+
 - Requires After Effects workflow
 - Limited interactivity
 - ~20-30 KB runtime
 
 **Use when**:
+
 - Designer creates animations in After Effects
 - Need scalable vector animations
 - Replacing animated GIFs/videos
@@ -419,17 +428,20 @@ When planning enhanced web graphics, consider these alternatives to Framer Motio
 **Best for**: Custom graphics, performance-critical rendering
 
 **Pros**:
+
 - Native browser API (0 KB bundle)
 - Full control over rendering
 - High performance for many elements
 - Pixel-level manipulation
 
 **Cons**:
+
 - Low-level API (more code)
 - No built-in accessibility
 - Requires manual DOM synchronization
 
 **Use when**:
+
 - Need custom graphics not achievable with CSS/SVG
 - Rendering thousands of elements (charts, particles)
 - Pixel-level manipulation required
@@ -439,18 +451,21 @@ When planning enhanced web graphics, consider these alternatives to Framer Motio
 **Best for**: High-performance graphics, compute shaders
 
 **Pros**:
+
 - Native browser API (0 KB bundle)
 - GPU-accelerated
 - Highest performance
 - Future-proof (WebGPU)
 
 **Cons**:
+
 - Very low-level
 - Requires shader programming
 - Browser support varies (WebGPU)
 - Complex learning curve
 
 **Use when**:
+
 - Maximum performance required
 - Custom GPU shaders needed
 - Advanced rendering techniques
@@ -463,6 +478,7 @@ When planning enhanced web graphics, consider these alternatives to Framer Motio
 ### Converting Framer Motion to CSS
 
 **Before: Framer Motion**
+
 ```tsx
 import { motion } from 'framer-motion';
 
@@ -472,16 +488,17 @@ import { motion } from 'framer-motion';
   transition={{ duration: 0.3 }}
 >
   {content}
-</motion.div>
+</motion.div>;
 ```
 
 **After: CSS Animation**
+
 ```tsx
 import { ScrollReveal } from '@/components/features';
 
 <ScrollReveal animation="fade-up" delay={1}>
   {content}
-</ScrollReveal>
+</ScrollReveal>;
 ```
 
 **Savings**: -60-80 KB per component (if Framer Motion can be removed entirely)
@@ -502,6 +519,7 @@ Based on audit, these 10 components are candidates for CSS conversion:
 10. **modern-post-card.tsx** - Card hover (keep 3D tilt, convert others)
 
 **Keep Framer Motion in:**
+
 - FlippableAvatar (3D coin flip)
 - FeaturedPostHero (3D tilt with perspective)
 - ContentTypeToggle (spring physics)
@@ -519,11 +537,14 @@ Based on audit, these 10 components are candidates for CSS conversion:
 // Use React Profiler to measure render cost
 import { Profiler } from 'react';
 
-<Profiler id="Animation" onRender={(id, phase, actualDuration) => {
-  console.log(`${id} (${phase}): ${actualDuration}ms`);
-}}>
+<Profiler
+  id="Animation"
+  onRender={(id, phase, actualDuration) => {
+    console.log(`${id} (${phase}): ${actualDuration}ms`);
+  }}
+>
   <AnimatedComponent />
-</Profiler>
+</Profiler>;
 ```
 
 ### Accessibility Testing
@@ -534,14 +555,14 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 it('should respect reduced motion preference', () => {
   // Mock prefers-reduced-motion: reduce
-  window.matchMedia = jest.fn().mockImplementation(query => ({
+  window.matchMedia = jest.fn().mockImplementation((query) => ({
     matches: query === '(prefers-reduced-motion: reduce)',
     addListener: jest.fn(),
     removeListener: jest.fn(),
   }));
-  
+
   const { container } = render(<AnimatedComponent />);
-  
+
   // Verify animations are disabled
   expect(container.querySelector('.animate-in')).not.toBeInTheDocument();
 });
@@ -565,13 +586,15 @@ export const ReducedMotion = () => <AnimatedComponent reducedMotion={true} />;
 Before implementing any animation, verify:
 
 ### CSS Animation Checklist
+
 - [ ] Only animates transform and/or opacity (GPU-accelerated)
-- [ ] Uses design tokens (ANIMATION.*, HOVER_EFFECTS.*)
+- [ ] Uses design tokens (ANIMATION._, HOVER_EFFECTS._)
 - [ ] Respects prefers-reduced-motion (automatic via CSS media query)
 - [ ] Has appropriate duration (fast: 150ms, normal: 300ms, slow: 500ms)
 - [ ] Uses semantic transition utility (movement, appearance, theme)
 
 ### Framer Motion Checklist
+
 - [ ] CSS alternative considered and documented (why insufficient)
 - [ ] JSDoc includes justification (3D, spring, gestures, scroll-linked)
 - [ ] Manual reduced motion handling via useReducedMotion hook
@@ -584,11 +607,13 @@ Before implementing any animation, verify:
 ## Resources
 
 ### Internal
+
 - [Design Tokens](../../src/lib/design-tokens.ts) - ANIMATION, HOVER_EFFECTS constants
 - [Animation CSS](../../src/styles/animations.css) - CSS animation utilities
 - [useReducedMotion Hook](../../src/hooks/use-reduced-motion.ts) - Accessibility hook
 
 ### External
+
 - [CSS Animations MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations)
 - [Framer Motion Documentation](https://www.framer.com/motion/)
 - [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)
@@ -597,5 +622,5 @@ Before implementing any animation, verify:
 
 ---
 
-**Last Updated**: January 15, 2026  
+**Last Updated**: January 15, 2026
 **Next Review**: Q2 2026 (after graphics engine evaluation)

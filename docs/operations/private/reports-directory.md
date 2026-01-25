@@ -1,4 +1,4 @@
-{/_ TLP:CLEAR _/}
+{/_ TLP:AMBER _/}
 
 # 📊 Reports Directory
 

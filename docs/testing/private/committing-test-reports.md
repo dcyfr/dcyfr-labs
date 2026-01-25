@@ -1,4 +1,4 @@
-{/* TLP:CLEAR */}
+{/* TLP:AMBER */}
 
 Committing Test Reports
 =======================

@@ -139,7 +139,7 @@ function hasOperationalContent(filePath) {
       /Status:\s*COMPLETE/i,
       /Implementation Complete/i,
       /Generated:\s*\d{4}-\d{2}-\d{2}/,
-      /Overall\s+Score:\s*\d+\/\d+/i,  // More specific: "Overall Score: X/Y"
+      /Overall\s+Score:\s*\d+\/\d+/i, // More specific: "Overall Score: X/Y"
       /Validation Score:/i,
       /Performance Metrics Summary/i,
       /Success Metrics:/i,
