@@ -1008,14 +1008,17 @@ git status  # Should not appear
 git status .vscode/mcp.json  # Should appear if untracked/modified
 ```
 
-#### 3. GitHub Actions (Future - Phase 2)
+#### 3. GitHub Actions (Active Governance Validation)
 
-**Workflow:** `.github/workflows/governance-validation.yml` (to be created in Phase 2)
+**Workflow:** [`.github/workflows/governance-validation.yml`](.github/workflows/governance-validation.yml) (active in CI)
 
 **Validation:**
 - Sensitive files in public docs (CI check)
 - Private file references are valid
 - AI configuration compliance
+- TLP compliance enforcement
+- .gitignore coverage
+- Secret scanning
 
 ### Manual Validation
 

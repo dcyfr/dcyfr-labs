@@ -13,10 +13,11 @@ on:
     branches: [main, preview]
 
 # Explicit permissions (least privilege principle)
+# Write permissions scoped to pull_request events only
 permissions:
   contents: read        # Required: checkout repository
-  pull-requests: write  # Required: post scan results as PR comments
-  issues: write         # Required: create remediation issues for critical secrets
+  pull-requests: ${{ github.event_name == 'pull_request' && 'write' || 'read' }}  # Write only on PRs
+  issues: ${{ github.event_name == 'pull_request' && 'write' || 'read' }}         # Write only on PRs
 
 # Cancel in-progress runs for same PR/branch
 concurrency:

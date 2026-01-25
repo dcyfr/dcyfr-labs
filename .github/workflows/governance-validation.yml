@@ -19,6 +19,11 @@ on:
       - '.gitignore'
       - 'AGENTS.md'
 
+# Explicit permissions (least privilege principle)
+permissions:
+  contents: read        # Required: checkout repository
+  pull-requests: write  # Required: post validation results as PR comments
+
 jobs:
   validate-governance:
     runs-on: ubuntu-latest
