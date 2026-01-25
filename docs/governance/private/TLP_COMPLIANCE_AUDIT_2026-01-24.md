@@ -1,11 +1,11 @@
-{/_ TLP:CLEAR _/}
+{/_ TLP:AMBER _/}
 
 # TLP Compliance Audit Summary
 
 **Audit Date:** January 24, 2026
 **Auditor:** DCYFR AI Lab Assistant
 **Status:** ✅ **COMPLETE** - All sensitive content relocated
-**Information Classification:** TLP:CLEAR (Public)
+**Information Classification:** TLP:AMBER (Internal Use Only)
 
 ---
 
@@ -333,4 +333,4 @@ The enhanced governance policy provides clear guidelines for maintaining this cl
 
 **Audit Completed:** January 24, 2026
 **Next Review:** April 24, 2026 (Quarterly)
-**Information Classification:** TLP:CLEAR (Public)
+**Information Classification:** TLP:AMBER (Internal Use Only)
