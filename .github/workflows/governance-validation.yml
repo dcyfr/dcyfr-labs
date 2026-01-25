@@ -160,6 +160,43 @@ jobs:
             echo "ℹ️  check-private-references.mjs not found - skipping"
           fi
 
+      - name: Validate TLP compliance
+        run: |
+          echo "🔍 Validating TLP compliance..."
+
+          if [ -f "scripts/validate-tlp-compliance.mjs" ]; then
+            node scripts/validate-tlp-compliance.mjs || {
+              echo ""
+              echo "❌ ERROR: TLP compliance validation failed"
+              echo ""
+              echo "Fix errors by:"
+              echo "  1. Add TLP:CLEAR markers to public docs"
+              echo "  2. Move operational files to docs/*/private/"
+              echo "  3. Run: npm run check:docs"
+              echo ""
+              exit 1
+            }
+          else
+            echo "ℹ️  validate-tlp-compliance.mjs not found - skipping"
+          fi
+
+      - name: Validate documentation location
+        run: |
+          echo "📁 Validating documentation location..."
+
+          if [ -f "scripts/validate-doc-location.mjs" ]; then
+            node scripts/validate-doc-location.mjs || {
+              echo ""
+              echo "❌ ERROR: Documentation location validation failed"
+              echo ""
+              echo "Fix errors by moving documentation files to docs/ directory"
+              echo ""
+              exit 1
+            }
+          else
+            echo "ℹ️  validate-doc-location.mjs not found - skipping"
+          fi
+
       - name: Run governance compliance check
         run: |
           echo "🔍 Running comprehensive governance check..."
@@ -235,6 +272,8 @@ jobs:
           echo ""
           echo "Checks completed:"
           echo "  ✅ Documentation structure"
+          echo "  ✅ TLP compliance"
+          echo "  ✅ Documentation location"
           echo "  ✅ AI configuration"
           echo "  ✅ .gitignore coverage"
           echo "  ✅ Private file references"
