@@ -29,8 +29,8 @@
  * ```
  */
 
-import { createClient } from 'redis';
-import type { RedisClientType } from 'redis';
+import { redis } from '@/mcp/shared/redis-client';
+import type { Redis } from '@upstash/redis';
 
 // ============================================================================
 // TYPES
@@ -62,40 +62,6 @@ export interface CachedData<T> {
 }
 
 // ============================================================================
-// REDIS CLIENT HELPER
-// ============================================================================
-
-async function getRedisClient(): Promise<RedisClientType | null> {
-  const redisUrl = process.env.REDIS_URL;
-  if (!redisUrl) {
-    console.warn('[Cache] REDIS_URL not configured');
-    return null;
-  }
-
-  try {
-    const client = createClient({
-      url: redisUrl,
-      socket: {
-        connectTimeout: 5000,
-        reconnectStrategy: (retries) => {
-          if (retries > 3) return new Error('Max retries exceeded');
-          return Math.min(retries * 100, 3000);
-        },
-      },
-    });
-
-    if (!client.isOpen) {
-      await client.connect();
-    }
-
-    return client as RedisClientType;
-  } catch (error) {
-    console.error('[Cache] Redis connection failed:', error);
-    return null;
-  }
-}
-
-// ============================================================================
 // VERSIONED CACHE
 // ============================================================================
 
@@ -124,9 +90,7 @@ export class VersionedCache<T = any> {
    * - Redis unavailable
    */
   async get(key: string): Promise<T | null> {
-    const redis = await getRedisClient();
-    if (!redis) return null;
-
+    // Using shared redis client from module imports
     try {
       const versionedKey = this.getVersionedKey(key);
       const raw = await redis.get(versionedKey);
@@ -138,7 +102,7 @@ export class VersionedCache<T = any> {
         return null;
       }
 
-      const cached: CachedData<T> = JSON.parse(raw);
+      const cached: CachedData<T> = JSON.parse(raw as string);
 
       // Validate version match
       if (cached.metadata.version !== this.config.version) {
@@ -168,18 +132,15 @@ export class VersionedCache<T = any> {
     } catch (error) {
       console.error(`[Cache] Get error:`, error);
       return null;
-    } finally {
-      await redis.quit();
     }
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
   }
 
   /**
    * Set data in cache with version metadata
    */
   async set(key: string, data: T, customTtl?: number): Promise<boolean> {
-    const redis = await getRedisClient();
-    if (!redis) return false;
-
+    // Using shared redis client from module imports
     try {
       const versionedKey = this.getVersionedKey(key);
       const ttl = customTtl ?? this.config.ttl;
@@ -196,7 +157,7 @@ export class VersionedCache<T = any> {
         data,
       };
 
-      await redis.setEx(versionedKey, ttl, JSON.stringify(cached));
+      await redis.setex(versionedKey, ttl, JSON.stringify(cached));
 
       console.warn(
         `[Cache] Set: ${versionedKey} (${this.config.description || this.config.namespace}, TTL: ${ttl}s)`
@@ -207,7 +168,7 @@ export class VersionedCache<T = any> {
       console.error(`[Cache] Set error:`, error);
       return false;
     } finally {
-      await redis.quit();
+      // No quit() needed - Upstash uses HTTP REST API (stateless)
     }
   }
 
@@ -215,9 +176,7 @@ export class VersionedCache<T = any> {
    * Delete cache entry
    */
   async delete(key: string): Promise<boolean> {
-    const redis = await getRedisClient();
-    if (!redis) return false;
-
+    // Using shared redis client from module imports
     try {
       const versionedKey = this.getVersionedKey(key);
       const deleted = await redis.del(versionedKey);
@@ -228,9 +187,8 @@ export class VersionedCache<T = any> {
     } catch (error) {
       console.error(`[Cache] Delete error:`, error);
       return false;
-    } finally {
-      await redis.quit();
     }
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
   }
 
   /**
@@ -238,9 +196,7 @@ export class VersionedCache<T = any> {
    * WARNING: Use with caution - deletes ALL versions
    */
   async deleteAllVersions(key: string): Promise<number> {
-    const redis = await getRedisClient();
-    if (!redis) return 0;
-
+    // Using shared redis client from module imports
     try {
       // Find all keys matching pattern
       const pattern = `${this.config.namespace}:v*:${key}`;
@@ -251,16 +207,15 @@ export class VersionedCache<T = any> {
         return 0;
       }
 
-      const deleted = await redis.del(keys);
+      const deleted = await redis.del(...keys);
       console.warn(`[Cache] Deleted ${deleted} versions of ${this.config.namespace}:${key}`);
 
       return deleted;
     } catch (error) {
       console.error(`[Cache] Delete all versions error:`, error);
       return 0;
-    } finally {
-      await redis.quit();
     }
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
   }
 
   /**
@@ -272,11 +227,7 @@ export class VersionedCache<T = any> {
     age: string | null;
     ttl: number | null;
   }> {
-    const redis = await getRedisClient();
-    if (!redis) {
-      return { exists: false, version: null, age: null, ttl: null };
-    }
-
+    // Using shared redis client from module imports
     try {
       const versionedKey = this.getVersionedKey('*');
       const keys = await redis.keys(versionedKey);
@@ -291,7 +242,7 @@ export class VersionedCache<T = any> {
         return { exists: false, version: null, age: null, ttl: null };
       }
 
-      const cached: CachedData<T> = JSON.parse(raw);
+      const cached: CachedData<T> = JSON.parse(raw as string);
       const ttl = await redis.ttl(keys[0]);
 
       return {
@@ -303,9 +254,8 @@ export class VersionedCache<T = any> {
     } catch (error) {
       console.error(`[Cache] Stats error:`, error);
       return { exists: false, version: null, age: null, ttl: null };
-    } finally {
-      await redis.quit();
     }
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
   }
 
   /**

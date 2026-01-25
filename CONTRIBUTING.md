@@ -96,9 +96,9 @@ npm run parse:gitleaks-report ./gitleaks-report.json
 
 ## Environment
 
-If you rely on services (Redis, Resend, GitHub token) for local features, use `.env.local` or `vercel env pull .env.development.local` to populate environment variables. Example keys used by the app:
+If you rely on services (Upstash Redis, Resend, GitHub token) for local features, use `.env.local` or `vercel env pull .env.development.local` to populate environment variables. Example keys used by the app:
 
-- `REDIS_URL` — Redis for view counts
+- `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` — Serverless Redis for view counts and caching
 - `RESEND_API_KEY` — emails via Resend
 - `GITHUB_TOKEN` — optional GitHub token for higher API rate limits
 
@@ -162,19 +162,19 @@ This project uses specialized AI agent instructions and pattern enforcement syst
 
 #### What You CAN Do
 
-✅ **Learn and reference** patterns from `/docs/ai/`  
-✅ **Use templates** from `/docs/templates/` in your own projects  
-✅ **Follow** documented design patterns and standards  
-✅ **Request DCYFR mode** for your feature work  
-✅ **Suggest improvements** via GitHub Issues  
+✅ **Learn and reference** patterns from `/docs/ai/`
+✅ **Use templates** from `/docs/templates/` in your own projects
+✅ **Follow** documented design patterns and standards
+✅ **Request DCYFR mode** for your feature work
+✅ **Suggest improvements** via GitHub Issues
 ✅ **Contribute** code that follows published patterns
 
 #### What You CANNOT Do
 
-❌ **Redistribute** `.github/agents/` files or DCYFR specifications  
-❌ **Use DCYFR architecture** in competing projects  
-❌ **Modify** proprietary specifications without approval  
-❌ **Copy** enforcement system to other repositories  
+❌ **Redistribute** `.github/agents/` files or DCYFR specifications
+❌ **Use DCYFR architecture** in competing projects
+❌ **Modify** proprietary specifications without approval
+❌ **Copy** enforcement system to other repositories
 ❌ **Claim ownership** of DCYFR system components
 
 #### How to Extend DCYFR

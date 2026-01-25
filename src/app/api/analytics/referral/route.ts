@@ -50,17 +50,9 @@ interface ReferralCounts {
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as ReferralPayload;
-    const {
-      postId,
-      sessionId,
-      platform,
-      referrer,
-      utmSource,
-      utmMedium,
-      utmCampaign,
-      utmContent
-    } = body;
+    const body = (await request.json()) as ReferralPayload;
+    const { postId, sessionId, platform, referrer, utmSource, utmMedium, utmCampaign, utmContent } =
+      body;
 
     // Validate required fields
     if (!postId || !sessionId || !platform) {
@@ -71,7 +63,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate platform
-    const validPlatforms = ['twitter', 'dev', 'linkedin', 'reddit', 'hackernews', 'github', 'other'];
+    const validPlatforms = [
+      'twitter',
+      'dev',
+      'linkedin',
+      'reddit',
+      'hackernews',
+      'github',
+      'other',
+    ];
     if (!validPlatforms.includes(platform)) {
       return NextResponse.json(
         { error: `Invalid platform. Must be one of: ${validPlatforms.join(', ')}` },
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     };
 
     await redis.set(eventKey, JSON.stringify(eventData), {
-      EX: 86400, // 24 hours
+      ex: 86400, // 24 hours
     });
 
     // Increment referral counter for this post and platform
@@ -127,10 +127,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('[API] Referral tracking error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -163,10 +160,7 @@ export async function GET(request: NextRequest) {
     const postId = searchParams.get('postId');
 
     if (!postId) {
-      return NextResponse.json(
-        { error: 'Missing required parameter: postId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required parameter: postId' }, { status: 400 });
     }
 
     // Get referral counts by platform
@@ -191,10 +185,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('[API] Get referral error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

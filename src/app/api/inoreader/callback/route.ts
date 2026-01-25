@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
           updatedAt: Date.now(),
         }),
         {
-          EX: 60 * 60 * 24 * 30, // 30 days TTL
+          ex: 60 * 60 * 24 * 30, // 30 days TTL
         }
       );
 

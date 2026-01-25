@@ -18,28 +18,28 @@
  * - SEARCH_CONSOLE_CLIENT_EMAIL / SEARCH_CONSOLE_PRIVATE_KEY: Service account (optional)
  */
 
-import { createClient } from "redis";
-import { fetchVercelAnalytics } from "./vercel-analytics-api";
+import { createClient } from 'redis';
+import { fetchVercelAnalytics } from './vercel-analytics-api';
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
 interface AnalyticsMilestone {
-  type: "monthly_visitors" | "total_views" | "unique_visitors";
+  type: 'monthly_visitors' | 'total_views' | 'unique_visitors';
   threshold: number;
   reached_at: string;
   value: number;
 }
 
 interface GitHubTrafficMilestone {
-  type: "stars" | "forks" | "watchers" | "contributors";
+  type: 'stars' | 'forks' | 'watchers' | 'contributors';
   value: number;
   reached_at: string;
 }
 
 interface SearchConsoleMilestone {
-  type: "impressions" | "clicks" | "ctr" | "position" | "top_keyword";
+  type: 'impressions' | 'clicks' | 'ctr' | 'position' | 'top_keyword';
   value: number | string;
   reached_at: string;
   query?: string;
@@ -61,7 +61,7 @@ async function getRedisClient() {
       socket: {
         connectTimeout: 5000,
         reconnectStrategy: (retries) => {
-          if (retries > 3) return new Error("Max retries exceeded");
+          if (retries > 3) return new Error('Max retries exceeded');
           return Math.min(retries * 100, 3000);
         },
       },
@@ -73,7 +73,7 @@ async function getRedisClient() {
 
     return client;
   } catch (error) {
-    console.error("[Analytics] Redis connection failed:", error);
+    console.error('[Analytics] Redis connection failed:', error);
     return null;
   }
 }
@@ -91,12 +91,9 @@ async function getRedisClient() {
  *
  * Returns empty array if not configured (graceful degradation)
  */
-export async function fetchVercelAnalyticsMilestones(
-  days = 30
-): Promise<AnalyticsMilestone[]> {
+export async function fetchVercelAnalyticsMilestones(days = 30): Promise<AnalyticsMilestone[]> {
   const isProduction =
-    process.env.NODE_ENV === "production" ||
-    process.env.VERCEL_ENV === "production";
+    process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
 
   try {
     const analyticsData = await fetchVercelAnalytics(days);
@@ -104,23 +101,20 @@ export async function fetchVercelAnalyticsMilestones(
     if (!analyticsData) {
       if (isProduction) {
         console.error(
-          "❌ CRITICAL: Vercel Analytics not configured in production. " +
-            "Set VERCEL_TOKEN and VERCEL_ANALYTICS_ENDPOINT."
+          '❌ CRITICAL: Vercel Analytics not configured in production. ' +
+            'Set VERCEL_TOKEN and VERCEL_ANALYTICS_ENDPOINT.'
         );
       } else {
         console.warn(
-          "📊 Vercel Analytics not configured (development mode). " +
-            "Set VERCEL_TOKEN and VERCEL_ANALYTICS_ENDPOINT to enable."
+          '📊 Vercel Analytics not configured (development mode). ' +
+            'Set VERCEL_TOKEN and VERCEL_ANALYTICS_ENDPOINT to enable.'
         );
       }
       return [];
     }
 
     // Calculate total views from top pages
-    const totalViews = analyticsData.topPages.reduce(
-      (sum, page) => sum + page.views,
-      0
-    );
+    const totalViews = analyticsData.topPages.reduce((sum, page) => sum + page.views, 0);
 
     const milestones: AnalyticsMilestone[] = [];
     const now = new Date().toISOString();
@@ -133,7 +127,7 @@ export async function fetchVercelAnalyticsMilestones(
     for (const threshold of viewThresholds) {
       if (totalViews >= threshold) {
         milestones.push({
-          type: "total_views",
+          type: 'total_views',
           threshold,
           reached_at: now,
           value: totalViews,
@@ -147,7 +141,7 @@ export async function fetchVercelAnalyticsMilestones(
     for (const threshold of monthlyThresholds) {
       if (estimatedMonthlyVisitors >= threshold) {
         milestones.push({
-          type: "monthly_visitors",
+          type: 'monthly_visitors',
           threshold,
           reached_at: now,
           value: estimatedMonthlyVisitors,
@@ -161,12 +155,9 @@ export async function fetchVercelAnalyticsMilestones(
     return milestones;
   } catch (error) {
     if (isProduction) {
-      console.error(
-        "❌ CRITICAL: Failed to fetch Vercel Analytics in production:",
-        error
-      );
+      console.error('❌ CRITICAL: Failed to fetch Vercel Analytics in production:', error);
     } else {
-      console.warn("⚠️  Failed to fetch Vercel Analytics (dev mode):", error);
+      console.warn('⚠️  Failed to fetch Vercel Analytics (dev mode):', error);
     }
     return [];
   }
@@ -179,25 +170,23 @@ export async function storeVercelAnalyticsMilestones(): Promise<void> {
   const milestones = await fetchVercelAnalyticsMilestones();
 
   if (milestones.length === 0) {
-    console.warn("📊 No Vercel Analytics milestones to store");
+    console.warn('📊 No Vercel Analytics milestones to store');
     return;
   }
 
   const redis = await getRedisClient();
   if (!redis) {
-    console.error("❌ Redis not available, cannot store milestones");
+    console.error('❌ Redis not available, cannot store milestones');
     return;
   }
 
   try {
-    await redis.set("analytics:milestones", JSON.stringify(milestones));
-    console.warn(
-      `✅ Stored ${milestones.length} Vercel Analytics milestones in Redis`
-    );
+    await redis.set('analytics:milestones', JSON.stringify(milestones));
+    console.warn(`✅ Stored ${milestones.length} Vercel Analytics milestones in Redis`);
   } catch (error) {
-    console.error("❌ Failed to store analytics milestones:", error);
+    console.error('❌ Failed to store analytics milestones:', error);
   } finally {
-    await redis.quit();
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
   }
 }
 
@@ -217,39 +206,31 @@ export async function storeVercelAnalyticsMilestones(): Promise<void> {
  * Returns empty array if not configured
  */
 export async function fetchGitHubTrafficMilestones(
-  owner: string = "dcyfr",
-  repo: string = "dcyfr-labs"
+  owner: string = 'dcyfr',
+  repo: string = 'dcyfr-labs'
 ): Promise<GitHubTrafficMilestone[]> {
   const githubToken = process.env.GITHUB_TOKEN;
   const isProduction =
-    process.env.NODE_ENV === "production" ||
-    process.env.VERCEL_ENV === "production";
+    process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
 
   if (!githubToken) {
     if (isProduction) {
-      console.error(
-        "❌ CRITICAL: GITHUB_TOKEN not set in production. GitHub traffic unavailable."
-      );
+      console.error('❌ CRITICAL: GITHUB_TOKEN not set in production. GitHub traffic unavailable.');
     } else {
-      console.warn(
-        "📊 GITHUB_TOKEN not set (development). GitHub traffic unavailable."
-      );
+      console.warn('📊 GITHUB_TOKEN not set (development). GitHub traffic unavailable.');
     }
     return [];
   }
 
   try {
     // Fetch repository data
-    const repoResponse = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}`,
-      {
-        headers: {
-          Authorization: `Bearer ${githubToken}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-        next: { revalidate: 3600 }, // Cache for 1 hour
-      }
-    );
+    const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+      headers: {
+        Authorization: `Bearer ${githubToken}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
 
     if (!repoResponse.ok) {
       throw new Error(`GitHub API returned ${repoResponse.status}`);
@@ -263,7 +244,7 @@ export async function fetchGitHubTrafficMilestones(
     // Track stars
     if (repoData.stargazers_count > 0) {
       milestones.push({
-        type: "stars",
+        type: 'stars',
         value: repoData.stargazers_count,
         reached_at: now,
       });
@@ -272,7 +253,7 @@ export async function fetchGitHubTrafficMilestones(
     // Track forks
     if (repoData.forks_count > 0) {
       milestones.push({
-        type: "forks",
+        type: 'forks',
         value: repoData.forks_count,
         reached_at: now,
       });
@@ -281,7 +262,7 @@ export async function fetchGitHubTrafficMilestones(
     // Track watchers
     if (repoData.subscribers_count > 0) {
       milestones.push({
-        type: "watchers",
+        type: 'watchers',
         value: repoData.subscribers_count,
         reached_at: now,
       });
@@ -293,12 +274,9 @@ export async function fetchGitHubTrafficMilestones(
     return milestones;
   } catch (error) {
     if (isProduction) {
-      console.error(
-        "❌ CRITICAL: Failed to fetch GitHub traffic in production:",
-        error
-      );
+      console.error('❌ CRITICAL: Failed to fetch GitHub traffic in production:', error);
     } else {
-      console.warn("⚠️  Failed to fetch GitHub traffic (dev mode):", error);
+      console.warn('⚠️  Failed to fetch GitHub traffic (dev mode):', error);
     }
     return [];
   }
@@ -311,25 +289,23 @@ export async function storeGitHubTrafficMilestones(): Promise<void> {
   const milestones = await fetchGitHubTrafficMilestones();
 
   if (milestones.length === 0) {
-    console.warn("📊 No GitHub traffic milestones to store");
+    console.warn('📊 No GitHub traffic milestones to store');
     return;
   }
 
   const redis = await getRedisClient();
   if (!redis) {
-    console.error("❌ Redis not available, cannot store milestones");
+    console.error('❌ Redis not available, cannot store milestones');
     return;
   }
 
   try {
-    await redis.set("github:traffic:milestones", JSON.stringify(milestones));
-    console.warn(
-      `✅ Stored ${milestones.length} GitHub traffic milestones in Redis`
-    );
+    await redis.set('github:traffic:milestones', JSON.stringify(milestones));
+    console.warn(`✅ Stored ${milestones.length} GitHub traffic milestones in Redis`);
   } catch (error) {
-    console.error("❌ Failed to store GitHub traffic milestones:", error);
+    console.error('❌ Failed to store GitHub traffic milestones:', error);
   } finally {
-    await redis.quit();
+    // No quit() needed - Upstash uses HTTP REST API (stateless)
   }
 }
 
@@ -350,20 +326,17 @@ export async function storeGitHubTrafficMilestones(): Promise<void> {
  * 4. Add service account email to GA property as viewer
  * 5. Set GOOGLE_ANALYTICS_CREDENTIALS environment variable
  */
-export async function fetchGoogleAnalyticsMilestones(): Promise<
-  AnalyticsMilestone[]
-> {
+export async function fetchGoogleAnalyticsMilestones(): Promise<AnalyticsMilestone[]> {
   const isProduction =
-    process.env.NODE_ENV === "production" ||
-    process.env.VERCEL_ENV === "production";
+    process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
 
   if (isProduction) {
     console.error(
-      "❌ CRITICAL: Google Analytics not implemented yet. " +
-        "Implement OAuth 2.0 integration when ready."
+      '❌ CRITICAL: Google Analytics not implemented yet. ' +
+        'Implement OAuth 2.0 integration when ready.'
     );
   } else {
-    console.warn("📊 Google Analytics not configured (placeholder)");
+    console.warn('📊 Google Analytics not configured (placeholder)');
   }
 
   // TODO: Implement Google Analytics Data API integration
@@ -375,7 +348,7 @@ export async function fetchGoogleAnalyticsMilestones(): Promise<
  * Store Google Analytics milestones (placeholder)
  */
 export async function storeGoogleAnalyticsMilestones(): Promise<void> {
-  console.warn("📊 Google Analytics storage (placeholder - not implemented)");
+  console.warn('📊 Google Analytics storage (placeholder - not implemented)');
   // TODO: Implement when GA integration is ready
 }
 
@@ -396,20 +369,17 @@ export async function storeGoogleAnalyticsMilestones(): Promise<void> {
  * 4. Add service account email to Search Console as owner
  * 5. Set GOOGLE_SEARCH_CONSOLE_CREDENTIALS environment variable
  */
-export async function fetchSearchConsoleMilestones(): Promise<
-  SearchConsoleMilestone[]
-> {
+export async function fetchSearchConsoleMilestones(): Promise<SearchConsoleMilestone[]> {
   const isProduction =
-    process.env.NODE_ENV === "production" ||
-    process.env.VERCEL_ENV === "production";
+    process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
 
   if (isProduction) {
     console.error(
-      "❌ CRITICAL: Google Search Console not implemented yet. " +
-        "Implement OAuth 2.0 integration when ready."
+      '❌ CRITICAL: Google Search Console not implemented yet. ' +
+        'Implement OAuth 2.0 integration when ready.'
     );
   } else {
-    console.warn("📊 Google Search Console not configured (placeholder)");
+    console.warn('📊 Google Search Console not configured (placeholder)');
   }
 
   // TODO: Implement Google Search Console API integration
@@ -421,7 +391,7 @@ export async function fetchSearchConsoleMilestones(): Promise<
  * Store Search Console milestones (placeholder)
  */
 export async function storeSearchConsoleMilestones(): Promise<void> {
-  console.warn("📊 Search Console storage (placeholder - not implemented)");
+  console.warn('📊 Search Console storage (placeholder - not implemented)');
   // TODO: Implement when Search Console integration is ready
 }
 
@@ -448,7 +418,7 @@ export async function updateAllAnalyticsMilestones(): Promise<{
   updated: string[];
   failed: string[];
 }> {
-  console.warn("📊 Starting analytics milestones update...");
+  console.warn('📊 Starting analytics milestones update...');
 
   const updated: string[] = [];
   const failed: string[] = [];
@@ -456,19 +426,19 @@ export async function updateAllAnalyticsMilestones(): Promise<{
   // Update Vercel Analytics
   try {
     await storeVercelAnalyticsMilestones();
-    updated.push("vercel_analytics");
+    updated.push('vercel_analytics');
   } catch (error) {
-    console.error("❌ Failed to update Vercel Analytics:", error);
-    failed.push("vercel_analytics");
+    console.error('❌ Failed to update Vercel Analytics:', error);
+    failed.push('vercel_analytics');
   }
 
   // Update GitHub Traffic
   try {
     await storeGitHubTrafficMilestones();
-    updated.push("github_traffic");
+    updated.push('github_traffic');
   } catch (error) {
-    console.error("❌ Failed to update GitHub traffic:", error);
-    failed.push("github_traffic");
+    console.error('❌ Failed to update GitHub traffic:', error);
+    failed.push('github_traffic');
   }
 
   // Update Google Analytics (placeholder)
@@ -476,8 +446,8 @@ export async function updateAllAnalyticsMilestones(): Promise<{
     await storeGoogleAnalyticsMilestones();
     // Don't add to updated - not implemented yet
   } catch (error) {
-    console.error("❌ Failed to update Google Analytics:", error);
-    failed.push("google_analytics");
+    console.error('❌ Failed to update Google Analytics:', error);
+    failed.push('google_analytics');
   }
 
   // Update Search Console (placeholder)
@@ -485,15 +455,15 @@ export async function updateAllAnalyticsMilestones(): Promise<{
     await storeSearchConsoleMilestones();
     // Don't add to updated - not implemented yet
   } catch (error) {
-    console.error("❌ Failed to update Search Console:", error);
-    failed.push("search_console");
+    console.error('❌ Failed to update Search Console:', error);
+    failed.push('search_console');
   }
 
   const success = failed.length === 0;
   console.warn(
     success
-      ? `✅ Analytics update complete: ${updated.join(", ")}`
-      : `⚠️  Analytics update completed with errors: updated [${updated.join(", ")}], failed [${failed.join(", ")}]`
+      ? `✅ Analytics update complete: ${updated.join(', ')}`
+      : `⚠️  Analytics update completed with errors: updated [${updated.join(', ')}], failed [${failed.join(', ')}]`
   );
 
   return { success, updated, failed };

@@ -1,96 +1,72 @@
 /**
- * Redis client for MCP servers
- * Uses REDIS_URL from environment (same as main app)
- * 
- * Note: Uses standard redis client (not @upstash/redis) to support
- * both Redis Cloud and Upstash instances via REDIS_URL
+ * Upstash Redis client for MCP servers and main app
+ * Uses UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN from environment
+ *
+ * Upstash provides serverless Redis with HTTP-based REST API, perfect for
+ * Vercel Edge Functions and serverless deployments (no persistent connections needed)
  */
 
-import { createClient } from "redis";
-
-type RedisClient = ReturnType<typeof createClient>;
-
-let redisClient: RedisClient | null = null;
-let connecting: Promise<RedisClient> | null = null;
+import { Redis } from '@upstash/redis';
 
 /**
- * Get or create Redis client for MCP servers
+ * Upstash Redis client instance
+ * Lazy-initialized on first use to avoid connection in build/test environments
+ */
+let redisClient: Redis | null = null;
+
+/**
+ * Get or create Upstash Redis client
  * Only initializes when first used (lazy loading)
  */
-async function getRedisClient(): Promise<RedisClient> {
-  const redisUrl = process.env.REDIS_URL;
-  
-  if (!redisUrl) {
+function getRedisClient(): Redis {
+  const restUrl = process.env.UPSTASH_REDIS_REST_URL;
+  const restToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (!restUrl || !restToken) {
     throw new Error(
-      "Missing Redis credentials. Set REDIS_URL in .env.local (same as main app)"
+      'Missing Upstash Redis credentials. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in .env.local'
     );
   }
 
-  // If already connected, return it
-  if (redisClient?.isOpen) {
-    return redisClient;
+  if (!redisClient) {
+    redisClient = new Redis({
+      url: restUrl,
+      token: restToken,
+    });
   }
 
-  // If currently connecting, wait for that
-  if (connecting) {
-    return connecting;
-  }
-
-  // Start new connection
-  connecting = (async () => {
-    if (!redisClient) {
-      redisClient = createClient({ 
-        url: redisUrl,
-        socket: {
-          connectTimeout: 5000,
-          reconnectStrategy: (retries) => {
-            if (retries > 3) return new Error('Max retries exceeded');
-            return Math.min(retries * 100, 3000);
-          },
-        },
-      });
-
-      redisClient.on("error", (error) => {
-        console.error("[MCP Analytics] Redis error:", error);
-      });
-    }
-
-    if (!redisClient.isOpen) {
-      await redisClient.connect();
-    }
-
-    connecting = null;
-    return redisClient;
-  })();
-
-  return connecting;
+  return redisClient;
 }
 
 /**
- * Redis client proxy that auto-connects on first use
- * Provides same interface as standard redis client
+ * Upstash Redis client
+ * Auto-initializes on first use with environment credentials
+ *
+ * Compatible with standard Redis API:
+ * - get, set, setEx, del
+ * - zadd, zrange, zrangebyscore
+ * - All operations work via HTTP REST API
  */
-export const redis = new Proxy({} as RedisClient, {
+export const redis = new Proxy({} as Redis, {
   get(_target, prop) {
-    // Return an async wrapper for any method
-    return async (...args: any[]) => {
-      const client = await getRedisClient();
-      const method = client[prop as keyof RedisClient];
-      if (typeof method === 'function') {
-        return method.apply(client, args);
-      }
-      return method;
-    };
+    const client = getRedisClient();
+    const value = client[prop as keyof Redis];
+
+    if (typeof value === 'function') {
+      return value.bind(client);
+    }
+
+    return value;
   },
 });
 
 /**
  * Close Redis connection (for cleanup)
+ * Note: Upstash uses HTTP, so no persistent connection to close
+ * This is kept for API compatibility with previous implementation
  */
 export async function closeRedisClient() {
-  if (redisClient?.isOpen) {
-    await redisClient.quit();
-    redisClient = null;
-    connecting = null;
-  }
+  // Upstash uses HTTP REST API, no persistent connection to close
+  // Just reset the client instance
+  redisClient = null;
 }

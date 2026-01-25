@@ -50,8 +50,7 @@ const REDIS_KEYS = {
     `api:usage:${service}:${endpoint}:${date}`,
 
   // Monthly aggregate: api:usage:monthly:{service}:{YYYY-MM}
-  monthly: (service: string, month: string) =>
-    `api:usage:monthly:${service}:${month}`,
+  monthly: (service: string, month: string) => `api:usage:monthly:${service}:${month}`,
 
   // Service pattern for listing all keys
   servicePattern: (service: string) => `api:usage:${service}:*`,
@@ -191,7 +190,7 @@ export async function trackApiUsage(
       };
     }
 
-    await redis.set(dailyKey, JSON.stringify(usage), { EX: TTL.daily });
+    await redis.set(dailyKey, JSON.stringify(usage), { ex: TTL.daily });
 
     // Update monthly aggregate
     await updateMonthlyAggregate(service, month, {
@@ -239,7 +238,7 @@ async function updateMonthlyAggregate(
       aggregate.totalRequests += delta.requests;
       aggregate.totalCost += delta.cost;
       aggregate.totalTokens += delta.tokens;
-      
+
       // Update running average for duration
       const prevAvg = aggregate.avgDuration || 0;
       const prevCount = aggregate.totalRequests - delta.requests;
@@ -258,7 +257,7 @@ async function updateMonthlyAggregate(
       };
     }
 
-    await redis.set(monthlyKey, JSON.stringify(aggregate), { EX: TTL.monthly });
+    await redis.set(monthlyKey, JSON.stringify(aggregate), { ex: TTL.monthly });
   } catch (error) {
     console.error('[API Usage] Failed to update monthly aggregate:', error);
   }
@@ -278,7 +277,7 @@ async function checkUsageAlerts(
   if (percentUsed >= ALERT_THRESHOLDS.critical * 100) {
     const message = `CRITICAL: ${service} usage at ${percentUsed.toFixed(1)}% (${usage.count}/${limit})`;
     console.error(`[API Usage] 🚨 ${message}`);
-    
+
     Sentry.captureMessage(message, {
       level: 'error',
       tags: {
@@ -414,9 +413,9 @@ export async function getAllUsageStats(): Promise<ApiUsageStats[]> {
   try {
     const today = getDateKey();
     const keys = await redis.keys(REDIS_KEYS.allPattern());
-    
+
     // Filter to today's keys only
-    const todayKeys = keys.filter(key => key.includes(today));
+    const todayKeys = keys.filter((key) => key.includes(today));
 
     const stats: ApiUsageStats[] = [];
 
@@ -447,11 +446,9 @@ export async function getAllUsageStats(): Promise<ApiUsageStats[]> {
 /**
  * Get usage statistics for a specific service
  */
-export async function getServiceUsageStats(
-  service: string
-): Promise<ApiUsageStats[]> {
+export async function getServiceUsageStats(service: string): Promise<ApiUsageStats[]> {
   const allStats = await getAllUsageStats();
-  return allStats.filter(stat => stat.service === service);
+  return allStats.filter((stat) => stat.service === service);
 }
 
 /**
@@ -475,7 +472,7 @@ export async function getHistoricalUsage(
       const date = new Date(now);
       date.setDate(date.getDate() - i);
       const dateKey = date.toISOString().split('T')[0];
-      
+
       const usage = await getDailyUsage(service, endpoint, dateKey);
       if (usage) {
         results.push(usage);
@@ -509,7 +506,7 @@ export async function getMonthlyHistory(
       const date = new Date(now);
       date.setMonth(date.getMonth() - i);
       const monthKey = date.toISOString().slice(0, 7);
-      
+
       const usage = await getMonthlyUsage(service, monthKey);
       if (usage) {
         results.push(usage);
@@ -538,18 +535,13 @@ export async function getUsageSummary(): Promise<{
 }> {
   const stats = await getAllUsageStats();
 
-  const totalCost = stats.reduce(
-    (sum, stat) => sum + (stat.estimatedCost || 0),
-    0
-  );
+  const totalCost = stats.reduce((sum, stat) => sum + (stat.estimatedCost || 0), 0);
 
   const servicesNearLimit = stats
     .filter((s) => s.percentUsed >= ALERT_THRESHOLDS.warning * 100)
     .map((s) => s.service);
 
-  const servicesAtLimit = stats
-    .filter((s) => s.percentUsed >= 100)
-    .map((s) => s.service);
+  const servicesAtLimit = stats.filter((s) => s.percentUsed >= 100).map((s) => s.service);
 
   return {
     totalServices: new Set(stats.map((s) => s.service)).size,
@@ -567,7 +559,7 @@ export async function checkServiceLimit(
   endpoint: string = 'default'
 ): Promise<{ allowed: boolean; reason?: string; stats?: ApiUsageStats }> {
   const usage = await getDailyUsage(service, endpoint);
-  
+
   if (!usage) {
     return { allowed: true };
   }
@@ -627,7 +619,7 @@ export async function checkServiceLimit(
  */
 export async function clearAllUsageData(): Promise<void> {
   const redisAvailable = await isRedisAvailable();
-  
+
   if (!redisAvailable) {
     memoryFallback.clear();
     return;

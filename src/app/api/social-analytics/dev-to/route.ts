@@ -56,12 +56,7 @@ const DEFAULT_USERNAME = 'dcyfr';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      postId,
-      devSlug,
-      username = DEFAULT_USERNAME,
-      forceRefresh = false,
-    } = body;
+    const { postId, devSlug, username = DEFAULT_USERNAME, forceRefresh = false } = body;
 
     // Validate required fields
     if (!postId || !devSlug) {
@@ -111,7 +106,7 @@ export async function POST(request: NextRequest) {
         ...metrics,
         lastFetchedAt: new Date().toISOString(),
       }),
-      { EX: CACHE_TTL }
+      { ex: CACHE_TTL }
     );
 
     return NextResponse.json({
@@ -121,10 +116,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('[API] DEV.to metrics error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -151,10 +143,7 @@ export async function GET(request: NextRequest) {
     const postId = searchParams.get('postId');
 
     if (!postId) {
-      return NextResponse.json(
-        { error: 'Missing required parameter: postId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required parameter: postId' }, { status: 400 });
     }
 
     // Get from cache
@@ -162,10 +151,7 @@ export async function GET(request: NextRequest) {
     const cached = await redis.get(cacheKey);
 
     if (!cached) {
-      return NextResponse.json(
-        { error: 'Metrics not found in cache' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Metrics not found in cache' }, { status: 404 });
     }
 
     try {
@@ -183,17 +169,11 @@ export async function GET(request: NextRequest) {
         stale: isStale,
       });
     } catch {
-      return NextResponse.json(
-        { error: 'Invalid cached data' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Invalid cached data' }, { status: 500 });
     }
   } catch (error) {
     console.error('[API] Get DEV.to metrics error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -213,10 +193,7 @@ export async function DELETE(request: NextRequest) {
     const postId = searchParams.get('postId');
 
     if (!postId) {
-      return NextResponse.json(
-        { error: 'Missing required parameter: postId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required parameter: postId' }, { status: 400 });
     }
 
     const cacheKey = `dev-metrics:${postId}`;
@@ -228,10 +205,7 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.error('[API] Delete DEV.to cache error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
