@@ -21,7 +21,7 @@
     "github": {
       "type": "remote",
       "url": "https://api.githubcopilot.com/mcp/",
-      "enabled": false,
+      "enabled": true,
       "timeout": 10000
     },
     "context7": {
@@ -48,7 +48,7 @@
     "vercel": {
       "type": "remote",
       "url": "https://mcp.vercel.com",
-      "enabled": false,
+      "enabled": true,
       "timeout": 5000
     },
     "sentry": {
@@ -93,6 +93,27 @@
       "command": ["uvx", "arxiv-mcp-server"],
       "enabled": false,
       "timeout": 5000
+    },
+    "dcyfr-analytics": {
+      "type": "local",
+      "command": ["node", "scripts/mcp-servers/analytics-mcp-server.mjs"],
+      "enabled": false,
+      "timeout": 5000,
+      "description": "DCYFR Analytics MCP - Redis analytics data access"
+    },
+    "dcyfr-design-tokens": {
+      "type": "local",
+      "command": ["node", "scripts/mcp-servers/design-tokens-mcp-server.mjs"],
+      "enabled": false,
+      "timeout": 5000,
+      "description": "DCYFR Design Tokens MCP - Token compliance validation"
+    },
+    "dcyfr-content-manager": {
+      "type": "local",
+      "command": ["node", "scripts/mcp-servers/content-manager-mcp-server.mjs"],
+      "enabled": false,
+      "timeout": 5000,
+      "description": "DCYFR Content Manager MCP - MDX content operations"
     }
   },
 
@@ -100,7 +121,7 @@
     "*": true,
     "memory_*": true,
     "filesystem_*": true,
-    "github_*": false,
+    "github_*": true,
     "context7_*": true,
     "octocode_*": true,
     "perplexity_*": true,
@@ -118,14 +139,13 @@
     "default": {
       "tools": {
         "*": true,
-        "github_*": false,
+        "github_*": true,
         "sentry_*": false,
         "axiom_*": false
       },
       "permission": {
         "skill": {
           "*": "allow",
-          "dcyfr-*": "allow",
           "experimental-*": "ask"
         }
       }

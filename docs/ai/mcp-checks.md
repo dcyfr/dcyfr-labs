@@ -1,4 +1,4 @@
-{/* TLP:CLEAR */}
+{/_ TLP:CLEAR _/}
 
 ## MCP Servers - Health Checks & CI Guidance
 
@@ -6,9 +6,11 @@
 
 This page documents recommended checks for MCP (Model Context Protocol) servers, guidance for local development, and CI integration. It is intentionally short and prescriptive – follow these minimal steps to ensure MCP servers are discoverable, reachable, and documented in `AGENTS.md`.
 
+**Note:** As of January 24, 2026, Memory and Filesystem MCPs were removed as they duplicate VS Code built-in tools (`memory`, `read`, `edit`). See `docs/ai/mcp-overlap-analysis-2026-01-24.md` for analysis.
+
 ## Why this matters
 
-- MCP servers provide runtime context and services used by the AI agents this repository integrates with (e.g., Perplexity, Context, Axiom, Filesystem, arXiv, Octocode, Google Scholar, OpenReview, DBLP). Monitoring them improves developer ergonomics and reduces flaky CI runs.
+- MCP servers provide runtime context and services used by the AI agents this repository integrates with (e.g., Perplexity, Context7, Axiom, Octocode, GitHub, Vercel, Sentry, arXiv). Monitoring them improves developer ergonomics and reduces flaky CI runs.
 
 ## Local validation
 
