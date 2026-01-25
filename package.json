@@ -219,7 +219,13 @@
     "tasks:next:quick": "npm run tasks:scan && npm run tasks:prioritize -- --time=quick && node scripts/backlog/whats-next.mjs --time=quick",
     "tasks:next:today": "npm run tasks:scan && npm run tasks:prioritize -- --time=half-day && node scripts/backlog/whats-next.mjs --time=half-day",
     "tasks:next:week": "npm run tasks:scan && npm run tasks:prioritize -- --time=full-day --limit=10 && node scripts/backlog/whats-next.mjs --time=full-day --limit=10",
-    "tasks:stats": "npm run tasks:scan && npm run tasks:prioritize && node scripts/backlog/whats-next.mjs --stats"
+    "tasks:stats": "npm run tasks:scan && npm run tasks:prioritize && node scripts/backlog/whats-next.mjs --stats",
+    "claude:lint": "bash scripts/claude-code-automation.sh lint-subjective",
+    "claude:audit:tokens": "bash scripts/claude-code-automation.sh design-token-audit",
+    "claude:analyze:errors": "bash scripts/claude-code-automation.sh analyze-errors",
+    "claude:check:pre-commit": "bash scripts/claude-code-automation.sh pre-commit-check",
+    "claude:ci": "bash scripts/claude-code-automation.sh ci-pipeline",
+    "claude:help": "bash scripts/claude-code-automation.sh help"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

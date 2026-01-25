@@ -322,6 +322,63 @@ const text = html
 
 ---
 
+## 📁 Documentation Governance Rule: Operational vs. Reference (MANDATORY)
+
+When creating documentation, place it correctly based on type:
+
+### Quick Decision
+
+- **Reusable pattern/guide** → Public `docs/[category]/filename.md`
+- **Point-in-time status/summary** → Private `docs/[category]/private/filename-YYYY-MM-DD.md`
+- **Security/audit finding** → Private `docs/security/private/`
+- **Session/work log** → Private `docs/sessions/private/`
+
+### Operational Documentation Indicators (→ Private)
+
+**Filename patterns:**
+- `*-summary.md`, `*-complete.md`, `*-status.md`, `*-report.md`, `*-validation.md`
+- `*-implementation-YYYY-MM-DD.md`, `*-analysis-YYYY-MM-DD.md`
+- `*SUMMARY*.md`, `*STATUS*.md`, `*COMPLETE*.md`, `*REPORT*.md` (all-caps indicators)
+
+**Content patterns:**
+- Contains "Status: COMPLETE" or "Implementation Complete: [date]"
+- Contains "Total Implementation Time: X hours"
+- Contains task checklists with completion dates
+- Point-in-time snapshot, not reusable reference
+
+**Examples:**
+```
+❌ docs/ai/opencode-implementation-summary-2026-01-24.md
+✅ docs/ai/private/opencode-implementation-summary-2026-01-24.md
+
+❌ docs/operations/CLEANUP_COMPLETE.md
+✅ docs/operations/private/cleanup-complete-2026-01-24.md
+
+❌ docs/ai/PHASE1_STATUS.md
+✅ docs/ai/private/phase1-status-2026-01-24.md
+```
+
+### Reference Documentation (Public)
+
+**Characteristics:**
+- Timeless educational value
+- Reusable patterns and examples
+- How-to guides and tutorials
+- Architecture decisions (ADRs)
+- Quick reference materials
+
+**Examples:**
+```
+✅ docs/ai/component-patterns.md - Reusable component patterns
+✅ docs/ai/testing-strategy.md - Testing guidelines
+✅ docs/architecture/best-practices.md - Architecture guide
+✅ docs/templates/new-page.tsx.md - Copy-paste template
+```
+
+**See:** [`docs/governance/OPERATIONAL_DOCUMENTATION_POLICY.md`](../../docs/governance/OPERATIONAL_DOCUMENTATION_POLICY.md) for complete policy.
+
+---
+
 ## �📋 Workflow Examples
 
 ### Example 1: Creating a New Page

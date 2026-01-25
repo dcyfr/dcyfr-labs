@@ -205,6 +205,151 @@ For detailed validation checklist: [VALIDATION_CHECKLIST.md](./.github/agents/en
 
 ---
 
+## 🎯 Best Tasks for Copilot
+
+### ✅ Ideal Tasks (Assign to Copilot)
+
+Copilot excels at well-defined tasks with clear scope:
+
+- **Bug fixes** with clear reproduction steps and expected behavior
+- **Test coverage improvements** (add missing tests, improve assertions)
+- **UI updates** to existing components (spacing, styling, responsive fixes)
+- **Documentation improvements** (add comments, update guides, fix typos)
+- **Accessibility fixes** (color contrast, focus states, keyboard navigation)
+- **Technical debt cleanup** (code simplification, optimization, refactoring)
+- **Type safety improvements** (TypeScript conversions, stricter types)
+
+### ❌ Skip Copilot (Manual Review)
+
+Tasks requiring human judgment or domain expertise:
+
+- **Complex refactoring** requiring cross-repository knowledge
+- **Architecture decisions** requiring deep understanding of system design
+- **Security-critical work** (authentication, authorization, sanitization)
+- **Production incidents** requiring root cause analysis
+- **Ambiguous requirements** lacking clear definition or acceptance criteria
+- **Learning tasks** where the goal is developer education
+- **Business logic changes** affecting multiple systems
+
+### 🎓 Example Tasks
+
+**✅ GOOD:** "Add missing tests for `calculateDiscount()` function. Target 100% branch coverage. See `tests/lib/pricing.test.ts` for patterns."
+
+**✅ GOOD:** "Fix spacing inconsistency in BlogCard component - use `SPACING.compact` instead of hardcoded values. Reference: `docs/ai/design-system.md`"
+
+**❌ BAD:** "Refactor entire component system to improve performance" ← Too broad, needs architecture discussion
+
+**❌ BAD:** "Implement authentication with OAuth 2.0" ← Security-critical, needs human review
+
+### Creating Well-Scoped Issues
+
+Use the `.github/ISSUE_TEMPLATE/copilot-task.md` template to ensure issues are well-scoped.
+
+Key elements:
+1. **Clear problem statement** - What needs to be done?
+2. **Specific files** - Which files to create/modify?
+3. **Acceptance criteria** - How will we know it's done? (include: tests ≥99%, design tokens ✓, ESLint ✓)
+4. **Related docs** - Links to patterns, guidelines, examples
+
+---
+
+## 💬 Iterating on Copilot Pull Requests
+
+### Providing Feedback
+
+When Copilot creates a PR, you can request changes by mentioning `@copilot` in comments:
+
+```
+@copilot The header spacing looks too large. Please use SPACING.compact instead of SPACING.large.
+```
+
+### Batching Comments (Efficient Approach)
+
+Instead of adding one comment at a time:
+
+1. Click **"Start a review"** (don't "Add single comment")
+2. Add multiple comments on different parts of the code
+3. Click **"Submit review"** at the end
+
+✅ **Benefit:** Copilot processes all feedback at once instead of iterating separately for each comment.
+
+### PR Review Checklist
+
+When reviewing Copilot-created PRs:
+
+- [ ] **Design tokens** - All spacing/colors use tokens (SPACING, TYPOGRAPHY, etc.)
+- [ ] **Imports** - Uses barrel exports, no relative file imports
+- [ ] **Layouts** - Uses PageLayout (90% rule)
+- [ ] **Tests** - Added/updated with ≥99% pass rate
+- [ ] **Linting** - ESLint passes (0 errors)
+- [ ] **Types** - TypeScript compiles (0 errors)
+- [ ] **Naming** - Variables/functions clearly named
+- [ ] **Accessibility** - Semantic HTML, ARIA labels where needed
+- [ ] **Responsive** - Mobile-first, tested on multiple screens
+- [ ] **Breaking changes** - None (or approved separately)
+
+### Example Feedback
+
+```
+@copilot I see a few issues:
+
+1. The gap spacing should use SPACING.content instead of gap-8
+2. The button needs an aria-label for accessibility
+3. Add a test for the error state
+
+Please fix these items.
+```
+
+---
+
+## 📋 Path-Specific Instructions
+
+Copilot automatically applies file-type-specific guidance based on what you're working on:
+
+### For React Components
+When editing `src/components/**/*.tsx` files, Copilot will follow:
+- Design token enforcement (SPACING, TYPOGRAPHY)
+- Barrel export patterns
+- PageLayout default (90% rule)
+- Testing requirements
+- Accessibility standards
+
+See: `.github/instructions/react-components.instructions.md`
+
+### For API Routes
+When editing `src/app/api/**/*.ts` files, Copilot will follow:
+- Validate → Queue → Respond pattern
+- Input validation with allowlists
+- Inngest integration for async work
+- Error handling and logging
+- Rate limiting and security
+
+See: `.github/instructions/api-routes.instructions.md`
+
+### For Test Files
+When editing `**/*.{test,spec}.{ts,tsx}` files, Copilot will follow:
+- Test organization and naming
+- When to test (logic, state, APIs, a11y)
+- When NOT to test (pure rendering, CSS)
+- Semantic queries (getByRole, etc.)
+- Mock patterns
+- Coverage targets (≥80%)
+
+See: `.github/instructions/test-files.instructions.md`
+
+### For MDX Content
+When editing `src/content/**/*.mdx` files, Copilot will follow:
+- SEO-optimized titles and descriptions
+- Proper heading hierarchy
+- Custom components (KeyTakeaway, Alert, SectionShare, CollapsibleSection)
+- No hardcoded emojis (use lucide-react icons)
+- Internal linking strategy
+- Engagement best practices
+
+See: `.github/instructions/mdx-content.instructions.md`
+
+---
+
 ## Subagents (VS Code)
 
 To use VS Code subagents (context-isolated helpers) with Copilot and the Chat view, add the following workspace settings to `.vscode/settings.json`:

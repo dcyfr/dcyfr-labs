@@ -98,6 +98,157 @@ npm run tasks:stats
 - Import `SPACING`, `TYPOGRAPHY`, `CONTAINER_WIDTHS`
 - Never hardcode spacing or typography
 
+## Claude Code Workflow Examples
+
+### Common Workflow: "I need to fix a bug"
+
+```bash
+claude
+> Read src/components/BlogCard/index.tsx
+> Show me test files for this component
+> [Review Claude's suggestions]
+> Implement fix using design tokens
+> npm run test:run src/components/BlogCard/__tests__
+```
+
+**Result:** Bug fixed with tests, using design tokens, ESLint passing
+
+### Common Workflow: "Create new page with tests"
+
+```bash
+claude
+> /plan Create /bookmarks page following dcyfr patterns
+> [Review plan - looks good]
+> /ultrawork Implement the plan
+> npm run check  # Validate all gates
+```
+
+**Result:** Page with tests, design tokens, metadata, all validation passing
+
+### Common Workflow: "Fix all design token violations"
+
+```bash
+claude
+> npm run lint  # Show all violations
+> [Paste ESLint output to Claude]
+> Claude identifies hardcoded spacings and colors
+> Claude: "I'll fix these using SPACING and SEMANTIC_COLORS tokens"
+> npm run lint  # Verify fixed
+```
+
+**Result:** Design token compliance ≥90%, ESLint 0 errors
+
+### Common Workflow: "Research production patterns" (Using `/research`)
+
+```bash
+claude
+> /research How do production Next.js 16 projects structure design tokens and metadata?
+> [Claude researches across GitHub codebases]
+> Claude: "Here are 3 reference implementations with comparison"
+> Based on findings, implement our approach
+```
+
+**Result:** Implementation informed by production patterns
+
+### When to Use `/plan` First
+
+✅ **Use `/plan` for:**
+
+- New features (complex logic)
+- Refactors (multiple files)
+- Design decisions (layout selection)
+- API integrations
+
+❌ **Skip `/plan` for:**
+
+- One-line fixes
+- ESLint auto-fixes
+- Simple copy-paste changes
+
+## Course Correction Guide (Mid-Execution Redirection)
+
+### When to Use Course Correction
+
+You've started executing Claude's suggestion, but:
+
+- ✅ The approach is more complex than expected
+- ✅ You've changed your mind about the direction
+- ✅ You want to try an alternative solution
+- ✅ You see a better pattern while reviewing
+
+### How to Redirect Mid-Execution
+
+**Press `Escape` to:**
+
+1. **Pause execution** - Claude stops and waits
+2. **Provide new direction** - Explain the alternative
+3. **Continue** - Claude implements your new approach
+
+**Example:**
+
+```bash
+claude
+> /plan Add search feature to blog
+
+[Claude starts planning search implementation...]
+
+# You notice it's over-engineered:
+[Press Escape]
+
+> Actually, let's use Algolia instead of building custom search.
+  Simpler approach, better performance.
+
+# Claude pauses and implements the new direction
+```
+
+### How to Backtrack and Retry
+
+**Press `Escape` twice to:**
+
+1. **Undo the last action** - Revert the execution
+2. **Start over** - Keep the session context
+3. **Try different approach** - Claude remembers the goal
+
+**Example:**
+
+```bash
+claude
+> /ultrawork Implement the bookmarks page
+
+[Claude creates component structure]
+[Claude starts adding animations]
+# You: This is too much animation for first pass
+[Press Escape twice]
+
+> Let me restart: Create simple bookmarks page first.
+  We'll add animations in a separate pass.
+
+# Claude undoes and retries with simpler approach
+```
+
+### Explicit Undo Commands
+
+If Escape doesn't work, try explicit undo:
+
+```bash
+claude
+> Undo the last change
+> Let's try a different approach instead
+
+# Or ask for the work to be discarded:
+> Discard everything. Let's start over with approach X
+```
+
+### When NOT to Use Course Correction
+
+- ❌ If the output is completely wrong (close session, start fresh)
+- ❌ If you have compilation errors (press Escape → fix locally → continue)
+- ❌ For minor tweaks (finish current execution, then ask for changes)
+
+**Use course correction for:** Direction changes, approach alternatives, mid-execution decisions
+
+**Reference:** [Anthropic Claude Code Best Practices](https://docs.anthropic.com/claude-code/)
+
 **Content & SEO Guidelines**:
 
 - **Always end descriptions with periods** (both meta descriptions and hero section descriptions)
