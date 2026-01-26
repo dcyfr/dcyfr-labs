@@ -199,7 +199,7 @@ export class SecureSessionManager {
 
     // Store in Redis with expiration
     const key = `${this.SESSION_PREFIX}${sessionToken}`;
-    await redis.setEx(key, expirySeconds, JSON.stringify(encryptedData));
+    await redis.setex(key, expirySeconds, JSON.stringify(encryptedData));
 
     const bindingInfo = [];
     if (enrichedData.clientIp) bindingInfo.push('IP');
@@ -341,7 +341,7 @@ export class SecureSessionManager {
       // Re-encrypt and store
       const encryptedData = this.encrypt(JSON.stringify(updatedSession));
       const key = `${this.SESSION_PREFIX}${sessionToken}`;
-      await redis.setEx(key, expirySeconds, JSON.stringify(encryptedData));
+      await redis.setex(key, expirySeconds, JSON.stringify(encryptedData));
 
       return true;
     } catch (error) {
