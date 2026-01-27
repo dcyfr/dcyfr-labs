@@ -2,16 +2,23 @@
  * @/lib/agents barrel export
  *
  * Central export point for agent telemetry and provider fallback management.
+ *
+ * MIGRATION NOTE: Now using @dcyfr/ai framework with compatibility adapter
+ * for backward compatibility. Gradually migrate to direct @dcyfr/ai usage.
  */
 
-// Export everything from agent-telemetry
+// NEW: Export compatibility adapter (wraps @dcyfr/ai)
 export {
   telemetry,
   trackAgentSession,
-  TelemetrySessionManager,
-  AgentTelemetryManager,
-} from "./agent-telemetry";
+  getCompatibilityTelemetry as TelemetrySessionManager,
+  getCompatibilityTelemetry as AgentTelemetryManager,
+  getCompatibilityProvider as ProviderFallbackManager,
+  getCompatibilityProvider,
+  getCompatibilityTelemetry,
+} from './compat';
 
+// Re-export types from old system (for backward compatibility)
 export type {
   AgentType,
   TaskType,
@@ -26,16 +33,6 @@ export type {
   ComparisonStats,
 } from "./agent-telemetry";
 
-// Export everything from provider-fallback-manager
-export {
-  getGlobalFallbackManager,
-  initializeGlobalFallbackManager,
-  destroyGlobalFallbackManager,
-  ProviderFallbackManager,
-  RateLimitError,
-  ProviderUnavailableError,
-} from "./provider-fallback-manager";
-
 export type {
   ProviderType,
   ProviderConfig,
@@ -43,4 +40,14 @@ export type {
   TaskContext,
   ExecutionResult,
   ProviderHealth,
+} from "./provider-fallback-manager";
+
+// Legacy exports (kept for backward compatibility)
+// These now use the compatibility adapter under the hood
+export {
+  getGlobalFallbackManager,
+  initializeGlobalFallbackManager,
+  destroyGlobalFallbackManager,
+  RateLimitError,
+  ProviderUnavailableError,
 } from "./provider-fallback-manager";
