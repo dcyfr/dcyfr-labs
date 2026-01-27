@@ -6,6 +6,20 @@ This document serves as the **single source of truth** for discovering, routing,
 
 ---
 
+## 📦 Framework Migration Notice
+
+**DCYFR is transitioning to a modular AI framework architecture:**
+
+- **@dcyfr/ai** - Portable AI framework (telemetry, providers, plugins, validation)
+- **@dcyfr/agents** - DCYFR-specific validation plugins (proprietary)
+- **dcyfr-labs** - Project code with compatibility adapter
+
+**Migration Status:** Phase 1 Complete (Validation logic migrated)
+**Documentation:** See [Migration Guide](docs/ai/MIGRATION_GUIDE.md)
+**Compatibility:** 100% backward compatible via adapter layer
+
+---
+
 ## ⚠️ Important for AI Agents
 
 **Testing Commands:** Always use `npm run test:run` or `vitest run` instead of `npm test` to avoid watch mode hanging. See [Automated Testing Guide](docs/testing/automated-testing-guide.md) for details.
@@ -971,10 +985,10 @@ Governance compliance is enforced at three levels to prevent accidental exposure
 
 **Validation Layers:**
 - ✅ **Layer 1:** LGTM suppression validation (30+ min fix requirement)
-- ✅ **Layer 2:** Sensitive file location check (blocks FINDINGS, AUDIT, ANALYSIS outside `private/`)
+- ✅ **Layer 2:** Sensitive file location check (blocks FINDINGS, AUDIT, ANALYSIS outside `.private/`)
 - ✅ **Layer 3:** AI configuration check (blocks `.claude/` files, session state)
 - ✅ **Layer 4:** API key & credential detection (blocks hardcoded secrets)
-- ✅ **Layer 5:** Private docs validation (warns on unexpected `private/` commits)
+- ✅ **Layer 5:** Private docs validation (warns on unexpected `.private/` commits)
 
 **Enforcement Mode:**
 - **CRITICAL violations:** BLOCK commit (exit 1)
@@ -991,7 +1005,7 @@ chmod +x .git/hooks/pre-commit
 **Protected Content:**
 - ❌ `.claude/` - Proprietary agents (INTERNAL ONLY)
 - ❌ `.opencode/node_modules/` - OpenCode dependencies
-- ❌ `**/private/**` - Sensitive documentation
+- ❌ `**/.private/**` - Sensitive documentation
 - ❌ `*.session-state.json` - Local AI session state
 - ❌ `.env.local` - Environment secrets
 - ✅ `.github/agents/` - Public agent patterns (SOURCE OF TRUTH)
@@ -1057,7 +1071,7 @@ git status --ignored | grep -E "\.(claude|opencode|private)"
 - `.opencode/` - Fallback configuration (no secrets)
 - `.vscode/mcp.json` - MCP server setup (with example template)
 - `.vscode/settings.json` - Workspace defaults
-- `docs/` - Public documentation (except `private/` subdirectories)
+- `docs/` - Public documentation (except `.private/` subdirectories)
 
 **❌ PROPRIETARY (gitignored, internal only):**
 - `.claude/` - Proprietary Claude Code agents
@@ -1068,8 +1082,8 @@ git status --ignored | grep -E "\.(claude|opencode|private)"
 - Environment files (`.env.local`)
 
 **⚠️ PRIVATE (gitignored subdirectories):**
-- `docs/**/private/` - Sensitive docs (security, operations, performance)
-- Examples: `docs/security/private/`, `docs/operations/private/`
+- `docs/**/.private/` - Sensitive docs (security, operations, performance)
+- Examples: `docs/security/.private/`, `docs/operations/.private/`
 
 ### Justification
 
@@ -1466,7 +1480,7 @@ A: Quarterly automatic review, or immediately when adding new agents or major in
 - [ ] Keep file paths absolute (from repo root)
 - [ ] Update sync metadata when changing instructions
 - [ ] Test decision tree before committing changes
-- [ ] **Store sensitive files in `**/private/**` directories** (see below)
+- [ ] **Store sensitive files in `**/.private/**` directories** (see below)
 
 **Never:**
 
@@ -1478,7 +1492,7 @@ A: Quarterly automatic review, or immediately when adding new agents or major in
 
 ### Sensitive Files Policy
 
-**All sensitive/internal documentation must be stored in subdirectory `private/` folders under each docs category.**
+**All sensitive/internal documentation must be stored in subdirectory `.private/` folders under each docs category.**
 
 **What qualifies as sensitive:**
 
@@ -1498,22 +1512,22 @@ A: Quarterly automatic review, or immediately when adding new agents or major in
 /docs/
 ├── security/
 │   ├── public docs...
-│   └── private/       # Security audits, findings, vulnerabilities
+│   └── .private/       # Security audits, findings, vulnerabilities
 ├── operations/
 │   ├── public docs...
-│   └── private/       # Internal operations and deployment docs
+│   └── .private/       # Internal operations and deployment docs
 ├── design/
 │   ├── public docs...
-│   └── private/       # Design analysis and metrics
+│   └── .private/       # Design analysis and metrics
 └── ...
 ```
 
 **Examples:**
 
-- ✅ `/docs/security/private/CODEQL_FINDINGS_RESOLVED.md`
-- ✅ `/docs/security/private/SECURITY_AUDIT_SUMMARY.md`
-- ✅ `/docs/operations/private/PERFORMANCE_METRICS.md`
-- ❌ `/docs/security/VULNERABILITY_REPORT.md` (should be in private/ subfolder)
+- ✅ `/docs/security/.private/CODEQL_FINDINGS_RESOLVED.md`
+- ✅ `/docs/security/.private/SECURITY_AUDIT_SUMMARY.md`
+- ✅ `/docs/operations/.private/PERFORMANCE_METRICS.md`
+- ❌ `/docs/security/VULNERABILITY_REPORT.md` (should be in .private/ subfolder)
 
 **Rationale:** Subdirectory-specific `private/` folders prevent duplicate content and keep related materials together. See [DOCS_GOVERNANCE.md](docs/governance/DOCS_GOVERNANCE.md) for complete policy.
 

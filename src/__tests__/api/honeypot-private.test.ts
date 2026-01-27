@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS } from "@/app/private/route";
+import { GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS } from "@/app/.private/route";
 import * as Sentry from "@sentry/nextjs";
 import { NextRequest } from "next/server";
 
