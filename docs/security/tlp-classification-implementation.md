@@ -1,4 +1,4 @@
-{/_ TLP:CLEAR _/}
+<!-- TLP:CLEAR -->
 
 # Documentation Classification & TLP Implementation
 
@@ -12,25 +12,25 @@
 
 ### TLP:CLEAR (Public)
 
-**Header:** `{/* TLP:CLEAR */}`
+**Header:** `<!-- TLP:CLEAR -->`
 **Distribution:** May be distributed without restriction
 **Examples:** Technical documentation, tutorials, open source guides
 
 ### TLP:GREEN (Community)
 
-**Header:** `{/* TLP:GREEN - Limited Distribution */}`
+**Header:** `<!-- TLP:GREEN - Limited Distribution -->`
 **Distribution:** Limited to the organization and clients or customers
 **Examples:** Implementation details, architecture decisions, troubleshooting guides
 
 ### TLP:AMBER (Organization)
 
-**Header:** `{/* TLP:AMBER - Internal Use Only */}`
+**Header:** `<!-- TLP:AMBER - Internal Use Only -->`
 **Distribution:** Limited to the organization
 **Examples:** Business strategy, planning documents, competitive analysis, internal processes
 
 ### TLP:RED (Personal)
 
-**Header:** `{/* TLP:RED - Confidential */}`
+**Header:** `<!-- TLP:RED - Confidential -->`
 **Distribution:** Limited to specific individuals
 **Examples:** Financial information, personal data, sensitive business intelligence
 
@@ -213,7 +213,7 @@ Detailed business planning for 2025-2026...
 **TLP:AMBER Breakdown (Updated January 24, 2026):**
 
 - 253 files across 25 private/ subdirectories
-- All files now have `{/* TLP:AMBER - Internal Use Only */}` headers
+- All files now have `<!-- TLP:AMBER - Internal Use Only -->` headers
 - Categories: Security (49), Operations (61), Archive (62), Design (21), Features (20)
 - Full analysis: [TLP_AMBER_GOVERNANCE.md](../governance/TLP_AMBER_GOVERNANCE.md)
 

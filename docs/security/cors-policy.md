@@ -1,4 +1,4 @@
-{/* TLP:CLEAR */}
+<!-- TLP:CLEAR -->
 
 # CORS (Cross-Origin Resource Sharing) Policy
 
