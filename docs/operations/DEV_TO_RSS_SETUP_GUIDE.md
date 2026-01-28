@@ -1,4 +1,4 @@
-{/* TLP:CLEAR */}
+<!-- TLP:CLEAR -->
 
 # DEV.to RSS Feed Setup Guide
 

@@ -1,4 +1,4 @@
-{/* TLP:CLEAR */}
+<!-- TLP:CLEAR -->
 
 # Automation Documentation Index
 

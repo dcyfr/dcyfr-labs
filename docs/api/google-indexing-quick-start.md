@@ -1,4 +1,4 @@
-{/* TLP:CLEAR */}
+<!-- TLP:CLEAR -->
 
 # Google Indexing API - Quick Start
 
