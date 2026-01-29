@@ -6,6 +6,37 @@ This document serves as the **single source of truth** for discovering, routing,
 
 ---
 
+## ⚠️ Workspace Scope Limitation
+
+**Important:** When working at the **workspace root**, GitHub Copilot has limited access to dcyfr-labs specific agents, skills, and enforcement rules.
+
+**Why?** GitHub Copilot only discovers agents in `.github/agents/` at the **workspace root**. Agents in subdirectories (like `./dcyfr-labs/.github/agents/DCYFR.agent.md`) are invisible at workspace scope.
+
+**Impact:**
+- ❌ DCYFR Agent (560 lines) not available at workspace level
+- ❌ 60+ Claude specialized agents inaccessible
+- ❌ 23+ skills (design tokens, TDD, Inngest patterns) not available
+- ⚠️ MCP servers now synced to workspace (via automation)
+- ⚠️ Design token enforcement is manual
+
+**Solution:** For production work in dcyfr-labs requiring full agent support:
+1. **Open `dcyfr-labs/` as a dedicated VS Code workspace** ← Recommended
+2. Full DCYFR Agent with proactive enforcement activates
+3. All skills, MCPs, and quality gates available
+4. Return to multi-repo workspace for cross-package coordination
+
+**Workspace-Level Guidance:**
+- See [`.github/copilot-workspace-instructions.md`](../.github/copilot-workspace-instructions.md) for cross-repo patterns
+- See [`AI_AGENT_CONFIGURATION_ANALYSIS.md`](../AI_AGENT_CONFIGURATION_ANALYSIS.md) for detailed analysis and roadmap
+- MCP servers auto-synced via `scripts/sync-mcp-workspace.mjs`
+
+**AI Capability Catalogs:**
+- **[Skills Catalog](../.ai/skills/README.md)** - 23 specialized skills (design tokens, TDD, architecture, React, testing)
+- **[Agents Catalog](../.ai/agents/CATALOG.md)** - 60+ specialized agents (security, performance, documentation, DevOps)
+- **[MCP Registry](../.ai/mcp/REGISTRY.md)** - 17 MCP servers (GitHub, Vercel, Sentry, testing, custom DCYFR tools)
+
+---
+
 ## 📦 Framework Migration Notice
 
 **DCYFR has successfully migrated to a modular AI framework architecture:**
