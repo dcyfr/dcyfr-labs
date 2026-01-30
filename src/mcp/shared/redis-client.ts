@@ -92,7 +92,7 @@ function getRedisCredentials(): { url: string; token: string } | null {
  * Get environment-specific key prefix for Redis isolation
  * Prevents conflicts when sharing preview database between environments
  */
-function getRedisKeyPrefix(): string {
+export function getRedisKeyPrefix(): string {
   const isProduction =
     process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production';
   const isPreview = process.env.VERCEL_ENV === 'preview';
