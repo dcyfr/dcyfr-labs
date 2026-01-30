@@ -329,9 +329,9 @@ export async function validateDesignTokens(
 ): Promise<{ compliance: number; violations: string[]; suggestions: string[] }> {
   try {
     // Try to import from @dcyfr/agents if available
-    const enforcement = await import(
-      /* webpackIgnore: true */ '@dcyfr/agents/enforcement/design-tokens'
-    );
+    // Use a variable to bypass TypeScript static analysis
+    const modulePath = '@dcyfr/agents/enforcement/design-tokens';
+    const enforcement = await import(/* webpackIgnore: true */ modulePath as any);
     const { validateTokenUsage } = enforcement;
 
     const results = await Promise.all(files.map((file) => validateTokenUsage(file)));
@@ -375,9 +375,9 @@ export async function requiresApproval(change: {
   files: string[];
 }): Promise<boolean> {
   try {
-    const gates = await import(
-      /* webpackIgnore: true */ '@dcyfr/agents/enforcement/approval-gates'
-    );
+    // Use a variable to bypass TypeScript static analysis
+    const modulePath = '@dcyfr/agents/enforcement/approval-gates';
+    const gates = await import(/* webpackIgnore: true */ modulePath as any);
     const { requiresApproval: checkApproval } = gates;
 
     return checkApproval(change.type, change.scope, change.files);
