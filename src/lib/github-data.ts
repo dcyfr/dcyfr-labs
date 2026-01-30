@@ -52,20 +52,31 @@ const FALLBACK_DATA_KEY = 'github:fallback-data';
  * ⚠️  WARNING: This generates SAMPLE data and should only be used when Redis
  * is unavailable in development/testing environments.
  *
- * Do NOT rely on this fallback in production - it will show fake GitHub data.
+ * Do NOT use this fallback in production - demo data must never reach production users.
+ * In production, if Redis is unavailable, return an error response instead.
  */
 function generateFallbackData(): ContributionResponse {
   const nodeEnv = process.env.NODE_ENV || 'development';
   const isProduction = nodeEnv === 'production' || process.env.VERCEL_ENV === 'production';
 
-  // PRODUCTION WARNING
+  // PRODUCTION PROTECTION: NEVER show demo data in production
   if (isProduction) {
-    console.error('[GitHub Data] ❌ CRITICAL: Fallback data in production!');
-    console.error('[GitHub Data]    This means Redis is unavailable in production.');
-    console.error('[GitHub Data]    Showing fake contribution data is NOT acceptable.');
-    console.error('[GitHub Data]    Please restore Redis connection immediately.');
+    console.error('[GitHub Data] ❌ CRITICAL ERROR: Redis unavailable in production');
+    console.error('[GitHub Data]    Cannot load real GitHub contributions');
+    console.error('[GitHub Data]    Returning empty data instead of demo data');
+    console.error('[GitHub Data]    Action required: Restore Redis connection');
+
+    // Return empty data instead of demo data
+    return {
+      contributions: [],
+      source: 'error',
+      totalContributions: 0,
+      lastUpdated: new Date().toISOString(),
+      warning: '⚠️ Unable to load GitHub data - Redis connection unavailable. Please try again later.',
+    };
   }
 
+  // Development/preview: Use demo data with clear indication
   const contributions: ContributionDay[] = [];
   const endDate = new Date();
   let totalContributions = 0;
@@ -97,9 +108,7 @@ function generateFallbackData(): ContributionResponse {
     totalContributions,
     totalRepositories: 42,
     lastUpdated: new Date().toISOString(),
-    warning: isProduction
-      ? '❌ CRITICAL: Showing demo data in production (Redis unavailable)'
-      : 'Using demo data - GitHub API temporarily unavailable (DEV MODE)',
+    warning: 'Using demo data - GitHub API temporarily unavailable (DEV MODE)',
   };
 }
 
