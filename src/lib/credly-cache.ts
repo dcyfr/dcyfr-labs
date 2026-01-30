@@ -5,11 +5,11 @@
  * and reduce redundant API calls across multiple components on the same page.
  */
 
-import type { CredlyBadge, CredlyBadgesResponse } from "@/types/credly";
+import type { CredlyBadge, CredlyBadgesResponse } from '@/types/credly';
 
 // Cache configuration
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
-const CACHE_KEY_PREFIX = "credly_cache_";
+const CACHE_KEY_PREFIX = 'credly_cache_';
 
 // Fallback empty state for immediate display while loading
 const EMPTY_BADGES_RESPONSE = {
@@ -37,7 +37,7 @@ const cache = new Map<string, CacheEntry<any>>();
  * Create a cache key for badges with username and limit
  */
 function createBadgesCacheKey(username: string, limit?: number): string {
-  return `${CACHE_KEY_PREFIX}badges_${username}_${limit || "all"}`;
+  return `${CACHE_KEY_PREFIX}badges_${username}_${limit || 'all'}`;
 }
 
 /**
@@ -79,7 +79,7 @@ function setCachedData<T>(cacheKey: string, data: T): void {
  * Fetch Credly badges with caching
  */
 export async function fetchCredlyBadgesCached(
-  username: string = "dcyfr",
+  username: string = 'dcyfr',
   limit?: number
 ): Promise<BadgesApiResponse> {
   const cacheKey = createBadgesCacheKey(username, limit);
@@ -96,11 +96,13 @@ export async function fetchCredlyBadgesCached(
     ...(limit && { limit: limit.toString() }),
   });
 
+  // ✅ FIX: Use proper production URL in server-side (Inngest) context
   // Construct absolute URL for fetch
   const baseUrl =
-    typeof window !== "undefined"
+    typeof window !== 'undefined'
       ? window.location.origin
-      : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      : process.env.NEXT_PUBLIC_SITE_URL ||
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
   const apiUrl = new URL(`/api/credly/badges?${params}`, baseUrl).toString();
   const response = await fetch(apiUrl);
@@ -126,7 +128,7 @@ export function clearCredlyCache(): void {
       cache.delete(key);
     }
   }
-  console.warn("[Credly Cache] ✅ Cache cleared");
+  console.warn('[Credly Cache] ✅ Cache cleared');
 }
 
 /**
@@ -138,9 +140,7 @@ export function getCredlyCacheStats(): {
   expiredEntries: number;
   cacheKeys: string[];
 } {
-  const credlyKeys = Array.from(cache.keys()).filter((key) =>
-    key.startsWith(CACHE_KEY_PREFIX)
-  );
+  const credlyKeys = Array.from(cache.keys()).filter((key) => key.startsWith(CACHE_KEY_PREFIX));
 
   let validEntries = 0;
   let expiredEntries = 0;
@@ -168,9 +168,7 @@ export function getCredlyCacheStats(): {
  * Preload Credly data for better performance
  * Useful for SSR or when you know data will be needed
  */
-export async function preloadCredlyData(
-  username: string = "dcyfr"
-): Promise<void> {
+export async function preloadCredlyData(username: string = 'dcyfr'): Promise<void> {
   try {
     // Preload both unlimited and limited data
     await Promise.all([
