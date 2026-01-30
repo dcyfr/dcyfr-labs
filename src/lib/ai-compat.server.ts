@@ -329,7 +329,6 @@ export async function validateDesignTokens(
 ): Promise<{ compliance: number; violations: string[]; suggestions: string[] }> {
   try {
     // Try to import from @dcyfr/agents if available
-    // @ts-expect-error - @dcyfr/agents not yet configured for imports
     const enforcement = await import(
       /* webpackIgnore: true */ '@dcyfr/agents/enforcement/design-tokens'
     );
@@ -376,8 +375,9 @@ export async function requiresApproval(change: {
   files: string[];
 }): Promise<boolean> {
   try {
-    // @ts-expect-error - @dcyfr/agents not yet configured for imports
-    const gates = await import('@dcyfr/agents/enforcement/approval-gates');
+    const gates = await import(
+      /* webpackIgnore: true */ '@dcyfr/agents/enforcement/approval-gates'
+    );
     const { requiresApproval: checkApproval } = gates;
 
     return checkApproval(change.type, change.scope, change.files);
