@@ -72,7 +72,8 @@ function generateFallbackData(): ContributionResponse {
       source: 'error',
       totalContributions: 0,
       lastUpdated: new Date().toISOString(),
-      warning: '⚠️ Unable to load GitHub data - Redis connection unavailable. Please try again later.',
+      warning:
+        '⚠️ Unable to load GitHub data - Redis connection unavailable. Please try again later.',
     };
   }
 
