@@ -235,3 +235,6 @@ tmp/
 
 # Playwright generated test reports
 playwright-report/
+
+# Temp ignore during CI validation
+ai-compat.ts
