@@ -140,33 +140,14 @@ export class AgentRouter {
 
   /**
    * Route a task to the most appropriate agent
+   * Note: @dcyfr/ai not yet available - returning placeholder
    */
   async route(context: TaskContext): Promise<RoutingResult> {
     await this.registry.initialize();
 
     try {
-      const { AgentRouter: BaseRouter } = await import('@dcyfr/ai');
-
-      if (!this.router) {
-        this.router = new BaseRouter(this.registry['registry']!);
-      }
-
-      const result = await this.router.route({
-        description: context.description,
-        files: context.filesInProgress || [],
-        phase: context.phase || 'implementation',
-        metadata: {
-          requiresDesignTokens: context.requiresDesignTokens,
-          requiresDcyfrPatterns: context.requiresDcyfrPatterns,
-        },
-      });
-
-      return {
-        agent: result.agent,
-        tier: result.agent.manifest.tier as 'public' | 'private' | 'project',
-        reasoning: result.reasoning,
-        delegationChain: result.agent.manifest.delegatesTo,
-      };
+      // TODO: Implement when @dcyfr/ai exports AgentRouter
+      throw new Error('AgentRouter not yet implemented - @dcyfr/ai not available');
     } catch (error) {
       console.error('Failed to route task:', error);
       throw error;
@@ -175,29 +156,14 @@ export class AgentRouter {
 
   /**
    * Get routing suggestions for a task (dry run)
+   * Note: @dcyfr/ai not yet available - returning placeholder
    */
   async suggest(context: TaskContext): Promise<RoutingResult[]> {
     await this.registry.initialize();
 
     try {
-      const { AgentRouter: BaseRouter } = await import('@dcyfr/ai');
-
-      if (!this.router) {
-        this.router = new BaseRouter(this.registry['registry']!);
-      }
-
-      const suggestions = await this.router.suggest({
-        description: context.description,
-        files: context.filesInProgress || [],
-        phase: context.phase || 'implementation',
-      });
-
-      return suggestions.map((s: any) => ({
-        agent: s.agent,
-        tier: s.agent.manifest.tier as 'public' | 'private' | 'project',
-        reasoning: s.reasoning,
-        delegationChain: s.agent.manifest.delegatesTo,
-      }));
+      // TODO: Implement when @dcyfr/ai exports AgentRouter
+      throw new Error('AgentRouter not yet implemented - @dcyfr/ai not available');
     } catch (error) {
       console.error('Failed to get routing suggestions:', error);
       throw error;
