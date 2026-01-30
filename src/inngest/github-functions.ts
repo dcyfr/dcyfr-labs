@@ -85,11 +85,14 @@ async function fetchGitHubContributions(): Promise<ContributionResponse | null> 
         }))
     );
 
+    // ✅ Return clean API data without warning field
+    // Warning field should only exist in fallback/error scenarios
     return {
       contributions,
       source: 'github-api',
       totalContributions: calendar.totalContributions,
       lastUpdated: new Date().toISOString(),
+      // Explicitly no 'warning' field for real API data
     };
   } catch (error) {
     console.error('Failed to fetch GitHub contributions:', error);
@@ -141,18 +144,24 @@ export const refreshGitHubData = inngest.createFunction(
       }
 
       try {
+        // ✅ Clean data before caching: Remove any warning field
+        // This ensures production never shows "demo data" warnings from stale cache
+        const cleanData = {
+          contributions: freshData.contributions,
+          source: freshData.source,
+          totalContributions: freshData.totalContributions,
+          lastUpdated: freshData.lastUpdated,
+          // Explicitly exclude 'warning' field
+        };
+
         console.log('[Inngest] 📝 Writing to cache', {
           key: CACHE_KEY,
           keyWithPrefix: getRedisKeyPrefix() + CACHE_KEY,
-          dataSize: JSON.stringify(freshData).length,
-          totalContributions: freshData.totalContributions,
+          dataSize: JSON.stringify(cleanData).length,
+          totalContributions: cleanData.totalContributions,
         });
 
-        await redis.setex(
-          CACHE_KEY,
-          Math.floor(CACHE_DURATION / 1000),
-          JSON.stringify(freshData)
-        );
+        await redis.setex(CACHE_KEY, Math.floor(CACHE_DURATION / 1000), JSON.stringify(cleanData));
 
         // Verify write succeeded
         const verification = await redis.get(CACHE_KEY);

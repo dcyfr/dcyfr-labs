@@ -148,10 +148,18 @@ export async function getGitHubContributions(
 
     if (cached && typeof cached === 'string') {
       const data = JSON.parse(cached) as ContributionResponse;
+
+      // ✅ Clean any stale warning field from cached data
+      // Production cache should never have warnings (those are for fallback only)
+      if (data.source === 'github-api') {
+        delete (data as any).warning;
+      }
+
       console.log('[GitHub Data] ✅ Cache HIT', {
         totalContributions: data.totalContributions,
         lastUpdated: data.lastUpdated,
         source: data.source,
+        hasWarning: !!(data as any).warning,
       });
       return data;
     } else {
