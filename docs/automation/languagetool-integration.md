@@ -195,6 +195,7 @@ For automated PR checks and weekly scans, see:
 **[GitHub Actions Setup Guide](./GITHUB_ACTIONS_PROSE_SETUP.md)**
 
 Features:
+
 - Automated PR validation before merge
 - Weekly scheduled scans (every Monday)
 - Detailed PR comments with issues
@@ -202,6 +203,7 @@ Features:
 - Manual workflow dispatch
 
 **Quick Setup:**
+
 1. Add GitHub secrets (`LANGUAGETOOL_USERNAME`, `LANGUAGETOOL_API_KEY`)
 2. Workflow file already created at `.github/workflows/prose-validation.yml`
 3. Test with manual run from Actions tab

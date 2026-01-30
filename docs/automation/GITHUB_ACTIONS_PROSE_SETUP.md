@@ -3,6 +3,7 @@
 ## Overview
 
 Automated prose validation runs on:
+
 - **Pull Requests:** Checks MDX content changes before merge
 - **Weekly Schedule:** Runs every Monday at 9:00 AM UTC
 - **Manual Trigger:** Can be run on-demand via workflow dispatch
@@ -12,6 +13,7 @@ Automated prose validation runs on:
 The workflow requires LanguageTool Pro API credentials to be configured as repository secrets:
 
 ### 1. Navigate to Repository Settings
+
 ```
 GitHub → dcyfr/dcyfr-labs → Settings → Secrets and variables → Actions
 ```
@@ -19,11 +21,13 @@ GitHub → dcyfr/dcyfr-labs → Settings → Secrets and variables → Actions
 ### 2. Add the following secrets:
 
 #### `LANGUAGETOOL_API_KEY`
+
 - **Value:** Your LanguageTool Pro API key
 - **Source:** Available in your LanguageTool account settings
 - **Format:** Long alphanumeric string (e.g., `abc123def456...`)
 
 #### `LANGUAGETOOL_USERNAME`
+
 - **Value:** Your LanguageTool Pro username/email
 - **Source:** Your LanguageTool account email
 - **Format:** Email address (e.g., `user@example.com`)
@@ -31,6 +35,7 @@ GitHub → dcyfr/dcyfr-labs → Settings → Secrets and variables → Actions
 ### 3. Verification
 
 After adding secrets:
+
 1. Go to **Actions** tab
 2. Select **Prose Validation** workflow
 3. Click **Run workflow** (manual trigger)
@@ -39,18 +44,21 @@ After adding secrets:
 ## Workflow Features
 
 ### Pull Request Checks
+
 - ✅ Validates prose quality before merge
 - ✅ Posts detailed comment with issues found
 - ✅ Blocks merge if validation fails
 - ✅ Shows summary in PR checks
 
 ### Weekly Scans
+
 - ✅ Catches issues that slip through
 - ✅ Runs every Monday morning
 - ✅ Generates downloadable report
 - ✅ Can be configured to notify on failures
 
 ### Validation Report
+
 - **Artifact:** `prose-validation-report.json` (30-day retention)
 - **Contents:** Detailed issues with line numbers and suggestions
 - **Download:** Available in workflow run summary
@@ -58,7 +66,9 @@ After adding secrets:
 ## Usage Examples
 
 ### For Contributors
+
 When creating a PR with MDX content changes:
+
 1. Push your changes
 2. GitHub Actions automatically runs prose validation
 3. Review results in PR checks
@@ -66,7 +76,9 @@ When creating a PR with MDX content changes:
 5. Push fixes and re-run validation
 
 ### For Maintainers
+
 To run manual validation:
+
 1. Go to **Actions** → **Prose Validation**
 2. Click **Run workflow**
 3. Select branch (default: `main`)
@@ -76,35 +88,43 @@ To run manual validation:
 ## Troubleshooting
 
 ### Workflow fails with "API key not found"
+
 **Solution:** Verify GitHub secrets are configured correctly
+
 ```bash
 # Check if secrets exist (won't show values)
 gh secret list
 ```
 
 ### Workflow times out
+
 **Solution:** Increase timeout in `.github/workflows/prose-validation.yml`:
+
 ```yaml
-timeout-minutes: 15  # Increase from 10 to 15
+timeout-minutes: 15 # Increase from 10 to 15
 ```
 
 ### False positives in validation
+
 **Solution:** Add rules to disabled list in `scripts/validate-prose.mjs`:
+
 ```javascript
 disabledRules: [
   // ... existing rules
   'NEW_RULE_ID', // Description of why disabled
-]
+];
 ```
 
 ## Performance Metrics
 
 Current validation speed:
+
 - **14 MDX files:** ~8-10 seconds
 - **Network calls:** 1-2 per file (batched)
 - **Cache:** npm dependencies cached between runs
 
 Expected CI run time:
+
 - **Setup (Node + deps):** ~30-45 seconds
 - **Validation:** ~10-15 seconds
 - **Total:** ~1 minute per run
@@ -112,11 +132,13 @@ Expected CI run time:
 ## Cost Considerations
 
 LanguageTool Pro API limits:
+
 - **Rate limit:** 80 requests/min (sufficient for CI)
 - **Character limit:** 300K chars/min (far exceeds needs)
 - **Concurrent requests:** 5 (workflow runs sequentially)
 
 Estimated API usage per run:
+
 - **Weekly scan:** ~14 files = ~14 requests
 - **PR check:** ~1-3 files (only changed files) = ~1-3 requests
 - **Monthly total:** ~4 weekly + ~20 PR checks = ~56-76 requests
@@ -126,14 +148,18 @@ Estimated API usage per run:
 ## Integration with Development Workflow
 
 ### Pre-commit Hook (Optional)
+
 Add to `.husky/pre-commit` to catch issues before push:
+
 ```bash
 # Run prose validation on staged MDX files
 npm run prose:check:staged
 ```
 
 ### VS Code Integration (Optional)
+
 Install LanguageTool extension:
+
 ```json
 {
   "languageTool.enabled": true,
@@ -146,7 +172,9 @@ Install LanguageTool extension:
 ## Maintenance
 
 ### Update Schedule
+
 To change weekly scan timing, edit `.github/workflows/prose-validation.yml`:
+
 ```yaml
 schedule:
   # Run every Wednesday at 2:00 PM UTC
@@ -154,12 +182,15 @@ schedule:
 ```
 
 Cron syntax helper:
+
 - `0 9 * * 1` = Monday at 9:00 AM
 - `0 14 * * 3` = Wednesday at 2:00 PM
 - `0 0 * * 0` = Sunday at midnight
 
 ### Disable Workflow
+
 To temporarily disable without deleting:
+
 ```yaml
 on:
   workflow_dispatch: # Only manual runs
@@ -178,6 +209,7 @@ on:
 ## Support
 
 For issues with:
+
 - **Workflow configuration:** Check `.github/workflows/prose-validation.yml`
 - **Validation logic:** Check `scripts/validate-prose.mjs`
 - **GitHub Actions:** [GitHub Actions documentation](https://docs.github.com/en/actions)
