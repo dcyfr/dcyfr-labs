@@ -43,6 +43,9 @@ export function GlossaryTooltip({ term, definition, children, className }: Gloss
 
   // Load visited state from localStorage using lazy initialization
   const [isVisited, setIsVisited] = useState(() => {
+    // Only access localStorage on the client side
+    if (typeof window === 'undefined') return false;
+
     try {
       const visited = localStorage.getItem(STORAGE_KEY);
       if (visited) {
