@@ -26,8 +26,7 @@ let redisClient: Redis | null = null;
  */
 function getRedisCredentials(): { url: string; token: string } | null {
   const isProduction =
-    process.env.NODE_ENV === 'production' &&
-    process.env.VERCEL_ENV === 'production';
+    process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production';
   const isPreview = process.env.VERCEL_ENV === 'preview';
   const isDevelopment = process.env.NODE_ENV === 'development';
   const isTest = process.env.NODE_ENV === 'test';
@@ -53,14 +52,21 @@ function getRedisCredentials(): { url: string; token: string } | null {
     const url = process.env.UPSTASH_REDIS_REST_URL_PREVIEW;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN_PREVIEW;
     if (url && token) {
+      console.log('✅ Preview Redis connected (shared preview database)');
       return { url, token };
     }
-    // Fallback to production with warning
-    console.warn('⚠️ Preview Redis not configured, using production (unsafe!)');
-    return {
-      url: process.env.UPSTASH_REDIS_REST_URL!,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-    };
+    // ✅ FIX: Check production credentials exist before using as fallback
+    const prodUrl = process.env.UPSTASH_REDIS_REST_URL;
+    const prodToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+    if (prodUrl && prodToken) {
+      console.warn('⚠️ Preview Redis not configured, using production credentials (unsafe!)');
+      return { url: prodUrl, token: prodToken };
+    }
+    // No credentials available
+    console.error(
+      '❌ Preview Redis credentials missing (UPSTASH_REDIS_REST_URL_PREVIEW and UPSTASH_REDIS_REST_TOKEN_PREVIEW)'
+    );
+    return null;
   }
 
   // Development: Use shared preview database with key namespacing
@@ -88,8 +94,7 @@ function getRedisCredentials(): { url: string; token: string } | null {
  */
 function getRedisKeyPrefix(): string {
   const isProduction =
-    process.env.NODE_ENV === 'production' &&
-    process.env.VERCEL_ENV === 'production';
+    process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production';
   const isPreview = process.env.VERCEL_ENV === 'preview';
   const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -168,15 +173,31 @@ export const redis = new Proxy({} as Redis, {
     if (typeof value === 'function') {
       // Intercept methods that use keys and add environment prefix
       const keyMethods = [
-        'get', 'set', 'setex', 'del', 'incr', 'decr',
-        'zadd', 'zrange', 'zrangebyscore', 'zrem',
-        'lpush', 'rpush', 'lrange', 'llen',
-        'hget', 'hset', 'hdel', 'hgetall',
-        'expire', 'ttl', 'exists'
+        'get',
+        'set',
+        'setex',
+        'del',
+        'incr',
+        'decr',
+        'zadd',
+        'zrange',
+        'zrangebyscore',
+        'zrem',
+        'lpush',
+        'rpush',
+        'lrange',
+        'llen',
+        'hget',
+        'hset',
+        'hdel',
+        'hgetall',
+        'expire',
+        'ttl',
+        'exists',
       ];
 
       if (keyMethods.includes(prop as string)) {
-        return function(key: string, ...args: any[]) {
+        return function (key: string, ...args: any[]) {
           const prefixedKey = getRedisKeyPrefix() + key;
           return (value as Function).call(client, prefixedKey, ...args);
         };
@@ -195,10 +216,7 @@ export const redis = new Proxy({} as Redis, {
  */
 export function getRedisEnvironment(): string {
   if (process.env.NODE_ENV === 'test') return 'test';
-  if (
-    process.env.NODE_ENV === 'production' &&
-    process.env.VERCEL_ENV === 'production'
-  ) {
+  if (process.env.NODE_ENV === 'production' && process.env.VERCEL_ENV === 'production') {
     return 'production';
   }
   if (process.env.VERCEL_ENV === 'preview') return 'preview';

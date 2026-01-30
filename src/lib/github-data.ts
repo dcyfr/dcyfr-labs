@@ -56,8 +56,9 @@ const FALLBACK_DATA_KEY = 'github:fallback-data';
  * In production, if Redis is unavailable, return an error response instead.
  */
 function generateFallbackData(): ContributionResponse {
-  const nodeEnv = process.env.NODE_ENV || 'development';
-  const isProduction = nodeEnv === 'production' || process.env.VERCEL_ENV === 'production';
+  // ✅ FIX: Use VERCEL_ENV to properly distinguish production from preview
+  // Preview environments have NODE_ENV=production but VERCEL_ENV=preview
+  const isProduction = process.env.VERCEL_ENV === 'production';
 
   // PRODUCTION PROTECTION: NEVER show demo data in production
   if (isProduction) {
