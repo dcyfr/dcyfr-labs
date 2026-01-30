@@ -1150,7 +1150,14 @@ export async function transformCredlyBadges(
       return [];
     }
 
-    const data: CredlyBadgesResponse = await response.json();
+    // ✅ FIX: Add error handling for malformed JSON responses
+    let data: CredlyBadgesResponse;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      console.error(`[Activity] Failed to parse Credly JSON response:`, jsonError);
+      return [];
+    }
     const badges = data.data || [];
 
     // Sort by issued_at descending

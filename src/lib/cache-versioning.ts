@@ -102,7 +102,27 @@ export class VersionedCache<T = any> {
         return null;
       }
 
-      const cached: CachedData<T> = JSON.parse(raw as string);
+      // ✅ FIX: Handle Redis returning objects (Upstash REST API)
+      // When Redis stores an object, it returns it directly instead of as a JSON string
+      let cached: CachedData<T>;
+      if (typeof raw === 'string') {
+        try {
+          cached = JSON.parse(raw);
+        } catch (parseError) {
+          console.error(`[Cache] JSON parse failed for ${versionedKey}:`, parseError);
+          console.error(`[Cache] Raw value type: ${typeof raw}, value:`, raw);
+          // Auto-cleanup corrupted data
+          await redis.del(versionedKey);
+          return null;
+        }
+      } else if (typeof raw === 'object' && raw !== null) {
+        // Upstash REST API returns objects directly
+        cached = raw as CachedData<T>;
+      } else {
+        console.error(`[Cache] Invalid data type from Redis: ${typeof raw}`);
+        await redis.del(versionedKey);
+        return null;
+      }
 
       // Validate version match
       if (cached.metadata.version !== this.config.version) {
