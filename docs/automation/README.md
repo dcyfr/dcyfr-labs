@@ -61,7 +61,8 @@
 ├── scheduled-instruction-sync.yml (NEW)
 ├── automated-metrics-collection.yml (NEW)
 ├── automated-security-checks.yml (NEW)
-└── prose-quality.yml.example (NEW - LanguageTool)
+├── prose-validation.yml (NEW - LanguageTool CI/CD)
+└── prose-quality.yml.example (DEPRECATED - replaced by prose-validation.yml)
 ```
 
 ### Content Quality Tools
