@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, ExternalLink, Clock, Tag } from 'lucide-react';
 import type { InoreaderArticle } from '@/types/inoreader';
 import { SPACING, HOVER_EFFECTS } from '@/lib/design-tokens';
+import he from 'he';
 
 interface FeedsListProps {
   articles: InoreaderArticle[];
@@ -120,35 +121,18 @@ function ArticleCard({ article }: { article: InoreaderArticle }) {
   });
 
   // Extract plain text from HTML summary (first 200 chars)
-  // CWE-116 Prevention: Complete HTML sanitization with proper entity decoding (multi-pass)
+  // CWE-116 Prevention: Use robust HTML entity decoding on stripped content
   // Pass 1: Remove dangerous tags (script/style)
   let plainTextSummary = article.summary.content
     .replace(/<(script|style)[^>]*>.*?<\/\1>/gi, '')
     // Pass 2: Remove all HTML tags
-    .replace(/<[^>]+>/g, '')
-    // Pass 3: Decode named HTML entities (important: &amp; last to avoid double-decode)
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    // Pass 4: Decode numeric entities (&#NNN; and &#xHHH;) - complete character references
-    .replace(/&#([0-9]+);/g, (match, code) => {
-      try {
-        return String.fromCharCode(parseInt(code, 10));
-      } catch {
-        return match;
-      }
-    })
-    .replace(/&#x([0-9a-fA-F]+);/g, (match, code) => {
-      try {
-        return String.fromCharCode(parseInt(code, 16));
-      } catch {
-        return match;
-      }
-    })
-    // Pass 5: Normalize whitespace and truncate
+    .replace(/<[^>]+>/g, '');
+
+  // Pass 3: Decode HTML entities safely to plain text
+  plainTextSummary = he.decode(plainTextSummary);
+
+  // Pass 4: Normalize whitespace and truncate
+  plainTextSummary = plainTextSummary
     .replace(/\s+/g, ' ')
     .trim()
     .substring(0, 200);
