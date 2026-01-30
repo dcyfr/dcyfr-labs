@@ -43,6 +43,11 @@ const DEFAULT_DISABLED_RULES = [
   'QB_NEW_EN_OTHER_ERROR_IDS_5', // Spacing after component removal (~106 false positives)
   'QB_NEW_EN_DECAPITALIZE_ERROR_IDS_6', // Technical abbreviations
   'COMMA_COMPOUND_SENTENCE', // List items without conjunctions
+
+  // Bold list formatting (Phase 2 - Jan 2026)
+  'QB_NEW_EN_OTHER_ERROR_IDS_32', // Bold definition list items (~40 false positives)
+  'QB_NEW_EN_HYPHEN', // Technical compound words (performance-based, multi-part)
+  'QB_NEW_EN_ORTHOGRAPHY_ERROR_IDS_1', // Capitalization in lists
 ].join(',');
 
 // Default disabled categories
