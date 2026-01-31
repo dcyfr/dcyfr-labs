@@ -1,11 +1,19 @@
 /**
  * Activity Feed Skeleton Loader
  *
+ * This component uses design-token-aware skeleton primitives to ensure
+ * dimensions stay in sync with actual content automatically.
+ *
+ * ⚠️ SYNC REQUIRED WITH: src/components/activity/* (actual activity components)
+ *
  * Loading state for activity items with:
  * - Shimmer animation
- * - Responsive sizing matching actual content
+ * - Typography-aware primitives (auto-sized to TYPOGRAPHY tokens)
  * - Multiple variants (compact, standard, timeline, minimal)
  * - Matches Medium/Substack content-focused layout
+ * - Animation: ANIMATIONS.stagger.normal (100ms between items)
+ *
+ * Last sync: 2026-01-31
  *
  * @example
  * ```tsx
@@ -15,13 +23,21 @@
  * // Loading state for compact (homepage widget)
  * <ActivitySkeleton variant="compact" />
  * ```
+ *
+ * @see /docs/components/skeleton-sync-strategy.md
  */
 
 "use client";
 
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SPACING } from "@/lib/design-tokens";
+import {
+  SkeletonHeading,
+  SkeletonText,
+  SkeletonBadges,
+  SkeletonImage,
+} from "@/components/ui/skeleton-primitives";
+import { SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
 import type { ActivityVariant } from "@/lib/activity";
 
 // ============================================================================
@@ -41,8 +57,6 @@ export interface ActivitySkeletonProps {
 // COMPONENT
 // ============================================================================
 
-/**
- * Skeleton loader for activity feed items
 /**
  * Skeleton loader for activity feed items
  */
@@ -70,40 +84,28 @@ export function ActivitySkeleton({
       {/* Full Layout - standard or timeline */}
       {isFull && (
         <div className="w-full">
-          {/* Header: Badges */}
-          <div className="flex items-center gap-2 mb-1.5">
-            <Skeleton className="h-6 w-20" />
-            <Skeleton className="h-6 w-16" />
+          {/* Header: Badges - using primitive */}
+          <div className={`mb-${SPACING_VALUES.sm}`}>
+            <SkeletonBadges count={2} />
           </div>
 
           {/* Content with activity spacing */}
           <div className={SPACING.activity.contentGap}>
-            {/* Title */}
-            <Skeleton className="h-8 md:h-9 lg:h-10 w-3/4" />
-            <Skeleton className="h-8 md:h-9 lg:h-10 w-1/2" />
+            {/* Title - auto-sized to typography tokens */}
+            <SkeletonHeading level="h2" variant="article" width="w-3/4" />
 
-            {/* Featured Image (16:9 aspect ratio) */}
-            {showImage && (
-              <Skeleton className="aspect-[16/9] h-64 md:h-80 lg:h-96 rounded-lg" />
-            )}
+            {/* Featured Image (16:9 aspect ratio) - using primitive */}
+            {showImage && <SkeletonImage aspectRatio="video" />}
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-11/12" />
-              <Skeleton className="h-5 w-4/5" />
-            </div>
+            {/* Description - multi-line primitive */}
+            <SkeletonText lines={3} lastLineWidth="w-4/5" gap="tight" />
 
-            {/* Metadata (tags + stats) */}
-            <div className="flex flex-wrap items-center gap-2">
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-5 w-20" />
-            </div>
+            {/* Metadata (tags + stats) - using primitive */}
+            <SkeletonBadges count={3} />
           </div>
 
           {/* Actions */}
-          <div className="mt-4 flex items-center gap-4">
+          <div className={`mt-${SPACING_VALUES.md} flex items-center gap-${SPACING_VALUES.md}`}>
             <Skeleton className="h-8 w-16" />
             <Skeleton className="h-8 w-16" />
             <Skeleton className="h-4 w-24 ml-auto" />
@@ -115,17 +117,24 @@ export function ActivitySkeleton({
 }
 
 /**
- * Multiple skeleton loaders for initial page load
+ * Multiple skeleton loaders for initial page load with stagger animation
  */
 export function ActivitySkeletonGroup({ count = 3 }: { count?: number }) {
   return (
     <div className={SPACING.activity.threadGap}>
       {Array.from({ length: count }).map((_, i) => (
-        <ActivitySkeleton
+        <div
           key={i}
-          variant="standard"
-          showImage={i === 0} // Only first item shows image
-        />
+          style={{
+            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
+            animation: ANIMATIONS.types.fadeIn,
+          }}
+        >
+          <ActivitySkeleton
+            variant="standard"
+            showImage={i === 0} // Only first item shows image
+          />
+        </div>
       ))}
     </div>
   );

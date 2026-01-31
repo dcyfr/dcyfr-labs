@@ -1,11 +1,24 @@
 /**
  * Diagram Skeleton
  *
+ * This component uses design-token-aware patterns to ensure
+ * dimensions stay in sync with actual content automatically.
+ *
+ * ⚠️ SYNC REQUIRED WITH: Diagram components (Mermaid diagrams, flowcharts, visual diagrams)
+ *
  * Loading skeleton for MDX diagrams (Mermaid, etc.).
+ * - Aspect ratios: Responsive diagram placeholders based on variant
+ * - Minimal component with no spacing violations
+ *
  * Provides placeholder while diagram renders.
+ *
+ * Last sync: 2026-01-31
+ *
+ * @see /docs/components/skeleton-sync-strategy.md
  */
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { SPACING, ANIMATIONS } from "@/lib/design-tokens";
 
 export interface DiagramSkeletonProps {
   /** Diagram type affects aspect ratio */

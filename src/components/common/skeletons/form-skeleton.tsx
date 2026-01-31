@@ -1,12 +1,22 @@
 /**
  * Form Skeleton
  *
+ * This component uses design-token-aware patterns to ensure
+ * dimensions stay in sync with actual content automatically.
+ *
+ * ⚠️ SYNC REQUIRED WITH: Form components (contact forms, search forms, input interfaces)
+ *
  * Generic loading skeleton for form components.
- * Used for contact forms, search forms, and other input-heavy interfaces.
+ * - Spacing: SPACING.content for vertical gaps, SPACING_VALUES for field spacing
+ * - Animation: ANIMATIONS.stagger.normal (100ms between fields)
+ *
+ * Last sync: 2026-01-31
+ *
+ * @see /docs/components/skeleton-sync-strategy.md
  */
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { SPACING } from "@/lib/design-tokens";
+import { SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
 
 export interface FormSkeletonProps {
   /** Number of form fields to show */
@@ -30,7 +40,14 @@ export function FormSkeleton({
     <div className={className}>
       <div className={SPACING.content}>
         {[...Array(fieldCount)].map((_, i) => (
-          <div key={i} className="space-y-2">
+          <div
+            key={i}
+            className={`space-y-${SPACING_VALUES.sm}`}
+            style={{
+              animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
+              animation: ANIMATIONS.types.fadeIn,
+            }}
+          >
             {/* Label */}
             <Skeleton className="h-4 w-24" />
 
@@ -40,7 +57,16 @@ export function FormSkeleton({
         ))}
 
         {/* Submit button */}
-        {showButton && <Skeleton className="h-10 w-32 rounded-md" />}
+        {showButton && (
+          <div
+            style={{
+              animationDelay: `${ANIMATIONS.stagger.normal * fieldCount}ms`,
+              animation: ANIMATIONS.types.fadeIn,
+            }}
+          >
+            <Skeleton className="h-10 w-32 rounded-md" />
+          </div>
+        )}
       </div>
     </div>
   );
