@@ -66,13 +66,17 @@ function getFallbackCacheKey(): string {
  */
 function getEmptyState(): ContributionResponse {
   const isProduction = process.env.VERCEL_ENV === 'production';
+  const isDevelopment = process.env.NODE_ENV === 'development';
 
-  console.error('[GitHub Data] ❌ Cache unavailable - returning empty state');
-
+  // Different log levels based on environment
   if (isProduction) {
-    console.error('[GitHub Data]    CRITICAL: Redis unavailable in production');
+    console.error('[GitHub Data] ❌ CRITICAL: Cache unavailable in production');
     console.error('[GitHub Data]    Action required: Check build cache population');
+  } else if (isDevelopment) {
+    console.log('[GitHub Data] ℹ️ Cache empty in local dev (expected)');
+    console.log('[GitHub Data]    To populate: curl http://localhost:3000/api/dev/populate-cache');
   } else {
+    console.warn('[GitHub Data] ⚠️ Cache unavailable - returning empty state');
     console.warn('[GitHub Data]    Run: curl http://localhost:3000/api/dev/populate-cache');
   }
 
@@ -155,14 +159,18 @@ export async function getGitHubContributions(
       return data;
     }
   } catch (error) {
-    console.error('[GitHub Data] ❌ Cache read failed', {
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    if (isDevelopment) {
+      console.log('[GitHub Data] ℹ️ Cache read skipped (Redis not configured in local dev)');
+    } else {
+      console.error('[GitHub Data] ❌ Cache read failed', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+    }
   }
 
   // If all cache attempts fail, return empty state
-  console.warn('[GitHub Data] All cache attempts failed, returning empty state');
   return getEmptyState();
 }
 

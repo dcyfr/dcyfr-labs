@@ -1,22 +1,15 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import CalendarHeatmap from "react-calendar-heatmap";
-import { motion } from "framer-motion";
-import {
-  ExternalLink,
-  GitCommit,
-  Calendar,
-  Zap,
-  TrendingUp,
-  AlertCircle,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
-import type { ContributionResponse } from "@/lib/github-data";
+import { useMemo } from 'react';
+import CalendarHeatmap from 'react-calendar-heatmap';
+import { motion } from 'framer-motion';
+import { ExternalLink, GitCommit, Calendar, Zap, TrendingUp, AlertCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { TYPOGRAPHY, SEMANTIC_COLORS } from '@/lib/design-tokens';
+import type { ContributionResponse } from '@/lib/github-data';
 
 // Import styles for react-calendar-heatmap
-import "react-calendar-heatmap/dist/styles.css";
+import 'react-calendar-heatmap/dist/styles.css';
 
 // ============================================================================
 // TYPES
@@ -46,9 +39,7 @@ interface ActivityStats {
 /**
  * Calculate streak statistics from contribution data
  */
-function calculateStreaks(
-  contributions: ContributionResponse["contributions"]
-): StreakStats {
+function calculateStreaks(contributions: ContributionResponse['contributions']): StreakStats {
   let currentStreak = 0;
   let longestStreak = 0;
   let tempStreak = 0;
@@ -84,12 +75,11 @@ function calculateStreaks(
  * Calculate activity statistics
  */
 function calculateActivityStats(
-  contributions: ContributionResponse["contributions"]
+  contributions: ContributionResponse['contributions']
 ): ActivityStats {
   const activeDays = contributions.filter((day) => day.count > 0);
   const totalDaysActive = activeDays.length;
-  const averagePerDay =
-    contributions.reduce((sum, day) => sum + day.count, 0) / 365;
+  const averagePerDay = contributions.reduce((sum, day) => sum + day.count, 0) / 365;
 
   const busiestDay = contributions.reduce(
     (max, day) => (day.count > (max?.count || 0) ? day : max),
@@ -115,14 +105,11 @@ function calculateActivityStats(
  */
 export function ClientGitHubHeatmap({
   data,
-  username = "dcyfr",
+  username = 'dcyfr',
   showWarning = true,
 }: ClientGitHubHeatmapProps) {
   // Calculate statistics
-  const streaks = useMemo(
-    () => calculateStreaks(data.contributions),
-    [data.contributions]
-  );
+  const streaks = useMemo(() => calculateStreaks(data.contributions), [data.contributions]);
   const activityStats = useMemo(
     () => calculateActivityStats(data.contributions),
     [data.contributions]
@@ -136,7 +123,7 @@ export function ClientGitHubHeatmap({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
       className="space-y-3"
     >
       {/* Header */}
@@ -160,9 +147,7 @@ export function ClientGitHubHeatmap({
           animate={{ opacity: 1, scale: 1 }}
           className={`${SEMANTIC_COLORS.alert.warning.container} ${SEMANTIC_COLORS.alert.warning.border} rounded-lg p-3`}
         >
-          <p
-            className={`text-sm ${SEMANTIC_COLORS.alert.warning.text} flex items-center gap-2`}
-          >
+          <p className={`text-sm ${SEMANTIC_COLORS.alert.warning.text} flex items-center gap-2`}>
             <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
             <span>{data.warning}</span>
           </p>
@@ -177,34 +162,34 @@ export function ClientGitHubHeatmap({
           values={data.contributions}
           classForValue={(value) => {
             if (!value || value.count === 0) {
-              return "color-empty";
+              return 'color-empty';
             }
             if (value.count < 3) {
-              return "color-scale-1";
+              return 'color-scale-1';
             }
             if (value.count < 6) {
-              return "color-scale-2";
+              return 'color-scale-2';
             }
             if (value.count < 9) {
-              return "color-scale-3";
+              return 'color-scale-3';
             }
-            return "color-scale-4";
+            return 'color-scale-4';
           }}
           showWeekdayLabels={false}
           showMonthLabels={true}
           monthLabels={[
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
           ]}
           showOutOfRangeDays={true}
           gutterSize={4}
@@ -218,27 +203,27 @@ export function ClientGitHubHeatmap({
           <motion.div
             className="w-2.5 h-2.5 rounded-sm bg-muted border border-border"
             whileHover={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
           />
           <motion.div
             className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.75_0_0)] dark:bg-[oklch(0.35_0_0)]"
             whileHover={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
           />
           <motion.div
             className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.58_0_0)] dark:bg-[oklch(0.48_0_0)]"
             whileHover={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
           />
           <motion.div
             className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.45_0_0)] dark:bg-[oklch(0.60_0_0)]"
             whileHover={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
           />
           <motion.div
             className="w-2.5 h-2.5 rounded-sm border border-border bg-[oklch(0.32_0_0)] dark:bg-[oklch(0.72_0_0)]"
             whileHover={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
           />
         </div>
         <span>More</span>
@@ -249,28 +234,20 @@ export function ClientGitHubHeatmap({
         <motion.div
           className="bg-muted/50 rounded-lg p-3 border"
           whileHover={{ y: -2 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          transition={{ type: 'spring', stiffness: 300 }}
         >
-          <GitCommit
-            className="w-4 h-4 mx-auto mb-2 text-muted-foreground"
-            aria-hidden="true"
-          />
+          <GitCommit className="w-4 h-4 mx-auto mb-2 text-muted-foreground" aria-hidden="true" />
           <div className="text-xs text-muted-foreground mb-1">Total</div>
-          <div className="font-semibold">
-            {data.totalContributions.toLocaleString()}
-          </div>
+          <div className="font-semibold">{data.totalContributions.toLocaleString()}</div>
           <div className="text-xs text-muted-foreground">contributions</div>
         </motion.div>
 
         <motion.div
           className="bg-muted/50 rounded-lg p-3 border"
           whileHover={{ y: -2 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          transition={{ type: 'spring', stiffness: 300 }}
         >
-          <Calendar
-            className="w-4 h-4 mx-auto mb-2 text-muted-foreground"
-            aria-hidden="true"
-          />
+          <Calendar className="w-4 h-4 mx-auto mb-2 text-muted-foreground" aria-hidden="true" />
           <div className="text-xs text-muted-foreground mb-1">Active</div>
           <div className="font-semibold">{activityStats.totalDaysActive}</div>
           <div className="text-xs text-muted-foreground">days</div>
@@ -279,12 +256,9 @@ export function ClientGitHubHeatmap({
         <motion.div
           className="bg-muted/50 rounded-lg p-3 border"
           whileHover={{ y: -2 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          transition={{ type: 'spring', stiffness: 300 }}
         >
-          <Zap
-            className="w-4 h-4 mx-auto mb-2 text-muted-foreground"
-            aria-hidden="true"
-          />
+          <Zap className="w-4 h-4 mx-auto mb-2 text-muted-foreground" aria-hidden="true" />
           <div className="text-xs text-muted-foreground mb-1">Current</div>
           <div className="font-semibold">{streaks.currentStreak}</div>
           <div className="text-xs text-muted-foreground">day streak</div>
@@ -293,16 +267,11 @@ export function ClientGitHubHeatmap({
         <motion.div
           className="bg-muted/50 rounded-lg p-3 border"
           whileHover={{ y: -2 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          transition={{ type: 'spring', stiffness: 300 }}
         >
-          <TrendingUp
-            className="w-4 h-4 mx-auto mb-2 text-muted-foreground"
-            aria-hidden="true"
-          />
+          <TrendingUp className="w-4 h-4 mx-auto mb-2 text-muted-foreground" aria-hidden="true" />
           <div className="text-xs text-muted-foreground mb-1">Best</div>
-          <div className="font-semibold">
-            {activityStats.busiestDay?.count || 0}
-          </div>
+          <div className="font-semibold">{activityStats.busiestDay?.count || 0}</div>
           <div className="text-xs text-muted-foreground">in one day</div>
         </motion.div>
       </div>
@@ -311,14 +280,8 @@ export function ClientGitHubHeatmap({
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="text-xs">
-            {data.totalContributions.toLocaleString()} contributions in the last
-            year
+            {data.totalContributions.toLocaleString()} contributions in the last year
           </Badge>
-          {process.env.NODE_ENV === "development" && (
-            <Badge variant="destructive" className="text-xs">
-              Mock Data
-            </Badge>
-          )}
         </div>
       </div>
     </motion.div>
