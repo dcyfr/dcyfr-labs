@@ -79,10 +79,15 @@ const redis = new Redis({
 async function fetchGitHubContributions() {
   console.log('[Build Cache] 📊 Fetching GitHub contributions...');
 
+  // Get date range for last year
+  const to = new Date();
+  const from = new Date();
+  from.setFullYear(from.getFullYear() - 1);
+
   const query = `
-    query($username: String!) {
+    query($username: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $username) {
-        contributionsCollection {
+        contributionsCollection(from: $from, to: $to) {
           contributionCalendar {
             totalContributions
             weeks {
@@ -113,7 +118,11 @@ async function fetchGitHubContributions() {
       headers,
       body: JSON.stringify({
         query,
-        variables: { username: GITHUB_USERNAME },
+        variables: {
+          username: GITHUB_USERNAME,
+          from: from.toISOString(),
+          to: to.toISOString(),
+        },
       }),
     });
 
