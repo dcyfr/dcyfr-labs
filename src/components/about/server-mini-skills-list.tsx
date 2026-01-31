@@ -18,7 +18,7 @@ import { Lightbulb, ExternalLink } from 'lucide-react';
 import { SPACING, TYPOGRAPHY } from '@/lib/design-tokens';
 import { cn, ensureAbsoluteUrl } from '@/lib/utils';
 import { getCredlySkills } from '@/lib/credly-data';
-import type { AggregatedSkill } from '@/lib/credly-data';
+import type { SkillWithCount } from '@/lib/credly-data';
 
 interface ServerMiniSkillsListProps {
   username?: string;
@@ -87,7 +87,7 @@ async function ServerMiniSkillsListInner({
               Core Expertise
             </h4>
             <div className="flex flex-wrap gap-2">
-              {coreSkills.map((item: AggregatedSkill) => (
+              {coreSkills.map((item: SkillWithCount) => (
                 <Link
                   key={item.skill.id}
                   href={ensureAbsoluteUrl(
@@ -115,7 +115,7 @@ async function ServerMiniSkillsListInner({
           <div>
             <h4 className={cn(TYPOGRAPHY.label.small, 'text-muted-foreground mb-3')}>Proficient</h4>
             <div className="flex flex-wrap gap-2">
-              {proficientSkills.map((item: AggregatedSkill) => (
+              {proficientSkills.map((item: SkillWithCount) => (
                 <Link
                   key={item.skill.id}
                   href={ensureAbsoluteUrl(
@@ -143,7 +143,7 @@ async function ServerMiniSkillsListInner({
           <div>
             <h4 className={cn(TYPOGRAPHY.label.small, 'text-muted-foreground mb-3')}>Familiar</h4>
             <div className="flex flex-wrap gap-2">
-              {familiarSkills.map((item: AggregatedSkill) => (
+              {familiarSkills.map((item: SkillWithCount) => (
                 <Link
                   key={item.skill.id}
                   href={ensureAbsoluteUrl(
