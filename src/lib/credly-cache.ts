@@ -144,35 +144,21 @@ export async function fetchCredlyBadgesCached(
     return redisData;
   }
 
-  // Layer 3: Fetch from API (cache miss)
-  // Build API URL
-  const params = new URLSearchParams({
-    username,
-    ...(limit && { limit: limit.toString() }),
+  // Layer 3: Cache miss - return empty state instead of API call
+  // Cache should be populated during build or via manual trigger
+  const isProduction = process.env.VERCEL_ENV === 'production';
+
+  console.warn('[Credly Cache] ⚠️ Cache miss - returning empty state', {
+    redisKey,
+    environment: process.env.NODE_ENV,
   });
 
-  // ✅ FIX: Use proper production URL in server-side (Inngest) context
-  // Construct absolute URL for fetch
-  const baseUrl =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_SITE_URL ||
-        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-
-  const apiUrl = new URL(`/api/credly/badges?${params}`, baseUrl).toString();
-  const response = await fetch(apiUrl);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch badges: ${response.status}`);
+  if (!isProduction) {
+    console.warn('[Credly Cache]    Run: curl http://localhost:3000/api/dev/populate-cache');
   }
 
-  const data: BadgesApiResponse = await response.json();
-
-  // Cache in both layers for future requests
-  setMemoryCachedData(memoryCacheKey, data);
-  await setRedisCachedData(redisKey, data);
-
-  return data;
+  // Return empty state - no API call to prevent rate limiting
+  return EMPTY_BADGES_RESPONSE;
 }
 
 /**

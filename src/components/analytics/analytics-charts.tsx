@@ -7,10 +7,8 @@
 
 'use client';
 
-import { useAnalyticsData } from '@/hooks/use-analytics-data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   LineChart,
   Line,
@@ -23,16 +21,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from '@/components/charts';
-import { PostAnalytics, DateRange } from '@/types/analytics';
+import { PostAnalytics, DateRange, DailyData } from '@/types/analytics';
 
 interface AnalyticsChartsProps {
   /** All posts with analytics data */
   posts: PostAnalytics[];
   /** Current date range */
   dateRange: DateRange;
+  /** Daily analytics data from server */
+  daily: DailyData[];
 }
-
-import type { DailyData } from '@/types/analytics';
 
 /**
  * Time-series charts for analytics dashboard
@@ -42,42 +40,12 @@ import type { DailyData } from '@/types/analytics';
  * - Engagement trend (shares + comments)
  * - Combined metrics
  */
-export function AnalyticsCharts({ posts, dateRange }: AnalyticsChartsProps) {
-  const {
-    daily: dailyData,
-    loading,
-    error,
-    refresh,
-  } = useAnalyticsData({ dateRange, autoRefresh: false, dataType: 'daily' });
-  const chartData: DailyData[] = Array.isArray(dailyData) ? dailyData : [];
+export function AnalyticsCharts({ posts, dateRange, daily }: AnalyticsChartsProps) {
+  // Data comes from server props (no client-side fetching)
+  const chartData: DailyData[] = Array.isArray(daily) ? daily : [];
 
   if (posts.length === 0) {
     return null;
-  }
-
-  if (loading) {
-    return (
-      <Card className="mb-6">
-        <CardHeader className="p-4">
-          <Skeleton className="h-5 w-32" />
-          <Skeleton className="h-3 w-64 mt-2" />
-        </CardHeader>
-        <CardContent className="p-4 pt-0">
-          <Skeleton className="h-[300px] w-full" />
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card className="mb-6">
-        <CardHeader className="p-4">
-          <CardTitle className="text-base">Performance Trends</CardTitle>
-          <CardDescription className="text-xs text-destructive">{error}</CardDescription>
-        </CardHeader>
-      </Card>
-    );
   }
 
   // Check if we have any actual data (non-zero views)

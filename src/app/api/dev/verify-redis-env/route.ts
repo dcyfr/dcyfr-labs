@@ -65,7 +65,11 @@ export async function GET() {
     }
   }
 
-  return NextResponse.json({
+  // Determine if we need to show cache population help
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const needsCachePopulation = redisConnected && cacheStatus.includes('not-found');
+
+  const response: any = {
     environment: {
       nodeEnv: process.env.NODE_ENV,
       vercelEnv: process.env.VERCEL_ENV,
@@ -97,5 +101,22 @@ export async function GET() {
       region: process.env.VERCEL_REGION || 'not set',
       url: process.env.VERCEL_URL || 'not set',
     },
-  });
+  };
+
+  // Add helpful actions if cache is empty in development
+  if (isDevelopment && needsCachePopulation) {
+    response.actions = {
+      populateCache: {
+        message: '⚠️ Cache is empty. Click the link below to populate it:',
+        endpoint: '/api/dev/populate-cache',
+        description: 'Populates GitHub and Credly data in preview database',
+      },
+      alternativeEndpoints: {
+        githubOnly: '/api/dev/refresh-github',
+        credlyOnly: '/api/dev/refresh-credly',
+      },
+    };
+  }
+
+  return NextResponse.json(response);
 }

@@ -44,9 +44,9 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 // Hooks
-import { useAnalyticsData } from "@/hooks/use-analytics-data";
 import { useDashboardFilters } from "@/hooks/use-dashboard-filters";
 import { useDashboardSort } from "@/hooks/use-dashboard-sort";
+import { useRouter } from "next/navigation";
 
 // Components
 import { DashboardLayout } from "@/components/dashboard";
@@ -87,7 +87,7 @@ function SortIndicator({ field, sortField, sortDirection }: SortIndicatorProps) 
 import { AnalyticsTrending } from '@/components/analytics';
 
 // Types
-import { PostAnalytics, DateRange, DATE_RANGE_LABELS } from "@/types/analytics";
+import { PostAnalytics, DateRange, DATE_RANGE_LABELS, AnalyticsData, DailyData } from "@/types/analytics";
 
 // Utils
 import { 
@@ -127,10 +127,14 @@ const copyToClipboard = async (value: string | number, label: string) => {
   }
 };
 
-export default function AnalyticsDashboard() {
+type AnalyticsClientProps = {
+  initialData: AnalyticsData;
+  initialDailyData: DailyData[];
+};
+
+export default function AnalyticsDashboard({ initialData, initialDailyData }: AnalyticsClientProps) {
   // State
   const [dateRange, setDateRange] = useState<DateRange>("all");
-  const [autoRefresh, setAutoRefresh] = useState(false);
   const [publicationCohort, setPublicationCohort] = useState<PublicationCohort>("all");
   const [performanceTier, setPerformanceTier] = useState<PerformanceTierFilter>("all");
   const [tagFilterMode, setTagFilterMode] = useState<TagFilterMode>("AND");
@@ -138,11 +142,23 @@ export default function AnalyticsDashboard() {
   const [showConversion, setShowConversion] = useState(false);
   const [showPerformance, setShowPerformance] = useState(false);
 
-  // Custom hooks
-  const { data, loading, error, isRefreshing, lastUpdated, refresh } = useAnalyticsData({
-    dateRange,
-    autoRefresh,
-  });
+  // Data from server (no client-side fetching)
+  const [data] = useState<AnalyticsData>(initialData);
+  const [daily] = useState<DailyData[]>(initialDailyData);
+  const loading = false; // Data always available from server
+  const error = null; // Server handles errors
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Router for manual refresh
+  const router = useRouter();
+
+  // Manual refresh handler
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    router.refresh(); // Triggers server-side refetch
+    // Reset refreshing state after a brief delay
+    setTimeout(() => setIsRefreshing(false), 1000);
+  };
 
   const {
     searchQuery,
@@ -294,88 +310,7 @@ export default function AnalyticsDashboard() {
     URL.revokeObjectURL(url);
   };
 
-  // Loading state
-  if (loading) {
-    return (
-      <DashboardLayout
-        title="Analytics Dashboard"
-        description="View and analyze blog post performance metrics"
-      >
-        <div className="space-y-4">
-          {/* Stats Section Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <Skeleton className="h-6 w-40 mb-1" />
-              <Skeleton className="h-4 w-56" />
-            </div>
-            <Skeleton className="h-9 w-24" />
-          </div>
-
-          {/* Stats Cards - 4 columns */}
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-              <Card key={i} className="p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Skeleton className="h-5 w-5 rounded" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-                <Skeleton className="h-8 w-16 mb-1" />
-                <Skeleton className="h-3 w-24" />
-              </Card>
-            ))}
-          </div>
-
-          {/* Featured Posts Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <Skeleton className="h-6 w-32 mb-1" />
-              <Skeleton className="h-4 w-48" />
-            </div>
-            <Skeleton className="h-9 w-24" />
-          </div>
-
-          {/* Featured Posts Cards - 4 columns */}
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-              <Card key={i} className="p-4">
-                <Skeleton className="h-4 w-20 mb-2" />
-                <Skeleton className="h-5 w-full mb-2" />
-                <Skeleton className="h-4 w-3/4" />
-              </Card>
-            ))}
-          </div>
-
-          {/* Charts Section */}
-          <div className="space-y-4">
-            <Skeleton className="h-6 w-32" />
-            <Card className="p-4">
-              <Skeleton className="h-64 w-full" />
-            </Card>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <DashboardLayout
-        title="Analytics Dashboard"
-        description="View and analyze blog post performance metrics"
-      >
-        <Card className="border-destructive">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-destructive" />
-              <CardTitle>Error loading analytics</CardTitle>
-            </div>
-            <CardDescription>{error}</CardDescription>
-          </CardHeader>
-        </Card>
-      </DashboardLayout>
-    );
-  }
+  // No loading or error states needed - data always available from server
 
   if (!data) return null;
 
@@ -406,11 +341,11 @@ export default function AnalyticsDashboard() {
           onHideArchivedChange={setHideArchived}
           onExportCSV={handleExportCSV}
           onExportJSON={handleExportJSON}
-          onRefresh={refresh}
+          onRefresh={handleRefresh}
           isRefreshing={isRefreshing}
-          autoRefresh={autoRefresh}
-          onAutoRefreshChange={setAutoRefresh}
-          lastUpdated={lastUpdated || undefined}
+          autoRefresh={false}
+          onAutoRefreshChange={() => {}}
+          lastUpdated={undefined}
           compact={true}
           onClearAll={() => {
             setPublicationCohort("all");
@@ -681,7 +616,7 @@ export default function AnalyticsDashboard() {
         {showPerformance && (
           <CardContent className="pt-0 space-y-4">
             {/* Time-Series Charts */}
-            <AnalyticsCharts posts={sortedPosts} dateRange={dateRange} />
+            <AnalyticsCharts posts={sortedPosts} dateRange={dateRange} daily={daily} />
             {data?.vercel && (
               <VercelInsights vercel={data.vercel} lastSynced={data.vercelLastSynced} />
             )}
