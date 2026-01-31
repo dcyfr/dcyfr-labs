@@ -47,70 +47,31 @@ const FALLBACK_DATA_KEY = 'github:fallback-data';
 // ============================================================================
 
 /**
- * Generate realistic fallback data for development/demo purposes (DEV ONLY)
+ * Return empty state when cache is unavailable
  *
- * ⚠️  WARNING: This generates SAMPLE data and should only be used when Redis
- * is unavailable in development/testing environments.
- *
- * Do NOT use this fallback in production - demo data must never reach production users.
- * In production, if Redis is unavailable, return an error response instead.
+ * NO demo/mock data is generated. Cache should be populated during build
+ * or manually via /api/dev/populate-cache endpoint.
  */
-function generateFallbackData(): ContributionResponse {
-  // ✅ FIX: Use VERCEL_ENV to properly distinguish production from preview
-  // Preview environments have NODE_ENV=production but VERCEL_ENV=preview
+function getEmptyState(): ContributionResponse {
   const isProduction = process.env.VERCEL_ENV === 'production';
 
-  // PRODUCTION PROTECTION: NEVER show demo data in production
+  console.error('[GitHub Data] ❌ Cache unavailable - returning empty state');
+
   if (isProduction) {
-    console.error('[GitHub Data] ❌ CRITICAL ERROR: Redis unavailable in production');
-    console.error('[GitHub Data]    Cannot load real GitHub contributions');
-    console.error('[GitHub Data]    Returning empty data instead of demo data');
-    console.error('[GitHub Data]    Action required: Restore Redis connection');
-
-    // Return empty data instead of demo data
-    return {
-      contributions: [],
-      source: 'error',
-      totalContributions: 0,
-      lastUpdated: new Date().toISOString(),
-      warning:
-        '⚠️ Unable to load GitHub data - Redis connection unavailable. Please try again later.',
-    };
-  }
-
-  // Development/preview: Use demo data with clear indication
-  const contributions: ContributionDay[] = [];
-  const endDate = new Date();
-  let totalContributions = 0;
-
-  // Generate data for past year
-  for (let i = 365; i >= 0; i--) {
-    const date = new Date(endDate);
-    date.setDate(date.getDate() - i);
-
-    // Simulate realistic contribution patterns
-    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-    const baseChance = isWeekend ? 0.3 : 0.8;
-
-    let count = 0;
-    if (Math.random() < baseChance) {
-      count = Math.floor(Math.random() * (isWeekend ? 3 : 8)) + 1;
-      totalContributions += count;
-    }
-
-    contributions.push({
-      date: date.toISOString().split('T')[0],
-      count,
-    });
+    console.error('[GitHub Data]    CRITICAL: Redis unavailable in production');
+    console.error('[GitHub Data]    Action required: Check build cache population');
+  } else {
+    console.warn('[GitHub Data]    Run: curl http://localhost:3000/api/dev/populate-cache');
   }
 
   return {
-    contributions,
-    source: 'fallback-data',
-    totalContributions,
-    totalRepositories: 42,
+    contributions: [],
+    source: 'cache-miss',
+    totalContributions: 0,
     lastUpdated: new Date().toISOString(),
-    warning: 'Using demo data - GitHub API temporarily unavailable (DEV MODE)',
+    warning: isProduction
+      ? 'Unable to load GitHub data. Please try again later.'
+      : 'Cache not populated. Visit /api/dev/populate-cache to populate.',
   };
 }
 
@@ -132,8 +93,8 @@ export async function getGitHubContributions(
 ): Promise<ContributionResponse> {
   // Only support the configured username for security
   if (username !== 'dcyfr') {
-    console.warn(`[GitHub Data] Username ${username} not supported, using fallback`);
-    return generateFallbackData();
+    console.warn(`[GitHub Data] Username ${username} not supported, returning empty state`);
+    return getEmptyState();
   }
 
   try {
@@ -185,9 +146,9 @@ export async function getGitHubContributions(
     });
   }
 
-  // If all cache attempts fail, return fallback data
-  console.warn('[GitHub Data] All cache attempts failed, using fallback data');
-  return generateFallbackData();
+  // If all cache attempts fail, return empty state
+  console.warn('[GitHub Data] All cache attempts failed, returning empty state');
+  return getEmptyState();
 }
 
 /**

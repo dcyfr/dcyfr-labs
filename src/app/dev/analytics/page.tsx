@@ -5,6 +5,7 @@
 import type { Metadata } from "next";
 import { assertDevOr404 } from "@/lib/dev-only";
 import { createPageMetadata } from "@/lib/metadata";
+import { getAnalyticsData, getDailyAnalyticsData } from "@/lib/analytics.server";
 // Import the client component directly - the client component file contains
 // "use client" so it will be rendered on the client. We perform the server
 // environment check below and return a 404 in non-dev environments.
@@ -16,13 +17,19 @@ export const metadata: Metadata = createPageMetadata({
   path: "/dev/analytics",
 });
 
-// Vercel optimization: assertDevOr404() calls notFound() in Preview/Production,
-// which allows this page to be statically rendered. No dynamic function needed.
+// Enable ISR (Incremental Static Regeneration) - revalidate every 5 minutes
+// This caches the analytics data and reduces load on Redis
+export const revalidate = 300;
 
-export default function Page() {
+export default async function Page() {
   // Centralized helper: assert dev or render 404. Keeps behavior consistent
   // across developer-only pages.
   assertDevOr404();
 
-  return <AnalyticsClient />;
+  // Fetch analytics data server-side using ADMIN_API_KEY (secure, never exposed to client)
+  // This replaces the client-side useAnalyticsData hook that used NEXT_PUBLIC_ADMIN_API_KEY
+  const data = await getAnalyticsData(null); // "all" time range by default
+  const daily = await getDailyAnalyticsData(null); // 90 days of daily data
+
+  return <AnalyticsClient initialData={data} initialDailyData={daily} />;
 }
