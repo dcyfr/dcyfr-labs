@@ -98,6 +98,8 @@
     "analytics:update": "curl -X POST http://localhost:3000/api/analytics/update-milestones",
     "analytics:update:prod": "curl -X POST https://www.dcyfr.dev/api/analytics/update-milestones -H \"Authorization: Bearer $CRON_SECRET\"",
     "github:clear-cache-warnings": "node scripts/clear-github-cache-warnings.mjs",
+    "github:refresh": "curl -s http://localhost:3000/api/dev/refresh-github | json_pp",
+    "github:status": "node scripts/diagnose-github-cache.mjs",
     "engagement:consolidate": "node scripts/consolidate-event-driven-engagement.mjs",
     "prose:check": "node scripts/validate-prose.mjs",
     "prose:check:file": "node scripts/validate-prose.mjs --file",
