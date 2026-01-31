@@ -1,15 +1,24 @@
-"use client";
+'use client';
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { ChevronUp, SlidersHorizontal } from "lucide-react";
-import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ANIMATION, TYPOGRAPHY } from "@/lib/design-tokens";
-import { BlogFilters } from "./blog-filters";
-import { useMobileFilterSheet } from "@/hooks/use-mobile-filter-sheet";
+import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { ChevronUp, SlidersHorizontal } from 'lucide-react';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ANIMATION, TYPOGRAPHY } from '@/lib/design-tokens';
+import { BlogFilters } from './blog-filters';
+import { useMobileFilterSheet } from '@/hooks/use-mobile-filter-sheet';
 
 interface MobileFilterBarProps {
   selectedCategory: string;
@@ -26,11 +35,11 @@ interface MobileFilterBarProps {
 
 /**
  * MobileFilterBar Component
- * 
+ *
  * Compact, collapsible filter UI for mobile devices.
  * Shows active filter summary with expand/collapse toggle.
  * When expanded, reveals full BlogFilters component.
- * 
+ *
  * Features:
  * - Minimal footprint when collapsed (just summary bar)
  * - Shows active filter badges for quick removal
@@ -45,8 +54,8 @@ export function MobileFilterBar({
   categoryDisplayMap,
   tagList,
   query,
-  sortBy = "newest",
-  dateRange = "all",
+  sortBy = 'newest',
+  dateRange = 'all',
   totalResults,
 }: MobileFilterBarProps) {
   // Using shared state with FloatingFilterFab for coordinated sheet control
@@ -58,61 +67,61 @@ export function MobileFilterBar({
     startTransition(() => {
       // Close sheet if open, then clear all filters by navigating back to base blog path
       setIsOpen(false);
-      router.push("/blog", { scroll: false });
+      router.push('/blog', { scroll: false });
     });
   };
 
   // Calculate active filter count
   const activeFilters: Array<{ key: string; label: string; value: string }> = [];
-  
+
   if (query) {
-    activeFilters.push({ key: "q", label: `"${query}"`, value: query });
+    activeFilters.push({ key: 'q', label: `"${query}"`, value: query });
   }
   if (selectedCategory) {
-    activeFilters.push({ 
-      key: "category", 
-      label: categoryDisplayMap[selectedCategory] || selectedCategory, 
-      value: selectedCategory 
+    activeFilters.push({
+      key: 'category',
+      label: categoryDisplayMap[selectedCategory] || selectedCategory,
+      value: selectedCategory,
     });
   }
-  selectedTags.forEach(tag => {
-    activeFilters.push({ key: "tag", label: tag, value: tag });
+  selectedTags.forEach((tag) => {
+    activeFilters.push({ key: 'tag', label: tag, value: tag });
   });
   if (readingTime) {
     const readingTimeLabels: Record<string, string> = {
-      quick: "<5 min",
-      medium: "5-15 min", 
-      deep: ">15 min",
+      quick: '<5 min',
+      medium: '5-15 min',
+      deep: '>15 min',
     };
-    activeFilters.push({ 
-      key: "readingTime", 
-      label: readingTimeLabels[readingTime] || readingTime, 
-      value: readingTime 
+    activeFilters.push({
+      key: 'readingTime',
+      label: readingTimeLabels[readingTime] || readingTime,
+      value: readingTime,
     });
   }
-  if (sortBy && sortBy !== "newest") {
+  if (sortBy && sortBy !== 'popular') {
     const sortLabels: Record<string, string> = {
-      popular: "Popular",
-      oldest: "Oldest",
-      archived: "Archived",
-      drafts: "Drafts",
+      newest: 'Newest',
+      oldest: 'Oldest',
+      archived: 'Archived',
+      drafts: 'Drafts',
     };
-    activeFilters.push({ 
-      key: "sortBy", 
-      label: sortLabels[sortBy] || sortBy, 
-      value: sortBy 
+    activeFilters.push({
+      key: 'sortBy',
+      label: sortLabels[sortBy] || sortBy,
+      value: sortBy,
     });
   }
-  if (dateRange && dateRange !== "all") {
+  if (dateRange && dateRange !== 'all') {
     const dateLabels: Record<string, string> = {
-      "30d": "30 days",
-      "90d": "90 days",
-      year: "This year",
+      '30d': '30 days',
+      '90d': '90 days',
+      year: 'This year',
     };
-    activeFilters.push({ 
-      key: "dateRange", 
-      label: dateLabels[dateRange] || dateRange, 
-      value: dateRange 
+    activeFilters.push({
+      key: 'dateRange',
+      label: dateLabels[dateRange] || dateRange,
+      value: dateRange,
     });
   }
 
@@ -122,27 +131,23 @@ export function MobileFilterBar({
     <div className="border rounded-lg overflow-hidden">
       {/* Use Sheet as a mobile bottom sheet instead of inline expansion */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <div className={cn("border-b")}> 
+        <div className={cn('border-b')}>
           <SheetTrigger asChild>
             <button
               type="button"
               className={cn(
-                "w-full flex items-center justify-between gap-3 p-3",
-                "text-left hover:bg-muted/50 transition-colors"
+                'w-full flex items-center justify-between gap-3 p-3',
+                'text-left hover:bg-muted/50 transition-colors'
               )}
               aria-label="Open filter sheet"
             >
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <SlidersHorizontal className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className={TYPOGRAPHY.label.small}>
-                  {hasActiveFilters ? (
-                    <>Filters ({activeFilters.length})</>
-                  ) : (
-                    <>Filter & Search</>
-                  )}
+                  {hasActiveFilters ? <>Filters ({activeFilters.length})</> : <>Filter & Search</>}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  · {totalResults} post{totalResults !== 1 ? "s" : ""}
+                  · {totalResults} post{totalResults !== 1 ? 's' : ''}
                 </span>
               </div>
               <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -154,15 +159,15 @@ export function MobileFilterBar({
               <button
                 type="button"
                 className={cn(
-                  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-xs transition-base",
-                  "hover:bg-accent hover:text-accent-foreground active:bg-accent/80 dark:hover:bg-accent/60",
-                  "disabled:pointer-events-none disabled:opacity-50",
-                  "h-6 px-2"
+                  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-xs transition-base',
+                  'hover:bg-accent hover:text-accent-foreground active:bg-accent/80 dark:hover:bg-accent/60',
+                  'disabled:pointer-events-none disabled:opacity-50',
+                  'h-6 px-2'
                 )}
                 onClick={handleClearAll}
                 disabled={isPending}
               >
-                {isPending ? "..." : "Clear"}
+                {isPending ? '...' : 'Clear'}
               </button>
             </div>
           )}
@@ -199,13 +204,8 @@ export function MobileFilterBar({
               </div>
               <div className="flex items-center gap-2">
                 {hasActiveFilters && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleClearAll}
-                    disabled={isPending}
-                  >
-                    {isPending ? "..." : "Clear"}
+                  <Button variant="ghost" size="sm" onClick={handleClearAll} disabled={isPending}>
+                    {isPending ? '...' : 'Clear'}
                   </Button>
                 )}
                 <SheetClose asChild>
@@ -231,9 +231,7 @@ export function MobileFilterBar({
             />
           </div>
 
-          <SheetFooter>
-            {/* Footer actions if needed in the future */}
-          </SheetFooter>
+          <SheetFooter>{/* Footer actions if needed in the future */}</SheetFooter>
         </SheetContent>
       </Sheet>
     </div>

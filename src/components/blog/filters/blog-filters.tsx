@@ -1,15 +1,8 @@
-"use client";
+'use client';
 
-import {
-  Clock,
-  TrendingUp,
-  Calendar,
-  FolderOpen,
-  Tags,
-  ArrowUpDown,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { Clock, TrendingUp, Calendar, FolderOpen, Tags, ArrowUpDown } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { X } from 'lucide-react';
 import {
   useFilterParams,
   useFilterSearch,
@@ -18,7 +11,7 @@ import {
   FilterBadges,
   FilterClearButton,
   type FilterOption,
-} from "@/components/common";
+} from '@/components/common';
 
 interface BlogFiltersProps {
   selectedCategory: string;
@@ -33,25 +26,23 @@ interface BlogFiltersProps {
 }
 
 const READING_TIME_OPTIONS: FilterOption[] = [
-  { value: "quick", label: "<5 min" },
-  { value: "medium", label: "5-15 min" },
-  { value: "deep", label: ">15 min" },
+  { value: 'quick', label: '<5 min' },
+  { value: 'medium', label: '5-15 min' },
+  { value: 'deep', label: '>15 min' },
 ];
 
 const SORT_OPTIONS: FilterOption[] = [
-  { value: "newest", label: "Newest" },
-  { value: "popular", label: "Popular" },
-  { value: "oldest", label: "Oldest" },
-  { value: "archived", label: "Archived" },
-  ...(process.env.NODE_ENV === "development"
-    ? [{ value: "drafts", label: "Drafts" }]
-    : []),
+  { value: 'popular', label: 'Popular' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'archived', label: 'Archived' },
+  ...(process.env.NODE_ENV === 'development' ? [{ value: 'drafts', label: 'Drafts' }] : []),
 ];
 
 const DATE_RANGE_OPTIONS: FilterOption[] = [
-  { value: "30d", label: "30 days" },
-  { value: "90d", label: "90 days" },
-  { value: "year", label: "This year" },
+  { value: '30d', label: '30 days' },
+  { value: '90d', label: '90 days' },
+  { value: 'year', label: 'This year' },
 ];
 
 /**
@@ -84,15 +75,15 @@ export function BlogFilters({
   categoryDisplayMap,
   tagList,
   query,
-  sortBy = "newest",
-  dateRange = "all",
+  sortBy = 'newest',
+  dateRange = 'all',
 }: BlogFiltersProps) {
   const { updateParam, toggleMultiParam, clearAll } = useFilterParams({
-    basePath: "/blog",
+    basePath: '/blog',
   });
   const { searchValue, setSearchValue } = useFilterSearch({
     query,
-    basePath: "/blog",
+    basePath: '/blog',
   });
 
   const { hasActive, count } = useActiveFilters(
@@ -105,17 +96,15 @@ export function BlogFilters({
       dateRange,
     },
     {
-      sortBy: "newest",
-      dateRange: "all",
+      sortBy: 'newest',
+      dateRange: 'all',
     }
   );
 
   // Category uses single-select with lowercase URL values
-  const setCategory = (category: string) =>
-    updateParam("category", category, "");
+  const setCategory = (category: string) => updateParam('category', category, '');
   // Tags use lowercase for URL matching
-  const toggleTag = (tag: string) =>
-    toggleMultiParam("tag", tag.toLowerCase(), selectedTags);
+  const toggleTag = (tag: string) => toggleMultiParam('tag', tag.toLowerCase(), selectedTags);
 
   // Badge filter helper - click to toggle
   const renderFilterBadges = (
@@ -137,14 +126,10 @@ export function BlogFilters({
           return (
             <Badge
               key={option.value}
-              variant={isSelected ? "default" : "outline"}
+              variant={isSelected ? 'default' : 'outline'}
               className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors select-none text-xs"
               onClick={() =>
-                updateParam(
-                  paramName,
-                  isSelected ? defaultValue : option.value,
-                  defaultValue
-                )
+                updateParam(paramName, isSelected ? defaultValue : option.value, defaultValue)
               }
             >
               {option.label}
@@ -171,36 +156,32 @@ export function BlogFilters({
         {renderFilterBadges(
           SORT_OPTIONS,
           sortBy,
-          "newest",
-          "sortBy",
+          'newest',
+          'sortBy',
           <ArrowUpDown className="h-4 w-4" />,
-          "Sort"
+          'Sort'
         )}
 
         {renderFilterBadges(
           DATE_RANGE_OPTIONS,
           dateRange,
-          "all",
-          "dateRange",
+          'all',
+          'dateRange',
           <Calendar className="h-4 w-4" />,
-          "Date"
+          'Date'
         )}
 
         {renderFilterBadges(
           READING_TIME_OPTIONS,
-          readingTime || "all",
-          "all",
-          "readingTime",
+          readingTime || 'all',
+          'all',
+          'readingTime',
           <Clock className="h-4 w-4" />,
-          "Read"
+          'Read'
         )}
 
         {/* Clear All Button */}
-        <FilterClearButton
-          onClear={clearAll}
-          count={count}
-          visible={hasActive}
-        />
+        <FilterClearButton onClear={clearAll} count={count} visible={hasActive} />
       </div>
 
       {/* Category Badges - Primary classification */}
@@ -209,7 +190,7 @@ export function BlogFilters({
           <FilterBadges
             items={categoryList}
             selected={selectedCategory ? [selectedCategory] : []}
-            onToggle={(cat) => setCategory(selectedCategory === cat ? "" : cat)}
+            onToggle={(cat) => setCategory(selectedCategory === cat ? '' : cat)}
             icon={FolderOpen}
             label="Categories"
             displayMap={categoryDisplayMap}

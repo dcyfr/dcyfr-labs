@@ -13,6 +13,7 @@ This document serves as the **single source of truth** for discovering, routing,
 **Why?** GitHub Copilot only discovers agents in `.github/agents/` at the **workspace root**. Agents in subdirectories (like `./dcyfr-labs/.github/agents/DCYFR.agent.md`) are invisible at workspace scope.
 
 **Impact:**
+
 - ❌ DCYFR Agent (560 lines) not available at workspace level
 - ❌ 60+ Claude specialized agents inaccessible
 - ❌ 23+ skills (design tokens, TDD, Inngest patterns) not available
@@ -20,17 +21,20 @@ This document serves as the **single source of truth** for discovering, routing,
 - ⚠️ Design token enforcement is manual
 
 **Solution:** For production work in dcyfr-labs requiring full agent support:
+
 1. **Open `dcyfr-labs/` as a dedicated VS Code workspace** ← Recommended
 2. Full DCYFR Agent with proactive enforcement activates
 3. All skills, MCPs, and quality gates available
 4. Return to multi-repo workspace for cross-package coordination
 
 **Workspace-Level Guidance:**
+
 - See [`.github/copilot-workspace-instructions.md`](../.github/copilot-workspace-instructions.md) for cross-repo patterns
 - See [`AI_AGENT_CONFIGURATION_ANALYSIS.md`](../AI_AGENT_CONFIGURATION_ANALYSIS.md) for detailed analysis and roadmap
 - MCP servers auto-synced via `scripts/sync-mcp-workspace.mjs`
 
 **AI Capability Catalogs:**
+
 - **[Skills Catalog](../.ai/skills/README.md)** - 23 specialized skills (design tokens, TDD, architecture, React, testing)
 - **[Agents Catalog](../.ai/agents/CATALOG.md)** - 60+ specialized agents (security, performance, documentation, DevOps)
 - **[MCP Registry](../.ai/mcp/REGISTRY.md)** - 17 MCP servers (GitHub, Vercel, Sentry, testing, custom DCYFR tools)
@@ -348,11 +352,11 @@ npm run check               # Type + lint check
 
 #### Workflows Directory (.opencode/workflows/)
 
-| File                                                   | Lines | Covers                                                                            |
-| ------------------------------------------------------ | ----- | --------------------------------------------------------------------------------- |
+| File                                                   | Lines | Covers                                                                           |
+| ------------------------------------------------------ | ----- | -------------------------------------------------------------------------------- |
 | [SESSION_HANDOFF.md](workflows/SESSION_HANDOFF.md)     | 400+  | Claude ↔ OpenCode switching, session state schema v2.0, git workflow integration |
-| [COST_OPTIMIZATION.md](workflows/COST_OPTIMIZATION.md) | 450+  | 80/20 strategy (80% free, 20% premium), monthly cost tracking, ROI analysis       |
-| [TROUBLESHOOTING.md](workflows/TROUBLESHOOTING.md)     | 600+  | Provider-specific issues (GitHub Copilot auth, rate limits, validation failures)  |
+| [COST_OPTIMIZATION.md](workflows/COST_OPTIMIZATION.md) | 450+  | 80/20 strategy (80% free, 20% premium), monthly cost tracking, ROI analysis      |
+| [TROUBLESHOOTING.md](workflows/TROUBLESHOOTING.md)     | 600+  | Provider-specific issues (GitHub Copilot auth, rate limits, validation failures) |
 
 #### Scripts Directory (.opencode/scripts/)
 
@@ -1204,6 +1208,22 @@ git status --ignored | grep -E "\.(claude|opencode|private)"
 ---
 
 ## 📋 Recent Updates
+
+### January 30, 2026
+
+- ✅ **Implemented Production Metrics Sync System**
+  - Created `scripts/sync-production-metrics.mjs` - Automatic sync from production to preview Redis
+  - Integrated into build process: `npm run build` now syncs metrics automatically
+  - Added 3 new npm scripts: `sync:metrics`, `sync:metrics:dry-run`, `sync:metrics:quick`
+  - Created comprehensive documentation: `docs/operations/PRODUCTION_METRICS_SYNC.md` (385 lines)
+  - Added integration tests: `tests/integration/sync-production-metrics.test.ts` (238 lines, 9 tests passing)
+  - Created GitHub Actions workflow: `.github/workflows/sync-production-metrics.yml` (daily scheduled sync)
+  - **Key features:** One-way sync, automatic key prefixing (`preview:`), comprehensive security exclusions
+  - **Synced data:** Analytics milestones, trending posts, page views, engagement metrics
+  - **Excluded data:** Sessions, API tokens, rate limits, IP blocks (security-sensitive)
+  - **Performance:** Quick mode ~1-2s (4 keys), full mode ~5-15s (50-200 keys)
+  - Updated `.github/copilot-instructions.md` with sync documentation
+  - See `docs/operations/private/production-metrics-sync-implementation-2026-01-30.md` for complete implementation details
 
 ### January 24, 2026
 

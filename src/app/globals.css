@@ -153,12 +153,12 @@
      ANIMATION SYSTEM
      ============================================================================
      Philosophy: Performance, Browser Support, Simplicity
-     
+
      1. Use CSS custom properties for timing (single source of truth)
      2. Prefer transform + opacity (GPU-accelerated, 60fps)
      3. CSS handles reduced-motion globally (no JS checks needed)
      4. Utility classes for common patterns
-     
+
      @see /docs/ai/design-system.md for usage guidelines
      ============================================================================ */
 
@@ -189,7 +189,7 @@
 /* Neutral - ui.shadcn.com/docs/theming#basec-colors */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.985 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -358,7 +358,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.125 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -555,11 +555,11 @@
    P3 WIDE-GAMUT COLOR SUPPORT
    ============================================================================
    For devices with P3 displays (modern Apple devices, OLED screens)
-   
+
    P3 color space allows for more vibrant, saturated colors compared to sRGB.
    These values use slightly higher chroma (0.20-0.25) for richer colors on
    capable displays while maintaining the same hue structure.
-   
+
    Note: Base theme colors (--background, --foreground, etc.) remain neutral
    ============================================================================ */
 
@@ -849,11 +849,11 @@
 
   /**
    * Smooth theme transitions using View Transitions API with CSS fallback.
-   * 
+   *
    * Strategy:
    * 1. View Transitions API (modern browsers) - Handles everything automatically
    * 2. CSS transitions (fallback) - Selective transitions on key elements only
-   * 
+   *
    * This prevents flickering while providing smooth theme changes.
    */
 

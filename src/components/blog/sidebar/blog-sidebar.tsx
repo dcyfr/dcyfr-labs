@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
-import { SPACING } from "@/lib/design-tokens";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { SPACING } from '@/lib/design-tokens';
 import { useBlogKeyboard } from '@/components/blog';
-import { SidebarFilters } from "./sidebar-filters";
-import { SidebarCategories } from "./sidebar-categories";
-import { SidebarTopics } from "./sidebar-topics";
-import { SidebarAuthors } from "./sidebar-authors";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { SidebarFilters } from './sidebar-filters';
+import { SidebarCategories } from './sidebar-categories';
+import { SidebarTopics } from './sidebar-topics';
+import { SidebarAuthors } from './sidebar-authors';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface BlogSidebarProps {
   selectedCategory: string;
@@ -20,6 +20,8 @@ interface BlogSidebarProps {
   tagList: Array<{ tag: string; count: number }>;
   authors: Array<{ id: string; name: string; avatarImagePath?: string }>;
   selectedAuthor: string;
+  showArchived: boolean;
+  showDrafts: boolean;
   query: string;
   sortBy: string;
   dateRange: string;
@@ -31,11 +33,11 @@ export type { BlogSidebarProps };
 
 /**
  * Blog Sidebar Component
- * 
+ *
  * Sticky sidebar for blog filtering and navigation on desktop screens.
  * Provides search, view toggle, sorting, filtering, category and tag selection.
  * Collapses to top section on mobile/tablet.
- * 
+ *
  * Modularized into separate components:
  * - SidebarSearch: Search input with results count
  * - SidebarFilters: Sort, date range, reading time filters
@@ -51,6 +53,8 @@ export function BlogSidebar({
   tagList,
   authors,
   selectedAuthor,
+  showArchived,
+  showDrafts,
   query,
   sortBy,
   dateRange,
@@ -70,40 +74,39 @@ export function BlogSidebar({
 
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    
-    if (!value || value === "" || value === "all" || value === "newest") {
+
+    if (!value || value === '' || value === 'all' || value === 'newest') {
       params.delete(key);
     } else {
       params.set(key, value);
     }
-    
+
     // Reset to page 1 when filters change
-    if (key !== "page") {
-      params.delete("page");
+    if (key !== 'page') {
+      params.delete('page');
     }
-    
+
     startTransition(() => {
       router.push(`/blog?${params.toString()}`, { scroll: false });
     });
   };
-
 
   const toggleTag = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString());
     const lowerTag = tag.toLowerCase();
     const currentTags = selectedTags;
     const newTags = currentTags.includes(lowerTag)
-      ? currentTags.filter(t => t !== lowerTag)
+      ? currentTags.filter((t) => t !== lowerTag)
       : [...currentTags, lowerTag];
-    
+
     if (newTags.length === 0) {
-      params.delete("tag");
+      params.delete('tag');
     } else {
-      params.set("tag", newTags.join(","));
+      params.set('tag', newTags.join(','));
     }
-    
-    params.delete("page");
-    
+
+    params.delete('page');
+
     startTransition(() => {
       router.push(`/blog?${params.toString()}`, { scroll: false });
     });
@@ -111,15 +114,15 @@ export function BlogSidebar({
 
   const setCategory = (category: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     if (!category || category === selectedCategory) {
-      params.delete("category");
+      params.delete('category');
     } else {
-      params.set("category", category);
+      params.set('category', category);
     }
-    
-    params.delete("page");
-    
+
+    params.delete('page');
+
     startTransition(() => {
       router.push(`/blog?${params.toString()}`, { scroll: false });
     });
@@ -127,15 +130,15 @@ export function BlogSidebar({
 
   const setAuthor = (authorId: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     if (!authorId || authorId === selectedAuthor) {
-      params.delete("author");
+      params.delete('author');
     } else {
-      params.set("author", authorId);
+      params.set('author', authorId);
     }
-    
-    params.delete("page");
-    
+
+    params.delete('page');
+
     startTransition(() => {
       router.push(`/blog?${params.toString()}`, { scroll: false });
     });
@@ -143,31 +146,33 @@ export function BlogSidebar({
 
   const clearAllFilters = () => {
     startTransition(() => {
-      router.push("/blog", { scroll: false });
+      router.push('/blog', { scroll: false });
     });
   };
 
   const activeFilterCount = [
-    selectedCategory && "category",
-    selectedTags.length > 0 && "tags",
-    readingTime && "readingTime",
-    sortBy !== "newest" && "sort",
-    dateRange !== "all" && "date",
-    selectedAuthor && "author",
+    selectedCategory && 'category',
+    selectedTags.length > 0 && 'tags',
+    readingTime && 'readingTime',
+    sortBy !== 'newest' && 'sort',
+    dateRange !== 'all' && 'date',
+    selectedAuthor && 'author',
+    showArchived && 'archived',
+    showDrafts && 'drafts',
   ].filter(Boolean).length;
 
-  const toggleSection = (section: "filters" | "categories" | "topics" | "authors") => {
-    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  const toggleSection = (section: 'filters' | 'categories' | 'topics' | 'authors') => {
+    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   return (
-    <aside className={cn("flex flex-col", SPACING.subsection)}>
+    <aside className={cn('flex flex-col', SPACING.subsection)}>
       {/* Search Section */}
       <SidebarAuthors
         authors={authors}
         selectedAuthor={selectedAuthor}
         isExpanded={expandedSections.authors}
-        onToggle={() => toggleSection("authors")}
+        onToggle={() => toggleSection('authors')}
         onAuthorSelect={setAuthor}
       />
 
@@ -178,11 +183,15 @@ export function BlogSidebar({
         sortBy={sortBy}
         dateRange={dateRange}
         readingTime={readingTime}
+        showArchived={showArchived}
+        showDrafts={showDrafts}
         isExpanded={expandedSections.filters}
-        onToggle={() => toggleSection("filters")}
-        onSortChange={(value) => updateParam("sortBy", value)}
-        onDateRangeChange={(value) => updateParam("dateRange", value)}
-        onReadingTimeChange={(value) => updateParam("readingTime", value)}
+        onToggle={() => toggleSection('filters')}
+        onSortChange={(value) => updateParam('sortBy', value)}
+        onDateRangeChange={(value) => updateParam('dateRange', value)}
+        onReadingTimeChange={(value) => updateParam('readingTime', value)}
+        onShowArchivedChange={(value) => updateParam('showArchived', value ? 'true' : '')}
+        onShowDraftsChange={(value) => updateParam('showDrafts', value ? 'true' : '')}
       />
 
       <div className="border-t border-border/50" />
@@ -193,7 +202,7 @@ export function BlogSidebar({
         categoryDisplayMap={categoryDisplayMap}
         selectedCategory={selectedCategory}
         isExpanded={expandedSections.categories}
-        onToggle={() => toggleSection("categories")}
+        onToggle={() => toggleSection('categories')}
         onCategorySelect={setCategory}
       />
 
@@ -204,7 +213,7 @@ export function BlogSidebar({
         tagList={tagList}
         selectedTags={selectedTags}
         isExpanded={expandedSections.topics}
-        onToggle={() => toggleSection("topics")}
+        onToggle={() => toggleSection('topics')}
         onTagToggle={toggleTag}
       />
     </aside>

@@ -9,14 +9,15 @@
  * the post list and pagination as the data loads.
  */
 
-import { Suspense } from "react";
-import type { ArchiveData } from "@/lib/archive";
-import type { Post } from "@/data/posts";
-import type { PostCategory } from "@/lib/post-categories";
-import { getMultiplePostViews } from "@/lib/views.server";
-import { calculateActiveFilterCount } from "@/lib/blog.server";
-import { SPACING } from "@/lib/design-tokens";
-import { ArchivePagination } from "@/components/layouts";
+import { Suspense } from 'react';
+import type { ArchiveData } from '@/lib/archive';
+import type { Post } from '@/data/posts';
+import type { PostCategory } from '@/lib/post-categories';
+import { getMultiplePostViews } from '@/lib/views.server';
+import { getBulkEngagementStats } from '@/lib/engagement-analytics';
+import { calculateActiveFilterCount } from '@/lib/blog.server';
+import { SPACING } from '@/lib/design-tokens';
+import { ArchivePagination } from '@/components/layouts';
 import {
   PostList,
   PostCategorySection,
@@ -24,7 +25,7 @@ import {
   FloatingFilterFab,
   HorizontalFilterChips,
   LayoutToggle,
-} from "@/components/blog";
+} from '@/components/blog';
 
 interface DynamicBlogContentProps {
   /** Archive data with filtered/paginated posts */
@@ -54,7 +55,7 @@ interface DynamicBlogContentProps {
   /** Date range filter */
   dateRange: string;
   /** Post layout mode */
-  layout: "grid" | "list" | "magazine" | "compact" | "grouped";
+  layout: 'grid' | 'list' | 'magazine' | 'compact' | 'grouped';
   /** Whether active filters are applied */
   hasActiveFilters: boolean;
   /** Grouped categories (only when layout=grouped) */
@@ -84,18 +85,31 @@ async function DynamicBlogContentImpl({
   groupedCategories,
 }: DynamicBlogContentProps) {
   // Fetch view counts for all filtered posts (this is the async operation that gets streamed)
-  const postIds = sortedArchiveData.allFilteredItems.map(
-    (post: Post) => post.id
-  );
+  const postIds = sortedArchiveData.allFilteredItems.map((post: Post) => post.id);
   const viewCounts = await getMultiplePostViews(postIds);
 
-  // Apply sort by popularity if requested (after view counts are loaded)
+  // Fetch engagement stats (likes & bookmarks) for popularity calculation
+  const engagementItems = sortedArchiveData.allFilteredItems.map((post: Post) => ({
+    contentType: 'post' as const,
+    slug: post.id,
+  }));
+  const engagementStats = await getBulkEngagementStats(engagementItems);
+
+  // Apply sort by popularity if requested (after view counts and engagement are loaded)
+  // Popularity formula: views + (likes × 3) + (bookmarks × 5)
+  // Weighted to value engagement over passive views
   let postsToDisplay = mainListPosts;
-  if (sortBy === "popular") {
+  if (sortBy === 'popular') {
     postsToDisplay = [...mainListPosts].sort((a: Post, b: Post) => {
       const aViews = viewCounts.get(a.id) || 0;
       const bViews = viewCounts.get(b.id) || 0;
-      return bViews - aViews; // Descending order
+      const aEngagement = engagementStats.get(a.id);
+      const bEngagement = engagementStats.get(b.id);
+
+      const aScore = aViews + (aEngagement?.likes || 0) * 3 + (aEngagement?.bookmarks || 0) * 5;
+      const bScore = bViews + (bEngagement?.likes || 0) * 3 + (bEngagement?.bookmarks || 0) * 5;
+
+      return bScore - aScore; // Descending order
     });
   }
 
@@ -111,7 +125,7 @@ async function DynamicBlogContentImpl({
 
   // Feature flag: Horizontal filter chips can be toggled off for now to simplify mobile UI
   const showHorizontalFilterChips =
-    process.env.NEXT_PUBLIC_FEATURE_HORIZONTAL_FILTER_CHIPS === "true";
+    process.env.NEXT_PUBLIC_FEATURE_HORIZONTAL_FILTER_CHIPS === 'true';
 
   return (
     <div id="blog-posts" className="w-full">
@@ -150,13 +164,10 @@ async function DynamicBlogContentImpl({
         </div>
 
         {/* Floating filter FAB for mobile */}
-        <FloatingFilterFab
-          activeFilterCount={activeFilterCount}
-          hasFilters={hasActiveFilters}
-        />
+        <FloatingFilterFab activeFilterCount={activeFilterCount} hasFilters={hasActiveFilters} />
 
         {/* Post list or grouped view */}
-        {layout === "grouped" && groupedCategories ? (
+        {layout === 'grouped' && groupedCategories ? (
           <div className={SPACING.subsection}>
             {groupedCategories.map(([category, posts]) => (
               <PostCategorySection
@@ -177,7 +188,7 @@ async function DynamicBlogContentImpl({
             latestSlug={latestSlug}
             hottestSlug={hottestSlug}
             titleLevel="h2"
-            layout={layout as "grid" | "list" | "magazine" | "compact"}
+            layout={layout as 'grid' | 'list' | 'magazine' | 'compact'}
             viewCounts={viewCounts}
             hasActiveFilters={hasActiveFilters}
             emptyMessage="No posts found. Try adjusting your search or filters."
@@ -192,9 +203,7 @@ async function DynamicBlogContentImpl({
               currentPage={sortedArchiveData.currentPage}
               totalPages={sortedArchiveData.totalPages}
               hasPrevPage={sortedArchiveData.currentPage > 1}
-              hasNextPage={
-                sortedArchiveData.currentPage < sortedArchiveData.totalPages
-              }
+              hasNextPage={sortedArchiveData.currentPage < sortedArchiveData.totalPages}
             />
           </div>
         )}
