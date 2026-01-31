@@ -1,34 +1,52 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonHeading } from "@/components/ui/skeleton-primitives";
+import { SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
 
 /**
+ * GitHub Heatmap Skeleton
+ *
+ * This component uses design-token-aware patterns to ensure
+ * dimensions stay in sync with actual content automatically.
+ *
+ * ⚠️ SYNC REQUIRED WITH: GitHub heatmap and contribution statistics components
+ *
  * Skeleton loader for GitHub heatmap component.
- * Displays while contribution data is loading.
+ * - Spacing: SPACING_VALUES for padding/gaps/margins
+ * - Animation: ANIMATIONS.stagger.fast (50ms between stat cards)
  *
  * Matches the structure of GitHubHeatmap component:
  * - Header with title and username link
  * - Statistics grid (5 stat cards)
  * - Contribution heatmap grid
  * - Footer with total contributions and date range
+ *
+ * Last sync: 2026-01-31
+ *
+ * @see /docs/components/skeleton-sync-strategy.md
  */
 export function GitHubHeatmapSkeleton() {
   return (
-    <Card className="p-6 min-h-[400px]">
-      <div className="space-y-4">
+    <Card className={`p-${SPACING_VALUES.lg} min-h-100`}>
+      <div className={`space-y-${SPACING_VALUES.md}`}>
         {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <Skeleton className="h-6 w-32" /> {/* "GitHub Activity" title */}
+        <div className={`flex items-center justify-between flex-wrap gap-${SPACING_VALUES.sm}`}>
+          <SkeletonHeading level="h3" width="w-32" />
           <Skeleton className="h-4 w-24" /> {/* @username link */}
         </div>
 
         {/* Statistics Grid - 5 stat cards */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className={`grid grid-cols-2 md:grid-cols-5 gap-${SPACING_VALUES.sm}`}>
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="bg-muted/50 rounded-lg p-3 border border-border"
+              className={`bg-muted/50 rounded-lg p-${SPACING_VALUES.sm} border border-border`}
+              style={{
+                animationDelay: `${ANIMATIONS.stagger.fast * i}ms`,
+                animation: ANIMATIONS.types.fadeIn,
+              }}
             >
-              <Skeleton className="h-4 w-20 mb-2" /> {/* Stat label */}
+              <Skeleton className={`h-4 w-20 mb-${SPACING_VALUES.sm}`} /> {/* Stat label */}
               <Skeleton className="h-8 w-12 mb-1" /> {/* Stat value */}
               <Skeleton className="h-3 w-8" /> {/* "days" or unit */}
             </div>
@@ -49,7 +67,7 @@ export function GitHubHeatmapSkeleton() {
         </div>
 
         {/* Footer with contributions summary */}
-        <div className="flex items-center justify-between flex-wrap gap-2 text-sm">
+        <div className={`flex items-center justify-between flex-wrap gap-${SPACING_VALUES.sm} text-sm`}>
           <Skeleton className="h-4 w-56" />{" "}
           {/* "X contributions in the last year" */}
           <Skeleton className="h-4 w-32" /> {/* Date range */}

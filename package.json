@@ -25,6 +25,7 @@
     "validate:all": "node scripts/validate-cli.mjs all",
     "validate:tlp": "node scripts/validate-tlp-compliance.mjs",
     "validate:doc-location": "node scripts/validate-doc-location.mjs",
+    "validate:skeletons": "node scripts/validate-skeleton-sync.mjs",
     "docs:add-tlp-markers": "node scripts/add-tlp-markers.mjs",
     "docs:add-tlp-markers:dry-run": "node scripts/add-tlp-markers.mjs --dry-run",
     "docs:fix-private-markers": "node scripts/fix-private-tlp-markers.mjs",

@@ -66,10 +66,51 @@ const redis = new Redis({
 });
 
 // ============================================================================
+// VALIDATION HELPERS
+// ============================================================================
+
+function validateGitHubData(data) {
+  if (!data || typeof data !== 'object') {
+    throw new Error('Data must be an object');
+  }
+  if (!Array.isArray(data.contributions)) {
+    throw new Error('Missing or invalid contributions array');
+  }
+  if (typeof data.totalContributions !== 'number') {
+    throw new Error('Missing or invalid totalContributions');
+  }
+  if (data.contributions.length === 0) {
+    throw new Error('Contributions array is empty');
+  }
+  // Validate structure of first contribution
+  const sample = data.contributions[0];
+  if (!sample.date || typeof sample.count !== 'number') {
+    throw new Error('Invalid contribution structure');
+  }
+  return true;
+}
+
+function validateCredlyData(data) {
+  if (!data || typeof data !== 'object') {
+    throw new Error('Data must be an object');
+  }
+  if (!Array.isArray(data.badges)) {
+    throw new Error('Missing or invalid badges array');
+  }
+  if (typeof data.count !== 'number') {
+    throw new Error('Missing or invalid count');
+  }
+  if (data.count !== data.badges.length) {
+    throw new Error('Count mismatch with badges array length');
+  }
+  return true;
+}
+
+// ============================================================================
 // GITHUB CONTRIBUTIONS
 // ============================================================================
 
-async function fetchGitHubContributions() {
+async function fetchGitHubContributions(retries = 3) {
   console.log('[Build Cache] 📊 Fetching GitHub contributions...');
 
   // Get date range for last year
@@ -105,121 +146,178 @@ async function fetchGitHubContributions() {
     console.warn('[Build Cache] ⚠️  No GITHUB_TOKEN - API rate limits may apply');
   }
 
-  try {
-    const response = await fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        query,
-        variables: {
-          username: GITHUB_USERNAME,
-          from: from.toISOString(),
-          to: to.toISOString(),
-        },
-      }),
-    });
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      console.log(`[Build Cache] Attempt ${attempt}/${retries}...`);
 
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
+      const response = await fetch('https://api.github.com/graphql', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          query,
+          variables: {
+            username: GITHUB_USERNAME,
+            from: from.toISOString(),
+            to: to.toISOString(),
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data.errors) {
+        throw new Error(`GraphQL error: ${JSON.stringify(data.errors)}`);
+      }
+
+      const calendar = data.data?.user?.contributionsCollection?.contributionCalendar;
+
+      if (!calendar) {
+        throw new Error('Invalid response structure from GitHub API');
+      }
+
+      const contributions = calendar.weeks.flatMap((week) =>
+        week.contributionDays.map((day) => ({
+          date: day.date,
+          count: day.contributionCount,
+        }))
+      );
+
+      const cacheData = {
+        contributions,
+        source: 'github-api',
+        totalContributions: calendar.totalContributions,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      // Validate before writing
+      try {
+        validateGitHubData(cacheData);
+      } catch (validationError) {
+        throw new Error(`Validation failed: ${validationError.message}`);
+      }
+
+      // Write to Redis
+      const cacheKey = `${keyPrefix}github:contributions:dcyfr`;
+      const jsonString = JSON.stringify(cacheData);
+
+      // Verify JSON is valid before writing
+      JSON.parse(jsonString); // Will throw if invalid
+
+      await redis.setex(cacheKey, CACHE_DURATION, jsonString);
+
+      console.log('[Build Cache] ✅ GitHub data cached', {
+        totalContributions: cacheData.totalContributions,
+        contributionsCount: contributions.length,
+        cacheKey,
+      });
+
+      return true;
+    } catch (error) {
+      console.error(`[Build Cache] ❌ Attempt ${attempt} failed:`, error.message);
+
+      if (attempt < retries) {
+        const delay = attempt * 1000; // Exponential backoff: 1s, 2s, 3s
+        console.log(`[Build Cache] ⏳ Retrying in ${delay}ms...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      } else {
+        console.error('[Build Cache] ❌ All retries exhausted for GitHub data');
+        return false;
+      }
     }
-
-    const data = await response.json();
-
-    if (data.errors) {
-      throw new Error(`GraphQL error: ${JSON.stringify(data.errors)}`);
-    }
-
-    const calendar = data.data?.user?.contributionsCollection?.contributionCalendar;
-
-    if (!calendar) {
-      throw new Error('Invalid response structure from GitHub API');
-    }
-
-    const contributions = calendar.weeks.flatMap((week) =>
-      week.contributionDays.map((day) => ({
-        date: day.date,
-        count: day.contributionCount,
-      }))
-    );
-
-    const cacheData = {
-      contributions,
-      source: 'github-api',
-      totalContributions: calendar.totalContributions,
-      lastUpdated: new Date().toISOString(),
-    };
-
-    // Write to Redis
-    const cacheKey = `${keyPrefix}github:contributions:dcyfr`;
-    await redis.setex(cacheKey, CACHE_DURATION, JSON.stringify(cacheData));
-
-    console.log('[Build Cache] ✅ GitHub data cached', {
-      totalContributions: cacheData.totalContributions,
-      cacheKey,
-    });
-
-    return true;
-  } catch (error) {
-    console.error('[Build Cache] ❌ Failed to fetch GitHub data:', error.message);
-    return false;
   }
+
+  return false;
 }
 
 // ============================================================================
 // CREDLY BADGES
 // ============================================================================
 
-async function fetchCredlyBadges() {
+async function fetchCredlyBadges(retries = 3) {
   console.log('[Build Cache] 🎓 Fetching Credly badges...');
 
-  try {
-    const response = await fetch(`https://www.credly.com/users/${GITHUB_USERNAME}/badges.json`);
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      console.log(`[Build Cache] Attempt ${attempt}/${retries}...`);
 
-    if (!response.ok) {
-      throw new Error(`Credly API error: ${response.status}`);
-    }
+      const response = await fetch(`https://www.credly.com/users/${GITHUB_USERNAME}/badges.json`);
 
-    const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`Credly API error: ${response.status} ${response.statusText}`);
+      }
 
-    if (!data.data || !Array.isArray(data.data)) {
-      throw new Error('Invalid Credly response structure');
-    }
+      const data = await response.json();
 
-    const badges = data.data;
-    const cacheData = {
-      badges,
-      total_count: badges.length,
-      count: badges.length,
-    };
+      if (!data.data || !Array.isArray(data.data)) {
+        throw new Error('Invalid Credly response structure');
+      }
 
-    // Cache multiple configurations (all, top 10, top 3)
-    const configs = [
-      { limit: null, key: 'all' },
-      { limit: 10, key: '10' },
-      { limit: 3, key: '3' },
-    ];
-
-    for (const config of configs) {
-      const limitedData = {
-        ...cacheData,
-        badges: config.limit ? badges.slice(0, config.limit) : badges,
-        count: config.limit ? Math.min(config.limit, badges.length) : badges.length,
+      const badges = data.data;
+      const cacheData = {
+        badges,
+        total_count: badges.length,
+        count: badges.length,
       };
 
-      const cacheKey = `${keyPrefix}credly:badges:${GITHUB_USERNAME}:${config.key}`;
-      await redis.setex(cacheKey, CACHE_DURATION, JSON.stringify(limitedData));
+      // Validate base data
+      try {
+        validateCredlyData(cacheData);
+      } catch (validationError) {
+        throw new Error(`Validation failed: ${validationError.message}`);
+      }
+
+      // Cache multiple configurations (all, top 10, top 3)
+      const configs = [
+        { limit: null, key: 'all' },
+        { limit: 10, key: '10' },
+        { limit: 3, key: '3' },
+      ];
+
+      for (const config of configs) {
+        const limitedData = {
+          ...cacheData,
+          badges: config.limit ? badges.slice(0, config.limit) : badges,
+          count: config.limit ? Math.min(config.limit, badges.length) : badges.length,
+        };
+
+        // Validate limited data
+        validateCredlyData(limitedData);
+
+        const cacheKey = `${keyPrefix}credly:badges:${GITHUB_USERNAME}:${config.key}`;
+        const jsonString = JSON.stringify(limitedData);
+
+        // Verify JSON is valid before writing
+        JSON.parse(jsonString); // Will throw if invalid
+
+        await redis.setex(cacheKey, CACHE_DURATION, jsonString);
+        console.log(`[Build Cache] ✅ Cached ${config.key}: ${limitedData.count} badges`);
+      }
+
+      console.log('[Build Cache] ✅ Credly badges cached', {
+        totalBadges: badges.length,
+        configurations: configs.length,
+      });
+
+      return true;
+    } catch (error) {
+      console.error(`[Build Cache] ❌ Attempt ${attempt} failed:`, error.message);
+
+      if (attempt < retries) {
+        const delay = attempt * 1000; // Exponential backoff: 1s, 2s, 3s
+        console.log(`[Build Cache] ⏳ Retrying in ${delay}ms...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      } else {
+        console.error('[Build Cache] ❌ All retries exhausted for Credly badges');
+        return false;
+      }
     }
-
-    console.log('[Build Cache] ✅ Credly badges cached', {
-      totalBadges: badges.length,
-      configurations: configs.length,
-    });
-
-    return true;
-  } catch (error) {
-    console.error('[Build Cache] ❌ Failed to fetch Credly badges:', error.message);
-    return false;
   }
+
+  return false;
 }
 
 // ============================================================================
@@ -246,11 +344,22 @@ async function main() {
     credly: credlySuccess ? '✅ Success' : '❌ Failed',
   });
 
+  // In production, we MUST have valid cache data
+  // In preview/dev, we can continue with warnings
   if (!githubSuccess || !credlySuccess) {
-    console.warn('[Build Cache] ⚠️  Some cache operations failed');
-    console.warn('[Build Cache]    Components will show empty state or errors');
-    // Don't fail the build - graceful degradation
-    process.exit(0);
+    console.error('[Build Cache] ❌ Cache population failed!');
+
+    if (isProduction) {
+      console.error('[Build Cache] 🚨 PRODUCTION BUILD BLOCKED');
+      console.error('[Build Cache]    Cannot deploy without valid cache data');
+      console.error('[Build Cache]    This prevents corrupted data in production');
+      process.exit(1); // Fail the build in production
+    } else {
+      console.warn('[Build Cache] ⚠️  Preview/dev build continuing with warnings');
+      console.warn('[Build Cache]    Components may show empty state or errors');
+      console.warn('[Build Cache]    Fix cache issues before deploying to production');
+      process.exit(0); // Allow preview/dev builds to continue
+    }
   }
 
   console.log('[Build Cache] ✅ Build cache population complete');

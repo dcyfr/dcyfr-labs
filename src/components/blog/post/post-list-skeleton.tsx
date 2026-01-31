@@ -5,8 +5,10 @@ import {
   SkeletonText,
   SkeletonMetadata,
   SkeletonBadges,
+  SkeletonImage,
 } from '@/components/ui/skeleton-primitives';
-import { SPACING } from '@/lib/design-tokens';
+import { SPACING, SPACING_VALUES, ANIMATIONS, ARCHIVE_CARD_VARIANTS } from '@/lib/design-tokens';
+import { cn } from '@/lib/utils';
 
 /**
  * Skeleton loader for blog post list.
@@ -15,13 +17,23 @@ import { SPACING } from '@/lib/design-tokens';
  * This component uses design-token-aware skeleton primitives to ensure
  * dimensions stay in sync with actual content automatically.
  *
- * ⚠️ STRUCTURE SYNC: src/components/blog/post/post-list.tsx
+ * ⚠️ SYNC REQUIRED WITH: src/components/blog/post/modern-post-card.tsx
+ *
+ * Structure must match ModernPostCard:
+ * - Container: SPACING.postList vertical spacing
+ * - Padding: p-{SPACING_VALUES.sm} sm:p-{SPACING_VALUES.md}
+ * - Headings: SkeletonHeading (auto-sized to TYPOGRAPHY tokens)
+ * - Text: SkeletonText (multi-line with proper gaps)
+ * - Metadata: SkeletonMetadata (date, reading time, views)
+ * - Animation: ANIMATIONS.stagger.normal (100ms between items)
  *
  * Layout variants:
  * - compact (default): SPACING.postList with border cards, background images
  * - grid: 2-column card layout with images
  * - list: Single column with larger cards
  * - magazine: Alternating large/small hero layout
+ *
+ * Last sync: 2026-01-31
  *
  * @see /docs/components/skeleton-sync-strategy.md
  */
@@ -64,33 +76,34 @@ export function PostListSkeleton({
       return (
         <div className={SPACING.postList}>
           {Array.from({ length: count }).map((_, i) => (
-            <article key={i} className="group rounded-lg border overflow-hidden relative">
+            <article
+              key={i}
+              className="group rounded-lg border overflow-hidden relative hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+              style={{
+                animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
+                animation: ANIMATIONS.types.fadeIn,
+              }}
+            >
               {/* Background placeholder with gradient overlay */}
               <div className="absolute inset-0 z-0 bg-muted/20">
-                <div className="absolute inset-0 bg-linear-to-b from-background/60 via-background/70 to-background/80" />
+                <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/70 to-background/80" />
               </div>
 
               {/* Post content - matches actual structure */}
-              <div className="relative z-10 p-3 sm:p-4">
-                {/* Metadata row */}
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs mb-2">
-                  <Skeleton className="h-4 w-16" /> {/* Badge */}
-                  <Skeleton className="h-4 w-24" /> {/* Date */}
-                  <Skeleton className="h-3 w-1" /> {/* Separator */}
-                  <Skeleton className="h-4 w-16" /> {/* Reading time */}
-                  <Skeleton className="h-3 w-1 hidden md:inline-block" />{' '}
-                  {/* Separator (desktop) */}
-                  <Skeleton className="h-4 w-32 hidden md:inline-block" /> {/* Tags (desktop) */}
-                </div>
+              <div className={cn("relative z-10", `p-${SPACING_VALUES.sm} sm:p-${SPACING_VALUES.md}`)}>
+                {/* Metadata row - using primitive */}
+                <SkeletonMetadata
+                  showDate
+                  showReadingTime
+                  showViews={false}
+                  className={`mb-${SPACING_VALUES.sm}`}
+                />
 
-                {/* Title */}
-                <Skeleton className="h-5 sm:h-6 md:h-7 w-3/4 mb-1" />
+                {/* Title - using typography-aware primitive */}
+                <SkeletonHeading level="h4" variant="standard" width="w-3/4" className={`mb-${SPACING_VALUES.xs}`} />
 
-                {/* Summary - 2 lines */}
-                <div className="space-y-1">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                </div>
+                {/* Summary - using multi-line primitive */}
+                <SkeletonText lines={2} lastLineWidth="w-5/6" gap="tight" />
               </div>
             </article>
           ))}
@@ -118,13 +131,23 @@ export function PostListSkeleton({
       return renderGroupedSkeleton();
     }
 
-    // Fallback to compact
+    // Fallback to compact with design tokens
     return (
-      <div className="space-y-4">
+      <div className={SPACING.content}>
         {Array.from({ length: count }).map((_, i) => (
-          <article key={i} className="group rounded-lg border overflow-hidden relative p-4">
-            <Skeleton className="h-6 w-3/4 mb-2" />
-            <Skeleton className="h-4 w-full" />
+          <article
+            key={i}
+            className={cn(
+              "group rounded-lg border overflow-hidden relative hover:shadow-md hover:-translate-y-0.5 transition-all duration-300",
+              `p-${SPACING_VALUES.md}`
+            )}
+            style={{
+              animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
+              animation: ANIMATIONS.types.fadeIn,
+            }}
+          >
+            <SkeletonHeading level="h3" variant="standard" width="w-3/4" className={`mb-${SPACING_VALUES.sm}`} />
+            <SkeletonText lines={1} lastLineWidth="w-full" gap="tight" />
           </article>
         ))}
       </div>
@@ -155,24 +178,46 @@ function renderGridSkeleton(count: number) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {Array.from({ length: count }).map((_, i) => (
-        <Card key={i} className="overflow-hidden">
-          {/* Image placeholder */}
-          <Skeleton className="h-48 w-full" />
-          <CardHeader className="pb-2">
-            {/* Title */}
-            <Skeleton className="h-6 w-3/4" />
+        <Card
+          key={i}
+          className={cn("overflow-hidden", ARCHIVE_CARD_VARIANTS.elevated)}
+          style={{
+            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
+            animation: ANIMATIONS.types.fadeIn,
+            transition: ANIMATIONS.transition.all,
+          }}
+        >
+          {/* Image placeholder with aspect ratio */}
+          <div className="relative">
+            <SkeletonImage aspectRatio="video" />
+
+            {/* Gradient overlay matching ModernPostCard */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70" />
+
+            {/* Floating badges - bottom left (matches ModernPostCard badgeContainer) */}
+            <div className="absolute bottom-3 left-3 flex gap-2 z-10">
+              <Skeleton className="h-5 w-16" />
+              <Skeleton className="h-5 w-14" />
+            </div>
+
+            {/* Quick actions overlay - top right (shown on hover in real card) */}
+            <div className="absolute top-3 right-3 flex gap-2 z-10">
+              <Skeleton className="h-9 w-9 rounded-md" />
+              <Skeleton className="h-9 w-9 rounded-md" />
+            </div>
+          </div>
+
+          <CardHeader className={`pb-${SPACING_VALUES.sm}`}>
+            {/* Title - auto-sized to typography tokens */}
+            <SkeletonHeading level="h3" variant="standard" width="w-3/4" />
           </CardHeader>
+
           <CardContent className="pt-0">
-            {/* Summary */}
-            <div className="space-y-1 mb-3">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-            </div>
-            {/* Metadata */}
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-4 w-16" />
-            </div>
+            {/* Summary - multi-line primitive */}
+            <SkeletonText lines={2} lastLineWidth="w-5/6" gap="tight" className={`mb-${SPACING_VALUES.sm}`} />
+
+            {/* Metadata - using primitive */}
+            <SkeletonMetadata showDate showReadingTime showViews={false} />
           </CardContent>
         </Card>
       ))}
@@ -185,31 +230,50 @@ function renderGridSkeleton(count: number) {
  */
 function renderListSkeleton(count: number) {
   return (
-    <div className="space-y-6">
+    <div className={SPACING.subsection}>
       {Array.from({ length: count }).map((_, i) => (
-        <Card key={i} className="overflow-hidden">
+        <Card
+          key={i}
+          className={cn("overflow-hidden", ARCHIVE_CARD_VARIANTS.elevated)}
+          style={{
+            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
+            animation: ANIMATIONS.types.fadeIn,
+            transition: ANIMATIONS.transition.all,
+          }}
+        >
           <div className="flex flex-col md:flex-row">
-            {/* Image placeholder */}
-            <Skeleton className="h-48 md:h-auto md:w-64 shrink-0" />
-            <div className="flex-1 p-4">
-              {/* Metadata */}
-              <div className="flex items-center gap-2 mb-2">
-                <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-              {/* Title */}
-              <Skeleton className="h-7 w-3/4 mb-2" />
-              {/* Summary */}
-              <div className="space-y-1 mb-3">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-              {/* Tags */}
-              <div className="flex gap-2">
+            {/* Image placeholder - square aspect ratio for side-by-side */}
+            <div className="w-full md:w-64 shrink-0 relative">
+              <SkeletonImage aspectRatio="square" />
+
+              {/* Gradient overlay matching ModernPostCard */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70" />
+
+              {/* Floating badges - bottom left */}
+              <div className="absolute bottom-3 left-3 flex gap-2 z-10">
                 <Skeleton className="h-5 w-16" />
-                <Skeleton className="h-5 w-20" />
+                <Skeleton className="h-5 w-14" />
               </div>
+
+              {/* Quick actions overlay - top right */}
+              <div className="absolute top-3 right-3 flex gap-2 z-10">
+                <Skeleton className="h-9 w-9 rounded-md" />
+                <Skeleton className="h-9 w-9 rounded-md" />
+              </div>
+            </div>
+
+            <div className={`flex-1 p-${SPACING_VALUES.md}`}>
+              {/* Metadata - using primitive */}
+              <SkeletonMetadata showDate showReadingTime showViews className={`mb-${SPACING_VALUES.sm}`} />
+
+              {/* Title - larger heading for list layout */}
+              <SkeletonHeading level="h2" variant="article" width="w-3/4" className={`mb-${SPACING_VALUES.sm}`} />
+
+              {/* Summary - 3 lines for expanded layout */}
+              <SkeletonText lines={3} lastLineWidth="w-2/3" gap="tight" className={`mb-${SPACING_VALUES.sm}`} />
+
+              {/* Tags - using badge primitive */}
+              <SkeletonBadges count={2} />
             </div>
           </div>
         </Card>
@@ -223,29 +287,82 @@ function renderListSkeleton(count: number) {
  */
 function renderMagazineSkeleton(count: number) {
   return (
-    <div className="space-y-8">
+    <div className={SPACING.subsection}>
       {Array.from({ length: Math.ceil(count / 2) }).map((_, i) => (
-        <div key={i} className="grid md:grid-cols-5 gap-0">
+        <div
+          key={i}
+          className="grid md:grid-cols-5 gap-0"
+          style={{
+            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
+            animation: ANIMATIONS.types.fadeIn,
+          }}
+        >
           {/* Large featured card */}
           <div className={`md:col-span-3 ${i % 2 === 0 ? '' : 'md:order-last'}`}>
-            <Card className="h-full overflow-hidden rounded-none md:rounded-lg">
-              <Skeleton className="h-64 md:h-80 w-full" />
-              <CardContent className="p-4">
-                <Skeleton className="h-7 w-3/4 mb-2" />
-                <div className="space-y-1">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
+            <Card
+              className={cn(
+                "h-full overflow-hidden rounded-none md:rounded-lg",
+                ARCHIVE_CARD_VARIANTS.background
+              )}
+              style={{ transition: ANIMATIONS.transition.all }}
+            >
+              <div className="relative">
+                <SkeletonImage aspectRatio="wide" />
+
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70" />
+
+                {/* Floating badges - bottom left */}
+                <div className="absolute bottom-3 left-3 flex gap-2 z-10">
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-14" />
                 </div>
+
+                {/* Quick actions overlay - top right */}
+                <div className="absolute top-3 right-3 flex gap-2 z-10">
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                </div>
+              </div>
+
+              <CardContent className={`p-${SPACING_VALUES.md}`}>
+                <SkeletonHeading level="h2" variant="article" width="w-3/4" className={`mb-${SPACING_VALUES.sm}`} />
+                <SkeletonText lines={2} lastLineWidth="w-5/6" gap="tight" />
               </CardContent>
             </Card>
           </div>
+
           {/* Smaller card */}
           <div className="md:col-span-2">
-            <Card className="h-full overflow-hidden rounded-none md:rounded-lg">
-              <Skeleton className="h-48 w-full" />
-              <CardContent className="p-4">
-                <Skeleton className="h-6 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-full" />
+            <Card
+              className={cn(
+                "h-full overflow-hidden rounded-none md:rounded-lg",
+                ARCHIVE_CARD_VARIANTS.elevated
+              )}
+              style={{ transition: ANIMATIONS.transition.all }}
+            >
+              <div className="relative">
+                <SkeletonImage aspectRatio="video" />
+
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70" />
+
+                {/* Floating badges - bottom left */}
+                <div className="absolute bottom-3 left-3 flex gap-2 z-10">
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-14" />
+                </div>
+
+                {/* Quick actions overlay - top right */}
+                <div className="absolute top-3 right-3 flex gap-2 z-10">
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                </div>
+              </div>
+
+              <CardContent className={`p-${SPACING_VALUES.md}`}>
+                <SkeletonHeading level="h3" variant="standard" width="w-3/4" className={`mb-${SPACING_VALUES.sm}`} />
+                <SkeletonText lines={1} lastLineWidth="w-full" gap="tight" />
               </CardContent>
             </Card>
           </div>
@@ -262,29 +379,36 @@ function renderGroupedSkeleton() {
   return (
     <div className={SPACING.subsection}>
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="border-b pb-4 last:border-b-0">
-          {/* Category heading */}
-          <Skeleton className="h-8 w-48 mb-4" />
+        <div key={i} className={`border-b pb-${SPACING_VALUES.md} last:border-b-0`}>
+          {/* Category heading - using typography-aware primitive */}
+          <SkeletonHeading level="h3" variant="standard" width="w-48" className={`mb-${SPACING_VALUES.md}`} />
+
           {/* Posts in this category */}
           <div className={SPACING.content}>
             {Array.from({ length: 4 }).map((_, j) => (
-              <article key={j} className="group rounded-lg border overflow-hidden relative">
+              <article
+                key={j}
+                className="group rounded-lg border overflow-hidden relative hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+                style={{
+                  animationDelay: `${ANIMATIONS.stagger.fast * j}ms`,
+                  animation: ANIMATIONS.types.fadeIn,
+                }}
+              >
                 {/* Background placeholder */}
                 <div className="absolute inset-0 z-0 bg-muted/20">
-                  <div className="absolute inset-0 bg-linear-to-b from-background/60 via-background/70 to-background/80" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/70 to-background/80" />
                 </div>
 
                 {/* Compact post content */}
-                <div className="relative z-10 p-3 sm:p-4">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs mb-2">
-                    <Skeleton className="h-4 w-16" />
-                    <Skeleton className="h-4 w-24" />
-                  </div>
-                  <Skeleton className="h-5 sm:h-6 w-3/4 mb-1" />
-                  <div className="space-y-1">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-5/6" />
-                  </div>
+                <div className={cn("relative z-10", `p-${SPACING_VALUES.sm} sm:p-${SPACING_VALUES.md}`)}>
+                  {/* Metadata - using primitive */}
+                  <SkeletonMetadata showDate showReadingTime showViews={false} className={`mb-${SPACING_VALUES.sm}`} />
+
+                  {/* Title */}
+                  <SkeletonHeading level="h4" variant="standard" width="w-3/4" className={`mb-${SPACING_VALUES.xs}`} />
+
+                  {/* Summary */}
+                  <SkeletonText lines={2} lastLineWidth="w-5/6" gap="tight" />
                 </div>
               </article>
             ))}

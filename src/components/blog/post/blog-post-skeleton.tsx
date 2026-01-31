@@ -1,35 +1,51 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { CONTAINER_WIDTHS } from "@/lib/design-tokens";
+import {
+  SkeletonHeading,
+  SkeletonText,
+  SkeletonMetadata,
+  SkeletonBadges,
+  SkeletonParagraphs,
+} from "@/components/ui/skeleton-primitives";
+import { CONTAINER_WIDTHS, SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
 
 /**
  * Skeleton loader for blog post content page.
  * Displays while MDX content is loading.
- * 
- * ⚠️ SKELETON SYNC REQUIRED
- * When updating blog post page structure, also update this skeleton:
- * - src/app/blog/[slug]/page.tsx (main blog post layout)
- * 
- * Key structural elements that must match:
- * - container: CONTAINER_WIDTHS.content (max-w-7xl)
- * - grid layout: lg:grid-cols-[280px_1fr]
- * - Left sidebar (hidden on mobile)
- * - Main content area with article
- * 
- * Last synced: 2025-11-27
- * 
- * @see /docs/components/blog-post-skeleton.md for detailed documentation
- * @see /docs/components/skeleton-sync-strategy.md for skeleton sync guidelines
+ *
+ * This component uses design-token-aware skeleton primitives to ensure
+ * dimensions stay in sync with actual content automatically.
+ *
+ * ⚠️ SYNC REQUIRED WITH: src/app/blog/[slug]/page.tsx
+ *
+ * Structure must match blog post page:
+ * - Container: CONTAINER_WIDTHS.archive (max-w-7xl)
+ * - Grid: lg:grid-cols-[280px_1fr] with gap-8
+ * - Spacing: SPACING.subsection for vertical rhythm
+ * - Headings: SkeletonHeading (auto-sized to TYPOGRAPHY tokens)
+ * - Text: SkeletonText and SkeletonParagraphs (multi-line with proper gaps)
+ * - Metadata: SkeletonMetadata (date, reading time)
+ * - Animation: ANIMATIONS.stagger.fast (50ms between elements)
+ *
+ * Last sync: 2026-01-31
+ *
+ * @see /docs/components/skeleton-sync-strategy.md
  */
 export function BlogPostSkeleton() {
   return (
-    <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8`}>
-      <div className="grid gap-8 items-start lg:grid-cols-[280px_1fr]">
+    <div className={`container ${CONTAINER_WIDTHS.archive} mx-auto px-${SPACING_VALUES.md} sm:px-${SPACING_VALUES.lg} lg:px-${SPACING_VALUES.xl} pt-${SPACING_VALUES.xl} md:pt-12 pb-${SPACING_VALUES.xl}`}>
+      <div className="grid gap-${SPACING_VALUES.xl} items-start lg:grid-cols-[280px_1fr]">
         {/* Left Sidebar skeleton (desktop only) */}
-        <div className="hidden lg:block">
-          <div className="sticky top-24 space-y-6">
+        <div
+          className="hidden lg:block"
+          style={{
+            animationDelay: `${ANIMATIONS.stagger.fast * 0}ms`,
+            animation: ANIMATIONS.types.fadeIn,
+          }}
+        >
+          <div className={`sticky top-24 ${SPACING.subsection}`}>
             {/* ToC skeleton */}
-            <div className="space-y-3">
-              <Skeleton className="h-5 w-32" />
+            <div className={SPACING.content}>
+              <SkeletonHeading level="h4" variant="standard" width="w-32" />
               <div className="space-y-2 pl-2">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Skeleton key={i} className="h-4 w-full" />
@@ -45,46 +61,52 @@ export function BlogPostSkeleton() {
         </div>
 
         {/* Main Content */}
-        <article className="min-w-0">
+        <article
+          className="min-w-0"
+          style={{
+            animationDelay: `${ANIMATIONS.stagger.fast * 1}ms`,
+            animation: ANIMATIONS.types.fadeIn,
+          }}
+        >
           {/* Breadcrumbs */}
-          <div className="flex gap-2 mb-6">
+          <div className={`flex gap-2 mb-${SPACING_VALUES.lg}`}>
             <Skeleton className="h-4 w-12" />
             <Skeleton className="h-4 w-8" />
             <Skeleton className="h-4 w-24" />
           </div>
 
           {/* Header */}
-          <header className="mb-8">
-            {/* Date and reading time */}
-            <Skeleton className="h-4 w-48 mb-4" />
-            
-            {/* Title */}
-            <Skeleton className="h-10 w-3/4 mb-4" />
-            
-            {/* Description */}
-            <div className="space-y-2 mb-4">
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-5/6" />
-            </div>
-            
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2">
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-5 w-20" />
-              <Skeleton className="h-5 w-14" />
-            </div>
+          <header className={`mb-${SPACING_VALUES.xl}`}>
+            {/* Date and reading time - using primitive */}
+            <SkeletonMetadata
+              showDate
+              showReadingTime
+              showViews={false}
+              className={`mb-${SPACING_VALUES.md}`}
+            />
+
+            {/* Title - auto-sized to typography tokens */}
+            <SkeletonHeading
+              level="h1"
+              variant="article"
+              width="w-3/4"
+              className={`mb-${SPACING_VALUES.md}`}
+            />
+
+            {/* Description - lead text */}
+            <SkeletonText
+              lines={2}
+              lastLineWidth="w-5/6"
+              gap="normal"
+              className={`mb-${SPACING_VALUES.md}`}
+            />
+
+            {/* Badges - using primitive */}
+            <SkeletonBadges count={3} />
           </header>
 
-          {/* Content */}
-          <div className="space-y-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-4/5" />
-              </div>
-            ))}
-          </div>
+          {/* Content - using paragraph primitive */}
+          <SkeletonParagraphs count={8} linesPerParagraph={3} />
         </article>
       </div>
     </div>

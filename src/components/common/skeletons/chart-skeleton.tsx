@@ -1,13 +1,25 @@
 /**
  * Chart Skeleton
  *
+ * This component uses design-token-aware skeleton primitives to ensure
+ * dimensions stay in sync with actual content automatically.
+ *
+ * ⚠️ SYNC REQUIRED WITH: Chart components (analytics/dashboard)
+ *
  * Loading skeleton for analytics charts and data visualizations.
- * Used in dashboard pages and analytics sections.
+ * - Headings: SkeletonHeading (auto-sized to TYPOGRAPHY tokens)
+ * - Spacing: SPACING_VALUES for padding/gaps/margins
+ * - Animation: ANIMATIONS.stagger.fast (50ms between legend items)
+ *
+ * Last sync: 2026-01-31
+ *
+ * @see /docs/components/skeleton-sync-strategy.md
  */
 
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonHeading } from "@/components/ui/skeleton-primitives";
+import { SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
 
 export interface ChartSkeletonProps {
   /** Chart type affects skeleton appearance */
@@ -24,7 +36,7 @@ export interface ChartSkeletonProps {
 const BAR_HEIGHTS = ["60%", "85%", "45%", "75%", "50%", "90%", "65%", "55%"];
 
 /**
- * Skeleton for chart components
+ * Skeleton for chart components with stagger animation
  * Provides visual placeholder while data loads
  */
 export function ChartSkeleton({
@@ -34,23 +46,27 @@ export function ChartSkeleton({
   className,
 }: ChartSkeletonProps) {
   return (
-    <Card className={`p-6 ${className || ""}`}>
+    <Card className={`p-${SPACING_VALUES.lg} ${className || ""}`}>
       {/* Title */}
       {showTitle && (
-        <div className="mb-4">
+        <div className={`mb-${SPACING_VALUES.md}`}>
           <SkeletonHeading level="h3" width="w-48" />
         </div>
       )}
 
       {/* Chart area */}
-      <div className="h-64 w-full mb-4">
+      <div className={`h-64 w-full mb-${SPACING_VALUES.md}`}>
         {variant === "bar" && (
           <div className="h-full flex items-end justify-around gap-2">
             {BAR_HEIGHTS.map((height, i) => (
               <Skeleton
                 key={i}
                 className="w-full"
-                style={{ height }}
+                style={{
+                  height,
+                  animationDelay: `${ANIMATIONS.stagger.fast * i}ms`,
+                  animation: ANIMATIONS.types.fadeIn,
+                }}
               />
             ))}
           </div>
@@ -71,9 +87,16 @@ export function ChartSkeleton({
 
       {/* Legend */}
       {showLegend && (
-        <div className="flex flex-wrap gap-4">
+        <div className={`flex flex-wrap gap-${SPACING_VALUES.md}`}>
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex items-center gap-2">
+            <div
+              key={i}
+              className="flex items-center gap-2"
+              style={{
+                animationDelay: `${ANIMATIONS.stagger.fast * i}ms`,
+                animation: ANIMATIONS.types.fadeIn,
+              }}
+            >
               <Skeleton className="h-3 w-3 rounded-sm" />
               <Skeleton className="h-4 w-20" />
             </div>
