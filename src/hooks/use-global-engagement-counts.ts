@@ -20,10 +20,10 @@
  * ```
  */
 
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import type { ContentType } from "@/lib/engagement-analytics";
+import { useState, useEffect, useCallback, useRef } from 'react';
+import type { ContentType } from '@/lib/engagement-analytics';
 
 export interface GlobalEngagementCountsParams {
   slug: string;
@@ -49,10 +49,7 @@ export interface UseGlobalEngagementCountsReturn {
 
 // In-memory cache for global counts (across component instances)
 // Key: "slug:contentType"
-const countCache = new Map<
-  string,
-  { likes: number; bookmarks: number; timestamp: number }
->();
+const countCache = new Map<string, { likes: number; bookmarks: number; timestamp: number }>();
 const CACHE_TTL = 60 * 1000; // 1 minute
 
 /**
@@ -80,7 +77,7 @@ export function useGlobalEngagementCounts({
       // Check cache first
       const cached = countCache.get(cacheKey);
       if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-        console.warn("[useGlobalEngagementCounts] Using cached counts:", {
+        console.warn('[useGlobalEngagementCounts] Using cached counts:', {
           slug,
           contentType,
           likes: cached.likes,
@@ -92,7 +89,7 @@ export function useGlobalEngagementCounts({
         return;
       }
 
-      console.warn("[useGlobalEngagementCounts] Fetching counts from API:", {
+      console.warn('[useGlobalEngagementCounts] Fetching counts from API:', {
         slug,
         contentType,
       });
@@ -110,9 +107,7 @@ export function useGlobalEngagementCounts({
       if (!likesRes.ok || !bookmarksRes.ok) {
         // Check if Redis is unavailable (503 status)
         if (likesRes.status === 503 || bookmarksRes.status === 503) {
-          console.warn(
-            "[useGlobalEngagementCounts] Analytics unavailable (Redis not configured)"
-          );
+          console.warn('[useGlobalEngagementCounts] Analytics unavailable (Redis not configured)');
           // Set defaults and don't throw error for optional analytics
           setGlobalLikes(0);
           setGlobalBookmarks(0);
@@ -124,13 +119,28 @@ export function useGlobalEngagementCounts({
         );
       }
 
-      const likesData = (await likesRes.json()) as { count: number };
-      const bookmarksData = (await bookmarksRes.json()) as { count: number };
+      // Safer JSON parsing with error handling
+      let likesData: { count: number };
+      let bookmarksData: { count: number };
+
+      try {
+        likesData = (await likesRes.json()) as { count: number };
+      } catch (parseErr) {
+        console.warn('[useGlobalEngagementCounts] Failed to parse likes response:', parseErr);
+        likesData = { count: 0 };
+      }
+
+      try {
+        bookmarksData = (await bookmarksRes.json()) as { count: number };
+      } catch (parseErr) {
+        console.warn('[useGlobalEngagementCounts] Failed to parse bookmarks response:', parseErr);
+        bookmarksData = { count: 0 };
+      }
 
       const likes = likesData.count || 0;
       const bookmarks = bookmarksData.count || 0;
 
-      console.warn("[useGlobalEngagementCounts] Fetched counts:", {
+      console.warn('[useGlobalEngagementCounts] Fetched counts:', {
         slug,
         contentType,
         likes,
@@ -147,22 +157,41 @@ export function useGlobalEngagementCounts({
       setGlobalLikes(likes);
       setGlobalBookmarks(bookmarks);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      // More comprehensive error handling
+      let errorMsg = 'Unknown error';
+      let errorDetails: any = {};
+
+      if (err instanceof Error) {
+        errorMsg = err.message;
+        errorDetails = {
+          name: err.name,
+          message: err.message,
+          stack: err.stack?.split('\n').slice(0, 3).join('\n'), // First 3 lines of stack
+        };
+      } else if (typeof err === 'string') {
+        errorMsg = err;
+        errorDetails = { message: err };
+      } else if (err && typeof err === 'object') {
+        // Handle cases where err might be a plain object or have toString()
+        errorMsg = err.toString?.() || JSON.stringify(err) || 'Error object';
+        errorDetails = err;
+      }
 
       // Less noisy logging for common development issues
       if (
-        errorMsg.includes("Analytics unavailable") ||
-        errorMsg.includes("Redis")
+        errorMsg.includes('Analytics unavailable') ||
+        errorMsg.includes('Redis') ||
+        errorMsg.includes('Failed to fetch') ||
+        errorMsg.includes('NetworkError')
       ) {
-        console.warn(
-          "[useGlobalEngagementCounts] Analytics unavailable:",
-          errorMsg
-        );
+        console.warn('[useGlobalEngagementCounts] Analytics unavailable:', errorMsg);
       } else {
-        console.error("[useGlobalEngagementCounts] Error fetching counts:", {
+        console.error('[useGlobalEngagementCounts] Error fetching counts:', {
           slug,
           contentType,
           error: errorMsg,
+          details: errorDetails,
+          originalError: err,
         });
       }
 
@@ -183,7 +212,7 @@ export function useGlobalEngagementCounts({
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting && !isVisible) {
-          console.warn("[useGlobalEngagementCounts] Element visible, fetching counts:", {
+          console.warn('[useGlobalEngagementCounts] Element visible, fetching counts:', {
             slug,
             contentType,
           });
@@ -191,7 +220,7 @@ export function useGlobalEngagementCounts({
         }
       },
       {
-        rootMargin: "100px", // Start fetching slightly before visible
+        rootMargin: '100px', // Start fetching slightly before visible
         threshold: 0.01,
       }
     );

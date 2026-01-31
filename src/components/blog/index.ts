@@ -52,7 +52,7 @@ export { AnchorExpansionWrapper } from './anchor-expansion-wrapper';
 export { ReadingProgressBar, SeriesBackgroundNote } from './rivet/navigation';
 export { SeriesNavigation as RivetSeriesNavigation } from './rivet/navigation';
 export { SeriesNavigation } from './post/series-navigation';
-export { KeyTakeaway, TLDRSummary, RiskMatrix } from './rivet/visual';
+export { KeyTakeaway, TLDRSummary, RiskMatrix, RivetPillarCard } from './rivet/visual';
 export {
   GlossaryTooltip,
   SectionShare,

@@ -1292,16 +1292,50 @@ a[href]:hover {
 }
 
 
+/* ============================================================================
+   CODE BLOCK OVERFLOW HANDLING - Modern Best Practices
+   ============================================================================
+   Strategy: Horizontal scroll with visual enhancements
+
+   Best Practices:
+   1. Horizontal scroll (preserve code structure)
+   2. Smooth mobile scrolling (-webkit-overflow-scrolling: touch)
+   3. Fade gradient indicators (show overflow visually)
+   4. Max-width constraints (prevent excessive width)
+   5. Line numbers preserved (rehype-pretty-code support)
+
+   Why NOT word-wrap:
+   - Destroys visual hierarchy/indentation
+   - Makes line breaks ambiguous
+   - Copy-paste doesn't work correctly
+   - Developers expect horizontal scroll
+   ============================================================================ */
+
 /* Code Block Syntax Highlighting (rehype-pretty-code + Shiki) */
 /* Shiki themes provide their own backgrounds - we only add border, padding, and shadows */
 /* Only apply to standalone pre elements, not those inside CodeBlockWithHeader */
 pre:not([data-code-block-header]) {
+  position: relative;
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-lg);
   padding: 1rem 1.5rem;
   /* Tier 1 shadow: Reference content (most prominent) */
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
-  overflow: auto;
+
+  /* Horizontal scroll with modern handling */
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Smooth mobile scroll */
+
+  /* Preserve code structure - NO word wrap */
+  white-space: pre;
+  word-wrap: normal;
+  word-break: normal;
+
+  /* Constrain maximum width for readability */
+  max-width: 100%;
+
   margin: 1.5rem 0;
   transition: border-color var(--duration-fast) var(--ease-default),
     box-shadow var(--duration-fast) var(--ease-default);
@@ -1313,10 +1347,68 @@ pre:not([data-code-block-header]) {
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
 }
 
+/* Fade gradient indicator for overflow (right edge) */
+pre:not([data-code-block-header])::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 3rem;
+  background: linear-gradient(to right,
+      transparent 0%,
+      hsl(var(--background) / 0.8) 100%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-default);
+}
+
+/* Show gradient when scrolled (requires JS or show by default) */
+pre:not([data-code-block-header]):hover::after {
+  opacity: 1;
+}
+
+/* Dark mode gradient adjustment */
+.dark pre:not([data-code-block-header])::after {
+  background: linear-gradient(to right,
+      transparent 0%,
+      hsl(var(--background) / 0.9) 100%);
+}
+
+/* Modern scrollbar styling for code blocks */
+pre:not([data-code-block-header])::-webkit-scrollbar {
+  height: 0.5rem;
+}
+
+pre:not([data-code-block-header])::-webkit-scrollbar-track {
+  background-color: hsl(var(--muted) / 30%);
+  border-radius: 999px;
+}
+
+pre:not([data-code-block-header])::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted));
+  border-radius: 999px;
+  transition: background-color var(--duration-fast) var(--ease-default);
+}
+
+pre:not([data-code-block-header])::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--muted-foreground) / 60%);
+}
+
+/* Firefox scrollbar styling */
+pre:not([data-code-block-header]) {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted)) hsl(var(--muted) / 30%);
+}
+
 pre > code {
   display: grid;
   counter-reset: line;
   font-size: 0.875rem;
+
+  /* Ensure code doesn't wrap */
+  white-space: pre;
+  word-wrap: normal;
 }
 
 /* Shiki syntax highlighting - dual theme support */
