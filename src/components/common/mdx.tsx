@@ -47,6 +47,7 @@ import {
   MDXPipelineFlow,
   MDXCVEDecisionTree,
 } from '@/components/common';
+import { RivetPillarCard } from '@/components/blog';
 import { FAQ } from '@/components/common';
 import { ProgressiveParagraph, ContrastText } from '@/components/common';
 import {
@@ -62,6 +63,15 @@ import {
   Rocket,
   BarChart,
   Shield,
+  // RIVET blog post icons
+  Compass,
+  BarChart3,
+  Target,
+  SlidersHorizontal,
+  TrendingUp,
+  TrendingDown,
+  CheckCircle,
+  Calendar,
 } from 'lucide-react';
 import {
   TYPOGRAPHY,
@@ -383,9 +393,29 @@ const components: NonNullable<MDXRemoteProps['components']> = {
     <ContrastText.Bold as="strong" {...props} />
   ),
   em: (props: React.HTMLAttributes<HTMLElement>) => <ContrastText.Emphasis as="em" {...props} />,
-  ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul {...props} className={cn('list-disc pl-6', SPACING.list)} />
-  ),
+  ul: (props: React.HTMLAttributes<HTMLUListElement>) => {
+    // Check if this is a task list (contains checkboxes)
+    const children = React.Children.toArray(props.children);
+    const hasCheckboxes = children.some((child) => {
+      if (React.isValidElement(child) && child.type === 'li') {
+        const liChildren = React.Children.toArray(child.props.children);
+        return liChildren.some(
+          (liChild) =>
+            React.isValidElement(liChild) &&
+            liChild.type === 'input' &&
+            (liChild.props as any)?.type === 'checkbox'
+        );
+      }
+      return false;
+    });
+
+    return (
+      <ul
+        {...props}
+        className={cn(hasCheckboxes ? 'list-none pl-6' : 'list-disc pl-6', SPACING.list)}
+      />
+    );
+  },
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
     <ol {...props} className={cn('list-decimal pl-6', SPACING.list)} />
   ),
@@ -586,6 +616,19 @@ const components: NonNullable<MDXRemoteProps['components']> = {
       aria-label="Shield"
     />
   ),
+  // RIVET blog post icons - direct lucide component mappings
+  Compass,
+  BarChart3,
+  Target,
+  SlidersHorizontal,
+  TrendingUp,
+  TrendingDown,
+  CheckCircle,
+  Calendar,
+  Check,
+  X,
+  // RIVET pillar card component
+  RivetPillarCard,
 
   // Diagram presets (using ReactFlow) - imported from client-side wrapper
   // These use "use client" to prevent SSR bailout errors
