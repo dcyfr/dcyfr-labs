@@ -47,14 +47,17 @@ Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + MDX portfolio.
 
 ```bash
 npm run dev              # Start dev server
-npm run build            # Production build
+npm run build            # Production build (includes metrics sync)
 npm run test:run         # Unit tests (run once, no watch)
 npm run test:e2e         # E2E tests (Playwright)
 npm run lint             # ESLint check
 npm run check            # All quality checks
+npm run sync:metrics     # Sync production analytics to preview (manual)
 ```
 
 **⚠️ For AI Agents:** Always use `npm run test:run` or `vitest run` instead of `npm test` to avoid watch mode hanging. See [Automated Testing Guide](docs/testing/automated-testing-guide.md).
+
+**📊 Production Metrics Sync:** The build process automatically syncs production analytics data to preview/dev environments. See [Production Metrics Sync](docs/operations/PRODUCTION_METRICS_SYNC.md) for details.
 
 ### Most Common Patterns (80% Usage)
 

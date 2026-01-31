@@ -5,6 +5,7 @@ export { FloatingFilterFab } from './filters/floating-filter-fab';
 export { HorizontalFilterChips } from './filters/horizontal-filter-chips';
 export { BlogSidebar } from './sidebar/blog-sidebar';
 export type { BlogSidebarProps } from './sidebar/blog-sidebar';
+export { SidebarFilters } from './sidebar/sidebar-filters';
 export { BlogSidebarWrapper } from './blog-sidebar-wrapper';
 export { BlogKeyboardProvider, useBlogKeyboard } from './blog-keyboard-provider';
 export { BlogLayoutManager } from './blog-layout-manager';

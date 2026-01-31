@@ -241,7 +241,9 @@ export async function transformTrendingPosts(
 
       if (trendingData) {
         try {
-          const parsed = JSON.parse(trendingData as string);
+          // Upstash auto-parses JSON, so trendingData may already be an array
+          // Only parse if it's a string (backwards compatibility)
+          const parsed = typeof trendingData === 'string' ? JSON.parse(trendingData) : trendingData;
 
           // Double validation: check if data is valid
           if (Array.isArray(parsed) && parsed.length > 0) {

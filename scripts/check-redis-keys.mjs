@@ -1,48 +1,55 @@
 /**
  * Check Redis for analytics keys
  */
-import { createClient } from "redis";
-import { config } from "dotenv";
+import dotenv from 'dotenv';
+import { Redis } from '@upstash/redis';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-config({ path: ".env.local" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '..', '.env.local') });
 
-const client = createClient({ url: process.env.REDIS_URL });
+const prodRedis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+console.log('🔍 Checking production Redis for engagement metrics...\n');
 
 try {
-  await client.connect();
-  console.log("✅ Connected to Redis");
+  // Check for engagement keys
+  const engagementKeys = await prodRedis.keys('engagement:*');
+  console.log(`Found ${engagementKeys?.length || 0} engagement keys:`, engagementKeys);
 
-  const viewKeys = await client.keys("views:post:*");
-  console.log(`\n📊 Found ${viewKeys.length} total view keys`);
-  
-  const baseKeys = viewKeys.filter(key => !key.includes(":day:"));
-  console.log(`📊 Found ${baseKeys.length} base keys (excluding :day:)`);
-  
-  if (baseKeys.length > 0) {
-    console.log("First 10 base keys:", baseKeys.slice(0, 10));
-    const value = await client.get(baseKeys[0]);
-    console.log(`Sample: ${baseKeys[0]} = ${value}`);
-    
-    // Calculate total views
-    let total = 0;
-    for (const key of baseKeys) {
-      const val = await client.get(key);
-      total += parseInt(val || "0", 10);
+  // Check for pageview keys
+  const pageviewKeys = await prodRedis.keys('pageviews:*');
+  console.log(`\nFound ${pageviewKeys?.length || 0} pageview keys:`, pageviewKeys);
+
+  // Check for specific engagement patterns
+  const patterns = ['*:likes:*', '*:bookmarks:*', '*:shares:*'];
+  for (const pattern of patterns) {
+    const keys = await prodRedis.keys(pattern);
+    if (keys && keys.length > 0) {
+      console.log(`\nPattern '${pattern}':`, keys.slice(0, 10));
+      // Sample first key
+      if (keys[0]) {
+        const value = await prodRedis.get(keys[0]);
+        console.log(`  Sample value (${keys[0]}):`, value);
+      }
+    } else {
+      console.log(`\nPattern '${pattern}': No keys found`);
     }
-    console.log(`\n📈 Total views across all base keys: ${total}`);
   }
 
-  const likeKeys = await client.keys("likes:post:*");
-  console.log(`\n❤️  Found ${likeKeys.length} like keys`);
-
-  const bookmarkKeys = await client.keys("bookmarks:post:*");
-  console.log(`\n🔖 Found ${bookmarkKeys.length} bookmark keys`);
-
-  const milestones = await client.get("analytics:milestones");
-  console.log(`\n🎯 Milestones key exists: ${!!milestones}`);
-
-  await client.disconnect();
+  // Check all keys to see what exists
+  console.log('\n📋 All keys in production:');
+  const allKeys = await prodRedis.keys('*');
+  console.log(`Total keys: ${allKeys?.length || 0}`);
+  if (allKeys && allKeys.length > 0) {
+    console.log('Sample keys:', allKeys.slice(0, 20));
+  }
 } catch (error) {
-  console.error("❌ Error:", error.message);
+  console.error('❌ Error:', error.message);
   process.exit(1);
 }
