@@ -6,7 +6,7 @@
  * of GitHub activity widgets.
  */
 
-import { redis, getRedisEnvironment } from '@/mcp/shared/redis-client';
+import { redis, getRedisEnvironment, getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 
 // ============================================================================
 // TYPES
@@ -39,8 +39,20 @@ export interface PinnedRepository {
 // CONSTANTS
 // ============================================================================
 
-const CACHE_KEY = 'github:contributions:dcyfr';
-const FALLBACK_DATA_KEY = 'github:fallback-data';
+const CACHE_KEY_BASE = 'github:contributions:dcyfr';
+const FALLBACK_DATA_KEY_BASE = 'github:fallback-data';
+
+/**
+ * Get environment-aware cache key
+ * Matches the key format used by populate-build-cache.mjs
+ */
+function getCacheKey(): string {
+  return `${getRedisKeyPrefix()}${CACHE_KEY_BASE}`;
+}
+
+function getFallbackCacheKey(): string {
+  return `${getRedisKeyPrefix()}${FALLBACK_DATA_KEY_BASE}`;
+}
 
 // ============================================================================
 // FALLBACK DATA
@@ -98,14 +110,15 @@ export async function getGitHubContributions(
   }
 
   try {
+    const cacheKey = getCacheKey();
     console.log('[GitHub Data] 🔍 Attempting cache read', {
-      key: CACHE_KEY,
+      key: cacheKey,
       environment: getRedisEnvironment(),
       redisAvailable: !!redis,
     });
 
     // Try the main cache
-    const cached = await redis.get(CACHE_KEY);
+    const cached = await redis.get(cacheKey);
 
     if (cached && typeof cached === 'string') {
       const data = JSON.parse(cached) as ContributionResponse;
@@ -131,7 +144,7 @@ export async function getGitHubContributions(
     }
 
     // Try fallback cache if main cache is empty
-    const fallbackCached = await redis.get(FALLBACK_DATA_KEY);
+    const fallbackCached = await redis.get(getFallbackCacheKey());
 
     if (fallbackCached && typeof fallbackCached === 'string') {
       const data = JSON.parse(fallbackCached) as ContributionResponse;
@@ -161,7 +174,7 @@ export async function checkGitHubDataHealth(): Promise<{
   totalContributions?: number;
 }> {
   try {
-    const cached = await redis.get(CACHE_KEY);
+    const cached = await redis.get(getCacheKey());
 
     if (!cached || typeof cached !== 'string') {
       return { cacheAvailable: true, dataFresh: false };
