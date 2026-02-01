@@ -1971,8 +1971,8 @@ export const BUTTON_SIZES = {
  * ```
  */
 export const PAGE_LAYOUT = {
-  /** Root page wrapper - provides consistent vertical rhythm */
-  wrapper: '',
+  /** Root page wrapper - provides consistent vertical rhythm and ensures backgrounds render fully */
+  wrapper: 'min-h-full overflow-visible',
 
   /** Unified hero section - used for all hero sections across the site
    * Includes fixed header compensation (h-18 = 72px) for consistent spacing

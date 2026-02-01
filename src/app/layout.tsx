@@ -173,7 +173,7 @@ export default async function RootLayout({
                 {/* eslint-disable-next-line no-restricted-syntax -- Root layout is the container for all pages, PageLayout wraps children */}
                 <main
                   id="main-content"
-                  className={`min-h-[calc(100dvh-128px)] ${MOBILE_SAFE_PADDING}`}
+                  className={`min-h-[calc(100dvh-128px)] overflow-visible ${MOBILE_SAFE_PADDING}`}
                 >
                   {children}
                 </main>
