@@ -199,12 +199,16 @@ gh workflow run monthly-security-review.yml
 ## 🚨 Troubleshooting
 
 ### "403 Resource not accessible by integration"
-**Issue:** GitHub MCP server lacks `security_events:read` permission
+**Issue:** GitHub MCP server lacks `security-events: read` permission
 
-**Workaround:**
-- Use GitHub CLI: `gh api repos/dcyfr/dcyfr-labs/code-scanning/alerts`
-- Use npm scripts: `npm run security:check-alerts`
-- Manual check: GitHub Security tab
+**This is the expected behavior.** The hosted GitHub MCP server at `https://api.githubcopilot.com/mcp/` doesn't have permissions to access the Code Scanning API. This is a limitation we cannot fix directly.
+
+**Recommended Solution:**
+- ✅ Use npm scripts: `npm run security:check-alerts` (GitHub CLI-based)
+- ✅ Use GitHub CLI directly: `gh api repos/dcyfr/dcyfr-labs/code-scanning/alerts`
+- ✅ Manual check: GitHub Security tab
+
+**Full Workaround Guide:** See [GitHub Code Scanning Workaround](../features/mcp/github-code-scanning-workaround.md)
 
 ---
 
