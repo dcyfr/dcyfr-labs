@@ -555,23 +555,7 @@ await waitFor(() => {
    - New Stop/PostToolUse hooks for quality enforcement
    - `docs/ai/opencode-usage-guide.md` - Tool decision guide
 
-2. **Phase 8: Superpowers Integration**
-   - Integrated obra/superpowers (27.4k stars) skills framework
-   - Created 3 DCYFR override skills:
-     - `dcyfr-tdd` - TDD with design token validation
-     - `dcyfr-brainstorming` - Design with DCYFR decisions
-     - `dcyfr-code-review` - Review with DCYFR checklist
-   - Plugin: `/plugin marketplace add obra/superpowers-marketplace`
-
-3. **Phase 9: Agent Consolidation**
-   - Archived 3 redundant agents to `_archived/`:
-     - `architect-review.md` → Use `architecture-reviewer.md`
-     - `performance-engineer.md` → Use `performance-profiler.md`
-     - `security-auditor.md` → Use `security-engineer.md`
-   - Created `/superpowers` command for skills reference
-   - Updated AGENT_TAXONOMY.md to v1.1.0 (61 active, 3 archived)
-
-4. **Phase 10: OpenSkills Universal Skill Distribution**
+2. **Phase 8: OpenSkills Universal Skill Distribution**
    - Integrated [numman-ali/openskills](https://github.com/numman-ali/openskills) (5.4k stars)
    - Created `.agent/skills` symlink for universal tool compatibility
    - Generated `<available_skills>` XML in AGENTS.md (22 skills)
@@ -580,10 +564,16 @@ await waitFor(() => {
    - **Key finding:** No formal universal standard; AGENTS.md is de facto (60k+ projects)
    - **Decision:** Keep multi-file architecture; Copilot requires `.github/`
 
+3. **Phase 9: Agent Consolidation**
+   - Archived 3 redundant agents to `_archived/`:
+     - `architect-review.md` → Use `architecture-reviewer.md`
+     - `performance-engineer.md` → Use `performance-profiler.md`
+     - `security-auditor.md` → Use `security-engineer.md`
+   - Updated AGENT_TAXONOMY.md to v1.1.0 (61 active, 3 archived)
+
 **Backlogged for Future:**
 
-- More DCYFR override skills (dcyfr-debugging, dcyfr-git-workflow)
-- Test superpowers integration with real feature workflow
+- Future skill expansions as needed
 
 ---
 
