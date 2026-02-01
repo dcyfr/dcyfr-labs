@@ -306,4 +306,40 @@ describe('PageLayout', () => {
       expect(element).toHaveAttribute('aria-label', 'Test Label');
     });
   });
+
+  describe('Background Rendering', () => {
+    it('includes overflow-visible to prevent background clipping', () => {
+      const { container } = render(
+        <PageLayout>
+          <div>Content with background</div>
+        </PageLayout>
+      );
+
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.className).toContain('overflow-visible');
+    });
+
+    it('includes min-h-full for full height backgrounds', () => {
+      const { container } = render(
+        <PageLayout>
+          <div>Content with full height background</div>
+        </PageLayout>
+      );
+
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.className).toContain('min-h-full');
+    });
+
+    it('handles long content without clipping backgrounds', () => {
+      const { container } = render(
+        <PageLayout>
+          <div style={{ minHeight: '200vh' }}>Very long content that extends beyond viewport</div>
+        </PageLayout>
+      );
+
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.className).toContain('overflow-visible');
+      expect(wrapper.className).toContain('min-h-full');
+    });
+  });
 });
