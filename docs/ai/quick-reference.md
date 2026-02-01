@@ -104,6 +104,10 @@ grep -r "pattern" src/
 
 Use VS Code subagents for context-isolated research or analysis. Enable the `runSubagent` tool in the Chat tool picker (or add `runSubagent` to the `tools` frontmatter in custom prompt files), then use `#runSubagent` in prompts to spawn a subagent. See https://code.visualstudio.com/docs/copilot/chat/chat-sessions#_contextisolated-subagents for details.
 
+## OpenCode VS Code Onboarding (Quick Access)
+
+A short onboarding page has been added to make the `sst-dev.opencode` extension easier to use from VS Code: `docs/ai/opencode-vscode-onboarding.md`. It includes quick shortcuts, recommended presets (`dcyfr-feature`, `dcyfr-quick`), and basic troubleshooting steps. Add the optional onboarding GIF to `docs/ai/assets/opencode-vscode-onboarding.gif` for a faster ramp.
+
 ## MDX Content Components
 
 | Component                | Usage                                             | Purpose                         |

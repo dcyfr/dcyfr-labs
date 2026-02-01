@@ -316,8 +316,9 @@ npm run check               # Type + lint check
 ### 5. OpenCode.ai Fallback System (v2.0.0)
 
 **Hub Directory:** `.opencode/`
-**Last Updated:** January 11, 2026
+**Last Updated:** January 31, 2026
 **Audience:** All developers (fallback tier when primary/secondary exhausted)
+**Status:** Maintained fallback (minimal active development; focus on UX & monitoring)
 **Format:** Modular documentation with provider-specific guides
 
 **Hub File:** [`.opencode/DCYFR.opencode.md`](./.opencode/DCYFR.opencode.md) (257 lines)

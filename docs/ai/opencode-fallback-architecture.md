@@ -2,11 +2,19 @@
 
 # OpenCode.ai Fallback Architecture
 
-**Last Updated:** January 11, 2026
+**Last Updated:** January 31, 2026
+
+## Status: Maintained fallback (Jan 31, 2026)
+
+- **Current state:** OpenCode is maintained as a fallback for token exhaustion, extended sessions, and cost-optimization workflows. Active development is minimal; focus is on stability, UX improvements, and monitoring adoption.
+- **Actions taken:** Keep `opencode.jsonc`, setup scripts, and validation hooks in the repo; add a short VS Code onboarding guide to reduce UX friction; monitor usage and cost impact for 60 days and re-evaluate.
+- **Success criteria (30–60 days):** documented sessions > 10% of total AI sessions or estimated cost savings ≥ 10% of model budget, otherwise consider deprecation/archival.
 
 ## Overview
 
 OpenCode.ai serves as a fallback AI development tool when Claude Code or GitHub Copilot encounter token exhaustion or rate limiting. With GitHub Copilot integration (GPT-5 Mini + Raptor Mini), OpenCode provides free, high-quality AI assistance included with your existing Copilot subscription.
+
+> Quick access: see the new VS Code onboarding guide: `docs/ai/opencode-vscode-onboarding.md`
 
 ---
 

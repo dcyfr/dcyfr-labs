@@ -2,8 +2,13 @@
 
 # OpenCode vs Claude Code Usage Guide
 
-**Version:** 1.0.0  
-**Last Updated:** January 17, 2026
+**Version:** 1.1.0  
+**Last Updated:** January 31, 2026
+
+## Status & Review Plan
+
+- **Maintained fallback:** OpenCode is kept as a maintained fallback to address token exhaustion, extended sessions, and cost-sensitive work. Minimal active feature development is planned; the priority is UX (VS Code onboarding) and stability.
+- **Review cadence:** We will review usage and cost metrics in 30–60 days (target: sessions ≥ 10% or cost savings ≥ 10%). If thresholds are not met, we will deprecate and archive configuration and scripts to keep the repo minimal.
 
 This guide helps you choose between OpenCode and Claude Code for different development scenarios in dcyfr-labs.
 
