@@ -67,33 +67,27 @@ All skills in `.agent/skills/dcyfr-*` have been updated with:
 - `security_level: workspace-isolated` flag
 - Security notices where applicable
 
-#### DCYFR-Specific Skills (21 skills)
+#### DCYFR-Specific Skills (19 skills)
 
 1. **dcyfr-accessibility** - Workspace-scoped accessibility auditing
-2. **dcyfr-brainstorming** - DCYFR design decisions within workspace
-3. **dcyfr-canvas-design** - Visual designs created in workspace only
-4. **dcyfr-code-review** - Code review within workspace scope
-5. **dcyfr-code-reviewer** - Comprehensive code review (workspace-isolated)
-6. **dcyfr-design-tokens** - Design token enforcement (workspace-only)
-7. **dcyfr-file-organizer** - **CRITICAL UPDATE** (see below)
-8. **dcyfr-frontend-design** - Frontend components in workspace only
-9. **dcyfr-git-commit-helper** - Git operations within workspace
-10. **dcyfr-inngest-patterns** - Inngest integration patterns
-11. **dcyfr-mcp-builder** - MCP server development
-12. **dcyfr-mdx-authoring** - MDX content authoring
-13. **dcyfr-next-app-router** - Next.js patterns
-14. **dcyfr-pdf-processing-pro** - PDF operations within workspace
-15. **dcyfr-senior-architect** - Architecture decisions
-16. **dcyfr-senior-backend** - Backend development
-17. **dcyfr-senior-frontend** - Frontend development
-18. **dcyfr-skill-creator** - Skill creation
-19. **dcyfr-tdd** - Test-driven development
-20. **dcyfr-ui-design-system** - UI design system
-21. **dcyfr-webapp-testing** - Web app testing
-
-#### General Skills (1 skill)
-
-22. **react-best-practices** - React optimization (workspace-scoped for consistency)
+2. **dcyfr-canvas-design** - Visual designs created in workspace only
+3. **dcyfr-code-reviewer** - Comprehensive code review (workspace-isolated)
+4. **dcyfr-design-tokens** - Design token enforcement (workspace-only)
+5. **dcyfr-file-organizer** - **CRITICAL UPDATE** (see below)
+6. **dcyfr-frontend-design** - Frontend components in workspace only
+7. **dcyfr-git-commit-helper** - Git operations within workspace
+8. **dcyfr-inngest-patterns** - Inngest integration patterns
+9. **dcyfr-mcp-builder** - MCP server development
+10. **dcyfr-mdx-authoring** - MDX content authoring
+11. **dcyfr-next-app-router** - Next.js patterns
+12. **dcyfr-pdf-processing-pro** - PDF operations within workspace
+13. **dcyfr-senior-architect** - Architecture decisions
+14. **dcyfr-senior-backend** - Backend development
+15. **dcyfr-senior-frontend** - Frontend development
+16. **dcyfr-skill-creator** - Skill creation
+17. **dcyfr-ui-design-system** - UI design system
+18. **dcyfr-webapp-testing** - Web app testing
+19. **react-best-practices** - React optimization (workspace-scoped for consistency)
 
 ---
 
