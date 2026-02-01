@@ -105,14 +105,16 @@ describe('Production Metrics Sync', () => {
       const previewRedis = createMockRedis({}) as unknown as Redis;
 
       const criticalKeys = [
-        'analytics:milestones',
-        'github:traffic:milestones',
-        'google:analytics:milestones',
-        'blog:trending',
+        'blog:trending', // Only critical production key
+      ];
+
+      const optionalKeys = [
+        'analytics:milestones', // Optional (future)
+        'github:traffic:milestones', // Optional (future)
       ];
 
       const synced = [];
-      for (const key of criticalKeys) {
+      for (const key of [...criticalKeys, ...optionalKeys]) {
         const value = await prodRedis.get(key);
         if (value !== null) {
           await previewRedis.set(`preview:${key}`, value);
@@ -121,9 +123,9 @@ describe('Production Metrics Sync', () => {
       }
 
       expect(synced).toEqual([
+        'blog:trending',
         'analytics:milestones',
         'github:traffic:milestones',
-        'blog:trending',
       ]);
       expect(previewRedis.set).toHaveBeenCalledTimes(3);
       expect(previewRedis.set).toHaveBeenCalledWith(
