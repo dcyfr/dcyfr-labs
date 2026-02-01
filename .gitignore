@@ -24,6 +24,7 @@ nuclei-results.json
 nuclei-report.md
 nuclei-*.json
 nuclei-*.md
+!nuclei-integration.md
 
 # Playwright visual regression & test artifacts
 # These contain screenshots/videos/diffs generated during CI or local runs
