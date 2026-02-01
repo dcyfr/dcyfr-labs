@@ -33,12 +33,21 @@ import dotenv from 'dotenv';
 import { Redis } from '@upstash/redis';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { escapeRegExp } from '../src/lib/security/regex-utils.ts';
 
 // Load environment variables from .env.local
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config({ path: join(__dirname, '..', '.env.local') });
+
+/**
+ * Escapes regex special characters in a pattern string, preserving wildcards.
+ * Prevents regex injection (CWE-94) by escaping metacharacters except `*` (wildcard).
+ */
+function escapeRegExp(pattern) {
+  return pattern
+    .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // Escape special chars
+    .replace(/\*/g, '.*'); // Convert wildcard * to .*
+}
 
 // ============================================================================
 // Configuration
