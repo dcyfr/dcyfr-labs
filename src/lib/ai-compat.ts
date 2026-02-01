@@ -1,3 +1,5 @@
+'use server';
+
 /**
  * AI Agent Compatibility Layer
  *
@@ -36,7 +38,10 @@ export interface TaskContext {
 /**
  * Agent routing result (extends base with convenience properties)
  */
-export interface RoutingResult extends Omit<BaseRoutingResult, 'matchedRule' | 'fallbacks' | 'confidence'> {
+export interface RoutingResult extends Omit<
+  BaseRoutingResult,
+  'matchedRule' | 'fallbacks' | 'confidence'
+> {
   tier: 'public' | 'private' | 'project';
   reasoning: string;
   delegationChain?: string[];
@@ -348,7 +353,8 @@ export async function validateDesignTokens(
 
     // Calculate compliance - use rule count * files as baseline
     const totalChecks = ALL_TOKEN_RULES.length * files.length;
-    const compliance = totalChecks > 0 ? ((totalChecks - allViolations.length) / totalChecks) * 100 : 100;
+    const compliance =
+      totalChecks > 0 ? ((totalChecks - allViolations.length) / totalChecks) * 100 : 100;
 
     return {
       compliance: Math.max(0, Math.min(100, Math.round(compliance * 100) / 100)),
