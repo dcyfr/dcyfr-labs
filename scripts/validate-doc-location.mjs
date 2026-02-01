@@ -83,6 +83,23 @@ const ALLOWED_EXCEPTIONS = [
   'certs/README.md', // Certificate documentation (technical)
 ];
 
+// Pattern-based exceptions for asset and config documentation
+// These READMEs document assets, configurations, or technical setups
+// and belong with the code/assets they describe (not in docs/)
+const ALLOWED_README_PATTERNS = [
+  /^public\/\.archive\/[^/]+\/README\.md$/, // Asset documentation (blog images, portfolio images)
+  /^public\/[^/]+\/README\.md$/, // Public asset documentation
+  /^reports\/[^/]+\/[^/]+\/README\.md$/, // Config documentation (performance budgets, etc.)
+  /^scripts\/[^/]+\/README\.md$/, // Script documentation
+];
+
+/**
+ * Check if file matches any allowed pattern
+ */
+function isAllowedByPattern(filePath) {
+  return ALLOWED_README_PATTERNS.some((pattern) => pattern.test(filePath));
+}
+
 // Colors
 const colors = {
   reset: '\x1b[0m',
@@ -215,6 +232,11 @@ function main() {
 
       // Skip if this file is in the allowed exceptions list
       if (ALLOWED_EXCEPTIONS.includes(file)) {
+        continue;
+      }
+
+      // Skip if this file matches allowed patterns (asset/config documentation)
+      if (isAllowedByPattern(file)) {
         continue;
       }
 
