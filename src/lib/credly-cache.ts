@@ -226,6 +226,77 @@ export function getCredlyCacheStats(): {
 }
 
 /**
+ * Populate Credly cache by fetching from API
+ *
+ * Used by Inngest job and admin endpoints to actually fetch fresh data
+ * from Credly API and populate the cache. Unlike fetchCredlyBadgesCached(),
+ * this function WILL make an API call.
+ *
+ * @param username - Credly username (default: 'dcyfr')
+ * @throws Error if API fetch fails
+ */
+export async function populateCredlyCache(username: string = 'dcyfr'): Promise<void> {
+  console.log(`[Credly Cache] 🔄 Populating cache for user: ${username}`);
+
+  try {
+    // Fetch all badges from Credly API
+    const url = `https://www.credly.com/users/${username}/badges.json`;
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'dcyfr-labs/1.0' },
+      next: { revalidate: 0 }, // Don't cache the fetch itself
+    });
+
+    if (!response.ok) {
+      throw new Error(`Credly API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const badges = data.data || [];
+
+    if (!Array.isArray(badges)) {
+      throw new Error('Invalid Credly API response: expected array of badges');
+    }
+
+    console.log(`[Credly Cache] ✅ Fetched ${badges.length} badges from Credly API`);
+
+    // Create all three cache variants
+    const variants = [
+      { limit: null, key: 'all', badges: badges },
+      { limit: 10, key: '10', badges: badges.slice(0, 10) },
+      { limit: 3, key: '3', badges: badges.slice(0, 3) },
+    ];
+
+    // Store each variant in both memory and Redis
+    for (const variant of variants) {
+      const cacheData: BadgesApiResponse = {
+        badges: variant.badges,
+        total_count: variant.badges.length,
+        count: variant.badges.length,
+      };
+
+      // Store in memory cache
+      const memoryCacheKey = createBadgesCacheKey(username, variant.limit || undefined);
+      setMemoryCachedData(memoryCacheKey, cacheData);
+
+      // Store in Redis
+      const redisKey = createRedisKey(username, variant.limit || undefined);
+      try {
+        await redis.set(redisKey, JSON.stringify(cacheData), { ex: REDIS_CACHE_DURATION });
+        console.log(`[Credly Cache] ✅ Cached ${variant.key}: ${variant.badges.length} badges to ${redisKey}`);
+      } catch (redisError) {
+        console.error(`[Credly Cache] ❌ Failed to cache ${variant.key} to Redis:`, redisError);
+        // Don't throw - at least we have memory cache
+      }
+    }
+
+    console.log(`[Credly Cache] ✅ Cache population complete for ${username}`);
+  } catch (error) {
+    console.error('[Credly Cache] ❌ Failed to populate cache:', error);
+    throw error; // Re-throw to allow caller to handle
+  }
+}
+
+/**
  * Preload Credly data for better performance
  * Useful for SSR or when you know data will be needed
  */

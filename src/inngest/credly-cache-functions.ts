@@ -12,7 +12,7 @@
  */
 
 import { inngest } from "./client";
-import { preloadCredlyData } from "@/lib/credly-cache";
+import { populateCredlyCache } from "@/lib/credly-cache";
 
 // ============================================================================
 // REFRESH CREDLY CACHE
@@ -48,11 +48,11 @@ export const refreshCredlyCache = inngest.createFunction(
     // Step 1: Refresh primary user badge cache
     await step.run("refresh-dcyfr-badges", async () => {
       console.warn("[Credly Cache] Refreshing badge cache for dcyfr user...");
-      
+
       try {
-        // Pre-load all common badge configurations
-        await preloadCredlyData("dcyfr");
-        
+        // Populate cache by fetching from Credly API
+        await populateCredlyCache("dcyfr");
+
         return {
           status: "success",
           message: "Credly cache refreshed successfully",

@@ -23,6 +23,7 @@
     "build": "npm run validate:categories && npm run validate:frontmatter && npm run build:search && npm run build:populate-cache && npm run sync:metrics:quick && next build",
     "build:search": "tsx src/lib/search/build-index.ts",
     "build:populate-cache": "node scripts/populate-build-cache.mjs",
+    "populate:cache": "node scripts/populate-local-cache.mjs",
     "start": "next start",
     "setup": "npm install && cp .env.example .env.local 2>/dev/null || true && npm run build && npm run test",
     "doctor": "npm run check && npm run test && npm run perf:check",

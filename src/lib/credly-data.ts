@@ -124,7 +124,7 @@ export async function getCredlyBadges(
       badges: [],
       totalCount: 0,
       source: 'empty',
-      error: `Cache key not found: ${redisKey}. Run 'npm run populate:cache' or deploy to populate.`,
+      error: `Cache key not found: ${redisKey}. Run 'npm run populate:cache' locally or trigger /api/admin/populate-cache in production.`,
     };
   } catch (error) {
     console.error('[Credly Data] ❌ Redis error:', error);
