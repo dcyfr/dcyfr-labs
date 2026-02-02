@@ -50,11 +50,15 @@ if (!apiKey) {
 
 const client = new PromptIntelClient({
   apiKey,
-  baseUrl: process.env.PROMPTINTEL_BASE_URL,
+  baseUrl: 'https://api.promptintel.novahunting.ai/api/v1',
+  timeout: 15000,
 });
 
-// Initialize cache (5 minutes TTL for threat data)
-const promptIntelCache = new SimpleCache(300000);
+// ============================================================================
+// Cache Configuration (5-minute TTL)
+// ============================================================================
+
+const promptIntelCache = new SimpleCache<unknown>(300000);
 
 // ============================================================================
 // Tool 1: Search Threats
@@ -63,86 +67,73 @@ const promptIntelCache = new SimpleCache(300000);
 server.addTool({
   name: 'promptintel:searchThreats',
   description:
-    'Search PromptIntel IoPC (Indicators of Prompt Compromise) database for threats, attack patterns, and vulnerabilities. Returns adversarial prompt patterns with detection methods and mitigations.',
+    'Search IoPC (Indicators of Prompt Compromise) database for adversarial prompt patterns and attack techniques. Filter by severity and category to find relevant threats.',
   parameters: z.object({
     severity: z
       .enum(['critical', 'high', 'medium', 'low', 'info'])
       .optional()
       .describe('Filter by severity level'),
-    category: z.string().optional().describe('Filter by category (e.g., injection, jailbreak, exfiltration)'),
+    category: z
+      .string()
+      .optional()
+      .describe('Filter by threat category (e.g., injection, manipulation)'),
     limit: z
       .number()
       .optional()
       .default(20)
-      .describe('Maximum results to return (default: 20, max: 100)'),
-    order: z
-      .enum(['severity', 'created_at', 'updated_at'])
-      .optional()
-      .default('severity')
-      .describe('Sort order'),
+      .describe('Maximum number of results (max 100)'),
   }),
   annotations: {
     readOnlyHint: true,
-    openWorldHint: true,
+    openWorldHint: false,
   },
   execute: async (
-    args: {
-      severity?: 'critical' | 'high' | 'medium' | 'low' | 'info';
-      category?: string;
-      limit?: number;
-      order?: string;
-    },
+    args: { severity?: string; category?: string; limit?: number },
     { log }: { log: any }
   ) => {
-    return handleToolError(
-      async () => {
-        const { result, durationMs } = await measurePerformance(async () => {
-          const cacheKey = `threats:${args.severity || 'all'}:${args.category || 'all'}:${args.limit || 20}`;
-          const cached = promptIntelCache.get(cacheKey);
+    try {
+      const { result, durationMs } = await measurePerformance(async () => {
+        const cacheKey = `threats:${args.severity}:${args.category}:${args.limit}`;
+        const cached = promptIntelCache.get(cacheKey);
 
-          if (cached) {
-            log.info('Returning cached threat data');
-            return cached;
-          }
+        if (cached) {
+          log.info('Returning cached threats');
+          return cached;
+        }
 
-          const threats = await client.getPrompts({
-            severity: args.severity,
-            category: args.category,
-            limit: Math.min(args.limit || 20, 100),
-            order: `${args.order || 'severity'}.desc`,
-          });
-
-          promptIntelCache.set(cacheKey, threats);
-          return threats;
+        const threats = await client.getPrompts({
+          severity: args.severity,
+          category: args.category,
+          limit: Math.min(args.limit || 20, 100),
         });
 
-        logToolExecution('promptintel:searchThreats', durationMs, log);
+        promptIntelCache.set(cacheKey, threats);
+        return threats;
+      }, 'searchThreats');
 
-        return {
+      logToolExecution(
+        'promptintel:searchThreats',
+        { severity: args.severity, category: args.category, limit: args.limit },
+        true,
+        durationMs
+      );
+
+      return JSON.stringify(
+        {
+          count: Array.isArray(result) ? result.length : 0,
           threats: result,
-          count: result.length,
-          cached: false,
-          summary: `Found ${result.length} threats. Top severity: ${
-            result.length > 0
-              ? result.reduce((max, t) => {
-                  const severity_order = {
-                    critical: 4,
-                    high: 3,
-                    medium: 2,
-                    low: 1,
-                    info: 0,
-                  };
-                  return severity_order[t.severity] > severity_order[max.severity]
-                    ? t
-                    : max;
-                }).severity
-              : 'N/A'
-          }`,
-        };
-      },
-      'promptintel:searchThreats',
-      log
-    );
+        },
+        null,
+        2
+      );
+    } catch (error) {
+      logToolExecution(
+        'promptintel:searchThreats',
+        { severity: args.severity, category: args.category },
+        false
+      );
+      return handleToolError(error);
+    }
   },
 });
 
@@ -153,54 +144,72 @@ server.addTool({
 server.addTool({
   name: 'promptintel:getTaxonomy',
   description:
-    'Fetch PromptIntel threat taxonomy to understand attack categories, techniques, and defense strategies. Returns hierarchical classification of adversarial techniques.',
+    'Fetch threat taxonomy - hierarchical classification of attack techniques, defense strategies, and security categories.',
   parameters: z.object({
     limit: z
       .number()
       .optional()
       .default(50)
-      .describe('Maximum results to return'),
+      .describe('Maximum number of taxonomy entries (max 100)'),
   }),
   annotations: {
     readOnlyHint: true,
-    openWorldHint: true,
+    openWorldHint: false,
   },
   execute: async (
     args: { limit?: number },
     { log }: { log: any }
   ) => {
-    return handleToolError(
-      async () => {
-        const { result, durationMs } = await measurePerformance(async () => {
-          const cacheKey = `taxonomy:all`;
-          const cached = promptIntelCache.get(cacheKey);
+    try {
+      const { result, durationMs } = await measurePerformance(async () => {
+        const cacheKey = `taxonomy:${args.limit}`;
+        const cached = promptIntelCache.get(cacheKey);
 
-          if (cached) {
-            log.info('Returning cached taxonomy');
-            return cached;
-          }
+        if (cached) {
+          log.info('Returning cached taxonomy');
+          return cached;
+        }
 
-          const taxonomy = await client.getTaxonomy({
-            limit: Math.min(args.limit || 50, 100),
-          });
-
-          promptIntelCache.set(cacheKey, taxonomy);
-          return taxonomy;
+        const taxonomy = await client.getTaxonomy({
+          limit: Math.min(args.limit || 50, 100),
         });
 
-        logToolExecution('promptintel:getTaxonomy', durationMs, log);
+        promptIntelCache.set(cacheKey, taxonomy);
+        return taxonomy;
+      }, 'getTaxonomy');
 
-        return {
+      const taxonomyArray = Array.isArray(result) ? result : [result];
+      const categories = new Set<string>();
+
+      for (const item of taxonomyArray) {
+        if (typeof item === 'object' && item !== null && 'category_type' in item) {
+          const categoryType = (item as Record<string, unknown>).category_type;
+          if (typeof categoryType === 'string') {
+            categories.add(categoryType);
+          }
+        }
+      }
+
+      logToolExecution(
+        'promptintel:getTaxonomy',
+        { limit: args.limit },
+        true,
+        durationMs
+      );
+
+      return JSON.stringify(
+        {
+          count: taxonomyArray.length,
+          categories: Array.from(categories),
           taxonomy: result,
-          count: result.length,
-          categories: [
-            ...new Set(result.map((t) => t.category_type)),
-          ],
-        };
-      },
-      'promptintel:getTaxonomy',
-      log
-    );
+        },
+        null,
+        2
+      );
+    } catch (error) {
+      logToolExecution('promptintel:getTaxonomy', { limit: args.limit }, false);
+      return handleToolError(error);
+    }
   },
 });
 
@@ -222,10 +231,10 @@ server.addTool({
       .enum(['critical', 'high', 'medium', 'low'])
       .describe('Severity level'),
     findings: z
-      .record(z.unknown())
+      .any()
       .describe('Structured findings data (JSON object)'),
     metadata: z
-      .record(z.unknown())
+      .any()
       .optional()
       .describe('Additional metadata'),
   }),
@@ -244,123 +253,186 @@ server.addTool({
     },
     { log }: { log: any }
   ) => {
-    return handleToolError(
-      async () => {
-        const { result, durationMs } = await measurePerformance(async () => {
-          return await client.submitReport({
-            agent_name: args.agentName,
-            title: args.title,
-            description: args.description,
-            severity: args.severity,
-            findings: args.findings,
-            metadata: args.metadata || {},
-          });
+    try {
+      const { result, durationMs } = await measurePerformance(async () => {
+        return await client.submitReport({
+          agent_name: args.agentName,
+          title: args.title,
+          description: args.description,
+          severity: args.severity,
+          findings: args.findings,
+          metadata: args.metadata || {},
         });
+      }, 'submitReport');
 
-        logToolExecution('promptintel:submitReport', durationMs, log);
+      logToolExecution(
+        'promptintel:submitReport',
+        { title: args.title, severity: args.severity },
+        true,
+        durationMs
+      );
 
-        return {
+      return JSON.stringify(
+        {
           success: true,
           report: {
-            id: result.id,
-            title: result.title,
-            created_at: result.created_at,
+            id: result?.id ?? 'unknown',
+            title: result?.title ?? args.title,
+            created_at: result?.created_at ?? new Date().toISOString(),
           },
           message: 'Report submitted successfully to PromptIntel community',
-        };
-      },
-      'promptintel:submitReport',
-      log
-    );
+        },
+        null,
+        2
+      );
+    } catch (error) {
+      logToolExecution(
+        'promptintel:submitReport',
+        { title: args.title, severity: args.severity },
+        false
+      );
+      return handleToolError(error);
+    }
   },
 });
 
 // ============================================================================
-// Resources
+// Resource 1: Critical Threats
 // ============================================================================
 
-/**
- * Resource: Critical Threats
- * Quick access to the most severe threats
- */
 server.addResource({
   uri: 'promptintel://threats/critical',
   name: 'Critical Threats',
   description: 'Critical severity threats from PromptIntel',
   mimeType: 'application/json',
-  fetch: async () => {
-    const threats = await client.getPrompts({
-      severity: 'critical',
-      limit: 10,
-      order: 'created_at.desc',
-    });
+  async load() {
+    try {
+      const cacheKey = 'resource:critical-threats';
+      const cached = promptIntelCache.get(cacheKey);
 
-    return {
-      contents: [
-        {
-          uri: 'promptintel://threats/critical',
-          mimeType: 'application/json',
-          text: JSON.stringify(threats, null, 2),
-        },
-      ],
-    };
+      if (cached) {
+        return {
+          text: JSON.stringify(cached, null, 2),
+        };
+      }
+
+      const threats = await client.getPrompts({
+        severity: 'critical',
+        limit: 10,
+        order: 'created_at.desc',
+      });
+
+      promptIntelCache.set(cacheKey, threats);
+
+      return {
+        text: JSON.stringify(threats, null, 2),
+      };
+    } catch (error) {
+      return {
+        text: JSON.stringify(
+          {
+            error: 'Failed to fetch critical threats',
+            message: error instanceof Error ? error.message : String(error),
+          },
+          null,
+          2
+        ),
+      };
+    }
   },
 });
 
-/**
- * Resource: Threat Taxonomy
- * Quick access to attack technique classification
- */
+// ============================================================================
+// Resource 2: Threat Taxonomy
+// ============================================================================
+
 server.addResource({
   uri: 'promptintel://taxonomy',
   name: 'Threat Taxonomy',
   description: 'Attack techniques and defense strategies taxonomy',
   mimeType: 'application/json',
-  fetch: async () => {
-    const taxonomy = await client.getTaxonomy({ limit: 50 });
+  async load() {
+    try {
+      const cacheKey = 'resource:taxonomy';
+      const cached = promptIntelCache.get(cacheKey);
 
-    return {
-      contents: [
-        {
-          uri: 'promptintel://taxonomy',
-          mimeType: 'application/json',
-          text: JSON.stringify(taxonomy, null, 2),
-        },
-      ],
-    };
+      if (cached) {
+        return {
+          text: JSON.stringify(cached, null, 2),
+        };
+      }
+
+      const taxonomy = await client.getTaxonomy({ limit: 50 });
+
+      promptIntelCache.set(cacheKey, taxonomy);
+
+      return {
+        text: JSON.stringify(taxonomy, null, 2),
+      };
+    } catch (error) {
+      return {
+        text: JSON.stringify(
+          {
+            error: 'Failed to fetch taxonomy',
+            message: error instanceof Error ? error.message : String(error),
+          },
+          null,
+          2
+        ),
+      };
+    }
   },
 });
 
-/**
- * Resource: API Health Status
- * Monitor PromptIntel API availability
- */
+// ============================================================================
+// Resource 3: API Health Status
+// ============================================================================
+
 server.addResource({
   uri: 'promptintel://health',
-  name: 'API Health',
-  description: 'PromptIntel API health and status',
+  name: 'PromptIntel API Health',
+  description: 'Current status and health of PromptIntel API',
   mimeType: 'application/json',
-  fetch: async () => {
-    const health = await client.healthCheck();
+  async load() {
+    try {
+      const cacheKey = 'resource:health';
+      const cached = promptIntelCache.get(cacheKey);
 
-    return {
-      contents: [
-        {
-          uri: 'promptintel://health',
-          mimeType: 'application/json',
-          text: JSON.stringify(health, null, 2),
-        },
-      ],
-    };
+      if (cached) {
+        return {
+          text: JSON.stringify(cached, null, 2),
+        };
+      }
+
+      const health = await client.healthCheck();
+
+      promptIntelCache.set(cacheKey, health);
+
+      return {
+        text: JSON.stringify(health, null, 2),
+      };
+    } catch (error) {
+      return {
+        text: JSON.stringify(
+          {
+            status: 'down',
+            message: error instanceof Error ? error.message : 'Unknown error',
+            timestamp: new Date().toISOString(),
+          },
+          null,
+          2
+        ),
+      };
+    }
   },
 });
 
 // ============================================================================
-// Server Startup
+// Start Server
 // ============================================================================
 
-server.listen().then(() => {
-  console.log('✅ PromptIntel MCP Server running');
-  console.log('Tools: promptintel:searchThreats, promptintel:getTaxonomy, promptintel:submitReport');
-  console.log('Resources: promptintel://threats/critical, promptintel://taxonomy, promptintel://health');
+server.start({
+  transportType: 'stdio',
 });
+
+console.warn('✅ PromptIntel MCP Server started (stdio mode)');
