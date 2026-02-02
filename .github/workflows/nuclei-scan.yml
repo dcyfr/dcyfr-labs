@@ -107,7 +107,7 @@ jobs:
           echo "🔍 Fetching latest Nuclei version..."
           LATEST_VERSION=$(curl -s https://api.github.com/repos/projectdiscovery/nuclei/releases/latest | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
           echo "📦 Latest Nuclei version: v$LATEST_VERSION"
-          
+
           NUCLEI_URL="https://github.com/projectdiscovery/nuclei/releases/latest/download/nuclei_${LATEST_VERSION}_linux_amd64.zip"
           MAX_RETRIES=3
           RETRY_DELAY=5
