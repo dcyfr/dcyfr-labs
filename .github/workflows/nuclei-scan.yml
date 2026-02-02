@@ -126,9 +126,9 @@ jobs:
             fi
           done
 
-          unzip -q nuclei.zip
+          unzip -o -q nuclei.zip
           sudo mv nuclei /usr/local/bin/
-          rm -f nuclei.zip
+          rm -f nuclei.zip LICENSE.md README.md  # Remove extracted docs that conflict
           echo "✅ Nuclei installed successfully"
           nuclei -version
 
