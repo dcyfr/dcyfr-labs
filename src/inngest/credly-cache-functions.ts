@@ -11,8 +11,8 @@
  * - Resilient to Credly API downtime
  */
 
-import { inngest } from "./client";
-import { populateCredlyCache } from "@/lib/credly-cache";
+import { inngest } from './client';
+import { populateCredlyCache } from '@/lib/credly-cache';
 
 // ============================================================================
 // REFRESH CREDLY CACHE
@@ -40,65 +40,67 @@ import { populateCredlyCache } from "@/lib/credly-cache";
  */
 export const refreshCredlyCache = inngest.createFunction(
   {
-    id: "refresh-credly-cache",
+    id: 'refresh-credly-cache',
     retries: 3, // More retries for external API dependency
   },
-  { cron: "0 6 * * *" }, // Daily at 6:00 AM UTC
+  { cron: '0 6 * * *' }, // Daily at 6:00 AM UTC
   async ({ step }) => {
     // Step 1: Refresh primary user badge cache
-    await step.run("refresh-dcyfr-badges", async () => {
-      console.warn("[Credly Cache] Refreshing badge cache for dcyfr user...");
+    await step.run('refresh-dcyfr-badges', async () => {
+      console.warn('[Credly Cache] Refreshing badge cache for dcyfr user...');
 
       try {
         // Populate cache by fetching from Credly API
-        await populateCredlyCache("dcyfr");
+        await populateCredlyCache('dcyfr');
 
         return {
-          status: "success",
-          message: "Credly cache refreshed successfully",
+          status: 'success',
+          message: 'Credly cache refreshed successfully',
           timestamp: new Date().toISOString(),
         };
       } catch (error) {
-        console.error("[Credly Cache] Failed to refresh cache:", error);
-        throw new Error(`Credly cache refresh failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+        console.error('[Credly Cache] Failed to refresh cache:', error);
+        throw new Error(
+          `Credly cache refresh failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     });
 
     // Step 2: Validate cache integrity
-    const validation = await step.run("validate-cache", async () => {
+    const validation = await step.run('validate-cache', async () => {
       try {
         // Import cache functions for validation
-        const { getCredlyCacheStats } = await import("@/lib/credly-cache");
-        
+        const { getCredlyCacheStats } = await import('@/lib/credly-cache');
+
         const stats = getCredlyCacheStats();
-        console.warn("[Credly Cache] Cache validation:", stats);
-        
+        console.warn('[Credly Cache] Cache validation:', stats);
+
         if (stats.validEntries === 0) {
-          throw new Error("No valid cache entries after refresh");
+          throw new Error('No valid cache entries after refresh');
         }
-        
+
         return {
-          status: "validated",
+          status: 'validated',
           stats,
           message: `Cache validated: ${stats.validEntries} valid entries`,
         };
       } catch (error) {
-        console.error("[Credly Cache] Cache validation failed:", error);
+        console.error('[Credly Cache] Cache validation failed:', error);
         // Don't throw here - cache refresh might have worked even if validation fails
         return {
-          status: "validation_failed",
-          error: error instanceof Error ? error.message : "Unknown validation error",
+          status: 'validation_failed',
+          error: error instanceof Error ? error.message : 'Unknown validation error',
         };
       }
     });
 
     return {
-      refreshStatus: "completed",
+      refreshStatus: 'completed',
       validation,
       completedAt: new Date().toISOString(),
-      message: "Daily Credly cache refresh completed successfully",
+      message: 'Daily Credly cache refresh completed successfully',
     };
-  },
+  }
 );
 
 // ============================================================================
@@ -109,10 +111,17 @@ export const refreshCredlyCache = inngest.createFunction(
  * Emergency Credly Cache Clear
  *
  * Manually triggered function to clear Credly cache in case of
- * corrupted or stale data. Can be triggered via Inngest dashboard
- * or programmatically when cache issues are detected.
+ * corrupted or stale data, then immediately repopulates it to
+ * prevent empty cache state in production.
  *
  * Event: "credly/cache.clear"
+ *
+ * Flow:
+ * 1. Clear all Credly cache entries (memory + Redis)
+ * 2. Immediately repopulate with fresh data from Credly API
+ *
+ * This ensures production never has an empty cache state that
+ * would cause "Cache key not found" errors on the sponsors page.
  *
  * Use cases:
  * - Corrupted cache data detected
@@ -122,38 +131,64 @@ export const refreshCredlyCache = inngest.createFunction(
  */
 export const clearCredlyCache = inngest.createFunction(
   {
-    id: "clear-credly-cache",
+    id: 'clear-credly-cache',
     retries: 1,
   },
-  { event: "credly/cache.clear" },
+  { event: 'credly/cache.clear' },
   async ({ event, step }) => {
-    const { reason = "manual", requestedBy = "system" } = event.data;
-    
-    await step.run("clear-cache", async () => {
-      console.warn(`[Credly Cache] Clearing cache - Reason: ${reason}, Requested by: ${requestedBy}`);
-      
+    const { reason = 'manual', requestedBy = 'system' } = event.data;
+
+    // Step 1: Clear the cache
+    await step.run('clear-cache', async () => {
+      console.warn(
+        `[Credly Cache] Clearing cache - Reason: ${reason}, Requested by: ${requestedBy}`
+      );
+
       try {
-        const { clearCredlyCache } = await import("@/lib/credly-cache");
+        const { clearCredlyCache } = await import('@/lib/credly-cache');
         clearCredlyCache();
-        
+
         return {
-          status: "success",
-          message: "Credly cache cleared successfully",
+          status: 'success',
+          message: 'Credly cache cleared successfully',
           reason,
           requestedBy,
           timestamp: new Date().toISOString(),
         };
       } catch (error) {
-        console.error("[Credly Cache] Failed to clear cache:", error);
-        throw new Error(`Cache clear failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+        console.error('[Credly Cache] Failed to clear cache:', error);
+        throw new Error(
+          `Cache clear failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
+      }
+    });
+
+    // Step 2: Immediately repopulate to prevent empty cache state
+    const repopulateResult = await step.run('repopulate-cache', async () => {
+      console.warn('[Credly Cache] Repopulating cache after clear...');
+
+      try {
+        await populateCredlyCache('dcyfr');
+
+        return {
+          status: 'success',
+          message: 'Cache repopulated successfully after clear',
+          timestamp: new Date().toISOString(),
+        };
+      } catch (error) {
+        console.error('[Credly Cache] Failed to repopulate cache:', error);
+        throw new Error(
+          `Cache repopulation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     });
 
     return {
-      action: "cache_cleared",
+      action: 'cache_cleared_and_repopulated',
       reason,
       requestedBy,
+      repopulateResult,
       timestamp: new Date().toISOString(),
     };
-  },
+  }
 );

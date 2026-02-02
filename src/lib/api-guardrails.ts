@@ -45,6 +45,12 @@ export const API_LIMITS = {
     maxEventsPerMonth: 45000, // Stay under 50K limit
     maxTransactionsPerMonth: 45000, // Performance monitoring
   },
+  promptintel: {
+    maxRequestsPerMonth: 10000, // Free tier limit
+    maxRequestsPerDay: 500, // Daily limit
+    cacheMinutes: 5, // Cache threat data for 5 minutes
+    estimatedCostPerRequest: 0, // Free tier
+  },
 } as const;
 
 /**
@@ -76,6 +82,11 @@ export const RATE_LIMITS = {
     requestsPerMinute: 60,
     requestsPerHour: 1000,
     requestsPerDay: 10000,
+  promptScan: {
+    requestsPerMinute: 20, // Generous for automated scanning
+    requestsPerHour: 500,
+    requestsPerDay: 2000,
+  },
   },
   shares: {
     requestsPerMinute: 30,

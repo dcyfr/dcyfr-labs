@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 DCYFR Labs
+Copyright (c) 2025-2026 DCYFR Labs (https://www.dcyfr.ai)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -45,11 +45,13 @@ Documentation in `/docs/` is licensed under Creative Commons Attribution-ShareAl
 - All markdown files in `/docs/`
 
 **You are free to:**
+
 - Share and adapt these materials
 - Use in your own projects
 - Build upon them
 
 **You must:**
+
 - Give appropriate credit
 - Indicate changes made
 - Use the same license for adaptations
@@ -59,6 +61,7 @@ Documentation in `/docs/` is licensed under Creative Commons Attribution-ShareAl
 The following files contain proprietary system specifications for DCYFR (automated code quality system) and are **NOT licensed under MIT or CC**. These files are provided for transparency only.
 
 **Proprietary Files:**
+
 - `.github/agents/DCYFR.agent.md` - DCYFR agent specifications
 - `.github/agents/patterns/` - Pattern enforcement specifications (4 files)
 - `.github/agents/enforcement/` - Validation and approval gate specifications (3 files)
@@ -69,6 +72,7 @@ The following files contain proprietary system specifications for DCYFR (automat
 **Restrictions:**
 
 You may NOT:
+
 - ❌ Reproduce, copy, or distribute these files in any form
 - ❌ Use these specifications as the basis for competing systems
 - ❌ Modify and redistribute these specifications
@@ -76,6 +80,7 @@ You may NOT:
 - ❌ Use in commercial products or services without written permission
 
 You MAY:
+
 - ✅ View and read these files for transparency
 - ✅ Learn from the patterns and approaches documented
 - ✅ Reference concepts in discussions with attribution
@@ -89,15 +94,16 @@ See `.github/DCYFR_STATEMENT.md` for more information about why certain files ar
 
 ## License Summary
 
-| Category | License | Location | Use |
-|----------|---------|----------|-----|
-| **Source Code** | MIT | `/src/`, `/tests/`, `/scripts/` | Free to use, modify, redistribute |
-| **Documentation** | CC BY-SA 4.0 | `/docs/` | Learn, adapt, share (with attribution) |
-| **Proprietary** | Restricted | `.github/agents/` | View only (commercial use restricted) |
+| Category          | License      | Location                                                                                                                                                      | Use                                    |
+| ----------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| **Source Code**   | MIT          | `/src/`, `/tests/`, `/scripts/`                                                                                                                               | Free to use, modify, redistribute      |
+| **Documentation** | CC BY-SA 4.0 | `/docs/`                                                                                                                                                      | Learn, adapt, share (with attribution) |
+| **Proprietary**   | Restricted   | `.agent/`, `.claude/agents`, `.github/agents`, `.opencode/agents`, `src/__tests__/agents`, `src/app/dev/agents/`, `src/components/agents/`, `src/lib/agents/` | View only (commercial use restricted)  |
 
 ---
 
 For questions about licensing, see:
+
 - **Public Patterns:** [docs/ai/README.md](docs/ai/README.md)
 - **DCYFR System:** [.github/DCYFR_STATEMENT.md](.github/DCYFR_STATEMENT.md)
 - **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)

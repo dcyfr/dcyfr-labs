@@ -27,6 +27,14 @@ export {
 // Import API cost monitoring functions
 export { monitorApiCosts, monthlyApiCostReport } from './api-cost-monitoring';
 
+// Import prompt security functions
+export {
+  handlePromptThreatDetected,
+  generateDailyThreatReport,
+  syncIoPCDatabase,
+  handlePromptScanError,
+} from '../lib/inngest/functions/prompt-security';
+
 /**
  * Hello World function - demonstrates basic Inngest function pattern
  *
