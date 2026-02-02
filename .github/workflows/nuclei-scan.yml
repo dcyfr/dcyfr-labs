@@ -103,12 +103,17 @@ jobs:
       - name: Install Nuclei
         run: |
           # Install latest Nuclei from GitHub releases with retry logic
-          NUCLEI_URL="https://github.com/projectdiscovery/nuclei/releases/latest/download/nuclei_3.3.7_linux_amd64.zip"
+          # Dynamically fetch the latest version to avoid hardcoded version issues
+          echo "🔍 Fetching latest Nuclei version..."
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/projectdiscovery/nuclei/releases/latest | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
+          echo "📦 Latest Nuclei version: v$LATEST_VERSION"
+          
+          NUCLEI_URL="https://github.com/projectdiscovery/nuclei/releases/latest/download/nuclei_${LATEST_VERSION}_linux_amd64.zip"
           MAX_RETRIES=3
           RETRY_DELAY=5
 
           for i in $(seq 1 $MAX_RETRIES); do
-            echo "🔄 Attempt $i of $MAX_RETRIES to download Nuclei..."
+            echo "🔄 Attempt $i of $MAX_RETRIES to download Nuclei v$LATEST_VERSION..."
             if wget -q --timeout=30 --tries=2 "$NUCLEI_URL" -O nuclei.zip; then
               echo "✅ Nuclei downloaded successfully"
               break
