@@ -273,6 +273,7 @@ describe('PromptIntelClient', () => {
         description: 'Test description',
         severity: 'high',
         findings: { type: 'injection' },
+        metadata: {},
       });
 
       expect(report.id).toBe('report_123');
@@ -291,6 +292,7 @@ describe('PromptIntelClient', () => {
         description: 'Test',
         severity: 'low',
         findings: {},
+        metadata: {},
       });
 
       expect(fetchSpy).toHaveBeenCalledWith(
@@ -313,6 +315,7 @@ describe('PromptIntelClient', () => {
         description: 'Test',
         severity: 'low',
         findings: {},
+        metadata: {},
       });
 
       expect(fetchSpy).toHaveBeenCalledWith(
@@ -338,6 +341,7 @@ describe('PromptIntelClient', () => {
         description: 'Test',
         severity: 'low',
         findings,
+        metadata: {},
       });
 
       const body = fetchSpy.mock.calls[0][1].body;
