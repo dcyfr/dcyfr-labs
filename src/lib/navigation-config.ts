@@ -13,7 +13,7 @@
  * ```
  */
 
-import { Home, FileText, FolderGit2, Mail, Rss, Heart } from 'lucide-react';
+import { Home, FileText, FolderGit2, Mail, Rss, Heart, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface NavItem {
@@ -56,6 +56,7 @@ export const PRIMARY_NAV: NavItem[] = [
   {
     href: '/about',
     label: 'About',
+    icon: User,
     shortcut: 'g a',
   },
   {
