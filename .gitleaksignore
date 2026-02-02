@@ -126,7 +126,15 @@ z8e9d1c2b3a4z5y6x7w8v9b1u2a3z4y5x6w7v8z  # .vscode/mcp.json: LinkedIn MCP client
 a9f1e2d3c4b5a6z7y8x9w1c2v3b4a5z6y7x8w9a  # docs/mcp/linkedin.md: Example client ID
 b1g2f3e4d5c6b7a8z9y1x2d3w4c5b6a7z8y9x1b  # docs/mcp/linkedin.md: Example client ID
 
+# Test fixtures - Not real secrets
+# Category: Test data
+# Justification: Fake API keys used in test fixtures
+# Review date: 2026-02-02
+# Status: SAFE - Test-only values, not real credentials
+
+tests/integration/threat-intel-integration.test.ts:generic-api-key:265
+
 # END OF BASELINE
-# Total: 196 suppressed findings
-# Last updated: 2026-02-01
+# Total: 197 suppressed findings
+# Last updated: 2026-02-02
 # Next review: 2026-05-01

@@ -6,6 +6,7 @@ import { RATE_LIMITS } from "@/lib/api-guardrails";
 import { inngest } from "@/inngest/client";
 import { trackContactFormSubmission } from "@/lib/analytics";
 import { handleApiError } from "@/lib/error-handler";
+import { getPromptScanner } from "@/lib/security/prompt-scanner";
 
 // Rate limit: 3 requests per minute per IP (from centralized guardrails config)
 // Fail closed on Redis errors to protect against abuse during outages
@@ -69,18 +70,18 @@ export async function POST(request: NextRequest) {
   // Validate request size to prevent DoS attacks via large payloads
   const contentLength = request.headers.get("content-length");
   const maxSize = 50 * 1024; // 50KB limit for contact form
-  
+
   // Primary check: Content-Length header (for production environments)
   if (contentLength && parseInt(contentLength) > maxSize) {
     return NextResponse.json(
-      { 
+      {
         error: "Request too large",
         message: `Request size must not exceed ${Math.floor(maxSize / 1024)}KB`,
       },
       { status: 413 } // Payload Too Large
     );
   }
-  
+
   // Secondary check: Body size validation (for testing/environments without Content-Length)
   let rawBody: string;
   let body: any;
@@ -110,7 +111,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  
+
   // Validate the parsed data
   if (!body || typeof body !== "object") {
     return NextResponse.json(
@@ -130,12 +131,12 @@ export async function POST(request: NextRequest) {
     // Toggle BotID via ENABLE_BOTID env var (set to '1' to enable). Default is disabled.
     // This approach allows us to re-enable BotID quickly after verifying configuration
     // in the Vercel dashboard without code changes.
-    // 
+    //
     // IMPORTANT: Only enable BotID in production AND when explicitly enabled via env var
     // This prevents false positives in development/preview and requires deliberate activation
     // TEMPORARILY DISABLED: BotID causing 403 errors - investigate configuration
     const shouldUseBotId = false; // process.env.NODE_ENV === 'production' && process.env.ENABLE_BOTID === '1';
-    
+
     if (shouldUseBotId) {
       try {
         // TEMPORARILY DISABLED: checkBotId import is commented out to prevent 403 errors
@@ -167,11 +168,11 @@ export async function POST(request: NextRequest) {
 
     if (!rateLimitResult.success) {
       return NextResponse.json(
-        { 
+        {
           error: "Too many requests. Please try again later.",
           retryAfter: Math.ceil((rateLimitResult.reset - Date.now()) / 1000),
         },
-        { 
+        {
           status: 429,
           headers: {
             ...createRateLimitHeaders(rateLimitResult),
@@ -190,9 +191,9 @@ export async function POST(request: NextRequest) {
       console.warn("[Contact API] Honeypot triggered - likely bot submission");
       // Return success to avoid revealing the honeypot
       return NextResponse.json(
-        { 
-          success: true, 
-          message: "Message received. We'll get back to you soon!" 
+        {
+          success: true,
+          message: "Message received. We'll get back to you soon!"
         },
         { status: 200 }
       );
@@ -236,7 +237,38 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+Prompt security scanning - detect adversarial patterns
+    try {
+      const scanner = getPromptScanner();
+      const scanResult = await scanner.scanPrompt(sanitizedData.message, {
+        maxRiskScore: 70, // Block if risk score > 70
+        blockCritical: true,
+        cacheResults: true,
+      });
 
+      // Block if threats detected
+      if (!scanResult.safe || scanResult.severity === 'critical') {
+        console.warn("[Contact API] Prompt threat detected:", {
+          severity: scanResult.severity,
+          riskScore: scanResult.riskScore,
+          threatCount: scanResult.threats.length,
+        });
+
+        // Return generic error to avoid leaking security details
+        return NextResponse.json(
+          {
+            error: "Message validation failed",
+            message: "Your message could not be processed. Please review your content and try again.",
+          },
+          { status: 400 }
+        );
+      }
+    } catch (scanError) {
+      // Fail open - if scanning fails, allow submission but log error
+      console.error("[Contact API] Prompt scanning failed:", scanError);
+    }
+
+    //
     // Send event to Inngest for background processing
     // This returns immediately, making the API response much faster
     try {
@@ -251,7 +283,7 @@ export async function POST(request: NextRequest) {
           ip: clientIp,
         },
       });
-      
+
       // Track analytics (async, don't wait)
       trackContactFormSubmission(
         sanitizedData.message.length,
@@ -269,11 +301,11 @@ export async function POST(request: NextRequest) {
       });
 
       return NextResponse.json(
-        { 
+        {
           success: true,
-          message: "Message received successfully. You'll receive a confirmation email shortly." 
+          message: "Message received successfully. You'll receive a confirmation email shortly."
         },
-        { 
+        {
           status: 200,
           headers: createRateLimitHeaders(rateLimitResult),
         }
