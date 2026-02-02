@@ -16,12 +16,12 @@
  * Triggered by: / (forward slash - universal across all OS and keyboards)
  */
 
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { Command } from "cmdk";
-import Fuse from "fuse.js";
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { Command } from 'cmdk';
+import Fuse from 'fuse.js';
 import {
   Search,
   Clock,
@@ -32,15 +32,16 @@ import {
   Moon,
   Sun,
   Monitor,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
-import { useKeyboardShortcut } from "@/hooks/use-keyboard-shortcut";
-import { useReadingProgressList } from "@/hooks/use-reading-progress";
-import { useSearch } from "@/components/search";
-import { NAVIGATION } from "@/lib/navigation-config";
-import type { SearchIndex, SearchablePost } from "@/lib/search";
-import { fuseOptions } from "@/lib/search";
+  User,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { TYPOGRAPHY, SPACING } from '@/lib/design-tokens';
+import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcut';
+import { useReadingProgressList } from '@/hooks/use-reading-progress';
+import { useSearch } from '@/components/search';
+import { NAVIGATION } from '@/lib/navigation-config';
+import type { SearchIndex, SearchablePost } from '@/lib/search';
+import { fuseOptions } from '@/lib/search';
 
 export interface UnifiedCommandProps {
   open?: boolean;
@@ -59,12 +60,10 @@ interface ActionCommand {
 }
 
 export function UnifiedCommand(props?: UnifiedCommandProps) {
-  const { open: controlledOpen, onOpenChange: controlledOnOpenChange } =
-    props || {};
+  const { open: controlledOpen, onOpenChange: controlledOnOpenChange } = props || {};
 
   // Get context from SearchProvider for global search state
-  const { open: searchProviderOpen, setOpen: setSearchProviderOpen } =
-    useSearch();
+  const { open: searchProviderOpen, setOpen: setSearchProviderOpen } = useSearch();
 
   // Support both controlled mode (from props) and uncontrolled mode (from SearchProvider)
   const [internalOpen, setInternalOpen] = useState(false);
@@ -93,13 +92,13 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   );
 
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [searchIndex, setSearchIndex] = useState<SearchIndex | null>(null);
   const [fuse, setFuse] = useState<Fuse<SearchablePost> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
-    if (typeof window === "undefined") return [];
-    const stored = localStorage.getItem("dcyfr-recent-searches");
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem('dcyfr-recent-searches');
     if (stored) {
       try {
         return JSON.parse(stored);
@@ -121,38 +120,36 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   // Register / shortcut (universal search)
   useKeyboardShortcut([
     {
-      key: "/",
+      key: '/',
       callback: () => onOpenChange(!open),
       preventInInput: true,
-      description: "Open unified command palette",
+      description: 'Open unified command palette',
     },
   ]);
 
   // Load search index
   useEffect(() => {
     if (open && !searchIndex) {
-      fetch("/search-index.json")
+      fetch('/search-index.json')
         .then((res) => res.json())
         .then((data: SearchIndex) => {
           setSearchIndex(data);
           setFuse(new Fuse(data.posts, fuseOptions));
         })
-        .catch((err) =>
-          console.error("[Command] Failed to load search index:", err)
-        );
+        .catch((err) => console.error('[Command] Failed to load search index:', err));
     }
   }, [open, searchIndex]);
 
   // Close on Escape
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         onOpenChange(false);
       }
     };
 
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
   }, [onOpenChange]);
 
   // Prevent arrow keys from scrolling the page when modal is open
@@ -160,13 +157,13 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
     if (!open) return;
 
     const preventArrowScroll = (e: KeyboardEvent) => {
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         e.preventDefault();
       }
     };
 
-    document.addEventListener("keydown", preventArrowScroll);
-    return () => document.removeEventListener("keydown", preventArrowScroll);
+    document.addEventListener('keydown', preventArrowScroll);
+    return () => document.removeEventListener('keydown', preventArrowScroll);
   }, [open]);
 
   // Force focus on input when modal opens
@@ -184,7 +181,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
 
     setRecentSearches((prev) => {
       const updated = [query, ...prev.filter((q) => q !== query)].slice(0, 5);
-      localStorage.setItem("dcyfr-recent-searches", JSON.stringify(updated));
+      localStorage.setItem('dcyfr-recent-searches', JSON.stringify(updated));
       return updated;
     });
   }, []);
@@ -192,7 +189,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   // Clear recent searches
   const clearRecent = useCallback(() => {
     setRecentSearches([]);
-    localStorage.removeItem("dcyfr-recent-searches");
+    localStorage.removeItem('dcyfr-recent-searches');
   }, []);
 
   // Search posts
@@ -203,9 +200,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
     let filtered = fuseResults.map((r) => r.item);
 
     if (selectedTags.length > 0) {
-      filtered = filtered.filter((post) =>
-        selectedTags.some((tag) => post.tags.includes(tag))
-      );
+      filtered = filtered.filter((post) => selectedTags.some((tag) => post.tags.includes(tag)));
     }
 
     return filtered.slice(0, 8);
@@ -226,44 +221,42 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
   // Action commands (theme switching)
   const actionCommands: ActionCommand[] = [
     {
-      id: "action-light-theme",
-      label: "Light Theme",
+      id: 'action-light-theme',
+      label: 'Light Theme',
       icon: Sun,
-      keywords: ["theme", "light"],
+      keywords: ['theme', 'light'],
       onSelect: () => {
         const html = document.documentElement;
-        html.classList.remove("dark");
-        html.classList.add("light");
-        localStorage.setItem("theme", "light");
+        html.classList.remove('dark');
+        html.classList.add('light');
+        localStorage.setItem('theme', 'light');
         onOpenChange(false);
       },
     },
     {
-      id: "action-dark-theme",
-      label: "Dark Theme",
+      id: 'action-dark-theme',
+      label: 'Dark Theme',
       icon: Moon,
-      keywords: ["theme", "dark"],
+      keywords: ['theme', 'dark'],
       onSelect: () => {
         const html = document.documentElement;
-        html.classList.remove("light");
-        html.classList.add("dark");
-        localStorage.setItem("theme", "dark");
+        html.classList.remove('light');
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
         onOpenChange(false);
       },
     },
     {
-      id: "action-system-theme",
-      label: "System Theme",
+      id: 'action-system-theme',
+      label: 'System Theme',
       icon: Monitor,
-      keywords: ["theme", "system", "auto"],
+      keywords: ['theme', 'system', 'auto'],
       onSelect: () => {
         const html = document.documentElement;
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        html.classList.remove("light", "dark");
-        html.classList.add(prefersDark ? "dark" : "light");
-        localStorage.setItem("theme", "system");
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        html.classList.remove('light', 'dark');
+        html.classList.add(prefersDark ? 'dark' : 'light');
+        localStorage.setItem('theme', 'system');
         onOpenChange(false);
       },
     },
@@ -303,18 +296,18 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
     >
       <div
         className={cn(
-          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-          "w-[calc(100%-3rem)] sm:w-[calc(100%-6rem)] max-w-2xl",
-          "max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-8rem)]",
-          "pointer-events-auto"
+          'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+          'w-[calc(100%-3rem)] sm:w-[calc(100%-6rem)] max-w-2xl',
+          'max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-8rem)]',
+          'pointer-events-auto'
         )}
         onClick={(e) => e.stopPropagation()}
       >
         <Command
           className={cn(
-            "rounded-xl border border-border shadow-2xl",
-            "bg-muted/80 dark:bg-muted/40",
-            "overflow-hidden h-full flex flex-col"
+            'rounded-xl border border-border shadow-2xl',
+            'bg-muted/80 dark:bg-muted/40',
+            'overflow-hidden h-full flex flex-col'
           )}
           value=""
           shouldFilter={false}
@@ -326,12 +319,12 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
               ref={inputRef}
               value={search}
               onValueChange={setSearch}
-              placeholder="Search posts, navigate, or toggle theme..."
+              placeholder="Search commands..."
               autoFocus
               className={cn(
-                "flex h-14 w-full bg-transparent py-3 text-base outline-none",
-                "placeholder:text-muted-foreground",
-                "disabled:cursor-not-allowed disabled:opacity-50"
+                'flex h-14 w-full bg-transparent py-3 text-base outline-none',
+                'placeholder:text-muted-foreground',
+                'disabled:cursor-not-allowed disabled:opacity-50'
               )}
             />
             <kbd className="ml-auto hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">
@@ -343,13 +336,31 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
             {/* Loading State */}
             {!searchIndex && (
               <Command.Loading>
-                <div
-                  className={cn(
-                    "text-center text-sm text-muted-foreground",
-                    SPACING.content
-                  )}
-                >
-                  Loading...
+                <div className={cn('space-y-3 p-4', SPACING.content)}>
+                  {/* Header skeleton */}
+                  <div className="flex items-center gap-3">
+                    <div className="h-4 w-4 rounded-full bg-muted-foreground/20 animate-pulse" />
+                    <div className="h-4 flex-1 rounded bg-muted-foreground/20 animate-pulse" />
+                  </div>
+
+                  {/* Content skeletons */}
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="space-y-2">
+                      <div
+                        className="h-3 w-3/4 rounded bg-muted-foreground/15 animate-pulse"
+                        style={{ animationDelay: `${i * 150}ms` }}
+                      />
+                      <div
+                        className="h-3 w-1/2 rounded bg-muted-foreground/10 animate-pulse"
+                        style={{ animationDelay: `${i * 150 + 75}ms` }}
+                      />
+                    </div>
+                  ))}
+
+                  {/* Helpful text */}
+                  <div className="text-center text-xs text-muted-foreground pt-2">
+                    Preparing search index...
+                  </div>
                 </div>
               </Command.Loading>
             )}
@@ -357,16 +368,16 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
             {/* Empty State */}
             {searchIndex && !hasSearchQuery && recentSearches.length === 0 && (
               <Command.Empty>
-                <div
-                  className={cn(
-                    "text-center text-primary/70 dark:text-muted-foreground",
-                    SPACING.content
-                  )}
-                >
-                  <p className="mb-2">
-                    Search posts, navigate, or switch theme
-                  </p>
-                  <p className="text-xs">Type to get started...</p>
+                <div className={cn('text-center space-y-3', SPACING.content, 'py-8')}>
+                  <Search className="h-12 w-12 mx-auto text-muted-foreground/40" />
+                  <div>
+                    <p className="text-sm text-foreground/70 mb-1">
+                      Search posts, navigate, or switch theme
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Try typing &quot;react&quot; or &quot;dark theme&quot;
+                    </p>
+                  </div>
                 </div>
               </Command.Empty>
             )}
@@ -379,9 +390,9 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
                     key={query}
                     onSelect={() => setSearch(query)}
                     className={cn(
-                      "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2",
-                      "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                      "hover:bg-accent/50 transition-colors"
+                      'relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2',
+                      'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                      'hover:bg-accent/50 transition-colors'
                     )}
                   >
                     <Clock className="h-4 w-4 text-muted-foreground" />
@@ -398,38 +409,32 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
             )}
 
             {/* Continue Reading */}
-            {!hasSearchQuery &&
-              filteredContinueReading.length === 0 &&
-              inProgress.length > 0 && (
-                <Command.Group heading="Continue Reading">
-                  {inProgress.map((article) => (
-                    <Command.Item
-                      key={article.articleId}
-                      onSelect={() => {
-                        router.push(`/blog/${article.articleId}`);
-                        onOpenChange(false);
-                      }}
-                      className={cn(
-                        "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2",
-                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                        "hover:bg-accent/50 transition-colors"
-                      )}
-                    >
-                      <BookOpen className="h-4 w-4 text-primary/60" />
-                      <div className="flex-1 min-w-0">
-                        <div className={TYPOGRAPHY.depth.primary}>
-                          {article.title}
-                        </div>
-                        <div
-                          className={cn(TYPOGRAPHY.depth.tertiary, "text-xs")}
-                        >
-                          {Math.round(article.progress)}% complete
-                        </div>
+            {!hasSearchQuery && filteredContinueReading.length === 0 && inProgress.length > 0 && (
+              <Command.Group heading="Continue Reading">
+                {inProgress.map((article) => (
+                  <Command.Item
+                    key={article.articleId}
+                    onSelect={() => {
+                      router.push(`/blog/${article.articleId}`);
+                      onOpenChange(false);
+                    }}
+                    className={cn(
+                      'relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2',
+                      'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                      'hover:bg-accent/50 transition-colors'
+                    )}
+                  >
+                    <BookOpen className="h-4 w-4 text-primary/60" />
+                    <div className="flex-1 min-w-0">
+                      <div className={TYPOGRAPHY.depth.primary}>{article.title}</div>
+                      <div className={cn(TYPOGRAPHY.depth.tertiary, 'text-xs')}>
+                        {Math.round(article.progress)}% complete
                       </div>
-                    </Command.Item>
-                  ))}
-                </Command.Group>
-              )}
+                    </div>
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            )}
 
             {/* Search Results - Blog Posts */}
             {hasSearchQuery && searchResults.length > 0 && (
@@ -443,9 +448,9 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
                       onOpenChange(false);
                     }}
                     className={cn(
-                      "relative flex cursor-pointer flex-col gap-1 rounded-md px-3 py-3",
-                      "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                      "hover:bg-accent/50 transition-colors"
+                      'relative flex cursor-pointer flex-col gap-1 rounded-md px-3 py-3',
+                      'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                      'hover:bg-accent/50 transition-colors'
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -460,19 +465,16 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
                     <div className="flex items-center gap-3 mt-1">
                       <div className="flex items-center gap-1 text-xs text-primary/60 dark:text-muted-foreground">
                         <Calendar className="h-3 w-3" />
-                        {new Date(post.publishedAt).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}
+                        {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
                       </div>
                       {post.tags.length > 0 && (
                         <div className="flex items-center gap-1">
                           <Tag className="h-3 w-3 text-primary/60 dark:text-muted-foreground" />
                           <span className="text-xs text-primary/60 dark:text-muted-foreground">
-                            {post.tags.slice(0, 2).join(", ")}
+                            {post.tags.slice(0, 2).join(', ')}
                           </span>
                         </div>
                       )}
@@ -492,9 +494,9 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
                       key={cmd.id}
                       onSelect={cmd.onSelect}
                       className={cn(
-                        "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2",
-                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                        "hover:bg-accent/50 transition-colors"
+                        'relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2',
+                        'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                        'hover:bg-accent/50 transition-colors'
                       )}
                     >
                       <Icon className="h-4 w-4 text-muted-foreground" />
@@ -515,9 +517,9 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
                       key={cmd.id}
                       onSelect={cmd.onSelect}
                       className={cn(
-                        "relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2",
-                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                        "hover:bg-accent/50 transition-colors"
+                        'relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2',
+                        'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                        'hover:bg-accent/50 transition-colors'
                       )}
                     >
                       <Icon className="h-4 w-4 text-muted-foreground" />
@@ -531,16 +533,16 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
             {/* No Results */}
             {hasSearchQuery && !hasResults && searchIndex && (
               <Command.Empty>
-                <div className={cn("text-center", SPACING.content)}>
+                <div className={cn('text-center', SPACING.content)}>
                   <p className="text-sm text-muted-foreground mb-2">
                     No results found for &quot;{search}&quot;
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Try different keywords or browse{" "}
+                    Try different keywords or browse{' '}
                     <button
                       onClick={() => {
                         onOpenChange(false);
-                        router.push("/blog");
+                        router.push('/blog');
                       }}
                       className="text-primary hover:underline"
                     >

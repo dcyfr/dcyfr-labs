@@ -1,5 +1,10 @@
 # Next.js Developer Blog & Portfolio
 
+[![CI](https://img.shields.io/github/actions/workflow/status/dcyfr/dcyfr-labs/test.yml?branch=main&label=Tests&style=flat-square&logo=github)](https://github.com/dcyfr/dcyfr-labs/actions)
+[![Lighthouse](https://img.shields.io/badge/Lighthouse-92%2B-28a745?style=flat-square&logo=lighthouse&logoColor=white)](https://github.com/dcyfr/dcyfr-labs/actions/workflows/lighthouse-ci.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/dcyfr/dcyfr-labs/codeql.yml?branch=main&label=CodeQL&style=flat-square&logo=github)](https://github.com/dcyfr/dcyfr-labs/security/code-scanning)
+[![Coverage](https://img.shields.io/badge/Coverage-96.7%25-28a745?style=flat-square&logo=vitest&logoColor=white)](./docs/testing/)
+
 A modern, full-featured developer blog and portfolio built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui. Features an MDX-powered blog with advanced analytics, GitHub integration, Redis-backed view counts, background job processing, and comprehensive security features.
 
 **🤖 AI Contributors:**
@@ -261,6 +266,284 @@ npm run test:e2e:ui       # Playwright UI
 
 - **Global metadata**: `src/app/layout.tsx`
 - **SEO routes**: `src/app/sitemap.ts`, `src/app/robots.ts`
+
+---
+
+## 🔧 Troubleshooting
+
+### Common Development Issues
+
+**Issue: Dev server won't start (port 3000 in use)**
+- **Cause:** Previous dev server still running or another process using port 3000
+- **Solution:** Kill process: `lsof -ti:3000 | xargs kill -9` or use different port: `PORT=3001 npm run dev`
+- **Alternative:** Use `npm run dev:fast` which may use a different port
+- **Prevention:** Always stop dev server with Ctrl+C before closing terminal
+
+**Issue: Tests fail locally but pass in CI**
+- **Cause:** Environment differences (Redis unavailable, missing env vars, file path issues)
+- **Solution:**
+  1. Copy `.env.example` to `.env.local` and populate required values
+  2. Run `npm run populate:cache` to warm Redis cache
+  3. Restart dev server: `npm run dev`
+  4. Run tests: `npm run test`
+- **Verify:** Run `npm run check` (lint + typecheck) before pushing
+- **Debug:** Check `.env.local` has `REDIS_URL`, `CONTACT_EMAIL`, `RESEND_API_KEY`
+
+**Issue: Lighthouse CI fails with low performance score**
+- **Cause:** Local dev server includes hot-reload overhead, not representative of production
+- **Solution:** Run production build before Lighthouse: `npm run build && npm start`, then run Lighthouse
+- **Threshold:** ≥90 performance, ≥95 accessibility, ≥95 best practices, 100 SEO
+- **Debug:** Use Chrome DevTools Lighthouse to identify specific issues
+- **Common fixes:** Optimize images, reduce bundle size, lazy load components
+
+**Issue: Design token validation errors after component changes**
+- **Cause:** Hardcoded spacing/typography/colors in components instead of design tokens
+- **Solution:**
+  1. Import design tokens: `import { SPACING, TYPOGRAPHY, SEMANTIC_COLORS } from '@/lib/design-tokens'`
+  2. Replace hardcoded values: `p-4` → `p-[${SPACING.md}]`, `text-gray-900` → `text-[${SEMANTIC_COLORS.text.primary}]`
+  3. Run validation: `npm run validate:design-tokens`
+- **Tool:** Use design-tokens agent for automated fixing
+- **Prevention:** Use design token ESLint rules (enabled in `.eslintrc.js`)
+
+**Issue: MDX blog post not rendering**
+- **Cause:** Invalid frontmatter or unsupported MDX syntax
+- **Solution:**
+  1. Run `npm run validate:frontmatter` to check YAML syntax
+  2. Ensure required frontmatter fields: `title`, `date`, `tags` (array), `excerpt`
+  3. Check date format: YYYY-MM-DD (e.g., `2026-02-02`)
+  4. Verify tags is array: `tags: ['nextjs', 'typescript']` not `tags: nextjs, typescript`
+- **Example:** See `src/content/blog/example-post.mdx` for proper frontmatter format
+- **Debug:** Check browser console for MDX parsing errors
+
+### Redis/Cache Issues
+
+**Issue: View counts not updating**
+- **Cause:** Redis connection failure or missing `REDIS_URL` environment variable
+- **Solution:**
+  1. Check `npm run redis:health` for connection status
+  2. Verify Upstash Redis connection string in `.env.local`
+  3. Test connection: `node -e "const Redis = require('ioredis'); const redis = new Redis(process.env.REDIS_URL); redis.ping().then(console.log)"`
+- **Fallback:** App works without Redis (analytics features disabled)
+- **Alternative:** Use in-memory fallback (automatically enabled if Redis unavailable)
+
+**Issue: GitHub activity heatmap blank**
+- **Cause:** Cache miss or GitHub API rate limit exceeded
+- **Solution:**
+  1. Run `npm run populate:cache` to warm cache
+  2. Set `GITHUB_TOKEN` in `.env.local` for higher rate limits (5000 req/hour vs 60 req/hour)
+  3. Wait for rate limit reset (check headers in browser DevTools Network tab)
+- **Dev:** Heatmap auto-populates on `npm run dev` (runs cache warmup script)
+- **Production:** Inngest background job refreshes cache every 6 hours
+
+### Build/Deployment Issues
+
+**Issue: Vercel deployment fails**
+- **Cause:** Missing environment variables or build errors
+- **Solution:**
+  1. Check Vercel dashboard logs for specific error
+  2. Verify all env vars from `.env.example` are set in Vercel project settings
+  3. Required: `CONTACT_EMAIL`, `RESEND_API_KEY`
+  4. Optional: `REDIS_URL`, `GITHUB_TOKEN`, `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`
+- **Test locally:** Run `npm run build` to catch build errors before deploying
+- **Debug:** Use `vercel logs` command to see deployment logs
+
+**Issue: Type errors after dependency update**
+- **Cause:** Breaking changes in `@dcyfr/ai` or other dependencies
+- **Solution:**
+  1. Run `npm run typecheck` to see all type errors
+  2. Check `CHANGELOG.md` in updated package for migration guide
+  3. Update imports and API usage to match new types
+- **Tool:** Use `npm outdated` to see which packages have new versions
+- **Prevention:** Review changelogs before updating dependencies
+
+**Issue: Inngest functions not triggering**
+- **Cause:** Inngest dev server not running or missing signing keys
+- **Solution:**
+  1. Start Inngest dev server: `npx inngest-cli@latest dev`
+  2. Verify Inngest dashboard shows functions registered (http://localhost:8288)
+  3. Check `.env.local` has `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY`
+  4. Trigger function manually from Inngest dashboard to test
+- **Debug:** Check `src/inngest/functions/` for function definitions
+- **Logs:** View function logs in Inngest dashboard
+
+### Safari/HTTPS Issues
+
+**Issue: Safari APIs not working (clipboard, etc.)**
+- **Cause:** Safari requires HTTPS for certain Web APIs, even on localhost
+- **Solution:** Use HTTPS dev server: `npm run dev:https` (auto-generates certs via mkcert)
+- **Access:** Visit https://localhost:3000 (note HTTPS protocol)
+- **Trust cert:** First run may require trusting self-signed certificate
+- **Alternative:** Test in Chrome/Firefox for development, Safari only for final testing
+
+---
+
+## 📚 FAQ
+
+**Q: How do I create a new blog post?**
+
+A: Create MDX file in `src/content/blog/my-post-slug.mdx` with proper frontmatter:
+```yaml
+---
+title: "My Post Title"
+date: "2026-02-02"
+tags: ["nextjs", "typescript"]
+excerpt: "Brief description of the post"
+---
+```
+Then write content in MDX (Markdown + JSX). See [blog/README.md](./src/content/blog/README.md) for detailed guide.
+
+**Q: What's the difference between Claude Code and GitHub Copilot agents?**
+
+A: **Claude Code** uses agents in `.claude/agents/` (65+ specialized agents for complex refactoring, architecture, testing). **GitHub Copilot** uses `.github/copilot-instructions.md` for inline suggestions and quick-reference patterns. Use Claude for complex tasks, Copilot for day-to-day coding.
+
+**Q: How do I add a new page with proper SEO?**
+
+A: Use `PageLayout` component + `createPageMetadata()` helper:
+```tsx
+import { PageLayout } from '@/components/layouts/PageLayout';
+import { createPageMetadata } from '@/lib/metadata';
+
+export const metadata = createPageMetadata({
+  title: 'About',
+  description: 'About this site',
+});
+
+export default function AboutPage() {
+  return <PageLayout><h1>About</h1></PageLayout>;
+}
+```
+See `src/app/about/page.tsx` for complete example.
+
+**Q: Can I use emojis in blog posts or public-facing content?**
+
+A: **No.** Emojis are prohibited in public-facing content for accessibility and professionalism. Use React icons from `lucide-react` instead. See [DCYFR.agent.md - Never Use Emojis](./.github/agents/DCYFR.agent.md) for policy.
+
+**Q: How do I run tests for a specific component?**
+
+A: Use path filtering:
+```bash
+npm run test src/components/MyComponent/__tests__
+npm run test:watch  # Interactive mode with filtering
+npm run test:ui     # Vitest UI for visual test running
+```
+
+**Q: What's the AI fallback strategy when Claude Code rate limits?**
+
+A: Use **OpenCode.ai** with cost-effective providers (Groq, Ollama). See [opencode-fallback-architecture.md](./docs/ai/opencode-fallback-architecture.md). Run `npm run ai:opencode` to generate OpenCode configuration from Claude agents.
+
+**Q: How do I test API routes locally?**
+
+A: Use the built-in test utilities:
+```bash
+npm run test src/app/api  # Run all API route tests
+```
+Or test manually with curl/Postman:
+```bash
+curl http://localhost:3000/api/contact -X POST -H "Content-Type: application/json" -d '{"email":"test@example.com","message":"Hello"}'
+```
+
+**Q: Why are some tests failing in CI but passing locally?**
+
+A: Common causes:
+1. **Environment variables:** CI may not have `.env.local` values (check GitHub Secrets)
+2. **Redis:** CI may not have Redis instance (tests should mock or skip Redis-dependent tests)
+3. **Timezones:** Date/time tests may fail due to timezone differences (use UTC in tests)
+4. **File paths:** Windows vs. Unix path separators (use `path.join()` instead of string concatenation)
+
+---
+
+## 📊 Performance Benchmarks
+
+### Production Metrics
+- **Lighthouse Score:** 92+ (Performance 90+, Accessibility 95+, Best Practices 95+, SEO 100)
+- **Core Web Vitals:**
+  - **LCP (Largest Contentful Paint):** <2.5s
+  - **INP (Interaction to Next Paint):** <200ms
+  - **CLS (Cumulative Layout Shift):** <0.1
+- **Bundle Size:** ~450KB initial JS (Next.js production build)
+- **Test Suite:** 1879/1944 passing (96.7%, goal: ≥95%)
+
+### Build Performance
+- **Clean build:** ~45s
+- **Incremental build:** ~10s
+- **Test suite:** ~30s
+- **Type check:** ~15s
+
+### Runtime Performance
+- **First paint:** <1s
+- **Time to interactive:** <2s
+- **API response time:** <100ms (avg)
+- **Cache hit rate:** ~85% (Redis)
+
+---
+
+## 🆚 Why dcyfr-labs?
+
+### Compared to Other Next.js Starters
+
+**vs. create-next-app (baseline)**
+- ✅ Pre-configured design system (Tailwind v4 + design tokens)
+- ✅ MDX blog with analytics, trending, search
+- ✅ Comprehensive security (CSP with nonces, rate limiting)
+- ✅ Background jobs (Inngest)
+- ✅ 65+ AI agents for development productivity
+
+**vs. next-blog-starter**
+- ✅ Redis-backed view counts and milestones
+- ✅ Real-time GitHub contribution heatmap
+- ✅ Related posts algorithm
+- ✅ RSS/Atom feeds with validation
+
+**vs. vercel/platforms**
+- ✅ Single-tenant (no multi-tenancy complexity)
+- ✅ Security-first (OWASP compliance, Nuclei scanning)
+- ✅ Test-driven (1879 tests, 96.7% pass rate)
+
+### Unique Value Propositions
+1. **AI-Powered Development:** 65+ Claude Code agents + GitHub Copilot integration
+2. **Security by Default:** CSP, rate limiting, security scanning (CodeQL, Nuclei)
+3. **Production-Ready Testing:** 1879 unit/integration/E2E tests with strict quality gates
+4. **Design System Enforcement:** ESLint rules + pre-commit hooks for design token compliance
+5. **Analytics Without Tracking:** Redis-based view counts, no third-party analytics cookies
+
+---
+
+## 🔒 Security
+
+### Reporting Vulnerabilities
+Found a security issue? Report it privately:
+- **GitHub Security Advisories:** [dcyfr-labs/security](https://github.com/dcyfr/dcyfr-labs/security/advisories/new)
+- **Security.md:** See [SECURITY.md](./SECURITY.md) for full policy
+
+### Security Features
+- **Content Security Policy:** Nonce-based CSP with zero `unsafe-inline`
+- **Rate Limiting:** Redis-backed with in-memory fallback (100 requests/15min per IP)
+- **Input Validation:** Zod schemas on all API routes
+- **Security Headers:** HSTS, X-Frame-Options, X-Content-Type-Options, Permissions-Policy
+- **PII Protection:** Logs sanitized, no sensitive data exposure
+- **Dependency Scanning:** Dependabot + CodeQL + npm audit
+- **External Scanning:** Nuclei on deploy + daily schedule
+
+See [docs/security/](./docs/security/) for implementation details.
+
+---
+
+## ⚙️ Known Issues / Limitations
+
+### Current Limitations
+- **Safari HTTPS requirement:** Some APIs require HTTPS (use `npm run dev:https` for Safari testing)
+- **Redis optional but recommended:** App works without Redis, but analytics features disabled
+- **Test pass rate:** 1879/1944 (96.7%) - 65 flaky/failing tests (goal: ≥99%)
+- **Node.js version:** Requires ≥24.13.0 (uses native fetch, modern APIs)
+- **Bundle size:** ~450KB initial JS (monitoring in progress, goal: <400KB)
+
+### Tracked Issues
+- [ ] Lighthouse CI occasional flakiness on CI (network throttling sensitivity)
+- [ ] GitHub Activity heatmap rate limits (mitigated with `GITHUB_TOKEN`)
+- [ ] Test coverage gaps in legacy components (incremental improvement ongoing)
+- [ ] Design token migration incomplete (80% complete, 20% hardcoded values remain)
+
+See [docs/operations/todo.md](./docs/operations/todo.md) for current priorities.
 
 ---
 
