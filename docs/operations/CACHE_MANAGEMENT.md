@@ -1,8 +1,8 @@
 <!-- TLP:AMBER - Internal Use Only -->
 # Cache Management Operations Guide
 
-**Information Classification:** TLP:AMBER (Limited Distribution)  
-**Audience:** DevOps, Site Reliability Engineers  
+**Information Classification:** TLP:AMBER (Limited Distribution)
+**Audience:** DevOps, Site Reliability Engineers
 **Last Updated:** February 4, 2026
 
 ---
@@ -409,6 +409,6 @@ curl -X POST https://www.dcyfr.ai/api/admin/populate-cache \
 
 ---
 
-**Last Updated:** 2026-02-04  
-**Maintained By:** DevOps Team  
+**Last Updated:** 2026-02-04
+**Maintained By:** DevOps Team
 **Review Cycle:** Quarterly
