@@ -1,0 +1,103 @@
+/**
+ * Cache Health Check Endpoint
+ *
+ * Verifies that all critical cache keys are populated in Redis.
+ * Use for monitoring and alerting on cache state.
+ *
+ * Usage:
+ *   curl https://www.dcyfr.ai/api/health/cache
+ *
+ * Returns:
+ *   200 OK - All caches populated
+ *   503 Service Unavailable - One or more caches missing
+ */
+
+import { NextResponse } from 'next/server';
+import { redis } from '@/mcp/shared/redis-client';
+import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
+
+export async function GET() {
+  try {
+    const keyPrefix = getRedisKeyPrefix();
+
+    // Define all critical cache keys
+    const checks = {
+      credly: {
+        all: `${keyPrefix}credly:badges:dcyfr:all`,
+        limit10: `${keyPrefix}credly:badges:dcyfr:10`,
+        limit3: `${keyPrefix}credly:badges:dcyfr:3`,
+      },
+      github: `${keyPrefix}github:contributions:dcyfr`,
+    };
+
+    const results: Record<string, any> = {};
+    let totalChecks = 0;
+    let passedChecks = 0;
+
+    // Check Credly cache variants
+    for (const [variant, key] of Object.entries(checks.credly)) {
+      totalChecks++;
+      const exists = await redis.exists(key);
+      const cached = exists === 1;
+
+      if (cached) passedChecks++;
+
+      results[`credly_${variant}`] = {
+        cached,
+        key,
+        status: cached ? 'OK' : 'MISSING',
+      };
+    }
+
+    // Check GitHub cache
+    totalChecks++;
+    const githubExists = await redis.exists(checks.github);
+    const githubCached = githubExists === 1;
+
+    if (githubCached) passedChecks++;
+
+    results.github = {
+      cached: githubCached,
+      key: checks.github,
+      status: githubCached ? 'OK' : 'MISSING',
+    };
+
+    const allHealthy = passedChecks === totalChecks;
+
+    return NextResponse.json(
+      {
+        healthy: allHealthy,
+        summary: `${passedChecks}/${totalChecks} cache keys populated`,
+        checks: results,
+        environment: {
+          NODE_ENV: process.env.NODE_ENV,
+          VERCEL_ENV: process.env.VERCEL_ENV,
+          keyPrefix: keyPrefix || '(none)',
+        },
+        timestamp: new Date().toISOString(),
+      },
+      {
+        status: allHealthy ? 200 : 503,
+        headers: {
+          'Cache-Control': 'no-store, must-revalidate',
+        },
+      }
+    );
+  } catch (error) {
+    console.error('[Cache Health] Check failed:', error);
+
+    return NextResponse.json(
+      {
+        healthy: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString(),
+      },
+      {
+        status: 503,
+        headers: {
+          'Cache-Control': 'no-store, must-revalidate',
+        },
+      }
+    );
+  }
+}
