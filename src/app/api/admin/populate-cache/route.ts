@@ -127,28 +127,77 @@ async function fetchGitHubContributions(): Promise<{
 }
 
 async function fetchCredlyBadges(): Promise<any[] | null> {
-  try {
-    console.log('[Admin Cache] Fetching Credly badges...');
+  const maxRetries = 3;
 
-    const response = await fetch(CREDLY_API_BASE, {
-      headers: { 'User-Agent': 'dcyfr-labs/1.0' },
-      next: { revalidate: 0 }, // Don't cache during populate
-    });
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[Admin Cache] Fetching Credly badges (attempt ${attempt}/${maxRetries})...`);
 
-    if (!response.ok) {
-      throw new Error(`Credly API returned ${response.status} ${response.statusText}`);
+      // Add timeout protection
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+      const response = await fetch(CREDLY_API_BASE, {
+        headers: { 'User-Agent': 'dcyfr-labs/1.0' },
+        next: { revalidate: 0 }, // Don't cache during populate
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const errorBody = await response.text().catch(() => 'Unable to read error body');
+        throw new Error(
+          `Credly API returned ${response.status} ${response.statusText}: ${errorBody}`
+        );
+      }
+
+      const data = await response.json();
+      const badges = data.data || [];
+
+      console.log(`[Admin Cache] ✅ Fetched ${badges.length} badges on attempt ${attempt}`);
+
+      return badges;
+    } catch (error) {
+      const isLastAttempt = attempt === maxRetries;
+      console.error(
+        `[Admin Cache] ❌ Credly fetch attempt ${attempt}/${maxRetries} failed:`,
+        error
+      );
+
+      // Send to Sentry on final failure
+      if (isLastAttempt) {
+        try {
+          const Sentry = await import('@sentry/nextjs');
+          Sentry.captureException(error, {
+            level: 'error',
+            tags: {
+              component: 'cache-population',
+              api: 'credly',
+              source: 'admin-populate-cache',
+            },
+            extra: {
+              attempt,
+              maxRetries,
+              apiUrl: CREDLY_API_BASE,
+            },
+          });
+        } catch (sentryError) {
+          // Sentry not available - silently continue
+          console.warn('[Admin Cache] Could not send error to Sentry:', sentryError);
+        }
+
+        return null; // All retries exhausted
+      }
+
+      // Exponential backoff: 1s, 2s, 4s
+      const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+      console.log(`[Admin Cache] ⏳ Retrying in ${delay}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
-
-    const data = await response.json();
-    const badges = data.data || [];
-
-    console.log(`[Admin Cache] ✅ Fetched ${badges.length} badges`);
-
-    return badges;
-  } catch (error) {
-    console.error('[Admin Cache] ❌ Credly fetch failed:', error);
-    return null;
   }
+
+  return null;
 }
 
 export async function POST(request: NextRequest) {

@@ -1,0 +1,84 @@
+name: Cache Refresh
+
+on:
+  schedule:
+    # Run daily at 6:00 AM UTC (same as original Vercel cron schedule)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual triggering for testing
+
+jobs:
+  refresh-cache:
+    name: Refresh Production Cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger Cache Population
+        id: populate
+        run: |
+          echo "🔄 Triggering cache refresh for production..."
+          
+          response=$(curl -X POST https://www.dcyfr.ai/api/admin/populate-cache \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --silent --show-error --max-time 60 --write-out "\nHTTP_CODE:%{http_code}")
+          
+          http_code=$(echo "$response" | grep "HTTP_CODE:" | cut -d':' -f2)
+          body=$(echo "$response" | sed '/HTTP_CODE:/d')
+          
+          echo "Response:"
+          echo "$body" | jq '.' 2>/dev/null || echo "$body"
+          
+          # Check HTTP status
+          if [ "$http_code" != "200" ]; then
+            echo "❌ Cache refresh failed with HTTP $http_code"
+            exit 1
+          fi
+          
+          # Check if successful
+          if echo "$body" | jq -e '.success == true' > /dev/null 2>&1; then
+            echo "✅ Cache refresh successful"
+          else
+            echo "❌ Cache refresh reported failure"
+            exit 1
+          fi
+
+      - name: Verify Cache Health
+        if: success()
+        run: |
+          echo "🔍 Verifying cache health..."
+          
+          # Wait for cache to propagate across edge network
+          sleep 5
+          
+          health=$(curl -s https://www.dcyfr.ai/api/health/cache --max-time 30)
+          echo "Cache Health Status:"
+          echo "$health" | jq '.' 2>/dev/null || echo "$health"
+          
+          # Verify all keys populated
+          if echo "$health" | jq -e '.healthy == true' > /dev/null 2>&1; then
+            echo "✅ Cache is healthy (4/4 keys populated)"
+          else
+            echo "❌ Cache is unhealthy"
+            exit 1
+          fi
+
+      - name: Report Success
+        if: success()
+        run: |
+          echo "✅ Cache refresh workflow completed successfully"
+          echo "Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+
+      - name: Report Failure
+        if: failure()
+        run: |
+          echo "⚠️ Cache refresh workflow failed"
+          echo "Manual intervention may be required"
+          echo "Check: https://www.dcyfr.ai/api/health/cache"
+          echo "Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          
+          # In the future, add Slack/Discord notification here
+          # Example:
+          # curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+          #   -H 'Content-Type: application/json' \
+          #   -d '{"text":"Cache refresh failed - manual intervention required"}'
