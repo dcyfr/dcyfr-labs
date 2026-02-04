@@ -1,6 +1,13 @@
 {
   "framework": "nextjs",
   "trailingSlash": false,
+  "crons": [
+    {
+      "path": "/api/admin/populate-cache",
+      "schedule": "0 6 * * *",
+      "description": "Daily cache population for Credly badges and GitHub contributions"
+    }
+  ],
   "github": {
     "silent": true
   },

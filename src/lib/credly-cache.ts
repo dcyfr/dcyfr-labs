@@ -155,7 +155,28 @@ export async function fetchCredlyBadgesCached(
     environment: process.env.NODE_ENV,
   });
 
-  if (!isProduction) {
+  // Alert in production - this should not happen if cron is working
+  if (isProduction) {
+    try {
+      const Sentry = await import('@sentry/nextjs');
+      Sentry.captureMessage('Credly cache miss in production', {
+        level: 'warning',
+        tags: {
+          cache: 'credly',
+          username,
+          limit: limit?.toString() || 'all',
+          redisKey,
+        },
+        extra: {
+          message: 'Cache not populated - Vercel cron may have failed',
+          suggestion: 'Check /api/health/cache and verify cron execution',
+        },
+      });
+    } catch (error) {
+      // Sentry not available - silently continue
+      console.warn('[Credly Cache] Failed to send Sentry alert:', error);
+    }
+  } else {
     console.warn('[Credly Cache]    Run: curl http://localhost:3000/api/dev/populate-cache');
   }
 
