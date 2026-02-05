@@ -119,9 +119,54 @@ export default async function RootLayout({
   const pathname = headersList.get('x-pathname') || '';
   const isEmbed = pathname.startsWith('/embed');
 
+  // Organization schema for AI visibility and brand signals
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
+    name: SITE_TITLE_PLAIN,
+    url: SITE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/icon-512x512.png`,
+      width: 512,
+      height: 512,
+    },
+    description: SITE_DESCRIPTION,
+    founder: {
+      '@type': 'Person',
+      '@id': `${SITE_URL}/#person`,
+      name: 'Drew (dcyfr)',
+      url: SITE_URL,
+      sameAs: ['https://www.linkedin.com/in/andrew-a-drew', 'https://github.com/dcyfr'],
+      jobTitle: 'Founding Cyber Architect',
+      knowsAbout: [
+        'Cybersecurity',
+        'AI Security',
+        'Web Development',
+        'Software Architecture',
+        'Vulnerability Research',
+      ],
+    },
+    sameAs: ['https://www.linkedin.com/in/andrew-a-drew', 'https://github.com/dcyfr'],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Professional',
+      email: 'drew@dcyfr.ai',
+    },
+  };
+
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        {/* Organization Schema for AI Visibility */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+
         {/* Font optimization */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
