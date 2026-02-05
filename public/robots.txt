@@ -1,0 +1,88 @@
+# robots.txt - AI Crawler-Optimized Configuration
+# Last Updated: February 5, 2026
+#
+# This file explicitly permits AI crawlers for maximum visibility in
+# AI-powered search engines (ChatGPT, Claude, Perplexity, Google AI).
+# Research shows 80% of LLM citations don't rank in Google's top 100,
+# and explicit AI crawler permission is critical for discoverability.
+
+# Global rules for all crawlers
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/static/
+Disallow: /private/
+
+# AI Crawlers - Explicit Permission
+# These are critical for AI-powered search visibility
+
+# OpenAI Crawlers
+User-agent: GPTBot
+Allow: /
+# Training data (569M monthly requests)
+
+User-agent: ChatGPT-User
+Allow: /
+# Real-time browsing (2400 pages/hour, time-sensitive content)
+
+User-agent: OAI-SearchBot
+Allow: /
+# ChatGPT search features
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Allow: /
+# Claude AI (500 pages/hour)
+
+# Google AI
+User-agent: Google-Extended
+Allow: /
+# Google's AI training and Bard/Gemini
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+# Perplexity AI search
+
+# Common Crawl (feeds many AI models)
+User-agent: CCBot
+Allow: /
+# Common Crawl archive (used by multiple AI systems)
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+# Additional AI crawlers
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+# ByteDance (TikTok) AI crawler
+
+# Traditional search engines (maintain existing behavior)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+# Yahoo
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.dcyfr.ai/sitemap.xml
+Sitemap: https://www.dcyfr.ai/blog/sitemap.xml
+Sitemap: https://www.dcyfr.ai/work/sitemap.xml

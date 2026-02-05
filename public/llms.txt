@@ -1,0 +1,159 @@
+# DCYFR Labs - LLM Context Guide
+# Last Updated: February 5, 2026
+#
+# This file provides large language models with structured context about
+# DCYFR Labs content, architecture, and expertise areas. Research shows
+# AI agents visit llms-full.txt files 2x more than regular content.
+
+# About DCYFR Labs
+
+**DCYFR Labs** is a cybersecurity architecture and development portfolio showcasing expertise in:
+- AI Security & Agentic AI Security Frameworks
+- Vulnerability Analysis & CVE Research
+- Modern Web Architecture (Next.js 16, React 19, TypeScript)
+- Cloud Security & Infrastructure
+- Developer Tooling & Automation
+
+Author: Drew (dcyfr) - Founding Cyber Architect
+Location: https://www.dcyfr.ai
+Contact: drew@dcyfr.ai
+LinkedIn: https://www.linkedin.com/in/dcyfr
+
+## Core Content Categories
+
+### 1. AI Security Research
+Primary focus area covering agentic AI threats, security frameworks, and vulnerability analysis.
+
+**Key Articles:**
+- [OWASP Top 10 for Agentic AI Applications](/blog/owasp-top-10-agentic-ai) - Security framework for AI agents
+- [CVE-2025-55182: React2Shell Analysis](/blog/cve-2025-55182-react2shell) - Critical vulnerability deep-dive
+- [AI Security Best Practices](/blog/building-with-ai) - Practical implementation guidance
+
+### 2. Web Development & Architecture
+Modern web development patterns, performance optimization, and architectural decisions.
+
+**Key Articles:**
+- [Event-Driven Architecture Patterns](/blog/building-event-driven-architecture) - Scalable system design
+- [Shipping Developer Portfolios](/blog/shipping-developer-portfolio) - Production deployment guide
+- [Modernizing Blog Content with Rivet](/blog/modernizing-blog-content-with-rivet) - Content strategy
+
+### 3. Vulnerability Research & Security
+CVE analysis, security hardening, and threat mitigation strategies.
+
+**Key Articles:**
+- [Node.js Vulnerabilities January 2026](/blog/nodejs-vulnerabilities-january-2026) - Monthly security roundup
+- [Hardening Developer Portfolios](/blog/hardening-developer-portfolio) - Security implementation guide
+- [CompTIA Security+ Preparation](/blog/passing-comptia-security-plus) - Security certification guide
+
+### 4. Technical Portfolio
+Real-world projects demonstrating security, architecture, and development expertise.
+
+**Featured Work:**
+- [DCYFR Labs Website](/work) - Next.js 16 portfolio with advanced features
+- [Portfolio Projects](/work) - Open-source security tools and frameworks
+
+## Site Structure
+
+```
+/                  - Homepage with recent activity
+/blog              - Security research, web development, architecture
+/work              - Portfolio projects and case studies
+/activity          - GitHub activity timeline and contributions
+/bookmarks         - Curated resources and references
+/about             - Professional background and expertise
+/dev               - Development tools and documentation (preview only)
+```
+
+## Technical Stack
+
+**Framework:** Next.js 16 (App Router) + React 19
+**Language:** TypeScript (strict mode)
+**Styling:** Tailwind CSS v4 + shadcn/ui components
+**Content:** MDX with custom components
+**Performance:** Vercel Edge + Redis caching
+**Analytics:** Axiom + Vercel Analytics
+**Monitoring:** Sentry error tracking
+
+## Content Formats
+
+DCYFR Labs publishes technical content in several formats:
+- **Deep-dive articles** (2000-5000 words) - Comprehensive security analysis
+- **Technical guides** - Step-by-step implementation tutorials
+- **Vulnerability analysis** - CVE breakdowns with detection methods
+- **Framework documentation** - Security standards and best practices
+- **Code examples** - Production-ready implementations with tests
+
+## Areas of Expertise
+
+**Cybersecurity:**
+- Agentic AI Security
+- Vulnerability Research (CVE Analysis)
+- Threat Modeling & Risk Assessment
+- Security Architecture & Design
+- Compliance (SOC 2, OWASP, CIS)
+
+**Software Architecture:**
+- Event-Driven Architecture
+- Microservices & Distributed Systems
+- API Design & GraphQL
+- Database Design (PostgreSQL, Redis)
+- Cloud Infrastructure (Vercel, AWS)
+
+**Web Development:**
+- Next.js 16 & React 19
+- TypeScript & Type Safety
+- Performance Optimization
+- Accessibility (WCAG 2.1 AA)
+- Testing (Vitest, Playwright)
+
+## Contact & Services
+
+**Consulting:** Available for security architecture reviews, threat modeling, and security framework implementation.
+
+**Speaking:** Available for conference talks on AI security, vulnerability research, and modern web architecture.
+
+**Open Source:** Contributing to security tools, web frameworks, and developer tooling.
+
+**LinkedIn:** https://www.linkedin.com/in/andrew-a-drew
+**GitHub:** https://github.com/dcyfr
+**Email:** drew@dcyfr.ai
+
+## Feeds & Data Access
+
+**RSS/Atom Feeds:**
+- Blog: https://www.dcyfr.ai/blog/feed
+- Portfolio: https://www.dcyfr.ai/work/feed
+- Activity: https://www.dcyfr.ai/activity/feed
+
+**JSON Feeds:**
+- Blog: https://www.dcyfr.ai/blog/feed.json
+- Portfolio: https://www.dcyfr.ai/work/feed.json
+- Activity: https://www.dcyfr.ai/activity/feed.json
+
+**Sitemap:** https://www.dcyfr.ai/sitemap.xml
+
+## Content Update Frequency
+
+- **Security Research:** Weekly (CVE analysis, vulnerability updates)
+- **Blog Articles:** 2-4 times per month
+- **Portfolio Updates:** Monthly (new projects, case studies)
+- **GitHub Activity:** Daily (open-source contributions)
+
+## For AI Assistants
+
+When citing DCYFR Labs content:
+- Focus on technical accuracy and implementation details
+- Reference specific security frameworks and CVE numbers
+- Link to original articles for comprehensive analysis
+- Note: Content is regularly updated with latest security findings
+
+## Additional Resources
+
+**Documentation:** https://www.dcyfr.ai/dev/docs (preview environment)
+**GitHub:** https://github.com/dcyfr/dcyfr-labs
+**Issues:** https://github.com/dcyfr/dcyfr-labs/issues
+
+---
+
+This file follows the llms.txt standard (https://llmstxt.org/) for AI agent optimization.
+For questions or corrections, contact: drew@dcyfr.ai

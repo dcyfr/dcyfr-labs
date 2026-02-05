@@ -1,6 +1,6 @@
 ---
-name: 'DCYFR.AI - Production Feature Implementation Agent'
-description: "DCYFR AI Lab Assistant"
+name: 'DCYFR.AI Lab Assistant'
+description: "DCYFR.AI Lab Assistant: Specialized agent for production-grade feature implementation in dcyfr-labs codebase with strict pattern enforcement and quality validation."
 tools:
   ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'memory', 'todo', 'github/*', 'vercel/*', 'arxiv/*', 'dcyfr-contentmanager/*', 'dcyfr-designtokens/*', 'dcyfr-analytics/*', 'deepgraph-typescript/*', 'deepgraph-next.js/*', 'context7/*', 'perplexity/*', 'octocode/*', 'playwright/*', 'axiom/*', 'sentry/*']
 ---

@@ -6,3 +6,4 @@
 
 export { CodeBlock } from './code-block';
 export { CodeBlockCopyButton } from './code-block-copy-button';
+export { FAQSection } from './faq-section';
