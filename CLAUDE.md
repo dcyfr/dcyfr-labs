@@ -535,7 +535,6 @@ npx depcheck              # Find unused dependencies
 
 **Key Maintenance Documents:**
 
-- [`docs/operations/PROJECT_HEALTH_AUDIT.md`](docs/operations/PROJECT_HEALTH_AUDIT.md) - Latest comprehensive audit
 - [`docs/operations/MAINTENANCE_PLAYBOOK.md`](docs/operations/MAINTENANCE_PLAYBOOK.md) - Repeatable processes
 - [`docs/operations/VERSIONING.md`](docs/operations/VERSIONING.md) - Calendar versioning scheme
 - [`docs/operations/todo.md`](docs/operations/todo.md) - Current priorities
@@ -667,8 +666,6 @@ console.log(`Service Account: ${maskEmail(credentials.client_email)}`);
 - [`docs/ai/best-practices.md`](docs/ai/best-practices.md) - Workflow best practices
 - [`docs/ai/design-system.md`](docs/ai/design-system.md) - Complete design validation
 - [`docs/ai/logging-security.md`](docs/ai/logging-security.md) - Logging security best practices
-- [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) - Token optimization
-- [`docs/ai/claude-code-setup.md`](docs/ai/claude-code-setup.md) - Claude Code integration setup
 
 **Domain-specific docs:**
 
@@ -694,8 +691,6 @@ console.log(`Service Account: ${maskEmail(credentials.client_email)}`);
 - Feature: <50k tokens
 - Refactoring: <100k tokens
 
-See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for details.
-
 ## CI/CD
 
 **All PRs must pass:**
@@ -719,9 +714,7 @@ See [`docs/ai/OPTIMIZATION_STRATEGY.md`](docs/ai/OPTIMIZATION_STRATEGY.md) for d
 **Secondary: GitHub Copilot** (~8K context) → Inline suggestions, quick edits
 **Fallback: OpenCode.ai** (75+ providers) → Token exhaustion, cost optimization, offline work
 
-**NEW:** See [AI Agent Architecture Improvements](docs/operations/AI_AGENT_ARCHITECTURE_IMPROVEMENTS_2026-01-06.md) for complete system documentation.
-
-### Agent Operational Systems (NEW - January 2026)
+### Agent Operational Systems
 
 **Three systems ensure continuous, data-driven development:**
 
@@ -802,4 +795,4 @@ _Note: Memory and Sequential Thinking MCPs removed Dec 2025 - replaced by native
 
 **For quick tasks**: Use this guide + design tokens
 **For complex tasks**: Load relevant detailed guides from `/docs/ai/`
-**For Phase 4 work**: See [`docs/operations/phase-4-guide.md`](docs/operations/phase-4-guide.md)
+**For complex tasks**: Load relevant detailed guides from `/docs/ai/`
