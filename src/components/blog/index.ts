@@ -22,6 +22,9 @@ export { LayoutToggle } from './layout-toggle';
 export { RSSFeedButton } from './rss-feed-button';
 export { FeedDropdown } from './feed-dropdown';
 
+// Featured content
+export { FeaturedPostsSection } from './featured-posts-section';
+
 // Search components
 export { BlogSearchClient, useBlogSearch } from './blog-search-client';
 
