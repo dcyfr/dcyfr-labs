@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { posts, type Post } from '@/data/posts';
+import { posts, featuredPosts, type Post } from '@/data/posts';
 import { POST_CATEGORY_LABEL } from '@/lib/post-categories';
 import { getArchiveData } from '@/lib/archive';
 import { getPostBadgeMetadata } from '@/lib/post-badges.server';
@@ -30,6 +30,7 @@ import {
   BlogListSkeleton,
   ModernBlogGrid,
   FeedDropdown,
+  FeaturedPostsSection,
 } from '@/components/blog';
 import { PostList } from '@/components/blog/client';
 import { DynamicBlogContent } from '@/components/blog/server';
@@ -160,7 +161,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   const query = getParam('q');
   const readingTime = getParam('readingTime');
-  const sortBy = getParam('sortBy') || 'popular';
+  const sortBy = getParam('sortBy') || 'newest';
   const dateRange = getParam('dateRange') || 'all';
   const showArchived = getParam('showArchived') === 'true';
   const showDrafts = getParam('showDrafts') === 'true' && process.env.NODE_ENV === 'development';
@@ -307,13 +308,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     selectedCategory ||
     selectedTags.length > 0 ||
     readingTime ||
-    sortBy !== 'popular' ||
+    sortBy !== 'newest' ||
     dateRange !== 'all' ||
     selectedAuthor ||
     showArchived ||
     showDrafts
   );
-  const shouldShowFeaturedSection = false;
+  const shouldShowFeaturedSection = true;
 
   // Create serializable authors list for client component (without icon objects)
   const serializableAuthors = teamMembers.map((author) => ({
@@ -376,6 +377,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <div
         className={`mx-auto ${CONTAINER_WIDTHS.archive} ${CONTAINER_PADDING} ${MOBILE_SAFE_PADDING}`}
       >
+        {/* Featured posts section (full width, only when no filters active) */}
+        {shouldShowFeaturedSection && !hasActiveFilters && (
+          <FeaturedPostsSection posts={featuredPosts} />
+        )}
+
         {/* Main grid: Sidebar + Content */}
         <BlogLayoutWrapper>
           {/* Sidebar (desktop only) - positioned on left, toggled via 'f' key */}
