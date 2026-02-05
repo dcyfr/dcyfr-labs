@@ -14,8 +14,10 @@ import { PromptIntelClient } from '../../src/mcp/shared/promptintel-client';
 // Test Configuration
 // ============================================================================
 
+const HAS_API_KEY = !!process.env.PROMPTINTEL_API_KEY;
+
 const TEST_CONFIG = {
-  apiKey: process.env.PROMPTINTEL_API_KEY,
+  apiKey: process.env.PROMPTINTEL_API_KEY || '',
   baseUrl: process.env.PROMPTINTEL_BASE_URL || 'https://api.promptintel.novahunting.ai/api/v1',
   timeout: 15000,
 };
@@ -26,12 +28,12 @@ const TEST_CONFIG = {
 
 let client: PromptIntelClient;
 
+const describeIfApiKey = HAS_API_KEY ? describe : describe.skip;
+
 beforeAll(() => {
-  if (!TEST_CONFIG.apiKey) {
-    throw new Error(
-      'PROMPTINTEL_API_KEY environment variable is required for threat intel tests. ' +
-      'Get your key from https://promptintel.novahunting.ai/account/api-keys'
-    );
+  if (!HAS_API_KEY) {
+    console.warn('⚠️ PROMPTINTEL_API_KEY not set, skipping threat intel integration tests');
+    return;
   }
 
   client = new PromptIntelClient(TEST_CONFIG);
@@ -46,7 +48,7 @@ afterAll(() => {
 // Health Check Tests
 // ============================================================================
 
-describe('PromptIntel API Health', () => {
+describeIfApiKey('PromptIntel API Health', () => {
   it('should verify API connectivity', async () => {
     const health = await client.healthCheck();
 
@@ -65,7 +67,7 @@ describe('PromptIntel API Health', () => {
 // Threat Search Tests (IoPC)
 // ============================================================================
 
-describe('PromptIntel Threat Search', () => {
+describeIfApiKey('PromptIntel Threat Search', () => {
   it('should search for critical severity threats', async () => {
     const response = await client.getPrompts({
       severity: 'critical',
@@ -81,7 +83,7 @@ describe('PromptIntel Threat Search', () => {
       console.log('Sample response:', firstItem);
 
       // Check if it's a pagination wrapper with data property
-      if (firstItem.data) {
+      if ('data' in firstItem) {
         expect(firstItem).toHaveProperty('pagination');
       }
     }
@@ -145,7 +147,7 @@ describe('PromptIntel Threat Search', () => {
 // Taxonomy Tests
 // ============================================================================
 
-describe('PromptIntel Taxonomy', () => {
+describeIfApiKey('PromptIntel Taxonomy', () => {
   it('should fetch threat taxonomy', async () => {
     const response = await client.getTaxonomy({
       limit: 20,
@@ -180,12 +182,13 @@ describe('PromptIntel Taxonomy', () => {
 // Report Submission Tests
 // ============================================================================
 
-describe('PromptIntel Report Submission', () => {
+describeIfApiKey('PromptIntel Report Submission', () => {
   it('should submit a test security report', async () => {
     const testReport = {
       agent_name: 'DCYFR Test Agent',
       title: 'Automated Integration Test Report',
-      description: 'This is a test report submitted during automated testing of the PromptIntel integration.',
+      description:
+        'This is a test report submitted during automated testing of the PromptIntel integration.',
       severity: 'low' as const,
       findings: {
         test: true,
@@ -206,7 +209,10 @@ describe('PromptIntel Report Submission', () => {
       console.log('Report submitted successfully:', result);
     } catch (error) {
       // API may have specific validation requirements
-      console.log('Report submission validation error (expected):', error instanceof Error ? error.message : String(error));
+      console.log(
+        'Report submission validation error (expected):',
+        error instanceof Error ? error.message : String(error)
+      );
       expect(error).toBeDefined();
     }
   }, 30000);
@@ -216,7 +222,7 @@ describe('PromptIntel Report Submission', () => {
 // Performance & Rate Limiting Tests
 // ============================================================================
 
-describe('PromptIntel Performance', () => {
+describeIfApiKey('PromptIntel Performance', () => {
   it('should handle multiple concurrent requests', async () => {
     const startTime = Date.now();
 
@@ -235,12 +241,16 @@ describe('PromptIntel Performance', () => {
     });
 
     console.log(`Concurrent requests completed in ${duration}ms`);
-    console.log('Results:', results.map((r) => r.length));
+    console.log(
+      'Results:',
+      results.map((r) => r.length)
+    );
   }, 45000);
 
   it('should respect timeout settings', async () => {
     const shortTimeoutClient = new PromptIntelClient({
-      ...TEST_CONFIG,
+      apiKey: TEST_CONFIG.apiKey,
+      baseUrl: TEST_CONFIG.baseUrl,
       timeout: 1, // 1ms - should timeout
     });
 
@@ -259,7 +269,7 @@ describe('PromptIntel Performance', () => {
 // Error Handling Tests
 // ============================================================================
 
-describe('PromptIntel Error Handling', () => {
+describeIfApiKey('PromptIntel Error Handling', () => {
   it('should handle invalid API key gracefully', async () => {
     const badClient = new PromptIntelClient({
       apiKey: 'invalid-key-12345',
@@ -299,7 +309,7 @@ describe('PromptIntel Error Handling', () => {
 // Integration Summary Test
 // ============================================================================
 
-describe('PromptIntel Integration Summary', () => {
+describeIfApiKey('PromptIntel Integration Summary', () => {
   it('should provide complete integration overview', async () => {
     console.log('\n========================================');
     console.log('THREAT INTELLIGENCE INTEGRATION SUMMARY');
