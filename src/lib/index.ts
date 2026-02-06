@@ -10,7 +10,11 @@ export type { SeriesColorTheme, ContainerWidth, HeadingVariant } from './design-
 export { SPACING, TYPOGRAPHY, SEMANTIC_COLORS, CONTAINER_WIDTHS } from './design-tokens.js';
 
 // Metadata
-export { createPageMetadata, createArticlePageMetadata, createArchivePageMetadata } from './metadata.js';
+export {
+  createPageMetadata,
+  createArticlePageMetadata,
+  createArchivePageMetadata,
+} from './metadata.js';
 
 // Utils
 export { cn, ensureAbsoluteUrl, formatNumber } from './utils.js';
@@ -28,8 +32,8 @@ export { PRIMARY_NAV_LINKS, SECONDARY_NAV_LINKS } from './nav-links.js';
 
 /**
  * NOTE: For all other exports, import directly from the module:
- * 
+ *
  * import { specificFunction } from '@/lib/module-name';
- * 
+ *
  * This avoids barrel export complexity and improves tree-shaking.
  */

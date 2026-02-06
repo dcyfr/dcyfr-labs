@@ -57,38 +57,62 @@ for (const line of lines) {
 }
 
 // Now fix type exports - add 'type' keyword where needed
-const fixedLines = uniqueLines.map(line => {
+const fixedLines = uniqueLines.map((line) => {
   if (!line.trim().startsWith('export {')) {
     return line;
   }
 
   // Check if line exports things that should be types
   const typeKeywords = [
-    'Config', 'Options', 'Result', 'Response', 'Request', 'Data', 'Item',
-    'Entry', 'Meta', 'Metadata', 'Schema', 'Context', 'Event', 'Stats',
-    'Type', 'Category', 'Filter', 'Variant', 'Theme', 'Format', 'Level',
-    'Status', 'Error', 'Manager', 'Client', 'Service', 'Adapter', 'Handler'
+    'Config',
+    'Options',
+    'Result',
+    'Response',
+    'Request',
+    'Data',
+    'Item',
+    'Entry',
+    'Meta',
+    'Metadata',
+    'Schema',
+    'Context',
+    'Event',
+    'Stats',
+    'Type',
+    'Category',
+    'Filter',
+    'Variant',
+    'Theme',
+    'Format',
+    'Level',
+    'Status',
+    'Error',
+    'Manager',
+    'Client',
+    'Service',
+    'Adapter',
+    'Handler',
   ];
 
   // Simple heuristic: if the export contains mostly types, make it export type
-  const hasTypeKeywords = typeKeywords.some(keyword => line.includes(keyword));
-  
+  const hasTypeKeywords = typeKeywords.some((keyword) => line.includes(keyword));
+
   // But don't change it if it already has 'export type'
   if (hasTypeKeywords && !line.includes('export type')) {
     // Check if ALL exports seem type-like (name starts with capital or contains type keyword)
     const exportsMatch = line.match(/export\s*\{([^}]+)\}/);
     if (exportsMatch) {
-      const exports = exportsMatch[1].split(',').map(e => e.trim().split(/\s+/)[0]);
-      const allTypeLike = exports.every(name => {
+      const exports = exportsMatch[1].split(',').map((e) => e.trim().split(/\s+/)[0]);
+      const allTypeLike = exports.every((name) => {
         // Capital letter or has type keyword
-        return /^[A-Z]/.test(name) || typeKeywords.some(kw => name.includes(kw));
+        return /^[A-Z]/.test(name) || typeKeywords.some((kw) => name.includes(kw));
       });
-      
+
       // Don't convert if it has mixed case exports (likely values + types)
       if (!allTypeLike) {
         return line;
       }
-      
+
       // Convert to export type
       return line.replace(/^export\s*\{/, 'export type {');
     }
