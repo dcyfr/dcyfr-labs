@@ -14,7 +14,7 @@
 
 | #   | Task                               | Priority | Effort    | Status                    |
 | --- | ---------------------------------- | -------- | --------- | ------------------------- |
-| 1   | RIVET Blog Post Rollout (Tier 1)   | High     | 8-12h     | Backlog                   |
+| 1   | RIVET Blog Post Rollout (Tier 2)   | High     | 4-6h      | In Progress               |
 | 2   | GitHub Webhook Deployment          | High     | 1h        | ✅ Complete (Feb 5, 2026) |
 | 3   | Stage 7: Trending Technologies tab | Medium   | 4-6h      | Backlog                   |
 | 4   | Social Media Phase 2 Dashboard     | Medium   | 2-3 weeks | Q2 2026                   |
@@ -30,15 +30,22 @@
 
 Apply P0/P1/P2 RIVET components to existing blog posts. Components are built and tested (462 tests passing).
 
-**Tier 1 (Full RIVET - 3 posts):**
+**Tier 1 (Full RIVET - 4 posts): ✅ COMPLETE (Jan 18, 2026)**
 
-- [ ] OWASP Top 10 for Agentic AI (4,911 words) - P1 RoleBasedCTA already applied
-- [ ] CVE-2025-55182 React2Shell (4,211 words)
-- [ ] Hardening a Developer Portfolio (1,389 words)
+- [x] OWASP Top 10 for Agentic AI (36 components)
+- [x] CVE-2025-55182 React2Shell (31 components)
+- [x] Node.js January 2026 Security Release (26 components)
+- [x] Hardening a Developer Portfolio (22 components)
 
-**Tier 2 (Core RIVET - 5 posts):** Event-Driven Architecture, CompTIA Security+, AI Development Workflow, Demo: UI Elements, Demo: Code Syntax
+**Tier 2 (Core RIVET - 5 posts):** Missing TLDRSummary, KeyTakeaway, RoleBasedCTA
 
-**Tier 3 (Light RIVET - 4 posts):** Demo posts + Shipping a Developer Portfolio
+- [x] Building Event-Driven Architecture (575 lines) - Full P0+P1 (20 components)
+- [x] Passing CompTIA Security+ (233 lines) - Full P0+P1 (17 components)
+- [x] Building with AI (390 lines) - Full P0+P1 (19 components)
+- [ ] Demo: UI Elements (596 lines) - has KeyTakeaway×3, SectionShare×2, CollapsibleSection×1
+- [ ] Demo: Code Syntax (880 lines) - has SectionShare×3, GlossaryTooltip×1, CollapsibleSection×1
+
+**Tier 3 (Light RIVET - 4 posts):** Shipping Portfolio, Demo Diagrams, Demo LaTeX Math, Demo Markdown
 
 ### GitHub Webhook Deployment
 
@@ -70,7 +77,7 @@ Phase 1 (Consolidation) and Phase 2 (Projects) complete. Remaining:
 - [ ] `src/lib/storage-adapter.ts:142` - Implement OAuth integration (blocks API storage)
 - [ ] `src/lib/storage-adapter.ts:274` - Switch to ApiStorageAdapter when OAuth ready
 - [ ] `src/lib/activity/bookmarks.ts:510` - Server-side bookmark sync (requires auth)
-- [ ] `src/components/layouts/article-header.tsx:190` - Re-enable holo effects
+- [x] ~~`src/components/layouts/article-header.tsx:190` - Re-enable holo effects~~ (Won't fix - Feb 5, 2026)
 
 ### Medium Priority
 

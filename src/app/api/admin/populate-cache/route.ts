@@ -17,7 +17,7 @@ import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 
 const GITHUB_USERNAME = 'dcyfr';
 const CREDLY_API_BASE = 'https://www.credly.com/users/dcyfr/badges.json';
-const CACHE_TTL = 24 * 60 * 60; // 24 hours in seconds
+const CACHE_TTL = 25 * 60 * 60; // 25 hours in seconds (1hr buffer beyond daily cron)
 
 interface PopulateResult {
   success: boolean;
@@ -200,8 +200,23 @@ async function fetchCredlyBadges(): Promise<any[] | null> {
   return null;
 }
 
+/**
+ * GET handler for Vercel Cron Jobs
+ *
+ * Vercel crons send GET requests. This handler authenticates via the
+ * Authorization header (Vercel auto-injects CRON_SECRET) and delegates
+ * to the shared population logic.
+ */
+export async function GET(request: NextRequest) {
+  return handlePopulateCache(request);
+}
+
 export async function POST(request: NextRequest) {
-  // Authentication check
+  return handlePopulateCache(request);
+}
+
+async function handlePopulateCache(request: NextRequest) {
+  // Authentication check - Vercel crons send Authorization: Bearer <CRON_SECRET>
   const authHeader = request.headers.get('authorization');
   const token = authHeader?.replace('Bearer ', '');
 

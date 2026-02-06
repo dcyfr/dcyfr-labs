@@ -34,7 +34,7 @@ config({ path: resolve(__dirname, '../.env.local') });
 
 const GITHUB_USERNAME = 'dcyfr';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const CACHE_DURATION = 60 * 60; // 1 hour in seconds
+const CACHE_DURATION = 25 * 60 * 60; // 25 hours in seconds (survives between daily cron runs)
 
 // Determine which Redis to use
 const isProduction =

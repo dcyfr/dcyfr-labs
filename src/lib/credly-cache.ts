@@ -15,7 +15,7 @@ import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 
 // Cache configuration
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
-const REDIS_CACHE_DURATION = 60 * 60; // 1 hour in seconds for Redis
+const REDIS_CACHE_DURATION = 25 * 60 * 60; // 25 hours in seconds for Redis (survives between daily cron runs)
 const CACHE_KEY_PREFIX = 'credly_cache_';
 const REDIS_KEY_BASE = 'credly:badges:'; // Base key (env prefix added at runtime)
 
@@ -303,7 +303,9 @@ export async function populateCredlyCache(username: string = 'dcyfr'): Promise<v
       const redisKey = createRedisKey(username, variant.limit || undefined);
       try {
         await redis.set(redisKey, JSON.stringify(cacheData), { ex: REDIS_CACHE_DURATION });
-        console.log(`[Credly Cache] ✅ Cached ${variant.key}: ${variant.badges.length} badges to ${redisKey}`);
+        console.log(
+          `[Credly Cache] ✅ Cached ${variant.key}: ${variant.badges.length} badges to ${redisKey}`
+        );
       } catch (redisError) {
         console.error(`[Credly Cache] ❌ Failed to cache ${variant.key} to Redis:`, redisError);
         // Don't throw - at least we have memory cache
