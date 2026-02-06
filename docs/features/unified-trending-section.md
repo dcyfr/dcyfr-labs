@@ -562,6 +562,7 @@ const trendingProjects = await getTrendingProjects(allProjects, {
 Fourth tab added showing trending tech stack usage aggregated from blog post tags and project tech stacks.
 
 **Files Created/Modified:**
+
 - `src/lib/activity/trending-technologies.ts` — Aggregation logic with alias normalization, configurable scoring weights
 - `src/components/home/trending-technologies-panel.tsx` — UI panel with score bars, color-coded badges, source counts
 - `src/components/home/trending-section.tsx` — Added 4th "Tech" tab with Code2 icon
@@ -569,6 +570,7 @@ Fourth tab added showing trending tech stack usage aggregated from blog post tag
 - `src/__tests__/components/home/trending-section.test.tsx` — 5 new integration tests (24 total)
 
 **Key Features:**
+
 - Weighted scoring: `(blogMentions × blogWeight) + (projectMentions × projectWeight)` (defaults: blog=1, project=2)
 - Tech alias normalization (react/reactjs/React → React, nextjs/next.js → Next.js, etc.)
 - Filters out archived/draft posts, deduplicates sources
