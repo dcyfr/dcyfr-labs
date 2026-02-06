@@ -2,9 +2,9 @@
 
 # Operations TODO
 
-**Last Updated:** February 2, 2026
+**Last Updated:** February 5, 2026
 **Status:** Maintenance Mode - Incremental Feature Development
-**Health:** Tests 3008/3087 passing (97.4%), 0 TypeScript errors, 0 ESLint errors
+**Health:** Tests 3014/3087 passing (97.6%), 0 TypeScript errors, 0 ESLint errors
 **Versioning:** Calendar Versioning (YYYY.MM.DD)
 **Archive:** Full history at `docs/operations/private/todo-archive-2026-02-02.md`
 
@@ -14,7 +14,7 @@
 
 | #   | Task                               | Priority | Effort    | Status                    |
 | --- | ---------------------------------- | -------- | --------- | ------------------------- |
-| 1   | RIVET Blog Post Rollout (Tier 2)   | High     | 4-6h      | In Progress               |
+| 1   | RIVET Blog Post Rollout (Tier 2)   | High     | 4-6h      | ✅ Complete (Feb 5, 2026) |
 | 2   | GitHub Webhook Deployment          | High     | 1h        | ✅ Complete (Feb 5, 2026) |
 | 3   | Stage 7: Trending Technologies tab | Medium   | 4-6h      | Backlog                   |
 | 4   | Social Media Phase 2 Dashboard     | Medium   | 2-3 weeks | Q2 2026                   |
@@ -42,8 +42,8 @@ Apply P0/P1/P2 RIVET components to existing blog posts. Components are built and
 - [x] Building Event-Driven Architecture (575 lines) - Full P0+P1 (20 components)
 - [x] Passing CompTIA Security+ (233 lines) - Full P0+P1 (17 components)
 - [x] Building with AI (390 lines) - Full P0+P1 (19 components)
-- [ ] Demo: UI Elements (596 lines) - has KeyTakeaway×3, SectionShare×2, CollapsibleSection×1
-- [ ] Demo: Code Syntax (880 lines) - has SectionShare×3, GlossaryTooltip×1, CollapsibleSection×1
+- [x] Demo: UI Elements (596 lines) - Full P0+P1 (TLDRSummary, RoleBasedCTA×2, KeyTakeaway×3, SectionShare×2, CollapsibleSection, GlossaryTooltip×2)
+- [x] Demo: Code Syntax (880 lines) - Full P0+P1 (TLDRSummary, RoleBasedCTA×2, KeyTakeaway×2, SectionShare×4, CollapsibleSection, GlossaryTooltip×3)
 
 **Tier 3 (Light RIVET - 4 posts):** Shipping Portfolio, Demo Diagrams, Demo LaTeX Math, Demo Markdown
 

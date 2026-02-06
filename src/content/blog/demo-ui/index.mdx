@@ -11,9 +11,39 @@ tags: ['Demo', 'UI', 'Design System', 'Components', 'MDX', 'React 19']
 draft: true
 ---
 
+<TLDRSummary
+  title="UI Elements Quick Reference"
+  sections={[
+    {
+      title: 'Typography & Layout',
+      items: [
+        'Six heading levels with responsive scaling for document hierarchy',
+        'Rich text formatting: bold, italic, strikethrough, inline code',
+        'Ordered, unordered, and task lists with nesting support',
+      ],
+    },
+    {
+      title: 'Custom Components',
+      items: [
+        'KeyTakeaway, ContextClue, and Alert components for emphasis',
+        'CollapsibleSection for progressive disclosure of advanced content',
+        'SectionShare for social sharing of individual sections',
+      ],
+    },
+    {
+      title: 'Design System',
+      items: [
+        'Semantic color tokens for consistent theming across light/dark modes',
+        'Responsive design with mobile-first breakpoints (sm, md, lg, xl)',
+        'Performance-optimized with server-side rendering and code splitting',
+      ],
+    },
+  ]}
+/>
+
 > **Note:** This is a demonstration post showcasing all available UI elements and components. It serves as a visual reference for content creators and developers.
 
-This post demonstrates every visual element, component, and styling option available in the blog system. Use this as a reference when creating new content.
+This post demonstrates every visual element, component, and styling option available in the <GlossaryTooltip term="design system" definition="A collection of reusable components, tokens, and guidelines that ensure visual and functional consistency across an application">design system</GlossaryTooltip>. Use this as a reference when creating new content.
 
 ---
 
@@ -49,7 +79,7 @@ The smallest heading level, rarely used but available.
 
 ## Text Formatting
 
-Regular paragraph text provides the foundation for your content. It should be easy to read with appropriate line height and spacing. The system uses a responsive typography scale that adapts to different screen sizes.
+Regular paragraph text provides the foundation for your content. It should be easy to read with appropriate line height and spacing. The system uses a responsive <GlossaryTooltip term="typography scale" definition="A systematic set of font sizes and line heights that maintain visual harmony and readability across different heading levels and text elements">typography scale</GlossaryTooltip> that adapts to different screen sizes.
 
 You can use **bold text** to emphasize important points, _italic text_ for subtle emphasis, or **_bold italic_** for maximum impact. Use ~~strikethrough~~ for deprecated content or corrections.
 
@@ -93,7 +123,7 @@ Inline `code snippets` are perfect for mentioning variables, functions, or comma
 
 ### KeyTakeaway
 
-<KeyTakeaway>
+<KeyTakeaway variant="insight" title="Design System Consistency">
   The design system ensures visual consistency across all blog posts by using semantic color tokens
   and standardized component patterns. This makes content creation faster and the user experience
   more predictable.
@@ -346,6 +376,14 @@ export default function Page() {
 
 <SectionShare sectionId="code-examples" sectionTitle="Code Examples" />
 
+<RoleBasedCTA
+  role="developer"
+  title="For Developers"
+  description="This design system provides production-ready components with semantic tokens, accessibility built-in, and responsive design out of the box. Explore the full component library and start building consistent UIs faster."
+  buttonText="Explore Components"
+  buttonHref="/dev/docs/component-patterns"
+/>
+
 ---
 
 ## Links and Navigation
@@ -581,10 +619,18 @@ This showcase demonstrates the full range of visual elements available in the bl
 - Include custom components for emphasis
 - Ensure accessibility in all content
 
-<KeyTakeaway>
+<KeyTakeaway variant="tip" title="Content Creation">
   A consistent design system enables faster content creation while maintaining high quality and
   accessibility standards across all blog posts.
 </KeyTakeaway>
+
+<RoleBasedCTA
+  role="executive"
+  title="For Content Teams"
+  description="A unified design system reduces design debt, accelerates content creation, and ensures brand consistency. Every component demonstrated here is production-ready with accessible defaults and responsive behavior."
+  buttonText="Contact Us"
+  buttonHref="/contact?role=executive&topic=design-system"
+/>
 
 ---
 
