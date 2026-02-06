@@ -74,7 +74,7 @@ SECRETS=$(git diff --cached -U0 2>/dev/null | \
   grep -E "API_KEY.*=|SECRET.*=|PASSWORD.*=|TOKEN.*=|PRIVATE_KEY.*=" | \
   grep -v "<your-secret-here>" | \
   grep -v "your-api-key-here" | \
-  grep -v "YOUR_[A-Z_]*" | \
+  grep -vE "YOUR_[A-Z_]+" | \
   grep -v "process\.env\." || true)
 
 if [ -n "$SECRETS" ]; then
