@@ -502,17 +502,158 @@ export function downloadBookmarks(
 // ============================================================================
 
 /**
- * Sync bookmarks with server (placeholder for future implementation)
+ * Sync bookmarks with server using storage adapter
+ * 
+ * When authenticated, saves bookmark collection to server-backed storage
+ * for cross-device sync. Falls back to local-only if unauthenticated.
+ * 
+ * @param collection - Current bookmark collection
+ * @param isAuthenticated - Whether user has valid auth session
+ * @param authToken - Bearer token for API authentication
+ * @returns Updated collection with sync status
  */
 export async function syncBookmarksWithServer(
-  collection: BookmarkCollection
+  collection: BookmarkCollection,
+  isAuthenticated: boolean = false,
+  authToken?: string
 ): Promise<BookmarkCollection> {
-  // TODO: Implement server sync when authentication is available
-  // For now, just mark as local-only
-  console.warn("[Bookmarks] Server sync not yet implemented");
+  // For unauthenticated users, mark as local-only
+  if (!isAuthenticated || !authToken) {
+    return {
+      ...collection,
+      syncStatus: "local",
+    };
+  }
+
+  try {
+    // Use ApiStorageAdapter for authenticated users
+    const { createStorageAdapter } = await import('@/lib/storage-adapter');
+    const adapter = createStorageAdapter(isAuthenticated, authToken);
+    
+    // Save entire bookmark collection to server
+    await adapter.set('bookmarks', {
+      bookmarks: collection.bookmarks.map((b) => ({
+        ...b,
+        createdAt: b.createdAt.toISOString(),
+        lastSyncedAt: new Date().toISOString(),
+      })),
+      lastUpdated: new Date().toISOString(),
+      count: collection.count,
+    });
+
+    // Update local collection with sync status
+    const syncedBookmarks = collection.bookmarks.map((b) => ({
+      ...b,
+      lastSyncedAt: new Date(),
+    }));
+
+    return {
+      bookmarks: syncedBookmarks,
+      lastUpdated: new Date(),
+      count: collection.count,
+      syncStatus: "synced",
+    };
+  } catch (error) {
+    console.error("[Bookmarks] Server sync failed:", error);
+    
+    return {
+      ...collection,
+      syncStatus: "error",
+      syncError: error instanceof Error ? error.message : "Unknown sync error",
+    };
+  }
+}
+
+/**
+ * Load bookmarks from server for authenticated users
+ * 
+ * Merges server bookmarks with local bookmarks, preferring most recent data.
+ * 
+ * @param isAuthenticated - Whether user has valid auth session
+ * @param authToken - Bearer token for API authentication
+ * @returns Merged bookmark collection from server and local storage
+ */
+export async function loadBookmarksFromServer(
+  isAuthenticated: boolean = false,
+  authToken?: string
+): Promise<BookmarkCollection | null> {
+  if (!isAuthenticated || !authToken) {
+    return null;
+  }
+
+  try {
+    const { createStorageAdapter } = await import('@/lib/storage-adapter');
+    const adapter = createStorageAdapter(isAuthenticated, authToken);
+    
+    const serverData = await adapter.get('bookmarks');
+    
+    if (!serverData) {
+      return null;
+    }
+
+    // Deserialize dates from server data
+    const bookmarks: Bookmark[] = serverData.bookmarks.map((b: any) => ({
+      ...b,
+      createdAt: new Date(b.createdAt),
+      lastSyncedAt: b.lastSyncedAt ? new Date(b.lastSyncedAt) : undefined,
+    }));
+
+    return {
+      bookmarks,
+      lastUpdated: new Date(serverData.lastUpdated),
+      count: serverData.count,
+      syncStatus: "synced",
+    };
+  } catch (error) {
+    console.error("[Bookmarks] Failed to load from server:", error);
+    return null;
+  }
+}
+
+/**
+ * Merge local and server bookmark collections, keeping most recent
+ * 
+ * @param local - Local bookmark collection
+ * @param server - Server bookmark collection
+ * @returns Merged collection with conflict resolution
+ */
+export function mergeBookmarkCollections(
+  local: BookmarkCollection,
+  server: BookmarkCollection
+): BookmarkCollection {
+  const mergedMap = new Map<string, Bookmark>();
+  
+  // Add all local bookmarks
+  for (const bookmark of local.bookmarks) {
+    mergedMap.set(bookmark.activityId, bookmark);
+  }
+  
+  // Merge server bookmarks (keep most recent based on lastSyncedAt or createdAt)
+  for (const serverBookmark of server.bookmarks) {
+    const localBookmark = mergedMap.get(serverBookmark.activityId);
+    
+    if (!localBookmark) {
+      // New bookmark from server
+      mergedMap.set(serverBookmark.activityId, serverBookmark);
+    } else {
+      // Conflict: choose most recent based on lastSyncedAt, fallback to createdAt
+      const localTime = localBookmark.lastSyncedAt?.getTime() || localBookmark.createdAt.getTime();
+      const serverTime = serverBookmark.lastSyncedAt?.getTime() || serverBookmark.createdAt.getTime();
+      
+      if (serverTime > localTime) {
+        mergedMap.set(serverBookmark.activityId, serverBookmark);
+      }
+      // If local is newer, keep it (already in map)
+    }
+  }
+  
+  const mergedBookmarks = Array.from(mergedMap.values());
   
   return {
-    ...collection,
-    syncStatus: "local",
+    bookmarks: mergedBookmarks,
+    lastUpdated: new Date(),
+    count: mergedBookmarks.length,
+    syncStatus: "synced",
   };
 }
+

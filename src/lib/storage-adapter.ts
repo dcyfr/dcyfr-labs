@@ -260,25 +260,26 @@ export class ApiStorageAdapter implements StorageAdapter {
 /**
  * Create storage adapter based on user authentication state
  *
- * Current: Always returns LocalStorageAdapter
- * Future: Returns ApiStorageAdapter for authenticated users
+ * Current: Returns ApiStorageAdapter for authenticated users with Bearer token
+ * Fallback: Returns LocalStorageAdapter for unauthenticated users
+ *
+ * The ApiStorageAdapter persists engagement data (bookmarks, likes) to the server,
+ * enabling cross-device sync for authenticated users via /api/user/engagement
  *
  * @param isAuthenticated - Whether user is logged in (OAuth)
- * @param authToken - Optional auth token for API requests
+ * @param authToken - Optional auth token (Bearer token) for API requests
  * @returns Storage adapter instance
  */
 export function createStorageAdapter(
   isAuthenticated: boolean = false,
   authToken?: string
 ): StorageAdapter {
-  // TODO: Switch to ApiStorageAdapter when OAuth is implemented
+  // Use API storage for authenticated users with valid token
   if (isAuthenticated && authToken) {
-    // For now, still use localStorage (API not implemented)
-    // return new ApiStorageAdapter("/api/user/engagement", authToken);
-    console.warn("[StorageAdapter] OAuth not yet implemented, using localStorage");
-    return new LocalStorageAdapter();
+    return new ApiStorageAdapter("/api/user/engagement", authToken);
   }
 
+  // Fallback to localStorage for unauthenticated users
   return new LocalStorageAdapter();
 }
 
