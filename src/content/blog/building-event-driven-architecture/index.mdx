@@ -41,6 +41,36 @@ previousSlugs:
   context="Following the initial build and security hardening, here we explore how event-driven architecture transforms user experience and system reliability using Inngest for background job processing."
 />
 
+<TLDRSummary
+  title="Event-Driven Architecture Brief"
+  sections={[
+    {
+      title: 'Core Pattern',
+      items: [
+        'Separate acknowledgment from processing for instant API responses (< 100ms)',
+        'Use Inngest step functions for durable execution with automatic retries',
+        'Pre-populate caches with scheduled tasks instead of fetching on demand',
+      ],
+    },
+    {
+      title: 'Production Results',
+      items: [
+        'Contact form response dropped from 1-2 seconds to under 100ms',
+        'Email delivery reliability improved to 99.9% with retry policies',
+        'Automated security advisory monitoring runs 3x daily',
+      ],
+    },
+    {
+      title: 'Implementation',
+      items: [
+        'Zero infrastructure: serverless with Vercel-native Inngest integration',
+        '8 background functions running in production (contact, analytics, security)',
+        'Step-based checkpoints prevent redundant work on retries',
+      ],
+    },
+  ]}
+/>
+
 Your API routes are lying to your users. They return `200 OK` while work is still happening. The contact form says "Message sent!" but the email hasn't been delivered yet.
 
 Event-driven architecture fixes this by separating **acknowledgment** from **processing**. Users get instant feedback. Work happens reliably in the background. Here's how <GlossaryTooltip term="Inngest" definition="A serverless background job platform with durable execution, automatic retries, and step functions for building reliable event-driven systems">Inngest</GlossaryTooltip> makes this practical for any <GlossaryTooltip term="Next.js" definition="Next.js - a React framework providing server-side rendering, static site generation, API routes, and file-based routing for building production-ready web applications">Next.js</GlossaryTooltip> project.
@@ -110,6 +140,20 @@ User → API Route → Queue Event → Response (< 100ms)
 ```
 
 The insight: **users don't care when the email sends—they care that you acknowledged their message.**
+
+<KeyTakeaway variant="insight" title="The Core Insight">
+  Event-driven architecture isn't about making work faster—it's about **decoupling the response from
+  the work**. Users get instant feedback. Processing happens reliably in the background with
+  automatic retries and observability.
+</KeyTakeaway>
+
+<RoleBasedCTA
+  role="executive"
+  title="For Engineering Leaders"
+  description="Event-driven architecture transforms API reliability and user experience. This post demonstrates real production results: 10x faster response times, 99.9% delivery reliability, and automated security monitoring—all without managing queue infrastructure."
+  buttonText="Contact Us"
+  buttonHref="/contact?role=executive&topic=event-driven-architecture"
+/>
 
 Modern event-driven systems add one more concept: **steps**. Instead of one monolithic background function, you break work into discrete, named operations. Each step becomes a checkpoint—if step 3 fails, steps 1 and 2 don't re-run. This is called <GlossaryTooltip term="Durable Execution" definition="A programming model where function execution state is automatically persisted, allowing workflows to resume from the last successful checkpoint after failures or interruptions">durable execution</GlossaryTooltip>, and it transforms how you think about reliability.
 
@@ -183,6 +227,12 @@ export async function POST(request: NextRequest) {
 
 The API route now completes in **under 100ms**. The user sees instant feedback.
 
+<KeyTakeaway variant="tip" title="Validate Then Queue">
+  Follow the **Validate → Queue → Respond** pattern: validate and sanitize inputs synchronously,
+  queue the event for background processing, and return an instant response. Never expose background
+  processing failures to users.
+</KeyTakeaway>
+
 ### Step 2: Handle Event in Background Function
 
 ```typescript
@@ -250,6 +300,20 @@ Each `step.run()` creates a **checkpoint**. If Step 2 fails:
 - You see exactly where it failed in the Inngest dashboard
 
 This is <GlossaryTooltip term="Durable Execution" definition="A programming model where function execution survives failures by creating checkpoints between steps, allowing automatic retries from the last successful point without re-running completed work">**durable execution**</GlossaryTooltip>—your function survives failures and resumes from the last successful step.
+
+<KeyTakeaway variant="insight" title="Steps Are Checkpoints">
+  Each `step.run()` call creates a durable checkpoint. If step 3 fails, steps 1 and 2 don't re-run.
+  This means emails aren't sent twice, analytics aren't double-counted, and retries are surgical
+  rather than wasteful.
+</KeyTakeaway>
+
+<RoleBasedCTA
+  role="developer"
+  title="For Developers"
+  description="Implement event-driven architecture in any Next.js project with Inngest. Use step functions for durable execution, automatic retries with exponential backoff, and a local dev UI for debugging. Zero infrastructure required."
+  buttonText="View Implementation"
+  buttonHref="#implementation-contact-form"
+/>
 
 <SectionShare sectionId="implementation-contact-form" sectionTitle="Implementation: Contact Form" />
 
@@ -559,6 +623,20 @@ Event-driven architecture isn't always the answer:
 - **Small scale**: If you have 10 users/day, synchronous is simpler. Don't add infrastructure complexity you don't need yet.
 
 The rule of thumb: **if users don't need to wait for the result, don't make them wait.** But if they _do_ need to see the result immediately, don't hide it behind a queue.
+
+<KeyTakeaway variant="warning" title="Don't Over-Engineer">
+  Event-driven architecture isn't always the answer. Simple CRUD, real-time user feedback, and
+  low-traffic apps don't need queuing. Add complexity only when users are waiting for work they
+  don't need to see complete.
+</KeyTakeaway>
+
+<RoleBasedCTA
+  role="security"
+  title="For Security Teams"
+  description="Background jobs are a security surface. This post covers automated CVE monitoring (3x daily GHSA checks), input validation in async pipelines, and how a 13-hour detection gap led to building automated security advisory monitoring."
+  buttonText="Security Patterns"
+  buttonHref="#the-security-monitor"
+/>
 
 One more thing: **background jobs are a security surface too.** The security monitor in this portfolio exists because I learned the hard way that CVE detection gaps matter. If you're processing sensitive data in background functions, apply the same security rigor you would do to API routes—validate inputs, sanitize outputs, and monitor for anomalies.
 
