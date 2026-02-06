@@ -2,7 +2,7 @@
 
 /**
  * Link Verification Script
- * 
+ *
  * Validates that links in documentation are working correctly after cleanup.
  * Tests both file existence and URL accessibility for internal links.
  */
@@ -28,11 +28,11 @@ class LinkVerifier {
 
   async verify() {
     console.log('🔍 Verifying documentation links...\n');
-    
+
     // Read the broken links report if it exists
     const reportPath = path.join(projectRoot, 'reports', 'broken-links-report.json');
     let report = null;
-    
+
     try {
       if (existsSync(reportPath)) {
         const reportData = await fs.readFile(reportPath, 'utf-8');
@@ -42,7 +42,7 @@ class LinkVerifier {
     } catch (error) {
       console.log('📊 No previous report found\n');
     }
-    
+
     // Sample key documentation files to verify
     const keyFiles = [
       'docs/README.md',
@@ -52,21 +52,21 @@ class LinkVerifier {
       'CLAUDE.md',
       'AGENTS.md',
     ];
-    
+
     for (const file of keyFiles) {
       const filePath = path.join(projectRoot, file);
       if (existsSync(filePath)) {
         await this.verifyFile(filePath);
       }
     }
-    
+
     console.log('\n📊 Verification Results');
     console.log('═'.repeat(30));
     console.log(`🔗 Links checked: ${this.stats.linksChecked}`);
     console.log(`✅ Valid links: ${this.stats.validLinks}`);
     console.log(`❌ Invalid links: ${this.stats.invalidLinks}`);
     console.log(`🌐 External links: ${this.stats.externalLinks}`);
-    
+
     if (this.issues.length > 0) {
       console.log('\n🚨 Issues Found:');
       for (const issue of this.issues) {
@@ -75,26 +75,26 @@ class LinkVerifier {
     } else {
       console.log('\n🎉 All checked links are valid!');
     }
-    
+
     return this.stats.invalidLinks === 0;
   }
-  
+
   async verifyFile(filePath) {
     const content = await fs.readFile(filePath, 'utf-8');
     const links = this.extractLinks(content);
-    
+
     console.log(`📄 Checking: ${path.relative(projectRoot, filePath)} (${links.length} links)`);
-    
+
     for (const link of links) {
       this.stats.linksChecked++;
-      
+
       if (this.isExternalLink(link.url)) {
         this.stats.externalLinks++;
         continue;
       }
-      
+
       const isValid = await this.validateLink(filePath, link.url);
-      
+
       if (isValid) {
         this.stats.validLinks++;
       } else {
@@ -108,18 +108,18 @@ class LinkVerifier {
       }
     }
   }
-  
+
   extractLinks(content) {
     const links = [];
     const patterns = [
       /\[([^\]]+)\]\(([^)]+)\)/g, // Markdown links
       /<a[^>]+href=["']([^"']+)["'][^>]*>/g, // HTML links
     ];
-    
+
     for (const pattern of patterns) {
       let match;
       const regex = new RegExp(pattern.source, pattern.flags);
-      
+
       while ((match = regex.exec(content)) !== null) {
         if (pattern.source.includes('\\[')) {
           links.push({ text: match[1], url: match[2] });
@@ -128,40 +128,53 @@ class LinkVerifier {
         }
       }
     }
-    
+
     return links;
   }
-  
+
   isExternalLink(url) {
-    return url.startsWith('http://') || 
-           url.startsWith('https://') || 
-           url.startsWith('mailto:') || 
-           url.startsWith('tel:') ||
-           url.startsWith('#');
+    return (
+      url.startsWith('http://') ||
+      url.startsWith('https://') ||
+      url.startsWith('mailto:') ||
+      url.startsWith('tel:') ||
+      url.startsWith('#')
+    );
   }
-  
+
   async validateLink(filePath, url) {
     try {
       if (url.startsWith('./') || url.startsWith('../')) {
         const resolvedPath = path.resolve(path.dirname(filePath), url);
-        return existsSync(resolvedPath) || 
-               existsSync(resolvedPath + '.md') || 
-               existsSync(resolvedPath + '.mdx');
+        return (
+          existsSync(resolvedPath) ||
+          existsSync(resolvedPath + '.md') ||
+          existsSync(resolvedPath + '.mdx')
+        );
       }
-      
+
       if (url.startsWith('/')) {
         const absolutePath = path.join(projectRoot, url.slice(1));
-        return existsSync(absolutePath) || 
-               existsSync(absolutePath + '.md') || 
-               existsSync(absolutePath + '.mdx');
+        return (
+          existsSync(absolutePath) ||
+          existsSync(absolutePath + '.md') ||
+          existsSync(absolutePath + '.mdx')
+        );
       }
-      
+
+      // Check root-relative path (e.g. "docs/ai/file.md" from root files like AGENTS.md)
+      const rootRelativePath = path.join(projectRoot, url);
+      if (
+        existsSync(rootRelativePath) ||
+        existsSync(rootRelativePath + '.md') ||
+        existsSync(rootRelativePath + '.mdx')
+      ) {
+        return true;
+      }
+
       // Check docs-relative path
       const docsPath = path.join(projectRoot, 'docs', url);
-      return existsSync(docsPath) || 
-             existsSync(docsPath + '.md') || 
-             existsSync(docsPath + '.mdx');
-      
+      return existsSync(docsPath) || existsSync(docsPath + '.md') || existsSync(docsPath + '.mdx');
     } catch {
       return false;
     }

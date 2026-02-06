@@ -30,7 +30,6 @@ This document serves as the **single source of truth** for discovering, routing,
 **Workspace-Level Guidance:**
 
 - See [`.github/copilot-workspace-instructions.md`](../.github/copilot-workspace-instructions.md) for cross-repo patterns
-- See [`AI_AGENT_CONFIGURATION_ANALYSIS.md`](../AI_AGENT_CONFIGURATION_ANALYSIS.md) for detailed analysis and roadmap
 - MCP servers auto-synced via `scripts/sync-mcp-workspace.mjs`
 
 **AI Capability Catalogs:**
@@ -50,7 +49,6 @@ This document serves as the **single source of truth** for discovering, routing,
 - **dcyfr-labs** - Project code with compatibility adapter
 
 **Migration Status:** ✅ **Complete** (January 27, 2026)
-**Documentation:** See [Migration Guide](docs/ai/MIGRATION_GUIDE.md)
 **Compatibility:** 100% backward compatible via adapter layer
 **Breaking Changes:** None - all existing code continues to work
 
@@ -99,7 +97,7 @@ npm run check               # Type + lint check
   - Pattern validation in conversation mode
   - **CLAUDE.md has extended capability:** Contains production-level knowledge suitable for extended development sessions (when PRIMARY is rate-limited)
 
-**Rationale:** [See `docs/ai/AGENT_UNIFICATION_ANALYSIS.md`](docs/ai/AGENT_UNIFICATION_ANALYSIS.md) for detailed feasibility analysis and why unification isn't viable.
+**Rationale:** The multi-tier architecture was chosen because unification isn't viable due to different tool capabilities, context limits, and optimization targets across agents.
 
 ---
 
@@ -215,29 +213,29 @@ npm run check               # Type + lint check
 
 #### Patterns Directory (.github/agents/patterns/)
 
-| File                                                                                            | Lines | Covers                                                                                               |
-| ----------------------------------------------------------------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------- |
-| [COMPONENT_PATTERNS.md](patterns/COMPONENT_PATTERNS.md)                                         | 466   | Layout selection (PageLayout 90% rule), barrel exports, import strategy, anti-patterns               |
-| [API_PATTERNS.md](patterns/API_PATTERNS.md)                                                     | 405   | Validate→Queue→Respond, Inngest integration, error handling, rate limiting                           |
-| [TESTING_PATTERNS.md](patterns/TESTING_PATTERNS.md)                                             | 370   | 99% pass rate target, strategic skips, when/when-not-to-test, E2E strategy                           |
-| [CODEQL_SUPPRESSIONS.md](patterns/CODEQL_SUPPRESSIONS.md)                                       | 310   | LGTM syntax, false positive patterns, common suppressions, verification                              |
-| [SECURITY_VULNERABILITY_TROUBLESHOOTING.md](patterns/SECURITY_VULNERABILITY_TROUBLESHOOTING.md) | 510   | Code scanning analysis workflow, SSRF/CWE-918 prevention, security testing patterns, lessons learned |
+| File                                                                                                           | Lines | Covers                                                                                               |
+| -------------------------------------------------------------------------------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------- |
+| [COMPONENT_PATTERNS.md](.github/agents/patterns/COMPONENT_PATTERNS.md)                                         | 466   | Layout selection (PageLayout 90% rule), barrel exports, import strategy, anti-patterns               |
+| [API_PATTERNS.md](.github/agents/patterns/API_PATTERNS.md)                                                     | 405   | Validate→Queue→Respond, Inngest integration, error handling, rate limiting                           |
+| [TESTING_PATTERNS.md](.github/agents/patterns/TESTING_PATTERNS.md)                                             | 370   | 99% pass rate target, strategic skips, when/when-not-to-test, E2E strategy                           |
+| [CODEQL_SUPPRESSIONS.md](.github/agents/patterns/CODEQL_SUPPRESSIONS.md)                                       | 310   | LGTM syntax, false positive patterns, common suppressions, verification                              |
+| [SECURITY_VULNERABILITY_TROUBLESHOOTING.md](.github/agents/patterns/SECURITY_VULNERABILITY_TROUBLESHOOTING.md) | 510   | Code scanning analysis workflow, SSRF/CWE-918 prevention, security testing patterns, lessons learned |
 
 #### Enforcement Directory (.github/agents/enforcement/)
 
-| File                                                           | Lines | Covers                                                                               |
-| -------------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------ |
-| [DESIGN_TOKENS.md](enforcement/DESIGN_TOKENS.md)               | 360   | Token enforcement (NON-NEGOTIABLE), categories, ESLint rules, compliance targets     |
-| [APPROVAL_GATES.md](enforcement/APPROVAL_GATES.md)             | 380   | Breaking changes, architecture decisions, security-sensitive work, approval process  |
-| [VALIDATION_CHECKLIST.md](enforcement/VALIDATION_CHECKLIST.md) | 360   | Pre-completion checks, automated/manual validation, common failures, bypass criteria |
+| File                                                                          | Lines | Covers                                                                               |
+| ----------------------------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------ |
+| [DESIGN_TOKENS.md](.github/agents/enforcement/DESIGN_TOKENS.md)               | 360   | Token enforcement (NON-NEGOTIABLE), categories, ESLint rules, compliance targets     |
+| [APPROVAL_GATES.md](.github/agents/enforcement/APPROVAL_GATES.md)             | 380   | Breaking changes, architecture decisions, security-sensitive work, approval process  |
+| [VALIDATION_CHECKLIST.md](.github/agents/enforcement/VALIDATION_CHECKLIST.md) | 360   | Pre-completion checks, automated/manual validation, common failures, bypass criteria |
 
 #### Learning Directory (.github/agents/learning/)
 
-| File                                                      | Lines | Covers                                                                                   |
-| --------------------------------------------------------- | ----- | ---------------------------------------------------------------------------------------- |
-| [PERFORMANCE_METRICS.md](learning/PERFORMANCE_METRICS.md) | 340   | Token budgets, efficiency targets, dashboards, metrics tracking                          |
-| [CONTINUOUS_LEARNING.md](learning/CONTINUOUS_LEARNING.md) | 420   | Pattern recognition, feedback loops, self-improvement triggers, knowledge base evolution |
-| [KNOWLEDGE_BASE.md](learning/KNOWLEDGE_BASE.md)           | 350   | Session handoff, knowledge transfer, long-term learning, monthly reports                 |
+| File                                                                     | Lines | Covers                                                                                   |
+| ------------------------------------------------------------------------ | ----- | ---------------------------------------------------------------------------------------- |
+| [PERFORMANCE_METRICS.md](.github/agents/learning/PERFORMANCE_METRICS.md) | 340   | Token budgets, efficiency targets, dashboards, metrics tracking                          |
+| [CONTINUOUS_LEARNING.md](.github/agents/learning/CONTINUOUS_LEARNING.md) | 420   | Pattern recognition, feedback loops, self-improvement triggers, knowledge base evolution |
+| [KNOWLEDGE_BASE.md](.github/agents/learning/KNOWLEDGE_BASE.md)           | 350   | Session handoff, knowledge transfer, long-term learning, monthly reports                 |
 
 **When to update:**
 
@@ -337,26 +335,26 @@ npm run check               # Type + lint check
 
 #### Patterns Directory (.opencode/patterns/)
 
-| File                                                      | Lines | Covers                                                                |
-| --------------------------------------------------------- | ----- | --------------------------------------------------------------------- |
-| [PROVIDER_SELECTION.md](patterns/PROVIDER_SELECTION.md)   | 200+  | Decision tree, free model optimization, when to use each provider     |
-| [VS_CODE_INTEGRATION.md](patterns/VS_CODE_INTEGRATION.md) | 150+  | Extension setup, keyboard shortcuts (Cmd+Esc), provider configuration |
+| File                                                                | Lines | Covers                                                                |
+| ------------------------------------------------------------------- | ----- | --------------------------------------------------------------------- |
+| [PROVIDER_SELECTION.md](.opencode/patterns/PROVIDER_SELECTION.md)   | 200+  | Decision tree, free model optimization, when to use each provider     |
+| [VS_CODE_INTEGRATION.md](.opencode/patterns/VS_CODE_INTEGRATION.md) | 150+  | Extension setup, keyboard shortcuts (Cmd+Esc), provider configuration |
 
 #### Enforcement Directory (.opencode/enforcement/)
 
-| File                                                         | Lines | Covers                                                                                                                                      |
-| ------------------------------------------------------------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [HYBRID_ENFORCEMENT.md](enforcement/HYBRID_ENFORCEMENT.md)   | 400+  | STRICT rules (hard block): design tokens, PageLayout, barrel exports, test data, emojis; FLEXIBLE rules (warn): API patterns, test coverage |
-| [VALIDATION_ENHANCED.md](enforcement/VALIDATION_ENHANCED.md) | 450+  | Manual checklists for GitHub Copilot models, escalation triggers, provider capability matrix                                                |
-| [QUALITY_GATES.md](enforcement/QUALITY_GATES.md)             | 500+  | Pre-commit validation by provider tier, security gates, performance gates                                                                   |
+| File                                                                   | Lines | Covers                                                                                                                                      |
+| ---------------------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [HYBRID_ENFORCEMENT.md](.opencode/enforcement/HYBRID_ENFORCEMENT.md)   | 400+  | STRICT rules (hard block): design tokens, PageLayout, barrel exports, test data, emojis; FLEXIBLE rules (warn): API patterns, test coverage |
+| [VALIDATION_ENHANCED.md](.opencode/enforcement/VALIDATION_ENHANCED.md) | 450+  | Manual checklists for GitHub Copilot models, escalation triggers, provider capability matrix                                                |
+| [QUALITY_GATES.md](.opencode/enforcement/QUALITY_GATES.md)             | 500+  | Pre-commit validation by provider tier, security gates, performance gates                                                                   |
 
 #### Workflows Directory (.opencode/workflows/)
 
-| File                                                   | Lines | Covers                                                                           |
-| ------------------------------------------------------ | ----- | -------------------------------------------------------------------------------- |
-| [SESSION_HANDOFF.md](workflows/SESSION_HANDOFF.md)     | 400+  | Claude ↔ OpenCode switching, session state schema v2.0, git workflow integration |
-| [COST_OPTIMIZATION.md](workflows/COST_OPTIMIZATION.md) | 450+  | 80/20 strategy (80% free, 20% premium), monthly cost tracking, ROI analysis      |
-| [TROUBLESHOOTING.md](workflows/TROUBLESHOOTING.md)     | 600+  | Provider-specific issues (GitHub Copilot auth, rate limits, validation failures) |
+| File                                                             | Lines | Covers                                                                           |
+| ---------------------------------------------------------------- | ----- | -------------------------------------------------------------------------------- |
+| [SESSION_HANDOFF.md](.opencode/workflows/SESSION_HANDOFF.md)     | 400+  | Claude ↔ OpenCode switching, session state schema v2.0, git workflow integration |
+| [COST_OPTIMIZATION.md](.opencode/workflows/COST_OPTIMIZATION.md) | 450+  | 80/20 strategy (80% free, 20% premium), monthly cost tracking, ROI analysis      |
+| [TROUBLESHOOTING.md](.opencode/workflows/TROUBLESHOOTING.md)     | 600+  | Provider-specific issues (GitHub Copilot auth, rate limits, validation failures) |
 
 #### Scripts Directory (.opencode/scripts/)
 
@@ -506,11 +504,6 @@ Test Strategy → test-engineer
 - **Skills Gallery**: https://www.aitmpl.com/skills (355+ skills)
 - **Documentation**: https://docs.aitmpl.com/
 - **Installation**: `npx claude-code-templates@latest --agent=<name> --yes`
-
-**See Also:**
-
-- [Enhancement Plan](docs/ai/aitmpl-enhancement-plan.md) - Full integration strategy
-- [Integration Summary](docs/ai/aitmpl-integration-summary.md) - What was integrated
 
 ---
 
@@ -897,7 +890,7 @@ Claude General → Deep research and architecture decisions
 - **Secondary (🟡)**: GitHub Copilot gets 80/20 patterns from public docs
 - **NO PUBLIC SYNC FROM PROPRIETARY**: `.claude/agents/` files are never referenced in public documentation
 
-**Detailed Strategy**: See [`docs/ai/AGENT_SYNC_STRATEGY.md`](docs/ai/AGENT_SYNC_STRATEGY.md) and [`docs/ai/AGENT_UNIFICATION_ANALYSIS.md`](docs/ai/AGENT_UNIFICATION_ANALYSIS.md) for complete plans and design rationale.
+**Detailed Strategy**: Sync flows from `.github/agents/` (source of truth) to all other instruction files. See the Synchronization & Maintenance section above.
 
 ### File Ownership & Update Responsibility
 
@@ -1304,8 +1297,7 @@ git status --ignored | grep -E "\.(claude|opencode|private)"
   - Created 4 new commands: `/code-review`, `/frontend`, `/typescript`, `/test-strategy`
   - Enhanced DCYFR.md (v2.2.0) with delegation strategy and proactive triggers
   - Updated AGENTS.md with template agent documentation section
-  - Created comprehensive enhancement plan (`docs/ai/aitmpl-enhancement-plan.md`)
-  - Created integration summary (`docs/ai/aitmpl-integration-summary.md`)
+  - Documented enhancement plan and integration summary
   - Total agents: 15 (11 existing + 4 from templates)
   - Enhanced capabilities: React optimization, TypeScript mastery, code review automation, test engineering
 
@@ -1473,7 +1465,7 @@ git status --ignored | grep -E "\.(claude|opencode|private)"
 
 dcyfr-labs uses a **comprehensive multi-layer automation system** to keep dependencies, documentation, and metrics current automatically.
 
-**Full Documentation:** [`docs/automation/AUTOMATED_UPDATES.md`](docs/automation/AUTOMATED_UPDATES.md)
+**Full Documentation:** See the [Automated Updates](#-automated-updates--maintenance) section below.
 
 ### What's Automated
 
@@ -1499,7 +1491,7 @@ npm run mcp:check
 npm run check
 ```
 
-**For detailed automation setup and configuration, see:** [`docs/automation/AUTOMATED_UPDATES.md`](docs/automation/AUTOMATED_UPDATES.md)
+**For detailed automation setup and configuration, see:** [`docs/automation/README.md`](docs/automation/README.md)
 
 ---
 
