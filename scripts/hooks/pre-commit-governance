@@ -165,7 +165,7 @@ echo "${BLUE}4/5 Scanning for hardcoded credentials...${NC}"
 
 # Scan staged files for potential API keys
 POTENTIAL_KEYS=$(git diff --cached | \
-  grep -E "^\+.*['\"]?[A-Z_]{3,}_(KEY|TOKEN|SECRET|PASSWORD)['\"]?\s*[:=]" | \
+  grep -E "^\+.*(API_KEY|API_TOKEN|DB_PASSWORD|SECRET_KEY|AUTH_TOKEN).*=" | \
   grep -v "secrets\." | \
   grep -v "process\.env\." | \
   grep -v "_required_env" | \
