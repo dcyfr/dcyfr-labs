@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  cacheDir: 'node_modules/.vitest',
   plugins: [react()],
   css: {
     // Disable PostCSS processing in tests to avoid Tailwind v4 compatibility issues
@@ -13,10 +14,20 @@ export default defineConfig({
     setupFiles: ['./tests/vitest.setup.ts'],
     // Performance optimization: Use thread pool for parallel execution
     pool: 'threads',
-    // Cache configuration for faster re-runs
-    cache: {
-      dir: 'node_modules/.vitest',
+    minThreads: 2,
+    maxThreads: 8,
+    // Force NODE_ENV=test regardless of shell environment
+    // Vitest only sets this when not already defined; force it here
+    // so production code that branches on NODE_ENV works correctly in tests.
+    env: {
+      NODE_ENV: 'test',
     },
+    // Route pure-logic tests to lighter node environment (no DOM overhead)
+    environmentMatchGlobs: [
+      ['src/**/agents/**/*.test.ts', 'node'],
+      ['src/__tests__/lib/**/*.test.ts', 'node'],
+    ],
+    // Cache: uses Vite's cacheDir (set at top level)
     // Test isolation: Clear all mocks and module cache between test suites
     testTimeout: 10000, // 10 second timeout per test
     // Bail after N failures (speeds up CI)

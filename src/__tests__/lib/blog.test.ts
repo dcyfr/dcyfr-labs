@@ -538,6 +538,39 @@ describe('blog utilities', () => {
         const post = { draft: false, publishedAt: futureDate };
         expect(isPostVisible(post)).toBe(true);
       });
+
+      it('should hide demo posts in preview', () => {
+        const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
+        // Even in preview, demo posts should be hidden (isDevelopment defaults to false in test env)
+        expect(isPostVisible(post, false, false)).toBe(false);
+      });
+    });
+
+    describe('demo posts (category = "Demo")', () => {
+      it('should show demo posts in local development', () => {
+        const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
+        expect(isPostVisible(post, false, true)).toBe(true);
+      });
+
+      it('should hide demo posts in production', () => {
+        const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
+        expect(isPostVisible(post, true, false)).toBe(false);
+      });
+
+      it('should hide demo posts in preview (non-production, non-development)', () => {
+        const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
+        expect(isPostVisible(post, false, false)).toBe(false);
+      });
+
+      it('should not affect non-demo posts', () => {
+        const post = { draft: false, category: 'Architecture' as const, publishedAt: pastDate };
+        expect(isPostVisible(post, false, false)).toBe(true);
+      });
+
+      it('should not affect posts without a category', () => {
+        const post = { draft: false, publishedAt: pastDate };
+        expect(isPostVisible(post, false, false)).toBe(true);
+      });
     });
   });
 

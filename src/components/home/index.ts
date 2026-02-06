@@ -19,6 +19,7 @@ export { TrendingSection } from "./trending-section";
 export { TrendingPostsPanel } from "./trending-posts-panel";
 export { TrendingTopicsPanel } from "./trending-topics-panel";
 export { TrendingProjectsPanel } from "./trending-projects-panel";
+export { TrendingTechnologiesPanel } from "./trending-technologies-panel";
 export type {
   TrendingProject,
   TrendingVelocity,

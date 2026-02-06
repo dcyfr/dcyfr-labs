@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-01-25T10:08:24.259Z",
+  "generated_at": "2026-02-06T04:30:07.767Z",
   "version": "1.0.0",
   "filters": {
-    "time": "quick",
+    "time": "all",
     "skill": "mid",
     "category": "all",
     "limit": "unlimited"
@@ -14,7 +14,7 @@
   },
   "tasks": [
     {
-      "id": "test-flaky-sxkvsedpv",
+      "id": "test-flaky-a78buc7mn",
       "title": "Fix date boundary issues in heatmap tests",
       "description": "Flaky test at src/__tests__/lib/activity-heatmap.test.ts:144",
       "category": "Test Infrastructure",
@@ -34,11 +34,11 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-25",
+      "last_updated": "2026-02-06",
       "priority_score": 7.1
     },
     {
-      "id": "test-flaky-i5wgjwnwd",
+      "id": "test-flaky-98elj23g2",
       "title": "Fix Radix Tabs async behavior in tests",
       "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:216",
       "category": "Test Infrastructure",
@@ -58,11 +58,11 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-25",
+      "last_updated": "2026-02-06",
       "priority_score": 7.1
     },
     {
-      "id": "test-flaky-xcmbed7ot",
+      "id": "test-flaky-8ztw50hdu",
       "title": "Fix performance tests (environment-dependent, flaky in CI)",
       "description": "Flaky test at src/__tests__/lib/activity-search.test.ts:240",
       "category": "Test Infrastructure",
@@ -82,11 +82,11 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-25",
+      "last_updated": "2026-02-06",
       "priority_score": 6.7
     },
     {
-      "id": "test-flaky-5o9o8lfzu",
+      "id": "test-flaky-eh8lq8x2t",
       "title": "Fix aria-selected not updating in tests",
       "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:448",
       "category": "Test Infrastructure",
@@ -106,7 +106,7 @@
         "flaky"
       ],
       "created_at": "2025-12-23",
-      "last_updated": "2026-01-25",
+      "last_updated": "2026-02-06",
       "priority_score": 6.7
     }
   ]
