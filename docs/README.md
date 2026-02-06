@@ -22,7 +22,7 @@ Welcome to the DCYFR Labs documentation hub. This is your central resource for u
 
 **New to the project?**
 
-1. Read [Quick Start Guide](./quick-start.md) (5 min) - Get up and running
+1. Read [Quick Start Guide](./operations/quick-start.md) (5 min) - Get up and running
 2. Review [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) - Common commands and patterns
 3. Explore [INDEX.md](./INDEX.md) - Full documentation catalog
 
@@ -42,7 +42,7 @@ Welcome to the DCYFR Labs documentation hub. This is your central resource for u
 System design, patterns, and getting started guides
 
 - [→ Architecture Overview](./architecture/README)
-- [→ Quick Start Guide](./quick-start)
+- [→ Quick Start Guide](./operations/quick-start)
 - [→ Environment Setup](./platform/environment-variables)
 
 ### 🧩 Components & Design
@@ -72,7 +72,7 @@ Performance, testing, and optimization guides
 ## Essential References
 
 - **[Complete Index](./INDEX)** – Full directory structure and file listing
-- **[Quick Start Guide](./quick-start)** – Get up and running in minutes
+- **[Quick Start Guide](./operations/quick-start)** – Get up and running in minutes
 - **Operations Todo** – Current priorities and active tasks
 
 ## 📁 Documentation Structure
@@ -111,15 +111,15 @@ Performance, testing, and optimization guides
 
 ## 🔗 Quick Links
 
-| Area                  | Key Documentation                                                                                  |
-| --------------------- | -------------------------------------------------------------------------------------------------- |
-| **Getting Started**   | [Quick Start](./quick-start) • [Environment Setup](./platform/environment-variables)               |
-| **Architecture**      | [Architecture Overview](./architecture/README) • Migration Guide |
-| **Design System**     | [Design System](./design/design-system) • Page Templates                                           |
-| **Components**        | [MDX Components](./components/mdx) • [Post Components](./components/post-badges)                   |
-| **API & Features**    | [API Overview](./api/routes/overview) • [Background Jobs](./features/inngest-integration)          |
-| **Testing & Quality** | [Testing Guide](./testing/README) • Performance |
-| **Operations**        | Current Tasks • Completed Work                                                                     |
+| Area                  | Key Documentation                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------- |
+| **Getting Started**   | [Quick Start](./operations/quick-start) • [Environment Setup](./platform/environment-variables) |
+| **Architecture**      | [Architecture Overview](./architecture/README) • Migration Guide                                |
+| **Design System**     | [Design System](./design/design-system) • Page Templates                                        |
+| **Components**        | [MDX Components](./components/mdx) • [Post Components](./components/post-badges)                |
+| **API & Features**    | [API Overview](./api/routes/overview) • [Background Jobs](./features/inngest-integration)       |
+| **Testing & Quality** | [Testing Guide](./testing/README) • Performance                                                 |
+| **Operations**        | Current Tasks • Completed Work                                                                  |
 
 ---
 
