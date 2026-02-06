@@ -163,3 +163,11 @@ export {
   getTrendingProjects,
   getMockTrendingProjects,
 } from "./trending-projects";
+
+// Trending Technologies
+export {
+  calculateTrendingTechnologies,
+  normalizeTechName,
+  type TrendingTechnology,
+  type TrendingTechnologiesOptions,
+} from "./trending-technologies";

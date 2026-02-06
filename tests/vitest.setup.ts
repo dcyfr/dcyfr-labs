@@ -56,7 +56,7 @@ afterEach(() => {
  * ENVIRONMENT VARIABLES FOR TESTS
  * Ensures consistent test environment
  */
-// NODE_ENV is set by vitest automatically
+// NODE_ENV is set to 'test' via vitest.config.ts env option (overrides shell environment)
 process.env.NEXT_PUBLIC_SITE_URL = 'http://localhost:3000'
 
 /**

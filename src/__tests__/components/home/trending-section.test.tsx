@@ -68,6 +68,20 @@ vi.mock("@/components/home/trending-projects-panel", () => ({
   ),
 }));
 
+vi.mock("@/components/home/trending-technologies-panel", () => ({
+  __esModule: true,
+  TrendingTechnologiesPanel: ({ technologies, maxTechnologies }: any) => (
+    <div data-testid="trending-technologies-panel" data-max-technologies={maxTechnologies}>
+      <div data-testid="technologies-count">{technologies.length}</div>
+      {technologies.map((tech: any) => (
+        <div key={tech.name} data-testid={`tech-${tech.name}`}>
+          {tech.name} (Score: {tech.score})
+        </div>
+      ))}
+    </div>
+  ),
+}));
+
 // ============================================================================
 // MOCK DATA
 // ============================================================================
@@ -139,6 +153,23 @@ const mockProjects = [
   },
 ];
 
+const mockTechnologies = [
+  {
+    name: "React",
+    blogMentions: 5,
+    projectMentions: 2,
+    score: 9,
+    sources: { posts: ["post-1", "post-2"], projects: ["proj-1"] },
+  },
+  {
+    name: "TypeScript",
+    blogMentions: 3,
+    projectMentions: 1,
+    score: 5,
+    sources: { posts: ["post-1"], projects: ["proj-1"] },
+  },
+];
+
 // ============================================================================
 // TESTS
 // ============================================================================
@@ -160,6 +191,9 @@ describe("TrendingSection", () => {
       expect(
         screen.getByRole("tab", { name: /projects/i })
       ).toBeInTheDocument();
+      expect(
+        screen.getByRole("tab", { name: /tech/i })
+      ).toBeInTheDocument();
     });
 
     it("should render tab icons", () => {
@@ -174,11 +208,13 @@ describe("TrendingSection", () => {
       const postsTab = screen.getByRole("tab", { name: /posts/i });
       const topicsTab = screen.getByRole("tab", { name: /topics/i });
       const projectsTab = screen.getByRole("tab", { name: /projects/i });
+      const techTab = screen.getByRole("tab", { name: /tech/i });
 
       // Icons should be rendered (SVGs have role="img" implicitly or are decorative)
       expect(postsTab).toBeInTheDocument();
       expect(topicsTab).toBeInTheDocument();
       expect(projectsTab).toBeInTheDocument();
+      expect(techTab).toBeInTheDocument();
     });
 
     it("should render default tab (posts) by default", () => {
@@ -454,7 +490,7 @@ describe("TrendingSection", () => {
       );
 
       expect(screen.getByRole("tablist")).toBeInTheDocument();
-      expect(screen.getAllByRole("tab")).toHaveLength(3);
+      expect(screen.getAllByRole("tab")).toHaveLength(4);
     });
 
     it("should mark active tab with aria-selected", async () => {
@@ -510,6 +546,91 @@ describe("TrendingSection", () => {
 
       // Should be able to navigate with keyboard
       expect(topicsTab).toBeInTheDocument();
+    });
+  });
+
+  describe("Technologies Tab", () => {
+    it("should switch to Technologies tab when clicked", async () => {
+      render(
+        <TrendingSection
+          posts={mockPosts}
+          viewCounts={mockViewCounts}
+          topics={mockTopics}
+          technologies={mockTechnologies}
+        />
+      );
+
+      const techTab = screen.getByRole("tab", { name: /tech/i });
+      await userEvent.click(techTab);
+      await flushPromises();
+
+      await waitFor(() => {
+        expect(screen.getByTestId("trending-technologies-panel")).toBeInTheDocument();
+        expect(techTab).toHaveAttribute("aria-selected", "true");
+      });
+
+      expect(screen.getByTestId("technologies-count")).toHaveTextContent("2");
+    });
+
+    it("should pass technologies data to TrendingTechnologiesPanel", () => {
+      render(
+        <TrendingSection
+          posts={mockPosts}
+          viewCounts={mockViewCounts}
+          topics={mockTopics}
+          technologies={mockTechnologies}
+          defaultTab="technologies"
+        />
+      );
+
+      expect(screen.getByTestId("trending-technologies-panel")).toBeInTheDocument();
+      expect(screen.getByTestId("technologies-count")).toHaveTextContent("2");
+      expect(screen.getByTestId("tech-React")).toHaveTextContent("React (Score: 9)");
+      expect(screen.getByTestId("tech-TypeScript")).toHaveTextContent("TypeScript (Score: 5)");
+    });
+
+    it("should handle empty technologies array", () => {
+      render(
+        <TrendingSection
+          posts={mockPosts}
+          viewCounts={mockViewCounts}
+          topics={mockTopics}
+          technologies={[]}
+          defaultTab="technologies"
+        />
+      );
+
+      expect(screen.getByTestId("trending-technologies-panel")).toBeInTheDocument();
+      expect(screen.getByTestId("technologies-count")).toHaveTextContent("0");
+    });
+
+    it("should handle undefined technologies (defaults to empty array)", () => {
+      render(
+        <TrendingSection
+          posts={mockPosts}
+          viewCounts={mockViewCounts}
+          topics={mockTopics}
+          defaultTab="technologies"
+        />
+      );
+
+      expect(screen.getByTestId("trending-technologies-panel")).toBeInTheDocument();
+      expect(screen.getByTestId("technologies-count")).toHaveTextContent("0");
+    });
+
+    it("should pass maxTechnologies=12 to TrendingTechnologiesPanel", () => {
+      render(
+        <TrendingSection
+          posts={mockPosts}
+          viewCounts={mockViewCounts}
+          topics={mockTopics}
+          technologies={mockTechnologies}
+          defaultTab="technologies"
+        />
+      );
+
+      const panel = screen.getByTestId("trending-technologies-panel");
+      expect(panel).toHaveAttribute("data-max-technologies", "12");
     });
   });
 });

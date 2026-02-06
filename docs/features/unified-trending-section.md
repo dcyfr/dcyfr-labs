@@ -557,27 +557,27 @@ const trendingProjects = await getTrendingProjects(allProjects, {
 - [x] Component integration tests (15/19 passing)
 - [x] Feature documentation
 
+### ✅ Phase 2.1: Trending Technologies (Complete - Feb 5, 2026)
+
+Fourth tab added showing trending tech stack usage aggregated from blog post tags and project tech stacks.
+
+**Files Created/Modified:**
+- `src/lib/activity/trending-technologies.ts` — Aggregation logic with alias normalization, configurable scoring weights
+- `src/components/home/trending-technologies-panel.tsx` — UI panel with score bars, color-coded badges, source counts
+- `src/components/home/trending-section.tsx` — Added 4th "Tech" tab with Code2 icon
+- `src/__tests__/lib/trending-technologies.test.ts` — 25 unit tests
+- `src/__tests__/components/home/trending-section.test.tsx` — 5 new integration tests (24 total)
+
+**Key Features:**
+- Weighted scoring: `(blogMentions × blogWeight) + (projectMentions × projectWeight)` (defaults: blog=1, project=2)
+- Tech alias normalization (react/reactjs/React → React, nextjs/next.js → Next.js, etc.)
+- Filters out archived/draft posts, deduplicates sources
+- Hash-based accent color assignment from SEMANTIC_COLORS palette
+- Empty state handling, configurable limit/weights/minScore
+
+**Tests:** 49/49 passing (25 unit + 24 integration)
+
 ### 🚧 Phase 2 Extensions (Proposed)
-
-**Phase 2.1: Trending Technologies**
-
-Add fourth tab showing trending tech stack usage:
-
-```typescript
-// Track tech stack popularity across posts + projects
-const techCounts = {
-  React: 15,
-  TypeScript: 12,
-  'Next.js': 10,
-  // ...
-};
-```
-
-**Benefits:**
-
-- See which technologies are most featured
-- Discover new tools/frameworks
-- Identify skill gaps
 
 **Phase 2.2: Trending Series**
 

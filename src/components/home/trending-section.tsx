@@ -1,14 +1,16 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Hash, FolderGit2 } from "lucide-react";
+import { TrendingUp, Hash, FolderGit2, Code2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SPACING, ANIMATION } from "@/lib/design-tokens";
 
 import { TrendingPostsPanel } from "@/components/home";
 import { TrendingTopicsPanel } from "@/components/home";
 import { TrendingProjectsPanel } from "@/components/home";
+import { TrendingTechnologiesPanel } from "@/components/home";
 import type { TrendingProject } from "@/components/home";
+import type { TrendingTechnology } from "@/lib/activity";
 import type { Post } from "@/data/posts";
 
 // ============================================================================
@@ -29,8 +31,10 @@ export interface TrendingSectionProps {
   topics: TopicData[];
   /** Trending projects data */
   projects?: TrendingProject[];
+  /** Trending technologies data */
+  technologies?: TrendingTechnology[];
   /** Default active tab */
-  defaultTab?: "posts" | "topics" | "projects";
+  defaultTab?: "posts" | "topics" | "projects" | "technologies";
   /** Class name for container */
   className?: string;
 }
@@ -46,6 +50,7 @@ export interface TrendingSectionProps {
  * - Trending Posts (by view count + engagement)
  * - Popular Topics (by frequency)
  * - Trending Projects (by GitHub stars + activity)
+ * - Trending Technologies (by blog + project mentions)
  *
  * Features:
  * - Tabbed interface for clean organization
@@ -60,6 +65,7 @@ export interface TrendingSectionProps {
  *   viewCounts={viewCountsMap}
  *   topics={topTopics}
  *   projects={trendingProjects}
+ *   technologies={trendingTech}
  *   defaultTab="posts"
  * />
  * ```
@@ -69,6 +75,7 @@ export function TrendingSection({
   viewCounts,
   topics,
   projects = [],
+  technologies = [],
   defaultTab = "posts",
   className,
 }: TrendingSectionProps) {
@@ -88,6 +95,10 @@ export function TrendingSection({
           <TabsTrigger value="projects" className="flex-1 sm:flex-initial">
             <FolderGit2 className="h-4 w-4" />
             <span>Projects</span>
+          </TabsTrigger>
+          <TabsTrigger value="technologies" className="flex-1 sm:flex-initial">
+            <Code2 className="h-4 w-4" />
+            <span>Tech</span>
           </TabsTrigger>
         </TabsList>
 
@@ -128,6 +139,17 @@ export function TrendingSection({
             )}
           >
             <TrendingProjectsPanel projects={projects} limit={5} />
+          </TabsContent>
+
+          {/* Technologies Tab */}
+          <TabsContent
+            value="technologies"
+            className={cn(
+              ANIMATION.transition.appearance,
+              "data-[state=active]:animate-in data-[state=active]:fade-in-0"
+            )}
+          >
+            <TrendingTechnologiesPanel technologies={technologies} maxTechnologies={12} />
           </TabsContent>
         </div>
       </Tabs>

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-25T10:08:23.436Z",
+  "generated_at": "2026-02-06T04:30:06.854Z",
   "version": "1.0.0",
   "categories": [
     {
@@ -10,7 +10,7 @@
       "total_effort_hours": 4.5,
       "tasks": [
         {
-          "id": "test-flaky-sxkvsedpv",
+          "id": "test-flaky-a78buc7mn",
           "title": "Fix date boundary issues in heatmap tests",
           "description": "Flaky test at src/__tests__/lib/activity-heatmap.test.ts:144",
           "category": "Test Infrastructure",
@@ -30,10 +30,10 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-25"
+          "last_updated": "2026-02-06"
         },
         {
-          "id": "test-flaky-xcmbed7ot",
+          "id": "test-flaky-8ztw50hdu",
           "title": "Fix performance tests (environment-dependent, flaky in CI)",
           "description": "Flaky test at src/__tests__/lib/activity-search.test.ts:240",
           "category": "Test Infrastructure",
@@ -53,10 +53,10 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-25"
+          "last_updated": "2026-02-06"
         },
         {
-          "id": "test-flaky-i5wgjwnwd",
+          "id": "test-flaky-98elj23g2",
           "title": "Fix Radix Tabs async behavior in tests",
           "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:216",
           "category": "Test Infrastructure",
@@ -76,10 +76,10 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-25"
+          "last_updated": "2026-02-06"
         },
         {
-          "id": "test-flaky-5o9o8lfzu",
+          "id": "test-flaky-eh8lq8x2t",
           "title": "Fix aria-selected not updating in tests",
           "description": "Flaky test at src/__tests__/components/home/trending-section.test.tsx:448",
           "category": "Test Infrastructure",
@@ -99,29 +99,29 @@
             "flaky"
           ],
           "created_at": "2025-12-23",
-          "last_updated": "2026-01-25"
+          "last_updated": "2026-02-06"
         }
       ]
     }
   ],
   "statistics": {
-    "total_tasks": 286,
-    "ready_to_start": 138,
+    "total_tasks": 56,
+    "ready_to_start": 33,
     "blocked": 0,
     "in_progress": 0,
-    "completed": 148,
+    "completed": 23,
     "total_effort_hours": 4.5
   },
   "recent_git_activity": [
-    "2a0fda04 feat: add comprehensive Upstash data analysis and cleanup scripts",
-    "c1d8924c feat: migrate from standard Redis client to Upstash Redis client",
-    "f6b3cb67 feat: implement agent delegation and validation scripts; optimize MCP configurations",
-    "6b3fe27b fix: properly gitignore all private/ directories",
-    "7f56a5dc docs: update private files to TLP:AMBER classification",
-    "0ea456d4 fix(docs): convert TLP tag to HTML comment in animation-decision-matrix.md",
-    "6e845f70 fix(docs): add TLP tags and improve TLP validation",
-    "b2ed0bd4 fix: update documentation placement validation in pre-commit hook",
-    "2ffcf034 docs(governance): enforce operational documentation placement policy",
-    "5de79181 Merge branch 'preview' of https://github.com/dcyfr/dcyfr-labs into preview"
+    "a43d3829 fix(todos): update last updated date and task statuses in operations TODO document",
+    "16042482 fix(cache): extend Redis cache duration to 25 hours for improved stability across daily cron runs",
+    "ffa088d0 refactor(tests): update analytics and error scenario tests to use new views.server module",
+    "69e13dbc fix(docs): update links in README and AGENTS documentation for improved navigation",
+    "e03838fa fix(todo): standardize formatting and improve clarity in operations TODO document",
+    "248d8280 fix(todo): update GitHub Webhook Deployment status to complete and add verification details",
+    "d630eb20 chore: gitignore .agent/ directory",
+    "0934394a fix(blog): adjust padding in Featured Posts section for improved layout",
+    "8b7b75cc test: re-enable 7 section-share tests with proper async handling",
+    "5bdbb63f chore: consolidate scripts, clean docs/ai, trim todo.md"
   ]
 }
