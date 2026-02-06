@@ -74,10 +74,17 @@ Phase 1 (Consolidation) and Phase 2 (Projects) complete. Remaining:
 
 ### High Priority
 
-- [ ] `src/lib/storage-adapter.ts:142` - Implement OAuth integration (blocks API storage)
-- [ ] `src/lib/storage-adapter.ts:274` - Switch to ApiStorageAdapter when OAuth ready
-- [ ] `src/lib/activity/bookmarks.ts:510` - Server-side bookmark sync (requires auth)
-- [x] ~~`src/components/layouts/article-header.tsx:190` - Re-enable holo effects~~ (Won't fix - Feb 5, 2026)
+- [x] `src/lib/storage-adapter.ts:142` - ✅ OAuth integration complete (Feb 5, 2026)
+  - Created `/api/user/engagement/[key]` endpoints (GET, POST, DELETE, HEAD)
+  - Implemented ApiStorageAdapter with Bearer token authentication  
+  - Server-backed persistence using Redis (90-day expiration)
+  - Tests: 11/11 passing for bookmark sync functionality
+- [x] `src/lib/activity/bookmarks.ts:510` - ✅ Server-side bookmark sync complete (Feb 5, 2026)
+  - Implemented `syncBookmarksWithServer()` with auth support
+  - Implemented `loadBookmarksFromServer()` for cross-device sync
+  - Implemented `mergeBookmarkCollections()` for conflict resolution
+  - Uses storage adapter pattern for authenticated users
+- [ ] ~`src/components/layouts/article-header.tsx:190` - Re-enable holo effects~ (Won't fix - Feb 5, 2026)
 
 ### Medium Priority
 
