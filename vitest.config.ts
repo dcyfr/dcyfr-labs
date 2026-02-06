@@ -10,13 +10,6 @@ export default defineConfig({
   },
   test: {
     environment: 'happy-dom',
-    // Use node environment for pure logic tests (avoids DOM setup overhead)
-    environmentMatchGlobs: [
-      ['src/__tests__/mcp/**', 'node'],
-      ['src/lib/agents/__tests__/**', 'node'],
-      ['tests/integration/**', 'node'],
-      ['tests/scripts/**', 'node'],
-    ],
     setupFiles: ['./tests/vitest.setup.ts'],
     // Performance optimization: Use thread pool for parallel execution
     pool: 'threads',
