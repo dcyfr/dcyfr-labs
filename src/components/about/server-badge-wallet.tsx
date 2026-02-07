@@ -58,15 +58,13 @@ async function ServerBadgeWalletInner({
     badgeCount: data.badges.length,
     totalCount: data.totalCount,
     source: data.source,
-    hasError: !!data.error,
   });
 
-  // Pass data to client component
+  // Pass data to client component (no error prop - graceful degradation)
   return (
     <BadgeWalletClient
       badges={data.badges}
       totalCount={data.totalCount}
-      error={data.error}
       showLatestOnly={showLatestOnly}
       limit={limit}
       viewMoreUrl={viewMoreUrl}

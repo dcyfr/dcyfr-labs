@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '@/mcp/shared/redis-client';
-import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 
 /**
  * Admin endpoint to populate production cache
@@ -232,10 +231,9 @@ async function handlePopulateCache(request: NextRequest) {
   console.log('[Admin Cache] Environment:', {
     NODE_ENV: process.env.NODE_ENV,
     VERCEL_ENV: process.env.VERCEL_ENV,
-    keyPrefix: getRedisKeyPrefix() || '(none)',
+    note: 'Keys auto-prefixed by Redis Proxy',
   });
 
-  const keyPrefix = getRedisKeyPrefix();
   const results: {
     github?: PopulateResult;
     credly?: PopulateResult;
@@ -246,7 +244,7 @@ async function handlePopulateCache(request: NextRequest) {
     const githubData = await fetchGitHubContributions();
 
     if (githubData) {
-      const key = `${keyPrefix}github:contributions:dcyfr`;
+      const key = 'github:contributions:dcyfr';
       await redis.set(key, JSON.stringify(githubData), { ex: CACHE_TTL });
 
       results.github = {
@@ -289,7 +287,7 @@ async function handlePopulateCache(request: NextRequest) {
       ];
 
       for (const variant of variants) {
-        const redisKey = `${keyPrefix}credly:badges:dcyfr:${variant.key}`;
+        const redisKey = `credly:badges:dcyfr:${variant.key}`;
         const cacheData = {
           badges: variant.badges,
           total_count: variant.badges.length,

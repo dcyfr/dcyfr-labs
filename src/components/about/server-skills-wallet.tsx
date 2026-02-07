@@ -57,16 +57,14 @@ async function ServerSkillsWalletInner({
     limit,
     skillCount: data.skills.length,
     source: data.source,
-    hasError: !!data.error,
     excludedCount: excludeSkills.length,
   });
 
-  // Pass data to client component
+  // Pass data to client component (no error prop - graceful degradation)
   return (
     <SkillsWalletClient
       skills={data.skills}
       totalCount={data.totalCount}
-      error={data.error}
       limit={limit}
       viewMoreUrl={viewMoreUrl}
       viewMoreText={viewMoreText}

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { handleApiError } from '@/lib/error-handler';
 import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 import { redis } from '@/lib/redis';
-import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 import { dataLogger } from '@/lib/logger';
 import type { CredlyBadgesResponse } from '@/types/credly';
 
@@ -23,10 +22,10 @@ const CACHE_TTL = 60 * 60; // 1 hour in seconds
 const REDIS_KEY_BASE = 'credly:badges:';
 
 /**
- * Create Redis key with environment-aware prefix
+ * Create Redis key (base key only - prefix added by Redis Proxy)
  */
 function createRedisKey(username: string, limit?: number): string {
-  return `${getRedisKeyPrefix()}${REDIS_KEY_BASE}${username}:${limit || 'all'}`;
+  return `${REDIS_KEY_BASE}${username}:${limit || 'all'}`;
 }
 
 export async function GET(request: NextRequest) {

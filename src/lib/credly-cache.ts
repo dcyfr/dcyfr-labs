@@ -11,7 +11,6 @@
 
 import type { CredlyBadge, CredlyBadgesResponse } from '@/types/credly';
 import { redis } from '@/lib/redis';
-import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 
 // Cache configuration
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
@@ -50,10 +49,10 @@ function createBadgesCacheKey(username: string, limit?: number): string {
 
 /**
  * Create a Redis key for badges with username and limit
- * Uses environment-aware prefix to match build-time key generation
+ * Base key only - prefix is automatically added by Redis Proxy
  */
 function createRedisKey(username: string, limit?: number): string {
-  return `${getRedisKeyPrefix()}${REDIS_KEY_BASE}${username}:${limit || 'all'}`;
+  return `${REDIS_KEY_BASE}${username}:${limit || 'all'}`;
 }
 
 /**

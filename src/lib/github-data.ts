@@ -6,7 +6,7 @@
  * of GitHub activity widgets.
  */
 
-import { redis, getRedisEnvironment, getRedisKeyPrefix } from '@/mcp/shared/redis-client';
+import { redis, getRedisEnvironment } from '@/mcp/shared/redis-client';
 import { logger } from '@/lib/logger';
 
 // ============================================================================
@@ -44,15 +44,15 @@ const CACHE_KEY_BASE = 'github:contributions:dcyfr';
 const FALLBACK_DATA_KEY_BASE = 'github:fallback-data';
 
 /**
- * Get environment-aware cache key
+ * Get cache keys (base keys only - prefix added by Redis Proxy)
  * Matches the key format used by populate-build-cache.mjs
  */
 function getCacheKey(): string {
-  return `${getRedisKeyPrefix()}${CACHE_KEY_BASE}`;
+  return CACHE_KEY_BASE;
 }
 
 function getFallbackCacheKey(): string {
-  return `${getRedisKeyPrefix()}${FALLBACK_DATA_KEY_BASE}`;
+  return FALLBACK_DATA_KEY_BASE;
 }
 
 // ============================================================================

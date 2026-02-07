@@ -14,7 +14,6 @@
  */
 
 import { redis } from '@/lib/redis';
-import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 import { dataLogger } from '@/lib/logger';
 import type { CredlyBadge, CredlySkill } from '@/types/credly';
 
@@ -25,14 +24,14 @@ import type { CredlyBadge, CredlySkill } from '@/types/credly';
 export interface CredlyBadgesData {
   badges: CredlyBadge[];
   totalCount: number;
-  source: 'redis-cache' | 'empty';
+  source: 'redis-cache' | 'snapshot' | 'empty';
   error?: string;
 }
 
 export interface CredlySkillsData {
   skills: SkillWithCount[];
   totalCount: number;
-  source: 'redis-cache' | 'empty';
+  source: 'redis-cache' | 'snapshot' | 'empty';
   error?: string;
 }
 
@@ -54,17 +53,54 @@ const DEFAULT_USERNAME = 'dcyfr';
 // ============================================================================
 
 /**
+ * Load snapshot data from disk (fallback when cache is empty)
+ * Returns null if snapshot doesn't exist or is invalid
+ */
+function loadSnapshotData(): { badges: CredlyBadge[]; total_count: number } | null {
+  try {
+    // Dynamic import to handle cases where snapshot doesn't exist yet
+    const fs = require('fs');
+    const path = require('path');
+    const snapshotPath = path.resolve(process.cwd(), 'src/data/credly-badges-snapshot.json');
+    
+    if (!fs.existsSync(snapshotPath)) {
+      console.warn('[Credly Data] ℹ️  Snapshot not found - this is normal on first build');
+      return null;
+    }
+    
+    const rawData = fs.readFileSync(snapshotPath, 'utf-8');
+    const snapshot = JSON.parse(rawData);
+    
+    if (!Array.isArray(snapshot.badges) || snapshot.badges.length === 0) {
+      console.warn('[Credly Data] ⚠️  Snapshot is empty or invalid');
+      return null;
+    }
+    
+    console.log('[Credly Data] ✅ Loaded snapshot', {
+      badges: snapshot.badges.length,
+      generatedAt: snapshot.generatedAt,
+    });
+    
+    return {
+      badges: snapshot.badges,
+      total_count: snapshot.total_count || snapshot.count || snapshot.badges.length,
+    };
+  } catch (error) {
+    console.warn('[Credly Data] ⚠️  Failed to load snapshot:', error instanceof Error ? error.message : 'Unknown error');
+    return null;
+  }
+}
+
+/**
  * Create Redis key for Credly badges
- * Uses unified 'preview:' prefix for all non-production environments
+ * Base key only - prefix is automatically added by Redis Proxy
  */
 function createRedisKey(username: string, limit?: number): string {
-  const prefix = getRedisKeyPrefix();
-  const key = `${prefix}${REDIS_KEY_BASE}${username}:${limit || 'all'}`;
+  const key = `${REDIS_KEY_BASE}${username}:${limit || 'all'}`;
 
   // Debug logging via dataLogger (development only)
   if (process.env.NODE_ENV === 'development') {
-    dataLogger.fetch(`Redis key: ${key}`, {
-      prefix,
+    dataLogger.fetch(`Redis key (base): ${key}`, {
       username,
       limit: limit || 'all',
     });
@@ -80,6 +116,11 @@ function createRedisKey(username: string, limit?: number): string {
 /**
  * Fetch Credly badges from Redis cache (SERVER-SIDE ONLY)
  *
+ * Three-layer fallback architecture:
+ * 1. Redis cache (live data, refreshed by cron)
+ * 2. Build-time snapshot (committed to git, always available)
+ * 3. Graceful empty state (no error shown to user)
+ *
  * @param username - Credly username (default: 'dcyfr')
  * @param limit - Optional limit (matches cache keys: 'all', '10', '3')
  * @returns Badge data with source indicator
@@ -90,6 +131,7 @@ export async function getCredlyBadges(
 ): Promise<CredlyBadgesData> {
   const redisKey = createRedisKey(username, limit);
 
+  // Layer 1: Try Redis cache first
   try {
     const cached = await redis.get(redisKey);
 
@@ -119,23 +161,44 @@ export async function getCredlyBadges(
     }
 
     dataLogger.cache(redisKey, false);
-
-    return {
-      badges: [],
-      totalCount: 0,
-      source: 'empty',
-      error: `Cache key not found: ${redisKey}. Run 'npm run populate:cache' locally or trigger /api/admin/populate-cache in production.`,
-    };
   } catch (error) {
     console.error('[Credly Data] ❌ Redis error:', error);
-
-    return {
-      badges: [],
-      totalCount: 0,
-      source: 'empty',
-      error: error instanceof Error ? error.message : 'Unknown Redis error',
-    };
   }
+
+  // Layer 2: Try snapshot fallback (only for 'all' variant)
+  if (!limit || limit.toString() === 'all') {
+    const snapshot = loadSnapshotData();
+    if (snapshot) {
+      console.warn('[Credly Data] 📸 Using snapshot fallback (cache miss)');
+      return {
+        badges: snapshot.badges,
+        totalCount: snapshot.total_count,
+        source: 'snapshot',
+      };
+    }
+  } else {
+    // For limited queries, try to load full snapshot and slice
+    const snapshot = loadSnapshotData();
+    if (snapshot) {
+      const limitedBadges = snapshot.badges.slice(0, limit);
+      console.warn(`[Credly Data] 📸 Using snapshot fallback with limit ${limit} (cache miss)`);
+      return {
+        badges: limitedBadges,
+        totalCount: snapshot.total_count,
+        source: 'snapshot',
+      };
+    }
+  }
+
+  // Layer 3: Graceful empty state (no error message to user)
+  console.warn('[Credly Data] ⚠️  All fallbacks exhausted - returning empty state');
+  console.warn('[Credly Data]    This should only happen on first build or if snapshot generation failed');
+  
+  return {
+    badges: [],
+    totalCount: 0,
+    source: 'empty',
+  };
 }
 
 /**
@@ -223,9 +286,7 @@ export async function getCredlySkills(
 export async function validateCredlyCache(username: string = DEFAULT_USERNAME): Promise<{
   isPopulated: boolean;
   keys: { key: string; found: boolean; count?: number }[];
-  prefix: string;
 }> {
-  const prefix = getRedisKeyPrefix();
   const variants = ['all', '10', '3'] as const;
   const keys: { key: string; found: boolean; count?: number }[] = [];
 
@@ -250,5 +311,5 @@ export async function validateCredlyCache(username: string = DEFAULT_USERNAME): 
 
   const isPopulated = keys.some((k) => k.found);
 
-  return { isPopulated, keys, prefix };
+  return { isPopulated, keys };
 }

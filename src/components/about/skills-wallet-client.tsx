@@ -35,7 +35,6 @@ interface SkillWithCount {
 interface SkillsWalletClientProps {
   skills: SkillWithCount[];
   totalCount: number;
-  error?: string;
   limit?: number;
   viewMoreUrl?: string;
   viewMoreText?: string;
@@ -55,7 +54,6 @@ interface SkillsWalletClientProps {
 export function SkillsWalletClient({
   skills,
   totalCount,
-  error,
   limit,
   viewMoreUrl,
   viewMoreText = 'View all skills',
@@ -66,22 +64,9 @@ export function SkillsWalletClient({
     return limit ? skills.slice(0, limit) : skills;
   }, [skills, limit]);
 
-  // Error state
-  if (error) {
-    return (
-      <Alert type="critical" className={className}>
-        {error}
-      </Alert>
-    );
-  }
-
-  // Empty state
+  // Empty state (graceful - no error banner)
   if (skills.length === 0) {
-    return (
-      <Alert type="info" className={className}>
-        No skills found. Cache may not be populated.
-      </Alert>
-    );
+    return null; // Simply don't render anything if no skills available
   }
 
   return (
