@@ -1,9 +1,9 @@
-import { getAllPosts } from "@/lib/blog.server";
+import { getAllPosts } from '@/lib/blog.server';
 
 // Re-export category types and labels from centralized file (client-safe)
-export type { PostCategory } from "@/lib/post-categories";
-export { POST_CATEGORY_LABEL } from "@/lib/post-categories";
-import type { PostCategory } from "@/lib/post-categories";
+export type { PostCategory } from '@/lib/post-categories';
+export { POST_CATEGORY_LABEL } from '@/lib/post-categories';
+import type { PostCategory } from '@/lib/post-categories';
 
 export type PostImage = {
   url: string; // local path (e.g., "/blog/images/post-slug/hero.jpg") or external URL
@@ -12,7 +12,7 @@ export type PostImage = {
   height?: number; // optional, maintains aspect ratio
   caption?: string; // optional, displayed below image
   credit?: string; // optional, photographer/source attribution
-  position?: "top" | "left" | "right" | "background"; // list view placement hint
+  position?: 'top' | 'left' | 'right' | 'background'; // list view placement hint
   hideHero?: boolean; // hide image in hero section on detail pages
   hideCard?: boolean; // hide image as background in list view cards
 };
@@ -54,53 +54,41 @@ export type Post = {
 // Retrieve all posts from the file system
 export const posts: Post[] = getAllPosts();
 
-export const postsBySlug = Object.fromEntries(
-  posts.map((post) => [post.slug, post])
-) as Record<string, Post>;
+export const postsBySlug = Object.fromEntries(posts.map((post) => [post.slug, post])) as Record<
+  string,
+  Post
+>;
 
-export const postTagCounts = posts.reduce<Record<string, number>>(
-  (acc, post) => {
-    for (const tag of post.tags) {
-      acc[tag] = (acc[tag] ?? 0) + 1;
-    }
-    return acc;
-  },
-  {}
-);
+export const postTagCounts = posts.reduce<Record<string, number>>((acc, post) => {
+  for (const tag of post.tags) {
+    acc[tag] = (acc[tag] ?? 0) + 1;
+  }
+  return acc;
+}, {});
 
 export const allPostTags = Object.freeze(Object.keys(postTagCounts).sort());
 
-export const postCategoryCounts = posts.reduce<Record<string, number>>(
-  (acc, post) => {
-    if (post.category) {
-      acc[post.category] = (acc[post.category] ?? 0) + 1;
-    }
-    return acc;
-  },
-  {}
-);
+export const postCategoryCounts = posts.reduce<Record<string, number>>((acc, post) => {
+  if (post.category) {
+    acc[post.category] = (acc[post.category] ?? 0) + 1;
+  }
+  return acc;
+}, {});
 
-export const allPostCategories = Object.freeze(
-  Object.keys(postCategoryCounts).sort()
-);
+export const allPostCategories = Object.freeze(Object.keys(postCategoryCounts).sort());
 
-export const featuredPosts = Object.freeze(
-  posts.filter((post) => post.featured)
-);
+export const featuredPosts = Object.freeze(posts.filter((post) => post.featured));
 
 // Group posts by series
-const postsBySeriesUnsorted = posts.reduce<Record<string, Post[]>>(
-  (acc, post) => {
-    if (post.series) {
-      if (!acc[post.series.name]) {
-        acc[post.series.name] = [];
-      }
-      acc[post.series.name].push(post);
+const postsBySeriesUnsorted = posts.reduce<Record<string, Post[]>>((acc, post) => {
+  if (post.series) {
+    if (!acc[post.series.name]) {
+      acc[post.series.name] = [];
     }
-    return acc;
-  },
-  {}
-);
+    acc[post.series.name].push(post);
+  }
+  return acc;
+}, {});
 
 // Sort posts within each series by order
 Object.keys(postsBySeriesUnsorted).forEach((seriesName) => {
@@ -113,9 +101,7 @@ Object.keys(postsBySeriesUnsorted).forEach((seriesName) => {
 
 // Rebuild postsBySeries with sorted keys for consistency
 export const postsBySeries: Record<string, Post[]> = {};
-const sortedSeriesNames = Object.keys(postsBySeriesUnsorted).sort((a, b) =>
-  a.localeCompare(b)
-);
+const sortedSeriesNames = Object.keys(postsBySeriesUnsorted).sort((a, b) => a.localeCompare(b));
 sortedSeriesNames.forEach((seriesName) => {
   postsBySeries[seriesName] = postsBySeriesUnsorted[seriesName];
 });
@@ -147,31 +133,36 @@ export type SeriesMetadata = {
 /**
  * Generate series metadata from posts
  * Auto-generates description from first post summary if not provided
+ * Filters out empty series (e.g., when all posts are drafts in production)
  */
-export const allSeries: SeriesMetadata[] = allSeriesNames.map((name) => {
-  const seriesPosts = postsBySeries[name];
-  const firstPost = seriesPosts[0];
-  const latestPost = [...seriesPosts].sort(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  )[0];
+export const allSeries = allSeriesNames
+  .map((name): SeriesMetadata | null => {
+    const seriesPosts = postsBySeries[name];
 
-  return {
-    name,
-    slug: name.toLowerCase().replace(/\s+/g, "-"),
-    description: firstPost.series?.description || firstPost.summary,
-    icon: firstPost.series?.icon,
-    color: firstPost.series?.color || "default",
-    postCount: seriesPosts.length,
-    totalReadingTime: seriesPosts.reduce(
-      (sum, p) => sum + p.readingTime.minutes,
-      0
-    ),
-    posts: seriesPosts,
-    firstPost,
-    latestPost,
-  };
-});
+    // Skip series with no posts (happens when all posts are drafts in production)
+    if (!seriesPosts || seriesPosts.length === 0) {
+      return null;
+    }
+
+    const firstPost = seriesPosts[0];
+    const latestPost = [...seriesPosts].sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    )[0];
+
+    return {
+      name,
+      slug: name.toLowerCase().replace(/\s+/g, '-'),
+      description: firstPost.series?.description || firstPost.summary,
+      icon: firstPost.series?.icon,
+      color: firstPost.series?.color || 'default',
+      postCount: seriesPosts.length,
+      totalReadingTime: seriesPosts.reduce((sum, p) => sum + p.readingTime.minutes, 0),
+      posts: seriesPosts,
+      firstPost,
+      latestPost,
+    };
+  })
+  .filter((series) => series !== null) as SeriesMetadata[];
 
 /**
  * Get series metadata by slug
@@ -220,9 +211,7 @@ export function getSeriesByAnySlug(slug: string): {
 
   // Then check previousSlugs in any post from the series
   for (const s of allSeries) {
-    const hasPreviousSlug = s.posts.some((post) =>
-      post.series?.previousSlugs?.includes(slug)
-    );
+    const hasPreviousSlug = s.posts.some((post) => post.series?.previousSlugs?.includes(slug));
     if (hasPreviousSlug) {
       return { series: s, needsRedirect: true, canonicalSlug: s.slug };
     }

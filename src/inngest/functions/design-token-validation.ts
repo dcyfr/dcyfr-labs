@@ -30,7 +30,7 @@ interface DesignTokenViolation {
 function parseViolations(output: string): DesignTokenViolation[] {
   const violations: DesignTokenViolation[] = [];
   const lines = output.split("\n");
-  
+
   for (const line of lines) {
     // Example format: "src/components/foo.tsx:42: hardcoded padding-4 (use SPACING.md)"
     const match = line.match(/^(.+):(\d+):\s*(.+)$/);
@@ -43,7 +43,7 @@ function parseViolations(output: string): DesignTokenViolation[] {
       });
     }
   }
-  
+
   return violations;
 }
 
@@ -110,19 +110,19 @@ export const validateDesignTokens = inngest.createFunction(
 
     // Step 2: Log results
     await step.run("log-results", async () => {
-      console.log(`[Design Tokens] Branch: ${branch}`);
-      console.log(`[Design Tokens] Files checked: ${changedFiles.length}`);
-      console.log(`[Design Tokens] Violations found: ${violations.length}`);
-      
+      console.warn(`[Design Tokens] Branch: ${branch}`);
+      console.warn(`[Design Tokens] Files checked: ${changedFiles.length}`);
+      console.warn(`[Design Tokens] Violations found: ${violations.length}`);
+
       if (violations.length > 0) {
-        console.log("[Design Tokens] Violations by pattern:");
+        console.warn("[Design Tokens] Violations by pattern:");
         const byPattern = violations.reduce((acc, v) => {
           acc[v.pattern] = (acc[v.pattern] || 0) + 1;
           return acc;
         }, {} as Record<string, number>);
-        console.log(byPattern);
+        console.warn(byPattern);
       }
-      
+
       return {
         branch,
         filesChecked: changedFiles.length,
@@ -140,22 +140,22 @@ export const validateDesignTokens = inngest.createFunction(
         // TODO: Future enhancement - Post GitHub PR comment with violations
         // TODO: Future enhancement - Send Slack notification
         // TODO: Future enhancement - Update dashboard metrics
-        
+
         console.warn(
           `[Design Tokens] ⚠️  ${violations.length} violations found in ${changedFiles.length} files`
         );
-        
+
         // For now, just log critical violations
         const critical = violations.filter((v) =>
           ["spacing", "typography", "colors"].includes(v.pattern)
         );
-        
+
         if (critical.length > 0) {
           console.error(
             `[Design Tokens] 🔴 ${critical.length} CRITICAL violations (SPACING/TYPOGRAPHY/COLORS)`
           );
         }
-        
+
         return {
           total: violations.length,
           critical: critical.length,

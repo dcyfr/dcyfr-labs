@@ -11,8 +11,8 @@ This directory contains comprehensive architectural plans and documentation for 
 **New to the refactored architecture?** Start here:
 
 1. **Migration Guide** - Step-by-step guide for creating archive/article pages
-2. **[Examples](./examples)** - Copy-paste examples for common patterns
-3. **[Best Practices](./best-practices)** - Guidelines and recommendations
+2. **[Examples](./examples.md)** - Copy-paste examples for common patterns
+3. **[Best Practices](./best-practices.md)** - Guidelines and recommendations
 
 **Want to understand the current architecture?** Read these:
 
@@ -27,8 +27,8 @@ This directory contains comprehensive architectural plans and documentation for 
 ### ✅ Completed Refactoring
 
 #### Blog & Archive Pages Refactor
-**Status:** ✅ Complete  
-**Completed:** November 10, 2025  
+**Status:** ✅ Complete
+**Completed:** November 10, 2025
 **Goal:** Simplify and standardize `/blog`, `/projects`, and future archive pages
 
 **Achievements:**
@@ -51,16 +51,16 @@ This directory contains comprehensive architectural plans and documentation for 
 **Documentation:**
 - **Refactoring Complete** - Complete overview with metrics
 - **Migration Guide** - How to use the patterns
-- **[Examples](./examples)** - Practical copy-paste examples
-- **[Best Practices](./best-practices)** - Guidelines and tips
+- **[Examples](./examples.md)** - Practical copy-paste examples
+- **[Best Practices](./best-practices.md)** - Guidelines and tips
 - **Phase 1** - Foundation details
 - **Phase 2** - Blog refactoring details
 
 ---
 
 #### Developer Dashboard Refactor
-**Status:** ✅ Phase 3 Complete  
-**Completed:** November 11, 2025  
+**Status:** ✅ Phase 3 Complete
+**Completed:** November 11, 2025
 **Goal:** Simplify analytics dashboard and create reusable dashboard patterns
 
 **Achievements:**
@@ -78,20 +78,20 @@ This directory contains comprehensive architectural plans and documentation for 
 **Documentation:**
 - **Dashboard Refactor Plan** - Complete plan with phases
 - **Phase 3 Complete** - Technical summary
-- **[Analytics Architecture Decision](./analytics-architecture-decision)** - Vercel Analytics evaluation
+- **[Analytics Architecture Decision](./analytics-architecture-decision.md)** - Vercel Analytics evaluation
 
 ---
 
 ### 📋 Planning Phase
 
 #### Blog Refactor Plan
-**Status:** ✅ Completed (see Refactoring Complete)  
+**Status:** ✅ Completed (see Refactoring Complete)
 **Note:** Original planning document - refer to completion docs for actual results
 
 ---
 
 #### Core Pages Refactor
-**Status:** Planning Phase  
+**Status:** Planning Phase
 **Goal:** Simplify and standardize core pages (/, /about, /contact, /resume)
 
 **Key Improvements:**
@@ -109,7 +109,7 @@ This directory contains comprehensive architectural plans and documentation for 
 ---
 
 #### Developer Dashboard & Tools Refactor
-**Status:** Planning Phase  
+**Status:** Planning Phase
 **Goal:** Simplify and standardize developer dashboards and admin tools (/analytics)
 
 **Key Improvements:**
@@ -159,7 +159,7 @@ All refactoring plans follow these core principles:
 ## 📐 Key Patterns
 
 ### Archive Pattern
-**For:** List/grid pages with filtering, sorting, pagination  
+**For:** List/grid pages with filtering, sorting, pagination
 **Used by:** `/blog`, `/projects`, future `/writing`, `/notes`, `/bookmarks`
 
 **Components:**
@@ -175,7 +175,7 @@ All refactoring plans follow these core principles:
 ---
 
 ### Article Pattern
-**For:** Individual item pages with metadata, navigation, related content  
+**For:** Individual item pages with metadata, navigation, related content
 **Used by:** `/blog/[slug]`, `/projects/[slug]`, future individual pages
 
 **Components:**
@@ -191,7 +191,7 @@ All refactoring plans follow these core principles:
 ---
 
 ### Page Pattern
-**For:** Core pages with consistent structure  
+**For:** Core pages with consistent structure
 **Used by:** `/`, `/about`, `/contact`, `/resume`
 
 **Components:**
@@ -206,7 +206,7 @@ All refactoring plans follow these core principles:
 ---
 
 ### Dashboard Pattern
-**For:** Developer tools with data tables, filters, exports, analytics  
+**For:** Developer tools with data tables, filters, exports, analytics
 **Used by:** `/analytics`, future admin dashboards, monitoring tools
 
 **Components:**

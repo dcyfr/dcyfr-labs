@@ -1,5 +1,10 @@
-"use client";
+'use client';
 
+/**
+ * Global error boundary for catching errors in root layout
+ * This component is only rendered during runtime errors, never statically generated
+ * See: https://nextjs.org/docs/app/api-reference/file-conventions/error#global-errorjs
+ */
 export default function GlobalError({
   error,
   reset,

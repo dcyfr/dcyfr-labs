@@ -1,32 +1,66 @@
 ---
-id: "post-20251112-26db545c"
-title: "LaTeX & Mathematical Expressions"
-summary: "Complete demonstration of LaTeX and mathematical expression rendering with KaTeX, including inline equations, integrals, matrices, calculus, and accessibility features."
-publishedAt: "2025-11-12T12:00:00Z"
-updatedAt: "2026-01-11T12:00:00Z"
-category: "Demo"
-tags:
-  ["LaTeX", "Math", "KaTeX", "Equations", "Calculus", "Demo", "Accessibility"]
+id: 'post-20251112-26db545c'
+title: 'LaTeX & Mathematical Expressions'
+summary: 'Complete demonstration of LaTeX and mathematical expression rendering with KaTeX, including inline equations, integrals, matrices, calculus, and accessibility features.'
+publishedAt: '2025-11-12T12:00:00Z'
+updatedAt: '2026-01-11T12:00:00Z'
+category: 'Demo'
+tags: ['LaTeX', 'Math', 'KaTeX', 'Equations', 'Calculus', 'Demo', 'Accessibility']
 draft: true
 series:
-  name: "Features"
+  name: 'Features'
   order: 4
 ---
 
+<TLDRSummary
+  title="Mathematical Expression Rendering Guide"
+  sections={[
+    {
+      title: 'Rendering Engine',
+      items: [
+        'KaTeX for fast, build-time math typesetting with TeX syntax',
+        'remark-math and rehype-katex plugins for MDX integration',
+        'Inline expressions with single $ and block with double $$',
+      ],
+    },
+    {
+      title: 'Math Domains',
+      items: [
+        'Calculus: derivatives, integrals, multivariable operations',
+        'Linear algebra: matrices, vectors, eigenvalues, determinants',
+        'Statistics: distributions, probability, variance, expected value',
+      ],
+    },
+    {
+      title: 'Authoring Tips',
+      items: [
+        'Use inline $ for small expressions, display $$ for equations',
+        'Environment modes: aligned, bmatrix, cases for structured content',
+        'Greek letters, operators, relations for complete notation',
+      ],
+    },
+  ]}
+/>
+
 <!-- languagetool-disable QB_NEW_EN_OTHER,QB_NEW_EN_OTHER_ERROR_IDS_12 -->
+
 This post demonstrates mathematical expression rendering using <GlossaryTooltip term="KaTeX" definition="Fast math typesetting library for the web, based on TeX">**KaTeX**</GlossaryTooltip>, providing beautiful typesetting for mathematical content inline and as block equations.
+
 <!-- languagetool-enable QB_NEW_EN_OTHER,QB_NEW_EN_OTHER_ERROR_IDS_12 -->
 
-<SectionShare
-  sectionId="introduction"
-  sectionTitle="LaTeX & Mathematical Expressions"
-/>
+<SectionShare sectionId="introduction" sectionTitle="LaTeX & Mathematical Expressions" />
 
 ---
 
 ## What is KaTeX?
 
-**KaTeX** is a fast, easy-to-use JavaScript library for TeX math rendering on the web. The blog uses KaTeX through the `remark-math` and `rehype-katex` plugins to render LaTeX expressions at build time.
+**KaTeX** is a fast, easy-to-use JavaScript library for TeX math rendering on the web. The blog uses KaTeX through the <GlossaryTooltip term="remark-math" definition="A remark plugin that parses math notation in markdown, extracting inline $ and block $$ expressions for processing">remark-math</GlossaryTooltip> and <GlossaryTooltip term="rehype-katex" definition="A rehype plugin that transforms parsed math nodes into rendered KaTeX HTML at build time, ensuring fast page loads without client-side rendering">rehype-katex</GlossaryTooltip> plugins to render LaTeX expressions at build time.
+
+<KeyTakeaway variant="insight" title="KaTeX vs MathJax">
+  KaTeX renders math at build time with zero client-side JavaScript, while MathJax requires runtime
+  rendering in the browser. This makes KaTeX significantly faster for initial page loads and
+  improves SEO since math content is indexed as HTML rather than LaTeX source.
+</KeyTakeaway>
 
 ---
 
@@ -54,7 +88,7 @@ $$
 
 ### Euler's Identity
 
-Often called the most beautiful equation in mathematics, connecting five fundamental constants:
+Often called the most beautiful equation in mathematics, <GlossaryTooltip term="Euler's Identity" definition="A mathematical equation that elegantly connects five fundamental constants: e (Euler's number), i (imaginary unit), π (pi), 1, and 0 in the form e^(iπ) + 1 = 0">Euler's Identity</GlossaryTooltip> connects five fundamental constants:
 
 $$
 e^{i\pi} + 1 = 0
@@ -307,7 +341,7 @@ $$
 
 ### Eigenvalue Problem
 
-For matrix $A$ and scalar $\lambda$:
+For matrix $A$ and scalar <GlossaryTooltip term="Eigenvalue" definition="A scalar λ where multiplying a matrix A by eigenvector v yields the same result as scaling v by λ, fundamental to linear transformations and principal component analysis">$\lambda$</GlossaryTooltip>:
 
 $$
 A\mathbf{v} = \lambda\mathbf{v}
@@ -342,6 +376,8 @@ P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
 $$
 
 ### Normal Distribution (Gaussian)
+
+The <GlossaryTooltip term="Normal Distribution" definition="A bell-shaped probability distribution characterized by mean μ and standard deviation σ, fundamental to statistics and the central limit theorem">normal distribution</GlossaryTooltip> probability density function:
 
 $$
 f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
@@ -389,13 +425,15 @@ $$
 
 ### Schrödinger Equation
 
-Time-dependent Schrödinger equation:
+Time-dependent <GlossaryTooltip term="Schrödinger equation" definition="A fundamental equation in quantum mechanics that describes how the quantum state of a physical system changes over time, relating wave function Ψ to energy operators">Schrödinger equation</GlossaryTooltip>:
 
 $$
 i\hbar\frac{\partial \Psi}{\partial t} = -\frac{\hbar^2}{2m}\frac{\partial^2 \Psi}{\partial x^2} + V\Psi
 $$
 
 ---
+
+<CollapsibleSection id="complex-numbers" title="Complex Numbers">
 
 ## Complex Numbers
 
@@ -417,7 +455,11 @@ $$
 \overline{z} = \overline{a + bi} = a - bi
 $$
 
+</CollapsibleSection>
+
 ---
+
+<CollapsibleSection id="special-functions" title="Special Functions">
 
 ## Special Functions
 
@@ -445,6 +487,8 @@ $$
 \text{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} dt
 $$
 
+</CollapsibleSection>
+
 ---
 
 ## Tips for Writing LaTeX
@@ -453,6 +497,12 @@ $$
 
 - **Inline**: Use single `$` signs: `$E = mc^2$`
 - **Display**: Use double `$$` signs or `$$...$$` on separate lines
+
+<KeyTakeaway variant="tip" title="LaTeX Syntax Best Practices">
+  Use inline math ($) for small expressions within sentences and display mode ($$) for standalone
+  equations. Environment modes like aligned, bmatrix, and cases provide structured formatting for
+  complex multi-line equations, systems, and matrices.
+</KeyTakeaway>
 
 ### Common Symbols
 

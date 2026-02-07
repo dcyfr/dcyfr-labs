@@ -111,11 +111,11 @@ This directory contains 40+ guides organized by category to help AI agents and d
 
 #### Cost Tracking & Analytics
 
-| Document                                                                             | Purpose                 | Use When             |
-| ------------------------------------------------------------------------------------ | ----------------------- | -------------------- |
-| AI_COST_TRACKING_PROGRESS.md                                                         | Cost tracking progress  | Monitoring costs     |
-| [UNIFIED_AI_COST_DASHBOARD.md](./UNIFIED_AI_COST_DASHBOARD.md)                       | Cost dashboard overview | Viewing metrics      |
-| [UNIFIED_AI_COST_DASHBOARD_QUICKSTART.md](./UNIFIED_AI_COST_DASHBOARD_QUICKSTART.md) | Quick start guide       | Setting up dashboard |
+| Document                                                                                         | Purpose                 | Use When             |
+| ------------------------------------------------------------------------------------------------ | ----------------------- | -------------------- |
+| AI_COST_TRACKING_PROGRESS.md                                                                     | Cost tracking progress  | Monitoring costs     |
+| [UNIFIED_AI_COST_DASHBOARD.md](./.private/UNIFIED_AI_COST_DASHBOARD.md)                         | Cost dashboard overview | Viewing metrics      |
+| [UNIFIED_AI_COST_DASHBOARD_QUICKSTART.md](./.private/UNIFIED_AI_COST_DASHBOARD_QUICKSTART.md)   | Quick start guide       | Setting up dashboard |
 
 ---
 
@@ -123,10 +123,10 @@ This directory contains 40+ guides organized by category to help AI agents and d
 
 **Instruction files and alignment guides:**
 
-| Document                                                           | Purpose                | Use When           |
-| ------------------------------------------------------------------ | ---------------------- | ------------------ |
-| [INSTRUCTION_ALIGNMENT_INDEX.md](./INSTRUCTION_ALIGNMENT_INDEX.md) | Instruction file index | Finding guidance   |
-| INSTRUCTION_ALIGNMENT_SUMMARY.md                                   | Alignment summary      | Understanding sync |
+| Document                                                                       | Purpose                | Use When           |
+| ------------------------------------------------------------------------------ | ---------------------- | ------------------ |
+| [INSTRUCTION_ALIGNMENT_INDEX.md](./.private/INSTRUCTION_ALIGNMENT_INDEX.md)   | Instruction file index | Finding guidance   |
+| INSTRUCTION_ALIGNMENT_SUMMARY.md                                               | Alignment summary      | Understanding sync |
 
 ---
 

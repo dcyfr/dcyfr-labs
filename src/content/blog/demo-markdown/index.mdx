@@ -1,23 +1,50 @@
 ---
-id: "post-20200107-04d94a8e"
-title: "Markdown Elements & Typography"
-summary: "Complete demonstration of markdown elements including typography, lists, blockquotes, tables, and HTML components. Features Lora serif font with modern MDX enhancements."
-publishedAt: "2020-01-07T12:00:00Z"
-updatedAt: "2026-01-11T12:00:00Z"
-category: "Demo"
-tags: ["Typography", "Markdown", "MDX", "Demo", "Accessibility"]
+id: 'post-20200107-04d94a8e'
+title: 'Markdown Elements & Typography'
+summary: 'Complete demonstration of markdown elements including typography, lists, blockquotes, tables, and HTML components. Features Lora serif font with modern MDX enhancements.'
+publishedAt: '2020-01-07T12:00:00Z'
+updatedAt: '2026-01-11T12:00:00Z'
+category: 'Demo'
+tags: ['Typography', 'Markdown', 'MDX', 'Demo', 'Accessibility']
 draft: true
 series:
-  name: "Features"
+  name: 'Features'
   order: 2
 ---
 
+<TLDRSummary
+  title="Markdown Elements Reference"
+  sections={[
+    {
+      title: 'Typography',
+      items: [
+        'Six heading levels with responsive scaling and semantic hierarchy',
+        'Bold, italic, strikethrough, inline code, and keyboard shortcuts',
+        'Lora serif for body text, Geist Sans for UI elements',
+      ],
+    },
+    {
+      title: 'Rich Elements',
+      items: [
+        'Tables with alignment, task lists, blockquotes, and footnotes',
+        'KaTeX math rendering (inline and block equations)',
+        'Interactive ReactFlow diagrams embedded via MDX',
+      ],
+    },
+    {
+      title: 'Custom Components',
+      items: [
+        'Icon components for consistent status indicators',
+        'Collapsible sections for advanced/optional content',
+        'HTML elements with Tailwind class styling support',
+      ],
+    },
+  ]}
+/>
+
 This page demonstrates all markdown elements and typographic styles used throughout the site. It showcases the <GlossaryTooltip term="Lora" definition="A serif typeface designed for optimal reading on screens and in print">**Lora**</GlossaryTooltip> serif font for body text paired with <GlossaryTooltip term="Geist Sans" definition="A modern sans-serif font family optimized for user interfaces">**Geist Sans**</GlossaryTooltip> for UI elements.
 
-<SectionShare
-  sectionId="introduction"
-  sectionTitle="Markdown Elements & Typography"
-/>
+<SectionShare sectionId="introduction" sectionTitle="Markdown Elements & Typography" />
 
 ---
 
@@ -45,9 +72,15 @@ The smallest heading level available.
 
 You can use **bold text** for emphasis, _italic text_ for subtle emphasis, and **_bold italic_** for maximum emphasis. Use ~~strikethrough~~ for deleted text.
 
-Inline `code snippets` are styled with monospace font and background highlighting. You can also use <kbd>Cmd</kbd> + <kbd>K</kbd> to show keyboard shortcuts.
+Inline `code snippets` are styled with <GlossaryTooltip term="Monospace" definition="A font family where every character occupies the same horizontal space, commonly used for code display to maintain alignment and distinguish code from prose">monospace</GlossaryTooltip> font and background highlighting. You can also use <kbd>Cmd</kbd> + <kbd>K</kbd> to show keyboard shortcuts.
 
 This paragraph includes a [link to Next.js](https://nextjs.org/) and an external link with proper styling.
+
+<KeyTakeaway variant="tip" title="Typography Hierarchy">
+  The blog uses a responsive typography scale with six heading levels. Lora serif provides optimal
+  screen reading for body text, while Geist Sans handles interface labels and navigation. Both fonts
+  support dark mode through CSS variables.
+</KeyTakeaway>
 
 ---
 
@@ -130,7 +163,7 @@ This paragraph includes a [link to Next.js](https://nextjs.org/) and an external
 | Component | Mobile | Desktop | Tablet | PWA | Notes                 |
 | --------- | :----: | :-----: | :----: | :-: | --------------------- |
 | Header    |   ✓    |    ✓    |   ✓    |  ✓  | Responsive navigation |
-| Sidebar   |   ✗    |    ✓    |   ⚠   |  ✓  | Collapsible on tablet |
+| Sidebar   |   ✗    |    ✓    |   ⚠    |  ✓  | Collapsible on tablet |
 | Footer    |   ✓    |    ✓    |   ✓    |  ✓  | Sticky on mobile      |
 | Search    |   ✓    |    ✓    |   ✓    |  ⓘ  | Voice search on PWA   |
 
@@ -166,7 +199,7 @@ _Image caption: This is how images render with optional captions._
 
 ## Math & LaTeX (KaTeX)
 
-Inline math equations render with KaTeX: $E = mc^2$ is Einstein's famous equation.
+Inline math equations render with <GlossaryTooltip term="KaTeX" definition="Fast math typesetting library for the web, based on TeX. Renders LaTeX equations at build time without client-side JavaScript">KaTeX</GlossaryTooltip>: $E = mc^2$ is Einstein's famous equation.
 
 Block math equations are centered on their own line:
 
@@ -181,6 +214,8 @@ $$
 $$
 
 ---
+
+<CollapsibleSection id="icon-components" title="Icon Components Reference">
 
 ## Icon Components
 
@@ -209,12 +244,14 @@ Icons work great in tables for feature comparison:
 | :------------: | ------- | ------------------------------ |
 |       ✓        | Check   | Success, completion, available |
 |       ✗        | Cross   | Error, unavailable, denied     |
-|       ⚠       | Warning | Caution, deprecation           |
+|       ⚠        | Warning | Caution, deprecation           |
 |       ⓘ        | Info    | Helpful notes, documentation   |
 |  <IdeaIcon />  | Idea    | Tips, insights                 |
 |  <ZapIcon />   | Zap     | Performance, speed             |
 | <RocketIcon /> | Rocket  | Launch, deployment             |
 |  <LockIcon />  | Lock    | Security, privacy              |
+
+</CollapsibleSection>
 
 ---
 
@@ -223,8 +260,7 @@ Icons work great in tables for feature comparison:
 You can also use HTML elements when needed:
 
 <div className="p-4 bg-accent rounded-lg my-4">
-  <strong>Custom HTML:</strong> This is a custom HTML element styled with
-  Tailwind classes.
+  <strong>Custom HTML:</strong> This is a custom HTML element styled with Tailwind classes.
 </div>
 
 <CollapsibleSection id="html-details-example" title="Click to expand">
@@ -239,7 +275,7 @@ Hidden content that reveals when you click the summary.
 
 ## Footnotes
 
-Here's a sentence with a footnote reference[^1].
+Here's a sentence with a <GlossaryTooltip term="Footnotes" definition="Supplementary notes placed at the bottom of a page, referenced by markers in the text. MDX supports both numbered and named footnotes via remark-gfm">footnote</GlossaryTooltip> reference[^1].
 
 You can also use named footnotes[^note].
 
@@ -251,7 +287,7 @@ You can also use named footnotes[^note].
 
 ## Interactive Diagrams
 
-The site supports interactive diagrams for flowcharts and architecture visualizations:
+The site supports interactive diagrams for flowcharts and architecture visualizations using <GlossaryTooltip term="ReactFlow" definition="A highly customizable React library for building node-based editors and interactive diagrams with pan, zoom, and custom node support">ReactFlow</GlossaryTooltip>:
 
 <PipelineFlow height={600} />
 
@@ -272,6 +308,12 @@ You can combine multiple markdown elements:
 > See the [Code Examples](/blog/demo-code) for detailed examples.
 
 ---
+
+<KeyTakeaway variant="insight" title="MDX Extends Markdown">
+  Every standard Markdown element renders consistently through the design system, and MDX adds
+  interactive React components like diagrams, collapsible sections, and icon tables. No imports
+  needed—components are globally registered.
+</KeyTakeaway>
 
 ## Summary
 

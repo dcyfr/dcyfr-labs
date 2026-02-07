@@ -2,11 +2,11 @@
 
 /**
  * Process Output Helper
- * 
+ *
  * Handles buffering and flow control for child processes with large output.
  * Prevents heredoc hangs and buffer overflow issues when agents generate
  * large amounts of terminal output.
- * 
+ *
  * @see docs/audits/HEREDOC_BUFFER_OVERFLOW_ANALYSIS_2026-02-02.md
  */
 
@@ -18,13 +18,13 @@ const CHUNK_SIZE = 64 * 1024; // 64KB chunks
 
 /**
  * Spawn process with intelligent buffering
- * 
+ *
  * Prevents buffer overflow by:
  * - Using explicit pipe buffering instead of stdio: 'inherit'
  * - Monitoring output size with warnings
  * - Implementing backpressure handling
  * - Graceful termination on overflow
- * 
+ *
  * @param {string} command - Command to execute
  * @param {string[]} args - Command arguments
  * @param {object} options - Spawn options
@@ -121,11 +121,11 @@ export async function spawnWithBuffering(command, args, options = {}) {
 
 /**
  * Stream process output with line-by-line processing
- * 
+ *
  * Ideal for very large outputs (>100MB) where buffering
  * entire output would exhaust memory. Processes lines
  * immediately without storing full output.
- * 
+ *
  * @param {string} command - Command to execute
  * @param {string[]} args - Command arguments
  * @param {function} lineProcessor - Callback for each line
@@ -196,10 +196,10 @@ export async function streamProcessOutput(command, args, lineProcessor, options 
 
 /**
  * Execute command with timeout and buffer management
- * 
+ *
  * Combines buffering with timeout protection for AI agent
  * output that might hang indefinitely.
- * 
+ *
  * @param {string} command - Command to execute
  * @param {string[]} args - Command arguments
  * @param {object} options - Execution options
@@ -264,7 +264,7 @@ export async function executeWithTimeout(command, args, options = {}) {
 
 /**
  * Validate output doesn't exceed size limits
- * 
+ *
  * @param {string} output - Output to validate
  * @param {number} maxSize - Maximum allowed size in bytes
  * @returns {object} Validation result
@@ -286,7 +286,7 @@ export function validateOutputSize(output, maxSize = DEFAULT_MAX_BUFFER) {
   };
 }
 
-export default {
+const processOutputExports = {
   spawnWithBuffering,
   streamProcessOutput,
   executeWithTimeout,
@@ -294,3 +294,5 @@ export default {
   DEFAULT_MAX_BUFFER,
   CHUNK_SIZE
 };
+
+export default processOutputExports;

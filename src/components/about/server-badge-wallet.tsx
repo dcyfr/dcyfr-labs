@@ -52,7 +52,7 @@ async function ServerBadgeWalletInner({
   const data = await getCredlyBadges(username, limit);
 
   // Log for debugging
-  console.log('[ServerBadgeWallet] 📦 Data fetched:', {
+  console.warn('[ServerBadgeWallet] Data fetched:', {
     username,
     limit,
     badgeCount: data.badges.length,

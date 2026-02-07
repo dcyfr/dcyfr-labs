@@ -76,7 +76,7 @@ export const logger = {
   debug(message: string, context?: LogContext): void {
     if (isDevelopment) {
       const ctx = formatContext(context);
-      console.log(`[DEBUG] ${message}`, ctx || '');
+      console.warn(`[DEBUG] ${message}`, ctx || '');
     }
   },
 
@@ -90,7 +90,7 @@ export const logger = {
   info(event: string, context?: LogContext): void {
     if (isDevelopment) {
       const ctx = formatContext(context);
-      console.log(`[INFO] ${event}`, ctx || '');
+      console.warn(`[INFO] ${event}`, ctx || '');
     }
   },
 

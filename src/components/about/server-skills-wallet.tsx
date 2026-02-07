@@ -52,7 +52,7 @@ async function ServerSkillsWalletInner({
   const data = await getCredlySkills(username, excludeSkills);
 
   // Log for debugging
-  console.log('[ServerSkillsWallet] 📦 Data fetched:', {
+  console.warn('[ServerSkillsWallet] Data fetched:', {
     username,
     limit,
     skillCount: data.skills.length,

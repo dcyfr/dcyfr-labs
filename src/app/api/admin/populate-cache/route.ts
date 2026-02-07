@@ -34,7 +34,7 @@ async function fetchGitHubContributions(): Promise<{
   lastUpdated: string;
 } | null> {
   try {
-    console.log('[Admin Cache] Fetching GitHub contributions...');
+    console.warn('[Admin Cache] Fetching GitHub contributions...');
 
     // Get date range for last year
     const to = new Date();
@@ -111,7 +111,7 @@ async function fetchGitHubContributions(): Promise<{
       }
     }
 
-    console.log(`[Admin Cache] ✅ Fetched ${calendar.totalContributions} contributions`);
+    console.warn(`[Admin Cache] Fetched ${calendar.totalContributions} contributions`);
 
     return {
       contributions,
@@ -130,7 +130,7 @@ async function fetchCredlyBadges(): Promise<any[] | null> {
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log(`[Admin Cache] Fetching Credly badges (attempt ${attempt}/${maxRetries})...`);
+      console.warn(`[Admin Cache] Fetching Credly badges (attempt ${attempt}/${maxRetries})...`);
 
       // Add timeout protection
       const controller = new AbortController();
@@ -154,7 +154,7 @@ async function fetchCredlyBadges(): Promise<any[] | null> {
       const data = await response.json();
       const badges = data.data || [];
 
-      console.log(`[Admin Cache] ✅ Fetched ${badges.length} badges on attempt ${attempt}`);
+      console.warn(`[Admin Cache] Fetched ${badges.length} badges on attempt ${attempt}`);
 
       return badges;
     } catch (error) {
@@ -191,7 +191,7 @@ async function fetchCredlyBadges(): Promise<any[] | null> {
 
       // Exponential backoff: 1s, 2s, 4s
       const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
-      console.log(`[Admin Cache] ⏳ Retrying in ${delay}ms...`);
+      console.warn(`[Admin Cache] Retrying in ${delay}ms...`);
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
@@ -227,8 +227,8 @@ async function handlePopulateCache(request: NextRequest) {
     );
   }
 
-  console.log('[Admin Cache] 🚀 Starting cache population...');
-  console.log('[Admin Cache] Environment:', {
+  console.warn('[Admin Cache] Starting cache population...');
+  console.warn('[Admin Cache] Environment:', {
     NODE_ENV: process.env.NODE_ENV,
     VERCEL_ENV: process.env.VERCEL_ENV,
     note: 'Keys auto-prefixed by Redis Proxy',
@@ -254,7 +254,7 @@ async function handlePopulateCache(request: NextRequest) {
         count: githubData.totalContributions,
       };
 
-      console.log(`[Admin Cache] ✅ GitHub data cached: ${key}`);
+      console.warn(`[Admin Cache] GitHub data cached: ${key}`);
     } else {
       results.github = {
         success: false,
@@ -297,7 +297,7 @@ async function handlePopulateCache(request: NextRequest) {
         await redis.set(redisKey, JSON.stringify(cacheData), { ex: CACHE_TTL });
         credlyKeys.push(redisKey);
 
-        console.log(`[Admin Cache] ✅ Cached ${variant.key}: ${variant.badges.length} badges`);
+        console.warn(`[Admin Cache] Cached ${variant.key}: ${variant.badges.length} badges`);
       }
 
       results.credly = {
@@ -327,7 +327,7 @@ async function handlePopulateCache(request: NextRequest) {
 
   const overallSuccess = results.github?.success && results.credly?.success;
 
-  console.log('[Admin Cache] 📋 Summary:', {
+  console.warn('[Admin Cache] Summary:', {
     github: results.github?.success ? '✅' : '❌',
     credly: results.credly?.success ? '✅' : '❌',
     overall: overallSuccess ? '✅' : '❌',

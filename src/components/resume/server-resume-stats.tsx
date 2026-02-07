@@ -46,7 +46,7 @@ function ResumeStatsSkeleton() {
 async function ServerResumeStatsInner() {
   const { totalCount } = await getCredlyBadges('dcyfr');
 
-  console.log('[ServerResumeStats] 📦 Data fetched:', {
+  console.warn('[ServerResumeStats] Data fetched:', {
     totalBadges: totalCount,
   });
 
