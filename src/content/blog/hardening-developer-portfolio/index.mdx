@@ -79,6 +79,14 @@ This series documents the patterns and decisions that took it from prototype to 
 
 ## Production Features Overview
 
+<RoleBasedCTA
+  role="executive"
+  title="For Business Leaders"
+  description="Production-ready portfolios require systematic security hardening, performance optimization, and scalability planning. This post demonstrates how to build enterprise-grade developer platforms with CSP, rate limiting, Core Web Vitals monitoring, and background job processing."
+  buttonText="Contact Us"
+  buttonHref="/contact?role=executive&topic=portfolio-hardening"
+/>
+
 **Current Architecture (December 2025):**
 
 - <LockIcon /> **Security**: CSP headers, rate limiting, input validation, automated vulnerability
@@ -89,14 +97,6 @@ This series documents the patterns and decisions that took it from prototype to 
 - <RocketIcon /> **Infrastructure**: Background jobs with Inngest, GitHub integration, automated
   deployments
 - <ShieldIcon /> **Monitoring**: Sentry error tracking, Vercel Analytics, comprehensive logging
-
-<RoleBasedCTA
-  role="executive"
-  title="For Business Leaders"
-  description="Production-ready portfolios require systematic security hardening, performance optimization, and scalability planning. This post demonstrates how to build enterprise-grade developer platforms with CSP, rate limiting, Core Web Vitals monitoring, and background job processing."
-  buttonText="Contact Us"
-  buttonHref="/contact?role=executive&topic=portfolio-hardening"
-/>
 
 ---
 
@@ -174,14 +174,6 @@ response.headers.set('Content-Security-Policy', csp);
   nonces per request and support third-party scripts with explicit allowlisting.
 </KeyTakeaway>
 
-<RoleBasedCTA
-  role="developer"
-  title="For Developers"
-  description="Implement CSP via Next.js middleware for reliable header enforcement. Use defense-in-depth with both middleware and Vercel config. Zero external dependencies for rate limiting works perfectly for serverless deployments."
-  buttonText="View Implementation Guide"
-  buttonHref="#the-journey"
-/>
-
 **Rate Limiting Implementation**
 
 The contact form API endpoint had no rate limiting, making it vulnerable to spam and abuse. I implemented a zero-dependency, in-memory rate limiter.
@@ -257,15 +249,15 @@ export class RateLimiter {
   client UX. Upgrade to Redis only when you need multi-region or high-scale.
 </KeyTakeaway>
 
-<RoleBasedCTA
-  role="security"
-  title="For Security Teams"
-  description="Implement defense-in-depth CSP with Next.js middleware + Vercel config, zero-dependency rate limiting for API endpoints, and automated security header validation. Monitor for XSS, clickjacking, and DDoS patterns using standard HTTP security headers."
-  buttonText="Security Patterns"
-  buttonHref="#part-1-security-hardening"
-/>
-
 ### Part 2: Performance Optimization
+
+<RoleBasedCTA
+  role="developer"
+  title="For Developers"
+  description="Implement CSP via Next.js middleware for reliable header enforcement. Use defense-in-depth with both middleware and Vercel config. Zero external dependencies for rate limiting works perfectly for serverless deployments."
+  buttonText="View Implementation Guide"
+  buttonHref="#the-journey"
+/>
 
 **<GlossaryTooltip term="INP" definition="Interaction to Next Paint - a Core Web Vital metric that measures the responsiveness of a page by tracking the latency of user interactions from click to visual update">INP</GlossaryTooltip> (Interaction to Next Paint) Improvements**
 
@@ -400,6 +392,14 @@ const fetchContributions = async (): Promise<ContributionResponse> => {
 </CollapsibleSection>
 
 ### Part 3: Developer Experience
+
+<RoleBasedCTA
+  role="security"
+  title="For Security Teams"
+  description="Implement defense-in-depth CSP with Next.js middleware + Vercel config, zero-dependency rate limiting for API endpoints, and automated security header validation. Monitor for XSS, clickjacking, and DDoS patterns using standard HTTP security headers."
+  buttonText="Security Patterns"
+  buttonHref="#part-1-security-hardening"
+/>
 
 **AI Contributor Guide**
 

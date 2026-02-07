@@ -131,6 +131,14 @@ These dependency patches are automatically included in the Node.js security rele
 
 ## Who Should Upgrade?
 
+<RoleBasedCTA
+  role="developer"
+  title="For Developers"
+  description="Upgrade Node.js to v20.20.0, v22.22.0, v24.13.0, or v25.3.0 immediately. If using Next.js 13+ with App Router, add depth validation to API routes processing user input to prevent CVE-2025-59466 exploitation."
+  buttonText="View Upgrade Guide"
+  buttonHref="#how-to-upgrade"
+/>
+
 **You are affected if:**
 
 - You use Next.js 13+ with App Router (uses `AsyncLocalStorage` internally)
@@ -245,17 +253,17 @@ Upgrade immediately. The permissions model's security guarantees are broken unti
 
 </CollapsibleSection>
 
-<RoleBasedCTA
-  role="developer"
-  title="For Developers"
-  description="Upgrade Node.js to v20.20.0, v22.22.0, v24.13.0, or v25.3.0 immediately. If using Next.js 13+ with App Router, add depth validation to API routes processing user input to prevent CVE-2025-59466 exploitation."
-  buttonText="View Upgrade Guide"
-  buttonHref="#how-to-upgrade"
-/>
-
 ---
 
 ## How to Upgrade
+
+<RoleBasedCTA
+  role="security"
+  title="For Security Teams"
+  description="Monitor for buffer memory leaks (CVE-2025-55131), AsyncLocalStorage crashes in Next.js apps (CVE-2025-59466), and HTTP/2 DoS patterns (CVE-2025-59465). If using --permission flags, review symlink bypasses and UDS access controls immediately."
+  buttonText="Detection Patterns"
+  buttonHref="#high-severity-vulnerabilities"
+/>
 
 ### Using nvm (Node Version Manager)
 
@@ -310,14 +318,6 @@ Update your GitHub Actions workflows to use version pinning:
   with:
     node-version-file: '.nvmrc' # Use version from .nvmrc file
 ```
-
-<RoleBasedCTA
-  role="security"
-  title="For Security Teams"
-  description="Monitor for buffer memory leaks (CVE-2025-55131), AsyncLocalStorage crashes in Next.js apps (CVE-2025-59466), and HTTP/2 DoS patterns (CVE-2025-59465). If using --permission flags, review symlink bypasses and UDS access controls immediately."
-  buttonText="Detection Patterns"
-  buttonHref="#high-severity-vulnerabilities"
-/>
 
 ---
 

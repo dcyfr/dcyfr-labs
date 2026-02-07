@@ -148,11 +148,11 @@ The insight: **users don't care when the email sends—they care that you acknow
 </KeyTakeaway>
 
 <RoleBasedCTA
-  role="executive"
-  title="For Engineering Leaders"
+  role="leader"
+  title="For Leaders"
   description="Event-driven architecture transforms API reliability and user experience. This post demonstrates real production results: 10x faster response times, 99.9% delivery reliability, and automated security monitoring—all without managing queue infrastructure."
   buttonText="Contact Us"
-  buttonHref="/contact?role=executive&topic=event-driven-architecture"
+  buttonHref="/contact?role=leader&topic=event-driven-architecture"
 />
 
 Modern event-driven systems add one more concept: **steps**. Instead of one monolithic background function, you break work into discrete, named operations. Each step becomes a checkpoint—if step 3 fails, steps 1 and 2 don't re-run. This is called <GlossaryTooltip term="Durable Execution" definition="A programming model where function execution state is automatically persisted, allowing workflows to resume from the last successful checkpoint after failures or interruptions">durable execution</GlossaryTooltip>, and it transforms how you think about reliability.
@@ -192,6 +192,14 @@ What sold me on Inngest:
 ---
 
 ## Implementation: Contact Form
+
+<RoleBasedCTA
+  role="developer"
+  title="For Developers"
+  description="Implement event-driven architecture in any Next.js project with Inngest. Use step functions for durable execution, automatic retries with exponential backoff, and a local dev UI for debugging. Zero infrastructure required."
+  buttonText="View Implementation"
+  buttonHref="#implementation-contact-form"
+/>
 
 Here's the actual production code from this portfolio:
 
@@ -306,14 +314,6 @@ This is <GlossaryTooltip term="Durable Execution" definition="A programming mode
   This means emails aren't sent twice, analytics aren't double-counted, and retries are surgical
   rather than wasteful.
 </KeyTakeaway>
-
-<RoleBasedCTA
-  role="developer"
-  title="For Developers"
-  description="Implement event-driven architecture in any Next.js project with Inngest. Use step functions for durable execution, automatic retries with exponential backoff, and a local dev UI for debugging. Zero infrastructure required."
-  buttonText="View Implementation"
-  buttonHref="#implementation-contact-form"
-/>
 
 <SectionShare sectionId="implementation-contact-form" sectionTitle="Implementation: Contact Form" />
 
@@ -615,6 +615,14 @@ Event-driven architecture doesn't require enterprise scale. With tools like Inng
 
 ### When NOT to Use Event-Driven
 
+<RoleBasedCTA
+  role="security"
+  title="For Security Teams"
+  description="Background jobs are a security surface. This post covers automated CVE monitoring (3x daily GHSA checks), input validation in async pipelines, and how a 13-hour detection gap led to building automated security advisory monitoring."
+  buttonText="Security Patterns"
+  buttonHref="#the-security-monitor"
+/>
+
 Event-driven architecture isn't always the answer:
 
 - **Simple CRUD**: Reading/writing to a database doesn't need queuing. Saving a user preference? Just write to the database directly.
@@ -629,14 +637,6 @@ The rule of thumb: **if users don't need to wait for the result, don't make them
   low-traffic apps don't need queuing. Add complexity only when users are waiting for work they
   don't need to see complete.
 </KeyTakeaway>
-
-<RoleBasedCTA
-  role="security"
-  title="For Security Teams"
-  description="Background jobs are a security surface. This post covers automated CVE monitoring (3x daily GHSA checks), input validation in async pipelines, and how a 13-hour detection gap led to building automated security advisory monitoring."
-  buttonText="Security Patterns"
-  buttonHref="#the-security-monitor"
-/>
 
 One more thing: **background jobs are a security surface too.** The security monitor in this portfolio exists because I learned the hard way that CVE detection gaps matter. If you're processing sensitive data in background functions, apply the same security rigor you would do to API routes—validate inputs, sanitize outputs, and monitor for anomalies.
 
