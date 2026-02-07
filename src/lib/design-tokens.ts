@@ -447,6 +447,58 @@ export const TYPOGRAPHY = {
   },
 
   /**
+   * Geist Pixel - Bitmap-inspired display fonts
+   *
+   * Expressive typefaces designed for modern products, not just visual gimmicks.
+   * Each variant uses a strict pixel grid for nostalgic-yet-contemporary aesthetics.
+   *
+   * Use Cases:
+   * - Banners and hero sections
+   * - Experimental layouts
+   * - Product moments and feature highlights
+   * - Dashboard accents
+   * - Easter eggs and interactive elements
+   *
+   * Features:
+   * - 5 variants (square, grid, circle, triangle, line)
+   * - 480 glyphs per variant
+   * - 7 stylistic sets
+   * - 32 supported languages
+   * - Metrics aligned with Geist Sans and Geist Mono
+   *
+   * @see https://vercel.com/font
+   * @example
+   * ```tsx
+   * <h2 className={TYPOGRAPHY.pixel.square.large}>Retro Banner</h2>
+   * <div className={TYPOGRAPHY.pixel.grid.medium}>Dashboard Accent</div>
+   * ```
+   */
+  pixel: {
+    /** Square variant - bitmap-inspired with squared corners */
+    square: {
+      /** Extra large: 48px */
+      xl: 'font-pixel-square text-5xl font-normal tracking-wider',
+      /** Large: 36px */
+      large: 'font-pixel-square text-4xl font-normal tracking-wider',
+      /** Medium: 24px */
+      medium: 'font-pixel-square text-2xl font-normal tracking-wide',
+      /** Small: 16px */
+      small: 'font-pixel-square text-base font-normal tracking-wide',
+    },
+    /** Grid variant - shows pixel grid structure */
+    grid: {
+      /** Extra large: 48px */
+      xl: 'font-pixel-grid text-5xl font-normal tracking-wider',
+      /** Large: 36px */
+      large: 'font-pixel-grid text-4xl font-normal tracking-wider',
+      /** Medium: 24px */
+      medium: 'font-pixel-grid text-2xl font-normal tracking-wide',
+      /** Small: 16px */
+      small: 'font-pixel-grid text-base font-normal tracking-wide',
+    },
+  },
+
+  /**
    * Depth-Based Text Hierarchy
    *
    * Creates visual hierarchy through progressive text treatments.
