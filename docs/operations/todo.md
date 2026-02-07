@@ -76,7 +76,7 @@ Phase 1 (Consolidation) and Phase 2 (Projects) complete. Remaining:
 
 - [x] `src/lib/storage-adapter.ts:142` - ✅ OAuth integration complete (Feb 5, 2026)
   - Created `/api/user/engagement/[key]` endpoints (GET, POST, DELETE, HEAD)
-  - Implemented ApiStorageAdapter with Bearer token authentication  
+  - Implemented ApiStorageAdapter with Bearer token authentication
   - Server-backed persistence using Redis (90-day expiration)
   - Tests: 11/11 passing for bookmark sync functionality
 - [x] `src/lib/activity/bookmarks.ts:510` - ✅ Server-side bookmark sync complete (Feb 5, 2026)
@@ -181,6 +181,20 @@ Low priority - unit/integration tests provide sufficient coverage:
 
 - Curated link collection at `/links`
 - Categories, submission, curation, discovery
+
+### Invite Claim Tracking
+
+- Add click tracking to `/invites` page
+- Capture which invite links are claimed
+- Store claim metadata (timestamp, source, user agent)
+- Dashboard metrics for invite redemption rates
+
+### Randomize Recommended Blog Posts
+
+- Randomize blog post recommendations at bottom of like/bookmark pages
+- Improve discovery and engagement by varying recommendations
+- Update recommendation algorithm to include randomization factor
+- Track which posts are shown to measure engagement impact
 
 ### Mobile Experience
 
