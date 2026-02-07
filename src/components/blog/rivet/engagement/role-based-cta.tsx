@@ -1,12 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Briefcase, Code, Shield } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  TYPOGRAPHY,
-  BORDERS,
-} from "@/lib/design-tokens";
+import * as React from 'react';
+import { Briefcase, Code, Shield } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { TYPOGRAPHY, BORDERS } from '@/lib/design-tokens';
 
 /**
  * RoleBasedCTA - Single role-specific call-to-action card
@@ -27,11 +24,11 @@ import {
  * Each instance shows only one card based on the role prop
  */
 
-type RoleType = "executive" | "developer" | "security";
+type RoleType = 'executive' | 'developer' | 'security';
 
 interface RoleBasedCTAProps {
-  /** Which role this card represents */
-  role: RoleType;
+  /** Which role this card represents. Falls back to "developer" styling for unknown roles. */
+  role: RoleType | (string & {});
   /** Card title */
   title: string;
   /** Card description */
@@ -47,30 +44,30 @@ interface RoleBasedCTAProps {
 const roleConfig = {
   executive: {
     icon: Briefcase,
-    color: "text-blue-600 dark:text-blue-400",
-    bgColor: "bg-blue-50 dark:bg-blue-950/30",
-    borderColor: "border-blue-200 dark:border-blue-800",
-    hoverBg: "hover:bg-blue-100 dark:hover:bg-blue-900/40",
-    buttonBg: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600",
-    buttonText: "text-white dark:text-white",
+    color: 'text-blue-600 dark:text-blue-400',
+    bgColor: 'bg-blue-50 dark:bg-blue-950/30',
+    borderColor: 'border-blue-200 dark:border-blue-800',
+    hoverBg: 'hover:bg-blue-100 dark:hover:bg-blue-900/40',
+    buttonBg: 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600',
+    buttonText: 'text-white dark:text-white',
   },
   developer: {
     icon: Code,
-    color: "text-green-600 dark:text-green-400",
-    bgColor: "bg-green-50 dark:bg-green-950/30",
-    borderColor: "border-green-200 dark:border-green-800",
-    hoverBg: "hover:bg-green-100 dark:hover:bg-green-900/40",
-    buttonBg: "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600",
-    buttonText: "text-white dark:text-white",
+    color: 'text-green-600 dark:text-green-400',
+    bgColor: 'bg-green-50 dark:bg-green-950/30',
+    borderColor: 'border-green-200 dark:border-green-800',
+    hoverBg: 'hover:bg-green-100 dark:hover:bg-green-900/40',
+    buttonBg: 'bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600',
+    buttonText: 'text-white dark:text-white',
   },
   security: {
     icon: Shield,
-    color: "text-red-600 dark:text-red-400",
-    bgColor: "bg-red-50 dark:bg-red-950/30",
-    borderColor: "border-red-200 dark:border-red-800",
-    hoverBg: "hover:bg-red-100 dark:hover:bg-red-900/40",
-    buttonBg: "bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600",
-    buttonText: "text-white dark:text-white",
+    color: 'text-red-600 dark:text-red-400',
+    bgColor: 'bg-red-50 dark:bg-red-950/30',
+    borderColor: 'border-red-200 dark:border-red-800',
+    hoverBg: 'hover:bg-red-100 dark:hover:bg-red-900/40',
+    buttonBg: 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600',
+    buttonText: 'text-white dark:text-white',
   },
 };
 
@@ -82,14 +79,14 @@ export function RoleBasedCTA({
   buttonHref,
   className,
 }: RoleBasedCTAProps) {
-  const theme = roleConfig[role];
+  const theme = roleConfig[role as RoleType] ?? roleConfig.developer;
   const Icon = theme.icon;
 
   const handleClick = () => {
     // Track CTA click event
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "cta_click", {
-        cta_type: "role_based",
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'cta_click', {
+        cta_type: 'role_based',
         role,
         button_text: buttonText,
       });
@@ -99,7 +96,7 @@ export function RoleBasedCTA({
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row md:items-center gap-4 md:gap-4 p-4 rounded-lg border transition-all my-8 w-full",
+        'flex flex-col md:flex-row md:items-center gap-4 md:gap-4 p-4 rounded-lg border transition-all my-8 w-full',
         BORDERS.card,
         theme.bgColor,
         theme.borderColor,
@@ -110,17 +107,13 @@ export function RoleBasedCTA({
     >
       {/* Icon */}
       <div className="flex-shrink-0">
-        <Icon className={cn("h-8 w-8", theme.color)} aria-hidden="true" />
+        <Icon className={cn('h-8 w-8', theme.color)} aria-hidden="true" />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <h3 className={cn(TYPOGRAPHY.h3.standard, "mb-2")}>
-          {title}
-        </h3>
-        <p className={cn("text-sm leading-relaxed text-muted-foreground")}>
-          {description}
-        </p>
+        <h3 className={cn(TYPOGRAPHY.h3.standard, 'mb-2')}>{title}</h3>
+        <p className={cn('text-sm leading-relaxed text-muted-foreground')}>{description}</p>
       </div>
 
       {/* Button */}
@@ -129,14 +122,14 @@ export function RoleBasedCTA({
           href={buttonHref}
           onClick={handleClick}
           className={cn(
-            "inline-flex items-center justify-center px-4 py-3 rounded-md whitespace-nowrap w-full md:w-auto",
-            "text-sm font-medium transition-colors no-underline",
+            'inline-flex items-center justify-center px-4 py-3 rounded-md whitespace-nowrap w-full md:w-auto',
+            'text-sm font-medium transition-colors no-underline',
             theme.buttonBg,
             theme.buttonText,
-            "focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-background",
-            role === "executive" && "focus:ring-blue-500",
-            role === "developer" && "focus:ring-green-500",
-            role === "security" && "focus:ring-red-500"
+            'focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-background',
+            role === 'executive' && 'focus:ring-blue-500',
+            role === 'developer' && 'focus:ring-green-500',
+            role === 'security' && 'focus:ring-red-500'
           )}
           role="button"
           aria-label={`${buttonText} for ${title}`}
