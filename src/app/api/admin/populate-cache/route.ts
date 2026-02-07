@@ -342,7 +342,7 @@ async function handlePopulateCache(request: NextRequest) {
       environment: {
         NODE_ENV: process.env.NODE_ENV,
         VERCEL_ENV: process.env.VERCEL_ENV,
-        keyPrefix: keyPrefix || '(none)',
+        note: 'Keys auto-prefixed by Redis Proxy',
       },
       results: {
         github: results.github,

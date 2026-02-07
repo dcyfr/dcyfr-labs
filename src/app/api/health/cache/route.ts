@@ -69,7 +69,7 @@ export async function GET() {
         environment: {
           NODE_ENV: process.env.NODE_ENV,
           VERCEL_ENV: process.env.VERCEL_ENV,
-          keyPrefix: keyPrefix || '(none)',
+          note: 'Keys auto-prefixed by Redis Proxy',
         },
         timestamp: new Date().toISOString(),
       },
