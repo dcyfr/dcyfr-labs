@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '@/mcp/shared/redis-client';
-import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 
 /**
  * Development-only endpoint to populate local cache
@@ -128,7 +127,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Only available in development' }, { status: 403 });
   }
 
-  const keyPrefix = getRedisKeyPrefix();
   const results: {
     github?: { success: boolean; message?: string; key?: string };
     credly?: { success: boolean; message?: string; keys?: string[] };
@@ -138,7 +136,7 @@ export async function GET(request: NextRequest) {
   try {
     const githubData = await fetchGitHubContributions();
     if (githubData) {
-      const key = `${keyPrefix}github:contributions:dcyfr`;
+      const key = 'github:contributions:dcyfr';
       await redis.set(key, JSON.stringify(githubData), { ex: 24 * 60 * 60 });
       results.github = {
         success: true,
@@ -165,7 +163,7 @@ export async function GET(request: NextRequest) {
     // Fetch all badges
     const allBadges = await fetchCredlyBadges();
     if (allBadges && Array.isArray(allBadges)) {
-      const key = `${keyPrefix}credly:badges:dcyfr:all`;
+      const key = 'credly:badges:dcyfr:all';
       // Store in format expected by credly-data.ts: { badges, total_count }
       const cacheData = {
         badges: allBadges,
@@ -178,7 +176,7 @@ export async function GET(request: NextRequest) {
     // Fetch 10 badges
     const badges10 = await fetchCredlyBadges(10);
     if (badges10 && Array.isArray(badges10)) {
-      const key = `${keyPrefix}credly:badges:dcyfr:10`;
+      const key = 'credly:badges:dcyfr:10';
       const cacheData = {
         badges: badges10,
         total_count: badges10.length,
@@ -190,7 +188,7 @@ export async function GET(request: NextRequest) {
     // Fetch 3 badges
     const badges3 = await fetchCredlyBadges(3);
     if (badges3 && Array.isArray(badges3)) {
-      const key = `${keyPrefix}credly:badges:dcyfr:3`;
+      const key = 'credly:badges:dcyfr:3';
       const cacheData = {
         badges: badges3,
         total_count: badges3.length,
@@ -222,7 +220,7 @@ export async function GET(request: NextRequest) {
         ? 'Local cache populated successfully'
         : 'Some operations failed - check details',
       details: results,
-      keyPrefix,
+      note: 'Keys auto-prefixed by Redis Proxy',
     },
     { status: overallSuccess ? 200 : 500 }
   );

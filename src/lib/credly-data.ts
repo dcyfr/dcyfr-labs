@@ -62,25 +62,25 @@ function loadSnapshotData(): { badges: CredlyBadge[]; total_count: number } | nu
     const fs = require('fs');
     const path = require('path');
     const snapshotPath = path.resolve(process.cwd(), 'src/data/credly-badges-snapshot.json');
-    
+
     if (!fs.existsSync(snapshotPath)) {
       console.warn('[Credly Data] ℹ️  Snapshot not found - this is normal on first build');
       return null;
     }
-    
+
     const rawData = fs.readFileSync(snapshotPath, 'utf-8');
     const snapshot = JSON.parse(rawData);
-    
+
     if (!Array.isArray(snapshot.badges) || snapshot.badges.length === 0) {
       console.warn('[Credly Data] ⚠️  Snapshot is empty or invalid');
       return null;
     }
-    
+
     console.log('[Credly Data] ✅ Loaded snapshot', {
       badges: snapshot.badges.length,
       generatedAt: snapshot.generatedAt,
     });
-    
+
     return {
       badges: snapshot.badges,
       total_count: snapshot.total_count || snapshot.count || snapshot.badges.length,
@@ -193,7 +193,7 @@ export async function getCredlyBadges(
   // Layer 3: Graceful empty state (no error message to user)
   console.warn('[Credly Data] ⚠️  All fallbacks exhausted - returning empty state');
   console.warn('[Credly Data]    This should only happen on first build or if snapshot generation failed');
-  
+
   return {
     badges: [],
     totalCount: 0,

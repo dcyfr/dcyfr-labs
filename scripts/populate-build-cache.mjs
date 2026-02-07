@@ -275,16 +275,16 @@ async function fetchCredlyBadges(retries = 3) {
       try {
         const snapshotPath = resolve(__dirname, '../src/data/credly-badges-snapshot.json');
         const snapshotDir = dirname(snapshotPath);
-        
+
         // Ensure directory exists
         mkdirSync(snapshotDir, { recursive: true });
-        
+
         // Add generatedAt timestamp to snapshot
         const snapshot = {
           ...cacheData,
           generatedAt: new Date().toISOString(),
         };
-        
+
         writeFileSync(snapshotPath, JSON.stringify(snapshot, null, 2));
         console.log('[Build Cache] ✅ Snapshot written to src/data/credly-badges-snapshot.json', {
           badges: snapshot.badges.length,
