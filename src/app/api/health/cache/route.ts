@@ -14,20 +14,17 @@
 
 import { NextResponse } from 'next/server';
 import { redis } from '@/mcp/shared/redis-client';
-import { getRedisKeyPrefix } from '@/mcp/shared/redis-client';
 
 export async function GET() {
   try {
-    const keyPrefix = getRedisKeyPrefix();
-
-    // Define all critical cache keys
+    // Define all critical cache keys (base keys - Proxy adds prefix)
     const checks = {
       credly: {
-        all: `${keyPrefix}credly:badges:dcyfr:all`,
-        limit10: `${keyPrefix}credly:badges:dcyfr:10`,
-        limit3: `${keyPrefix}credly:badges:dcyfr:3`,
+        all: 'credly:badges:dcyfr:all',
+        limit10: 'credly:badges:dcyfr:10',
+        limit3: 'credly:badges:dcyfr:3',
       },
-      github: `${keyPrefix}github:contributions:dcyfr`,
+      github: 'github:contributions:dcyfr',
     };
 
     const results: Record<string, any> = {};

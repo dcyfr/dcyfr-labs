@@ -21,6 +21,7 @@ import { config } from 'dotenv';
 import { Redis } from '@upstash/redis';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
+import { writeFileSync, mkdirSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -268,6 +269,30 @@ async function fetchCredlyBadges(retries = 3) {
         validateCredlyData(cacheData);
       } catch (validationError) {
         throw new Error(`Validation failed: ${validationError.message}`);
+      }
+
+      // ✅ STEP 2: Write persistent snapshot to disk (committed to git)
+      try {
+        const snapshotPath = resolve(__dirname, '../src/data/credly-badges-snapshot.json');
+        const snapshotDir = dirname(snapshotPath);
+        
+        // Ensure directory exists
+        mkdirSync(snapshotDir, { recursive: true });
+        
+        // Add generatedAt timestamp to snapshot
+        const snapshot = {
+          ...cacheData,
+          generatedAt: new Date().toISOString(),
+        };
+        
+        writeFileSync(snapshotPath, JSON.stringify(snapshot, null, 2));
+        console.log('[Build Cache] ✅ Snapshot written to src/data/credly-badges-snapshot.json', {
+          badges: snapshot.badges.length,
+          generatedAt: snapshot.generatedAt,
+        });
+      } catch (snapshotError) {
+        // Don't fail the build if snapshot write fails - log warning
+        console.warn('[Build Cache] ⚠️  Failed to write snapshot:', snapshotError.message);
       }
 
       // Cache multiple configurations (all, top 10, top 3)

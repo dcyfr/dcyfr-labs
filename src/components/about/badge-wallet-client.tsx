@@ -30,7 +30,6 @@ import type { CredlyBadge } from '@/types/credly';
 interface BadgeWalletClientProps {
   badges: CredlyBadge[];
   totalCount: number;
-  error?: string;
   showLatestOnly?: boolean;
   limit?: number;
   viewMoreUrl?: string;
@@ -131,7 +130,6 @@ function BadgeCard({ badge }: BadgeCardProps) {
 export function BadgeWalletClient({
   badges,
   totalCount,
-  error,
   showLatestOnly = false,
   limit,
   viewMoreUrl,
@@ -146,22 +144,9 @@ export function BadgeWalletClient({
     return badges;
   }, [badges, showLatestOnly, limit]);
 
-  // Error state
-  if (error) {
-    return (
-      <Alert type="critical" className={className}>
-        {error}
-      </Alert>
-    );
-  }
-
-  // Empty state
+  // Empty state (graceful - no error banner)
   if (badges.length === 0) {
-    return (
-      <Alert type="info" className={className}>
-        No badges found. Cache may not be populated.
-      </Alert>
-    );
+    return null; // Simply don't render anything if no badges available
   }
 
   return (
