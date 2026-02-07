@@ -111,15 +111,15 @@ Performance, testing, and optimization guides
 
 ## 🔗 Quick Links
 
-| Area                  | Key Documentation                                                                               |
-| --------------------- | ----------------------------------------------------------------------------------------------- |
-| **Getting Started**   | [Quick Start](./operations/quick-start) • [Environment Setup](./platform/environment-variables) |
-| **Architecture**      | [Architecture Overview](./architecture/README) • Migration Guide                                |
-| **Design System**     | [Design System](./design/design-system) • Page Templates                                        |
-| **Components**        | [MDX Components](./components/mdx) • [Post Components](./components/post-badges)                |
-| **API & Features**    | [API Overview](./api/routes/overview) • [Background Jobs](./features/inngest-integration)       |
-| **Testing & Quality** | [Testing Guide](./testing/README) • Performance                                                 |
-| **Operations**        | Current Tasks • Completed Work                                                                  |
+| Area                  | Key Documentation                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Getting Started**   | [Quick Start](./operations/quick-start.md) • [Environment Setup](./platform/environment-variables.md) |
+| **Architecture**      | [Architecture Overview](./architecture/README.md) • Migration Guide                                   |
+| **Design System**     | [Design System](./design/design-system.md) • Page Templates                                           |
+| **Components**        | [MDX Components](./components/mdx.md) • [Post Components](./components/post-badges.md)                |
+| **API & Features**    | [API Overview](./api/routes/overview.md) • [Background Jobs](./features/inngest-integration.md)       |
+| **Testing & Quality** | [Testing Guide](./testing/README.md) • Performance                                                    |
+| **Operations**        | Current Tasks • Completed Work                                                                        |
 
 ---
 
@@ -127,7 +127,7 @@ Performance, testing, and optimization guides
 
 - **Browse all docs**: Use the search above or explore the directory structure
 - **Need specific help?** Check operations/todo.md for current priorities
-- **Contributing?** See [ai/BEST_PRACTICES.md](./ai/best-practices) for development guidelines
+- **Contributing?** See [ai/BEST_PRACTICES.md](./ai/best-practices.md) for development guidelines
 
 ## Contributing & Maintenance
 

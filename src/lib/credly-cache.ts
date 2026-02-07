@@ -256,7 +256,7 @@ export function getCredlyCacheStats(): {
  * @throws Error if API fetch fails
  */
 export async function populateCredlyCache(username: string = 'dcyfr'): Promise<void> {
-  console.log(`[Credly Cache] 🔄 Populating cache for user: ${username}`);
+  console.warn(`[Credly Cache] Populating cache for user: ${username}`);
 
   try {
     // Fetch all badges from Credly API
@@ -277,7 +277,7 @@ export async function populateCredlyCache(username: string = 'dcyfr'): Promise<v
       throw new Error('Invalid Credly API response: expected array of badges');
     }
 
-    console.log(`[Credly Cache] ✅ Fetched ${badges.length} badges from Credly API`);
+    console.warn(`[Credly Cache] Fetched ${badges.length} badges from Credly API`);
 
     // Create all three cache variants
     const variants = [
@@ -302,8 +302,8 @@ export async function populateCredlyCache(username: string = 'dcyfr'): Promise<v
       const redisKey = createRedisKey(username, variant.limit || undefined);
       try {
         await redis.set(redisKey, JSON.stringify(cacheData), { ex: REDIS_CACHE_DURATION });
-        console.log(
-          `[Credly Cache] ✅ Cached ${variant.key}: ${variant.badges.length} badges to ${redisKey}`
+        console.warn(
+          `[Credly Cache] Cached ${variant.key}: ${variant.badges.length} badges to ${redisKey}`
         );
       } catch (redisError) {
         console.error(`[Credly Cache] ❌ Failed to cache ${variant.key} to Redis:`, redisError);
@@ -311,7 +311,7 @@ export async function populateCredlyCache(username: string = 'dcyfr'): Promise<v
       }
     }
 
-    console.log(`[Credly Cache] ✅ Cache population complete for ${username}`);
+    console.warn(`[Credly Cache] Cache population complete for ${username}`);
   } catch (error) {
     console.error('[Credly Cache] ❌ Failed to populate cache:', error);
     throw error; // Re-throw to allow caller to handle

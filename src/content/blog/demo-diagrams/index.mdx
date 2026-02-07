@@ -15,6 +15,36 @@ series:
   color: 'tutorial'
 ---
 
+<TLDRSummary
+  title="Interactive Diagrams Quick Reference"
+  sections={[
+    {
+      title: 'Diagram Presets',
+      items: [
+        'MCP Architecture: three-tier client-server model visualization',
+        'Authentication Flow: decision-based user login workflows',
+        'Pipeline Flow: six-stage MDX processing transformation',
+      ],
+    },
+    {
+      title: 'Customization',
+      items: [
+        'Control visibility with showControls prop (default: true)',
+        'Customize height with number or string values',
+        'Add captions for accessibility and SEO enhancement',
+      ],
+    },
+    {
+      title: 'Accessibility',
+      items: [
+        'Semantic HTML with ARIA labels for all nodes and edges',
+        'Keyboard navigation support for interactive elements',
+        'Color contrast validation ensures readability',
+      ],
+    },
+  ]}
+/>
+
 After migrating away from Mermaid, we've built a set of interactive diagrams using <GlossaryTooltip term="ReactFlow" definition="A highly customizable React library for building node-based editors and interactive diagrams">**ReactFlow**</GlossaryTooltip> that provide better performance, accessibility, and customization. These diagrams are fully interactive—you can pan, zoom, and explore them freely.
 
 <SectionShare sectionId="introduction" sectionTitle="Interactive Diagrams with ReactFlow" />
@@ -31,6 +61,12 @@ ReactFlow offers several advantages over Mermaid:
 - **Customization**: Full control over styling and behavior
 - **React Integration**: First-class support for React components within diagrams
 
+<KeyTakeaway variant="insight" title="ReactFlow vs Mermaid">
+  ReactFlow provides better performance for complex diagrams (handles thousands of nodes), built-in
+  accessibility with ARIA labels, and seamless React integration. Unlike Mermaid's static SVG
+  output, ReactFlow diagrams are fully interactive with pan, zoom, and keyboard navigation support.
+</KeyTakeaway>
+
 ---
 
 ## Available Diagram Presets
@@ -39,7 +75,7 @@ We've created several reusable diagram components that you can drop into any blo
 
 ### 1. MCP Architecture
 
-The Model Context Protocol (MCP) architecture follows a three-tier client-server model:
+The <GlossaryTooltip term="Model Context Protocol" definition="A standardized protocol for AI models to access external context and data sources through server integrations">Model Context Protocol (MCP)</GlossaryTooltip> architecture follows a three-tier client-server model:
 
 <MCPArchitecture
   height={300}
@@ -161,9 +197,11 @@ interface DiagramPresetProps {
 
 ---
 
+<CollapsibleSection id="custom-diagrams" title="Creating Custom Diagrams">
+
 ## Creating Custom Diagrams
 
-If you need a custom diagram, use the base `InteractiveDiagram` component directly:
+If you need a custom diagram, use the base <GlossaryTooltip term="InteractiveDiagram" definition="The foundational ReactFlow wrapper component that provides pan/zoom controls, accessibility features, and consistent diagram styling across all preset diagrams">InteractiveDiagram</GlossaryTooltip> component directly:
 
 ```tsx
 import { InteractiveDiagram } from '@/components/common/interactive-diagram';
@@ -185,14 +223,22 @@ export function CustomDiagram() {
 }
 ```
 
+</CollapsibleSection>
+
 ---
 
 ## Performance Notes
 
-- Diagrams are **client-side rendered** using React hooks
+- Diagrams are <GlossaryTooltip term="Client-side rendering" definition="JavaScript-based rendering that executes in the browser after the initial HTML loads, enabling interactive features like pan and zoom in ReactFlow diagrams">**client-side rendered**</GlossaryTooltip> using React hooks
 - Use `showControls={false}` for read-only diagrams to reduce bundle impact
 - Each diagram is lightweight (< 5KB gzipped)
-- Animations are GPU-accelerated for smooth performance
+- Animations are <GlossaryTooltip term="GPU-accelerated" definition="Hardware-accelerated rendering that uses the graphics processing unit instead of CPU for smooth 60fps animations with CSS transforms and transitions">GPU-accelerated</GlossaryTooltip> for smooth performance
+
+<KeyTakeaway variant="tip" title="Optimal Performance Settings">
+  Each diagram weighs less than 5KB gzipped. For static content, use showControls={false} to
+  eliminate pan/zoom controls and reduce the JavaScript bundle. All animations leverage GPU
+  acceleration for consistent 60fps rendering.
+</KeyTakeaway>
 
 ---
 
@@ -201,9 +247,17 @@ export function CustomDiagram() {
 All diagrams include:
 
 - Semantic HTML structure
-- ARIA labels for nodes and edges
+- <GlossaryTooltip
+    term="ARIA"
+    definition="Accessible Rich Internet Applications - a set of attributes that define ways to make web content more accessible to people with disabilities, particularly dynamic content and advanced user interface controls"
+  >
+    ARIA labels
+  </GlossaryTooltip>
+  for nodes and edges
 - Keyboard navigation support
 - Sufficient color contrast
+
+<SectionShare sectionId="accessibility" sectionTitle="Diagram Accessibility Features" />
 
 ---
 

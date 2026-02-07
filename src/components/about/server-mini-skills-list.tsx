@@ -42,7 +42,7 @@ async function ServerMiniSkillsListInner({
 }: ServerMiniSkillsListProps) {
   const { skills, error } = await getCredlySkills(username);
 
-  console.log('[ServerMiniSkillsList] 📦 Data fetched:', {
+  console.warn('[ServerMiniSkillsList] Data fetched:', {
     username,
     skillCount: skills.length,
     hasError: !!error,

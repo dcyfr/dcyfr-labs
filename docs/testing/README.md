@@ -15,8 +15,8 @@ Comprehensive testing setup for the application.
 
 ## Quick Links
 
-- **[Coverage Roadmap](./coverage-roadmap)** - Detailed plan to reach 80% coverage
-- **[Quick Reference](./quick-reference)** - Testing commands and patterns
+- **[Coverage Roadmap](./coverage-roadmap.md)** - Detailed plan to reach 80% coverage
+- **[Quick Reference](./quick-reference.md)** - Testing commands and patterns
 
 ---
 
@@ -30,7 +30,7 @@ The 58 "failing" tests are actually **strategic skips**, not failures. These tes
 
 **Note:** The test suite has grown significantly since initial documentation, with comprehensive coverage added across:
 - Integration tests for API routes
-- Component interaction tests  
+- Component interaction tests
 - Error scenario testing
 - Security validation tests
 
@@ -173,7 +173,7 @@ npm run test:e2e:debug
 - Blog system lifecycle tests
 - Error scenarios and edge cases
 
-See **[Coverage Roadmap](./coverage-roadmap)** for detailed plan.
+See **[Coverage Roadmap](./coverage-roadmap.md)** for detailed plan.
 
 ---
 
@@ -361,20 +361,20 @@ thresholds: {
 
 ### DO
 
-✅ Write tests for business logic first (highest ROI)  
-✅ Mock external dependencies (Redis, APIs, file system)  
-✅ Test edge cases and error scenarios  
-✅ Keep tests fast (< 30 seconds total runtime)  
-✅ Use descriptive test names  
+✅ Write tests for business logic first (highest ROI)
+✅ Mock external dependencies (Redis, APIs, file system)
+✅ Test edge cases and error scenarios
+✅ Keep tests fast (< 30 seconds total runtime)
+✅ Use descriptive test names
 ✅ Follow AAA pattern (Arrange, Act, Assert)
 
 ### DON'T
 
-❌ Test implementation details  
-❌ Test third-party libraries  
-❌ Write flaky tests  
-❌ Mock everything (test real code when possible)  
-❌ Skip edge cases  
+❌ Test implementation details
+❌ Test third-party libraries
+❌ Write flaky tests
+❌ Mock everything (test real code when possible)
+❌ Skip edge cases
 ❌ Test UI styling (use visual regression tools instead)
 
 ---
@@ -414,7 +414,7 @@ thresholds: {
 
 ### Internal Docs
 
-- [Coverage Roadmap](./coverage-roadmap) - Detailed testing plan
+- [Coverage Roadmap](./coverage-roadmap.md) - Detailed testing plan
 - Testing Guide - How-to guide
 - E2E Testing - Playwright setup
 

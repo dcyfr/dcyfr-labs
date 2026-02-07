@@ -43,7 +43,7 @@ async function ServerMiniBadgeListInner({
 }: ServerMiniBadgeListProps) {
   const { badges, error } = await getCredlyBadges(username);
 
-  console.log('[ServerMiniBadgeList] 📦 Data fetched:', {
+  console.warn('[ServerMiniBadgeList] Data fetched:', {
     username,
     badgeCount: badges.length,
     hasError: !!error,

@@ -41,6 +41,36 @@ previousSlugs:
   context="What started as a minimal portfolio has evolved into a production-ready platform with comprehensive security, featuring CSP headers, rate limiting, Redis analytics, background job processing, and extensive monitoring. This series documents the complete journey from initial build to production deployment."
 />
 
+<TLDRSummary
+  title="Portfolio Architecture Brief"
+  sections={[
+    {
+      title: 'Stack Choices',
+      items: [
+        'Next.js App Router with server components by default',
+        'Tailwind v4 CSS-first mental model with dark mode via variables',
+        'shadcn/ui accessible Radix primitives you own',
+      ],
+    },
+    {
+      title: 'Architecture Highlights',
+      items: [
+        'File-based routing with zero-config metadata',
+        'MDX content pipeline with Git-backed authoring',
+        'Turbopack dev server, Webpack production builds',
+      ],
+    },
+    {
+      title: 'Deployment',
+      items: [
+        'Vercel with zero manual configuration',
+        'Analytics and Speed Insights enabled by default',
+        'Type-safe frontmatter validated at build time',
+      ],
+    },
+  ]}
+/>
+
 ---
 
 I wanted to build a focused portfolio that is fast to load, easy to iterate on, and simple to host. After trying a few prototypes, I settled on a modern stack that prioritizes <GlossaryTooltip term="Server Rendering" definition="Server Rendering - the process of generating HTML on the server before sending it to the client, improving initial page load performance and SEO">server rendering</GlossaryTooltip>, typed data, and tiny bundles.
@@ -57,6 +87,12 @@ The Next.js <GlossaryTooltip term="App Router" definition="Next.js 13+ routing s
 - **Streaming and suspense**: Built-in support for progressive loading.
 
 In this portfolio, I only use client components where it actually matters, theme toggling, the contact form, and a few sprinkle interactions.
+
+<KeyTakeaway variant="insight" title="Server-First by Default">
+  The App Router flips the mental model: instead of opting into server rendering, you opt into
+  client rendering only where interactivity demands it. This portfolio uses client components only
+  for theme toggling, the contact form, and a few sprinkle interactions.
+</KeyTakeaway>
 
 ---
 
@@ -83,7 +119,13 @@ src/
     Turbopack
   </GlossaryTooltip>
   for lightning-fast dev server (production builds use Webpack)
-- File-based metadata with zero config
+- <GlossaryTooltip
+    term="File-based metadata"
+    definition="Next.js convention where page metadata (title, description, og images) is exported from route files, enabling zero-configuration SEO"
+  >
+    File-based metadata
+  </GlossaryTooltip>
+  with zero config
 
 **TypeScript (strict)**
 
@@ -102,6 +144,11 @@ src/
 - Headless building blocks with <GlossaryTooltip term="CVA" definition="Class Variance Authority - a utility for creating type-safe component variants with Tailwind CSS classes, enabling consistent UI patterns">CVA variants</GlossaryTooltip>
 - Copy-paste component library that you own
 
+<SectionShare
+  sectionId="stack-deep-dive"
+  sectionTitle="Stack Deep Dive: Next.js, TypeScript, Tailwind v4, shadcn/ui"
+/>
+
 ---
 
 ## Deployment
@@ -112,18 +159,24 @@ Everything lands on Vercel with zero manual knobs. Analytics and Speed Insights 
 
 ## Content Management
 
-Blog posts live as individual MDX files in `src/content/blog/`, parsed at build time with gray-matter for frontmatter. This approach offers:
+Blog posts live as individual MDX files in `src/content/blog/`, parsed at build time with <GlossaryTooltip term="gray-matter" definition="A Node.js library that parses YAML front matter from strings or files, commonly used to extract metadata from Markdown and MDX documents">gray-matter</GlossaryTooltip> for frontmatter. This approach offers:
 
 - **Version control**: Every post is tracked in Git
 - **Simple authoring**: Write in Markdown with React components
 - **Type safety**: Frontmatter is validated against TypeScript types
 - **Build-time rendering**: Posts are statically generated for speed
 
-MDX content is rendered with `next-mdx-remote` and enhanced with rehype plugins for auto-linking headings and GitHub-flavored markdown.
+MDX content is rendered with <GlossaryTooltip term="next-mdx-remote" definition="A library for rendering MDX content fetched from any source (files, CMS, API) with support for custom React components and server-side rendering">next-mdx-remote</GlossaryTooltip> and enhanced with rehype plugins for auto-linking headings and GitHub-flavored markdown.
 
 ---
 
 ## Takeaways
+
+<KeyTakeaway variant="tip" title="Key Architecture Decision">
+  File-based content with MDX and strict TypeScript frontmatter catches errors before deployment
+  while keeping authoring simple. Every post is tracked in Git, rendered at build time, and
+  type-validated.
+</KeyTakeaway>
 
 - Server components encourage you to ask "does this need to be interactive?"
 - Tailwind v4 wipes away config noise

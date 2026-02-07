@@ -52,7 +52,7 @@ function getRedisCredentials(): { url: string; token: string } | null {
     const url = process.env.UPSTASH_REDIS_REST_URL_PREVIEW;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN_PREVIEW;
     if (url && token) {
-      console.log('✅ Preview Redis connected (shared preview database)');
+      console.warn('Preview Redis connected (shared preview database)');
       return { url, token };
     }
     // ✅ FIX: Check production credentials exist before using as fallback
@@ -75,12 +75,12 @@ function getRedisCredentials(): { url: string; token: string } | null {
     const url = process.env.UPSTASH_REDIS_REST_URL_PREVIEW;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN_PREVIEW;
     if (url && token) {
-      console.log('✅ Development Redis connected (shared preview database)');
+      console.warn('Development Redis connected (shared preview database)');
       return { url, token };
     }
     // Graceful degradation: No warning in production logs
     if (process.env.NODE_ENV !== 'test') {
-      console.log('ℹ️ Development Redis not configured, analytics/caching disabled');
+      console.warn('ℹ️ Development Redis not configured, analytics/caching disabled');
     }
     return null;
   }
@@ -128,7 +128,7 @@ function getRedisClient(): Redis | null {
     // Graceful degradation: Redis not configured (expected in development/test)
     // Only log once to avoid console spam during module initialization
     if (!redisClient && process.env.NODE_ENV === 'development') {
-      console.log('[Redis] ℹ️ No credentials configured (using fallback)', {
+      console.warn('[Redis] No credentials configured (using fallback)', {
         environment: getRedisEnvironment(),
       });
     }
@@ -136,7 +136,7 @@ function getRedisClient(): Redis | null {
   }
 
   if (!redisClient) {
-    console.log('[Redis] ✅ Client initialized', {
+    console.warn('[Redis] Client initialized', {
       environment: getRedisEnvironment(),
       urlPrefix: credentials.url.substring(0, 30),
       keyPrefix: getRedisKeyPrefix(),

@@ -9,14 +9,14 @@ Comprehensive debugging tools and documentation for troubleshooting async operat
 ## 📚 Documentation Index
 
 ### Quick Start
-- **[Quick Reference](./quick-reference)** - One-page guide for common debugging tasks
+- **[Quick Reference](./quick-reference.md)** - One-page guide for common debugging tasks
   - Quick commands and code patterns
   - Debug checklist
   - Emergency procedures
   - Pro tips
 
 ### Comprehensive Guide
-- **[Dev Debugging Guide](./dev-debugging-guide)** - Complete debugging documentation
+- **[Dev Debugging Guide](./dev-debugging-guide.md)** - Complete debugging documentation
   - Tool overview and API reference
   - Common debugging scenarios with solutions
   - Monitoring dashboard setup
@@ -208,18 +208,18 @@ src/
 
 ## 🆘 Getting Help
 
-1. **Check Quick Reference** - [QUICK_REFERENCE.md](./quick-reference)
-2. **Review Common Scenarios** - [DEV_DEBUGGING_GUIDE.md](./dev-debugging-guide)
+1. **Check Quick Reference** - [QUICK_REFERENCE.md](./quick-reference.md)
+2. **Review Common Scenarios** - [DEV_DEBUGGING_GUIDE.md](./dev-debugging-guide.md)
 3. **Run Diagnostics** - `curl localhost:3000/api/dev/diagnostics | jq .`
 4. **Check Terminal Logs** - Look for color-coded errors/warnings
 5. **Test with Minimal Config** - Disable external services one by one
 
 ## 🔗 Related Documentation
 
-- [Redis Health Check](../platform/view-counts) - Production Redis monitoring
-- [Error Monitoring](../operations/error-monitoring-strategy) - Sentry integration
+- [Redis Health Check](../platform/view-counts.md) - Production Redis monitoring
+- [Error Monitoring](../operations/error-monitoring-strategy.md) - Sentry integration
 - API Security - Rate limiting and security
-- [Testing Guide](../testing/readme) - Test infrastructure
+- [Testing Guide](../testing/README.md) - Test infrastructure
 
 ## 📝 Contributing
 
@@ -257,4 +257,4 @@ curl http://localhost:3000/api/dev/diagnostics | jq .success
 
 ---
 
-**Need Help?** Start with [QUICK_REFERENCE.md](./quick-reference) for common tasks or [DEV_DEBUGGING_GUIDE.md](./dev-debugging-guide) for comprehensive documentation.
+**Need Help?** Start with [QUICK_REFERENCE.md](./quick-reference.md) for common tasks or [DEV_DEBUGGING_GUIDE.md](./dev-debugging-guide.md) for comprehensive documentation.

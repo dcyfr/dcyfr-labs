@@ -154,7 +154,7 @@ export const refreshGitHubData = inngest.createFunction(
           // Explicitly exclude 'warning' field
         };
 
-        console.log('[Inngest] 📝 Writing to cache', {
+        console.warn('[Inngest] Writing to cache', {
           key: CACHE_KEY,
           keyWithPrefix: getRedisKeyPrefix() + CACHE_KEY,
           dataSize: JSON.stringify(cleanData).length,
@@ -173,7 +173,7 @@ export const refreshGitHubData = inngest.createFunction(
           return { success: false, reason: 'write-verification-failed' };
         }
 
-        console.log('[Inngest] ✅ Cache write verified', {
+        console.warn('[Inngest] Cache write verified', {
           totalContributions: freshData.totalContributions,
           lastUpdated: freshData.lastUpdated,
         });

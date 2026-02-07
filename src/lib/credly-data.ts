@@ -76,7 +76,7 @@ function loadSnapshotData(): { badges: CredlyBadge[]; total_count: number } | nu
       return null;
     }
 
-    console.log('[Credly Data] ✅ Loaded snapshot', {
+    console.warn('[Credly Data] Loaded snapshot', {
       badges: snapshot.badges.length,
       generatedAt: snapshot.generatedAt,
     });

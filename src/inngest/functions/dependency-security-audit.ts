@@ -1,9 +1,9 @@
 /**
  * Security Dependency Monitoring
- * 
+ *
  * Automatically audits dependencies when package files change.
  * Runs `npm audit` and reports critical vulnerabilities.
- * 
+ *
  * @see docs/security/dependency-management.md
  */
 
@@ -48,7 +48,7 @@ interface NpmAuditResult {
 function parseAuditOutput(jsonOutput: string): NpmAuditResult {
   try {
     const audit = JSON.parse(jsonOutput);
-    
+
     return {
       vulnerabilities: {
         critical: audit.metadata?.vulnerabilities?.critical || 0,
@@ -104,14 +104,14 @@ export const auditDependencies = inngest.createFunction(
         const { stdout } = await execAsync("npm audit --json", {
           timeout: 30000, // 30 second timeout
         });
-        
+
         return parseAuditOutput(stdout);
       } catch (error) {
         // npm audit exits with non-zero code if vulnerabilities found
         if (error instanceof Error && "stdout" in error) {
           return parseAuditOutput((error as any).stdout);
         }
-        
+
         console.error("[Security Audit] Failed to run npm audit:", error);
         throw error;
       }
@@ -122,16 +122,16 @@ export const auditDependencies = inngest.createFunction(
     const hasHigh = auditResult.vulnerabilities.high > 0;
 
     await step.run("log-audit-results", async () => {
-      console.log(`[Security Audit] Branch: ${branch}`);
-      console.log(`[Security Audit] Changed files: ${changedFiles.join(", ")}`);
-      console.log(`[Security Audit] Total dependencies: ${auditResult.metadata.totalDependencies}`);
-      console.log(`[Security Audit] Vulnerabilities:`);
-      console.log(`  - Critical: ${auditResult.vulnerabilities.critical}`);
-      console.log(`  - High: ${auditResult.vulnerabilities.high}`);
-      console.log(`  - Moderate: ${auditResult.vulnerabilities.moderate}`);
-      console.log(`  - Low: ${auditResult.vulnerabilities.low}`);
-      console.log(`  - Info: ${auditResult.vulnerabilities.info}`);
-      
+      console.warn(`[Security Audit] Branch: ${branch}`);
+      console.warn(`[Security Audit] Changed files: ${changedFiles.join(", ")}`);
+      console.warn(`[Security Audit] Total dependencies: ${auditResult.metadata.totalDependencies}`);
+      console.warn(`[Security Audit] Vulnerabilities:`);
+      console.warn(`  - Critical: ${auditResult.vulnerabilities.critical}`);
+      console.warn(`  - High: ${auditResult.vulnerabilities.high}`);
+      console.warn(`  - Moderate: ${auditResult.vulnerabilities.moderate}`);
+      console.warn(`  - Low: ${auditResult.vulnerabilities.low}`);
+      console.warn(`  - Info: ${auditResult.vulnerabilities.info}`);
+
       return auditResult;
     });
 
@@ -139,19 +139,19 @@ export const auditDependencies = inngest.createFunction(
     if (hasCritical || hasHigh) {
       await step.run("send-security-alerts", async () => {
         const severity = hasCritical ? "CRITICAL" : "HIGH";
-        const count = hasCritical 
-          ? auditResult.vulnerabilities.critical 
+        const count = hasCritical
+          ? auditResult.vulnerabilities.critical
           : auditResult.vulnerabilities.high;
-        
+
         console.error(
           `[Security Audit] 🔴 ${severity}: ${count} vulnerabilities found!`
         );
-        
+
         // TODO: Future enhancement - Send email alert
         // TODO: Future enhancement - Post GitHub issue
         // TODO: Future enhancement - Send Slack notification
         // TODO: Future enhancement - Block PR merge if critical
-        
+
         return {
           severity,
           count,
@@ -165,7 +165,7 @@ export const auditDependencies = inngest.createFunction(
       // TODO: Future enhancement - Store audit results in Redis
       // TODO: Future enhancement - Track vulnerability trends over time
       // TODO: Future enhancement - Dashboard visualization
-      
+
       return {
         timestamp: new Date().toISOString(),
         branch,
