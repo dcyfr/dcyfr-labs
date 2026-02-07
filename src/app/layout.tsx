@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Alegreya } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
+import { GeistPixelSquare, GeistPixelGrid } from 'geist/font/pixel';
+import { Alegreya } from 'next/font/google';
 import './globals.css';
 // print.css and katex.css are imported via globals.css @import
 import {
@@ -27,21 +30,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { AxiomWebVitals } from 'next-axiom';
 import { headers } from 'next/headers';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-  display: 'optional',
-  preload: true,
-  adjustFontFallback: true,
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-  display: 'optional',
-  preload: true,
-  adjustFontFallback: true,
-});
+// Official Vercel Geist fonts from npm package
+// https://vercel.com/font
 
 const alegreya = Alegreya({
   variable: '--font-serif',
@@ -166,10 +156,6 @@ export default async function RootLayout({
           }}
         />
 
-        {/* Font optimization */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
         {/* Analytics & monitoring */}
         <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
         <link rel="preconnect" href="https://vercel-insights.com" crossOrigin="anonymous" />
@@ -182,7 +168,7 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://giscus.app" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${alegreya.variable} antialiased`}
+        className={`${GeistSans.variable} ${GeistMono.variable} ${GeistPixelSquare.variable} ${GeistPixelGrid.variable} ${alegreya.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem nonce={nonce}>
           {isEmbed ? (

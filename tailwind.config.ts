@@ -38,6 +38,9 @@ const config: Config = {
         sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
         serif: ['var(--font-serif)', ...defaultTheme.fontFamily.serif],
         mono: ['var(--font-mono)', ...defaultTheme.fontFamily.mono],
+        // Geist Pixel variants (bitmap-inspired display fonts)
+        'pixel-square': ['var(--font-geist-pixel-square)', ...defaultTheme.fontFamily.mono],
+        'pixel-grid': ['var(--font-geist-pixel-grid)', ...defaultTheme.fontFamily.mono],
       },
 
       // Colors defined via CSS variables in globals.css
@@ -74,16 +77,16 @@ const config: Config = {
 
       keyframes: {
         fadeIn: {
-          'from': { opacity: '0' },
-          'to': { opacity: '1' },
+          from: { opacity: '0' },
+          to: { opacity: '1' },
         },
         fadeOut: {
-          'from': { opacity: '1' },
-          'to': { opacity: '0' },
+          from: { opacity: '1' },
+          to: { opacity: '0' },
         },
         slideIn: {
-          'from': { transform: 'translateY(10px)', opacity: '0' },
-          'to': { transform: 'translateY(0)', opacity: '1' },
+          from: { transform: 'translateY(10px)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
         },
       },
 
