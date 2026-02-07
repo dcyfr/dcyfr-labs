@@ -80,5 +80,8 @@
   "githubPullRequests.pullRequestDescription": "template",
   "chat.tools.terminal.autoApprove": {
     "vercel": true
-  }
+  },
+  "cSpell.words": [
+    "Inngest"
+  ]
 }
