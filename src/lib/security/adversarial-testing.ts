@@ -18,7 +18,7 @@
  * ```
  */
 
-import { detectPromptInjection } from '@/lib/security/prompt-injection-detection';
+import { getPromptScanner } from '@/lib/security/prompt-scanner';
 
 // ============================================================================
 // Types
