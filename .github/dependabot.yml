@@ -148,9 +148,12 @@ updates:
     pull-request-branch-name:
       separator: "/"
   
-  # NOTE: Node.js version updates are tracked automatically from .nvmrc/.node-version
-  # files when the npm ecosystem is configured (no separate ecosystem entry needed).
-  # Dependabot will create PRs when .nvmrc or .node-version changes upstream.
+  # Node.js Runtime Tracking (.nvmrc in place as of Feb 7, 2026)
+  # - .nvmrc files: workspace root + dcyfr-labs (v24.13.0)
+  # - Manual updates required: Dependabot does not auto-update Node.js runtime versions
+  # - Security patches: Monitor nodejs-sec mailing list + DEPENDABOT_SECURITY_AUDIT_JAN2026.md
+  # - Verification: nvm use && node --version (should show v24.13.0)
+  # - Update process: Manual .nvmrc edit → npm run ai:sync → test → commit
   
   - package-ecosystem: "github-actions"
     directory: "/"

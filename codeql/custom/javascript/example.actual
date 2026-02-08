@@ -1,2 +1,3 @@
-| codeql-pack.lock.yml:0:0:0:0 | codeql-pack.lock.yml | Hello, world! |
-| codeql-pack.yml:0:0:0:0 | codeql-pack.yml | Hello, world! |
+ERROR: getName() cannot be resolved for type Files::File (example.ql:12,9-16)
+ERROR: right hand side of an 'in' term must be a range (example.ql:12,22-65)
+ERROR: unexpected input ',' expecting one of: 'and', 'implies', 'in', 'instanceof', 'or', '<', '<=', '=', '>', '>=', '-', '!=', '/', '.', ')', '*', '%', '+' (example.ql:12,40-41)
