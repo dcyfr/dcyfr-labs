@@ -1,0 +1,4 @@
+{
+  "comment": "Lint-staged configuration - enforcement deferred to CI/CD while ESLint stabilizes",
+  "linters": {}
+}
