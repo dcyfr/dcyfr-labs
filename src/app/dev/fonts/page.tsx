@@ -1,5 +1,6 @@
 import { PageLayout } from '@/components/layouts';
 import { createPageMetadata } from '@/lib/metadata';
+import { assertDevOr404 } from '@/lib/dev-only';
 import { CONTAINER_WIDTHS, SPACING, TYPOGRAPHY } from '@/lib/design-tokens';
 
 export const metadata = createPageMetadata({
@@ -10,6 +11,9 @@ export const metadata = createPageMetadata({
 });
 
 export default function FontShowcasePage() {
+  // SECURITY: Dev-only page - returns 404 in preview/production
+  assertDevOr404();
+
   return (
     <PageLayout>
       <div className={`mx-auto ${CONTAINER_WIDTHS.standard} space-y-${SPACING.section}`}>

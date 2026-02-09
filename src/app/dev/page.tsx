@@ -14,7 +14,7 @@ interface DevTool {
   name: string;
   path: string;
   description: string;
-  category: 'Analytics' | 'API' | 'Content' | 'Infrastructure' | 'AI';
+  category: 'Analytics' | 'Content' | 'Infrastructure' | 'AI';
 }
 
 const devTools: DevTool[] = [
@@ -38,13 +38,7 @@ const devTools: DevTool[] = [
     category: 'Analytics',
   },
 
-  // API & Infrastructure
-  {
-    name: 'API Explorer',
-    path: '/dev/api',
-    description: 'Test and explore internal API endpoints',
-    category: 'API',
-  },
+  // Infrastructure
   {
     name: 'MCP Health',
     path: '/dev/mcp-health',
@@ -58,13 +52,7 @@ const devTools: DevTool[] = [
     category: 'Infrastructure',
   },
 
-  // Content & Documentation
-  {
-    name: 'Documentation',
-    path: '/dev/docs',
-    description: 'Internal development documentation',
-    category: 'Content',
-  },
+  // Content & Development
   {
     name: 'Font Showcase',
     path: '/dev/fonts',
@@ -143,7 +131,7 @@ export default function DevToolsPage() {
           🔒 Security Notice
         </h3>
         <p className={`${TYPOGRAPHY.body} text-muted-foreground mt-2`}>
-          All developer tools use <code className="px-1.5 py-0.5 bg-muted rounded text-sm">assertDevOr404()</code> 
+          All developer tools use <code className="px-1.5 py-0.5 bg-muted rounded text-sm">assertDevOr404()</code>
           {' '}and return 404 in preview/production environments. Access is restricted to{' '}
           <code className="px-1.5 py-0.5 bg-muted rounded text-sm">NODE_ENV=development</code> only.
         </p>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { TYPOGRAPHY } from '@/lib/design-tokens';
+import { TYPOGRAPHY, Z_INDEX, NAVIGATION_HEIGHT } from '@/lib/design-tokens';
 
 /**
  * Layout for all /dev/** routes
@@ -11,6 +11,8 @@ import { TYPOGRAPHY } from '@/lib/design-tokens';
  * - No static generation during build (export const dynamic = "force-dynamic")
  * - All dev pages inherit this behavior
  * - Reduced build time and bundle size
+ * - Dev nav positioned below site header (top-18 = 72px header height)
+ * - Z-index below site header (z-30 vs z-40) for proper stacking
  */
 
 export const dynamic = "force-dynamic";
@@ -23,12 +25,12 @@ export default function DevLayout({
 }) {
   return (
     <div className="min-h-screen">
-      {/* Dev Tools Navigation Bar */}
-      <nav className="border-b border-border bg-muted/30 sticky top-0 z-10 backdrop-blur supports-backdrop-filter:bg-muted/50">
+      {/* Dev Tools Navigation Bar - positioned below site header */}
+      <nav className={`border-b border-border bg-muted/30 sticky top-18 ${Z_INDEX.sticky} backdrop-blur supports-backdrop-filter:bg-muted/50`}>
         <div className="mx-auto max-w-[1536px] px-4 md:px-8">
           <div className="flex items-center gap-4 h-14">
-            <Link 
-              href="/dev" 
+            <Link
+              href="/dev"
               className={`${TYPOGRAPHY.metadata} font-semibold text-foreground hover:text-primary transition-colors`}
             >
               🛠️ Dev Tools
