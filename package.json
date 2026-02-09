@@ -392,7 +392,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/he": "^1.2.3",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "25.0.10",
+    "@types/node": "25.2.2",
     "@types/react": "^19.2.9",
     "@types/react-calendar-heatmap": "^1.9.0",
     "@types/react-dom": "19.2.3",
