@@ -11,7 +11,7 @@
  * - TTL: 90 days (daily), 12 months (monthly)
  */
 
-import { redis } from './redis';
+import { redis } from '../redis';
 import * as Sentry from '@sentry/nextjs';
 import { API_LIMITS, ALERT_THRESHOLDS } from './api-guardrails';
 import type { ApiUsageStats } from './api-guardrails';

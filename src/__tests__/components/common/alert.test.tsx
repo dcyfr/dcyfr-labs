@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Alert } from "../alert";
+import { Alert } from '@/components/common/alert';
 
 describe("Alert", () => {
   it("renders with critical type", () => {

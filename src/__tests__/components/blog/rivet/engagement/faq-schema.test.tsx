@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { FAQSchema, type FAQItem } from '../faq-schema';
+import { FAQSchema, type FAQItem } from '@/components/blog/rivet/engagement/faq-schema';
 
 describe('FAQSchema', () => {
   const defaultItems: FAQItem[] = [

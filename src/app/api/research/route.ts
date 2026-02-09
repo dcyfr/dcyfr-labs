@@ -14,7 +14,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { blockExternalAccess } from "@/lib/api-security";
+import { blockExternalAccess } from "@/lib/api/api-security";
 import {
   rateLimit,
   getClientIp,
@@ -31,7 +31,7 @@ import { SERVICES } from "@/lib/site-config";
 import {
   recordApiCall,
   estimatePerplexityCost,
-} from "@/lib/api-guardrails";
+} from "@/lib/api/api-guardrails";
 
 // ============================================================================
 // CONFIG

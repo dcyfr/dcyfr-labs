@@ -10,7 +10,7 @@
  */
 
 import { telemetry, type AgentType } from './agents/agent-telemetry';
-import { getMonthlyUsage, getHistoricalUsage } from './api-usage-tracker';
+import { getMonthlyUsage, getHistoricalUsage } from './api/api-usage-tracker';
 
 // ============================================================================
 // TYPE DEFINITIONS

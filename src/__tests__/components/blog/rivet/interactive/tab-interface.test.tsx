@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { TabInterface, type TabItem } from "../tab-interface";
+import { TabInterface, type TabItem } from '@/components/blog/rivet/interactive/tab-interface';
 
 describe("TabInterface", () => {
   const defaultTabs: TabItem[] = [

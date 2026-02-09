@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { NewsletterSignup } from '../newsletter-signup';
+import { NewsletterSignup } from '@/components/blog/rivet/engagement/newsletter-signup';
 
 describe('NewsletterSignup', () => {
   const NEWSLETTER_STORAGE_KEY = 'dcyfr-newsletter-signup';

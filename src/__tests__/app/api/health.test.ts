@@ -97,7 +97,7 @@ describe('Health Check API (/api/health)', () => {
   });
 
   test('handles external access blocking', async () => {
-    const { blockExternalAccess } = await import('@/lib/api-security');
+    const { blockExternalAccess } = await import('@/lib/api/api-security');
     
     // Mock blocked access
     vi.mocked(blockExternalAccess).mockReturnValueOnce(

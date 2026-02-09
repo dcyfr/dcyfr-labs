@@ -60,7 +60,7 @@ The documentation is organized into **18 focused directories**:
 ### Blog System
 
 - **[blog/architecture.md](./blog/architecture)** - Complete blog architecture
-- **[blog/quick-reference.md](./blog/quick-reference)** - Common patterns
+- **[blog/blog-quick-ref.md](./blog/quick-reference)** - Common patterns
 - **[blog/feeds/](./blog/feeds/)** - RSS/Atom feed documentation
 
 ### Features

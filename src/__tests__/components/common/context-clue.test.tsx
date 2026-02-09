@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { ContextClue } from "../context-clue";
+import { ContextClue } from '@/components/common/context-clue';
 
 describe("ContextClue Component", () => {
   it("renders children content correctly", () => {

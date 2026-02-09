@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
-import { BlogPostLayoutWrapper } from "../blog-post-layout-wrapper";
+import { BlogPostLayoutWrapper } from '@/components/blog/blog-post-layout-wrapper';
 
 describe("BlogPostLayoutWrapper", () => {
   describe("Layout Structure", () => {

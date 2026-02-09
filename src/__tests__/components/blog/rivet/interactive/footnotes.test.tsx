@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Footnotes } from "../footnotes";
+import { Footnotes } from '@/components/blog/rivet/interactive/footnotes';
 
 // Mock localStorage to avoid cross-test contamination
 const localStorageMock = (() => {
