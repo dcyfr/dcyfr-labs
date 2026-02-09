@@ -6,10 +6,10 @@ import { SITE_URL } from "@/lib/site-config";
 
 /**
  * Sitemap Generator
- * 
+ *
  * Generates comprehensive sitemap.xml for all public pages.
  * Excludes: dev pages, private pages, API routes, route groups (embed)
- * 
+ *
  * Page categories:
  * - Static pages: About, Contact, Services, etc.
  * - Dynamic pages: Blog posts, Work projects, Team profiles
@@ -50,18 +50,18 @@ const pageConfig = {
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_URL;
   const now = new Date();
-  
+
   // Static pages from pageConfig
   const pageEntries = Object.keys(pageConfig).map((page) => {
     const config = pageConfig[page as keyof typeof pageConfig];
-    
+
     return {
       url: `${base}${page === "/" ? "" : page}`,
       lastModified: now,
       ...config,
     };
   });
-  
+
   // Team member profile pages (/about/drew, /about/dcyfr)
   // Note: Already included in pageConfig, but keeping for dynamic generation
   // in case team members are added in the future
@@ -73,7 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.5,
     }));
-  
+
   // Blog posts
   const blogPostEntries = posts.map((post) => ({
     url: `${base}/blog/${post.slug}`,
@@ -81,7 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "yearly" as const,
     priority: 0.6,
   }));
-  
+
   // Work/portfolio project pages
   const projectEntries = visibleProjects.map((project) => ({
     url: `${base}/work/${project.slug}`,
@@ -184,7 +184,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
   ];
-  
+
   return [
     ...pageEntries,
     ...teamEntries,
