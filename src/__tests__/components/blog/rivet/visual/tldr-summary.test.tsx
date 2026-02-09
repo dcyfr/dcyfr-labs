@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { TLDRSummary } from '../tldr-summary';
+import { TLDRSummary } from '@/components/blog/rivet/visual/tldr-summary';
 
 describe('TLDRSummary', () => {
   const mockSections = [

@@ -14,7 +14,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { devLogger } from './dev-logger';
+import { devLogger } from '../dev-logger';
 
 const isDev = process.env.NODE_ENV === 'development';
 

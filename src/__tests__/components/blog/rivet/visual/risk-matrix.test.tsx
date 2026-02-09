@@ -5,7 +5,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { RiskMatrix, type RiskItem } from "../risk-matrix";
+import { RiskMatrix, type RiskItem } from '@/components/blog/rivet/visual/risk-matrix';
 
 describe("RiskMatrix", () => {
   const defaultRisks: RiskItem[] = [

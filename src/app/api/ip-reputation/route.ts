@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'crypto';
 import * as Sentry from '@sentry/nextjs';
-import { blockExternalAccess } from '@/lib/api-security';
+import { blockExternalAccess } from '@/lib/api/api-security';
 import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 import { handleApiError } from '@/lib/error-handler';
 import { IPReputationService } from '@/lib/ip-reputation';

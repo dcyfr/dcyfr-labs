@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { BadgeWallet } from "../badge-wallet";
+import { BadgeWallet } from '@/components/about/badge-wallet';
 import type { CredlyBadge } from "@/types/credly";
 
 // Mock Next.js Image component to avoid configuration issues in tests

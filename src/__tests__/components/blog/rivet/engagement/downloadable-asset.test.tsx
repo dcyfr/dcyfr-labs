@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { DownloadableAsset } from "../downloadable-asset";
+import { DownloadableAsset } from '@/components/blog/rivet/engagement/downloadable-asset';
 
 describe("DownloadableAsset", () => {
   beforeEach(() => {

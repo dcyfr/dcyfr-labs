@@ -9,7 +9,7 @@ import {
 import { getPostSharesBulk, getPostShares24hBulk } from '@/lib/shares';
 import { getPostCommentsBulk, getPostComments24hBulk } from '@/lib/comments';
 import { rateLimit } from '@/lib/rate-limit';
-import { blockExternalAccess } from '@/lib/api-security';
+import { blockExternalAccess } from '@/lib/api/api-security';
 
 // Mock Upstash redis singleton
 vi.mock('@/mcp/shared/redis-client', () => ({

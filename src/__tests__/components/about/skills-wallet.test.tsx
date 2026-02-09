@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { SkillsWallet } from "../skills-wallet";
+import { SkillsWallet } from '@/components/about/skills-wallet';
 import { clearCredlyCache } from "@/lib/credly-cache";
 import type { CredlyBadge } from "@/types/credly";
 

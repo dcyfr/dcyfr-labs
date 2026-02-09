@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateExternalUrl, safeFetch } from '@/lib/api-security';
+import { validateExternalUrl, safeFetch } from '@/lib/api/api-security';
 
 describe('API Security - SSRF Prevention', () => {
   describe('validateExternalUrl', () => {

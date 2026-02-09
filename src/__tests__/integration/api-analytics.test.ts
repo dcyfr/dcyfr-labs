@@ -2,7 +2,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { GET } from '@/app/api/analytics/route';
 import { rateLimit } from '@/lib/rate-limit';
-import { blockExternalAccess } from '@/lib/api-security';
+import { blockExternalAccess } from '@/lib/api/api-security';
 import {
   getMultiplePostViews,
   getMultiplePostViews24h,

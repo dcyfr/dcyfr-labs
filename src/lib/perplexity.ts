@@ -7,7 +7,7 @@
  */
 
 import { SERVICES } from "@/lib/site-config";
-import { safeFetch } from "@/lib/api-security";
+import { safeFetch } from "@/lib/api/api-security";
 
 // ============================================================================
 // TYPES

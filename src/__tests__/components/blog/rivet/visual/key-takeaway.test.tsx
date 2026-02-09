@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { KeyTakeaway } from "../key-takeaway";
+import { KeyTakeaway } from '@/components/blog/rivet/visual/key-takeaway';
 
 describe("KeyTakeaway", () => {
   describe("Rendering", () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ReadingProgressBar } from "../reading-progress-bar";
+import { ReadingProgressBar } from '@/components/blog/rivet/navigation/reading-progress-bar';
 
 describe("ReadingProgressBar", () => {
   let scrollYSpy: ReturnType<typeof vi.spyOn>;

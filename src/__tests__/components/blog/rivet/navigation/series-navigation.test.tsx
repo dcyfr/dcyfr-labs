@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { SeriesNavigation, type SeriesItem } from "../series-navigation";
+import { SeriesNavigation, type SeriesItem } from '@/components/blog/rivet/navigation/series-navigation';
 
 describe("SeriesNavigation", () => {
   const defaultSeries: SeriesItem[] = [

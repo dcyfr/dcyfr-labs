@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as Sentry from '@sentry/nextjs';
-import { blockExternalAccess } from '@/lib/api-security';
+import { blockExternalAccess } from '@/lib/api/api-security';
 import { checkGitHubDataHealth } from '@/lib/github-data';
 
 export const runtime = 'nodejs';

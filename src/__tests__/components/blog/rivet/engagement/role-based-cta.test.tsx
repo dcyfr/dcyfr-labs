@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { RoleBasedCTA } from "../role-based-cta";
+import { RoleBasedCTA } from '@/components/blog/rivet/engagement/role-based-cta';
 
 describe("RoleBasedCTA", () => {
   const defaultProps = {

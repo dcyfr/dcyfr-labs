@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { KeyTakeaway } from "../key-takeaway";
+import { KeyTakeaway } from '@/components/common/key-takeaway';
 
 describe("KeyTakeaway Component", () => {
   it("renders children content correctly", () => {
