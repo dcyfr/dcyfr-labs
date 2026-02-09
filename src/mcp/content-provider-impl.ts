@@ -2,20 +2,9 @@
  * Filesystem Content Provider Implementation
  *
  * Reads MDX blog posts and project content from dcyfr-labs filesystem.
-<<<<<<< HEAD
  * Implements ContentProvider interface.
  */
 
-=======
- * Implements ContentProvider interface from @dcyfr/ai/mcp.
- */
-
-import type {
-  ContentProvider,
-  ContentItem,
-  ContentSearchOptions,
-} from '@dcyfr/ai/mcp';
->>>>>>> 38cdf95ddc6322e511fa69eb9a4bb2fb967a192f
 import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
-import { handleApiError } from '@/lib/error-handler';
-import { getMemory } from '@dcyfr/ai';
+// import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
+// import { handleApiError } from '@/lib/error-handler';
+// import { getMemory } from '@dcyfr/ai'; // Memory module not yet available in published @dcyfr/ai
 
 /**
  * POST /api/memory/add
@@ -28,6 +28,13 @@ type AddMemoryRequest = {
 };
 
 export async function POST(request: NextRequest) {
+  // Temporarily disabled - memory module not yet in published @dcyfr/ai package
+  return NextResponse.json(
+    { error: 'Memory API temporarily unavailable. Coming soon in @dcyfr/ai@1.0.4+' },
+    { status: 503 }
+  );
+
+  /* TODO: Re-enable when @dcyfr/ai@1.0.4+ is published
   let body: AddMemoryRequest | null = null;
 
   try {
@@ -164,4 +171,5 @@ export async function POST(request: NextRequest) {
       { status: errorInfo.statusCode }
     );
   }
+  */
 }
