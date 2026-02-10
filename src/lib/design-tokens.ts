@@ -4,7 +4,81 @@
  * This file centralizes all design decisions to ensure consistency across the site.
  * Use these constants instead of magic strings in components.
  *
+ * **File Size:** 2,977 lines | **Last Updated:** Phase 2 Complete (Feb 9, 2026)
+ *
  * @see /docs/design/ux-ui-consistency-analysis.md for rationale and usage guidelines
+ * @see /docs/reports/PHASE_2_COMPLETE_2026-02-09.md for recent improvements
+ */
+
+// ============================================================================
+// 📑 TABLE OF CONTENTS
+// ============================================================================
+/**
+ * Quick Navigation (Cmd/Ctrl+G → line number)
+ *
+ * LAYOUT & CONTAINERS (Lines 64-235)
+ *   - CONTAINER_WIDTHS (64) - Semantic container width patterns
+ *   - CONTAINER_PADDING (91) - Horizontal padding
+ *   - NAVIGATION_HEIGHT (97) - Nav component height
+ *   - CONTAINER_VERTICAL_PADDING (108) - Vertical padding
+ *   - MOBILE_SAFE_PADDING (115) - Mobile bottom padding
+ *   - getContainerClasses() (130) - Container utility function
+ *   - getContentDepthClass() (149) - Content depth classifier
+ *   - getContentBlockStyles() (208) - Content block helper
+ *   - ACTIVITY_IMAGE (235) - Activity feed images
+ *
+ * TYPOGRAPHY (Lines 264-640)
+ *   - TYPOGRAPHY (264) - Fluid typography variants (35+ variants)
+ *   - CONTENT_HIERARCHY (560) - Content block patterns
+ *   - PROGRESSIVE_TEXT (610) - Progressive text depth
+ *   - FONT_CONTRAST (640) - Font contrast system
+ *
+ * SPACING (Lines 737-940)
+ *   - SPACING (737) - Vertical spacing patterns
+ *   - SPACING_VALUES (838) - Numeric spacing [DEPRECATED]
+ *   - SPACING_SCALE (868) - Type-safe spacing scale ⭐ NEW
+ *   - spacing() (908) - Spacing helper function ⭐ NEW
+ *
+ * COLORS (Lines 940-1480)
+ *   - SEMANTIC_COLORS (940) - Semantic color tokens (100+ properties)
+ *   - OPACITY (1248) - Opacity scale
+ *   - SERIES_COLORS (1289) - Series/theme colors (12 themes)
+ *
+ * EFFECTS & VISUAL (Lines 1480-2542)
+ *   - HOVER_EFFECTS (1480) - Interactive hover states
+ *   - ANIMATION (1598) - CSS animation classes
+ *   - ANIMATION_CONSTANTS (1716) - Animation timing/easing ⭐ RENAMED
+ *   - BORDERS (1837) - Border styles
+ *   - SHADOWS (1879) - Shadow variations
+ *   - GRADIENTS (2542) - Gradient definitions (40+)
+ *   - GRADIENT_KEYS (2641) - Gradient key array
+ *
+ * INTERACTION (Lines 1990-2193)
+ *   - BREAKPOINTS (1956) - Responsive breakpoints
+ *   - TOUCH_TARGET (1990) - Touch target sizes
+ *   - BUTTON_SIZES (2054) - Button size variants
+ *   - Z_INDEX (2120) - Z-index stacking layers
+ *   - FOCUS_RING (2161) - Focus ring styles
+ *   - SCROLL_OFFSET (2193) - Scroll offset values
+ *
+ * LAYOUT PATTERNS (Lines 2216-2471)
+ *   - PAGE_LAYOUT (2216) - Page layout patterns
+ *   - HERO_VARIANTS (2274) - Hero section variants
+ *   - SCROLL_BEHAVIOR (2313) - Scroll animations
+ *   - WORD_SPACING (2378) - Word spacing variants
+ *   - GRID_PATTERNS (2416) - Grid layout patterns
+ *   - FORM_PATTERNS (2445) - Form styling patterns
+ *   - COMPONENT_PATTERNS (2471) - Component-specific patterns
+ *
+ * COMPONENTS & APP (Lines 2699-2976)
+ *   - IMAGE_PLACEHOLDER (2699) - Image placeholder config
+ *   - APP_TOKENS (2721) - App-specific tokens (20+ properties)
+ *   - ARCHIVE_CARD_VARIANTS (2807) - Archive card styles
+ *   - ARCHIVE_ANIMATIONS (2887) - Framer Motion variants
+ *   - VIEW_MODES (2948) - View mode configurations
+ *
+ * TYPE EXPORTS (Lines 2500+)
+ *   - TypeScript type definitions for all token keys
  */
 
 // ============================================================================
@@ -800,15 +874,28 @@ export const SPACING = {
     actionGap: 'gap-6',
   },
 
-  // Numeric-like properties for use in template literals (TEMPORARY - should be refactored)
-  // These map to standard Tailwind values: xs=2, sm=3, md=4, lg=6, xl=8, 2xl=10
+  /**
+   * @deprecated Use SPACING_SCALE instead
+   * Numeric properties for template literals - will be removed in future version
+   *
+   * Migration:
+   * - Old: `gap-${SPACING.md}` → New: `gap-${spacing('md')}`
+   * - Or use direct values: `gap-4` (if static)
+   */
   xs: '2',
+  /** @deprecated Use SPACING_SCALE.sm or spacing('sm') */
   sm: '3',
+  /** @deprecated Use SPACING_SCALE.md or spacing('md') */
   md: '4',
+  /** @deprecated Use SPACING_SCALE.lg or spacing('lg') */
   lg: '6',
+  /** @deprecated Use SPACING_SCALE.xl or spacing('xl') */
   xl: '8',
+  /** @deprecated Use SPACING_SCALE['2xl'] or spacing('2xl') */
   '2xl': '10',
+  /** @deprecated Use SPACING_SCALE['1.5'] or spacing('1.5') */
   '1.5': '3',
+  /** @deprecated Use SPACING_SCALE['0.5'] or spacing('0.5') */
   '0.5': '1',
 } as const;
 
@@ -819,6 +906,8 @@ export const SPACING = {
 /**
  * Numeric spacing values for use with padding (p-*), gaps (gap-*), margins (m-*)
  * These complement SPACING which is only for vertical spacing (space-y-*)
+ *
+ * @deprecated Use SPACING_SCALE instead for numeric values
  */
 export const SPACING_VALUES = {
   xs: '2', // 0.5rem
@@ -827,6 +916,67 @@ export const SPACING_VALUES = {
   lg: '6', // 1.5rem
   xl: '8', // 2rem
 } as const;
+
+/**
+ * Spacing Scale - Type-safe numeric spacing values
+ *
+ * Use this for template literals, calculations, and dynamic spacing.
+ * Returns Tailwind spacing scale numbers (not strings).
+ *
+ * Replaces numeric properties in SPACING (xs, sm, md, lg, xl, 2xl).
+ *
+ * @example Template literals (type-safe)
+ * ```tsx
+ * import { spacing } from '@/lib/design-tokens';
+ * <div className={`gap-${spacing('md')} p-${spacing('lg')}`}>
+ *   {content}
+ * </div>
+ * ```
+ *
+ * @example Direct usage
+ * ```tsx
+ * import { SPACING_SCALE } from '@/lib/design-tokens';
+ * const gapSize = SPACING_SCALE.md; // 4
+ * ```
+ */
+export const SPACING_SCALE = {
+  /** 0.125rem (2px) - Minimal spacing */
+  '0.5': 0.5,
+  /** 0.375rem (6px) - Compact spacing */
+  '1.5': 1.5,
+  /** 0.5rem (8px) - Extra small */
+  xs: 2,
+  /** 0.75rem (12px) - Small */
+  sm: 3,
+  /** 1rem (16px) - Medium (base) */
+  md: 4,
+  /** 1.5rem (24px) - Large */
+  lg: 6,
+  /** 2rem (32px) - Extra large */
+  xl: 8,
+  /** 2.5rem (40px) - 2X large */
+  '2xl': 10,
+} as const;
+
+/**
+ * Type-safe spacing helper for template literals
+ *
+ * Converts SPACING_SCALE keys to Tailwind class values.
+ * Use in template literals for dynamic spacing that preserves type safety.
+ *
+ * @example
+ * ```tsx
+ * <div className={`gap-${spacing('md')} mb-${spacing('lg')}`}>
+ *   Content with consistent spacing
+ * </div>
+ * ```
+ *
+ * @param size - Spacing scale key
+ * @returns String representation of the spacing value
+ */
+export function spacing(size: keyof typeof SPACING_SCALE): string {
+  return String(SPACING_SCALE[size]);
+}
 
 // ============================================================================
 // SEMANTIC COLORS
@@ -906,9 +1056,9 @@ export const SEMANTIC_COLORS = {
     success: 'bg-success text-success-foreground',
     warning: 'bg-warning text-warning-foreground',
     info: 'bg-info text-info-foreground',
+    neutral: 'bg-muted text-muted-foreground dark:bg-muted/50',
     inProgress: 'bg-warning text-warning-foreground',
     error: 'bg-error text-error-foreground',
-    neutral: 'bg-muted text-muted-foreground dark:bg-muted/50',
   },
 
   /** Activity feed interaction states (content-focused, subtle actions) */
@@ -1614,26 +1764,30 @@ export const ANIMATION = {
 /**
  * Animation Timing & Easing Constants
  *
- * Centralized animation configuration for consistent motion design.
- * All animations respect `prefers-reduced-motion` via globals.css.
+ * Raw CSS values for inline style animations.
+ * Use these constants when you need to access raw duration/easing values
+ * in JavaScript (e.g., for Framer Motion, inline styles, or calculations).
  *
- * Replaces deprecated Tailwind utility-based ANIMATIONS constant.
+ * For className-based animations, prefer ANIMATION instead.
+ *
+ * All animations respect `prefers-reduced-motion` via globals.css.
  *
  * Usage:
  * ```tsx
- * // In component styles
- * style={{ animation: ANIMATIONS.types.fadeIn }}
+ * // In component inline styles
+ * style={{ animation: ANIMATION_CONSTANTS.types.fadeIn }}
  *
  * // For transitions
- * style={{ transition: ANIMATIONS.transition.colors }}
+ * style={{ transition: ANIMATION_CONSTANTS.transition.colors }}
  *
  * // With stagger effect
- * style={{ animationDelay: `${ANIMATIONS.stagger.normal * index}ms` }}
+ * style={{ animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * index}ms` }}
  * ```
  *
+ * @see ANIMATION - For CSS class-based animations (preferred)
  * @see /src/app/globals.css - Animation keyframes and reduced-motion support
  */
-export const ANIMATIONS = {
+export const ANIMATION_CONSTANTS = {
   /**
    * Animation durations
    * Based on Material Design motion guidelines
@@ -2416,7 +2570,7 @@ export type HeadingVariant = keyof typeof TYPOGRAPHY.h1;
 export type HoverEffect = keyof typeof HOVER_EFFECTS;
 
 /** Type for animation durations */
-export type AnimationDuration = keyof typeof ANIMATIONS;
+export type AnimationDuration = keyof typeof ANIMATION_CONSTANTS;
 
 /** Type for word spacing variants */
 export type WordSpacingVariant = keyof typeof WORD_SPACING;

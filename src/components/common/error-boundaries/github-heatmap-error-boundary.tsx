@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AlertCircle, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS, SPACING } from "@/lib/design-tokens";
 
 /**
  * Error fallback specifically for the GitHub heatmap component.
@@ -22,7 +22,7 @@ function GitHubHeatmapErrorFallback({ error, resetError }: ErrorFallbackProps) {
         SEMANTIC_COLORS.alert.warning.border
       )}
     >
-      <div className="space-y-3 w-full">
+      <div className={`${SPACING.content} w-full`}>
         <div className="flex items-start gap-3">
           <AlertCircle
             className={cn(
@@ -31,7 +31,7 @@ function GitHubHeatmapErrorFallback({ error, resetError }: ErrorFallbackProps) {
             )}
             aria-hidden="true"
           />
-          <div className="flex-1 space-y-2">
+          <div className={`flex-1 ${SPACING.compact}`}>
             <div>
               <h3
                 className={cn(

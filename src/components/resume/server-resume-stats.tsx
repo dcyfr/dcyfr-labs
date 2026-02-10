@@ -17,7 +17,7 @@ import { ResumeStats } from './resume-stats';
 import { getCredlyBadges } from '@/lib/credly-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
-import { BORDERS } from '@/lib/design-tokens';
+import { BORDERS, SPACING } from '@/lib/design-tokens';
 import { cn } from '@/lib/utils';
 
 // Simple skeleton for the stats grid
@@ -30,7 +30,7 @@ function ResumeStatsSkeleton() {
     >
       {[1, 2, 3, 4].map((i) => (
         <Card key={i} className={cn('p-4', BORDERS.card)}>
-          <div className="space-y-3">
+          <div className={SPACING.content}>
             <Skeleton className="h-6 w-6 rounded" />
             <Skeleton className="h-8 w-16" />
             <Skeleton className="h-4 w-24" />

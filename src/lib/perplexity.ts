@@ -149,7 +149,7 @@ const DEFAULT_MODEL = SERVICES.perplexity.defaultModel;
 const CACHE_TTL = SERVICES.perplexity.cacheMinutes * 60 * 1000;
 
 // Simple in-memory cache for research queries
-let cache: Map<string, { data: ResearchResult; timestamp: number }> = new Map();
+const cache: Map<string, { data: ResearchResult; timestamp: number }> = new Map();
 
 // ============================================================================
 // HELPERS

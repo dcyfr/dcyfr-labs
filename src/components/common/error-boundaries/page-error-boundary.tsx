@@ -21,7 +21,7 @@ function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
       className={`mx-auto ${CONTAINER_WIDTHS.archive} ${CONTAINER_VERTICAL_PADDING}`}
     >
       <div className={SPACING.content}>
-        <div className="space-y-3">
+        <div className={SPACING.content}>
           <h1 className={cn(TYPOGRAPHY.display.error, "text-destructive")}>
             Oops! Something went wrong
           </h1>
@@ -31,9 +31,9 @@ function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className={SPACING.content}>
           <p className={cn("text-sm", "font-medium")}>What you can do:</p>
-          <ul className="list-none text-sm text-muted-foreground space-y-2">
+          <ul className={`list-none text-sm text-muted-foreground ${SPACING.compact}`}>
             <li className="flex gap-2 items-start">
               <Logo
                 width={12}
@@ -78,7 +78,7 @@ function PageErrorFallback({ error, resetError }: ErrorFallbackProps) {
             <summary className="cursor-pointer text-sm font-mono text-muted-foreground hover:text-foreground">
               Technical details (development only)
             </summary>
-            <div className="mt-3 space-y-2">
+            <div className={`mt-3 ${SPACING.compact}`}>
               <div>
                 <p
                   className={cn(

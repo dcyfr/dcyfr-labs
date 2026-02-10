@@ -92,7 +92,7 @@ function TLDRSectionComponent({ title, items }: TLDRSection) {
   if (!items || items.length === 0) return null;
 
   return (
-    <div className="space-y-2">
+    <div className={SPACING.compact}>
       <h3
         className={cn(
           TYPOGRAPHY.h4.mdx,

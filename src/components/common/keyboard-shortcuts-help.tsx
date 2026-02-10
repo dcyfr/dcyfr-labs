@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { getShortcutsByCategory } from "@/config/keyboard-shortcuts";
+import { SPACING } from "@/lib/design-tokens";
 
 interface KeyboardShortcutsHelpProps {
   open: boolean;
@@ -40,11 +41,11 @@ export function KeyboardShortcutsHelp({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className={SPACING.content}>
           {shortcuts.map((section) => (
             <div key={section.category}>
               <h3 className="font-semibold mb-3">{section.category}</h3>
-              <div className="space-y-2">
+              <div className={SPACING.compact}>
                 {section.items.map((item) => (
                   <div
                     key={item.description}

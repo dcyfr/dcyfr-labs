@@ -42,7 +42,7 @@ test.describe('WebKit Mobile Nav', () => {
     const buttonLocator = page.locator('[data-slot="button"][aria-label="Open navigation menu"], [data-mount-fallback], [data-slot="sheet-trigger"][aria-label="Open navigation menu"]')
     const buttonCount = await buttonLocator.count()
     console.log('[webkit-debug] buttonCount:', buttonCount)
-    let openNavTrigger = page.getByRole('button', { name: /open navigation menu/i })
+    const openNavTrigger = page.getByRole('button', { name: /open navigation menu/i })
     // If there's no button yet, wait a little for the client to hydrate
     if (buttonCount === 0) {
       console.log('[webkit-debug] no button found initially - waiting for hydrate...')

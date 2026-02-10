@@ -12,6 +12,7 @@ import {
   FilterClearButton,
   type FilterOption,
 } from '@/components/common';
+import { SPACING } from "@/lib/design-tokens";
 
 interface BlogFiltersProps {
   selectedCategory: string;
@@ -142,7 +143,7 @@ export function BlogFilters({
   );
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       {/* Search Input - Full Width */}
       <FilterSearchInput
         value={searchValue}
@@ -186,7 +187,7 @@ export function BlogFilters({
 
       {/* Category Badges - Primary classification */}
       {categoryList.length > 0 && (
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <FilterBadges
             items={categoryList}
             selected={selectedCategory ? [selectedCategory] : []}
@@ -200,7 +201,7 @@ export function BlogFilters({
 
       {/* Tag Badges */}
       {tagList.length > 0 && (
-        <div className="space-y-3">
+        <div className={SPACING.content}>
           <FilterBadges
             items={tagList}
             selected={selectedTags}

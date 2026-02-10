@@ -22,6 +22,7 @@ import {
   ResponsiveContainer,
 } from '@/components/charts';
 import { PostAnalytics, DateRange, DailyData } from '@/types/analytics';
+import { SPACING } from "@/lib/design-tokens";
 
 interface AnalyticsChartsProps {
   /** All posts with analytics data */
@@ -62,7 +63,7 @@ export function AnalyticsCharts({ posts, dateRange, daily }: AnalyticsChartsProp
         </CardHeader>
         <CardContent className="p-4 pt-0">
           <div className="flex items-center justify-center h-[300px] text-center">
-            <div className="space-y-2">
+            <div className={SPACING.compact}>
               {}
               <p className="text-sm font-medium text-muted-foreground">
                 No daily tracking data available yet
@@ -87,7 +88,7 @@ export function AnalyticsCharts({ posts, dateRange, daily }: AnalyticsChartsProp
         </CardDescription>
       </CardHeader>
       <CardContent className="p-4 pt-0">
-        <Tabs defaultValue="views" className="space-y-4">
+        <Tabs defaultValue="views" className={SPACING.content}>
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="views" className="text-xs">
               Views
@@ -101,7 +102,7 @@ export function AnalyticsCharts({ posts, dateRange, daily }: AnalyticsChartsProp
           </TabsList>
 
           {/* Views Chart */}
-          <TabsContent value="views" className="space-y-4">
+          <TabsContent value="views" className={SPACING.content}>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={chartData}>
                 <defs>
@@ -141,7 +142,7 @@ export function AnalyticsCharts({ posts, dateRange, daily }: AnalyticsChartsProp
           </TabsContent>
 
           {/* Engagement Chart */}
-          <TabsContent value="engagement" className="space-y-4">
+          <TabsContent value="engagement" className={SPACING.content}>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -188,7 +189,7 @@ export function AnalyticsCharts({ posts, dateRange, daily }: AnalyticsChartsProp
           </TabsContent>
 
           {/* Combined Chart */}
-          <TabsContent value="combined" className="space-y-4">
+          <TabsContent value="combined" className={SPACING.content}>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />

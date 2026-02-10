@@ -17,7 +17,7 @@ export function CompanyOverview() {
   return (
     <div className={SPACING.content}>
       {/* Company Header */}
-      <div className="text-center space-y-4 mb-12">
+      <div className={`text-center ${SPACING.content} mb-12`}>
         <h1 className={TYPOGRAPHY.h1.hero}>{overview.name}</h1>
         <p className={`${TYPOGRAPHY.h3.standard} text-muted-foreground`}>
           {overview.tagline}

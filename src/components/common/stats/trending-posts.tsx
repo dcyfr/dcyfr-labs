@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Post } from "@/data/posts";
-import { ANIMATION, TYPOGRAPHY, HOVER_EFFECTS } from "@/lib/design-tokens";
+import { ANIMATION, TYPOGRAPHY, HOVER_EFFECTS, SPACING } from "@/lib/design-tokens";
 
 interface TrendingPostsProps {
   posts: Post[];
@@ -72,7 +72,7 @@ export function TrendingPosts({
   }
 
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       {sortedPosts.map(({ post, views }, index) => {
         return (
           <motion.div
@@ -90,7 +90,7 @@ export function TrendingPosts({
                   "hover:bg-muted/30 hover:border-primary/50 hover:-translate-y-0.5"
                 )}
               >
-                <div className="space-y-2">
+                <div className={SPACING.compact}>
                   {/* Header: Rank + Tag */}
                   <div className="flex items-center justify-between gap-2">
                     <Badge

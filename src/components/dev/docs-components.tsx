@@ -53,7 +53,7 @@ export function DocSidebar({ docs, currentSlug, className }: DocSidebarProps) {
 
   return (
     <aside className={cn("sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto", className)}>
-      <nav className="space-y-2">
+      <nav className={SPACING.compact}>
         {Object.entries(docsByCategory).map(([category, categoryDocs]) => {
           const isExpanded = expandedCategories.has(category);
           const isCurrentCategory = currentSlug?.startsWith(`${category}/`);

@@ -37,7 +37,7 @@ export function TechnicalCapabilities() {
 
           return (
             <Card key={idx} className="p-4">
-              <div className="space-y-4">
+              <div className={SPACING.content}>
                 {/* Domain Header */}
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">

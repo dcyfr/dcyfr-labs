@@ -84,7 +84,7 @@ function BadgeCard({ badge }: BadgeCardProps) {
           </div>
 
           {/* Badge Info */}
-          <div className="flex-1 space-y-2">
+          <div className={`flex-1 ${SPACING.compact}`}>
             <h3
               className={cn(
                 TYPOGRAPHY.h3.standard,
@@ -195,7 +195,7 @@ export function BadgeWallet({
               <Skeleton className="h-36 w-36 rounded-full" />
 
               {/* Badge info placeholders */}
-              <div className="flex-1 space-y-2 w-full">
+              <div className={`flex-1 ${SPACING.compact} w-full`}>
                 <Skeleton className="h-5 w-full" />
                 <Skeleton className="h-4 w-3/4 mx-auto" />
                 <Skeleton className="h-4 w-20 mx-auto" />

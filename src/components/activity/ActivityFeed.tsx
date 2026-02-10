@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 import { ActivityItem } from "./ActivityItem";
 import { ActivitySkeleton, ActivitySkeletonGroup } from "./ActivitySkeleton";
 import {
@@ -169,7 +169,7 @@ function GroupedFeed({
               {TIME_GROUP_LABELS[group]}
             </h3>
 
-            <div className="space-y-3">
+            <div className={SPACING.content}>
               {variant === "timeline" ? (
                 <div className="relative">
                   {groupItems.map((activity, index) => (

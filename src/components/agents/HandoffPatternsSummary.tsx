@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getHandoffPatterns } from "@/lib/agents";
 import { ArrowRight, Zap, Hand } from "lucide-react";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 
 interface HandoffPatternsSummaryProps {
   period: string;
@@ -39,7 +39,7 @@ export function HandoffPatternsSummary({
     (patterns.automaticVsManual.automatic / patterns.totalHandoffs) * 100;
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       {/* Summary Stats */}
       <div className="grid grid-cols-2 gap-4">
          <div className="space-y-1">
@@ -72,7 +72,7 @@ export function HandoffPatternsSummary({
       {/* Handoff Reasons */}
       <div>
         <div className="text-sm text-muted-foreground mb-2">By Reason</div>
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           {Object.entries(patterns.byReason)
             .sort(([, a], [, b]) => b - a)
             .map(([reason, count]) => {

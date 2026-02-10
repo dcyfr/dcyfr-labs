@@ -166,7 +166,7 @@ export function withApiMonitoring<T = unknown>(
     const isSlow = duration > (options.slowThreshold || SLOW_REQUEST_THRESHOLD);
     const isVerySlow = duration > VERY_SLOW_REQUEST_THRESHOLD;
 
-    let logMessage = `← Response: ${requestMetadata.method} ${requestMetadata.pathname} - ${response.status}`;
+    const logMessage = `← Response: ${requestMetadata.method} ${requestMetadata.pathname} - ${response.status}`;
 
     if (isError) {
       devLogger.error(logMessage, {

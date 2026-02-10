@@ -1,5 +1,71 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
+
+// Use vi.hoisted() to ensure mocks are properly initialized before module imports
+const mocks = vi.hoisted(() => ({
+  redisGet: vi.fn().mockResolvedValue(null),
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+  addBreadcrumb: vi.fn(),
+  blockExternalAccess: vi.fn(() => null),
+  rateLimit: vi.fn(),
+  getClientIp: vi.fn(() => '192.168.1.1'),
+  createRateLimitHeaders: vi.fn((result) => ({
+    'X-RateLimit-Limit': result.limit.toString(),
+    'X-RateLimit-Remaining': result.remaining.toString(),
+    'X-RateLimit-Reset': result.reset.toString(),
+  })),
+  getMultiplePostViews: vi.fn(),
+  getMultiplePostViews24h: vi.fn(),
+  getMultiplePostViewsInRange: vi.fn(),
+  getPostSharesBulk: vi.fn(),
+  getPostShares24hBulk: vi.fn(),
+  getPostCommentsBulk: vi.fn(),
+  getPostComments24hBulk: vi.fn(),
+}));
+
+// Mock Upstash redis singleton
+vi.mock('@/mcp/shared/redis-client', () => ({
+  redis: {
+    get: mocks.redisGet,
+  },
+}));
+
+// Mock Sentry
+vi.mock('@sentry/nextjs', () => ({
+  captureException: mocks.captureException,
+  captureMessage: mocks.captureMessage,
+  addBreadcrumb: mocks.addBreadcrumb,
+}));
+
+// Prepare mocks
+vi.mock('@/lib/api/api-security', () => ({
+  blockExternalAccess: mocks.blockExternalAccess,
+}));
+
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: mocks.rateLimit,
+  getClientIp: mocks.getClientIp,
+  createRateLimitHeaders: mocks.createRateLimitHeaders,
+}));
+
+vi.mock('@/lib/views.server', () => ({
+  getMultiplePostViews: mocks.getMultiplePostViews,
+  getMultiplePostViews24h: mocks.getMultiplePostViews24h,
+  getMultiplePostViewsInRange: mocks.getMultiplePostViewsInRange,
+}));
+
+vi.mock('@/lib/shares', () => ({
+  getPostSharesBulk: mocks.getPostSharesBulk,
+  getPostShares24hBulk: mocks.getPostShares24hBulk,
+}));
+
+vi.mock('@/lib/comments', () => ({
+  getPostCommentsBulk: mocks.getPostCommentsBulk,
+  getPostComments24hBulk: mocks.getPostComments24hBulk,
+}));
+
+// Import after mocks are set up
 import { GET as analyticsGET } from '@/app/api/analytics/route';
 import {
   getMultiplePostViews,
@@ -10,54 +76,7 @@ import { getPostSharesBulk, getPostShares24hBulk } from '@/lib/shares';
 import { getPostCommentsBulk, getPostComments24hBulk } from '@/lib/comments';
 import { rateLimit } from '@/lib/rate-limit';
 import { blockExternalAccess } from '@/lib/api/api-security';
-
-// Mock Upstash redis singleton
-vi.mock('@/mcp/shared/redis-client', () => ({
-  redis: {
-    get: vi.fn().mockResolvedValue(null),
-  },
-}));
-
-// Mock Sentry
-vi.mock('@sentry/nextjs', () => ({
-  captureException: vi.fn(),
-  captureMessage: vi.fn(),
-  addBreadcrumb: vi.fn(),
-}));
-
-// Mock posts data import
 import { posts } from '@/data/posts';
-
-// Prepare mocks
-vi.mock('@/lib/api-security', () => ({
-  blockExternalAccess: vi.fn(() => null), // By default, allow access
-}));
-
-vi.mock('@/lib/rate-limit', () => ({
-  rateLimit: vi.fn(),
-  getClientIp: vi.fn(() => '192.168.1.1'),
-  createRateLimitHeaders: vi.fn((result) => ({
-    'X-RateLimit-Limit': result.limit.toString(),
-    'X-RateLimit-Remaining': result.remaining.toString(),
-    'X-RateLimit-Reset': result.reset.toString(),
-  })),
-}));
-
-vi.mock('@/lib/views.server', () => ({
-  getMultiplePostViews: vi.fn(),
-  getMultiplePostViews24h: vi.fn(),
-  getMultiplePostViewsInRange: vi.fn(),
-}));
-
-vi.mock('@/lib/shares', () => ({
-  getPostSharesBulk: vi.fn(),
-  getPostShares24hBulk: vi.fn(),
-}));
-
-vi.mock('@/lib/comments', () => ({
-  getPostCommentsBulk: vi.fn(),
-  getPostComments24hBulk: vi.fn(),
-}));
 
 describe('Error Scenario Integration Tests', () => {
   const originalEnv = process.env;
@@ -73,16 +92,16 @@ describe('Error Scenario Integration Tests', () => {
     delete process.env.REDIS_URL;
 
     // Default behavior: return zero maps
-    vi.mocked(getMultiplePostViews).mockResolvedValue(new Map());
-    vi.mocked(getMultiplePostViews24h).mockResolvedValue(new Map());
-    vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(new Map());
-    vi.mocked(getPostSharesBulk).mockResolvedValue({});
-    vi.mocked(getPostShares24hBulk).mockResolvedValue({});
-    vi.mocked(getPostCommentsBulk).mockResolvedValue({});
-    vi.mocked(getPostComments24hBulk).mockResolvedValue({});
+    mocks.getMultiplePostViews.mockResolvedValue(new Map());
+    mocks.getMultiplePostViews24h.mockResolvedValue(new Map());
+    mocks.getMultiplePostViewsInRange.mockResolvedValue(new Map());
+    mocks.getPostSharesBulk.mockResolvedValue({});
+    mocks.getPostShares24hBulk.mockResolvedValue({});
+    mocks.getPostCommentsBulk.mockResolvedValue({});
+    mocks.getPostComments24hBulk.mockResolvedValue({});
 
     // Default: rate limit allows requests
-    vi.mocked(rateLimit).mockResolvedValue({
+    mocks.rateLimit.mockResolvedValue({
       success: true,
       limit: 60,
       remaining: 59,
@@ -143,7 +162,7 @@ describe('Error Scenario Integration Tests', () => {
     process.env.ADMIN_API_KEY = 'test-key';
 
     // Make getMultiplePostViews throw to simulate DB/Redis layer failure
-    vi.mocked(getMultiplePostViews).mockRejectedValue(new Error('Views DB error'));
+    mocks.getMultiplePostViews.mockRejectedValue(new Error('Views DB error'));
 
     const request = new NextRequest('http://localhost:3000/api/analytics', {
       headers: { Authorization: 'Bearer test-key' },

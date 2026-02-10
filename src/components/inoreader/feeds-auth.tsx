@@ -101,7 +101,7 @@ export function FeedsAuth() {
       {authStatus === 'error' && (
         <Alert variant="destructive" className="mb-6">
           <AlertDescription>
-            <div className="space-y-2">
+            <div className={SPACING.compact}>
               <p className="font-semibold">
                 Authentication failed: {errorMessage || 'Unknown error'}
               </p>
@@ -146,7 +146,7 @@ export function FeedsAuth() {
 
         <CardContent className={SPACING.content}>
           {/* Features List */}
-          <ul className="mb-6 space-y-3">
+          <ul className={`mb-6 ${SPACING.content}`}>
             <li className="flex items-start gap-3">
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400" />
               <span className="text-sm">
