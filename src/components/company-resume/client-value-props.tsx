@@ -28,7 +28,7 @@ export function ClientValueProps() {
       <div className={SPACING.subsection}>
         {valueProps.map((prop, idx) => (
           <Card key={idx} className="p-4 hover:shadow-lg transition-shadow">
-            <div className="space-y-4">
+            <div className={SPACING.content}>
               {/* Header */}
               <div>
                 <h3 className={cn(TYPOGRAPHY.h2.standard, "mb-2")}>

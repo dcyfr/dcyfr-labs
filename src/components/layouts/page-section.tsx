@@ -35,7 +35,7 @@
  */
 
 import { ReactNode } from 'react'
-import { PAGE_LAYOUT, TYPOGRAPHY } from '@/lib/design-tokens'
+import { PAGE_LAYOUT, TYPOGRAPHY, SPACING } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
 
 type SectionVariant = 'standard' | 'prose' | 'narrow'
@@ -78,7 +78,7 @@ export function PageSection({
       <div className={cn(layout.content, contentClassName)}>
         {/* Section header */}
         {(title || description) && (
-          <div className="space-y-2 mb-8">
+          <div className={`${SPACING.compact} mb-8`}>
             {title && (
               <h2 className={TYPOGRAPHY.h2.standard}>{title}</h2>
             )}

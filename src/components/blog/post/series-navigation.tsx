@@ -6,6 +6,7 @@ import { ChevronRight, BookOpen } from "lucide-react";
 import type { Post } from "@/data/posts";
 import { cn } from "@/lib/utils";
 import { trackSeriesPostClick } from "@/lib/analytics";
+import { SPACING } from "@/lib/design-tokens";
 
 /**
  * SeriesNavigation Component
@@ -69,7 +70,7 @@ export function SeriesNavigation({ currentPost, seriesPosts }: SeriesNavigationP
       </div>
 
       <nav aria-label={`${seriesName} series navigation`}>
-        <ol className="space-y-2">
+        <ol className={SPACING.compact}>
           {seriesPosts.map((post) => {
             const isCurrent = post.slug === currentPost.slug;
             const order = post.series?.order ?? 0;

@@ -6,7 +6,7 @@ import {
   SkeletonBadges,
   SkeletonParagraphs,
 } from "@/components/ui/skeleton-primitives";
-import { CONTAINER_WIDTHS, SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
+import { CONTAINER_WIDTHS, SPACING, SPACING_VALUES, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 
 /**
  * Skeleton loader for blog post content page.
@@ -24,7 +24,7 @@ import { CONTAINER_WIDTHS, SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/des
  * - Headings: SkeletonHeading (auto-sized to TYPOGRAPHY tokens)
  * - Text: SkeletonText and SkeletonParagraphs (multi-line with proper gaps)
  * - Metadata: SkeletonMetadata (date, reading time)
- * - Animation: ANIMATIONS.stagger.fast (50ms between elements)
+ * - Animation: ANIMATION_CONSTANTS.stagger.fast (50ms between elements)
  *
  * Last sync: 2026-01-31
  *
@@ -38,22 +38,22 @@ export function BlogPostSkeleton() {
         <div
           className="hidden lg:block"
           style={{
-            animationDelay: `${ANIMATIONS.stagger.fast * 0}ms`,
-            animation: ANIMATIONS.types.fadeIn,
+            animationDelay: `${ANIMATION_CONSTANTS.stagger.fast * 0}ms`,
+            animation: ANIMATION_CONSTANTS.types.fadeIn,
           }}
         >
           <div className={`sticky top-24 ${SPACING.subsection}`}>
             {/* ToC skeleton */}
             <div className={SPACING.content}>
               <SkeletonHeading level="h4" variant="standard" width="w-32" />
-              <div className="space-y-2 pl-2">
+              <div className={`${SPACING.compact} pl-2`}>
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Skeleton key={i} className="h-4 w-full" />
                 ))}
               </div>
             </div>
             {/* Metadata skeleton */}
-            <div className="space-y-2">
+            <div className={SPACING.compact}>
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-4 w-20" />
             </div>
@@ -64,8 +64,8 @@ export function BlogPostSkeleton() {
         <article
           className="min-w-0"
           style={{
-            animationDelay: `${ANIMATIONS.stagger.fast * 1}ms`,
-            animation: ANIMATIONS.types.fadeIn,
+            animationDelay: `${ANIMATION_CONSTANTS.stagger.fast * 1}ms`,
+            animation: ANIMATION_CONSTANTS.types.fadeIn,
           }}
         >
           {/* Breadcrumbs */}

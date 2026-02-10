@@ -5,10 +5,10 @@ import path from 'path';
 
 /**
  * Dev Reports API - Serves generated reports for dev tools
- * 
+ *
  * This route is only accessible in development mode (protected by proxy.ts).
  * Reports are stored in /.reports/ directory (outside public/).
- * 
+ *
  * Usage:
  *   GET /dev/api/reports/design-system-report.json
  *   GET /dev/api/reports/design-system-report.txt
@@ -26,7 +26,7 @@ export async function GET(
 ) {
   // Defense-in-depth: explicit environment check for Vercel Fluid Compute optimization
   assertDevOr404();
-  
+
   const { name } = await params;
 
   // Validate report name
@@ -44,7 +44,7 @@ export async function GET(
   // Check if file exists
   if (!fs.existsSync(reportPath)) {
     return NextResponse.json(
-      { 
+      {
         error: 'Report not generated yet',
         hint: 'Run: node scripts/validate-design-tokens.mjs'
       },
@@ -54,7 +54,7 @@ export async function GET(
 
   // Read and return the report
   const content = fs.readFileSync(reportPath, 'utf-8');
-  
+
   // Determine content type
   const isJson = name.endsWith('.json');
   const contentType = isJson ? 'application/json' : 'text/plain';
@@ -63,6 +63,7 @@ export async function GET(
     status: 200,
     headers: {
       'Content-Type': contentType,
+      'Content-Disposition': `inline; filename="${name}"`,
       'Cache-Control': 'no-store',
     },
   });

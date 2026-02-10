@@ -1,0 +1,211 @@
+name: Design Token Validation
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/design-tokens.ts'
+      - 'scripts/validate-design-tokens.mjs'
+      - 'src/**/*.{ts,tsx}'
+      - 'eslint-local-rules/**/*.js'
+      - 'eslint.config.mjs'
+      - '.github/workflows/design-token-validation.yml'
+  push:
+    branches:
+      - main
+      - preview
+      - develop
+    paths:
+      - 'src/lib/design-tokens.ts'
+      - 'scripts/validate-design-tokens.mjs'
+      - 'src/**/*.{ts,tsx}'
+      - 'eslint-local-rules/**/*.js'
+      - 'eslint.config.mjs'
+
+jobs:
+  validate-design-tokens:
+    name: Validate Design Tokens
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run design token validation
+        id: token-validation
+        run: |
+          echo "Running design token validation..."
+          node scripts/validate-design-tokens.mjs
+        continue-on-error: true
+
+      - name: Run TypeScript type check
+        id: type-check
+        run: |
+          echo "Running TypeScript compilation check..."
+          npx tsc --noEmit
+        continue-on-error: true
+
+      - name: Run ESLint (design token rules)
+        id: eslint-check
+        run: |
+          echo "Running ESLint with design token rules..."
+          npm run lint -- --max-warnings=50
+        continue-on-error: true
+
+      - name: Generate validation summary
+        if: always()
+        run: |
+          echo "## Design Token Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.token-validation.outcome }}" == "success" ]; then
+            echo "✅ **Token Validation:** PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Token Validation:** FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ steps.type-check.outcome }}" == "success" ]; then
+            echo "✅ **TypeScript:** PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **TypeScript:** FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ steps.eslint-check.outcome }}" == "success" ]; then
+            echo "✅ **ESLint:** PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **ESLint:** WARNINGS" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See job logs for details." >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR with results
+        if: github.event_name == 'pull_request' && (steps.token-validation.outcome != 'success' || steps.type-check.outcome != 'success')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tokenStatus = '${{ steps.token-validation.outcome }}';
+            const typeStatus = '${{ steps.type-check.outcome }}';
+            const eslintStatus = '${{ steps.eslint-check.outcome }}';
+
+            let body = '## 🎨 Design Token Validation Report\n\n';
+
+            if (tokenStatus !== 'success') {
+              body += '❌ **Token Validation Failed**\n\n';
+              body += 'There are design token validation errors in this PR. ';
+              body += 'Please run `npm run check:tokens` locally to see details.\n\n';
+            }
+
+            if (typeStatus !== 'success') {
+              body += '❌ **TypeScript Compilation Failed**\n\n';
+              body += 'There are TypeScript errors in this PR. ';
+              body += 'Please run `npx tsc --noEmit` locally to see details.\n\n';
+            }
+
+            if (eslintStatus !== 'success') {
+              body += '⚠️ **ESLint Warnings Detected**\n\n';
+              body += 'There are linting warnings in this PR. ';
+              body += 'Please run `npm run lint` locally to see details.\n\n';
+            }
+
+            body += '### 📚 Resources\n\n';
+            body += '- [Design Token Usage Guide](../docs/design/DESIGN_TOKEN_USAGE_GUIDE.md)\n';
+            body += '- [Phase 4 Standardization Plan](../docs/plans/PHASE_4_STANDARDIZATION_PLAN_2026-02-09.md)\n\n';
+            body += '### 🔧 Quick Fixes\n\n';
+            body += '```bash\n';
+            body += '# Validate design tokens\n';
+            body += 'npm run check:tokens\n\n';
+            body += '# Check TypeScript\n';
+            body += 'npx tsc --noEmit\n\n';
+            body += '# Lint and auto-fix\n';
+            body += 'npm run lint:fix\n';
+            body += '```\n';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Fail job if validation failed
+        if: steps.token-validation.outcome != 'success' || steps.type-check.outcome != 'success'
+        run: |
+          echo "Design token validation or TypeScript compilation failed."
+          exit 1
+
+  eslint-report:
+    name: ESLint Design Token Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint with SARIF output
+        run: |
+          npm run lint -- --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+        continue-on-error: true
+
+      - name: Upload ESLint results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: eslint-results.sarif
+          wait-for-processing: true
+        continue-on-error: true
+
+      - name: Count design token violations
+        id: count-violations
+        run: |
+          echo "Counting design token ESLint violations..."
+          VIOLATIONS=$(npm run lint 2>&1 | grep -E "dcyfr-local/(no-hardcoded-spacing|no-hardcoded-colors|no-hardcoded-typography|no-deprecated-design-tokens)" | wc -l || echo "0")
+          echo "violations=$VIOLATIONS" >> $GITHUB_OUTPUT
+          echo "Found $VIOLATIONS design token violations"
+
+      - name: Comment violation count on PR
+        if: github.event_name == 'pull_request' && steps.count-violations.outputs.violations != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const violations = '${{ steps.count-violations.outputs.violations }}';
+
+            const body = `## 📊 Design Token Violations: ${violations}\n\n` +
+              `This PR has **${violations}** design token ESLint violations.\n\n` +
+              `### Common Violations\n\n` +
+              `- \`dcyfr-local/no-hardcoded-spacing\` - Use SPACING tokens\n` +
+              `- \`dcyfr-local/no-hardcoded-colors\` - Use SEMANTIC_COLORS\n` +
+              `- \`dcyfr-local/no-hardcoded-typography\` - Use TYPOGRAPHY\n` +
+              `- \`dcyfr-local/no-deprecated-design-tokens\` - Use modern tokens\n\n` +
+              `**Target:** 0 violations before switching rules from warn → error\n\n` +
+              `See [Design Token Usage Guide](../docs/design/DESIGN_TOKEN_USAGE_GUIDE.md) for fixes.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });

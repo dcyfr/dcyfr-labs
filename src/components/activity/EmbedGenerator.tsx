@@ -126,7 +126,7 @@ export function EmbedGenerator() {
       </p>
 
       {/* Options */}
-      <div className="space-y-4 mb-8">
+      <div className={`${SPACING.content} mb-8`}>
         {/* Source Filter */}
         <div>
           {}

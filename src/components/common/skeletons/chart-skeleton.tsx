@@ -9,7 +9,7 @@
  * Loading skeleton for analytics charts and data visualizations.
  * - Headings: SkeletonHeading (auto-sized to TYPOGRAPHY tokens)
  * - Spacing: SPACING_VALUES for padding/gaps/margins
- * - Animation: ANIMATIONS.stagger.fast (50ms between legend items)
+ * - Animation: ANIMATION_CONSTANTS.stagger.fast (50ms between legend items)
  *
  * Last sync: 2026-01-31
  *
@@ -19,7 +19,7 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonHeading } from "@/components/ui/skeleton-primitives";
-import { SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
+import { SPACING_VALUES, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 
 export interface ChartSkeletonProps {
   /** Chart type affects skeleton appearance */
@@ -64,8 +64,8 @@ export function ChartSkeleton({
                 className="w-full"
                 style={{
                   height,
-                  animationDelay: `${ANIMATIONS.stagger.fast * i}ms`,
-                  animation: ANIMATIONS.types.fadeIn,
+                  animationDelay: `${ANIMATION_CONSTANTS.stagger.fast * i}ms`,
+                  animation: ANIMATION_CONSTANTS.types.fadeIn,
                 }}
               />
             ))}
@@ -93,8 +93,8 @@ export function ChartSkeleton({
               key={i}
               className="flex items-center gap-2"
               style={{
-                animationDelay: `${ANIMATIONS.stagger.fast * i}ms`,
-                animation: ANIMATIONS.types.fadeIn,
+                animationDelay: `${ANIMATION_CONSTANTS.stagger.fast * i}ms`,
+                animation: ANIMATION_CONSTANTS.types.fadeIn,
               }}
             >
               <Skeleton className="h-3 w-3 rounded-sm" />

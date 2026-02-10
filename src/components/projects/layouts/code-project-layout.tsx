@@ -198,7 +198,7 @@ export function CodeProjectLayout({ project, nonce, basePath = '/work' }: CodePr
           </h2>
           <Card>
             <CardContent className="pt-4">
-              <ul className="space-y-2">
+              <ul className={SPACING.compact}>
                 {codeContent.references.map((ref, index) => {
                   const isExternal = /^(?:https?:)?\/\//.test(ref.href);
                   return (

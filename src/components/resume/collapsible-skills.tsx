@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { SkillCategory } from "@/data/resume";
+import { SPACING } from "@/lib/design-tokens";
 
 interface CollapsibleSkillsProps {
   skills: SkillCategory[];
@@ -75,7 +76,7 @@ export function CollapsibleSkills({ skills }: CollapsibleSkillsProps) {
   }, [skills]);
 
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       {skillsData.map((skillCategory, index) => (
         <SkillCategoryItem
           key={index}

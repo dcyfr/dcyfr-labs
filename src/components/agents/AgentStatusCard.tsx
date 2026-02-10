@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { AgentType, AgentStats, ProviderHealth } from "@/lib/agents";
 import { CheckCircle2, XCircle, Clock, DollarSign } from "lucide-react";
+import { SPACING } from "@/lib/design-tokens";
 
 interface AgentStatusCardProps {
   agent: AgentType;
@@ -82,7 +83,7 @@ export function AgentStatusCard({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className={SPACING.content}>
         {/* Usage Badge */}
         <div>
           <Badge variant={usagePercent > 0 ? "default" : "secondary"}>

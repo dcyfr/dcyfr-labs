@@ -216,7 +216,7 @@ export function CTASectionSocial() {
 export function CTASectionMinimal() {
   return (
     <section className={`mx-auto ${CONTAINER_WIDTHS.narrow} ${CONTAINER_PADDING} pb-8 md:pb-12`}>
-      <div className="text-center space-y-4">
+      <div className={`text-center ${SPACING.content}`}>
         <p className={cn(TYPOGRAPHY.body, 'text-muted-foreground')}>
           Interested in working together?
         </p>

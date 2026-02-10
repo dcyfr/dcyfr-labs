@@ -117,7 +117,7 @@ export function SeriesShowcase({
               </div>
 
               {/* Progress bar */}
-              <div className="space-y-2 mb-4">
+              <div className={`${SPACING.compact} mb-4`}>
                 <div className="flex items-center justify-between">
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-3 w-8" />
@@ -228,7 +228,7 @@ export function SeriesShowcase({
                   </p>
 
                   {/* Progress bar */}
-                  <div className="space-y-2">
+                  <div className={SPACING.compact}>
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>Progress</span>
                       <span>{progress}%</span>

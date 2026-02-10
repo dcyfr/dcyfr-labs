@@ -47,9 +47,9 @@ export function CodeComparison({
     <div className={cn('not-prose', SPACING.content, 'mb-6', className)}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Before */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <div className="flex items-center justify-between px-4 py-2 bg-muted rounded-t-lg border border-border">
-            <span className={cn(TYPOGRAPHY.caption, 'text-muted-foreground font-medium')}>
+            <span className={cn(TYPOGRAPHY.metadata, 'text-muted-foreground font-medium')}>
               {beforeLabel}
             </span>
           </div>
@@ -61,9 +61,9 @@ export function CodeComparison({
         </div>
 
         {/* After */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <div className="flex items-center justify-between px-4 py-2 bg-muted rounded-t-lg border border-border">
-            <span className={cn(TYPOGRAPHY.caption, 'text-muted-foreground font-medium')}>
+            <span className={cn(TYPOGRAPHY.metadata, 'text-muted-foreground font-medium')}>
               {afterLabel}
             </span>
           </div>

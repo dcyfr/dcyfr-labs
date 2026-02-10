@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 
 interface SidebarTopicsProps {
   tagList: Array<{ tag: string; count: number }>;
@@ -26,7 +26,7 @@ export function SidebarTopics({
   onTagToggle,
 }: SidebarTopicsProps) {
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       <button
         onClick={onToggle}
         className={`flex items-center justify-between w-full ${TYPOGRAPHY.label.small}`}

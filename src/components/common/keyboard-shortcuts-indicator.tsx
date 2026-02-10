@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { ANIMATION, TYPOGRAPHY, Z_INDEX } from '@/lib/design-tokens';
+import { ANIMATION, TYPOGRAPHY, Z_INDEX, SPACING } from '@/lib/design-tokens';
 
 /**
  * Small indicator that appears when 'g' is pressed
@@ -84,7 +84,7 @@ export function KeyboardShortcutsHelp() {
           <DialogDescription>Navigate quickly using keyboard shortcuts</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 mt-4">
+        <div className={`${SPACING.content} mt-4`}>
           {/* Navigation Shortcuts */}
           <section>
             <h3
@@ -95,7 +95,7 @@ export function KeyboardShortcutsHelp() {
             >
               Navigation
             </h3>
-            <div className="space-y-2">
+            <div className={SPACING.compact}>
               {shortcuts.map((shortcut) => (
                 <div
                   key={shortcut.href}
@@ -135,7 +135,7 @@ export function KeyboardShortcutsHelp() {
             >
               General
             </h3>
-            <div className="space-y-2">
+            <div className={SPACING.compact}>
               <div className="flex items-center justify-between py-2 border-b">
                 <span className="text-sm">Show keyboard shortcuts</span>
                 <kbd

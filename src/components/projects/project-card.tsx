@@ -108,7 +108,7 @@ export function ProjectCard({
             <Skeleton className="h-6 sm:h-7 md:h-8 w-48 sm:w-56" />
 
             {/* Description - 2 lines */}
-            <CardDescription className="space-y-2">
+            <CardDescription className={SPACING.compact}>
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-5/6" />
             </CardDescription>

@@ -8,7 +8,7 @@
  *
  * Generic loading skeleton for form components.
  * - Spacing: SPACING.content for vertical gaps, SPACING_VALUES for field spacing
- * - Animation: ANIMATIONS.stagger.normal (100ms between fields)
+ * - Animation: ANIMATION_CONSTANTS.stagger.normal (100ms between fields)
  *
  * Last sync: 2026-01-31
  *
@@ -16,7 +16,7 @@
  */
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
+import { SPACING, SPACING_VALUES, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 
 export interface FormSkeletonProps {
   /** Number of form fields to show */
@@ -44,8 +44,8 @@ export function FormSkeleton({
             key={i}
             className={`space-y-${SPACING_VALUES.sm}`}
             style={{
-              animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-              animation: ANIMATIONS.types.fadeIn,
+              animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+              animation: ANIMATION_CONSTANTS.types.fadeIn,
             }}
           >
             {/* Label */}
@@ -60,8 +60,8 @@ export function FormSkeleton({
         {showButton && (
           <div
             style={{
-              animationDelay: `${ANIMATIONS.stagger.normal * fieldCount}ms`,
-              animation: ANIMATIONS.types.fadeIn,
+              animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * fieldCount}ms`,
+              animation: ANIMATION_CONSTANTS.types.fadeIn,
             }}
           >
             <Skeleton className="h-10 w-32 rounded-md" />

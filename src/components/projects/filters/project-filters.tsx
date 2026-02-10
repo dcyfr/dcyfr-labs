@@ -18,6 +18,7 @@ import {
   FilterClearButton,
   type FilterOption,
 } from "@/components/common";
+import { SPACING } from "@/lib/design-tokens";
 
 export interface ProjectFiltersProps {
   selectedCategory: string;
@@ -162,7 +163,7 @@ export function ProjectFilters({
   }));
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       {/* Search Input - Full Width */}
       <div className="flex items-center gap-3">
         <FilterSearchInput
@@ -209,7 +210,7 @@ export function ProjectFilters({
 
       {/* Category Badges - Primary classification */}
       {categoryList.length > 0 && (
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <FilterBadges
             items={categoryList}
             selected={selectedCategory ? [selectedCategory] : []}
@@ -223,7 +224,7 @@ export function ProjectFilters({
 
       {/* Tag Badges */}
       {tagList.length > 0 && (
-        <div className="space-y-3">
+        <div className={SPACING.content}>
           <FilterBadges
             items={tagList}
             selected={selectedTags}

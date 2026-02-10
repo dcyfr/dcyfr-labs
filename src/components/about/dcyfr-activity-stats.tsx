@@ -45,7 +45,7 @@ export function DcyfrActivityStats() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {contributionAreas.map((item, idx) => (
-            <div key={idx} className="space-y-2">
+            <div key={idx} className={SPACING.compact}>
               <h4 className={TYPOGRAPHY.label.small + ' font-semibold text-foreground'}>
                 {item.area}
               </h4>

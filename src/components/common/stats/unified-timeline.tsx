@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { HOVER_EFFECTS, TYPOGRAPHY } from '@/lib/design-tokens';
+import { HOVER_EFFECTS, TYPOGRAPHY, SPACING } from '@/lib/design-tokens';
 import { Briefcase, GraduationCap } from 'lucide-react';
 import { Logo } from '@/components/common';
 import type { Experience, Education } from '@/data/resume';
@@ -93,7 +93,7 @@ export function UnifiedTimeline({ experiences, education, companyUrls }: Unified
         aria-hidden="true"
       />
 
-      <div className="space-y-4">
+      <div className={SPACING.content}>
         {timelineItems.map((item, index) => (
           <div key={index} className="relative">
             {/* Timeline node - Logo SVG (desktop only, hidden on mobile) */}
@@ -160,7 +160,7 @@ function ExperienceCard({
         </time>
       </header>
 
-      <ul className="space-y-2 text-sm text-muted-foreground">
+      <ul className={`${SPACING.compact} text-sm text-muted-foreground`}>
         {experience.responsibilities.map((resp, idx) => (
           <li key={idx} className="flex gap-2 items-start">
             <Logo

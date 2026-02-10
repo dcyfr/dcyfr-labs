@@ -4,11 +4,11 @@ import path from "path";
 
 /**
  * Serve static assets co-located with blog posts
- * 
+ *
  * URL pattern: /blog/{slug}/assets/{filename}
  * File location: src/content/blog/{slug}/{filename}
  *              or src/content/blog/private/{slug}/{filename} (dev only)
- * 
+ *
  * Supports images, videos, and other static files.
  * Returns 404 for non-existent files or disallowed extensions.
  */
@@ -43,10 +43,10 @@ export async function GET(
   { params }: { params: Promise<{ slug: string; path: string[] }> }
 ) {
   const { slug, path: pathSegments } = await params;
-  
+
   // Reconstruct the file path from segments
   const filename = pathSegments.join("/");
-  
+
   // Security: Prevent directory traversal attacks
   if (filename.includes("..") || slug.includes("..")) {
     return new NextResponse("Not Found", { status: 404 });
@@ -54,7 +54,7 @@ export async function GET(
 
   // Get the file extension
   const ext = path.extname(filename).toLowerCase();
-  
+
   // Only allow specific file types
   if (!ALLOWED_EXTENSIONS[ext]) {
     return new NextResponse("Not Found", { status: 404 });
@@ -71,7 +71,7 @@ export async function GET(
   // Ensure the file exists and is within allowed content directories
   const isInPublicDir = filePath.startsWith(CONTENT_DIR);
   const isInPrivateDir = process.env.NODE_ENV !== "production" && filePath.startsWith(PRIVATE_CONTENT_DIR);
-  
+
   if (!isInPublicDir && !isInPrivateDir) {
     return new NextResponse("Not Found", { status: 404 });
   }
@@ -89,6 +89,7 @@ export async function GET(
       status: 200,
       headers: {
         "Content-Type": contentType,
+        "Content-Disposition": `inline; filename="${path.basename(filename)}"`,
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });

@@ -8,7 +8,7 @@
  *
  * Loading skeleton for Giscus comments section.
  * - Spacing: SPACING.content for vertical gaps, SPACING_VALUES for margins/padding
- * - Animation: ANIMATIONS.stagger.normal (100ms between comments)
+ * - Animation: ANIMATION_CONSTANTS.stagger.normal (100ms between comments)
  *
  * Provides placeholder while comments load asynchronously.
  *
@@ -19,7 +19,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonHeading, SkeletonAvatar } from "@/components/ui/skeleton-primitives";
-import { SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
+import { SPACING, SPACING_VALUES, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 
 export interface CommentSectionSkeletonProps {
   /** Number of comment placeholders */
@@ -60,8 +60,8 @@ export function CommentSectionSkeleton({
             key={i}
             className={`flex gap-${SPACING_VALUES.sm}`}
             style={{
-              animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-              animation: ANIMATIONS.types.fadeIn,
+              animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+              animation: ANIMATION_CONSTANTS.types.fadeIn,
             }}
           >
             {/* Avatar */}

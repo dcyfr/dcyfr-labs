@@ -9,7 +9,7 @@
  * Loading skeleton for skills display on resume page.
  * - Headings: SkeletonHeading (auto-sized to TYPOGRAPHY tokens)
  * - Spacing: SPACING_VALUES for padding/gaps/margins
- * - Animation: ANIMATIONS.stagger.normal (100ms between items)
+ * - Animation: ANIMATION_CONSTANTS.stagger.normal (100ms between items)
  *
  * Last sync: 2026-01-31
  *
@@ -18,7 +18,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonHeading } from "@/components/ui/skeleton-primitives";
-import { SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
+import { SPACING, SPACING_VALUES, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 
 export interface SkillsWalletSkeletonProps {
   /** Number of skill categories to show */
@@ -54,8 +54,8 @@ export function SkillsWalletSkeleton({
             key={i}
             className={`rounded-lg border p-${SPACING_VALUES.md}`}
             style={{
-              animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-              animation: ANIMATIONS.types.fadeIn,
+              animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+              animation: ANIMATION_CONSTANTS.types.fadeIn,
             }}
           >
             {/* Skill name + count */}

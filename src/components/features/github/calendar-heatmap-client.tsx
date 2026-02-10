@@ -5,7 +5,7 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import { motion } from 'framer-motion';
 import { ExternalLink, GitCommit, Calendar, Zap, TrendingUp, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { TYPOGRAPHY, SEMANTIC_COLORS } from '@/lib/design-tokens';
+import { TYPOGRAPHY, SEMANTIC_COLORS, SPACING } from '@/lib/design-tokens';
 import type { ContributionResponse } from '@/lib/github-data';
 
 // Import styles for react-calendar-heatmap
@@ -124,7 +124,7 @@ export function ClientGitHubHeatmap({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="space-y-3"
+      className={SPACING.content}
     >
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">

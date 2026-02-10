@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonHeading } from "@/components/ui/skeleton-primitives";
-import { SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
+import { SPACING_VALUES, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 
 /**
  * GitHub Heatmap Skeleton
@@ -13,7 +13,7 @@ import { SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
  *
  * Skeleton loader for GitHub heatmap component.
  * - Spacing: SPACING_VALUES for padding/gaps/margins
- * - Animation: ANIMATIONS.stagger.fast (50ms between stat cards)
+ * - Animation: ANIMATION_CONSTANTS.stagger.fast (50ms between stat cards)
  *
  * Matches the structure of GitHubHeatmap component:
  * - Header with title and username link
@@ -42,8 +42,8 @@ export function GitHubHeatmapSkeleton() {
               key={i}
               className={`bg-muted/50 rounded-lg p-${SPACING_VALUES.sm} border border-border`}
               style={{
-                animationDelay: `${ANIMATIONS.stagger.fast * i}ms`,
-                animation: ANIMATIONS.types.fadeIn,
+                animationDelay: `${ANIMATION_CONSTANTS.stagger.fast * i}ms`,
+                animation: ANIMATION_CONSTANTS.types.fadeIn,
               }}
             >
               <Skeleton className={`h-4 w-20 mb-${SPACING_VALUES.sm}`} /> {/* Stat label */}

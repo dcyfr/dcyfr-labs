@@ -54,7 +54,7 @@ export function MetricsCard({
       )}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 space-y-2">
+        <div className={`flex-1 ${SPACING.compact}`}>
           {/* Value */}
           <div className={cn(TYPOGRAPHY.h2.standard, 'text-foreground font-bold')}>
             {value}
@@ -67,7 +67,7 @@ export function MetricsCard({
 
           {/* Description */}
           {description && (
-            <div className={cn(TYPOGRAPHY.caption, 'text-muted-foreground')}>
+            <div className={cn(TYPOGRAPHY.metadata, 'text-muted-foreground')}>
               {description}
             </div>
           )}

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 
 interface Author {
   id: string;
@@ -40,7 +40,7 @@ export function SidebarAuthors({
   };
 
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       <button
         onClick={onToggle}
         className={`flex items-center justify-between w-full ${TYPOGRAPHY.label.small}`}
@@ -54,7 +54,7 @@ export function SidebarAuthors({
       </button>
 
       {isExpanded && (
-        <div className="space-y-2 pt-2">
+        <div className={`${SPACING.compact} pt-2`}>
           <div className="flex flex-wrap gap-2">
             {authors.map((author) => (
               <button

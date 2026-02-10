@@ -302,7 +302,7 @@ export function BookmarkManager({ className }: BookmarkManagerProps) {
               <DialogTitle>Edit Bookmark</DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-4">
+            <div className={SPACING.content}>
               <div>
                 <Label htmlFor="notes">Notes</Label>
                 <Textarea
@@ -373,7 +373,7 @@ export function BookmarkManager({ className }: BookmarkManagerProps) {
               <DialogTitle>Import Bookmarks</DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-4">
+            <div className={SPACING.content}>
               <div>
                 <Label htmlFor="import-data">JSON Data</Label>
                 <Textarea
