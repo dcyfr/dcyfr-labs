@@ -18,16 +18,13 @@
 import type {
   Agent,
   AgentManifest,
-  AgentRegistry,
-  AgentRouter,
-  AgentRoutingResult,
+  AgentRegistry as BaseAgentRegistry,
+  AgentRouter as BaseAgentRouter,
+  AgentRoutingResult as BaseRoutingResult,
   LoadedAgent,
 } from '@dcyfr/ai';
 
 type AgentCategory = string;
-type BaseAgentRegistry = AgentRegistry;
-type BaseAgentRouter = AgentRouter;
-type BaseRoutingResult = AgentRoutingResult;
 
 /**
  * Task context for agent routing
