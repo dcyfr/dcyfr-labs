@@ -15,14 +15,13 @@
 // Type-only imports (erased at runtime, safe for client bundles)
 import type {
   Agent,
+  AgentCategory,
   AgentManifest,
   AgentRegistry as BaseAgentRegistry,
   AgentRouter as BaseAgentRouter,
   AgentRoutingResult as BaseRoutingResult,
   LoadedAgent,
 } from '@dcyfr/ai';
-
-type AgentCategory = string;
 
 /**
  * Task context for agent routing
@@ -338,7 +337,7 @@ export async function validateDesignTokens(
     // Try to import from @dcyfr/agents if available
     // Use a variable to bypass TypeScript static analysis
     const modulePath = '@dcyfr/agents/enforcement/design-tokens';
-    const enforcement = await import(/* webpackIgnore: true */ modulePath as any);
+    const enforcement = await import(/* webpackIgnore: true */ modulePath);
     const { validateTokenUsage } = enforcement;
 
     const results = await Promise.all(files.map((file) => validateTokenUsage(file)));

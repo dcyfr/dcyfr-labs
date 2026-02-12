@@ -17,14 +17,13 @@
 // Type-only imports (erased at runtime, safe for client bundles)
 import type {
   Agent,
+  AgentCategory,
   AgentManifest,
   AgentRegistry as BaseAgentRegistry,
   AgentRouter as BaseAgentRouter,
   AgentRoutingResult as BaseRoutingResult,
   LoadedAgent,
 } from '@dcyfr/ai';
-
-type AgentCategory = string;
 
 /**
  * Task context for agent routing
@@ -398,6 +397,7 @@ export async function requiresApproval(change: {
   try {
     // Use dynamic import with type assertion to avoid TypeScript resolution errors
     // when @dcyfr/agents is not yet installed
+    // @ts-expect-error - Dynamic import, module may not exist
     const gates = await import('@dcyfr/agents/enforcement/approval-gates');
     const { requiresApproval: checkApproval } = gates;
 
