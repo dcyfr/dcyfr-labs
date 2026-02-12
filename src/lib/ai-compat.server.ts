@@ -13,12 +13,19 @@
  */
 
 // Type-only imports (erased at runtime, safe for client bundles)
-type Agent = any;
-type AgentManifest = any;
+import type {
+  Agent,
+  AgentManifest,
+  AgentRegistry,
+  AgentRouter,
+  AgentRoutingResult,
+  LoadedAgent,
+} from '@dcyfr/ai';
+
 type AgentCategory = string;
-type BaseAgentRegistry = any;
-type BaseAgentRouter = any;
-type BaseRoutingResult = any;
+type BaseAgentRegistry = AgentRegistry;
+type BaseAgentRouter = AgentRouter;
+type BaseRoutingResult = AgentRoutingResult;
 
 /**
  * Task context for agent routing
@@ -36,7 +43,10 @@ export interface TaskContext {
 /**
  * Agent routing result (extends base with convenience properties)
  */
-export interface RoutingResult extends Omit<BaseRoutingResult, 'matchedRule' | 'fallbacks' | 'confidence'> {
+export interface RoutingResult extends Omit<
+  BaseRoutingResult,
+  'matchedRule' | 'fallbacks' | 'confidence'
+> {
   tier: 'public' | 'private' | 'project';
   reasoning: string;
   delegationChain?: string[];
@@ -130,7 +140,7 @@ export class AgentRegistry {
   async listAgentsByCategory(category: AgentCategory): Promise<Agent[]> {
     await this.ensureInitialized();
     const loaded = this.registry!.getAgentsByCategory(category);
-    return loaded.map((l: any) => l.agent);
+    return loaded.map((l: LoadedAgent) => l.agent);
   }
 
   private async ensureInitialized(): Promise<void> {
@@ -165,10 +175,10 @@ export class AgentRouter {
     await this.registry.initialize();
 
     try {
-      const { AgentRouter: BaseRouter } = await import('@dcyfr/ai');
+      const { getGlobalAgentRouter } = await import('@dcyfr/ai');
 
       if (!this.router && this.registry['registry']) {
-        this.router = new BaseRouter(this.registry['registry']);
+        this.router = getGlobalAgentRouter(this.registry['registry']);
       }
 
       if (!this.router) {
@@ -338,14 +348,15 @@ export async function validateDesignTokens(
 
     const totalChecks = results.reduce((sum, r) => sum + r.totalChecks, 0);
     const allViolations = results.flatMap((r) => r.violations);
-    const compliance = totalChecks > 0 ? ((totalChecks - allViolations.length) / totalChecks) * 100 : 100;
+    const compliance =
+      totalChecks > 0 ? ((totalChecks - allViolations.length) / totalChecks) * 100 : 100;
 
     return {
       compliance: Math.round(compliance * 100) / 100,
       violations: allViolations.map((v) => v.message),
       suggestions: allViolations.map((v) => v.fix),
     };
-  } catch (error) {
+  } catch {
     // @dcyfr/agents not yet available - return optimistic result
     // This allows builds to succeed while enforcement is being set up
     console.warn('@dcyfr/agents enforcement not available yet, returning optimistic result');
@@ -377,11 +388,11 @@ export async function requiresApproval(change: {
   try {
     // Use a variable to bypass TypeScript static analysis
     const modulePath = '@dcyfr/agents/enforcement/approval-gates';
-    const gates = await import(/* webpackIgnore: true */ modulePath as any);
+    const gates = await import(/* webpackIgnore: true */ modulePath);
     const { requiresApproval: checkApproval } = gates;
 
     return checkApproval(change.type, change.scope, change.files);
-  } catch (error) {
+  } catch {
     // @dcyfr/agents not yet available - return conservative default
     // Requiring approval is safer than auto-approving
     console.warn('@dcyfr/agents enforcement not available yet, defaulting to requiring approval');

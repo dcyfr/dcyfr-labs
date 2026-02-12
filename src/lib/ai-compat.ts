@@ -15,12 +15,19 @@
  */
 
 // Type-only imports (erased at runtime, safe for client bundles)
-type Agent = any;
-type AgentManifest = any;
+import type {
+  Agent,
+  AgentManifest,
+  AgentRegistry,
+  AgentRouter,
+  AgentRoutingResult,
+  LoadedAgent,
+} from '@dcyfr/ai';
+
 type AgentCategory = string;
-type BaseAgentRegistry = any;
-type BaseAgentRouter = any;
-type BaseRoutingResult = any;
+type BaseAgentRegistry = AgentRegistry;
+type BaseAgentRouter = AgentRouter;
+type BaseRoutingResult = AgentRoutingResult;
 
 /**
  * Task context for agent routing
@@ -135,7 +142,7 @@ export class AgentRegistry {
   async listAgentsByCategory(category: AgentCategory): Promise<Agent[]> {
     await this.ensureInitialized();
     const loaded = this.registry!.getAgentsByCategory(category);
-    return loaded.map((l: any) => l.agent);
+    return loaded.map((l: LoadedAgent) => l.agent);
   }
 
   private async ensureInitialized(): Promise<void> {
@@ -170,10 +177,10 @@ export class AgentRouter {
     await this.registry.initialize();
 
     try {
-      const { AgentRouter: BaseRouter } = await import('@dcyfr/ai');
+      const { getGlobalAgentRouter } = await import('@dcyfr/ai');
 
       if (!this.router && this.registry['registry']) {
-        this.router = new BaseRouter(this.registry['registry']);
+        this.router = getGlobalAgentRouter(this.registry['registry']);
       }
 
       if (!this.router) {
@@ -334,7 +341,7 @@ export async function validateDesignTokens(
 ): Promise<{ compliance: number; violations: string[]; suggestions: string[] }> {
   try {
     // Try to import from @dcyfr/agents if available
-    // @ts-ignore - Module may not exist, handled gracefully in catch block
+    // @ts-expect-error - Module may not exist, handled gracefully in catch block
     const enforcement = await import('@dcyfr/agents/enforcement/design-tokens');
     const { validateTokenUsage, ALL_TOKEN_RULES } = enforcement;
     const fs = await import('fs/promises');
@@ -346,7 +353,7 @@ export async function validateDesignTokens(
         const content = await fs.readFile(filePath, 'utf-8');
         const fileViolations = validateTokenUsage(content, filePath, ALL_TOKEN_RULES);
         allViolations.push(...fileViolations);
-      } catch (err) {
+      } catch {
         // Skip files that can't be read
         continue;
       }
@@ -362,7 +369,7 @@ export async function validateDesignTokens(
       violations: allViolations.map((v) => `${v.file}:${v.line} - ${v.rule.name}: ${v.match}`),
       suggestions: allViolations.map((v) => v.rule.fix),
     };
-  } catch (error) {
+  } catch {
     // @dcyfr/agents not yet available - return optimistic result
     // This allows builds to succeed while enforcement is being set up
     console.warn('@dcyfr/agents enforcement not available yet, returning optimistic result');
@@ -394,7 +401,7 @@ export async function requiresApproval(change: {
   try {
     // Use dynamic import with type assertion to avoid TypeScript resolution errors
     // when @dcyfr/agents is not yet installed
-    const gates = await import('@dcyfr/agents/enforcement/approval-gates' as any);
+    const gates = await import('@dcyfr/agents/enforcement/approval-gates');
     const { requiresApproval: checkApproval } = gates;
 
     // Construct a description string from the change type and scope
@@ -403,7 +410,7 @@ export async function requiresApproval(change: {
 
     // Return true if a gate was matched (requires approval)
     return gate !== null;
-  } catch (error) {
+  } catch {
     // @dcyfr/agents not yet available - return conservative default
     // Requiring approval is safer than auto-approving
     console.warn('@dcyfr/agents enforcement not available yet, defaulting to requiring approval');
