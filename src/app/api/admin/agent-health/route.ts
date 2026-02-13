@@ -16,7 +16,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { blockExternalAccess } from '@/lib/api-security';
+import { blockExternalAccess } from '@/lib/api/api-security';
 import { getAllCircuitMetrics } from '@/lib/security/circuit-breaker';
 
 // ============================================================================

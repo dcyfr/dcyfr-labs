@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DashboardStats, DashboardStat } from "@/components/dashboard";
-import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS, SPACING } from "@/lib/design-tokens";
 import { Mail, Linkedin, Eye, Github, Target, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -87,7 +87,7 @@ export function ConversionMetrics({
   };
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       {/* Conversion Goals Header */}
       <Card>
         <CardHeader className="pb-3">
@@ -149,9 +149,9 @@ export function ConversionMetrics({
             Track user journeys from awareness to conversion
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className={SPACING.content}>
           {/* Funnel 1: Organic Search → Blog → Contact */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium">
                 Organic Search → Blog → Contact
@@ -198,7 +198,7 @@ export function ConversionMetrics({
           </div>
 
           {/* Funnel 2: Social Media → Homepage → LinkedIn */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium">
                 Social Media → Homepage → LinkedIn
@@ -232,7 +232,7 @@ export function ConversionMetrics({
           </div>
 
           {/* Funnel 3: Direct → Projects → GitHub → Contact */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium">
                 Direct → Projects → GitHub → Contact
@@ -279,9 +279,9 @@ export function ConversionMetrics({
             Progress toward {currentMonth} targets
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className={SPACING.content}>
           {/* Consulting Leads */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-xs">
               <span className="font-medium">Consulting Inquiries</span>
               <span className="text-muted-foreground">
@@ -299,7 +299,7 @@ export function ConversionMetrics({
           </div>
 
           {/* LinkedIn Connections */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-xs">
               <span className="font-medium">LinkedIn Connections</span>
               <span className="text-muted-foreground">
@@ -317,7 +317,7 @@ export function ConversionMetrics({
           </div>
 
           {/* Job Opportunities */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-xs">
               <span className="font-medium">Job/Speaking Opportunities</span>
               <span className="text-muted-foreground">
@@ -335,7 +335,7 @@ export function ConversionMetrics({
           </div>
 
           {/* Blog Engagement */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-xs">
               <span className="font-medium">Blog Completion Rate</span>
               <span className="text-muted-foreground">
@@ -353,7 +353,7 @@ export function ConversionMetrics({
           </div>
 
           {/* GitHub Clicks */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <div className="flex items-center justify-between text-xs">
               <span className="font-medium">GitHub Repository Clicks</span>
               <span className="text-muted-foreground">

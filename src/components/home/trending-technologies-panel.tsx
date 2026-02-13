@@ -140,7 +140,7 @@ export function TrendingTechnologiesPanel({
   return (
     <div className={cn(SPACING.content, className)}>
       {/* Technology List */}
-      <div className="space-y-2">
+      <div className={SPACING.compact}>
         {displayTech.map((tech, index) => {
           const color = getTechColor(tech.name);
           const badgeClass = getAccentBadge(color);

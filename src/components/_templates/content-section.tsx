@@ -95,7 +95,7 @@ export function TwoColumnSection() {
               TypeScript provides type safety, while our design system ensures consistency.
               Hot reload and comprehensive testing speed up development.
             </p>
-            <ul className="space-y-2 mt-4">
+            <ul className={`${SPACING.compact} mt-4`}>
               <li className="flex items-start gap-2">
                 <CheckCircle className="h-5 w-5 text-primary mt-0.5 shrink-0" />
                 <span className={TYPOGRAPHY.body}>
@@ -126,7 +126,7 @@ export function TwoColumnSection() {
               Server-first rendering delivers fast page loads, while our accessible
               components ensure everyone can use your site.
             </p>
-            <ul className="space-y-2 mt-4">
+            <ul className={`${SPACING.compact} mt-4`}>
               <li className="flex items-start gap-2">
                 <CheckCircle className="h-5 w-5 text-primary mt-0.5 shrink-0" />
                 <span className={TYPOGRAPHY.body}>

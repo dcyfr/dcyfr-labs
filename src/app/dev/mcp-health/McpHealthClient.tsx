@@ -1,6 +1,6 @@
 'use client';
 
-/* eslint-disable no-restricted-syntax */
+ 
 // Dev tools page - intentionally not using PageLayout for internal admin interface
 
 /**

@@ -18,8 +18,8 @@ import {
   predictLimitDate,
   PRICING,
   BUDGET,
-} from '@/lib/api-cost-calculator';
-import { getUsageSummary, getAllUsageStats } from '@/lib/api-usage-tracker';
+} from '@/lib/api/api-cost-calculator';
+import { getUsageSummary, getAllUsageStats } from '@/lib/api/api-usage-tracker';
 
 // ============================================================================
 // CONFIGURATION

@@ -184,7 +184,7 @@ function validateTrendingData(
     }
 
     // Try to find post by current ID first, then by current slug, then by previous slug
-    let post = postsBySlug.get(item.postId) || postsByPreviousSlug.get(item.postId);
+    const post = postsBySlug.get(item.postId) || postsByPreviousSlug.get(item.postId);
 
     if (!post) {
       warnings.push(`Post ${item.postId} not found in posts data`);

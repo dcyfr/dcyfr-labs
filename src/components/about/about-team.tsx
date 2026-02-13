@@ -17,7 +17,7 @@ import { TeamMemberCard } from "@/components/common";
 export function AboutTeam() {
   return (
     <div className={SPACING.content}>
-      <div className="space-y-2">
+      <div className={SPACING.compact}>
         <h2 className={TYPOGRAPHY.h2.standard}>Meet the team</h2>
         <p className={TYPOGRAPHY.metadata}>{teamDescription}</p>
       </div>

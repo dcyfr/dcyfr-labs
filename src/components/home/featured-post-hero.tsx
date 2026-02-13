@@ -101,7 +101,7 @@ export function FeaturedPostHero({ post, loading = false }: FeaturedPostHeroProp
           {/* Title & Summary skeleton */}
           <div className={cn(SPACING.subsection)}>
             <Skeleton className="h-10 md:h-12 w-3/4 mb-4" />
-            <div className="space-y-2">
+            <div className={SPACING.compact}>
               <SkeletonText lines={3} />
             </div>
           </div>

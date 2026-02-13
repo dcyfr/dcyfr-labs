@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { TYPOGRAPHY } from '@/lib/design-tokens';
+import { TYPOGRAPHY, SPACING } from '@/lib/design-tokens';
 
 interface SidebarFiltersProps {
   sortBy: string;
@@ -40,7 +40,7 @@ export function SidebarFilters({
   onShowDraftsChange,
 }: SidebarFiltersProps) {
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       <button
         onClick={onToggle}
         className={`flex items-center justify-between w-full ${TYPOGRAPHY.label.small}`}
@@ -50,7 +50,7 @@ export function SidebarFilters({
       </button>
 
       {isExpanded && (
-        <div className="space-y-3 pt-2">
+        <div className={`${SPACING.content} pt-2`}>
           {/* Sort badges */}
           <div className="space-y-1.5">
             <label className="text-xs text-muted-foreground">Sort by</label>

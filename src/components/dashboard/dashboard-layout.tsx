@@ -3,8 +3,7 @@ import {
   TYPOGRAPHY,
   CONTAINER_WIDTHS,
   CONTAINER_PADDING,
-  CONTAINER_VERTICAL_PADDING,
-} from "@/lib/design-tokens";
+  CONTAINER_VERTICAL_PADDING, SPACING } from "@/lib/design-tokens";
 
 /**
  * Universal dashboard layout component for admin/developer tools
@@ -79,7 +78,7 @@ export function DashboardLayout({
       {filters && <div className="mb-6">{filters}</div>}
 
       {/* Content Section */}
-      <div className="space-y-4">{children}</div>
+      <div className={SPACING.content}>{children}</div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ import { AnalyticsSummary } from "@/types/analytics";
 import { getBenchmark } from "@/lib/dashboard";
 import Link from "next/link";
 import { useState } from "react";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 
 interface AnalyticsOverviewProps {
   /** Filtered summary statistics */
@@ -44,9 +44,9 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
   const [showFeaturedPosts, setShowFeaturedPosts] = useState(true);
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       {/* Stats Section - Collapsible */}
-      <div className="space-y-4">
+      <div className={SPACING.content}>
         <div className="flex items-center justify-between">
           <div>
             <h3 className={TYPOGRAPHY.h3.standard}>Summary Statistics</h3>
@@ -126,7 +126,7 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
       </div>
 
       {/* Featured Posts Section - Collapsible */}
-      <div className="space-y-4">
+      <div className={SPACING.content}>
         <div className="flex items-center justify-between">
           <div>
             <h3 className={TYPOGRAPHY.h3.standard}>Featured Posts</h3>
@@ -156,7 +156,7 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
           <div className="grid gap-3 md:grid-cols-3">
             {/* Top Post */}
             <Card className="p-4 hover:shadow-md transition-shadow">
-              <div className="space-y-3">
+              <div className={SPACING.content}>
                 <div>
                   <h4 className={TYPOGRAPHY.label.small}>Top Post</h4>
                   <p className="text-xs text-muted-foreground">
@@ -164,7 +164,7 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
                   </p>
                 </div>
                 {summary.topPost ? (
-                  <div className="space-y-2">
+                  <div className={SPACING.compact}>
                     <Link
                       href={`/blog/${summary.topPost.slug}`}
                       className="font-medium text-sm line-clamp-2 hover:underline block"
@@ -183,7 +183,7 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
 
             {/* Most Shared Post */}
             <Card className="p-4 hover:shadow-md transition-shadow">
-              <div className="space-y-3">
+              <div className={SPACING.content}>
                 <div>
                   <h4 className={TYPOGRAPHY.label.small}>Most Shared</h4>
                   <p className="text-xs text-muted-foreground">
@@ -191,7 +191,7 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
                   </p>
                 </div>
                 {summary.mostSharedPost ? (
-                  <div className="space-y-2">
+                  <div className={SPACING.compact}>
                     <Link
                       href={`/blog/${summary.mostSharedPost.slug}`}
                       className="font-medium text-sm line-clamp-2 hover:underline block"
@@ -210,7 +210,7 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
 
             {/* Most Commented Post */}
             <Card className="p-4 hover:shadow-md transition-shadow">
-              <div className="space-y-3">
+              <div className={SPACING.content}>
                 <div>
                   <h4 className={TYPOGRAPHY.label.small}>Most Commented</h4>
                   <p className="text-xs text-muted-foreground">
@@ -218,7 +218,7 @@ export function AnalyticsOverview({ summary }: AnalyticsOverviewProps) {
                   </p>
                 </div>
                 {summary.mostCommentedPost ? (
-                  <div className="space-y-2">
+                  <div className={SPACING.compact}>
                     <Link
                       href={`/blog/${summary.mostCommentedPost.slug}`}
                       className="font-medium text-sm line-clamp-2 hover:underline block"

@@ -151,7 +151,7 @@ export default function VaryingDepthDemo() {
           elements.
         </p>
 
-        <div className="space-y-3 rounded-lg border border-border p-4">
+        <div className={`${SPACING.content} rounded-lg border border-border p-4`}>
           <p>
             <ContrastText>
               This text uses the base weight (font-light) and normal text shows
@@ -201,10 +201,10 @@ export default function VaryingDepthDemo() {
           For custom implementations, use these tokens directly.
         </p>
 
-        <div className="space-y-3 rounded-lg border border-border p-4 text-sm">
+        <div className={`${SPACING.content} rounded-lg border border-border p-4 text-sm`}>
           <div>
             <p className="font-semibold mb-1">Primary Depth</p>
-            <p className={TYPOGRAPHY.depth.primary}>
+            <p className={CONTENT_HIERARCHY.primary.content}>
               Font-medium with full foreground contrast. Use for main content
               and primary information.
             </p>
@@ -212,28 +212,28 @@ export default function VaryingDepthDemo() {
 
           <div>
             <p className="font-semibold mb-1">Secondary Depth</p>
-            <p className={TYPOGRAPHY.depth.secondary}>
+            <p className={CONTENT_HIERARCHY.supporting.content}>
               Font-normal with 90% opacity. Use for supporting content.
             </p>
           </div>
 
           <div>
             <p className="font-semibold mb-1">Tertiary Depth</p>
-            <p className={TYPOGRAPHY.depth.tertiary}>
+            <p className={CONTENT_HIERARCHY.subtle.content}>
               Font-normal with muted-foreground. Use for contextual information.
             </p>
           </div>
 
           <div>
             <p className="font-semibold mb-1">Accent Depth</p>
-            <p className={TYPOGRAPHY.depth.accent}>
+            <p className={CONTENT_HIERARCHY.accent.content}>
               Font-semibold with full contrast. Use for highlighted information.
             </p>
           </div>
 
           <div>
             <p className="font-semibold mb-1">Subtle Depth</p>
-            <p className={TYPOGRAPHY.depth.subtle}>
+            <p className={CONTENT_HIERARCHY.subtle.content}>
               Font-light with 70% muted opacity. Use for minimal emphasis.
             </p>
           </div>

@@ -154,7 +154,7 @@ export function PageHero({
           <Skeleton className={cn('h-10 md:h-12', titleWidth, align === 'center' && 'mx-auto')} />
 
           {/* Description skeleton */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <Skeleton className={cn('h-6 w-full max-w-2xl', align === 'center' && 'mx-auto')} />
             <Skeleton className={cn('h-6 w-3/4 max-w-2xl', align === 'center' && 'mx-auto')} />
           </div>

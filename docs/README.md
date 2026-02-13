@@ -99,6 +99,7 @@ Performance, testing, and optimization guides
 ### Development & Quality
 
 - **[`testing/`](./testing/)** – Test infrastructure, coverage roadmap, quick reference
+- **[`reports/`](./reports/)** – Investigation reports, analysis, and audits
 - **`performance/private/development/`** – Performance optimization, Lighthouse CI, ISR
 - **[`optimization/`](./optimization/)** – SEO, JSON-LD, alt-text, tag analytics
 - **[`content/`](./content/)** – Content validation, Markdown standards, Mermaid

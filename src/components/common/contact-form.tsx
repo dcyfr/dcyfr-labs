@@ -156,7 +156,7 @@ export function ContactForm() {
         </div>
 
         {/* Name field with validation */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
@@ -176,7 +176,7 @@ export function ContactForm() {
         </div>
 
         {/* Email field with validation */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -204,7 +204,7 @@ export function ContactForm() {
         />
 
         {/* Message field with validation */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <Label htmlFor="message">Message</Label>
           <Textarea
             id="message"

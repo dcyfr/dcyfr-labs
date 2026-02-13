@@ -295,7 +295,7 @@ export function ActivityHeatmapCalendar({
           )}
 
           {/* Heatmap Calendar */}
-          <div className="space-y-4">
+          <div className={SPACING.content}>
             <div className="overflow-x-auto">
               <CalendarHeatmap
                 startDate={startDate}

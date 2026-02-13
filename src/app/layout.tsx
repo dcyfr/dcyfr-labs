@@ -200,7 +200,7 @@ export default async function RootLayout({
                 <NavigationShortcutsProvider />
                 <SiteHeader />
                 {/* Root layout - provides main element for all pages */}
-                {/* eslint-disable-next-line no-restricted-syntax -- Root layout is the container for all pages, PageLayout wraps children */}
+                { }
                 <main
                   id="main-content"
                   className={`min-h-[calc(100dvh-128px)] overflow-x-clip overflow-y-visible ${MOBILE_SAFE_PADDING}`}

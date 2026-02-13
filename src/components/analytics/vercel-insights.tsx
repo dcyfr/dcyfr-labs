@@ -5,7 +5,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ export function VercelInsights({ vercel, lastSynced }: VercelInsightsProps) {
   const topDevices = vercel.topDevices || [];
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">

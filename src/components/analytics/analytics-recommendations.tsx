@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SEMANTIC_COLORS } from "@/lib/design-tokens";
+import { SEMANTIC_COLORS, SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 import {
   Lightbulb,
   TrendingUp,
@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { PostAnalytics } from "@/types/analytics";
 import Link from "next/link";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
 
 interface Recommendation {
   id: string;
@@ -391,7 +390,7 @@ export function AnalyticsRecommendations({
   }
 
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       <div className="flex items-center justify-between">
         <div>
           <h3 className={TYPOGRAPHY.h3.standard}>Recommendations</h3>
@@ -405,7 +404,7 @@ export function AnalyticsRecommendations({
         </Badge>
       </div>
 
-      <div className="space-y-3">
+      <div className={SPACING.content}>
         {recommendations.map((rec) => {
           // Safely access type with fallback
           const type = rec.type || "insight";

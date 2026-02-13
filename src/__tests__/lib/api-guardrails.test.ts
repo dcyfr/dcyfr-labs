@@ -17,7 +17,7 @@ import {
   checkApiLimitMiddleware,
   recordApiCall,
   API_LIMITS,
-} from "@/lib/api-guardrails";
+} from "@/lib/api/api-guardrails";
 
 describe("api-guardrails.ts", () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;

@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { blockExternalAccess } from '@/lib/api-security';
+import { blockExternalAccess } from '@/lib/api/api-security';
 import { redis } from '@/mcp/shared/redis-client';
 import type { WeeklyMetrics } from '@/types/maintenance';
 

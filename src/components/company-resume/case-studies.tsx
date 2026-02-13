@@ -43,7 +43,7 @@ export function CaseStudies() {
             key={idx}
             className="p-4 md:p-5 hover:shadow-xl transition-shadow"
           >
-            <div className="space-y-4">
+            <div className={SPACING.content}>
               {/* Header */}
               <div>
                 <h3 className={TYPOGRAPHY.h1.standard}>{study.title}</h3>
@@ -117,7 +117,7 @@ export function CaseStudies() {
                   <TrendingUp className="w-4 h-4 text-primary" />
                   Key Results
                 </h4>
-                <ul className="space-y-2">
+                <ul className={SPACING.compact}>
                   {study.results.map((result, resultIdx) => (
                     <li
                       key={resultIdx}

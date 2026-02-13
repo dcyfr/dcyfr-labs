@@ -58,7 +58,7 @@ Quick references for blog content and features:
 | Topic                  | Purpose                      | Doc                                                     |
 | ---------------------- | ---------------------------- | ------------------------------------------------------- |
 | **Architecture**       | Blog system design overview  | [blog/architecture.md](./blog/architecture)             |
-| **Quick Reference**    | Common blog tasks            | [blog/quick-reference.md](./blog/quick-reference)       |
+| **Quick Reference**    | Common blog tasks            | [blog/blog-quick-ref.md](./blog/quick-reference)       |
 | **Content Creation**   | Writing and publishing posts | [blog/content-creation.md](./blog/content-creation)     |
 | **MDX Processing**     | MDX pipeline and plugins     | [blog/mdx-processing.md](./blog/mdx-processing)         |
 | **Frontmatter Schema** | Post metadata reference      | [blog/frontmatter-schema.md](./blog/frontmatter-schema) |

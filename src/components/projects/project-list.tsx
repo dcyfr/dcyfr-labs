@@ -211,7 +211,7 @@ export function ProjectList({
   // Compact layout: minimal cards
   if (layout === "compact") {
     return (
-      <div className="space-y-3" data-testid="project-list">
+      <div className={SPACING.content} data-testid="project-list">
         {projects.map((project, index) => {
           return (
             <ScrollReveal

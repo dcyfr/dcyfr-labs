@@ -21,7 +21,7 @@
  * ```
  */
 
-import { TYPOGRAPHY, IMAGE_PLACEHOLDER } from '@/lib/design-tokens';
+import { TYPOGRAPHY, IMAGE_PLACEHOLDER, SPACING } from '@/lib/design-tokens';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -106,7 +106,7 @@ export function ArticleHeader({
   return (
     <div className={className}>
       {/* Text Content Section - Outside and above the card */}
-      <div className="space-y-3 mb-6">
+      <div className={`${SPACING.content} mb-6`}>
         {/* Badges */}
         {badges && (
           <div className="flex flex-wrap gap-2">

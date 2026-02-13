@@ -11,7 +11,7 @@
  * - Typography-aware primitives (auto-sized to TYPOGRAPHY tokens)
  * - Multiple variants (compact, standard, timeline, minimal)
  * - Matches Medium/Substack content-focused layout
- * - Animation: ANIMATIONS.stagger.normal (100ms between items)
+ * - Animation: ANIMATION_CONSTANTS.stagger.normal (100ms between items)
  *
  * Last sync: 2026-01-31
  *
@@ -37,7 +37,7 @@ import {
   SkeletonBadges,
   SkeletonImage,
 } from "@/components/ui/skeleton-primitives";
-import { SPACING, SPACING_VALUES, ANIMATIONS } from "@/lib/design-tokens";
+import { SPACING, SPACING_VALUES, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 import type { ActivityVariant } from "@/lib/activity";
 
 // ============================================================================
@@ -126,8 +126,8 @@ export function ActivitySkeletonGroup({ count = 3 }: { count?: number }) {
         <div
           key={i}
           style={{
-            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-            animation: ANIMATIONS.types.fadeIn,
+            animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+            animation: ANIMATION_CONSTANTS.types.fadeIn,
           }}
         >
           <ActivitySkeleton

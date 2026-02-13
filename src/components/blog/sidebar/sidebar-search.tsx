@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import type { RefObject } from "react";
+import { SPACING } from "@/lib/design-tokens";
 
 interface SidebarSearchProps {
   searchValue: string;
@@ -32,7 +33,7 @@ export function SidebarSearch({
   onClearAll,
 }: SidebarSearchProps) {
   return (
-    <div className="space-y-2">
+    <div className={SPACING.compact}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input

@@ -60,7 +60,7 @@ export function ContactFormBasic() {
     <div className={`mx-auto ${CONTAINER_WIDTHS.narrow} ${CONTAINER_PADDING}`}>
       <form onSubmit={handleSubmit} className={SPACING.content}>
         {/* Name field */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
@@ -72,7 +72,7 @@ export function ContactFormBasic() {
         </div>
 
         {/* Email field */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -84,7 +84,7 @@ export function ContactFormBasic() {
         </div>
 
         {/* Subject field */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <Label htmlFor="subject">Subject</Label>
           <Input
             id="subject"
@@ -95,7 +95,7 @@ export function ContactFormBasic() {
         </div>
 
         {/* Message field */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <Label htmlFor="message">Message</Label>
           <Textarea
             id="message"
@@ -179,8 +179,8 @@ export function NewsletterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <div className="space-y-2">
+    <form onSubmit={handleSubmit} className={SPACING.content}>
+      <div className={SPACING.compact}>
         <Label htmlFor="newsletter-email" className="sr-only">
           Email address
         </Label>
