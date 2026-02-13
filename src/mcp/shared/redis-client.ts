@@ -55,7 +55,7 @@ function getRedisCredentials(): { url: string; token: string } | null {
       console.warn('Preview Redis connected (shared preview database)');
       return { url, token };
     }
-    
+
     // ✅ PRODUCTION FALLBACK: Check production credentials exist before using
     const prodUrl = process.env.UPSTASH_REDIS_REST_URL;
     const prodToken = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -65,24 +65,28 @@ function getRedisCredentials(): { url: string; token: string } | null {
       // Only use Upstash variables which use REST API instead of TCP
       return { url: prodUrl, token: prodToken };
     }
-    
+
     // Log detailed error for debugging
     console.error('❌ Preview Redis credentials missing:', {
-      UPSTASH_REDIS_REST_URL_PREVIEW: process.env.UPSTASH_REDIS_REST_URL_PREVIEW ? 'SET' : 'MISSING',
-      UPSTASH_REDIS_REST_TOKEN_PREVIEW: process.env.UPSTASH_REDIS_REST_TOKEN_PREVIEW ? 'SET' : 'MISSING',
+      UPSTASH_REDIS_REST_URL_PREVIEW: process.env.UPSTASH_REDIS_REST_URL_PREVIEW
+        ? 'SET'
+        : 'MISSING',
+      UPSTASH_REDIS_REST_TOKEN_PREVIEW: process.env.UPSTASH_REDIS_REST_TOKEN_PREVIEW
+        ? 'SET'
+        : 'MISSING',
       UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL ? 'SET' : 'MISSING',
       UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN ? 'SET' : 'MISSING',
       // SECURITY: Do NOT log legacy variables that might contain old Redis Cloud URLs
       legacyPreviewRedisExists: !!process.env.PREVIEW_REDIS_URL,
-      legacyRedisExists: !!process.env.REDIS_URL
+      legacyRedisExists: !!process.env.REDIS_URL,
     });
-    
+
     if (process.env.PREVIEW_REDIS_URL || process.env.REDIS_URL) {
       console.error('🚨 CRITICAL: Legacy Redis variables detected! These cause ENOTFOUND errors.');
       console.error('   Remove PREVIEW_REDIS_URL and REDIS_URL from environment variables.');
       console.error('   Only use UPSTASH_REDIS_REST_* variables for serverless Redis.');
     }
-    
+
     return null;
   }
 
@@ -166,23 +170,25 @@ function getRedisClient(): Redis | null {
         // Add resilience configurations for production reliability
         retry: {
           retries: 3,
-          initialDelayMs: 100,
-          maxDelayMs: 2000,
+          backoff: (retryCount: number) => {
+            // Exponential backoff: 100ms, 200ms, 400ms (capped at 2000ms)
+            return Math.min(100 * Math.pow(2, retryCount), 2000);
+          },
         },
-        // Disable telemetry for privacy and performance
-        enableTelemetry: false,
       });
-      
+
       // Test connection asynchronously (non-blocking)
-      redisClient.ping()
+      redisClient
+        .ping()
         .then(() => {
           console.warn('[Redis] ✅ Connection verified successfully');
         })
         .catch((error) => {
-          console.error('[Redis] ⚠️ Ping test failed (client still available for retries):', 
-            error instanceof Error ? error.message : String(error));
+          console.error(
+            '[Redis] ⚠️ Ping test failed (client still available for retries):',
+            error instanceof Error ? error.message : String(error)
+          );
         });
-        
     } catch (initError) {
       console.error('[Redis] ❌ Failed to initialize client:', initError);
       redisClient = null;
@@ -253,38 +259,46 @@ export const redis = new Proxy({} as Redis, {
       ];
 
       if (keyMethods.includes(prop as string)) {
-        return function (key: string, ...args: any[]) {
+        return function (key: string, ...args: any[]): Promise<any> {
           const prefixedKey = getRedisKeyPrefix() + key;
-          
+
           // Add timeout protection to Redis operations
-          const operation = (value as Function).call(client, prefixedKey, ...args);
-          
+          const redisMethod = value as (...args: any[]) => any;
+          const operation = redisMethod.call(client, prefixedKey, ...args);
+
           // Most Redis operations should complete quickly
           // Use different timeouts based on operation type
-          const timeout = (['keys', 'scan'].includes(prop as string)) ? 15000 : 10000;
-          
+          const timeout = ['keys', 'scan'].includes(prop as string) ? 15000 : 10000;
+
           return Promise.race([
             operation,
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error(`Redis ${String(prop)} operation timed out`)), timeout)
-            )
+            new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error(`Redis ${String(prop)} operation timed out`)),
+                timeout
+              )
+            ),
           ]);
         };
       }
 
       // Add timeout protection to non-key methods as well
       if (typeof value === 'function') {
-        return function (...args: any[]) {
-          const operation = (value as Function).call(client, ...args);
-          
+        return function (...args: any[]): Promise<any> {
+          const redisMethod = value as (...args: any[]) => any;
+          const operation = redisMethod.call(client, ...args);
+
           // Use shorter timeout for ping and other utility operations
-          const timeout = (prop === 'ping') ? 5000 : 10000;
-          
+          const timeout = prop === 'ping' ? 5000 : 10000;
+
           return Promise.race([
             operation,
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error(`Redis ${String(prop)} operation timed out`)), timeout)
-            )
+            new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error(`Redis ${String(prop)} operation timed out`)),
+                timeout
+              )
+            ),
           ]);
         };
       }
