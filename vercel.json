@@ -1,12 +1,6 @@
 {
   "framework": "nextjs",
   "trailingSlash": false,
-  "buildCommand": "npm run build",
-  "functions": {
-    "middleware.js": {
-      "runtime": "@vercel/edge"
-    }
-  },
   "crons": [
     {
       "path": "/api/admin/populate-cache",
