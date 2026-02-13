@@ -30,29 +30,68 @@ export const trackPostView = inngest.createFunction(
       return { success: false, reason: 'redis-not-configured' };
     }
 
-    // Step 1: Process view tracking atomically
+    // Test Redis connectivity first
+    try {
+      await Promise.race([
+        redis.ping(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Redis ping timeout')), 3000))
+      ]);
+    } catch (pingError) {
+      console.error('Redis connectivity check failed for view tracking:', pingError);
+      return { 
+        success: false, 
+        reason: 'redis-connection-failed',
+        error: pingError instanceof Error ? pingError.message : String(pingError)
+      };
+    }
+
+    // Step 1: Process view tracking atomically with timeout protection
     // Combines: get views, track daily, check milestones - reduces execution time by 33%
     const totalViews = await step.run('process-view', async () => {
       try {
-        // Get current view count (already incremented by /api/views)
-        const views = await redis.get(`${VIEW_KEY_PREFIX}${postId}`);
+        // Get current view count (already incremented by /api/views) with timeout
+        const views = await Promise.race([
+          redis.get(`${VIEW_KEY_PREFIX}${postId}`),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Redis get timeout')), 5000))
+        ]);
+        
         const count = parseInt((views as string) || '0');
         console.warn(`Post view tracked: ${slug} (${count} total views)`);
 
-        // Track in Vercel Analytics
-        await track('blog_post_viewed', {
-          postId,
-          slug,
-          title,
-          totalViews: count,
-        });
+        // Track in Vercel Analytics (non-blocking, with error handling)
+        try {
+          await track('blog_post_viewed', {
+            postId,
+            slug,
+            title,
+            totalViews: count,
+          });
+        } catch (trackError) {
+          console.warn('Failed to track view in Vercel Analytics:', trackError);
+          // Don't fail the function for analytics issues
+        }
 
-        // Track daily views (uses postId for consistency)
-        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-        await redis.incr(`${VIEW_KEY_PREFIX}${postId}:day:${today}`);
-        await redis.expire(`${VIEW_KEY_PREFIX}${postId}:day:${today}`, 90 * 24 * 60 * 60); // 90 days
+        // Track daily views (uses postId for consistency) with timeout
+        const today = new Date().toISOString().split('T')[0];
+        const dailyKey = `${VIEW_KEY_PREFIX}${postId}:day:${today}`;
+        
+        try {
+          await Promise.race([
+            redis.incr(dailyKey),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Redis incr timeout')), 5000))
+          ]);
+          
+          // Set expiry for daily keys (90 days) with timeout
+          await Promise.race([
+            redis.expire(dailyKey, 90 * 24 * 60 * 60),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Redis expire timeout')), 3000))
+          ]);
+        } catch (dailyError) {
+          console.warn(`Failed to track daily views for ${postId}:`, dailyError);
+          // Don't fail the main tracking for daily tracking issues
+        }
 
-        // Check for milestones
+        // Check for milestones with error handling
         const milestones = [100, 1000, 10000, 50000, 100000];
         for (const milestone of milestones) {
           if (count === milestone) {
@@ -170,90 +209,198 @@ export const calculateTrending = inngest.createFunction(
   },
   { cron: '0 * * * *' }, // Every hour
   async ({ step }) => {
-    // Redis client imported from shared module
+    const startTime = Date.now();
+    
+    // Add timeout protection to prevent Vercel 300s timeout
+    const FUNCTION_TIMEOUT_MS = 240000; // 4 minutes (less than Vercel's 5 minute limit)
+    
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Function timeout - preventing Vercel 504')), FUNCTION_TIMEOUT_MS)
+    );
 
-    if (!redis) {
-      return { success: false, reason: 'redis-not-configured' };
-    }
-
-    // Step 1: Get all post view keys
-    const posts = await step.run('fetch-post-data', async () => {
-      try {
-        const keys = await redis.keys(`${VIEW_KEY_PREFIX}*`);
-        const postKeys = keys.filter((key) => !key.includes(':day:'));
-
-        const postsData = [];
-
-        for (const key of postKeys) {
-          const postId = key.replace(VIEW_KEY_PREFIX, '');
-          const totalViews = parseInt(((await redis.get(key)) as string) || '0');
-
-          // Get views from last 7 days
-          let recentViews = 0;
-          const today = new Date();
-
-          for (let i = 0; i < 7; i++) {
-            const date = new Date(today);
-            date.setDate(date.getDate() - i);
-            const dateStr = date.toISOString().split('T')[0];
-            const dayViews = await redis.get(`${key}:day:${dateStr}`);
-            recentViews += parseInt((dayViews as string) || '0');
+    try {
+      return await Promise.race([
+        (async () => {
+          // Redis client imported from shared module
+          if (!redis) {
+            console.warn('Redis not configured, skipping trending calculation');
+            return { success: false, reason: 'redis-not-configured' };
           }
 
-          postsData.push({
-            postId,
-            totalViews,
-            recentViews,
+          // Test Redis connectivity first with short timeout
+          try {
+            await Promise.race([
+              redis.ping(),
+              new Promise((_, reject) => setTimeout(() => reject(new Error('Redis ping timeout')), 5000))
+            ]);
+          } catch (pingError) {
+            console.error('Redis connectivity check failed:', pingError);
+            return { 
+              success: false, 
+              reason: 'redis-connection-failed',
+              error: pingError instanceof Error ? pingError.message : String(pingError)
+            };
+          }
+
+          // Step 1: Get all post view keys with timeout protection
+          const posts = await step.run('fetch-post-data', async () => {
+            try {
+              // Add timeout to individual Redis operations
+              const keysTimeout = 10000; // 10 seconds
+              const keys = await Promise.race([
+                redis.keys(`${VIEW_KEY_PREFIX}*`),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('Redis keys operation timed out')), keysTimeout)
+                )
+              ]) as string[];
+              
+              const postKeys = keys.filter((key) => !key.includes(':day:'));
+              
+              if (postKeys.length === 0) {
+                console.warn('No post view keys found, trending calculation skipped');
+                return [];
+              }
+
+              const postsData = [];
+              const batchSize = 10; // Process in batches to avoid overwhelming Redis
+              
+              for (let i = 0; i < postKeys.length; i += batchSize) {
+                const batch = postKeys.slice(i, i + batchSize);
+                
+                for (const key of batch) {
+                  try {
+                    const postId = key.replace(VIEW_KEY_PREFIX, '');
+                    
+                    // Get total views with timeout
+                    const totalViews = parseInt(((await Promise.race([
+                      redis.get(key),
+                      new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Redis get timeout')), 5000)
+                      )
+                    ])) as string) || '0');
+
+                    // Get views from last 7 days with timeout protection
+                    let recentViews = 0;
+                    const today = new Date();
+
+                    for (let j = 0; j < 7; j++) {
+                      try {
+                        const date = new Date(today);
+                        date.setDate(date.getDate() - j);
+                        const dateStr = date.toISOString().split('T')[0];
+                        
+                        const dayViews = await Promise.race([
+                          redis.get(`${key}:day:${dateStr}`),
+                          new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Day views timeout')), 2000)
+                          )
+                        ]);
+                        
+                        recentViews += parseInt((dayViews as string) || '0');
+                      } catch (dayError) {
+                        console.warn(`Failed to get day views for ${postId}, day ${j}:`, dayError);
+                        // Continue processing other days
+                      }
+                    }
+
+                    postsData.push({
+                      postId,
+                      totalViews,
+                      recentViews,
+                    });
+                  } catch (postError) {
+                    console.warn(`Failed to process post key ${key}:`, postError);
+                    // Continue processing other posts
+                  }
+                }
+                
+                // Small delay between batches to avoid overwhelming Redis
+                await new Promise(resolve => setTimeout(resolve, 100));
+              }
+
+              console.warn(`Successfully processed ${postsData.length} posts for trending calculation`);
+              return postsData;
+            } catch (error) {
+              console.error('Failed to fetch post data for trending:', error);
+              return [];
+            }
           });
-        }
 
-        return postsData;
-      } catch (error) {
-        console.error('Failed to fetch post data:', error);
-        return [];
-      }
-    });
+          // Step 2: Calculate trending scores
+          const trending = await step.run('calculate-scores', async () => {
+            if (posts.length === 0) {
+              console.warn('No posts data available for trending calculation');
+              return [];
+            }
+            
+            return posts
+              .filter((post) => post.recentViews > 0)
+              .map((post) => ({
+                ...post,
+                // Simple trending score: recent views * (recent/total ratio)
+                score: post.recentViews * (post.recentViews / (post.totalViews || 1)),
+              }))
+              .sort((a, b) => b.score - a.score)
+              .slice(0, 10); // Top 10
+          });
 
-    // Step 2: Calculate trending scores
-    const trending = await step.run('calculate-scores', async () => {
-      return posts
-        .filter((post) => post.recentViews > 0)
-        .map((post) => ({
-          ...post,
-          // Simple trending score: recent views * (recent/total ratio)
-          score: post.recentViews * (post.recentViews / (post.totalViews || 1)),
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 10); // Top 10
-    });
+          // Step 3: Store trending list with timeout protection
+          await step.run('store-trending', async () => {
+            try {
+              await Promise.race([
+                redis.set(
+                  TRENDING_KEY,
+                  JSON.stringify(trending),
+                  { ex: 60 * 60 } // Cache for 1 hour
+                ),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('Redis set timeout')), 10000)
+                )
+              ]);
 
-    // Step 3: Store trending list
-    await step.run('store-trending', async () => {
-      try {
-        await redis.set(
-          TRENDING_KEY,
-          JSON.stringify(trending),
-          { ex: 60 * 60 } // Cache for 1 hour
-        );
+              console.warn(`Updated trending posts: ${trending.length} posts`);
 
-        console.warn(`Updated trending posts: ${trending.length} posts`);
+              // Track in Vercel Analytics (with error handling)
+              try {
+                await track('trending_posts_calculated', {
+                  trendingCount: trending.length,
+                  topPostId: trending[0]?.postId,
+                  timestamp: new Date().toISOString(),
+                });
+              } catch (trackError) {
+                console.warn('Failed to track trending calculation in Vercel Analytics:', trackError);
+                // Don't fail the function for analytics tracking issues
+              }
+            } catch (error) {
+              console.error('Failed to store trending data:', error);
+              throw error; // Re-throw to indicate step failure
+            }
+          });
 
-        // Track in Vercel Analytics
-        await track('trending_posts_calculated', {
-          trendingCount: trending.length,
-          topPostId: trending[0]?.postId,
-        });
-      } catch (error) {
-        console.error('Failed to store trending data:', error);
-      }
-    });
-
-    return {
-      success: true,
-      trendingCount: trending.length,
-      topPost: trending[0]?.postId,
-      timestamp: new Date().toISOString(),
-    };
+          return {
+            success: true,
+            trendingCount: trending.length,
+            topPost: trending[0]?.postId,
+            timestamp: new Date().toISOString(),
+            processingTimeMs: Date.now() - startTime,
+          };
+        })(),
+        timeoutPromise
+      ]);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('Trending calculation failed:', errorMessage);
+      
+      // Return structured error response  
+      return {
+        success: false,
+        reason: 'calculation-failed',
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+);
   }
 );
 
