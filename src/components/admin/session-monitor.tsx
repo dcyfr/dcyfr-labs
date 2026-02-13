@@ -61,7 +61,7 @@ export function SessionMonitor({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className={SPACING.content}>
             <div className="h-4 skeleton-shimmer rounded"></div>
             <div className="h-4 skeleton-shimmer rounded w-3/4"></div>
             <div className="h-4 skeleton-shimmer rounded w-1/2"></div>
@@ -101,7 +101,7 @@ export function SessionMonitor({
   };
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

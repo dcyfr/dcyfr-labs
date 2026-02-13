@@ -57,7 +57,7 @@ import {
   Archive as ArchiveIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TYPOGRAPHY } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 import {
   PublicationCohort,
   PUBLICATION_COHORT_LABELS,
@@ -221,7 +221,7 @@ export function AnalyticsFilters({
     return (
       <Card className="border-dashed">
         <CardContent className="p-4">
-          <div className="space-y-3">
+          <div className={SPACING.content}>
             {/* Row 1: Main controls */}
             <div className="flex items-center gap-2 flex-wrap">
               {/* Presets */}
@@ -522,9 +522,9 @@ export function AnalyticsFilters({
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className={SPACING.content}>
         {/* Filter Presets */}
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <label className={TYPOGRAPHY.label.xs}>Quick Filters</label>
           <div className="flex flex-wrap gap-2">
             {DEFAULT_FILTER_PRESETS.map((preset) => (
@@ -544,7 +544,7 @@ export function AnalyticsFilters({
 
         <div className="grid grid-cols-2 gap-4">
           {/* Publication Cohort */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <label className={TYPOGRAPHY.label.xs}>Publication Date</label>
             <Select
               value={publicationCohort}
@@ -568,7 +568,7 @@ export function AnalyticsFilters({
           </div>
 
           {/* Performance Tier */}
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <label className={TYPOGRAPHY.label.xs}>Performance Tier</label>
             <Select
               value={performanceTier}
@@ -594,7 +594,7 @@ export function AnalyticsFilters({
 
         {/* Tag Filter Mode */}
         {selectedTags.length > 1 && (
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <label className={TYPOGRAPHY.label.xs}>Tag Match Mode</label>
             <div className="flex gap-2">
               <Button

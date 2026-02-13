@@ -1,36 +1,9 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
-import { GET } from '@/app/api/analytics/route';
-import { rateLimit } from '@/lib/rate-limit';
-import { blockExternalAccess } from '@/lib/api-security';
-import {
-  getMultiplePostViews,
-  getMultiplePostViews24h,
-  getMultiplePostViewsInRange,
-} from '@/lib/views.server';
-import { getPostSharesBulk, getPostShares24hBulk } from '@/lib/shares';
-import { getPostCommentsBulk, getPostComments24hBulk } from '@/lib/comments';
 
-// Mock Upstash redis singleton
-vi.mock('@/mcp/shared/redis-client', () => ({
-  redis: {
-    get: vi.fn().mockResolvedValue(null),
-  },
-}));
-
-// Mock Sentry
-vi.mock('@sentry/nextjs', () => ({
-  captureException: vi.fn(),
-  captureMessage: vi.fn(),
-  addBreadcrumb: vi.fn(),
-}));
-
-// Mock dependencies
-vi.mock('@/lib/api-security', () => ({
-  blockExternalAccess: vi.fn(() => null), // By default, allow access
-}));
-
-vi.mock('@/lib/rate-limit', () => ({
+// Use vi.hoisted() to ensure mocks are properly initialized before module imports
+const mocks = vi.hoisted(() => ({
+  blockExternalAccess: vi.fn(() => null),
   rateLimit: vi.fn(),
   getClientIp: vi.fn(() => '192.168.1.1'),
   createRateLimitHeaders: vi.fn((result) => ({
@@ -38,23 +11,71 @@ vi.mock('@/lib/rate-limit', () => ({
     'X-RateLimit-Remaining': result.remaining.toString(),
     'X-RateLimit-Reset': result.reset.toString(),
   })),
-}));
-
-vi.mock('@/lib/views.server', () => ({
   getMultiplePostViews: vi.fn(),
   getMultiplePostViews24h: vi.fn(),
   getMultiplePostViewsInRange: vi.fn(),
+  getPostSharesBulk: vi.fn(),
+  getPostShares24hBulk: vi.fn(),
+  getPostCommentsBulk: vi.fn(),
+  getPostComments24hBulk: vi.fn(),
+  redisGet: vi.fn().mockResolvedValue(null),
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+  addBreadcrumb: vi.fn(),
+}));
+
+// Mock Upstash redis singleton
+vi.mock('@/mcp/shared/redis-client', () => ({
+  redis: {
+    get: mocks.redisGet,
+  },
+}));
+
+// Mock Sentry
+vi.mock('@sentry/nextjs', () => ({
+  captureException: mocks.captureException,
+  captureMessage: mocks.captureMessage,
+  addBreadcrumb: mocks.addBreadcrumb,
+}));
+
+// Mock dependencies - now using hoisted mocks
+vi.mock('@/lib/api/api-security', () => ({
+  blockExternalAccess: mocks.blockExternalAccess,
+}));
+
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: mocks.rateLimit,
+  getClientIp: mocks.getClientIp,
+  createRateLimitHeaders: mocks.createRateLimitHeaders,
+}));
+
+vi.mock('@/lib/views.server', () => ({
+  getMultiplePostViews: mocks.getMultiplePostViews,
+  getMultiplePostViews24h: mocks.getMultiplePostViews24h,
+  getMultiplePostViewsInRange: mocks.getMultiplePostViewsInRange,
 }));
 
 vi.mock('@/lib/shares', () => ({
-  getPostSharesBulk: vi.fn(),
-  getPostShares24hBulk: vi.fn(),
+  getPostSharesBulk: mocks.getPostSharesBulk,
+  getPostShares24hBulk: mocks.getPostShares24hBulk,
 }));
 
 vi.mock('@/lib/comments', () => ({
-  getPostCommentsBulk: vi.fn(),
-  getPostComments24hBulk: vi.fn(),
+  getPostCommentsBulk: mocks.getPostCommentsBulk,
+  getPostComments24hBulk: mocks.getPostComments24hBulk,
 }));
+
+// Import after mocks are set up
+import { GET } from '@/app/api/analytics/route';
+import { rateLimit } from '@/lib/rate-limit';
+import { blockExternalAccess } from '@/lib/api/api-security';
+import {
+  getMultiplePostViews,
+  getMultiplePostViews24h,
+  getMultiplePostViewsInRange,
+} from '@/lib/views.server';
+import { getPostSharesBulk, getPostShares24hBulk } from '@/lib/shares';
+import { getPostCommentsBulk, getPostComments24hBulk } from '@/lib/comments';
 
 describe('Analytics API Integration', () => {
   beforeEach(() => {
@@ -66,22 +87,22 @@ describe('Analytics API Integration', () => {
     vi.stubEnv('NODE_ENV', 'development');
     vi.stubEnv('VERCEL_ENV', 'preview');
 
-    // Default mocks: successful responses
-    vi.mocked(rateLimit).mockResolvedValue({
+    // Default mocks: successful responses (using hoisted mocks)
+    mocks.rateLimit.mockResolvedValue({
       success: true,
       limit: 60,
       remaining: 59,
       reset: Date.now() + 60000,
     });
 
-    // Mock empty data by default
-    vi.mocked(getMultiplePostViews).mockResolvedValue(new Map());
-    vi.mocked(getMultiplePostViews24h).mockResolvedValue(new Map());
-    vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(new Map());
-    vi.mocked(getPostSharesBulk).mockResolvedValue({});
-    vi.mocked(getPostShares24hBulk).mockResolvedValue({});
-    vi.mocked(getPostCommentsBulk).mockResolvedValue({});
-    vi.mocked(getPostComments24hBulk).mockResolvedValue({});
+    // Mock empty data by default (using hoisted mocks)
+    mocks.getMultiplePostViews.mockResolvedValue(new Map());
+    mocks.getMultiplePostViews24h.mockResolvedValue(new Map());
+    mocks.getMultiplePostViewsInRange.mockResolvedValue(new Map());
+    mocks.getPostSharesBulk.mockResolvedValue({});
+    mocks.getPostShares24hBulk.mockResolvedValue({});
+    mocks.getPostCommentsBulk.mockResolvedValue({});
+    mocks.getPostComments24hBulk.mockResolvedValue({});
   });
 
   afterEach(() => {
@@ -208,7 +229,7 @@ describe('Analytics API Integration', () => {
       it('returns 429 when rate limit exceeded', async () => {
         const resetTime = Date.now() + 30000;
 
-        vi.mocked(rateLimit).mockResolvedValue({
+        mocks.rateLimit.mockResolvedValue({
           success: false,
           limit: 60,
           remaining: 0,
@@ -231,7 +252,7 @@ describe('Analytics API Integration', () => {
       it('includes rate limit headers in successful response', async () => {
         const resetTime = Date.now() + 60000;
 
-        vi.mocked(rateLimit).mockResolvedValue({
+        mocks.rateLimit.mockResolvedValue({
           success: true,
           limit: 60,
           remaining: 45,
@@ -273,9 +294,9 @@ describe('Analytics API Integration', () => {
           ['post-2', 5],
         ]);
 
-        vi.mocked(getMultiplePostViews).mockResolvedValue(viewMap);
-        vi.mocked(getMultiplePostViews24h).mockResolvedValue(views24hMap);
-        vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(viewMap);
+        mocks.getMultiplePostViews.mockResolvedValue(viewMap);
+        mocks.getMultiplePostViews24h.mockResolvedValue(views24hMap);
+        mocks.getMultiplePostViewsInRange.mockResolvedValue(viewMap);
 
         const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
@@ -294,7 +315,7 @@ describe('Analytics API Integration', () => {
       it('includes vercel analytics data when present in Redis', async () => {
         // Mock redis.get to return vercel analytics data
         const { redis } = await import('@/mcp/shared/redis-client');
-        vi.mocked(redis.get).mockImplementation(async (key: string) => {
+        mocks.redisGet.mockImplementation(async (key: string) => {
           if (key === 'vercel:topPages:daily') {
             return JSON.stringify([{ path: '/blog/test-post', views: 50 }]);
           }
@@ -360,9 +381,9 @@ describe('Analytics API Integration', () => {
           ['post-2', 50],
         ]);
 
-        vi.mocked(getMultiplePostViews).mockResolvedValue(viewMap);
-        vi.mocked(getMultiplePostViews24h).mockResolvedValue(new Map());
-        vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(viewMap);
+        mocks.getMultiplePostViews.mockResolvedValue(viewMap);
+        mocks.getMultiplePostViews24h.mockResolvedValue(new Map());
+        mocks.getMultiplePostViewsInRange.mockResolvedValue(viewMap);
 
         const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
@@ -383,9 +404,9 @@ describe('Analytics API Integration', () => {
           ['post-3', 75],
         ]);
 
-        vi.mocked(getMultiplePostViews).mockResolvedValue(viewMap);
-        vi.mocked(getMultiplePostViews24h).mockResolvedValue(new Map());
-        vi.mocked(getMultiplePostViewsInRange).mockResolvedValue(viewMap);
+        mocks.getMultiplePostViews.mockResolvedValue(viewMap);
+        mocks.getMultiplePostViews24h.mockResolvedValue(new Map());
+        mocks.getMultiplePostViewsInRange.mockResolvedValue(viewMap);
 
         const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
@@ -403,8 +424,8 @@ describe('Analytics API Integration', () => {
       });
 
       it('includes shares and comments data', async () => {
-        vi.mocked(getPostSharesBulk).mockResolvedValue({ 'post-1': 10 });
-        vi.mocked(getPostCommentsBulk).mockResolvedValue({ 'post-slug': 5 });
+        mocks.getPostSharesBulk.mockResolvedValue({ 'post-1': 10 });
+        mocks.getPostCommentsBulk.mockResolvedValue({ 'post-slug': 5 });
 
         const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
@@ -476,7 +497,7 @@ describe('Analytics API Integration', () => {
 
     describe('Error Handling', () => {
       it('handles view fetch errors gracefully', async () => {
-        vi.mocked(getMultiplePostViews).mockRejectedValue(new Error('Redis error'));
+        mocks.getMultiplePostViews.mockRejectedValue(new Error('Redis error'));
 
         const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
@@ -488,7 +509,7 @@ describe('Analytics API Integration', () => {
       });
 
       it('handles share fetch errors gracefully', async () => {
-        vi.mocked(getPostSharesBulk).mockRejectedValue(new Error('Redis error'));
+        mocks.getPostSharesBulk.mockRejectedValue(new Error('Redis error'));
 
         const request = new NextRequest('http://localhost:3000/api/analytics', {
           headers: { Authorization: 'Bearer test-api-key-123' },
@@ -543,7 +564,7 @@ describe('Analytics API Integration', () => {
       });
 
       it('stops at rate limit check when exceeded', async () => {
-        vi.mocked(rateLimit).mockResolvedValue({
+        mocks.rateLimit.mockResolvedValue({
           success: false,
           limit: 60,
           remaining: 0,

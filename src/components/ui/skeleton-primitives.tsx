@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { ANIMATIONS } from "@/lib/design-tokens";
+import { ANIMATION_CONSTANTS, SPACING, TYPOGRAPHY } from "@/lib/design-tokens";
 
 /**
  * Design-Token-Aware Skeleton Primitives
@@ -340,7 +340,7 @@ export function SkeletonCard({
     return (
       <div className={cn("rounded-lg border overflow-hidden", className)} style={style}>
         {showImage && <SkeletonImage aspectRatio="video" />}
-        <div className="p-4 space-y-3">
+        <div className={`p-4 ${SPACING.content}`}>
           <SkeletonMetadata />
           <SkeletonHeading level="h3" width="w-3/4" />
           <SkeletonText lines={2} />
@@ -360,7 +360,7 @@ export function SkeletonCard({
         <div className="absolute inset-0 bg-muted/20" />
 
         {/* Content */}
-        <div className="relative z-10 p-4 sm:p-8 space-y-3">
+        <div className={`relative z-10 p-4 sm:p-8 ${SPACING.content}`}>
           <div className="flex items-center gap-2">
             <Skeleton className="h-5 w-16" />
             <Skeleton className="h-4 w-24" />
@@ -434,7 +434,7 @@ export function SkeletonList({
     if (!stagger) return undefined;
 
     const speed = stagger === true ? "normal" : stagger;
-    const delay = ANIMATIONS.stagger[speed] * index;
+    const delay = ANIMATION_CONSTANTS.stagger[speed] * index;
     return `${delay}ms`;
   };
 

@@ -18,7 +18,7 @@
  */
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { SPACING, ANIMATIONS } from "@/lib/design-tokens";
+import { SPACING, ANIMATION_CONSTANTS } from "@/lib/design-tokens";
 
 export interface DiagramSkeletonProps {
   /** Diagram type affects aspect ratio */

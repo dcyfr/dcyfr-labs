@@ -121,7 +121,7 @@ export function SeriesNavigation({
       {showAllParts && (
       <div className="p-4 border-b">
           <h4 className="text-sm font-semibold mb-3">All Parts</h4>
-          <ol className="space-y-2">
+          <ol className={SPACING.compact}>
             {items.map((item, index) => {
               const isCurrent = item.slug === currentSlug;
               return (

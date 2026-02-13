@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { GitHubHeatmapSkeleton } from "@/components/common";
 import { sanitizeUrl, cn } from "@/lib/utils";
-import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS, SPACING } from "@/lib/design-tokens";
 import "react-calendar-heatmap/dist/styles.css";
 
 /**
@@ -323,7 +323,7 @@ export function GitHubHeatmap({
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <Card className="p-4">
-          <div className="space-y-3">
+          <div className={SPACING.content}>
             <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className={TYPOGRAPHY.h3.standard}>GitHub Activity</h3>
               <a
@@ -359,7 +359,7 @@ export function GitHubHeatmap({
             )}
 
             {/* Heatmap Grid */}
-            <div className="space-y-4">
+            <div className={SPACING.content}>
               <div className="overflow-x-auto">
                 <CalendarHeatmap
                   startDate={startDate}
@@ -595,7 +595,7 @@ export function GitHubHeatmap({
                         damping: 10,
                       }}
                     >
-                      <div className="space-y-2">
+                      <div className={SPACING.compact}>
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
                             <FolderGit2

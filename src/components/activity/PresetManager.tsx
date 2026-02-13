@@ -135,7 +135,7 @@ export function PresetManager({
               <Star className="h-4 w-4 text-muted-foreground" />
               Default Presets
             </h3>
-            <div className="space-y-2">
+            <div className={SPACING.compact}>
               {defaultPresets.map((preset) => (
                 <div
                   key={preset.id}
@@ -163,7 +163,7 @@ export function PresetManager({
                 No custom presets yet. Save your current filters to create one!
               </p>
             ) : (
-              <div className="space-y-2">
+              <div className={SPACING.compact}>
                 {userPresets.map((preset) => (
                   <div
                     key={preset.id}

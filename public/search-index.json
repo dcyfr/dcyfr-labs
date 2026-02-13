@@ -1,7 +1,7 @@
 {
   "posts": [
     {
-      "id": "post-20260315-a1b2c3d4",
+      "id": "post-20260315-c12ec3a1",
       "title": "AI Assistants as Development Partners",
       "summary": "After 6 months and 12,000+ AI-assisted code changes, discover the 5 daily workflows that deliver 60% time savings, 75% more features shipped, and zero quality regression. Real patterns, measurable results, and pitfalls to avoid.",
       "content": "After 6 months and 12,000+ AI-assisted code changes across 4 production projects, one thing is clear: the gap between \"AI writes buggy code\" and \"AI 10x'd my productivity\" isn't the model—it's the workflow. This post shares 5 repeatable workflows with real metrics from DCYFR Labs: 60% time savings, 75% more features shipped, zero quality regression. You'll learn how to treat AI assistants as Junior+ teammates with specific strengths and hard limits, not autocomplete on steroids. --- The Partners",
@@ -253,13 +253,5 @@
     "AI Workflows",
     "Portfolio"
   ],
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-  "generatedAt": "2026-02-09T06:23:14.966Z"
-=======
-  "generatedAt": "2026-02-09T07:20:27.323Z"
->>>>>>> Stashed changes
-=======
-  "generatedAt": "2026-02-09T06:34:35.138Z"
->>>>>>> 38cdf95ddc6322e511fa69eb9a4bb2fb967a192f
+  "generatedAt": "2026-02-12T23:12:01.791Z"
 }

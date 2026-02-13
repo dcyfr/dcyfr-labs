@@ -4,6 +4,7 @@ import next from "next";
 import { readFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { isPortInUse, getPortPIDs } from "./scripts/port-utils.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,10 +20,23 @@ const useHttps = existsSync(certPath) && existsSync(keyPath);
 
 const protocol = useHttps ? "https" : "http";
 
-const app = next({ dev, hostname, port, turbopack: dev });
-const handle = app.getRequestHandler();
+(async () => {
+  // --- Port conflict check ---
+  const portOccupied = await isPortInUse(port);
+  if (portOccupied) {
+    const pids = await getPortPIDs(port);
+    const hint = pids.length > 0 ? ` (PID: ${pids.join(", ")})` : "";
+    console.error(`\n❌ Port ${port} is already in use${hint}.`);
+    console.error(`   Free it:  kill ${pids.length > 0 ? pids.join(" ") : "<PID>"}`);
+    console.error(`   Or run:   npm run dev:fresh  (auto-kills port then starts)`);
+    process.exit(1);
+  }
 
-app.prepare().then(() => {
+  const app = next({ dev, hostname, port, turbopack: dev });
+  const handle = app.getRequestHandler();
+
+  await app.prepare();
+
   const requestHandler = async (req, res) => {
     try {
       // Use WHATWG URL API instead of deprecated url.parse()
@@ -60,4 +74,7 @@ app.prepare().then(() => {
     if (err) throw err;
     console.log(`> Ready on ${protocol}://${hostname}:${port}`);
   });
+})().catch((err) => {
+  console.error("Server startup error:", err.message);
+  process.exit(1);
 });

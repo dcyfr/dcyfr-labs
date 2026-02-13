@@ -60,7 +60,7 @@ export default async function ActivityEmbedPage({
   try {
     // STEP 1: Try cache first (TEMPORARILY DISABLED FOR DEBUG - committed activity removal)
     // const redis = await getRedisClient();
-    let cachedActivities: ActivityItem[] = []; // Always empty - cache disabled
+    const cachedActivities: ActivityItem[] = []; // Always empty - cache disabled
 
     // if (redis) {
     //   try {

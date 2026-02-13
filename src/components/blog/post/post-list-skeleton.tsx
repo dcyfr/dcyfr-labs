@@ -7,7 +7,7 @@ import {
   SkeletonBadges,
   SkeletonImage,
 } from '@/components/ui/skeleton-primitives';
-import { SPACING, SPACING_VALUES, ANIMATIONS, ARCHIVE_CARD_VARIANTS } from '@/lib/design-tokens';
+import { SPACING, SPACING_VALUES, ANIMATION_CONSTANTS, ARCHIVE_CARD_VARIANTS } from '@/lib/design-tokens';
 import { cn } from '@/lib/utils';
 
 /**
@@ -25,7 +25,7 @@ import { cn } from '@/lib/utils';
  * - Headings: SkeletonHeading (auto-sized to TYPOGRAPHY tokens)
  * - Text: SkeletonText (multi-line with proper gaps)
  * - Metadata: SkeletonMetadata (date, reading time, views)
- * - Animation: ANIMATIONS.stagger.normal (100ms between items)
+ * - Animation: ANIMATION_CONSTANTS.stagger.normal (100ms between items)
  *
  * Layout variants:
  * - compact (default): SPACING.postList with border cards, background images
@@ -80,8 +80,8 @@ export function PostListSkeleton({
               key={i}
               className="group rounded-lg border overflow-hidden relative hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
               style={{
-                animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-                animation: ANIMATIONS.types.fadeIn,
+                animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+                animation: ANIMATION_CONSTANTS.types.fadeIn,
               }}
             >
               {/* Background placeholder with gradient overlay */}
@@ -149,8 +149,8 @@ export function PostListSkeleton({
               `p-${SPACING_VALUES.md}`
             )}
             style={{
-              animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-              animation: ANIMATIONS.types.fadeIn,
+              animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+              animation: ANIMATION_CONSTANTS.types.fadeIn,
             }}
           >
             <SkeletonHeading
@@ -188,15 +188,15 @@ export function PostListSkeleton({
  */
 function renderGridSkeleton(count: number) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className={`grid grid-cols-1 md:grid-cols-2 ${SPACING.contentGrid}`}>
       {Array.from({ length: count }).map((_, i) => (
         <Card
           key={i}
           className={cn('overflow-hidden', ARCHIVE_CARD_VARIANTS.elevated)}
           style={{
-            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-            animation: ANIMATIONS.types.fadeIn,
-            transition: ANIMATIONS.transition.all,
+            animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+            animation: ANIMATION_CONSTANTS.types.fadeIn,
+            transition: ANIMATION_CONSTANTS.transition.all,
           }}
         >
           {/* Image placeholder with aspect ratio */}
@@ -253,9 +253,9 @@ function renderListSkeleton(count: number) {
           key={i}
           className={cn('overflow-hidden', ARCHIVE_CARD_VARIANTS.elevated)}
           style={{
-            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-            animation: ANIMATIONS.types.fadeIn,
-            transition: ANIMATIONS.transition.all,
+            animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+            animation: ANIMATION_CONSTANTS.types.fadeIn,
+            transition: ANIMATION_CONSTANTS.transition.all,
           }}
         >
           <div className="flex flex-col md:flex-row">
@@ -325,8 +325,8 @@ function renderMagazineSkeleton(count: number) {
           key={i}
           className="grid md:grid-cols-5 gap-0"
           style={{
-            animationDelay: `${ANIMATIONS.stagger.normal * i}ms`,
-            animation: ANIMATIONS.types.fadeIn,
+            animationDelay: `${ANIMATION_CONSTANTS.stagger.normal * i}ms`,
+            animation: ANIMATION_CONSTANTS.types.fadeIn,
           }}
         >
           {/* Large featured card */}
@@ -336,7 +336,7 @@ function renderMagazineSkeleton(count: number) {
                 'h-full overflow-hidden rounded-none md:rounded-lg',
                 ARCHIVE_CARD_VARIANTS.background
               )}
-              style={{ transition: ANIMATIONS.transition.all }}
+              style={{ transition: ANIMATION_CONSTANTS.transition.all }}
             >
               <div className="relative">
                 <SkeletonImage aspectRatio="wide" />
@@ -376,7 +376,7 @@ function renderMagazineSkeleton(count: number) {
                 'h-full overflow-hidden rounded-none md:rounded-lg',
                 ARCHIVE_CARD_VARIANTS.elevated
               )}
-              style={{ transition: ANIMATIONS.transition.all }}
+              style={{ transition: ANIMATION_CONSTANTS.transition.all }}
             >
               <div className="relative">
                 <SkeletonImage aspectRatio="video" />
@@ -437,8 +437,8 @@ function renderGroupedSkeleton() {
                 key={j}
                 className="group rounded-lg border overflow-hidden relative hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
                 style={{
-                  animationDelay: `${ANIMATIONS.stagger.fast * j}ms`,
-                  animation: ANIMATIONS.types.fadeIn,
+                  animationDelay: `${ANIMATION_CONSTANTS.stagger.fast * j}ms`,
+                  animation: ANIMATION_CONSTANTS.types.fadeIn,
                 }}
               >
                 {/* Background placeholder */}

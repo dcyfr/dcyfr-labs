@@ -11,12 +11,14 @@ import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code';
 import {
   CopyCodeButton,
   CodeBlockWithHeader,
+  CodeComparison,
   EnhancedInlineCode,
   getInlineCodeVariant,
   HorizontalRule,
   ZoomableImage,
   Alert,
   KeyTakeaway,
+  MetricsCard,
   ContextClue,
   Figure,
   FigureProvider,
@@ -260,7 +262,7 @@ function rehypeCaptureCodeLanguage() {
         if (codeChild && codeChild.properties) {
           // The pre element itself should have language info from rehypePrettyCode
           // Check various possible attributes where language might be stored
-          let language =
+          const language =
             node.properties?.['data-language'] || // pre element might have it
             codeChild.properties['data-language'] || // code element might have it
             node.properties?.['data-meta']?.[0] || // meta might contain language
@@ -692,6 +694,10 @@ const components: NonNullable<MDXRemoteProps['components']> = {
   TableCaption,
   // Code Playground component for interactive examples
   CodePlayground,
+  // Code Comparison component for before/after code snippets
+  CodeComparison,
+  // Metrics Card component for displaying key statistics
+  MetricsCard,
   // Risk Accordion components for interactive risk sections
   RiskAccordion,
   RiskAccordionGroup,

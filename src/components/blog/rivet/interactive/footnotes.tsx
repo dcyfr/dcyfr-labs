@@ -5,8 +5,7 @@ import { cn } from "@/lib/utils";
 import { CollapsibleSection } from "./collapsible-section";
 import {
   TYPOGRAPHY,
-  ANIMATION,
-} from "@/lib/design-tokens";
+  ANIMATION, SPACING } from "@/lib/design-tokens";
 
 /**
  * Footnotes - Collapsible footnotes section for blog posts
@@ -37,7 +36,7 @@ export function Footnotes({ children, className }: FootnotesProps) {
       reducedSpacing={true}
       className={className}
     >
-      <div className="space-y-3 md:space-y-4 text-card-foreground">
+      <div className={`${SPACING.content} md:space-y-4 text-card-foreground`}>
         {children}
       </div>
     </CollapsibleSection>

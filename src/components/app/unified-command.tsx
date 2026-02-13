@@ -35,7 +35,7 @@ import {
   User,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TYPOGRAPHY, SPACING, Z_INDEX } from '@/lib/design-tokens';
+import { TYPOGRAPHY, SPACING, Z_INDEX, CONTENT_HIERARCHY } from '@/lib/design-tokens';
 import { useKeyboardShortcut } from '@/hooks/use-keyboard-shortcut';
 import { useReadingProgressList } from '@/hooks/use-reading-progress';
 import { useSearch } from '@/components/search';
@@ -345,7 +345,7 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
 
                   {/* Content skeletons */}
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="space-y-2">
+                    <div key={i} className={SPACING.compact}>
                       <div
                         className="h-3 w-3/4 rounded bg-muted-foreground/15 animate-pulse"
                         style={{ animationDelay: `${i * 150}ms` }}
@@ -426,8 +426,8 @@ export function UnifiedCommand(props?: UnifiedCommandProps) {
                   >
                     <BookOpen className="h-4 w-4 text-primary/60" />
                     <div className="flex-1 min-w-0">
-                      <div className={TYPOGRAPHY.depth.primary}>{article.title}</div>
-                      <div className={cn(TYPOGRAPHY.depth.tertiary, 'text-xs')}>
+                      <div className={CONTENT_HIERARCHY.primary.content}>{article.title}</div>
+                      <div className={cn(CONTENT_HIERARCHY.subtle.content, 'text-xs')}>
                         {Math.round(article.progress)}% complete
                       </div>
                     </div>

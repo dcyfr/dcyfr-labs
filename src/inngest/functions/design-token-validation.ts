@@ -32,7 +32,7 @@ function parseViolations(output: string): DesignTokenViolation[] {
   const lines = output.split("\n");
 
   for (const line of lines) {
-    // Example format: "src/components/foo.tsx:42: hardcoded padding-4 (use SPACING.md)"
+    // Example format: "src/components/foo.tsx:42: hardcoded padding-4 (use spacing('md'))"
     const match = line.match(/^(.+):(\d+):\s*(.+)$/);
     if (match) {
       violations.push({

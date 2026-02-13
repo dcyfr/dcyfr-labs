@@ -231,8 +231,9 @@ function suggestToken(
     // Typography suggestions
     if (hardcodedValue.includes("text-") || hardcodedValue.includes("font-")) {
       suggestions.push("TYPOGRAPHY.h1.standard");
-      suggestions.push("TYPOGRAPHY.body.default");
-      suggestions.push("TYPOGRAPHY.small.muted");
+      suggestions.push("TYPOGRAPHY.body");
+      suggestions.push("TYPOGRAPHY.label.small");
+      suggestions.push("TYPOGRAPHY.metadata");
     }
   }
 
@@ -243,7 +244,7 @@ function suggestToken(
       hardcodedValue.includes("container")
     ) {
       suggestions.push("CONTAINER_WIDTHS.standard");
-      suggestions.push("CONTAINER_WIDTHS.wide");
+      suggestions.push("CONTAINER_WIDTHS.dashboard");
       suggestions.push("CONTAINER_WIDTHS.narrow");
     }
   }

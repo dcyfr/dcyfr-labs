@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import type { TocHeading } from "@/lib/toc";
 import { trackToCClick } from "@/lib/analytics";
 import { Input } from "@/components/ui/input";
-import { TYPOGRAPHY, SCROLL_BEHAVIOR } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SCROLL_BEHAVIOR, SPACING } from "@/lib/design-tokens";
 
 // Scroll behavior constants
 const SCROLL_OFFSET = SCROLL_BEHAVIOR.offset.standard; // 80px
@@ -241,7 +241,7 @@ export function TableOfContentsSidebar({
       className="h-fit max-h-[calc(100vh-8rem)] bg-background border rounded-lg p-4"
       aria-label="Table of contents"
     >
-      <div className="space-y-3">
+      <div className={SPACING.content}>
         <h2
           className={cn(
             "font-semibold text-foreground",

@@ -143,7 +143,7 @@ export function DefaultProjectLayout({
           <h2 className={`${TYPOGRAPHY.h2.standard} mb-4`}>Key Highlights</h2>
           <Card>
             <CardContent>
-              <ul className="space-y-3 mb-0">
+              <ul className={`${SPACING.content} mb-0`}>
                 {project.highlights!.map((highlight, index) => (
                   <li
                     key={index}

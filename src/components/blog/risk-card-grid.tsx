@@ -315,7 +315,7 @@ export function RiskCardGrid({ risks }: RiskCardGridProps) {
   return (
     <div className="my-8">
       {/* Controls */}
-      <div className="mb-6 space-y-4">
+      <div className={`mb-6 ${SPACING.content}`}>
         {/* Search */}
         <div className="relative">
           <input

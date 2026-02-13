@@ -145,7 +145,7 @@ export function HomepageHeatmapMini({
 
             {/* Heatmap Calendar skeleton */}
             <div className={SPACING.content}>
-              <div className="space-y-2">
+              <div className={SPACING.compact}>
                 {/* Month labels */}
                 <Skeleton className="h-3 w-full mb-2" />
                 {/* Heatmap grid - simplified skeleton */}

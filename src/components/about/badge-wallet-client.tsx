@@ -82,7 +82,7 @@ function BadgeCard({ badge }: BadgeCardProps) {
           </div>
 
           {/* Badge Info */}
-          <div className="flex-1 space-y-2">
+          <div className={`flex-1 ${SPACING.compact}`}>
             <h3
               className={cn(TYPOGRAPHY.h3.standard, 'group-hover:text-primary transition-colors')}
             >

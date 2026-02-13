@@ -123,7 +123,7 @@ export function ArchiveHero({
       <section className={cn(PAGE_LAYOUT.hero.archiveContainer, PAGE_LAYOUT.hero.padding, className)}>
         <div className={cn(PAGE_LAYOUT.hero.content, alignmentClasses, contentClassName)}>
           <Skeleton className={cn('h-10 md:h-12 w-48', align === 'center' && 'mx-auto')} />
-          <div className="space-y-2">
+          <div className={SPACING.compact}>
             <Skeleton className={cn('h-6 w-full max-w-2xl', align === 'center' && 'mx-auto')} />
             <Skeleton className={cn('h-6 w-3/4 max-w-2xl', align === 'center' && 'mx-auto')} />
           </div>

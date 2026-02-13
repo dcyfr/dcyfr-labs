@@ -318,7 +318,7 @@ export function GlossaryTooltip({ term, definition, children, className }: Gloss
             />
 
             {/* Content */}
-            <div className="relative space-y-2">
+            <div className={`relative ${SPACING.compact}`}>
               <h4
                 className={cn(
                   TYPOGRAPHY.h4.mdx,

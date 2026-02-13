@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { highlightMetrics } from "@/lib/highlight-metrics";
-import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Logo } from "@/components/common";
 import type { Experience } from "@/data/resume";
@@ -44,7 +44,7 @@ export function ExperienceTimeline({ experiences, companyUrls }: ExperienceTimel
         aria-hidden="true"
       />
 
-      <div className="space-y-4">
+      <div className={SPACING.content}>
         {visibleExperiences.map((exp, index) => (
           <div key={index} className="relative">
             {/* Timeline node - Logo SVG (desktop only, hidden on mobile) */}
@@ -87,7 +87,7 @@ export function ExperienceTimeline({ experiences, companyUrls }: ExperienceTimel
                   </time>
                 </header>
                 
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className={`${SPACING.compact} text-sm text-muted-foreground`}>
                   {exp.responsibilities.map((resp, idx) => (
                     <li key={idx} className="flex gap-2 items-start">
                       <Logo width={12} height={12} className="mt-1.5 shrink-0 text-primary" aria-hidden="true" />

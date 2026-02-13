@@ -22,7 +22,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { DashboardStats, DashboardStat } from "@/components/dashboard";
-import { TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
+import { TYPOGRAPHY, SEMANTIC_COLORS, SPACING } from "@/lib/design-tokens";
 import { getPlatformDisplayName } from "@/lib/analytics";
 import type { PostAnalytics } from "@/types/analytics";
 
@@ -85,7 +85,7 @@ export function SocialMetrics({
     .slice(0, 4);
 
   return (
-    <div className="space-y-4">
+    <div className={SPACING.content}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -113,7 +113,7 @@ export function SocialMetrics({
       </div>
 
       {showMetrics && (
-        <div className="space-y-4">
+        <div className={SPACING.content}>
           {/* Summary Stats */}
           <DashboardStats columns={4}>
             <DashboardStat
@@ -138,7 +138,7 @@ export function SocialMetrics({
           {/* Platform Breakdown */}
           {totalReferrals > 0 && (
             <Card className="p-4">
-              <div className="space-y-3">
+              <div className={SPACING.content}>
                 <div>
                   <h4 className={TYPOGRAPHY.label.small}>Referral Sources</h4>
                   <p className="text-xs text-muted-foreground">
@@ -146,7 +146,7 @@ export function SocialMetrics({
                   </p>
                 </div>
 
-                <div className="space-y-2">
+                <div className={SPACING.compact}>
                   {Object.entries(mockReferrals)
                     .filter(([_, count]) => count > 0)
                     .sort(([_, a], [__, b]) => b - a)

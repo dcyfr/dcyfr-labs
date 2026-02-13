@@ -13,7 +13,7 @@
 import { useMemo, useCallback, memo } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { HOVER_EFFECTS, TYPOGRAPHY } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, TYPOGRAPHY, SPACING } from "@/lib/design-tokens";
 import type { SkillCategory, CertificationCategory } from "@/data/resume";
 
 interface SkillsAndCertificationsProps {
@@ -88,9 +88,9 @@ export function SkillsAndCertifications({ skills, certifications }: SkillsAndCer
   }, [certifications]);
 
   return (
-    <div className="space-y-10">
+    <div className={SPACING.section}>
       {/* Certifications Subsection */}
-      <div className="space-y-3 pt-6">
+      <div className={`${SPACING.content} pt-6`}>
         <h2 className={`${TYPOGRAPHY.h2.standard} mb-3`}>Certifications</h2>
         {certGroupsWithProviders.map((certGroup, index) => (
           <CertificationCategoryGroup
@@ -103,7 +103,7 @@ export function SkillsAndCertifications({ skills, certifications }: SkillsAndCer
       </div>
 
       {/* Skills Subsection */}
-      <div className="space-y-3 pt-6">
+      <div className={`${SPACING.content} pt-6`}>
         <h2 className={`${TYPOGRAPHY.h2.standard} mb-3`}>Skills</h2>
         {skills.map((skillCategory, index) => (
           <SkillCategoryGroup

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Logo } from "@/components/common";
 import type { Education } from "@/data/resume";
+import { SPACING } from "@/lib/design-tokens";
 
 interface CollapsibleEducationProps {
   education: Education[];
@@ -23,7 +24,7 @@ export function CollapsibleEducation({ education }: CollapsibleEducationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       {education.map((edu, index) => (
         <div key={index} className="space-y-1">
           <p className="font-medium">{edu.degree}</p>

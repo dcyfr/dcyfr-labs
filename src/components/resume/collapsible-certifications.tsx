@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { HOVER_EFFECTS } from "@/lib/design-tokens";
+import { HOVER_EFFECTS, SPACING } from "@/lib/design-tokens";
 import type { CertificationCategory } from "@/data/resume";
 
 interface CollapsibleCertificationsProps {
@@ -102,7 +102,7 @@ export function CollapsibleCertifications({ certifications }: CollapsibleCertifi
   }, [certifications]);
 
   return (
-    <div className="space-y-3">
+    <div className={SPACING.content}>
       {certsData.map((certGroup, index) => (
         <CertificationCategoryItem
           key={index}

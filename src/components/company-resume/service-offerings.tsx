@@ -56,7 +56,7 @@ export function ServiceOfferings() {
               <div className="grid md:grid-cols-2 gap-4">
                 {category.services.map((service, serviceIdx) => (
                   <Card key={serviceIdx} className="p-8 hover:shadow-lg transition-shadow">
-                    <div className="space-y-4">
+                    <div className={SPACING.content}>
                       {/* Service Header */}
                       <div>
                         <h4 className={`${TYPOGRAPHY.h3.standard} mb-2`}>

@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toastSuccess } from '@/lib/toast';
-import { HOVER_EFFECTS, TYPOGRAPHY, BORDERS, SHADOWS, Z_INDEX } from '@/lib/design-tokens';
+import { HOVER_EFFECTS, TYPOGRAPHY, BORDERS, SHADOWS, Z_INDEX, SPACING } from '@/lib/design-tokens';
 
 /**
  * Props for the TableOfContents component
@@ -288,7 +288,7 @@ export function TableOfContents({
     }, [activeId]);
 
     return (
-      <ul ref={listRef} className="list-none relative space-y-2 text-sm border-l-2 border-border">
+      <ul ref={listRef} className={`list-none relative ${SPACING.compact} text-sm border-l-2 border-border`}>
         {/* Sliding active indicator */}
         {activeIndex !== null && (
           <motion.div
@@ -375,7 +375,7 @@ export function TableOfContents({
         className={`fixed top-24 right-4 hidden lg:block w-56 max-h-[calc(100vh-12rem)] ${Z_INDEX.sticky} bg-background border rounded-lg p-4 shadow-md`}
         aria-label="Table of contents"
       >
-        <div className="space-y-2">
+        <div className={SPACING.compact}>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className={cn(

@@ -279,6 +279,46 @@ fi
 
 echo ""
 
+# Check: Design Token Validation
+echo -n "  Validating design token usage... "
+if [ -f "scripts/validate-design-tokens.mjs" ]; then
+  if node scripts/validate-design-tokens.mjs > /dev/null 2>&1; then
+    echo -e "${GREEN}PASS${NC}"
+  else
+    echo -e "${RED}FAIL${NC}"
+    echo -e "${RED}❌ ERROR: Design token validation failed!${NC}"
+    echo ""
+    echo "🔍 Running validation for details..."
+    node scripts/validate-design-tokens.mjs
+    echo ""
+    echo "📖 See: docs/design/DESIGN_TOKEN_USAGE_GUIDE.md"
+    ERRORS=$((ERRORS+1))
+  fi
+else
+  echo -e "${YELLOW}SKIP${NC} (validator not found)"
+fi
+
+# Check: Lint-staged (ESLint + Prettier)
+echo -n "  Running lint-staged (ESLint + Prettier)... "
+if command -v npx &> /dev/null && [ -f ".lintstagedrc.json" ]; then
+  if npx lint-staged > /dev/null 2>&1; then
+    echo -e "${GREEN}PASS${NC}"
+  else
+    echo -e "${RED}FAIL${NC}"
+    echo -e "${RED}❌ ERROR: Linting or formatting issues detected!${NC}"
+    echo ""
+    echo "🔍 Running lint-staged for details..."
+    npx lint-staged
+    echo ""
+    echo "💡 Many issues can be auto-fixed with: npm run lint:fix"
+    ERRORS=$((ERRORS+1))
+  fi
+else
+  echo -e "${YELLOW}SKIP${NC} (lint-staged not available)"
+fi
+
+echo ""
+
 # Exit with error if there are violations
 if [ $ERRORS -gt 0 ]; then
   echo -e "${RED}Commit blocked due to governance violations.${NC}"
