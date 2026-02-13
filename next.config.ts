@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 import bundleAnalyzer from '@next/bundle-analyzer';
 // import { withBotId } from "botid/next/config"; // Temporarily disabled
 import { withAxiom } from 'next-axiom';
+import { cpus } from 'os';
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -25,7 +26,7 @@ const nextConfig: NextConfig = {
     ],
     // Performance optimization: Use multiple CPU cores for faster builds
     // Reserves 1 core for system, uses remaining cores for parallel processing
-    cpus: Math.max(1, require('os').cpus().length - 1),
+    cpus: Math.max(1, cpus().length - 1),
     // Development optimizations
     optimizeCss: process.env.NODE_ENV === 'development',
   },
@@ -156,12 +157,23 @@ const nextConfig: NextConfig = {
     // Performance optimization: Exclude dev-only components from production bundles
     // This prevents dev dashboards, analytics tools, and debug UIs from being bundled
     // in preview/production builds, reducing bundle size and build time
-    const isDevelopment = process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'development';
+    const isDevelopment =
+      process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'development';
     if (!isDevelopment) {
       config.resolve.alias = {
         ...config.resolve.alias,
         // Tree-shake dev-only client components in production
         '@/components/dev': false,
+      };
+    }
+
+    // Improve middleware compilation for Vercel deployments
+    if (config.name === 'middleware') {
+      // Ensure middleware artifacts are generated correctly
+      config.optimization = {
+        ...config.optimization,
+        // Disable mangling for middleware to prevent nft.json generation issues
+        minimize: false,
       };
     }
 
