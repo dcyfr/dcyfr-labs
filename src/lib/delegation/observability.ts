@@ -27,7 +27,6 @@ export interface DelegationEvent {
 // Axiom logger instance for delegation events
 const delegationLogger = new Logger({
   source: 'delegation-framework',
-  dataset: 'delegation-events',
 });
 
 /**
@@ -85,19 +84,11 @@ export function addDelegationContextToSentry(event: DelegationEvent): void {
 
     // Capture events as transactions for performance monitoring
     if (event.type === 'delegation_start') {
-      const transaction = Sentry.startTransaction({
-        name: `delegation.${event.contractId}`,
-        op: 'delegation.chain',
-        data: {
-          contractId: event.contractId,
-          delegatorAgentId: event.delegatorAgentId,
-          taskId: event.taskId,
-        },
-      });
-
-      // Store transaction reference for completion
-      Sentry.setContext('delegation_transaction', {
-        transaction_id: transaction.spanId,
+      // Set context for delegation tracking
+      Sentry.setContext('delegation', {
+        contractId: event.contractId,
+        delegatorAgentId: event.delegatorAgentId,
+        taskId: event.taskId,
       });
     }
 
@@ -198,6 +189,3 @@ export function createDelegationEventFromMCP(
     timestamp: Date.now(),
   };
 }
-
-// Export types for use in other modules
-export type { DelegationEvent };
