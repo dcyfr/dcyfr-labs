@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 import { handleApiError } from '@/lib/error-handler';
+import { getAuthenticatedUser } from '@/lib/auth-utils';
 import { getMemory } from '@dcyfr/ai';
 
 /**
@@ -31,6 +32,17 @@ export async function POST(request: NextRequest) {
   let body: AddMemoryRequest | null = null;
 
   try {
+    const { user } = await getAuthenticatedUser(request);
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: 'Unauthorized',
+          message: 'Authentication required',
+        },
+        { status: 401 }
+      );
+    }
+
     // Apply rate limiting
     const clientIp = getClientIp(request);
     const rateLimitResult = await rateLimit(clientIp, RATE_LIMIT_CONFIG);
@@ -76,6 +88,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'userId is required and must be a string' },
         { status: 400 }
+      );
+    }
+
+    if (user.id !== userId) {
+      return NextResponse.json(
+        {
+          error: 'Forbidden',
+          message: 'Cannot write memory for a different user',
+        },
+        { status: 403 }
       );
     }
 
