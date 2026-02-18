@@ -133,6 +133,9 @@ The documentation is organized into **18 focused directories**:
 - **[optimization/](./optimization/)** - SEO + accessibility + analytics
 - **[optimization/search-channel-priority-automation.md](./optimization/search-channel-priority-automation.md)** -
   SEO channel priority and automation policy
+- **[runbooks/](./runbooks/)** - Operational troubleshooting playbooks
+- **[runbooks/INDEXNOW_TROUBLESHOOTING.md](./runbooks/INDEXNOW_TROUBLESHOOTING.md)** -
+  IndexNow API troubleshooting and bulk resubmission procedures
 
 ### Configuration
 
