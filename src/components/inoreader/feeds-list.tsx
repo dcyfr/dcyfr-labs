@@ -33,7 +33,7 @@ export function FeedsList({ articles }: FeedsListProps) {
           .map((cat) => cat.replace('user/-/label/', ''))
       )
     )
-  ).sort();
+  ).sort((a, b) => a.localeCompare(b));
 
   // Filter articles based on search and selected tag
   const filteredArticles = articles.filter((article) => {

@@ -236,7 +236,7 @@ export class FilesystemContentProvider implements ContentProvider {
       });
     }
 
-    return Array.from(tagSet).sort();
+    return Array.from(tagSet).sort((a, b) => a.localeCompare(b));
   }
 
   /**

@@ -344,7 +344,7 @@ export function extractTags<T>(
     }
   });
   
-  return Array.from(tagSet).sort();
+  return Array.from(tagSet).sort((a, b) => a.localeCompare(b));
 }
 
 /**

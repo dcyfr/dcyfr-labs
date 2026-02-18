@@ -77,8 +77,8 @@ function generateSearchIndex(): SearchIndex {
 
   return {
     posts: searchablePosts,
-    tags: Array.from(allTags).sort(),
-    series: Array.from(allSeries).sort(),
+    tags: Array.from(allTags).sort((a, b) => a.localeCompare(b)),
+    series: Array.from(allSeries).sort((a, b) => a.localeCompare(b)),
     generatedAt: new Date().toISOString(),
   };
 }

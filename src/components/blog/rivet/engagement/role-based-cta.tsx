@@ -28,7 +28,7 @@ type RoleType = 'executive' | 'developer' | 'security';
 
 interface RoleBasedCTAProps {
   /** Which role this card represents. Falls back to "developer" styling for unknown roles. */
-  role: RoleType | (string & {});
+  role: RoleType | string;
   /** Card title */
   title: string;
   /** Card description */

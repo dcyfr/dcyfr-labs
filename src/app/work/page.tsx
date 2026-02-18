@@ -278,7 +278,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         .map((p) => p.category)
         .filter((c): c is NonNullable<typeof c> => !!c)
     )
-  ).sort();
+  ).sort((a, b) => a.localeCompare(b));
 
   // Get available tags from filtered results (for progressive filtering)
   // Tags maintain proper casing for display
@@ -286,7 +286,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
     new Set([
       ...sortedArchiveData.allFilteredItems.flatMap((p) => p.tags || []),
     ])
-  ).sort();
+  ).sort((a, b) => a.localeCompare(b));
 
   // Check if filters are active for empty state
   const hasActiveFilters = Boolean(
