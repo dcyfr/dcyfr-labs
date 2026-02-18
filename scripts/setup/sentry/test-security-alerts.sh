@@ -33,7 +33,7 @@ make_request() {
 
     echo -e "${YELLOW}Test:${NC} $description"
 
-    if [ -z "$auth_header" ]; then
+    if [[ -z "$auth_header" ]]; then
         response=$(curl -s -w "\n%{http_code}" -H "x-internal-request: true" "$BASE_URL$endpoint")
     else
         response=$(curl -s -w "\n%{http_code}" -H "x-internal-request: true" -H "Authorization: $auth_header" "$BASE_URL$endpoint")
@@ -83,11 +83,11 @@ echo "Expected: HTTP 200 until rate limit, then HTTP 429"
 echo "Note: Analytics has 60/min in dev, 5/min in production"
 echo ""
 
-if [ "$BASE_URL" == "http://localhost:3000" ]; then
+if [[ "$BASE_URL" == "http://localhost:3000" ]]; then
     # Development: 60 requests per minute
     echo "Testing development rate limit (60/min)..."
     for i in {1..70}; do
-        if [ $i -eq 61 ]; then
+        if [[ $i -eq 61 ]]; then
             echo -e "${YELLOW}Expecting rate limit starting now...${NC}"
         fi
 
@@ -100,7 +100,7 @@ else
     # Production/Preview: 5 requests per minute
     echo "Testing production rate limit (5/min)..."
     for i in {1..10}; do
-        if [ $i -eq 6 ]; then
+        if [[ $i -eq 6 ]]; then
             echo -e "${YELLOW}Expecting rate limit starting now...${NC}"
         fi
 

@@ -52,7 +52,7 @@ if ! command -v node &> /dev/null; then
 fi
 
 NODE_VERSION=$(node -v | cut -d 'v' -f 2 | cut -d '.' -f 1)
-if [ "$NODE_VERSION" -lt 18 ]; then
+if [[ "$NODE_VERSION" -lt 18 ]]; then
     error "Node.js version $NODE_VERSION is too old. Please upgrade to Node.js 20 or higher."
 fi
 success "Node.js version $(node -v) detected"
@@ -74,7 +74,7 @@ echo ""
 
 # Step 3: Initialize OpenCode.ai configuration
 echo "Step 3: Initializing OpenCode.ai configuration..."
-if [ -f "$HOME/.opencode/config.json" ]; then
+if [[ -f "$HOME/.opencode/config.json" ]]; then
     warning "Configuration already exists at ~/.opencode/config.json"
     read -p "Backup and overwrite? (y/N): " overwrite
     if [[ "$overwrite" =~ ^[Yy]$ ]]; then
@@ -86,7 +86,7 @@ if [ -f "$HOME/.opencode/config.json" ]; then
     fi
 fi
 
-if [ "$SKIP_CONFIG" != "true" ]; then
+if [[ "$SKIP_CONFIG" != "true" ]]; then
     mkdir -p "$HOME/.opencode"
     cp .opencode.config.example.json "$HOME/.opencode/config.json"
     success "Configuration initialized"
@@ -99,9 +99,9 @@ info "OpenCode.ai requires API keys for AI providers"
 echo ""
 
 # Check which shell is being used
-if [ -n "$ZSH_VERSION" ]; then
+if [[ -n "$ZSH_VERSION" ]]; then
     SHELL_RC="$HOME/.zshrc"
-elif [ -n "$BASH_VERSION" ]; then
+elif [[ -n "$BASH_VERSION" ]]; then
     SHELL_RC="$HOME/.bashrc"
 else
     SHELL_RC="$HOME/.profile"
@@ -131,10 +131,10 @@ add_env_var() {
 }
 
 # Anthropic API Key (for primary fallback)
-if [ -z "$ANTHROPIC_API_KEY" ]; then
+if [[ -z "$ANTHROPIC_API_KEY" ]]; then
     echo "Enter your Anthropic API key (or press Enter to skip):"
     read -s anthropic_key
-    if [ -n "$anthropic_key" ]; then
+    if [[ -n "$anthropic_key" ]]; then
         add_env_var "ANTHROPIC_API_KEY" "$anthropic_key"
         export ANTHROPIC_API_KEY="$anthropic_key"
     fi
@@ -143,10 +143,10 @@ else
 fi
 
 # OpenAI API Key (for secondary fallback)
-if [ -z "$OPENAI_API_KEY" ]; then
+if [[ -z "$OPENAI_API_KEY" ]]; then
     echo "Enter your OpenAI API key (or press Enter to skip):"
     read -s openai_key
-    if [ -n "$openai_key" ]; then
+    if [[ -n "$openai_key" ]]; then
         add_env_var "OPENAI_API_KEY" "$openai_key"
         export OPENAI_API_KEY="$openai_key"
     fi
@@ -155,10 +155,10 @@ else
 fi
 
 # Groq API Key (for cost-effective fallback)
-if [ -z "$GROQ_API_KEY" ]; then
+if [[ -z "$GROQ_API_KEY" ]]; then
     echo "Enter your Groq API key (or press Enter to skip):"
     read -s groq_key
-    if [ -n "$groq_key" ]; then
+    if [[ -n "$groq_key" ]]; then
         add_env_var "GROQ_API_KEY" "$groq_key"
         export GROQ_API_KEY="$groq_key"
     fi
@@ -167,10 +167,10 @@ else
 fi
 
 # Google API Key (for Gemini)
-if [ -z "$GOOGLE_API_KEY" ]; then
+if [[ -z "$GOOGLE_API_KEY" ]]; then
     echo "Enter your Google API key (or press Enter to skip):"
     read -s google_key
-    if [ -n "$google_key" ]; then
+    if [[ -n "$google_key" ]]; then
         add_env_var "GOOGLE_API_KEY" "$google_key"
         export GOOGLE_API_KEY="$google_key"
     fi

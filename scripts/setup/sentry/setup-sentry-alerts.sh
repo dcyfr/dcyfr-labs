@@ -35,7 +35,7 @@ read -p "Sentry Auth Token: " SENTRY_TOKEN
 read -p "Organization Slug: " ORG_SLUG
 read -p "Project Slug: " PROJECT_SLUG
 
-if [ -z "$SENTRY_TOKEN" ] || [ -z "$ORG_SLUG" ] || [ -z "$PROJECT_SLUG" ]; then
+if [[ -z "$SENTRY_TOKEN" ]] || [[ -z "$ORG_SLUG" ]] || [[ -z "$PROJECT_SLUG" ]]; then
   echo "❌ Error: All fields are required"
   exit 1
 fi
@@ -51,7 +51,7 @@ RESPONSE=$(curl -s -w "\n%{http_code}" \
 HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
 BODY=$(echo "$RESPONSE" | sed '$d')
 
-if [ "$HTTP_CODE" != "200" ]; then
+if [[ "$HTTP_CODE" != "200" ]]; then
   echo "❌ Error: Failed to connect to Sentry API (HTTP $HTTP_CODE)"
   echo "$BODY" | jq -r '.detail // .'
   exit 1
@@ -69,7 +69,7 @@ PROJECT_RESPONSE=$(curl -s -w "\n%{http_code}" \
 HTTP_CODE=$(echo "$PROJECT_RESPONSE" | tail -n1)
 BODY=$(echo "$PROJECT_RESPONSE" | sed '$d')
 
-if [ "$HTTP_CODE" != "200" ]; then
+if [[ "$HTTP_CODE" != "200" ]]; then
   echo "❌ Error: Failed to get project details (HTTP $HTTP_CODE)"
   echo "$BODY" | jq -r '.detail // .'
   exit 1

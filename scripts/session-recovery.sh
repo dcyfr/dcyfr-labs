@@ -11,7 +11,7 @@ CHECKPOINT_TIMESTAMP=$2
 CHECKPOINT_DIR=".git/agent-checkpoints"
 
 # Validate agent
-if [ -z "$AGENT" ]; then
+if [[ -z "$AGENT" ]]; then
     echo "Usage: $0 <agent> [checkpoint-timestamp]"
     echo ""
     echo "Arguments:"
@@ -53,14 +53,14 @@ case "$AGENT" in
 esac
 
 # Check if checkpoints exist
-if [ ! -d "$CHECKPOINT_DIR" ] || [ -z "$(ls -A $CHECKPOINT_DIR/*-${AGENT}.json 2>/dev/null)" ]; then
+if [[ ! -d "$CHECKPOINT_DIR" ]] || [[ -z "$(ls -A $CHECKPOINT_DIR/*-${AGENT}.json 2>/dev/null)" ]]; then
     echo "❌ No checkpoints found for $AGENT"
     echo "💡 Start auto-checkpoint: npm run checkpoint:start $AGENT"
     exit 1
 fi
 
 # If no timestamp provided, list available checkpoints
-if [ -z "$CHECKPOINT_TIMESTAMP" ]; then
+if [[ -z "$CHECKPOINT_TIMESTAMP" ]]; then
     echo "📂 Available checkpoints for $AGENT:"
     echo ""
 
@@ -86,7 +86,7 @@ if [ -z "$CHECKPOINT_TIMESTAMP" ]; then
 fi
 
 # Handle "latest" keyword
-if [ "$CHECKPOINT_TIMESTAMP" = "latest" ]; then
+if [[ "$CHECKPOINT_TIMESTAMP" = "latest" ]]; then
     CHECKPOINT_FILE=$(ls -t "$CHECKPOINT_DIR"/*-${AGENT}.json | head -1)
     CHECKPOINT_TIMESTAMP=$(basename "$CHECKPOINT_FILE" | sed "s/-${AGENT}.json//")
 else
@@ -94,14 +94,14 @@ else
 fi
 
 # Validate checkpoint exists
-if [ ! -f "$CHECKPOINT_FILE" ]; then
+if [[ ! -f "$CHECKPOINT_FILE" ]]; then
     echo "❌ Checkpoint not found: $CHECKPOINT_FILE"
     echo "💡 List available: npm run session:recover $AGENT"
     exit 1
 fi
 
 # Backup current state if exists
-if [ -f "$TARGET_FILE" ]; then
+if [[ -f "$TARGET_FILE" ]]; then
     BACKUP_FILE="${TARGET_FILE}.backup-$(date +%Y%m%d-%H%M%S)"
     cp "$TARGET_FILE" "$BACKUP_FILE"
     echo "📦 Current state backed up to: $BACKUP_FILE"
@@ -135,7 +135,7 @@ echo "   3. Validate state: cat $TARGET_FILE"
 echo ""
 
 # Offer to show file diff if git status shows changes
-if [ "$UNCOMMITTED" -gt 0 ]; then
+if [[ "$UNCOMMITTED" -gt 0 ]]; then
     echo "⚠️  Warning: $UNCOMMITTED uncommitted files detected"
     echo "💡 Review changes: git status && git diff"
 fi
