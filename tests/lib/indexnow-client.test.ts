@@ -5,6 +5,7 @@ import {
   submitToIndexNow,
   submitToIndexNowWithResult,
 } from '@/lib/indexnow/client';
+import { SITE_URL } from '@/lib/site-config';
 
 describe('indexnow client helper', () => {
   const originalFetch = global.fetch;
@@ -18,8 +19,9 @@ describe('indexnow client helper', () => {
   });
 
   it('builds canonical blog and project urls', () => {
-    expect(getBlogPostUrl('my-post')).toBe('https://www.dcyfr.ai/blog/my-post');
-    expect(getProjectUrl('my-project')).toBe('https://www.dcyfr.ai/work/my-project');
+    const base = SITE_URL.replace(/\/$/, '');
+    expect(getBlogPostUrl('my-post')).toBe(`${base}/blog/my-post`);
+    expect(getProjectUrl('my-project')).toBe(`${base}/work/my-project`);
   });
 
   it('returns successful queue details for successful submit API call', async () => {
