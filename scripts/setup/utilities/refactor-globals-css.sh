@@ -28,7 +28,7 @@ sed -n '2373,2458p' "$GLOBALS_CSS" > "$STYLES_DIR/print.css"
 # Extract KaTeX Styles (need to find exact lines first)
 echo "🔢 Searching for KaTeX styles..."
 KATEX_START=$(grep -n "KaTeX\|katex\|@keyframes loading-bar" "$GLOBALS_CSS" | head -1 | cut -d: -f1)
-if [ -n "$KATEX_START" ]; then
+if [[ -n "$KATEX_START" ]]; then
   # Extract approximately 80 lines
   KATEX_END=$((KATEX_START + 80))
   sed -n "${KATEX_START},${KATEX_END}p" "$GLOBALS_CSS" > "$STYLES_DIR/katex.css"
@@ -38,7 +38,7 @@ fi
 # Extract ReactFlow Overrides (need to find exact lines first)
 echo "⚛️  Searching for ReactFlow styles..."
 REACTFLOW_START=$(grep -n "\.react-flow" "$GLOBALS_CSS" | head -1 | cut -d: -f1)
-if [ -n "$REACTFLOW_START" ]; then
+if [[ -n "$REACTFLOW_START" ]]; then
   # Extract approximately 44 lines
   REACTFLOW_END=$((REACTFLOW_START + 44))
   sed -n "${REACTFLOW_START},${REACTFLOW_END}p" "$GLOBALS_CSS" > "$STYLES_DIR/react-flow.css"

@@ -27,10 +27,10 @@ echo "  Total Suppressions: $TOTAL"
 echo "  Baseline (CI):      2"
 echo ""
 
-if [ "$TOTAL" -gt 2 ]; then
+if [[ "$TOTAL" -gt 2 ]]; then
   echo "  Status: ❌ ABOVE BASELINE ($TOTAL > 2)"
   echo "  Action: Review and attempt to fix new suppressions"
-elif [ "$TOTAL" -lt 2 ]; then
+elif [[ "$TOTAL" -lt 2 ]]; then
   echo "  Status: ✅ BELOW BASELINE ($TOTAL < 2)"
   echo "  Action: Update baseline in .github/workflows/codeql.yml"
 else
@@ -91,12 +91,12 @@ echo ""
 echo "📋 Next Steps"
 echo ""
 
-if [ "$TOTAL" -gt 2 ]; then
+if [[ "$TOTAL" -gt 2 ]]; then
   echo "  1. Review new suppressions (count: $((TOTAL - 2)))"
   echo "  2. Attempt to fix instead of suppress"
   echo "  3. See: docs/security/LGTM_APPROVAL_PROCESS.md"
   echo "  4. Update baseline if suppressions are approved"
-elif [ "$TOTAL" -eq 2 ]; then
+elif [[ "$TOTAL" -eq 2 ]]; then
   echo "  1. Quarterly review: Validate existing suppressions"
   echo "  2. Check for new fix patterns in Node.js updates"
   echo "  3. Document any changes to justifications"

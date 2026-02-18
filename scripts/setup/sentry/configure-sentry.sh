@@ -14,7 +14,7 @@ echo ""
 echo -n "Paste your Sentry DSN here: "
 read -r SENTRY_DSN
 
-if [ -z "$SENTRY_DSN" ]; then
+if [[ -z "$SENTRY_DSN" ]]; then
   echo "❌ No DSN provided. Exiting."
   exit 1
 fi
@@ -26,7 +26,7 @@ if [[ ! "$SENTRY_DSN" =~ ^https://.*@.*\.ingest\.sentry\.io/.* ]]; then
   echo ""
   echo -n "Continue anyway? (y/n): "
   read -r CONTINUE
-  if [ "$CONTINUE" != "y" ]; then
+  if [[ "$CONTINUE" != "y" ]]; then
     echo "Cancelled."
     exit 1
   fi

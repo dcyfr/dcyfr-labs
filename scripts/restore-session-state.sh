@@ -9,7 +9,7 @@ FROM_AGENT=$1
 TO_AGENT=$2
 
 # Validate arguments
-if [ -z "$FROM_AGENT" ] || [ -z "$TO_AGENT" ]; then
+if [[ -z "$FROM_AGENT" ]] || [[ -z "$TO_AGENT" ]]; then
     echo "Usage: $0 <from-agent> <to-agent>"
     echo ""
     echo "Arguments:"
@@ -35,7 +35,7 @@ case "$FROM_AGENT" in
 esac
 
 # Check if session state exists
-if [ ! -f "$FROM_FILE" ]; then
+if [[ ! -f "$FROM_FILE" ]]; then
     echo "❌ No session state found for $FROM_AGENT"
     echo ""
     echo "💡 Create a session state first:"
@@ -82,11 +82,11 @@ echo "   Uncommitted files: $UNCOMMITTED"
 echo "   Last commit: $LAST_COMMIT"
 echo ""
 
-if [ "$ISSUE" != "" ] || [ "$PR" != "" ] || [ "$MILESTONE" != "" ]; then
+if [[ "$ISSUE" != "" ]] || [[ "$PR" != "" ]] || [[ "$MILESTONE" != "" ]]; then
     echo "🔗 Tracking:"
-    [ "$ISSUE" != "" ] && echo "   Issue: $ISSUE"
-    [ "$PR" != "" ] && echo "   PR: $PR"
-    [ "$MILESTONE" != "" ] && echo "   Milestone: $MILESTONE"
+    [[ "$ISSUE" != "" ]] && echo "   Issue: $ISSUE"
+    [[ "$PR" != "" ]] && echo "   PR: $PR"
+    [[ "$MILESTONE" != "" ]] && echo "   Milestone: $MILESTONE"
     echo ""
 fi
 
@@ -108,7 +108,7 @@ echo ""
 
 # Reference patterns
 PATTERNS=$(jq -r '.session.context.referencePatterns[]' "$FROM_FILE" 2>/dev/null)
-if [ -n "$PATTERNS" ]; then
+if [[ -n "$PATTERNS" ]]; then
     echo "📖 Reference Patterns:"
     echo "$PATTERNS" | while read pattern; do
         echo "   • $pattern"
@@ -117,7 +117,7 @@ if [ -n "$PATTERNS" ]; then
 fi
 
 # Provider-specific warnings
-if [ "$FROM_AGENT" == "opencode" ]; then
+if [[ "$FROM_AGENT" == "opencode" ]]; then
     echo "────────────────────────────────────────────────────────────────"
     echo "⚠️  ENHANCED VALIDATION REQUIRED"
     echo ""
@@ -127,11 +127,11 @@ if [ "$FROM_AGENT" == "opencode" ]; then
     echo "   Run: npm run check:opencode"
     echo ""
     echo "   Manual review checklist:"
-    echo "   [ ] Design tokens used (no hardcoded values)"
-    echo "   [ ] Barrel imports used (no direct file imports)"
-    echo "   [ ] PageLayout used (unless justified exception)"
-    echo "   [ ] Test data has environment checks"
-    echo "   [ ] No emojis in public content"
+    echo "   [[ ] Design tokens used (no hardcoded values)"
+    echo "   [[ ] Barrel imports used (no direct file imports)"
+    echo "   [[ ] PageLayout used (unless justified exception)"
+    echo "   [[ ] Test data has environment checks"
+    echo "   [[ ] No emojis in public content"
     echo "────────────────────────────────────────────────────────────────"
     echo ""
 fi
@@ -142,7 +142,7 @@ echo "💡 Next steps:"
 echo "   1. Review files in progress and handoff notes above"
 echo "   2. Continue work in $TO_AGENT with context from $FROM_AGENT"
 echo "   3. Update session state: npm run session:save $TO_AGENT \"task\" [phase] [time]"
-if [ "$FROM_AGENT" == "opencode" ]; then
+if [[ "$FROM_AGENT" == "opencode" ]]; then
     echo "   4. Run enhanced validation: npm run check:opencode"
 fi
 echo ""

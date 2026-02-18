@@ -11,7 +11,7 @@ AGENT=$1
 INTERVAL=${2:-1800}  # Default: 30 minutes (1800 seconds)
 
 # Validate agent
-if [ -z "$AGENT" ]; then
+if [[ -z "$AGENT" ]]; then
     echo "Usage: $0 <agent> [interval-seconds]"
     echo ""
     echo "Arguments:"
@@ -77,7 +77,7 @@ while true; do
     esac
 
     # Create checkpoint if source exists
-    if [ -f "$SOURCE_FILE" ]; then
+    if [[ -f "$SOURCE_FILE" ]]; then
         # Copy and enhance with checkpoint metadata
         cat "$SOURCE_FILE" | jq ". + {
             checkpoint: {

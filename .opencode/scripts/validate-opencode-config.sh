@@ -41,7 +41,7 @@ info() {
 
 # 1. Check opencode.json exists
 echo "1. Checking opencode.json..."
-if [ -f "opencode.json" ]; then
+if [[ -f "opencode.json" ]]; then
   pass "opencode.json exists in project root"
 else
   fail "opencode.json not found in project root"
@@ -65,7 +65,7 @@ echo ""
 echo "3. Checking MCP servers..."
 if command -v jq &> /dev/null; then
   MCP_COUNT=$(jq '.mcp | length' opencode.json 2>/dev/null || echo "0")
-  if [ "$MCP_COUNT" -gt 0 ]; then
+  if [[ "$MCP_COUNT" -gt 0 ]]; then
     pass "Found $MCP_COUNT MCP servers configured"
   else
     fail "No MCP servers configured"
@@ -77,12 +77,12 @@ fi
 # 4. Check skills directory
 echo ""
 echo "4. Checking skills directory..."
-if [ -d ".opencode/skill" ]; then
+if [[ -d ".opencode/skill" ]]; then
   pass ".opencode/skill directory exists"
   
   # Count skills
   SKILL_COUNT=$(find .opencode/skill -name "SKILL.md" | wc -l | tr -d ' ')
-  if [ "$SKILL_COUNT" -gt 0 ]; then
+  if [[ "$SKILL_COUNT" -gt 0 ]]; then
     pass "Found $SKILL_COUNT skills configured"
   else
     fail "No skills found (.opencode/skill/*/SKILL.md)"
@@ -95,7 +95,7 @@ fi
 echo ""
 echo "5. Validating skill frontmatter..."
 for skill in .opencode/skill/*/SKILL.md; do
-  if [ -f "$skill" ]; then
+  if [[ -f "$skill" ]]; then
     skill_name=$(basename "$(dirname "$skill")")
     
     # Check for frontmatter delimiters
@@ -123,7 +123,7 @@ done
 # 6. Check agent instructions
 echo ""
 echo "6. Checking agent instructions..."
-if [ -f ".opencode/DCYFR.opencode.md" ]; then
+if [[ -f ".opencode/DCYFR.opencode.md" ]]; then
   pass "DCYFR.opencode.md exists"
 else
   warn "DCYFR.opencode.md not found"
@@ -132,7 +132,7 @@ fi
 # 7. Check for legacy config
 echo ""
 echo "7. Checking for legacy config..."
-if [ -f ".opencode/config.json" ]; then
+if [[ -f ".opencode/config.json" ]]; then
   warn "Legacy .opencode/config.json found (superseded by opencode.json)"
 else
   pass "No legacy .opencode/config.json"
@@ -148,7 +148,7 @@ echo -e "${YELLOW}WARN: $WARN${NC}"
 echo -e "${RED}FAIL: $FAIL${NC}"
 echo ""
 
-if [ "$FAIL" -eq 0 ]; then
+if [[ "$FAIL" -eq 0 ]]; then
   echo -e "${GREEN}✅ OpenCode configuration is valid!${NC}"
   exit 0
 else

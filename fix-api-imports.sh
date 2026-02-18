@@ -11,7 +11,7 @@ files=(
 )
 
 for file in "${files[@]}"; do
-  if [ -f "$file" ]; then
+  if [[ -f "$file" ]]; then
     perl -i -pe "s|from '@/lib/api-security'|from '@/lib/api/api-security'|g" "$file"
     perl -i -pe "s|from '@/lib/api-guardrails'|from '@/lib/api/api-guardrails'|g" "$file"
     perl -i -pe "s|from '\./api-usage-tracker'|from '\./api/api-usage-tracker'|g" "$file"

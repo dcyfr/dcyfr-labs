@@ -14,7 +14,7 @@ read -p "Sentry Auth Token: " SENTRY_TOKEN
 read -p "Organization Slug: " ORG_SLUG
 read -p "Project Slug: " PROJECT_SLUG
 
-if [ -z "$SENTRY_TOKEN" ] || [ -z "$ORG_SLUG" ] || [ -z "$PROJECT_SLUG" ]; then
+if [[ -z "$SENTRY_TOKEN" ]] || [[ -z "$ORG_SLUG" ]] || [[ -z "$PROJECT_SLUG" ]]; then
   echo "❌ Error: All fields are required"
   exit 1
 fi
@@ -64,7 +64,7 @@ echo ""
 # Check for our specific event
 ADMIN_ISSUE=$(echo "$ISSUES" | jq -r '.[] | select(.title | contains("Admin access denied")) | .id' | head -1)
 
-if [ -n "$ADMIN_ISSUE" ]; then
+if [[ -n "$ADMIN_ISSUE" ]]; then
   echo "✓ Found 'Admin access denied' issue in Sentry! (ID: $ADMIN_ISSUE)"
   echo "✓ Sentry integration is working correctly"
   echo ""

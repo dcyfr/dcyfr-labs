@@ -16,7 +16,7 @@ SUPPRESSIONS=$(grep -rn "lgtm \[" \
   --include="*.mjs" \
   src/ scripts/ 2>/dev/null)
 
-if [ -z "$SUPPRESSIONS" ]; then
+if [[ -z "$SUPPRESSIONS" ]]; then
   echo "✅ No LGTM suppressions found in codebase!"
   echo ""
   exit 0
@@ -66,7 +66,7 @@ echo ""
 
 # Baseline check
 BASELINE=2  # Updated January 21, 2026 - Target: valid file-system-race suppressions only
-if [ "$TOTAL" -gt "$BASELINE" ]; then
+if [[ "$TOTAL" -gt "$BASELINE" ]]; then
   echo "⚠️  WARNING: Suppression count increased"
   echo "   Baseline: $BASELINE"
   echo "   Current:  $TOTAL"
@@ -74,7 +74,7 @@ if [ "$TOTAL" -gt "$BASELINE" ]; then
   echo ""
   echo "   New suppressions should be reviewed and potentially fixed."
   echo ""
-elif [ "$TOTAL" -lt "$BASELINE" ]; then
+elif [[ "$TOTAL" -lt "$BASELINE" ]]; then
   echo "✅ IMPROVEMENT: Suppression count decreased"
   echo "   Baseline: $BASELINE"
   echo "   Current:  $TOTAL"

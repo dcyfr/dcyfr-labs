@@ -14,7 +14,7 @@ read -p "Sentry Auth Token: " SENTRY_TOKEN
 read -p "Organization Slug: " ORG_SLUG
 read -p "Project Slug: " PROJECT_SLUG
 
-if [ -z "$SENTRY_TOKEN" ] || [ -z "$ORG_SLUG" ] || [ -z "$PROJECT_SLUG" ]; then
+if [[ -z "$SENTRY_TOKEN" ]] || [[ -z "$ORG_SLUG" ]] || [[ -z "$PROJECT_SLUG" ]]; then
   echo "❌ Error: All fields are required"
   exit 1
 fi
@@ -31,7 +31,7 @@ echo "$RULES" | jq -r '.[] | "  • \(.name) (ID: \(.id))"'
 echo ""
 read -p "Delete all existing alerts and recreate? (y/n): " CONFIRM
 
-if [ "$CONFIRM" != "y" ]; then
+if [[ "$CONFIRM" != "y" ]]; then
   echo "Cancelled."
   exit 0
 fi

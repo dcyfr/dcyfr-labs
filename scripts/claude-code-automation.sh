@@ -59,7 +59,7 @@ lint_subjective() {
         MODIFIED_FILES=$(find src/ -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | head -20)
     fi
 
-    if [ -z "$MODIFIED_FILES" ]; then
+    if [[ -z "$MODIFIED_FILES" ]]; then
         warning "No files to lint"
         return 0
     fi
@@ -87,7 +87,7 @@ Only output actual issues, one per line. Be specific and actionable."
     # Run Claude analysis (using echo to pipe prompt)
     REPORT=$(echo "$PROMPT" | claude --input src/ 2>/dev/null || echo "")
 
-    if [ -n "$REPORT" ]; then
+    if [[ -n "$REPORT" ]]; then
         echo "$REPORT" | tee -a "$LOG_FILE"
         success "Subjective linting complete (check output above)"
         return 0
@@ -110,7 +110,7 @@ design_token_audit() {
     log "Checking for hardcoded spacing values..."
     if grep -r "gap-\|p-\|m-\|pt-\|pb-\|pl-\|pr-" src/ --include="*.tsx" --include="*.ts" 2>/dev/null | grep -v "SPACING\|design-tokens" > /tmp/spacing-violations.txt; then
         local count=$(wc -l < /tmp/spacing-violations.txt)
-        if [ "$count" -gt 0 ]; then
+        if [[ "$count" -gt 0 ]]; then
             warning "Found $count hardcoded spacing violations"
             head -5 /tmp/spacing-violations.txt | tee -a "$LOG_FILE"
             violations_found=$((violations_found + count))
@@ -121,7 +121,7 @@ design_token_audit() {
     log "Checking for hardcoded colors..."
     if grep -r "#[0-9a-fA-F]\{3,6\}\|rgb(\|hsl(" src/ --include="*.tsx" --include="*.ts" 2>/dev/null | grep -v "SEMANTIC_COLORS\|design-tokens\|theme" > /tmp/color-violations.txt; then
         local count=$(wc -l < /tmp/color-violations.txt)
-        if [ "$count" -gt 0 ]; then
+        if [[ "$count" -gt 0 ]]; then
             warning "Found $count hardcoded color violations"
             head -5 /tmp/color-violations.txt | tee -a "$LOG_FILE"
             violations_found=$((violations_found + count))
@@ -132,14 +132,14 @@ design_token_audit() {
     log "Checking for hardcoded typography..."
     if grep -r "text-\|font-\|leading-" src/ --include="*.tsx" --include="*.ts" 2>/dev/null | grep -v "TYPOGRAPHY\|design-tokens" | head -5 > /tmp/typography-violations.txt; then
         local count=$(wc -l < /tmp/typography-violations.txt)
-        if [ "$count" -gt 0 ]; then
+        if [[ "$count" -gt 0 ]]; then
             warning "Found $count hardcoded typography violations"
             head -3 /tmp/typography-violations.txt | tee -a "$LOG_FILE"
             violations_found=$((violations_found + count))
         fi
     done
 
-    if [ $violations_found -eq 0 ]; then
+    if [[ $violations_found -eq 0 ]]; then
         success "Design token compliance: ✅ 100%"
         return 0
     else
@@ -154,7 +154,7 @@ design_token_audit() {
 analyze_errors() {
     local error_file="$1"
 
-    if [ -z "$error_file" ] || [ ! -f "$error_file" ]; then
+    if [[ -z "$error_file" ]] || [[ ! -f "$error_file" ]]; then
         error "Error log file not found: $error_file"
     fi
 

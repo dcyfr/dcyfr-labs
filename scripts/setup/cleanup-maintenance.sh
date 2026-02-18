@@ -12,7 +12,7 @@ echo ""
 # Clean Next.js Cache
 # ============================================================================
 echo "[1/4] Cleaning Next.js build cache..."
-if [ -d ".next/cache" ]; then
+if [[ -d ".next/cache" ]]; then
   CACHE_SIZE=$(du -sh .next/cache | cut -f1)
   echo "  Current cache size: $CACHE_SIZE"
   rm -rf .next/cache
@@ -27,9 +27,9 @@ echo ""
 # ============================================================================
 echo "[2/4] Cleaning old test reports (>30 days)..."
 
-if [ -d "coverage" ]; then
+if [[ -d "coverage" ]]; then
   OLD_COVERAGE=$(find coverage -type f -mtime +30 2>/dev/null | wc -l | tr -d ' ')
-  if [ "$OLD_COVERAGE" -gt 0 ]; then
+  if [[ "$OLD_COVERAGE" -gt 0 ]]; then
     find coverage -type f -mtime +30 -delete 2>/dev/null
     echo "  ✓ Removed $OLD_COVERAGE old coverage files"
   else
@@ -37,9 +37,9 @@ if [ -d "coverage" ]; then
   fi
 fi
 
-if [ -d "playwright-report" ]; then
+if [[ -d "playwright-report" ]]; then
   OLD_PLAYWRIGHT=$(find playwright-report -type f -mtime +30 2>/dev/null | wc -l | tr -d ' ')
-  if [ "$OLD_PLAYWRIGHT" -gt 0 ]; then
+  if [[ "$OLD_PLAYWRIGHT" -gt 0 ]]; then
     find playwright-report -type f -mtime +30 -delete 2>/dev/null
     echo "  ✓ Removed $OLD_PLAYWRIGHT old Playwright report files"
   else
@@ -67,7 +67,7 @@ echo ""
 echo "[4/4] Scanning for new backup files..."
 NEW_BACKUPS=$(find . -type f \( -name "*.bak" -o -name "*.backup" -o -name "*.old" \) ! -path "*/node_modules/*" ! -path "*/.next/*" 2>/dev/null)
 
-if [ -n "$NEW_BACKUPS" ]; then
+if [[ -n "$NEW_BACKUPS" ]]; then
   echo "  ⚠ Found backup files:"
   echo "$NEW_BACKUPS" | sed 's/^/    /'
   echo ""
