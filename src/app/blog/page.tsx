@@ -300,7 +300,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         .map((p) => p.category)
         .filter((c): c is NonNullable<typeof c> => !!c)
     )
-  ).sort();
+  ).sort((a, b) => a.localeCompare(b));
 
   // Check if filters are active for empty state
   const hasActiveFilters = Boolean(

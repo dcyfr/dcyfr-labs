@@ -629,7 +629,7 @@ describe('blog utilities', () => {
     it('should include categories with non-archived posts when sortBy is not "archived"', () => {
       const allCategories = Array.from(
         new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
-      ).sort();
+      ).sort((a, b) => a.localeCompare(b));
 
       const availableCategories = allCategories.filter((category) => {
         return mockPostsWithCategories.some((post) => post.category === category && !post.archived);
@@ -646,7 +646,7 @@ describe('blog utilities', () => {
     it('should include all categories when sortBy is "archived"', () => {
       const allCategories = Array.from(
         new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
-      ).sort();
+      ).sort((a, b) => a.localeCompare(b));
 
       // When viewing archived posts, show all categories
       const availableCategories = allCategories;
@@ -661,7 +661,7 @@ describe('blog utilities', () => {
     it('should filter categories correctly for mixed archived/active posts', () => {
       const allCategories = Array.from(
         new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
-      ).sort();
+      ).sort((a, b) => a.localeCompare(b));
 
       const availableCategories = allCategories.filter((category) => {
         return mockPostsWithCategories.some((post) => post.category === category && !post.archived);

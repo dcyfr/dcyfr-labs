@@ -53,7 +53,7 @@ function transformDataForChart(historyData: Record<string, McpServerStatus[]>) {
     }
   }
 
-  const sortedTimestamps = Array.from(allTimestamps).sort();
+  const sortedTimestamps = Array.from(allTimestamps).sort((a, b) => a.localeCompare(b));
 
   // Create data points for each timestamp
   return sortedTimestamps.map((timestamp) => {
