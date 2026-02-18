@@ -199,20 +199,20 @@
     }
   ],
   "tags": [
+    "Agentic AI",
     "AI",
     "AI Agent Security",
     "AI Security",
-    "Agentic AI",
     "Architecture",
     "AsyncLocalStorage",
     "Autonomous Systems",
     "Background Jobs",
-    "CVE",
     "Certification",
-    "CompTIA",
     "Component Architecture",
     "Components",
+    "CompTIA",
     "Content Strategy",
+    "CVE",
     "Cybersecurity",
     "Demo",
     "Dependabot",
@@ -222,8 +222,8 @@
     "Event-Driven",
     "GitHub Copilot",
     "HTTP/2",
-    "IT Career",
     "Inngest",
+    "IT Career",
     "LLM Security",
     "MCP",
     "MDX",
@@ -234,24 +234,24 @@
     "Portfolio",
     "Production",
     "Productivity",
-    "RSC",
     "React",
     "React 19",
     "React2Shell",
+    "RSC",
     "Security",
     "Security+",
+    "shadcn/ui",
     "Tailwind CSS",
     "Threat Intelligence",
     "TypeScript",
     "UI",
     "UX",
     "Vercel",
-    "Workflow",
-    "shadcn/ui"
+    "Workflow"
   ],
   "series": [
     "AI Workflows",
     "Portfolio"
   ],
-  "generatedAt": "2026-02-17T07:36:11.773Z"
+  "generatedAt": "2026-02-18T22:05:11.900Z"
 }

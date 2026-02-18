@@ -1,6 +1,11 @@
 import { inngest } from "./client";
 import { google } from "googleapis";
 import type { AuthClient } from "google-auth-library";
+import {
+  INDEXNOW_EVENTS,
+  type IndexNowSubmissionRequestedEventData,
+} from "@/lib/indexnow/events";
+import { buildKeyLocation } from "@/lib/indexnow/indexnow";
 
 /**
  * Google Indexing API integration for automatic URL submission
@@ -41,6 +46,36 @@ const rateLimitState: RateLimitState = {
   lastResetTime: Date.now(),
   lastSubmissionTime: 0,
 };
+
+async function queueIndexNowSubmission(urls: string[]): Promise<{
+  queued: boolean;
+  reason?: string;
+}> {
+  const key = process.env.INDEXNOW_API_KEY;
+
+  if (!key) {
+    return { queued: false, reason: "INDEXNOW_API_KEY not configured" };
+  }
+
+  const keyLocation = buildKeyLocation(process.env.NEXT_PUBLIC_SITE_URL, key);
+
+  const eventData: IndexNowSubmissionRequestedEventData = {
+    urls,
+    key,
+    keyLocation,
+    requestId: crypto.randomUUID(),
+    requestedAt: Date.now(),
+    userAgent: "google-indexing-functions",
+    ip: "internal",
+  };
+
+  await inngest.send({
+    name: INDEXNOW_EVENTS.submissionRequested,
+    data: eventData,
+  });
+
+  return { queued: true };
+}
 
 // Load service account credentials from environment
 function getServiceAccountCredentials() {
@@ -265,6 +300,21 @@ export const submitUrlToGoogle = inngest.createFunction(
 
     // Step 4: Verify indexing status
     if (result.success) {
+      await step.run("queue-indexnow", async () => {
+        try {
+          const queued = await queueIndexNowSubmission([url]);
+          if (!queued.queued) {
+            console.warn(
+              `[Google→IndexNow] Skipped IndexNow queue for ${url}: ${queued.reason}`
+            );
+          }
+          return queued;
+        } catch (error) {
+          console.warn(`[Google→IndexNow] Failed to queue ${url}:`, error);
+          return { queued: false, reason: "queue-failed" };
+        }
+      });
+
       const indexingStatus = await step.run("verify-indexing", async () => {
         // Wait a moment for Google to process
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -741,6 +791,25 @@ export const submitMissingPagesToGoogle = inngest.createFunction(
       }
 
       return { submitted, failed, skipped };
+    });
+
+    await step.run("queue-indexnow-batch", async () => {
+      if (!submissionResults.submitted.length) {
+        return { queued: false, reason: "no-submitted-urls" };
+      }
+
+      try {
+        const queued = await queueIndexNowSubmission(submissionResults.submitted);
+        if (!queued.queued) {
+          console.warn(
+            `[Google→IndexNow] Skipped batch queue: ${queued.reason}`
+          );
+        }
+        return queued;
+      } catch (error) {
+        console.warn("[Google→IndexNow] Failed batch queue:", error);
+        return { queued: false, reason: "queue-failed" };
+      }
     });
 
     // Step 5: Verify indexing status of submitted URLs

@@ -1,4 +1,15 @@
 import { inngest } from './client';
+import {
+  INDEXNOW_BATCH_SIZE,
+  INDEXNOW_MAX_URLS_PER_REQUEST,
+  buildIndexNowPayloads,
+  isUuidV4,
+  normalizeValidUrls,
+} from '@/lib/indexnow/indexnow';
+import {
+  INDEXNOW_EVENTS,
+  type IndexNowSubmissionRequestedEventData,
+} from '@/lib/indexnow/events';
 
 /**
  * IndexNow API integration for real-time search engine indexing
@@ -30,27 +41,12 @@ const INDEXNOW_ENDPOINTS = [
 
 // Rate limiting and retry configuration
 const INDEXNOW_CONFIG = {
-  MAX_URLS_PER_REQUEST: 10000,        // IndexNow protocol limit
-  MAX_RETRIES: 3,                     // Max retry attempts
-  INITIAL_RETRY_DELAY: 1000,          // Initial retry delay (ms)
-  MAX_RETRY_DELAY: 10000,             // Maximum retry delay (ms)
-  REQUEST_TIMEOUT: 30000,             // Request timeout (ms)
-  BATCH_SIZE: 100,                    // URLs per batch for large submissions
+  REQUEST_TIMEOUT: 30000,
 } as const;
 
 /**
  * IndexNow submission data structure
  */
-interface IndexNowSubmissionData {
-  urls: string[];
-  key: string;
-  keyLocation: string;
-  requestId: string;
-  requestedAt: number;
-  userAgent?: string;
-  ip?: string;
-}
-
 /**
  * IndexNow API request payload
  */
@@ -89,9 +85,9 @@ export const processIndexNowSubmission = inngest.createFunction(
     id: 'process-indexnow-submission',
     retries: 3, // Retry on transient failures
   },
-  { event: 'indexnow/submission.requested' },
+  { event: INDEXNOW_EVENTS.submissionRequested },
   async ({ event, step }) => {
-    const submissionData = event.data as IndexNowSubmissionData;
+    const submissionData = event.data as IndexNowSubmissionRequestedEventData;
     const { urls, key, keyLocation, requestId } = submissionData;
 
     console.log(`[IndexNow] Processing submission ${requestId} with ${urls.length} URLs`);
@@ -101,8 +97,7 @@ export const processIndexNowSubmission = inngest.createFunction(
       console.log(`[IndexNow] Validating submission data for ${requestId}`);
 
       // Validate API key format (UUID v4)
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-      if (!uuidRegex.test(key)) {
+      if (!isUuidV4(key)) {
         throw new Error(`Invalid API key format: ${key}`);
       }
 
@@ -113,20 +108,7 @@ export const processIndexNowSubmission = inngest.createFunction(
         throw new Error(`Invalid key location URL: ${keyLocation}`);
       }
 
-      // Validate and normalize URLs
-      const validUrls: string[] = [];
-      const invalidUrls: string[] = [];
-      
-      for (const url of urls) {
-        try {
-          const normalizedUrl = new URL(url);
-          // Normalize to remove fragments and unnecessary parameters
-          normalizedUrl.hash = '';
-          validUrls.push(normalizedUrl.toString());
-        } catch (error) {
-          invalidUrls.push(url);
-        }
-      }
+      const { validUrls, invalidUrls } = normalizeValidUrls(urls);
 
       if (invalidUrls.length > 0) {
         console.warn(`[IndexNow] Found ${invalidUrls.length} invalid URLs:`, invalidUrls);
@@ -161,38 +143,19 @@ export const processIndexNowSubmission = inngest.createFunction(
       console.log(`[IndexNow] Preparing payloads for ${validationResult.totalValid} URLs`);
 
       const { validUrls } = validationResult;
-      const payloads: IndexNowApiPayload[] = [];
-      
-      // Extract host from the first URL (all URLs should be from same domain)
-      const firstUrl = new URL(validUrls[0]);
-      const host = firstUrl.hostname;
+      const payloads = buildIndexNowPayloads(
+        validUrls,
+        key,
+        keyLocation,
+        INDEXNOW_BATCH_SIZE,
+        INDEXNOW_MAX_URLS_PER_REQUEST
+      );
 
-      // Batch URLs if we exceed the limit
-      if (validUrls.length <= INDEXNOW_CONFIG.MAX_URLS_PER_REQUEST) {
-        // Single payload
-        payloads.push({
-          host,
-          key,
-          keyLocation,
-          urlList: validUrls,
-        });
-      } else {
-        // Multiple payloads (batch)
-        const batchSize = INDEXNOW_CONFIG.BATCH_SIZE;
-        for (let i = 0; i < validUrls.length; i += batchSize) {
-          const batchUrls = validUrls.slice(i, i + batchSize);
-          payloads.push({
-            host,
-            key,
-            keyLocation,
-            urlList: batchUrls,
-          });
-        }
-      }
+      console.log(
+        `[IndexNow] Created ${payloads.length} payloads (max ${INDEXNOW_MAX_URLS_PER_REQUEST} URLs each)`
+      );
 
-      console.log(`[IndexNow] Created ${payloads.length} payloads (max ${INDEXNOW_CONFIG.MAX_URLS_PER_REQUEST} URLs each)`);
-
-      return { payloads, host };
+      return { payloads };
     });
 
     // Step 3: Submit to IndexNow endpoints

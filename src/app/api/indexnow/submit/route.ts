@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { inngest } from '@/inngest/client';
+import {
+  buildKeyLocation,
+  isInngestBranchEnvironmentIssue,
+  validateSameDomain,
+} from '@/lib/indexnow/indexnow';
+import { checkRateLimit, getClientIp } from '@/lib/indexnow/rate-limit';
+import {
+  INDEXNOW_EVENTS,
+  type IndexNowSubmissionRequestedEventData,
+} from '@/lib/indexnow/events';
 
 // IndexNow submission request schema
 const IndexNowSubmissionSchema = z.object({
@@ -10,9 +20,53 @@ const IndexNowSubmissionSchema = z.object({
 });
 
 export const runtime = 'nodejs';
+const INDEXNOW_SUBMIT_LIMIT = 30;
+const INDEXNOW_SUBMIT_WINDOW_MS = 60_000;
+
+function buildRateLimitHeaders(rateLimit: {
+  limit: number;
+  remaining: number;
+  resetAt: number;
+}): HeadersInit {
+  return {
+    'X-RateLimit-Limit': String(rateLimit.limit),
+    'X-RateLimit-Remaining': String(rateLimit.remaining),
+    'X-RateLimit-Reset': String(Math.floor(rateLimit.resetAt / 1000)),
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const clientIp = getClientIp(request.headers);
+    const rateLimit = checkRateLimit(
+      `indexnow-submit:${clientIp}`,
+      INDEXNOW_SUBMIT_LIMIT,
+      INDEXNOW_SUBMIT_WINDOW_MS
+    );
+
+    if (!rateLimit.allowed) {
+      const retryAfterSeconds = Math.max(
+        1,
+        Math.ceil((rateLimit.resetAt - Date.now()) / 1000)
+      );
+
+      return NextResponse.json(
+        {
+          error: 'Rate limit exceeded',
+          limit: rateLimit.limit,
+          remaining: rateLimit.remaining,
+          resetAt: new Date(rateLimit.resetAt).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            ...buildRateLimitHeaders(rateLimit),
+            'Retry-After': String(retryAfterSeconds),
+          },
+        }
+      );
+    }
+
     // 1. VALIDATE
     const body = await request.json();
     const validation = IndexNowSubmissionSchema.safeParse(body);
@@ -37,30 +91,24 @@ export async function POST(request: NextRequest) {
     if (!apiKey) {
       return NextResponse.json(
         { error: 'IndexNow API key not configured' },
-        { status: 500 }
+        { status: 503 }
       );
     }
 
     // Generate key location if not provided
-    const finalKeyLocation = keyLocation || `${process.env.NEXT_PUBLIC_SITE_URL}/${apiKey}.txt`;
+    const finalKeyLocation = buildKeyLocation(process.env.NEXT_PUBLIC_SITE_URL, apiKey, keyLocation);
 
     // Validate URLs are from our domain (security check)
-    const appUrl = process.env.NEXT_PUBLIC_SITE_URL;
-    if (appUrl) {
-      const allowedDomain = new URL(appUrl).hostname;
-      for (const url of urls) {
-        const urlDomain = new URL(url).hostname;
-        if (urlDomain !== allowedDomain) {
-          return NextResponse.json(
-            { 
-              error: 'URLs must be from the same domain as the application',
-              invalidUrl: url,
-              allowedDomain,
-            },
-            { status: 400 }
-          );
-        }
-      }
+    const domainValidation = validateSameDomain(urls, process.env.NEXT_PUBLIC_SITE_URL);
+    if (!domainValidation.isValid) {
+      return NextResponse.json(
+        {
+          error: 'URLs must be from the same domain as the application',
+          invalidUrl: domainValidation.invalidUrl,
+          allowedDomain: domainValidation.allowedDomain,
+        },
+        { status: 400 }
+      );
     }
 
     // 2. QUEUE
@@ -69,23 +117,23 @@ export async function POST(request: NextRequest) {
     let queueWarning: string | undefined;
 
     try {
-      await inngest.send({
-        name: 'indexnow/submission.requested',
-        data: {
+      const eventData: IndexNowSubmissionRequestedEventData = {
           urls,
           key: apiKey,
           keyLocation: finalKeyLocation,
           requestId,
           requestedAt: Date.now(),
           userAgent: request.headers.get('user-agent') || 'unknown',
-          ip: request.headers.get('x-forwarded-for') || 'unknown',
-        },
+            ip: clientIp,
+      };
+
+      await inngest.send({
+        name: INDEXNOW_EVENTS.submissionRequested,
+        data: eventData,
       });
     } catch (queueError) {
       const queueErrorMessage = queueError instanceof Error ? queueError.message : 'Unknown queue error';
-      const isBranchEnvIssue =
-        queueErrorMessage.includes('Branch environment name is required') ||
-        queueErrorMessage.includes('Branch environment does not exist');
+      const isBranchEnvIssue = isInngestBranchEnvironmentIssue(queueErrorMessage);
 
       if (!isBranchEnvIssue) {
         throw queueError;
@@ -110,6 +158,8 @@ export async function POST(request: NextRequest) {
         urls: urls.length,
         keyLocation: finalKeyLocation,
       },
+    }, {
+      headers: buildRateLimitHeaders(rateLimit),
     });
 
   } catch (error) {

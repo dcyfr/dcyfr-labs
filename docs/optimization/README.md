@@ -12,6 +12,8 @@ Analytics dashboard documentation for tracking and analyzing blog post performan
 
 - **[Tag Analytics (Complete)](./tag-analytics-consolidated)** - **Tag performance guide** (features + implementation + setup)
 - **[24h Trends (Complete)](./24h-trends-consolidated)** - **Real-time analytics guide** (metrics + dashboard + setup)
+- **[Search Channel Priority and Automation](./search-channel-priority-automation.md)** -
+   Priority framework for Google/Bing/YouTube/Reddit automation
 
 ## Other Optimization Guides
 
