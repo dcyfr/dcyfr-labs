@@ -73,50 +73,60 @@ const SKIP_PATTERNS = [
   'api:usage:*', // API usage tracking
 ];
 
+async function migrateStringKey(key, ttl, targetKey) {
+  const stringValue = await prodClient.get(key);
+  if (stringValue === null) return false;
+  if (ttl > 0) await targetClient.setex(targetKey, ttl, stringValue);
+  else await targetClient.set(targetKey, stringValue);
+  return true;
+}
+
+async function migrateHashKey(key, ttl, targetKey) {
+  const hashValue = await prodClient.hgetall(key);
+  if (!hashValue || Object.keys(hashValue).length === 0) return false;
+  await targetClient.hset(targetKey, hashValue);
+  if (ttl > 0) await targetClient.expire(targetKey, ttl);
+  return true;
+}
+
+async function migrateListKey(key, ttl, targetKey) {
+  const listValue = await prodClient.lrange(key, 0, -1);
+  if (!listValue || listValue.length === 0) return false;
+  await targetClient.rpush(targetKey, ...listValue);
+  if (ttl > 0) await targetClient.expire(targetKey, ttl);
+  return true;
+}
+
+async function migrateSetKey(key, ttl, targetKey) {
+  const setValue = await prodClient.smembers(key);
+  if (!setValue || setValue.length === 0) return false;
+  await targetClient.sadd(targetKey, ...setValue);
+  if (ttl > 0) await targetClient.expire(targetKey, ttl);
+  return true;
+}
+
+async function migrateZsetKey(key, ttl, targetKey) {
+  const zsetValue = await prodClient.zrange(key, 0, -1, { withScores: true });
+  if (!zsetValue || zsetValue.length === 0) return false;
+  const members = [];
+  for (let i = 0; i < zsetValue.length; i += 2) {
+    members.push({ score: zsetValue[i + 1], member: zsetValue[i] });
+  }
+  await targetClient.zadd(targetKey, ...members);
+  if (ttl > 0) await targetClient.expire(targetKey, ttl);
+  return true;
+}
+
 /**
  * Migrate a single key from production to target environment by its Redis type.
  */
 async function migrateKeyByType(key, type, ttl, targetKey) {
   switch (type) {
-    case 'string': {
-      const stringValue = await prodClient.get(key);
-      if (stringValue === null) return false;
-      if (ttl > 0) await targetClient.setex(targetKey, ttl, stringValue);
-      else await targetClient.set(targetKey, stringValue);
-      return true;
-    }
-    case 'hash': {
-      const hashValue = await prodClient.hgetall(key);
-      if (!hashValue || Object.keys(hashValue).length === 0) return false;
-      await targetClient.hset(targetKey, hashValue);
-      if (ttl > 0) await targetClient.expire(targetKey, ttl);
-      return true;
-    }
-    case 'list': {
-      const listValue = await prodClient.lrange(key, 0, -1);
-      if (!listValue || listValue.length === 0) return false;
-      await targetClient.rpush(targetKey, ...listValue);
-      if (ttl > 0) await targetClient.expire(targetKey, ttl);
-      return true;
-    }
-    case 'set': {
-      const setValue = await prodClient.smembers(key);
-      if (!setValue || setValue.length === 0) return false;
-      await targetClient.sadd(targetKey, ...setValue);
-      if (ttl > 0) await targetClient.expire(targetKey, ttl);
-      return true;
-    }
-    case 'zset': {
-      const zsetValue = await prodClient.zrange(key, 0, -1, { withScores: true });
-      if (!zsetValue || zsetValue.length === 0) return false;
-      const members = [];
-      for (let i = 0; i < zsetValue.length; i += 2) {
-        members.push({ score: zsetValue[i + 1], member: zsetValue[i] });
-      }
-      await targetClient.zadd(targetKey, ...members);
-      if (ttl > 0) await targetClient.expire(targetKey, ttl);
-      return true;
-    }
+    case 'string': return migrateStringKey(key, ttl, targetKey);
+    case 'hash': return migrateHashKey(key, ttl, targetKey);
+    case 'list': return migrateListKey(key, ttl, targetKey);
+    case 'set': return migrateSetKey(key, ttl, targetKey);
+    case 'zset': return migrateZsetKey(key, ttl, targetKey);
     case 'none':
       console.log(`  ⚠️ Skipping ${key} (key doesn't exist)`);
       return false;
