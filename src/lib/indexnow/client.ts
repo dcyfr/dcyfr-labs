@@ -48,6 +48,40 @@ export function getProjectUrl(slug: string): string {
 }
 
 /**
+ * Extract queued count from IndexNow API response payload.
+ * Falls back to expected count if not provided in response.
+ */
+function extractQueuedCount(payload: Record<string, unknown>, expectedCount: number): number {
+  if (typeof payload.queued === 'number') {
+    return payload.queued;
+  }
+  return expectedCount;
+}
+
+/**
+ * Extract error message from IndexNow API response payload.
+ */
+function extractPayloadError(payload: Record<string, unknown>, status: number): string {
+  if (typeof payload.error === 'string') {
+    return payload.error;
+  }
+  if (typeof payload.message === 'string') {
+    return payload.message;
+  }
+  return `Submission failed with status ${status}`;
+}
+
+/**
+ * Extract success message from IndexNow API response payload.
+ */
+function extractPayloadMessage(payload: Record<string, unknown>): string {
+  if (typeof payload.message === 'string') {
+    return payload.message;
+  }
+  return 'Submitted successfully';
+}
+
+/**
  * Submit one or more URLs to the IndexNow submission API and return result details.
  */
 export async function submitToIndexNowWithResult(
@@ -75,7 +109,7 @@ export async function submitToIndexNowWithResult(
       signal: options.signal,
     });
 
-    const payload = await response.json().catch(() => ({} as Record<string, unknown>));
+    const payload = await response.json().catch(() => ({}) as Record<string, unknown>);
     const queued = extractQueuedCount(payload, normalizedUrls.length);
 
     if (!response.ok) {

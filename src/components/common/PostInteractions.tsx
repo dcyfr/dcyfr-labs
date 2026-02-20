@@ -86,14 +86,25 @@ function renderInteractionButtons({
   contentType: 'post' | 'project';
   liked: boolean;
   bookmarked: boolean;
-  toggleLike: (id: string, action: string, contentType?: string) => void;
-  toggleBookmark: (id: string, context?: { contentType: string }) => void;
+  toggleLike: (
+    activityId: string,
+    type?: 'like',
+    contentTypeOverride?: 'post' | 'project' | 'activity'
+  ) => void;
+  toggleBookmark: (
+    activityId: string,
+    options?: {
+      notes?: string;
+      tags?: string[];
+      contentType?: 'post' | 'project' | 'activity';
+    }
+  ) => void;
   globalLikes: number;
   globalBookmarks: number;
   showCounts: boolean;
   variant: 'default' | 'compact' | 'detailed';
   title: string;
-  description: string;
+  description: string | undefined;
   href: string;
   isCompact: boolean;
 }) {
