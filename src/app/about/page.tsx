@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { getOgImageUrl } from '@/lib/site-config';
+import { getOgImageUrl, SITE_URL, SITE_LAUNCH_DATE, SITE_LAST_UPDATED_DATE } from '@/lib/site-config';
 import { getAboutPageSchema, getJsonLdScriptProps } from '@/lib/json-ld';
+import { createBreadcrumbSchema } from '@/lib/metadata';
 import { headers } from 'next/headers';
 import { SPACING, PAGE_LAYOUT, SCROLL_BEHAVIOR } from '@/lib/design-tokens';
 import { createPageMetadata } from '@/lib/metadata';
@@ -42,11 +43,19 @@ export default async function AboutPage() {
 
   // JSON-LD structured data for about page
   const socialImage = getOgImageUrl(pageTitle, pageDescription);
-  const jsonLd = getAboutPageSchema(pageDescription, socialImage);
+  const jsonLd = getAboutPageSchema(pageDescription, socialImage, {
+    datePublished: SITE_LAUNCH_DATE,
+    dateModified: SITE_LAST_UPDATED_DATE,
+  });
+  const breadcrumbJsonLd = createBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'About DCYFR Labs', url: `${SITE_URL}/about` },
+  ]);
 
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <script {...getJsonLdScriptProps(breadcrumbJsonLd, nonce)} />
       <SmoothScrollToHash />
 
       {/* Hero Section - Organization Introduction */}

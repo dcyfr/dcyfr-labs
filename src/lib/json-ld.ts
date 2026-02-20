@@ -183,8 +183,13 @@ export function getBlogCollectionSchema(
  *
  * @param description - About page description
  * @param socialImage - Optional profile image URL
+ * @param dates - Optional datePublished / dateModified for the AboutPage node
  */
-export function getAboutPageSchema(description: string, socialImage?: string) {
+export function getAboutPageSchema(
+  description: string,
+  socialImage?: string,
+  dates?: { datePublished?: string; dateModified?: string }
+) {
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -201,6 +206,8 @@ export function getAboutPageSchema(description: string, socialImage?: string) {
           "@id": `${SITE_URL}/#person`,
         },
         inLanguage: "en-US",
+        ...(dates?.datePublished !== undefined && { datePublished: dates.datePublished }),
+        ...(dates?.dateModified !== undefined && { dateModified: dates.dateModified }),
       },
       {
         "@type": "ProfilePage",
