@@ -121,6 +121,28 @@ class LinkChecker {
     return files;
   }
 
+  applyLinkFix(link, filePath, modifiedContent) {
+    const fixResult = this.fixBrokenLink(link, filePath);
+    let newContent = modifiedContent;
+    let fixed = false;
+    let removed = false;
+
+    if (fixResult.action === 'remove') {
+      newContent = newContent.replace(link.match[0], fixResult.replacement);
+      removed = true;
+    } else if (fixResult.action === 'fix') {
+      newContent = newContent.replace(link.match[0], fixResult.replacement);
+      fixed = true;
+      this.fixedLinks.push({
+        file: path.relative(this.projectRoot, filePath),
+        original: link.url,
+        fixed: fixResult.newUrl,
+      });
+    }
+
+    return { content: newContent, fixed, removed };
+  }
+
   async checkFile(filePath) {
     this.stats.filesScanned++;
 
@@ -155,21 +177,14 @@ class LinkChecker {
         });
 
         if (this.fix) {
-          const fixResult = this.fixBrokenLink(link, filePath);
-
-          if (fixResult.action === 'remove') {
-            modifiedContent = modifiedContent.replace(link.match[0], fixResult.replacement);
+          const { content: newContent, fixed, removed } = this.applyLinkFix(link, filePath, modifiedContent);
+          modifiedContent = newContent;
+          if (removed) {
             hasChanges = true;
             this.stats.linksRemoved++;
-          } else if (fixResult.action === 'fix') {
-            modifiedContent = modifiedContent.replace(link.match[0], fixResult.replacement);
+          } else if (fixed) {
             hasChanges = true;
             this.stats.linksFixed++;
-            this.fixedLinks.push({
-              file: path.relative(this.projectRoot, filePath),
-              original: link.url,
-              fixed: fixResult.newUrl,
-            });
           }
         }
       }

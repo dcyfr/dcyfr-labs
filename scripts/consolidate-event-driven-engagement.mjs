@@ -38,6 +38,39 @@ const client = createClient({ url: REDIS_URL });
 const CORRECT_SLUG = 'building-event-driven-architecture';
 const SHORT_SLUG = 'event-driven-architecture';
 
+async function requestUserConfirmation() {
+  const readline = await import('readline');
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const answer = await new Promise((resolve) => {
+    rl.question('\n   Continue? (y/N): ', resolve);
+  });
+  rl.close();
+  return answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes';
+}
+
+async function applyConsolidation(client, sourceKeys, targetKeys, totalLikes, totalBookmarks) {
+  if (totalLikes > 0) {
+    await client.set(targetKeys.likes, totalLikes);
+    console.log(`   ✅ Set ${targetKeys.likes} = ${totalLikes}`);
+  }
+
+  if (totalBookmarks > 0) {
+    await client.set(targetKeys.bookmarks, totalBookmarks);
+    console.log(`   ✅ Set ${targetKeys.bookmarks} = ${totalBookmarks}`);
+  }
+
+  const keysToDelete = Object.values(sourceKeys);
+  for (const key of keysToDelete) {
+    const exists = await client.exists(key);
+    if (exists === 1) {
+      await client.del(key);
+      console.log(`   🗑️  Deleted ${key}`);
+    }
+  }
+
+  return keysToDelete;
+}
+
 async function consolidateEngagementData() {
   console.log(`\n🔄 Redis Engagement Data Consolidation`);
   console.log(`   Mode: ${DRY_RUN ? 'DRY RUN (no changes)' : 'LIVE (will modify Redis)'}\n`);
@@ -121,18 +154,8 @@ async function consolidateEngagementData() {
 
     // Auto-proceed in CI/scripts, otherwise require confirmation
     if (!process.env.CI && !process.env.NODE_ENV?.includes('test')) {
-      const readline = await import('readline');
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-      });
-
-      const answer = await new Promise((resolve) => {
-        rl.question('\n   Continue? (y/N): ', resolve);
-      });
-      rl.close();
-
-      if (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'yes') {
+      const confirmed = await requestUserConfirmation();
+      if (!confirmed) {
         console.log('\n❌ Aborted by user');
         return;
       }
@@ -140,30 +163,7 @@ async function consolidateEngagementData() {
 
     console.log(`\n🚀 APPLYING CONSOLIDATION...\n`);
 
-    // Set consolidated values
-    if (totalLikes > 0) {
-      await client.set(targetKeys.likes, totalLikes);
-      console.log(`   ✅ Set ${targetKeys.likes} = ${totalLikes}`);
-    }
-
-    if (totalBookmarks > 0) {
-      await client.set(targetKeys.bookmarks, totalBookmarks);
-      console.log(`   ✅ Set ${targetKeys.bookmarks} = ${totalBookmarks}`);
-    }
-
-    // Delete old keys
-    const keysToDelete = Object.values(sourceKeys).filter(async (key) => {
-      const exists = await client.exists(key);
-      return exists === 1;
-    });
-
-    for (const key of keysToDelete) {
-      const exists = await client.exists(key);
-      if (exists === 1) {
-        await client.del(key);
-        console.log(`   🗑️  Deleted ${key}`);
-      }
-    }
+    const deletedKeys = await applyConsolidation(client, sourceKeys, targetKeys, totalLikes, totalBookmarks);
 
     console.log(`\n✅ CONSOLIDATION COMPLETE!\n`);
 
@@ -177,7 +177,7 @@ async function consolidateEngagementData() {
 
     console.log(`\n📈 SUMMARY:`);
     console.log(`   Consolidated ${totalLikes} likes and ${totalBookmarks} bookmarks`);
-    console.log(`   Deleted ${keysToDelete.length} duplicate keys`);
+    console.log(`   Deleted ${deletedKeys.length} duplicate keys`);
     console.log(`   Post engagement data now unified under: ${CORRECT_SLUG}`);
   } catch (error) {
     console.error('\n❌ Error during consolidation:', error);

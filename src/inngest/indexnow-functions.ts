@@ -44,6 +44,52 @@ const INDEXNOW_CONFIG = {
   REQUEST_TIMEOUT: 30000,
 } as const;
 
+/** Submit one payload to one endpoint and return result */
+async function submitToEndpoint(
+  payload: { host: string; key: string; keyLocation: string; urlList: string[] },
+  endpoint: string,
+  timeout: number
+): Promise<IndexNowApiResponse> {
+  const startTime = Date.now();
+
+  try {
+    console.log(`[IndexNow] Submitting ${payload.urlList.length} URLs to ${endpoint}`);
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'User-Agent': 'DCYFR-Labs IndexNow Client/1.0',
+      },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(timeout),
+    });
+
+    const responseTime = Date.now() - startTime;
+
+    if (response.ok) {
+      console.log(`[IndexNow] ✅ Success: ${endpoint} (${response.status}) in ${responseTime}ms`);
+      return { success: true, endpoint, statusCode: response.status, responseTime };
+    }
+
+    const errorText = await response.text().catch(() => 'Unknown error');
+    console.warn(`[IndexNow] ⚠️ HTTP ${response.status}: ${endpoint} - ${errorText}`);
+    return {
+      success: false,
+      endpoint,
+      statusCode: response.status,
+      responseTime,
+      error: `HTTP ${response.status}: ${errorText}`,
+    };
+  } catch (error) {
+    const responseTime = Date.now() - startTime;
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+    console.error(`[IndexNow] ❌ Error: ${endpoint} - ${errorMessage}`);
+    return { success: false, endpoint, statusCode: 0, responseTime, error: errorMessage };
+  }
+}
+
 /**
  * IndexNow submission data structure
  */
@@ -165,60 +211,13 @@ export const processIndexNowSubmission = inngest.createFunction(
       const results: IndexNowApiResponse[] = [];
 
       for (const payload of payloads.payloads) {
-        for (const endpoint of INDEXNOW_ENDPOINTS) {
-          const startTime = Date.now();
-          
-          try {
-            console.log(`[IndexNow] Submitting ${payload.urlList.length} URLs to ${endpoint}`);
-
-            const response = await fetch(endpoint, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'User-Agent': 'DCYFR-Labs IndexNow Client/1.0',
-              },
-              body: JSON.stringify(payload),
-              signal: AbortSignal.timeout(INDEXNOW_CONFIG.REQUEST_TIMEOUT),
-            });
-
-            const responseTime = Date.now() - startTime;
-
-            if (response.ok) {
-              console.log(`[IndexNow] ✅ Success: ${endpoint} (${response.status}) in ${responseTime}ms`);
-              results.push({
-                success: true,
-                endpoint,
-                statusCode: response.status,
-                responseTime,
-              });
-            } else {
-              const errorText = await response.text().catch(() => 'Unknown error');
-              console.warn(`[IndexNow] ⚠️ HTTP ${response.status}: ${endpoint} - ${errorText}`);
-              results.push({
-                success: false,
-                endpoint,
-                statusCode: response.status,
-                responseTime,
-                error: `HTTP ${response.status}: ${errorText}`,
-              });
-            }
-
-          } catch (error) {
-            const responseTime = Date.now() - startTime;
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            
-            console.error(`[IndexNow] ❌ Error: ${endpoint} - ${errorMessage}`);
-            results.push({
-              success: false,
-              endpoint,
-              statusCode: 0,
-              responseTime,
-              error: errorMessage,
-            });
-          }
+        for (let i = 0; i < INDEXNOW_ENDPOINTS.length; i++) {
+          const endpoint = INDEXNOW_ENDPOINTS[i];
+          const result = await submitToEndpoint(payload, endpoint, INDEXNOW_CONFIG.REQUEST_TIMEOUT);
+          results.push(result);
 
           // Rate limiting: small delay between requests
-          if (INDEXNOW_ENDPOINTS.indexOf(endpoint) < INDEXNOW_ENDPOINTS.length - 1) {
+          if (i < INDEXNOW_ENDPOINTS.length - 1) {
             await new Promise(resolve => setTimeout(resolve, 100));
           }
         }

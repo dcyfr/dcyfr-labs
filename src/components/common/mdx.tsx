@@ -258,28 +258,32 @@ function resolveCodeLanguage(preProps: Record<string, unknown>, codeProps: Recor
  * from the pre element's data-language attribute (if present) and ensures
  * the code child has it accessible to React components.
  */
+/** Process a pre/code node pair to ensure data-language attribute is set */
+function processPreCodeNode(node: any): void {
+  if (node.type !== 'element' || node.tagName !== 'pre') return;
+
+  const codeChild = node.children?.find(
+    (child: any) => child.type === 'element' && child.tagName === 'code'
+  );
+
+  if (!codeChild || !codeChild.properties) return;
+
+  const language = resolveCodeLanguage(node.properties ?? {}, codeChild.properties);
+
+  if (!codeChild.properties['data-language'] || codeChild.properties['data-language'] === '') {
+    codeChild.properties['data-language'] = language;
+  }
+
+  if (!node.properties) node.properties = {};
+  if (!node.properties['data-language']) {
+    node.properties['data-language'] = language;
+  }
+}
+
 function rehypeCaptureCodeLanguage() {
   return (tree: any) => {
     const visit = (node: any) => {
-      // Look for pre elements
-      if (node.type === 'element' && node.tagName === 'pre') {
-        const codeChild = node.children?.find(
-          (child: any) => child.type === 'element' && child.tagName === 'code'
-        );
-
-        if (codeChild && codeChild.properties) {
-          const language = resolveCodeLanguage(node.properties ?? {}, codeChild.properties);
-
-          if (!codeChild.properties['data-language'] || codeChild.properties['data-language'] === '') {
-            codeChild.properties['data-language'] = language;
-          }
-
-          if (!node.properties) node.properties = {};
-          if (!node.properties['data-language']) {
-            node.properties['data-language'] = language;
-          }
-        }
-      }
+      processPreCodeNode(node);
 
       // Recursively visit children
       if (node.children && Array.isArray(node.children)) {

@@ -16,6 +16,42 @@ const BulkRequestSchema = z.object({
 
 const DEFAULT_TYPES: Array<'posts' | 'projects' | 'static'> = ['posts', 'projects', 'static'];
 
+type IndexNowType = 'posts' | 'projects' | 'static';
+
+/** Collect URLs from specified content types */
+function collectUrlsForTypes(
+  types: IndexNowType[],
+  postsList: typeof posts,
+  projectsList: typeof visibleProjects
+): { urls: Set<string>; breakdown: { posts: number; projects: number; static: number } } {
+  const urls = new Set<string>();
+  const breakdown = { posts: 0, projects: 0, static: 0 };
+
+  if (types.includes('posts')) {
+    for (const post of postsList) {
+      urls.add(getBlogPostUrl(post.slug));
+    }
+    breakdown.posts = postsList.length;
+  }
+
+  if (types.includes('projects')) {
+    for (const project of projectsList) {
+      urls.add(getProjectUrl(project.slug));
+    }
+    breakdown.projects = projectsList.length;
+  }
+
+  if (types.includes('static')) {
+    const staticUrls = getStaticUrls();
+    for (const staticUrl of staticUrls) {
+      urls.add(staticUrl);
+    }
+    breakdown.static = staticUrls.length;
+  }
+
+  return { urls, breakdown };
+}
+
 function isValidAdminToken(request: NextRequest): boolean {
   const adminKey = process.env.ADMIN_API_KEY;
 
@@ -91,35 +127,8 @@ export async function POST(request: NextRequest) {
 
     const types = parsed.data.types && parsed.data.types.length > 0 ? parsed.data.types : DEFAULT_TYPES;
 
-    const urls = new Set<string>();
-    const breakdown = {
-      posts: 0,
-      projects: 0,
-      static: 0,
-    };
-
-    if (types.includes('posts')) {
-      for (const post of posts) {
-        urls.add(getBlogPostUrl(post.slug));
-      }
-      breakdown.posts = posts.length;
-    }
-
-    if (types.includes('projects')) {
-      for (const project of visibleProjects) {
-        urls.add(getProjectUrl(project.slug));
-      }
-      breakdown.projects = visibleProjects.length;
-    }
-
-    if (types.includes('static')) {
-      const staticUrls = getStaticUrls();
-      for (const staticUrl of staticUrls) {
-        urls.add(staticUrl);
-      }
-      breakdown.static = staticUrls.length;
-    }
-
+    // Collect URLs from specified sources
+    const { urls, breakdown } = collectUrlsForTypes(types, posts, visibleProjects);
     const urlList = Array.from(urls);
 
     if (urlList.length === 0) {

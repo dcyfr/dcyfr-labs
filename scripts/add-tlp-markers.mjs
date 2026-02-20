@@ -127,6 +127,44 @@ function findMarkdownFiles(dir, fileList = []) {
 }
 
 /**
+ * Print results summary
+ */
+function printResultSummary(results, isDryRunMode) {
+  console.log(`\n${colors.cyan}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
+  console.log(`${colors.green}✅ Markers added: ${results.added.length}${colors.reset}`);
+  console.log(`${colors.blue}ℹ️  Already marked: ${results.alreadyMarked.length}${colors.reset}`);
+  console.log(
+    `${colors.yellow}⏭️  Skipped (private): ${results.privateFiles.length}${colors.reset}`
+  );
+  console.log(`${colors.red}❌ Errors: ${results.errors.length}${colors.reset}\n`);
+
+  if (results.errors.length > 0) {
+    console.log(`${colors.red}Errors encountered:${colors.reset}\n`);
+    results.errors.forEach(({ path, error }) => {
+      console.log(`${colors.red}  ❌ ${path}: ${error}${colors.reset}`);
+    });
+    console.log('');
+  }
+
+  if (isDryRunMode) {
+    console.log(
+      `${colors.yellow}DRY RUN COMPLETE - Run without --dry-run to apply changes${colors.reset}\n`
+    );
+  } else {
+    console.log(`${colors.green}✅ TLP markers successfully added${colors.reset}\n`);
+
+    if (results.added.length > 0) {
+      console.log(`${colors.cyan}Next steps:${colors.reset}`);
+      console.log(`1. Run validation: npm run check:docs`);
+      console.log(`2. Review changes: git diff docs/`);
+      console.log(
+        `3. Commit changes: git add docs/ && git commit -m "docs: add TLP:CLEAR markers"\n`
+      );
+    }
+  }
+}
+
+/**
  * Main function
  */
 function main() {
@@ -170,38 +208,7 @@ function main() {
   }
 
   // Print summary
-  console.log(`\n${colors.cyan}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
-  console.log(`${colors.green}✅ Markers added: ${results.added.length}${colors.reset}`);
-  console.log(`${colors.blue}ℹ️  Already marked: ${results.alreadyMarked.length}${colors.reset}`);
-  console.log(
-    `${colors.yellow}⏭️  Skipped (private): ${results.privateFiles.length}${colors.reset}`
-  );
-  console.log(`${colors.red}❌ Errors: ${results.errors.length}${colors.reset}\n`);
-
-  if (results.errors.length > 0) {
-    console.log(`${colors.red}Errors encountered:${colors.reset}\n`);
-    results.errors.forEach(({ path, error }) => {
-      console.log(`${colors.red}  ❌ ${path}: ${error}${colors.reset}`);
-    });
-    console.log('');
-  }
-
-  if (isDryRun) {
-    console.log(
-      `${colors.yellow}DRY RUN COMPLETE - Run without --dry-run to apply changes${colors.reset}\n`
-    );
-  } else {
-    console.log(`${colors.green}✅ TLP markers successfully added${colors.reset}\n`);
-
-    if (results.added.length > 0) {
-      console.log(`${colors.cyan}Next steps:${colors.reset}`);
-      console.log(`1. Run validation: npm run check:docs`);
-      console.log(`2. Review changes: git diff docs/`);
-      console.log(
-        `3. Commit changes: git add docs/ && git commit -m "docs: add TLP:CLEAR markers"\n`
-      );
-    }
-  }
+  printResultSummary(results, isDryRun);
 
   process.exit(results.errors.length > 0 ? 1 : 0);
 }

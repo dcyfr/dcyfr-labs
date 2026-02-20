@@ -31,42 +31,45 @@ async function getAllBlogPostSlugs() {
 }
 
 // Parse key and check for issues
-function analyzeKey(key, blogPostSlugs) {
-  const parts = key.split(':');
-  const prefix = parts[0];
+function getMalformedIssues(key) {
   const issues = [];
-
-  // Check for malformed keys
   if (key.includes('undefined') || key.includes('null')) {
     issues.push({ type: 'malformed', reason: 'Contains undefined/null' });
   }
-
-  if (parts.some((part) => part === '')) {
+  if (key.split(':').some((part) => part === '')) {
     issues.push({ type: 'malformed', reason: 'Empty part in key' });
   }
+  return issues;
+}
 
-  // Check for stale dates (>90 days)
+function getStaleIssue(key) {
   const dateMatch = key.match(/(\d{4}-\d{2}-\d{2})/);
-  if (dateMatch) {
-    const date = new Date(dateMatch[1]);
-    const daysOld = (new Date() - date) / (1000 * 60 * 60 * 24);
-    if (daysOld > 90) {
-      issues.push({ type: 'stale', reason: `${Math.floor(daysOld)} days old` });
-    }
-  }
+  if (!dateMatch) return null;
+  const daysOld = (new Date() - new Date(dateMatch[1])) / (1000 * 60 * 60 * 24);
+  if (daysOld > 90) return { type: 'stale', reason: `${Math.floor(daysOld)} days old` };
+  return null;
+}
 
-  // Check for hanging post references
-  if (prefix in { views: 1, likes: 1, bookmarks: 1, shares: 1 }) {
-    if (parts[1] === 'post') {
-      const slug = parts[2];
-      if (slug && slug !== 'undefined' && slug !== 'null' && blogPostSlugs.length > 0) {
-        if (!blogPostSlugs.includes(slug)) {
-          issues.push({ type: 'hanging', reason: `Post not found: ${slug}` });
-        }
-      }
-    }
-  }
+function getHangingIssue(key, prefix, parts, blogPostSlugs) {
+  const trackingPrefixes = { views: 1, likes: 1, bookmarks: 1, shares: 1 };
+  if (!(prefix in trackingPrefixes)) return null;
+  if (parts[1] !== 'post') return null;
+  const slug = parts[2];
+  if (!slug || slug === 'undefined' || slug === 'null' || blogPostSlugs.length === 0) return null;
+  if (!blogPostSlugs.includes(slug)) return { type: 'hanging', reason: `Post not found: ${slug}` };
+  return null;
+}
 
+function analyzeKey(key, blogPostSlugs) {
+  const parts = key.split(':');
+  const prefix = parts[0];
+  const issues = [
+    ...getMalformedIssues(key),
+  ];
+  const stale = getStaleIssue(key);
+  if (stale) issues.push(stale);
+  const hanging = getHangingIssue(key, prefix, parts, blogPostSlugs);
+  if (hanging) issues.push(hanging);
   return { prefix, issues };
 }
 

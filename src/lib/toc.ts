@@ -86,6 +86,48 @@ function buildUniqueId(rawId: string, idCounts: Map<string, number>): string {
   return count > 1 ? `${rawId}-${count - 1}` : rawId;
 }
 
+/** Process a line for heading extraction - return heading if found, null otherwise */
+function processLine(
+  line: string,
+  state: { inCodeBlock: boolean; inCollapsibleComponent: boolean; collapsibleComponentDepth: number },
+  idCounts: Map<string, number>
+): TocHeading | null {
+  const trimmedLine = line.trim();
+
+  if (trimmedLine.startsWith('```')) {
+    state.inCodeBlock = !state.inCodeBlock;
+    return null;
+  }
+  if (state.inCodeBlock) return null;
+
+  if (!state.inCollapsibleComponent) {
+    if (isCollapsibleOpening(trimmedLine)) {
+      state.inCollapsibleComponent = true;
+      state.collapsibleComponentDepth = 1;
+    }
+  } else {
+    state.collapsibleComponentDepth = updateCollapsibleDepth(trimmedLine, state.collapsibleComponentDepth);
+    if (state.collapsibleComponentDepth <= 0) {
+      state.inCollapsibleComponent = false;
+      state.collapsibleComponentDepth = 0;
+      return null;
+    }
+  }
+
+  if (state.inCollapsibleComponent) return null;
+
+  const headingMatch = line.match(/^(#{2,3})\s+(.*)$/);
+  if (headingMatch) {
+    const level = headingMatch[1].length;
+    const rawText = headingMatch[2].trim();
+    const text = stripMarkdown(rawText);
+    const id = buildUniqueId(generateSlug(rawText), idCounts);
+    return { id, text, level };
+  }
+
+  return null;
+}
+
 /**
  * Extract headings from MDX content for table of contents
  * Matches h2 and h3 headings (## and ###)
@@ -96,43 +138,17 @@ function buildUniqueId(rawId: string, idCounts: Map<string, number>): string {
 export function extractHeadings(content: string): TocHeading[] {
   const headings: TocHeading[] = [];
   const lines = content.split('\n');
-  let inCodeBlock = false;
-  let inCollapsibleComponent = false;
-  let collapsibleComponentDepth = 0;
+  const state = {
+    inCodeBlock: false,
+    inCollapsibleComponent: false,
+    collapsibleComponentDepth: 0,
+  };
   const idCounts = new Map<string, number>();
 
   for (const line of lines) {
-    const trimmedLine = line.trim();
-
-    if (trimmedLine.startsWith('```')) {
-      inCodeBlock = !inCodeBlock;
-      continue;
-    }
-    if (inCodeBlock) continue;
-
-    if (!inCollapsibleComponent) {
-      if (isCollapsibleOpening(trimmedLine)) {
-        inCollapsibleComponent = true;
-        collapsibleComponentDepth = 1;
-      }
-    } else {
-      collapsibleComponentDepth = updateCollapsibleDepth(trimmedLine, collapsibleComponentDepth);
-      if (collapsibleComponentDepth <= 0) {
-        inCollapsibleComponent = false;
-        collapsibleComponentDepth = 0;
-        continue;
-      }
-    }
-
-    if (inCollapsibleComponent) continue;
-
-    const headingMatch = line.match(/^(#{2,3})\s+(.*)$/);
-    if (headingMatch) {
-      const level = headingMatch[1].length;
-      const rawText = headingMatch[2].trim();
-      const text = stripMarkdown(rawText);
-      const id = buildUniqueId(generateSlug(rawText), idCounts);
-      headings.push({ id, text, level });
+    const heading = processLine(line, state, idCounts);
+    if (heading) {
+      headings.push(heading);
     }
   }
 
