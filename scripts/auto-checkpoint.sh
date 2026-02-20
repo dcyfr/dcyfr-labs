@@ -74,6 +74,11 @@ while true; do
         copilot)
             SOURCE_FILE=".github/copilot-session-state.json"
             ;;
+        *)
+            echo "❌ Unknown agent: $AGENT"
+            echo "Valid agents: opencode, claude, copilot"
+            exit 1
+            ;;
     esac
 
     # Create checkpoint if source exists
