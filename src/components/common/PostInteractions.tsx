@@ -62,6 +62,84 @@ export interface PostInteractionsProps {
 }
 
 // ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/** Render interaction buttons helper */
+function renderInteractionButtons({
+  activityId,
+  contentType,
+  liked,
+  bookmarked,
+  toggleLike,
+  toggleBookmark,
+  globalLikes,
+  globalBookmarks,
+  showCounts,
+  variant,
+  title,
+  description,
+  href,
+  isCompact,
+}: {
+  activityId: string;
+  contentType: "blog" | "project";
+  liked: boolean;
+  bookmarked: boolean;
+  toggleLike: (id: string, action: string, contentType?: string) => void;
+  toggleBookmark: (id: string, context?: { contentType: string }) => void;
+  globalLikes: number;
+  globalBookmarks: number;
+  showCounts: boolean;
+  variant: "default" | "compact" | "detailed";
+  title: string;
+  description: string;
+  href: string;
+  isCompact: boolean;
+}) {
+  return (
+    <>
+      <ActionButton
+        icon={Heart}
+        label={
+          showCounts && globalLikes > 0
+            ? `${globalLikes}${globalLikes > 1 ? "+" : ""}`
+            : undefined
+        }
+        active={liked}
+        onClick={() => toggleLike(activityId, "like", contentType)}
+        ariaLabel={liked ? "Unlike" : "Like"}
+        variant={variant}
+        activeColor={SEMANTIC_COLORS.activity.action.liked}
+      />
+      <ActionButton
+        icon={Bookmark}
+        label={
+          showCounts && globalBookmarks > 0
+            ? `${globalBookmarks}${globalBookmarks > 1 ? "+" : ""}`
+            : undefined
+        }
+        active={bookmarked}
+        onClick={() => toggleBookmark(activityId, { contentType })}
+        ariaLabel={bookmarked ? "Remove bookmark" : "Bookmark"}
+        variant={variant}
+        activeColor={SEMANTIC_COLORS.activity.action.bookmarked}
+      />
+      <ThreadShareButton
+        activity={{
+          id: activityId,
+          title,
+          description,
+          href,
+        }}
+        variant="ghost"
+        size={isCompact ? "sm" : "default"}
+      />
+    </>
+  );
+}
+
+// ============================================================================
 // COMPONENT
 // ============================================================================
 
@@ -121,47 +199,22 @@ export function PostInteractions({
         className
       )}
     >
-      {/* Like Button */}
-      <ActionButton
-        icon={Heart}
-        label={
-          showCounts && globalLikes > 0
-            ? `${globalLikes}${globalLikes > 1 ? "+" : ""}`
-            : undefined
-        }
-        active={liked}
-        onClick={() => toggleLike(activityId, "like", contentType)}
-        ariaLabel={liked ? "Unlike" : "Like"}
-        variant={variant}
-        activeColor={SEMANTIC_COLORS.activity.action.liked}
-      />
-
-      {/* Bookmark Button */}
-      <ActionButton
-        icon={Bookmark}
-        label={
-          showCounts && globalBookmarks > 0
-            ? `${globalBookmarks}${globalBookmarks > 1 ? "+" : ""}`
-            : undefined
-        }
-        active={bookmarked}
-        onClick={() => toggleBookmark(activityId, { contentType })}
-        ariaLabel={bookmarked ? "Remove bookmark" : "Bookmark"}
-        variant={variant}
-        activeColor={SEMANTIC_COLORS.activity.action.bookmarked}
-      />
-
-      {/* Share Button */}
-      <ThreadShareButton
-        activity={{
-          id: activityId,
-          title,
-          description,
-          href,
-        }}
-        variant="ghost"
-        size={isCompact ? "sm" : "default"}
-      />
+      {renderInteractionButtons({
+        activityId,
+        contentType,
+        liked,
+        bookmarked,
+        toggleLike,
+        toggleBookmark,
+        globalLikes,
+        globalBookmarks,
+        showCounts,
+        variant,
+        title,
+        description,
+        href,
+        isCompact,
+      })}
     </div>
   );
 }
