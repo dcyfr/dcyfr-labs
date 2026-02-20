@@ -175,6 +175,134 @@ interface MagazinePostListProps {
   formatViews: (count: number) => string;
 }
 
+/** First post hero card for magazine layout */
+function FirstPostCard({
+  post,
+  latestSlug,
+  hottestSlug,
+  titleLevel,
+  viewCounts,
+  searchQuery,
+  formatViews,
+}: {
+  post: Post;
+  latestSlug?: string;
+  hottestSlug?: string;
+  titleLevel: "h2" | "h3";
+  viewCounts?: Map<string, number>;
+  searchQuery?: string;
+  formatViews: (count: number) => string;
+}) {
+  const TitleTag = titleLevel;
+  const hasImage = post.image && post.image.url && !post.image.hideCard;
+
+  return (
+    <ScrollReveal>
+      <article
+        className={`group rounded-xl border border-border/40 overflow-hidden relative bg-card shadow-md hover:shadow-lg transition-all ${ANIMATION.duration.normal} ${HOVER_EFFECTS.card}`}
+      >
+        <div className="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+          <BookmarkButton
+            slug={post.slug}
+            size="icon"
+            variant="ghost"
+            className="bg-background/80 backdrop-blur-sm hover:bg-background"
+          />
+        </div>
+        {hasImage && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={post.image!.url!}
+              alt={post.image!.alt || post.title}
+              fill
+              className={`object-cover group-hover:scale-105 transition-transform ${ANIMATION.duration.slow}`}
+              sizes="(max-width: 768px) 100vw, 100vw"
+              priority
+            />
+            <div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/50 to-black/70" />
+          </div>
+        )}
+        <Link href={`/blog/${post.slug}`} className="block">
+          <div className="p-4 md:p-10 lg:p-12 relative z-10 flex flex-col justify-end min-h-96 md:min-h-128">
+            <div
+              className={`flex flex-nowrap items-center gap-x-3 text-sm mb-4 overflow-x-auto ${hasImage ? "text-white/70" : "text-muted-foreground"}`}
+            >
+              <PostBadges
+                post={post}
+                isLatestPost={latestSlug === post.slug}
+                isHotPost={hottestSlug === post.slug}
+                showCategory={true}
+              />
+              <SeriesBadge post={post} />
+            </div>
+            <div
+              className={`hidden md:flex flex-nowrap items-center gap-x-3 text-sm mb-5 overflow-x-auto ${hasImage ? "text-white/70" : "text-muted-foreground"}`}
+            >
+              <time dateTime={post.publishedAt} className="whitespace-nowrap">
+                {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+              <span aria-hidden="true" className={hasImage ? "text-white/50" : "text-muted-foreground"}>
+                •
+              </span>
+              <span className="whitespace-nowrap">{post.readingTime.text}</span>
+              {viewCounts && viewCounts.has(post.id) && viewCounts.get(post.id)! > 0 && (
+                <>
+                  <span aria-hidden="true" className={hasImage ? "text-white/50" : "text-muted-foreground"}>
+                    •
+                  </span>
+                  <span className="whitespace-nowrap">{formatViews(viewCounts.get(post.id)!)} views</span>
+                </>
+              )}
+            </div>
+            <TitleTag
+              className={`font-bold text-4xl md:text-5xl lg:text-6xl leading-tight line-clamp-3 mb-4 ${hasImage ? "text-white" : "text-foreground"}`}
+            >
+              <HighlightText text={post.title} searchQuery={searchQuery} />
+            </TitleTag>
+            {post.subtitle && (
+              <p
+                className={`font-medium text-lg md:text-xl mb-4 line-clamp-2 ${hasImage ? "text-white/80" : "text-muted-foreground"}`}
+              >
+                <HighlightText text={post.subtitle} searchQuery={searchQuery} />
+              </p>
+            )}
+            <p
+              className={`text-base md:text-lg leading-relaxed line-clamp-2 md:line-clamp-3 mb-6 ${hasImage ? "text-white/80" : "text-muted-foreground"}`}
+            >
+              <HighlightText text={post.summary} searchQuery={searchQuery} />
+            </p>
+            {post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {post.tags.slice(0, 5).map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+                {post.tags.length > 5 && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-white/10 text-white/70 backdrop-blur-sm border border-white/20"
+                  >
+                    +{post.tags.length - 5}
+                  </Badge>
+                )}
+              </div>
+            )}
+          </div>
+        </Link>
+      </article>
+    </ScrollReveal>
+  );
+}
+
 function MagazinePostList({
   posts,
   latestSlug,
@@ -192,59 +320,16 @@ function MagazinePostList({
 
         if (isFirstPost) {
           return (
-            <ScrollReveal key={p.slug}>
-              <article
-                className={`group rounded-xl border border-border/40 overflow-hidden relative bg-card shadow-md hover:shadow-lg transition-all ${ANIMATION.duration.normal} ${HOVER_EFFECTS.card}`}
-              >
-                <div className="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <BookmarkButton slug={p.slug} size="icon" variant="ghost" className="bg-background/80 backdrop-blur-sm hover:bg-background" />
-                </div>
-                {p.image && p.image.url && !p.image.hideCard && (
-                  <div className="absolute inset-0 z-0">
-                    <Image src={p.image.url} alt={p.image.alt || p.title} fill className={`object-cover group-hover:scale-105 transition-transform ${ANIMATION.duration.slow}`} sizes="(max-width: 768px) 100vw, 100vw" priority />
-                    <div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/50 to-black/70" />
-                  </div>
-                )}
-                <Link href={`/blog/${p.slug}`} className="block">
-                  <div className="p-4 md:p-10 lg:p-12 relative z-10 flex flex-col justify-end min-h-96 md:min-h-128">
-                    <div className={`flex flex-nowrap items-center gap-x-3 text-sm mb-4 overflow-x-auto ${p.image && p.image.url && !p.image.hideCard ? "text-white/70" : "text-muted-foreground"}`}>
-                      <PostBadges post={p} isLatestPost={latestSlug === p.slug} isHotPost={hottestSlug === p.slug} showCategory={true} />
-                      <SeriesBadge post={p} />
-                    </div>
-                    <div className={`hidden md:flex flex-nowrap items-center gap-x-3 text-sm mb-5 overflow-x-auto ${p.image && p.image.url && !p.image.hideCard ? "text-white/70" : "text-muted-foreground"}`}>
-                      <time dateTime={p.publishedAt} className="whitespace-nowrap">{new Date(p.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time>
-                      <span aria-hidden="true" className={p.image && p.image.url && !p.image.hideCard ? "text-white/50" : "text-muted-foreground"}>•</span>
-                      <span className="whitespace-nowrap">{p.readingTime.text}</span>
-                      {viewCounts && viewCounts.has(p.id) && viewCounts.get(p.id)! > 0 && (
-                        <>
-                          <span aria-hidden="true" className={p.image && p.image.url && !p.image.hideCard ? "text-white/50" : "text-muted-foreground"}>•</span>
-                          <span className="whitespace-nowrap">{formatViews(viewCounts.get(p.id)!)} views</span>
-                        </>
-                      )}
-                    </div>
-                    <TitleTag className={`font-bold text-4xl md:text-5xl lg:text-6xl leading-tight line-clamp-3 mb-4 ${p.image && p.image.url && !p.image.hideCard ? "text-white" : "text-foreground"}`}>
-                      <HighlightText text={p.title} searchQuery={searchQuery} />
-                    </TitleTag>
-                    {p.subtitle && (
-                      <p className={`font-medium text-lg md:text-xl mb-4 line-clamp-2 ${p.image && p.image.url && !p.image.hideCard ? "text-white/80" : "text-muted-foreground"}`}>
-                        <HighlightText text={p.subtitle} searchQuery={searchQuery} />
-                      </p>
-                    )}
-                    <p className={`text-base md:text-lg leading-relaxed line-clamp-2 md:line-clamp-3 mb-6 ${p.image && p.image.url && !p.image.hideCard ? "text-white/80" : "text-muted-foreground"}`}>
-                      <HighlightText text={p.summary} searchQuery={searchQuery} />
-                    </p>
-                    {p.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {p.tags.slice(0, 5).map((tag) => (
-                          <Badge key={tag} variant="secondary" className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm border border-white/20">{tag}</Badge>
-                        ))}
-                        {p.tags.length > 5 && <Badge variant="secondary" className="bg-white/10 text-white/70 backdrop-blur-sm border border-white/20">+{p.tags.length - 5}</Badge>}
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              </article>
-            </ScrollReveal>
+            <FirstPostCard
+              key={p.slug}
+              post={p}
+              latestSlug={latestSlug}
+              hottestSlug={hottestSlug}
+              titleLevel={titleLevel}
+              viewCounts={viewCounts}
+              searchQuery={searchQuery}
+              formatViews={formatViews}
+            />
           );
         }
 

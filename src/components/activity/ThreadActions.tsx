@@ -82,6 +82,87 @@ function normalizeActivityId(activityId: string, href?: string): string {
   return activityId;
 }
 
+/** Render action buttons (Like, Bookmark, Share) */
+function renderActionButtons({
+  normalizedId,
+  liked,
+  bookmarked,
+  toggleLike,
+  toggleBookmark,
+  globalLikes,
+  globalBookmarks,
+  shareCount,
+  activity,
+  activityId,
+  size,
+}: {
+  normalizedId: string;
+  liked: boolean;
+  bookmarked: boolean;
+  toggleLike: (id: string) => void;
+  toggleBookmark: (id: string) => void;
+  globalLikes: number;
+  globalBookmarks: number;
+  shareCount: number;
+  activity?: ThreadActivity;
+  activityId: string;
+  size: "default" | "compact";
+}) {
+  return (
+    <>
+      <ActionButton
+        icon={Heart}
+        label={
+          globalLikes > 0
+            ? `${globalLikes}${globalLikes > 1 ? "+" : ""}`
+            : undefined
+        }
+        globalCount={globalLikes}
+        active={liked}
+        onClick={() => toggleLike(normalizedId)}
+        ariaLabel={liked ? "Unlike" : "Like"}
+        size={size}
+        activeColor={SEMANTIC_COLORS.activity.action.liked}
+      />
+      <ActionButton
+        icon={Bookmark}
+        label={
+          globalBookmarks > 0
+            ? `${globalBookmarks}${globalBookmarks > 1 ? "+" : ""}`
+            : undefined
+        }
+        globalCount={globalBookmarks}
+        active={bookmarked}
+        onClick={() => toggleBookmark(normalizedId)}
+        ariaLabel={bookmarked ? "Remove bookmark" : "Bookmark"}
+        size={size}
+        activeColor={SEMANTIC_COLORS.activity.action.bookmarked}
+      />
+      {activity && (
+        <div className="relative">
+          <ThreadShareButton
+            activity={{ id: activityId, ...activity }}
+            variant="ghost"
+            size="sm"
+          />
+          {shareCount > 0 && (
+            <span
+              className={cn(
+                TYPOGRAPHY.label.xs,
+                SEMANTIC_COLORS.activity.action.default,
+                "ml-1"
+              )}
+              suppressHydrationWarning
+            >
+              {shareCount}
+            </span>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
 /**
  * Thread action buttons (like, bookmark, share) + timestamp
  */
@@ -151,60 +232,19 @@ export function ThreadActions({
         className
       )}
     >
-      {/* Like Button */}
-      <ActionButton
-        icon={Heart}
-        label={
-          globalLikes > 0
-            ? `${globalLikes}${globalLikes > 1 ? "+" : ""}`
-            : undefined
-        }
-        globalCount={globalLikes}
-        active={liked}
-        onClick={() => toggleLike(normalizedId)}
-        ariaLabel={liked ? "Unlike" : "Like"}
-        size={size}
-        activeColor={SEMANTIC_COLORS.activity.action.liked}
-      />
-
-      {/* Bookmark Button */}
-      <ActionButton
-        icon={Bookmark}
-        label={
-          globalBookmarks > 0
-            ? `${globalBookmarks}${globalBookmarks > 1 ? "+" : ""}`
-            : undefined
-        }
-        globalCount={globalBookmarks}
-        active={bookmarked}
-        onClick={() => toggleBookmark(normalizedId)}
-        ariaLabel={bookmarked ? "Remove bookmark" : "Bookmark"}
-        size={size}
-        activeColor={SEMANTIC_COLORS.activity.action.bookmarked}
-      />
-
-      {/* Share Button (if activity data provided) */}
-      {activity && (
-        <div className="relative">
-          <ThreadShareButton
-            activity={{ id: activityId, ...activity }}
-            variant="ghost"
-            size="sm"
-          />
-          {shareCount > 0 && (
-            <span
-              className={cn(
-                TYPOGRAPHY.label.xs,
-                SEMANTIC_COLORS.activity.action.default,
-                "ml-1"
-              )}
-              suppressHydrationWarning
-            >
-              {shareCount}
-            </span>
-          )}
-        </div>
-      )}
+      {renderActionButtons({
+        normalizedId,
+        liked,
+        bookmarked,
+        toggleLike,
+        toggleBookmark,
+        globalLikes,
+        globalBookmarks,
+        shareCount,
+        activity,
+        activityId,
+        size,
+      })}
 
       {/* Timestamp */}
       {!hideTimestamp && (
