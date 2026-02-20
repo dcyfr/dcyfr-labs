@@ -13,7 +13,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 const nextConfig: NextConfig = {
   /* config options here */
   skipTrailingSlashRedirect: true,
-  serverExternalPackages: ['redis'],
+  serverExternalPackages: ['redis', 'mem0ai', '@anthropic-ai/sdk', 'sqlite3'],
   // Transpile local workspace packages
   transpilePackages: ['@dcyfr/ai', '@dcyfr/agents'],
   experimental: {

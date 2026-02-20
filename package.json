@@ -466,5 +466,9 @@
     "langsmith": ">=0.4.6",
     "undici": ">=6.23.0",
     "@qdrant/js-client-rest": ">=1.16.0"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sdk": "^0.40.1",
+    "sqlite3": "^5.1.7"
   }
 }
