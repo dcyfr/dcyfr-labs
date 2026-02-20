@@ -50,6 +50,11 @@ case "$AGENT" in
     copilot)
         TARGET_FILE=".github/copilot-session-state.json"
         ;;
+    *)
+        echo "❌ Unknown agent: $AGENT"
+        echo "Valid agents: opencode, claude, copilot"
+        exit 1
+        ;;
 esac
 
 # Check if checkpoints exist
