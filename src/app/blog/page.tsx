@@ -7,6 +7,7 @@ import { getPostBadgeMetadata } from '@/lib/post-badges.server';
 import { groupPostsByCategory, sortCategoriesByCount } from '@/lib/blog-grouping';
 import {
   createArchivePageMetadata,
+  createBreadcrumbSchema,
   createCollectionSchema,
   getJsonLdScriptProps,
 } from '@/lib/metadata';
@@ -371,9 +372,15 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     })),
   });
 
+  const breadcrumbJsonLd = createBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Blog', url: `${SITE_URL}/blog` },
+  ]);
+
   return (
     <PageLayout>
       <script {...getJsonLdScriptProps(jsonLd, nonce)} />
+      <script {...getJsonLdScriptProps(breadcrumbJsonLd, nonce)} />
       <SmoothScrollToHash />
 
       {/* Track search and filter analytics */}

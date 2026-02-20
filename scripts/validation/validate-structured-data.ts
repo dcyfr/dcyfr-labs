@@ -8,9 +8,9 @@
  * Usage: node scripts/validate-structured-data.mjs
  */
 
-import { posts } from "../src/data/posts.ts";
-import { visibleProjects } from "../src/data/projects.ts";
-import { SITE_URL } from "../src/lib/site-config.ts";
+import * as postsModule from "../../src/data/posts.ts";
+import * as projectsModule from "../../src/data/projects.ts";
+import * as siteConfigModule from "../../src/lib/site-config.ts";
 import {
   getPersonSchema,
   getWebSiteSchema,
@@ -19,7 +19,12 @@ import {
   getBlogCollectionSchema,
   getAboutPageSchema,
   getContactPageSchema,
-} from "../src/lib/json-ld.ts";
+} from "../../src/lib/json-ld.ts";
+
+const { posts } = postsModule;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { visibleProjects } = projectsModule;
+const { SITE_URL } = siteConfigModule;
 
 const TEST_SCHEMAS = {
   // Website schema (homepage)
@@ -65,6 +70,66 @@ const TEST_SCHEMAS = {
       ],
     };
   })(),
+
+  // FAQ Page (homepage FAQ enrichment)
+  "Homepage - FAQPage": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/#faqpage`,
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is DCYFR Labs?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "DCYFR Labs is a virtual partnership dedicated to building secure, innovative solutions for the modern web. We publish in-depth insights on cyber architecture, information security, artificial intelligence, and software development.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What topics does DCYFR Labs cover?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "DCYFR Labs covers cybersecurity, artificial intelligence, cloud security, DevSecOps, web development, risk management, incident response, and practical programming techniques.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Who creates content at DCYFR Labs?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Content at DCYFR Labs is created by experienced practitioners in cybersecurity and software engineering, led by Drew \u2014 a founding architect with expertise across security architecture, AI, and modern web development.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How can I read the latest articles on DCYFR Labs?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Browse all articles at dcyfr.ai/blog, or use the search feature on the homepage. You can filter content by topic, tag, or reading time to find exactly what you need.",
+        },
+      },
+    ],
+  },
+
+  // BreadcrumbList (blog/about pages)
+  "BreadcrumbList - Blog": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+    ],
+  },
+
+  "BreadcrumbList - About": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "About DCYFR Labs", item: `${SITE_URL}/about` },
+    ],
+  },
 };
 
 /**
@@ -81,6 +146,8 @@ function validateSchema(schema, name) {
   validatePersonType(schema, issues);
   validateArticleType(schema, issues);
   validateWebSiteType(schema, issues);
+  validateFAQPageType(schema, issues);
+  validateBreadcrumbType(schema, issues);
   checkJsonValues(schema, issues);
 
   return issues;
@@ -124,6 +191,42 @@ function validateWebSiteType(schema, issues) {
   if (!website) return;
   if (!website.name) issues.push("WebSite missing name");
   if (!website.url) issues.push("WebSite missing url");
+}
+
+function validateFAQPageType(schema, issues) {
+  const faq = findTypedItem(schema, "FAQPage");
+  if (!faq) return;
+  if (!faq.mainEntity) {
+    issues.push("FAQPage missing mainEntity");
+    return;
+  }
+  if (!Array.isArray(faq.mainEntity)) {
+    issues.push("FAQPage mainEntity must be an array");
+    return;
+  }
+  faq.mainEntity.forEach((q, i) => {
+    if (q["@type"] !== "Question") issues.push(`FAQPage mainEntity[${i}] must have @type 'Question'`);
+    if (!q.name) issues.push(`FAQPage mainEntity[${i}] missing name`);
+    if (!q.acceptedAnswer) issues.push(`FAQPage mainEntity[${i}] missing acceptedAnswer`);
+    else if (!q.acceptedAnswer.text) issues.push(`FAQPage mainEntity[${i}].acceptedAnswer missing text`);
+  });
+}
+
+function validateBreadcrumbType(schema, issues) {
+  const breadcrumb = findTypedItem(schema, "BreadcrumbList");
+  if (!breadcrumb) return;
+  if (!breadcrumb.itemListElement) {
+    issues.push("BreadcrumbList missing itemListElement");
+    return;
+  }
+  if (!Array.isArray(breadcrumb.itemListElement)) {
+    issues.push("BreadcrumbList itemListElement must be an array");
+    return;
+  }
+  breadcrumb.itemListElement.forEach((item, i) => {
+    if (!item.name) issues.push(`BreadcrumbList item ${i} missing name`);
+    if (!item.item) issues.push(`BreadcrumbList item ${i} missing item (url)`);
+  });
 }
 
 function checkJsonValues(schema, issues) {
