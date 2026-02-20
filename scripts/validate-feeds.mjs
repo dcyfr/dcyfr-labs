@@ -132,6 +132,41 @@ async function validateFeed(endpoint) {
 }
 
 /**
+ * Report the result for a single feed endpoint, returns true if there was an error
+ */
+function reportFeedResult(result) {
+  if (!result.success) {
+    log(colors.red, `  ❌ Failed: ${result.error}`);
+    return true;
+  }
+
+  let hasError = false;
+
+  if (!result.hasCorrectContentType) {
+    log(colors.yellow, `  ⚠️  Wrong Content-Type: ${result.contentType}`);
+    log(colors.yellow, `      Expected: ${result.endpoint.contentType}`);
+    hasError = true;
+  } else {
+    log(colors.green, `  ✅ Content-Type: ${result.contentType}`);
+  }
+
+  if (result.contentIssues.length > 0) {
+    log(colors.red, `  ❌ Found ${result.contentIssues.length} forbidden attribute(s):`);
+    for (const issue of result.contentIssues) {
+      log(colors.red, `     - ${issue.attribute}: ${issue.count} occurrence(s)`);
+    }
+    hasError = true;
+  } else {
+    log(colors.green, `  ✅ No forbidden attributes`);
+  }
+
+  const sizeKb = (result.size / 1024).toFixed(2);
+  console.log(`     Size: ${sizeKb} KB`);
+
+  return hasError;
+}
+
+/**
  * Main validation
  */
 async function validateFeeds() {
@@ -145,33 +180,8 @@ async function validateFeeds() {
     const result = await validateFeed(endpoint);
     results.push(result);
     
-    if (!result.success) {
-      log(colors.red, `  ❌ Failed: ${result.error}`);
+    if (reportFeedResult(result)) {
       hasErrors = true;
-    } else {
-      // Check content type
-      if (!result.hasCorrectContentType) {
-        log(colors.yellow, `  ⚠️  Wrong Content-Type: ${result.contentType}`);
-        log(colors.yellow, `      Expected: ${endpoint.contentType}`);
-        hasErrors = true;
-      } else {
-        log(colors.green, `  ✅ Content-Type: ${result.contentType}`);
-      }
-      
-      // Check for forbidden attributes
-      if (result.contentIssues.length > 0) {
-        log(colors.red, `  ❌ Found ${result.contentIssues.length} forbidden attribute(s):`);
-        for (const issue of result.contentIssues) {
-          log(colors.red, `     - ${issue.attribute}: ${issue.count} occurrence(s)`);
-        }
-        hasErrors = true;
-      } else {
-        log(colors.green, `  ✅ No forbidden attributes`);
-      }
-      
-      // Show size
-      const sizeKb = (result.size / 1024).toFixed(2);
-      console.log(`     Size: ${sizeKb} KB`);
     }
     
     console.log('');

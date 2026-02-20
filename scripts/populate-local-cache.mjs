@@ -12,6 +12,32 @@
  *   node scripts/populate-local-cache.mjs
  */
 
+function printCacheDetails(data) {
+  console.log('\n📊 Cache Status:');
+  console.log(`  - GitHub contributions: ${data.github ? '✅' : '❌'}`);
+  console.log(`  - Credly badges: ${data.credly ? '✅' : '❌'}`);
+
+  if (data.details) {
+    console.log('\n📝 Details:');
+    if (data.details.github) {
+      console.log(`  GitHub: ${data.details.github.message || 'No details'}`);
+      if (data.details.github.key) {
+        console.log(`    Key: ${data.details.github.key}`);
+      }
+    }
+    if (data.details.credly) {
+      console.log(`  Credly: ${data.details.credly.message || 'No details'}`);
+      if (data.details.credly.keys) {
+        console.log(`    Keys: ${data.details.credly.keys.length} variants cached`);
+      }
+    }
+  }
+
+  if (data.message && !data.success) {
+    console.warn(`\n⚠️  Warning: ${data.message}`);
+  }
+}
+
 async function populateLocalCache() {
   const port = process.env.PORT || 3000;
   const url = `http://localhost:${port}/api/dev/populate-cache`;
@@ -33,29 +59,7 @@ async function populateLocalCache() {
     console.log('✅ Cache populated successfully!');
     console.log(data);
 
-    console.log('\n📊 Cache Status:');
-    console.log(`  - GitHub contributions: ${data.github ? '✅' : '❌'}`);
-    console.log(`  - Credly badges: ${data.credly ? '✅' : '❌'}`);
-
-    if (data.details) {
-      console.log('\n📝 Details:');
-      if (data.details.github) {
-        console.log(`  GitHub: ${data.details.github.message || 'No details'}`);
-        if (data.details.github.key) {
-          console.log(`    Key: ${data.details.github.key}`);
-        }
-      }
-      if (data.details.credly) {
-        console.log(`  Credly: ${data.details.credly.message || 'No details'}`);
-        if (data.details.credly.keys) {
-          console.log(`    Keys: ${data.details.credly.keys.length} variants cached`);
-        }
-      }
-    }
-
-    if (data.message && !data.success) {
-      console.warn(`\n⚠️  Warning: ${data.message}`);
-    }
+    printCacheDetails(data);
   } catch (error) {
     console.error('❌ Error populating cache:', error);
     console.error('\n💡 Make sure:');

@@ -35,6 +35,32 @@ function buildRateLimitHeaders(rateLimit: {
   };
 }
 
+/** Queue IndexNow submission event or defer if Inngest branch environment missing */
+async function queueIndexNowEvent(
+  eventData: IndexNowSubmissionRequestedEventData
+): Promise<{ status: 'queued' | 'deferred'; warning?: string }> {
+  try {
+    await inngest.send({
+      name: INDEXNOW_EVENTS.submissionRequested,
+      data: eventData,
+    });
+    return { status: 'queued' };
+  } catch (queueError) {
+    const queueErrorMessage = queueError instanceof Error ? queueError.message : 'Unknown queue error';
+    const isBranchEnvIssue = isInngestBranchEnvironmentIssue(queueErrorMessage);
+
+    if (!isBranchEnvIssue) {
+      throw queueError;
+    }
+
+    console.warn('IndexNow queue deferred:', queueErrorMessage);
+    return {
+      status: 'deferred',
+      warning: 'Inngest branch environment is not configured; submission accepted but not queued.',
+    };
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const clientIp = getClientIp(request.headers);
@@ -113,54 +139,38 @@ export async function POST(request: NextRequest) {
 
     // 2. QUEUE
     const requestId = crypto.randomUUID();
-    let queueStatus: 'queued' | 'deferred' = 'queued';
-    let queueWarning: string | undefined;
+    const eventData: IndexNowSubmissionRequestedEventData = {
+      urls,
+      key: apiKey,
+      keyLocation: finalKeyLocation,
+      requestId,
+      requestedAt: Date.now(),
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      ip: clientIp,
+    };
 
-    try {
-      const eventData: IndexNowSubmissionRequestedEventData = {
-          urls,
-          key: apiKey,
-          keyLocation: finalKeyLocation,
-          requestId,
-          requestedAt: Date.now(),
-          userAgent: request.headers.get('user-agent') || 'unknown',
-            ip: clientIp,
-      };
-
-      await inngest.send({
-        name: INDEXNOW_EVENTS.submissionRequested,
-        data: eventData,
-      });
-    } catch (queueError) {
-      const queueErrorMessage = queueError instanceof Error ? queueError.message : 'Unknown queue error';
-      const isBranchEnvIssue = isInngestBranchEnvironmentIssue(queueErrorMessage);
-
-      if (!isBranchEnvIssue) {
-        throw queueError;
-      }
-
-      queueStatus = 'deferred';
-      queueWarning = 'Inngest branch environment is not configured; submission accepted but not queued.';
-      console.warn('IndexNow queue deferred:', queueErrorMessage);
-    }
+    const queueResult = await queueIndexNowEvent(eventData);
 
     // 3. RESPOND
-    return NextResponse.json({
-      success: true,
-      message:
-        queueStatus === 'queued'
-          ? 'IndexNow submission queued successfully'
-          : 'IndexNow submission accepted (queue deferred)',
-      requestId,
-      queueStatus,
-      ...(queueWarning ? { warning: queueWarning } : {}),
-      queued: {
-        urls: urls.length,
-        keyLocation: finalKeyLocation,
+    return NextResponse.json(
+      {
+        success: true,
+        message:
+          queueResult.status === 'queued'
+            ? 'IndexNow submission queued successfully'
+            : 'IndexNow submission accepted (queue deferred)',
+        requestId,
+        queueStatus: queueResult.status,
+        ...(queueResult.warning ? { warning: queueResult.warning } : {}),
+        queued: {
+          urls: urls.length,
+          keyLocation: finalKeyLocation,
+        },
       },
-    }, {
-      headers: buildRateLimitHeaders(rateLimit),
-    });
+      {
+        headers: buildRateLimitHeaders(rateLimit),
+      }
+    );
 
   } catch (error) {
     console.error('IndexNow submission error:', error);

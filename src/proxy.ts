@@ -180,6 +180,26 @@ function checkInternalApiAccess(request: NextRequest, pathname: string): NextRes
   return NextResponse.rewrite(new URL("/_not-found", request.url));
 }
 
+/** Build CSP directives array with nonce and environment-specific rules */
+function buildCspDirectives(nonce: string, isDevelopment: boolean): string[] {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://sitesapi.io https://vercel.live`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live",
+    `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://avatars.githubusercontent.com https://github.githubassets.com https://images.credly.com https://vercel.live`,
+    "font-src 'self' https://fonts.gstatic.com https://vercel.live",
+    `connect-src 'self'${isDevelopment ? " ws://localhost:* wss://localhost:*" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://*.sentry.io https://sitesapi.io https://vercel.live https://*.pusher.com wss://*.pusher.com`,
+    "frame-src 'self' https://vercel.live https://giscus.app https://*.credly.com https://*.vercel-insights.com",
+    "worker-src 'self' blob:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "upgrade-insecure-requests",
+    "block-all-mixed-content",
+    "report-uri /api/csp-report",
+  ];
+}
+
 export default function proxy(request: NextRequest) {
   // Generate unique nonce for this request
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
@@ -244,57 +264,7 @@ export default function proxy(request: NextRequest) {
   }
 
   // Build CSP directives with nonce
-  const cspDirectives = [
-    // Default: only allow same-origin resources
-    "default-src 'self'",
-
-    // Scripts: self with nonce, external analytics, BotID, and Vercel Live
-    // Using nonce instead of unsafe-inline for improved security
-    // In development, add 'unsafe-eval' for Turbopack HMR
-    `script-src 'self' 'nonce-${nonce}'${isDevelopment ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://sitesapi.io https://vercel.live`,
-
-    // Styles: self with unsafe-inline (no nonce)
-    // Note: Cannot use nonce for styles because third-party scripts (Vercel, Next.js fonts, React)
-    // inject styles dynamically without nonces, and browsers ignore 'unsafe-inline' when nonce is present.
-    // This is acceptable because inline style injection poses much lower XSS risk than inline scripts.
-    // We maintain strict nonce-based CSP for scripts where it matters most for security.
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://vercel.live",
-
-    // Images: self, data URIs, production domain, Vercel domains, GitHub (for Giscus avatars), Credly (for certification badges), and Vercel Live
-  `img-src 'self' data: https://${SITE_DOMAIN} https://*.vercel.com https://vercel.com https://avatars.githubusercontent.com https://github.githubassets.com https://images.credly.com https://vercel.live`,
-
-    // Fonts: self, Google Fonts CDN, and Vercel Live
-    "font-src 'self' https://fonts.gstatic.com https://vercel.live",
-
-    // Connect: self, Vercel analytics endpoints, Sentry error reporting, BotID API, and Vercel Live (for feedback/comments)
-    // In development, allow webpack/turbopack HMR websockets
-    `connect-src 'self'${isDevelopment ? " ws://localhost:* wss://localhost:*" : ""} https://va.vercel-scripts.com https://*.vercel-insights.com https://vercel-insights.com https://*.sentry.io https://sitesapi.io https://vercel.live https://*.pusher.com wss://*.pusher.com`,
-
-    // Frame: allow self (own domain), Vercel Live for preview feedback, Giscus for blog comments, Credly embeds, and Vercel Analytics for fingerprinting
-    "frame-src 'self' https://vercel.live https://giscus.app https://*.credly.com https://*.vercel-insights.com",
-
-    // Worker: allow blob URIs for Sentry session replay
-    "worker-src 'self' blob:",
-
-    // Objects: no plugins
-    "object-src 'none'",
-
-    // Base URI: restrict to self
-    "base-uri 'self'",
-
-    // Form actions: only to self
-    "form-action 'self'",
-
-    // Upgrade insecure requests
-    "upgrade-insecure-requests",
-
-    // Block all mixed content
-    "block-all-mixed-content",
-
-    // CSP violation reporting
-    "report-uri /api/csp-report",
-  ];
-
+  const cspDirectives = buildCspDirectives(nonce, isDevelopment);
   const cspHeader = cspDirectives.join("; ");
 
   // Clone response headers

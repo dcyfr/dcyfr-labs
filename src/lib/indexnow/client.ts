@@ -76,18 +76,10 @@ export async function submitToIndexNowWithResult(
     });
 
     const payload = await response.json().catch(() => ({} as Record<string, unknown>));
-    const queued =
-      typeof payload === 'object' && payload !== null &&
-      typeof (payload as { queued?: { urls?: number } }).queued?.urls === 'number'
-        ? (payload as { queued: { urls: number } }).queued.urls
-        : normalizedUrls.length;
+    const queued = extractQueuedCount(payload, normalizedUrls.length);
 
     if (!response.ok) {
-      const errorMessage =
-        typeof payload === 'object' && payload !== null &&
-        typeof (payload as { error?: string }).error === 'string'
-          ? (payload as { error: string }).error
-          : `IndexNow submission failed with status ${response.status}`;
+      const errorMessage = extractPayloadError(payload, response.status);
 
       const failure: IndexNowSubmitResult = {
         success: false,
@@ -107,11 +99,7 @@ export async function submitToIndexNowWithResult(
       success: true,
       status: response.status,
       queued,
-      message:
-        typeof payload === 'object' && payload !== null &&
-        typeof (payload as { message?: string }).message === 'string'
-          ? (payload as { message: string }).message
-          : 'URLs queued for IndexNow submission',
+      message: extractPayloadMessage(payload),
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';

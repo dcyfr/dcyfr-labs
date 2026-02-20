@@ -20,46 +20,93 @@ config({ path: resolve(__dirname, '../.env.local') });
 import { createClient } from 'redis';
 import { redis as upstashClient } from '../src/mcp/shared/redis-client.ts';
 
+async function migrateStringToUpstash(key, ttl, oldClient) {
+  const value = await oldClient.get(key);
+  if (ttl > 0) await upstashClient.setex(key, ttl, value);
+  else await upstashClient.set(key, value);
+  return true;
+}
+
+async function migrateListToUpstash(key, ttl, oldClient) {
+  const values = await oldClient.lRange(key, 0, -1);
+  if (!values.length) return false;
+  await upstashClient.del(key);
+  await upstashClient.lpush(key, ...values.reverse());
+  if (ttl > 0) await upstashClient.expire(key, ttl);
+  return true;
+}
+
+async function migrateSetToUpstash(key, ttl, oldClient) {
+  const members = await oldClient.sMembers(key);
+  if (!members.length) return false;
+  await upstashClient.del(key);
+  await upstashClient.sadd(key, ...members);
+  if (ttl > 0) await upstashClient.expire(key, ttl);
+  return true;
+}
+
+async function migrateZsetToUpstash(key, ttl, oldClient) {
+  const items = await oldClient.zRangeWithScores(key, 0, -1);
+  if (!items.length) return false;
+  await upstashClient.del(key);
+  await upstashClient.zadd(key, ...items.map(item => ({ score: item.score, member: item.value })));
+  if (ttl > 0) await upstashClient.expire(key, ttl);
+  return true;
+}
+
+async function migrateHashToUpstash(key, ttl, oldClient) {
+  const hash = await oldClient.hGetAll(key);
+  if (!Object.keys(hash).length) return false;
+  await upstashClient.del(key);
+  await upstashClient.hset(key, hash);
+  if (ttl > 0) await upstashClient.expire(key, ttl);
+  return true;
+}
+
 async function migrateKeyToUpstash(key, type, ttl, oldClient) {
-  if (type === 'string') {
-    const value = await oldClient.get(key);
-    if (ttl > 0) await upstashClient.setex(key, ttl, value);
-    else await upstashClient.set(key, value);
-    return true;
+  switch (type) {
+    case 'string': return migrateStringToUpstash(key, ttl, oldClient);
+    case 'list': return migrateListToUpstash(key, ttl, oldClient);
+    case 'set': return migrateSetToUpstash(key, ttl, oldClient);
+    case 'zset': return migrateZsetToUpstash(key, ttl, oldClient);
+    case 'hash': return migrateHashToUpstash(key, ttl, oldClient);
+    default: return null; // unsupported type
   }
-  if (type === 'list') {
-    const values = await oldClient.lRange(key, 0, -1);
-    if (!values.length) return false;
-    await upstashClient.del(key);
-    await upstashClient.lpush(key, ...values.reverse());
-    if (ttl > 0) await upstashClient.expire(key, ttl);
-    return true;
+}
+
+async function migrateAllKeys(allKeys, oldClient) {
+  let migrated = 0;
+  let failed = 0;
+  const errors = [];
+
+  for (let i = 0; i < allKeys.length; i++) {
+    const key = allKeys[i];
+    const progress = `[${i + 1}/${allKeys.length}]`;
+
+    try {
+      const type = await oldClient.type(key);
+      const ttl = await oldClient.ttl(key);
+
+      const result = await migrateKeyToUpstash(key, type, ttl, oldClient);
+      if (result === null) {
+        console.log(`${progress} ⚠️  Skipping ${key} (unsupported type: ${type})`);
+        continue;
+      }
+
+      if (result) {
+        migrated++;
+        if (migrated % 10 === 0) {
+          console.log(`${progress} ✅ Migrated ${migrated} keys...`);
+        }
+      }
+    } catch (error) {
+      failed++;
+      errors.push({ key, error: error.message });
+      console.error(`${progress} ❌ Failed to migrate ${key}: ${error.message}`);
+    }
   }
-  if (type === 'set') {
-    const members = await oldClient.sMembers(key);
-    if (!members.length) return false;
-    await upstashClient.del(key);
-    await upstashClient.sadd(key, ...members);
-    if (ttl > 0) await upstashClient.expire(key, ttl);
-    return true;
-  }
-  if (type === 'zset') {
-    const items = await oldClient.zRangeWithScores(key, 0, -1);
-    if (!items.length) return false;
-    await upstashClient.del(key);
-    await upstashClient.zadd(key, ...items.map(item => ({ score: item.score, member: item.value })));
-    if (ttl > 0) await upstashClient.expire(key, ttl);
-    return true;
-  }
-  if (type === 'hash') {
-    const hash = await oldClient.hGetAll(key);
-    if (!Object.keys(hash).length) return false;
-    await upstashClient.del(key);
-    await upstashClient.hset(key, hash);
-    if (ttl > 0) await upstashClient.expire(key, ttl);
-    return true;
-  }
-  return null; // unsupported type
+
+  return { migrated, failed, errors };
 }
 
 async function migrateRedisData() {
@@ -115,36 +162,7 @@ async function migrateRedisData() {
 
     console.log('🔄 Starting migration...\n');
 
-    let migrated = 0;
-    let failed = 0;
-    const errors = [];
-
-    for (let i = 0; i < allKeys.length; i++) {
-      const key = allKeys[i];
-      const progress = `[${i + 1}/${allKeys.length}]`;
-
-      try {
-        const type = await oldClient.type(key);
-        const ttl = await oldClient.ttl(key);
-
-        const result = await migrateKeyToUpstash(key, type, ttl, oldClient);
-        if (result === null) {
-          console.log(`${progress} ⚠️  Skipping ${key} (unsupported type: ${type})`);
-          continue;
-        }
-
-        if (result) {
-          migrated++;
-          if (migrated % 10 === 0) {
-            console.log(`${progress} ✅ Migrated ${migrated} keys...`);
-          }
-        }
-      } catch (error) {
-        failed++;
-        errors.push({ key, error: error.message });
-        console.error(`${progress} ❌ Failed to migrate ${key}: ${error.message}`);
-      }
-    }
+    const { migrated, failed, errors } = await migrateAllKeys(allKeys, oldClient);
 
     console.log('\n📊 Migration Summary:');
     console.log(`  ✅ Successfully migrated: ${migrated} keys`);

@@ -65,6 +65,42 @@ function getAllPosts() {
   return posts;
 }
 
+function reportValidationResults(errors, warnings, posts) {
+  if (errors.length > 0) {
+    console.log('❌ ERRORS:\n');
+    for (const error of errors) {
+      console.log(`   ${error.file}`);
+      console.log(`   Issue: ${error.issue}`);
+      console.log(`   Fix: ${error.fix}`);
+      console.log('');
+    }
+  }
+
+  if (warnings.length > 0) {
+    console.log('⚠️  WARNINGS:\n');
+    for (const warning of warnings) {
+      console.log(`   ${warning.file}`);
+      console.log(`   ${warning.issue}`);
+      console.log(`   ${warning.detail}`);
+      console.log(`   Note: ${warning.note}`);
+      console.log('');
+    }
+  }
+
+  console.log('📊 SUMMARY:\n');
+  console.log(`   Posts validated: ${posts.length}`);
+  console.log(`   Errors: ${errors.length}`);
+  console.log(`   Warnings: ${warnings.length}`);
+
+  if (errors.length === 0) {
+    console.log('\n✅ All posts have valid IDs!');
+    process.exit(0);
+  } else {
+    console.log('\n❌ Validation failed. Fix the errors above.');
+    process.exit(1);
+  }
+}
+
 function validate() {
   console.log('🔍 Validating blog post IDs...\n');
   
@@ -115,41 +151,5 @@ function validate() {
     }
   }
 
-  // Report results
-  if (errors.length > 0) {
-    console.log('❌ ERRORS:\n');
-    for (const error of errors) {
-      console.log(`   ${error.file}`);
-      console.log(`   Issue: ${error.issue}`);
-      console.log(`   Fix: ${error.fix}`);
-      console.log('');
-    }
-  }
-
-  if (warnings.length > 0) {
-    console.log('⚠️  WARNINGS:\n');
-    for (const warning of warnings) {
-      console.log(`   ${warning.file}`);
-      console.log(`   ${warning.issue}`);
-      console.log(`   ${warning.detail}`);
-      console.log(`   Note: ${warning.note}`);
-      console.log('');
-    }
-  }
-
-  // Summary
-  console.log('📊 SUMMARY:\n');
-  console.log(`   Posts validated: ${posts.length}`);
-  console.log(`   Errors: ${errors.length}`);
-  console.log(`   Warnings: ${warnings.length}`);
-
-  if (errors.length === 0) {
-    console.log('\n✅ All posts have valid IDs!');
-    process.exit(0);
-  } else {
-    console.log('\n❌ Validation failed. Fix the errors above.');
-    process.exit(1);
-  }
+  reportValidationResults(errors, warnings, posts);
 }
-
-validate();

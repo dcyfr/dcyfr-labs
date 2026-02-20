@@ -71,6 +71,38 @@ export async function extractProseAsText(filePath) {
 }
 
 /**
+ * Process a single tokenizer token for annotation building.
+ * Returns the updated currentText.
+ */
+function processAnnotationToken(token, annotations, currentText) {
+  // Code blocks - ignore completely
+  if (token.startsWith('```')) {
+    if (currentText) annotations.push({ text: currentText });
+    return '';
+  }
+
+  // Inline code - ignore
+  if (token.startsWith('`') && token.endsWith('`')) {
+    if (currentText) annotations.push({ text: currentText });
+    return '';
+  }
+
+  // JSX/HTML tags - mark as markup
+  if (token.startsWith('<')) {
+    if (currentText) annotations.push({ text: currentText });
+    if (token.match(/<\/?(?:div|p|br|h[1-6]|li|blockquote|section|article)/i)) {
+      annotations.push({ markup: token, interpretAs: '\n\n' });
+    } else {
+      annotations.push({ markup: token });
+    }
+    return '';
+  }
+
+  // Regular text - accumulate
+  return currentText + token;
+}
+
+/**
  * Extract prose from MDX file as LanguageTool annotation JSON
  *
  * This preserves markup structure for better context-aware checking.
@@ -89,42 +121,7 @@ export async function extractProseAsAnnotation(filePath) {
   const tokens = mdxContent.split(/(<[^>]+>|```[\s\S]*?```|`[^`]+`)/);
 
   for (const token of tokens) {
-    // Code blocks - ignore completely
-    if (token.startsWith('```')) {
-      if (currentText) {
-        annotations.push({ text: currentText });
-        currentText = '';
-      }
-      continue;
-    }
-
-    // Inline code - ignore
-    if (token.startsWith('`') && token.endsWith('`')) {
-      if (currentText) {
-        annotations.push({ text: currentText });
-        currentText = '';
-      }
-      continue;
-    }
-
-    // JSX/HTML tags - mark as markup
-    if (token.startsWith('<')) {
-      if (currentText) {
-        annotations.push({ text: currentText });
-        currentText = '';
-      }
-
-      // Interpret block elements as line breaks
-      if (token.match(/<\/?(?:div|p|br|h[1-6]|li|blockquote|section|article)/i)) {
-        annotations.push({ markup: token, interpretAs: '\n\n' });
-      } else {
-        annotations.push({ markup: token });
-      }
-      continue;
-    }
-
-    // Regular text
-    currentText += token;
+    currentText = processAnnotationToken(token, annotations, currentText);
   }
 
   // Add remaining text
