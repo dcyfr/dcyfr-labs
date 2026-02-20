@@ -235,18 +235,23 @@ function suggestToken(
 }
 
 /**
- * Calculate compliance for entire codebase or specific file
+ * Compliance result shape (used for cache and return type)
  */
-async function calculateCompliance(filePath?: string): Promise<{
+type ComplianceResult = {
   percentage: number;
   totalFiles: number;
   totalViolations: number;
   fileBreakdown?: Record<string, number>;
-}> {
+};
+
+/**
+ * Calculate compliance for entire codebase or specific file
+ */
+async function calculateCompliance(filePath?: string): Promise<ComplianceResult> {
   // Check cache first
   const cacheKey = filePath || "global";
   const cached = complianceCache.get(cacheKey);
-  if (cached) return cached as any;
+  if (cached) return cached as ComplianceResult;
 
   // For specific file
   if (filePath) {

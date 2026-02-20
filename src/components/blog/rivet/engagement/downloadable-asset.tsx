@@ -82,7 +82,7 @@ export function DownloadableAsset({
 
     // Track analytics
     if (typeof window !== "undefined" && "gtag" in window) {
-      (window as any).gtag("event", "file_download", {
+      (window as typeof window & { gtag: (...args: unknown[]) => void }).gtag("event", "file_download", {
         event_category: "engagement",
         event_label: fileName,
         value: requireEmail ? email : undefined,

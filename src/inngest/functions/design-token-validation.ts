@@ -98,7 +98,8 @@ export const validateDesignTokens = inngest.createFunction(
         } catch (error) {
           // Script exits with non-zero code if violations found
           if (error instanceof Error && "stdout" in error) {
-            const allViolations = parseViolations((error as any).stdout);
+            const execError = error as Error & { stdout: string };
+            const allViolations = parseViolations(execError.stdout);
             return allViolations.filter((v) =>
               changedFiles.some((f: string) => v.file.includes(f))
             );

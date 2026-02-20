@@ -298,7 +298,7 @@ export class PromptSecurityScanner {
   /**
    * Match input against cached IoPC threats and collect matching entries
    */
-  private matchInputAgainstIoPCCache(inputLower: string): ThreatMatch[] {
+  private matchInputAgainstIoPCCache(_inputLower: string): ThreatMatch[] {
     const matches: ThreatMatch[] = [];
     if (!this.ioPCCache) return matches;
 
@@ -312,7 +312,7 @@ export class PromptSecurityScanner {
         continue;
       }
 
-      void inputLower; // matching logic placeholder
+      // TODO: implement IoPC pattern matching against _inputLower
     }
 
     return matches;
@@ -329,9 +329,9 @@ export class PromptSecurityScanner {
   /**
    * Check input against threat taxonomy
    */
-  private async checkAgainstTaxonomy(input: string): Promise<ThreatMatch[]> {
+  private async checkAgainstTaxonomy(_input: string): Promise<ThreatMatch[]> {
     await this.refreshTaxonomyCacheIfNeeded();
-    void input; // Taxonomy matching implementation placeholder
+    // TODO: implement taxonomy matching against _input
     return [];
   }
 
