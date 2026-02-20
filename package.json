@@ -39,6 +39,8 @@
     "check": "npm run lint && npm run typecheck",
     "check:docs": "npm run validate:tlp && npm run validate:doc-location",
     "check:tokens": "node scripts/validate-design-tokens.mjs",
+    "check:voice": "node scripts/validate-voice-compliance.mjs",
+    "check:voice:warn": "node scripts/validate-voice-compliance.mjs --mode warn",
     "migrate:tokens": "tsx scripts/migrate-design-tokens.ts",
     "migrate:tokens:apply": "tsx scripts/migrate-design-tokens.ts -- --apply",
     "migrate:tokens:report": "tsx scripts/migrate-design-tokens.ts > docs/reports/MIGRATION_REPORT_$(date +%Y-%m-%d).md",
