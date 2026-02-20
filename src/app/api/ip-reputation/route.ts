@@ -56,7 +56,7 @@ function validateEnvironment(): boolean {
 function logApiAccess(
   request: NextRequest,
   success: boolean,
-  details: Record<string, any> = {}
+  details: Record<string, unknown> = {}
 ): void {
   const clientIp = getClientIp(request);
   const userAgent = request.headers.get('user-agent') || 'unknown';
@@ -233,7 +233,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: errorInfo.message,
         code: errorInfo.isConnectionError ? 'CONNECTION_CLOSED' : 'INTERNAL_ERROR',
       },
-      { status: (errorInfo as any).statusCode ?? 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }
@@ -320,7 +320,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: errorInfo.message,
         code: errorInfo.isConnectionError ? 'CONNECTION_CLOSED' : 'INTERNAL_ERROR',
       },
-      { status: (errorInfo as any).statusCode ?? 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }
@@ -388,7 +388,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         error: errorInfo.message,
         code: errorInfo.isConnectionError ? 'CONNECTION_CLOSED' : 'INTERNAL_ERROR',
       },
-      { status: (errorInfo as any).statusCode ?? 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }

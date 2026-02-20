@@ -47,7 +47,7 @@ export function isConnectionError(error: unknown): boolean {
   const err = error as NodeJS.ErrnoException & { message?: string };
 
   // Check error code
-  if (err.code && CONNECTION_ERROR_CODES.includes(err.code as any)) {
+  if (err.code && CONNECTION_ERROR_CODES.includes(err.code as (typeof CONNECTION_ERROR_CODES)[number])) {
     return true;
   }
 
@@ -58,6 +58,17 @@ export function isConnectionError(error: unknown): boolean {
   }
 
   return false;
+}
+
+/**
+ * API error response details
+ */
+export interface ApiErrorResponse {
+  isConnectionError: boolean;
+  shouldRetry: boolean;
+  statusCode: number;
+  message: string;
+  logLevel: "debug" | "error";
 }
 
 /**
@@ -75,7 +86,7 @@ export function handleApiError(
     userId?: string;
     additionalData?: Record<string, unknown>;
   }
-) {
+): ApiErrorResponse {
   const isConnError = isConnectionError(error);
 
   // For connection errors, log at debug level (not an error)
@@ -148,7 +159,7 @@ export function handleApiError(
  * );
  * ```
  */
-export function withErrorHandling<T extends (...args: any[]) => Promise<Response>>(
+export function withErrorHandling<T extends (...args: unknown[]) => Promise<Response>>(
   handler: T,
   context?: {
     route?: string;

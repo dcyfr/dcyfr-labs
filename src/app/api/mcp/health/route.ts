@@ -100,33 +100,36 @@ function isAuthenticated(request: NextRequest): boolean {
 /**
  * Validates incoming health report data
  */
-function validateHealthReport(data: any): data is PostRequestBody {
+function validateHealthReport(data: unknown): data is PostRequestBody {
   if (!data || typeof data !== 'object') {
     return false;
   }
 
+  const d = data as Record<string, unknown>;
+
   // Check required fields
-  if (!data.timestamp || !Array.isArray(data.servers) || !data.summary) {
+  if (!d.timestamp || !Array.isArray(d.servers) || !d.summary) {
     return false;
   }
 
   // Validate timestamp format
-  if (isNaN(Date.parse(data.timestamp))) {
+  if (isNaN(Date.parse(d.timestamp as string))) {
     return false;
   }
 
   // Validate servers array
-  for (const server of data.servers) {
+  for (const server of (d.servers as Record<string, unknown>[]) ) {
     if (!server.name || !server.status || typeof server.responseTimeMs !== 'number') {
       return false;
     }
-    if (!['ok', 'degraded', 'down'].includes(server.status)) {
+    if (!['ok', 'degraded', 'down'].includes(server.status as string)) {
       return false;
     }
   }
 
   // Validate summary
-  const { total, ok, degraded, down } = data.summary;
+  const summary = d.summary as Record<string, unknown>;
+  const { total, ok, degraded, down } = summary;
   if (
     typeof total !== 'number' ||
     typeof ok !== 'number' ||

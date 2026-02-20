@@ -1,11 +1,14 @@
 import { inngest } from "./client";
 import { google } from "googleapis";
-import type { AuthClient } from "google-auth-library";
+import type { AuthClient, OAuth2Client } from "google-auth-library";
 import {
   INDEXNOW_EVENTS,
   type IndexNowSubmissionRequestedEventData,
 } from "@/lib/indexnow/events";
 import { buildKeyLocation } from "@/lib/indexnow/indexnow";
+
+/** Google API error shape from googleapis HTTP errors */
+type GoogleApiError = { response?: { status?: number; data?: unknown }; message?: string };
 
 /**
  * Google Indexing API integration for automatic URL submission
@@ -95,7 +98,7 @@ function getServiceAccountCredentials() {
 }
 
 // Initialize Google Auth client
-async function getAuthClient(): Promise<AuthClient | null> {
+async function getAuthClient(): Promise<OAuth2Client | null> {
   const credentials = getServiceAccountCredentials();
   
   if (!credentials) {
@@ -107,7 +110,7 @@ async function getAuthClient(): Promise<AuthClient | null> {
     scopes: ["https://www.googleapis.com/auth/indexing"],
   });
 
-  return auth.getClient();
+  return (await auth.getClient()) as OAuth2Client;
 }
 
 /**
@@ -155,21 +158,21 @@ function recordSubmission(): void {
  */
 async function checkIndexingStatus(
   url: string, 
-  authClient: AuthClient | any
+  authClient: OAuth2Client
 ): Promise<{
   indexed: boolean;
   status: string;
-  metadata: any;
+  metadata: Record<string, unknown>;
 }> {
   try {
-    const indexing = google.indexing({ version: "v3", auth: authClient as any });
+    const indexing = google.indexing({ version: "v3", auth: authClient as OAuth2Client });
     
     const response = await indexing.urlNotifications.getMetadata({
       url,
     });
 
-    const data = response.data as any;
-    const mobileFriendlyStatus = data.mobileFriendlyStatus || "UNKNOWN";
+    const data = response.data as Record<string, unknown>;
+    const mobileFriendlyStatus = (data.mobileFriendlyStatus as string) || "UNKNOWN";
     const indexed = mobileFriendlyStatus !== "NOT_FOUND";
 
     return {
@@ -177,8 +180,8 @@ async function checkIndexingStatus(
       status: mobileFriendlyStatus,
       metadata: data,
     };
-  } catch (error: any) {
-    const statusCode = error.response?.status;
+  } catch (error) {
+    const statusCode = (error as { response?: { status?: number } }).response?.status;
     
     // 404 means URL is not indexed
     if (statusCode === 404) {
@@ -248,7 +251,7 @@ export const submitUrlToGoogle = inngest.createFunction(
     // Step 3: Submit URL to Google Indexing API
     const result = await step.run("submit-url", async () => {
       try {
-        const indexing = google.indexing({ version: "v3", auth: authClient as any });
+        const indexing = google.indexing({ version: "v3", auth: authClient as OAuth2Client });
 
         const response = await indexing.urlNotifications.publish({
           requestBody: {
@@ -269,9 +272,10 @@ export const submitUrlToGoogle = inngest.createFunction(
           metadata: response.data,
           quotaRemaining: getRemainingQuota(),
         };
-      } catch (error: any) {
-        const statusCode = error.response?.status;
-        const errorMessage = error.response?.data || error.message;
+      } catch (error) {
+        const apiError = error as GoogleApiError;
+        const statusCode = apiError.response?.status;
+        const errorMessage = apiError.response?.data || apiError.message;
 
         console.error(`✗ Failed to submit ${url} to Google:`, {
           status: statusCode,
@@ -320,7 +324,7 @@ export const submitUrlToGoogle = inngest.createFunction(
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         try {
-          return await checkIndexingStatus(url, authClient);
+          return await checkIndexingStatus(url, authClient as OAuth2Client);
         } catch (error) {
           console.warn(`Could not verify indexing status for ${url}:`, error);
           return { indexed: null, status: "UNKNOWN", metadata: {} };
@@ -398,7 +402,7 @@ export const validateSitemapAndGetMissing = inngest.createFunction(
         const url = sitemapUrls[i];
         
         try {
-          const status = await checkIndexingStatus(url, authClient);
+          const status = await checkIndexingStatus(url, authClient as OAuth2Client);
           results.push({
             url,
             indexed: status.indexed,
@@ -410,13 +414,13 @@ export const validateSitemapAndGetMissing = inngest.createFunction(
           if (i < sitemapUrls.length - 1) {
             await new Promise(resolve => setTimeout(resolve, 100));
           }
-        } catch (error: any) {
-          console.warn(`Could not check status for ${url}:`, error.message);
+        } catch (error) {
+          console.warn(`Could not check status for ${url}:`, (error as Error).message);
           results.push({
             url,
             indexed: null,
             status: "ERROR",
-            error: error.message,
+            error: (error as Error).message,
           });
         }
       }
@@ -515,7 +519,7 @@ export const deleteUrlFromGoogle = inngest.createFunction(
     // Step 3: Submit deletion request to Google
     const result = await step.run("delete-url", async () => {
       try {
-        const indexing = google.indexing({ version: "v3", auth: authClient as any });
+        const indexing = google.indexing({ version: "v3", auth: authClient as OAuth2Client });
 
         const response = await indexing.urlNotifications.publish({
           requestBody: {
@@ -536,9 +540,10 @@ export const deleteUrlFromGoogle = inngest.createFunction(
           metadata: response.data,
           quotaRemaining: getRemainingQuota(),
         };
-      } catch (error: any) {
-        const statusCode = error.response?.status;
-        const errorMessage = error.response?.data || error.message;
+      } catch (error) {
+        const apiError = error as GoogleApiError;
+        const statusCode = apiError.response?.status;
+        const errorMessage = apiError.response?.data || apiError.message;
 
         console.error(`✗ Failed to delete ${url} from Google:`, {
           status: statusCode,
@@ -681,7 +686,7 @@ export const submitMissingPagesToGoogle = inngest.createFunction(
 
     // Step 2: Validate sitemap and identify missing pages
     const validationResult = await step.run("validate-sitemap", async () => {
-      return await checkIndexingStatus("https://placeholder.com", authClient).then(
+      return await checkIndexingStatus("https://placeholder.com", authClient as OAuth2Client).then(
         () => ({ success: true }),
         () => ({ success: false }) // API is working even on placeholder fail
       ).then(async () => {
@@ -693,7 +698,7 @@ export const submitMissingPagesToGoogle = inngest.createFunction(
           const url = sitemapUrls[i];
           
           try {
-            const status = await checkIndexingStatus(url, authClient);
+            const status = await checkIndexingStatus(url, authClient as OAuth2Client);
             
             if (!status.indexed) {
               missing.push(url);
@@ -709,8 +714,8 @@ export const submitMissingPagesToGoogle = inngest.createFunction(
             if (i < sitemapUrls.length - 1) {
               await new Promise(resolve => setTimeout(resolve, 100));
             }
-          } catch (error: any) {
-            console.warn(`Could not check status for ${url}:`, error.message);
+          } catch (error) {
+            console.warn(`Could not check status for ${url}:`, (error as Error).message);
             // Treat unknown as potentially missing
             missing.push(url);
           }
@@ -755,7 +760,7 @@ export const submitMissingPagesToGoogle = inngest.createFunction(
         try {
           const indexing = google.indexing({ 
             version: "v3", 
-            auth: authClient as any 
+            auth: authClient as OAuth2Client
           });
 
           await indexing.urlNotifications.publish({
@@ -776,11 +781,11 @@ export const submitMissingPagesToGoogle = inngest.createFunction(
               setTimeout(resolve, SUBMISSION_RATE_LIMIT_MS)
             );
           }
-        } catch (error: any) {
-          console.error(`✗ Failed to submit ${url}:`, error.message);
+        } catch (error) {
+          console.error(`✗ Failed to submit ${url}:`, (error as Error).message);
           failed.push({
             url,
-            error: error.message,
+            error: (error as Error).message,
           });
         }
       }
@@ -821,14 +826,14 @@ export const submitMissingPagesToGoogle = inngest.createFunction(
           // Wait for Google to process
           await new Promise(resolve => setTimeout(resolve, 2000));
           
-          const status = await checkIndexingStatus(url, authClient);
+          const status = await checkIndexingStatus(url, authClient as OAuth2Client);
           verified.push({
             url,
             indexed: status.indexed,
             status: status.status,
           });
-        } catch (error: any) {
-          console.warn(`Could not verify ${url}:`, error.message);
+        } catch (error) {
+          console.warn(`Could not verify ${url}:`, (error as Error).message);
           verified.push({
             url,
             indexed: null,

@@ -79,7 +79,7 @@ export function TabInterface({
 
     // Analytics tracking
     if (typeof window !== "undefined" && "gtag" in window) {
-      (window as any).gtag("event", "tab_change", {
+      (window as typeof window & { gtag: (...args: unknown[]) => void }).gtag("event", "tab_change", {
         event_category: "engagement",
         event_label: tabId,
       });
