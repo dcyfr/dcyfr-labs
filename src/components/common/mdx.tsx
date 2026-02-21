@@ -176,13 +176,13 @@ function rehypeWrapFootnotes() {
 
         // Remove the "Footnotes" heading that remark-gfm generates
         // since the Footnotes component provides its own heading
+        const isFootnoteTextNode = (textNode: any) =>
+          textNode.type === 'text' && textNode.value === 'Footnotes';
         if (node.children && Array.isArray(node.children)) {
           node.children = node.children.filter((child: any) => {
             // Remove h2 headings that contain "Footnotes" text
             if (child.type === 'element' && child.tagName === 'h2') {
-              const hasFootnotesText = child.children?.some(
-                (textNode: any) => textNode.type === 'text' && textNode.value === 'Footnotes'
-              );
+              const hasFootnotesText = child.children?.some(isFootnoteTextNode);
               return !hasFootnotesText;
             }
             return true;

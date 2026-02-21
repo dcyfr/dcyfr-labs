@@ -159,12 +159,13 @@ function applyFilters<T extends Record<string, any>>(
 
       // Handle array fields (e.g., tags)
       if (Array.isArray(itemValue)) {
-        return values.some(filterValue =>
-          itemValue.some(v =>
-            String(v).toLowerCase() === filterValue.toLowerCase() ||
-            String(v).toLowerCase().includes(filterValue.toLowerCase())
-          )
-        );
+        const matchesArrayItem = (filterValue: string) =>
+          itemValue.some(
+            v =>
+              String(v).toLowerCase() === filterValue.toLowerCase() ||
+              String(v).toLowerCase().includes(filterValue.toLowerCase())
+          );
+        return values.some(matchesArrayItem);
       }
 
       // Handle string fields
