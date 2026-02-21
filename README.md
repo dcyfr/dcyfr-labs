@@ -69,6 +69,7 @@ A modern, full-featured developer blog and portfolio built with Next.js (App Rou
   - [Content Creation](#content-creation)
   - [Blog Features](#blog-features)
 - [Background Jobs (Inngest)](#-background-jobs-inngest)
+- [SEO & IndexNow](#-seo--indexnow)
 - [Security Features](#-security-features)
 - [Deployment](#-deployment)
   - [Vercel (Recommended)](#vercel-recommended)
@@ -232,7 +233,88 @@ See [`/docs/features/inngest-integration.md`](./docs/features/inngest-integratio
 
 ---
 
-## 🔒 Security Features
+## � SEO & IndexNow
+
+Real-time search engine indexing via the [IndexNow protocol](https://www.indexnow.org/).
+When you publish content, IndexNow notifies Bing, Yandex, and other participating
+engines within seconds — no waiting for the next crawl.
+
+### How it works
+
+1. Search engines fetch `https://www.dcyfr.ai/<INDEXNOW_API_KEY>.txt` to verify domain ownership.
+2. You POST URLs to `/api/indexnow/submit` (or use the helper library).
+3. An Inngest background function submits the batch to all IndexNow endpoints.
+
+### Environment variables
+
+```bash
+# Required: UUID v4 key (generate with: node -e "console.log(crypto.randomUUID())")
+INDEXNOW_API_KEY=<uuid-v4>
+
+# Required for canonical URLs
+NEXT_PUBLIC_SITE_URL=https://www.dcyfr.ai
+
+# Optional: protects the admin bulk-reindex endpoint
+ADMIN_API_KEY=<strong-random-token>
+```
+
+### Setup for new developers
+
+1. **Generate a key** — run `node -e "console.log(crypto.randomUUID())"` and copy the output.
+2. **Add to `.env.local`** — `INDEXNOW_API_KEY=<your-uuid>`.
+3. **Add to Vercel** — Settings → Environment Variables → add for Production, Preview, and Development.
+4. **Verify key file** — visit `http://localhost:3000/<your-uuid>.txt` (should return the UUID).
+5. **Test submission** — use the dev dashboard at `/dev/seo` to submit a URL manually.
+
+### Notifying IndexNow when you publish content
+
+After adding a new blog post (`src/content/blog/`) or project (`src/data/projects.ts`),
+trigger IndexNow so search engines pick it up immediately:
+
+```typescript
+import { submitToIndexNow, getBlogPostUrl, getProjectUrl } from '@/lib/indexnow';
+
+// New blog post
+await submitToIndexNow(getBlogPostUrl('my-new-post-slug'));
+
+// New project
+await submitToIndexNow(getProjectUrl('my-project-slug'));
+
+// Multiple URLs at once
+await submitToIndexNow([
+  getBlogPostUrl('post-a'),
+  getBlogPostUrl('post-b'),
+  getProjectUrl('project-x'),
+]);
+```
+
+> `submitToIndexNow` is non-blocking — errors are logged but never thrown.
+
+### API endpoints
+
+| Endpoint                   | Method | Purpose                                       |
+| -------------------------- | ------ | --------------------------------------------- |
+| `/<key>.txt`               | GET    | Domain ownership verification (edge runtime)  |
+| `/api/indexnow/submit`     | POST   | Submit URLs for indexing                      |
+| `/api/admin/indexnow/bulk` | POST   | Bulk re-index all posts/projects/static pages |
+| `/dev/seo`                 | GET    | Developer dashboard (dev only)                |
+
+### Bulk re-index (admin)
+
+```bash
+curl -s -X POST https://www.dcyfr.ai/api/admin/indexnow/bulk \
+  -H "Authorization: Bearer $ADMIN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"types":["posts","projects","static"]}'
+```
+
+See [`/docs/runbooks/INDEXNOW_TROUBLESHOOTING.md`](./docs/runbooks/INDEXNOW_TROUBLESHOOTING.md) for diagnosis and fixes.
+
+[⬆️ Back to top](#nextjs-developer-blog--portfolio)
+
+---
+
+## �🔒 Security Features
 
 - **Content Security Policy (CSP)** - Nonce-based with zero `unsafe-inline`
 - **Rate Limiting** - Redis-backed with in-memory fallback
