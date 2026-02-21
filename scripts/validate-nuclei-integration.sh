@@ -49,16 +49,16 @@ echo "2️⃣  Checking file structure..."
 cd "$PROJECT_ROOT"
 
 # Check config file
-if [ -f ".github/nuclei/config.yaml" ]; then
+if [[ -f ".github/nuclei/config.yaml" ]]; then
   check_pass "Configuration file exists"
 else
   check_fail "Configuration file missing: .github/nuclei/config.yaml"
 fi
 
 # Check submodule
-if [ -d ".github/nuclei/templates/community" ]; then
+if [[ -d ".github/nuclei/templates/community" ]]; then
   COMMUNITY_COUNT=$(find .github/nuclei/templates/community -name "*.yaml" 2>/dev/null | wc -l | tr -d ' ')
-  if [ "$COMMUNITY_COUNT" -gt 0 ]; then
+  if [[ "$COMMUNITY_COUNT" -gt 0 ]]; then
     check_pass "Community templates loaded: $COMMUNITY_COUNT templates"
   else
     check_fail "Community templates directory empty - run 'git submodule update --init --recursive'"
@@ -68,9 +68,9 @@ else
 fi
 
 # Check custom templates
-if [ -d ".github/nuclei/templates/custom" ]; then
+if [[ -d ".github/nuclei/templates/custom" ]]; then
   CUSTOM_COUNT=$(find .github/nuclei/templates/custom -name "*.yaml" 2>/dev/null | wc -l | tr -d ' ')
-  if [ "$CUSTOM_COUNT" -gt 0 ]; then
+  if [[ "$CUSTOM_COUNT" -gt 0 ]]; then
     check_pass "Custom dcyfr templates found: $CUSTOM_COUNT templates"
   else
     check_warn "No custom templates found"
@@ -84,7 +84,7 @@ echo "3️⃣  Validating custom templates..."
 
 # Validate each custom template
 for template in .github/nuclei/templates/custom/*.yaml; do
-  if [ -f "$template" ]; then
+  if [[ -f "$template" ]]; then
     TEMPLATE_NAME=$(basename "$template")
 
     # Check for required fields
@@ -111,7 +111,7 @@ echo ""
 echo "4️⃣  Checking git submodule configuration..."
 
 # Check .gitmodules
-if [ -f ".gitmodules" ]; then
+if [[ -f ".gitmodules" ]]; then
   if grep -q "path = .github/nuclei/templates/community" .gitmodules; then
     check_pass "Submodule registered in .gitmodules"
   else
@@ -153,7 +153,7 @@ echo ""
 echo "6️⃣  Checking workflow integration..."
 
 # Check workflow file
-if [ -f ".github/workflows/nuclei-scan.yml" ]; then
+if [[ -f ".github/workflows/nuclei-scan.yml" ]]; then
   check_pass "Nuclei scan workflow exists"
 
   # Check for config and templates flags
@@ -168,7 +168,7 @@ else
 fi
 
 # Check sync workflow
-if [ -f ".github/workflows/nuclei-templates-sync.yml" ]; then
+if [[ -f ".github/workflows/nuclei-templates-sync.yml" ]]; then
   check_pass "Template sync workflow exists"
 else
   check_warn "Template sync workflow missing - templates won't auto-update"
@@ -208,7 +208,7 @@ echo -e "${GREEN}✅ Passed: $success_count${NC}"
 echo -e "${RED}❌ Failed: $failure_count${NC}"
 echo ""
 
-if [ $failure_count -eq 0 ]; then
+if [[ $failure_count -eq 0 ]]; then
   echo -e "${GREEN}✅ All critical checks passed - ready to commit!${NC}"
   echo ""
   echo "Next steps:"

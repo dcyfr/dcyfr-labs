@@ -16,6 +16,11 @@ export const SITE_SUBTITLE = 'Cyber Architecture & Design';
 export const SITE_DESCRIPTION =
   'Professional portfolio and blog of DCYFR Labs, exploring cyber architecture, coding, security, and tech trends.';
 
+/** ISO date when the site first went live */
+export const SITE_LAUNCH_DATE = '2025-08-01';
+/** ISO date of last significant content/schema update — update on major changes */
+export const SITE_LAST_UPDATED_DATE = '2026-02-20';
+
 /**
  * Feature Flags
  * Enable/disable features centrally without code changes
@@ -34,6 +39,7 @@ export const FEATURES = {
   enableRSS: true,
   enableSearchParams: true, // URL-based search/filters
   enablePrintStyles: true,
+  enableIndexNow: !!process.env.INDEXNOW_API_KEY,
 } as const;
 
 /**

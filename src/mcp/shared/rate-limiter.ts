@@ -54,7 +54,7 @@ export class RateLimiter {
       });
 
       // Start processing if not already running
-      void this.processQueue();
+      this.processQueue().catch(() => { /* Queue processing errors handled per-task via task.reject() */ });
     });
   }
 

@@ -56,7 +56,7 @@ function validateEnvironment(): boolean {
 function logApiAccess(
   request: NextRequest,
   success: boolean,
-  details: Record<string, any> = {}
+  details: Record<string, unknown> = {}
 ): void {
   const clientIp = getClientIp(request);
   const userAgent = request.headers.get('user-agent') || 'unknown';
@@ -84,6 +84,86 @@ function logApiAccess(
 }
 
 /**
+ * Enforce the 3-layer security stack on every request.
+ * Returns a rejection NextResponse if blocked, or null if all checks pass.
+ */
+async function enforceSecurityGuards(request: NextRequest): Promise<NextResponse | null> {
+  const externalAccessResult = blockExternalAccess(request);
+  if (externalAccessResult) {
+    logApiAccess(request, false, { reason: 'external-access-blocked' });
+    return externalAccessResult;
+  }
+  if (!validateApiKey(request)) {
+    logApiAccess(request, false, { reason: 'invalid-api-key' });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (!validateEnvironment()) {
+    logApiAccess(request, false, { reason: 'invalid-environment' });
+    return NextResponse.json({ error: 'Not available in production' }, { status: 403 });
+  }
+  return null;
+}
+
+/**
+ * Parse the JSON request body, returning a discriminated union result.
+ */
+async function parseJsonBody(
+  request: NextRequest
+): Promise<{ ok: true; body: unknown } | { ok: false; response: NextResponse }> {
+  try {
+    return { ok: true, body: await request.json() };
+  } catch {
+    return { ok: false, response: NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }) };
+  }
+}
+
+/**
+ * Perform a single or bulk IP reputation lookup and log the outcome.
+ */
+async function performIpLookup(
+  request: NextRequest,
+  singleIp: string | null,
+  multipleIps: string[] | undefined,
+  useCache: boolean,
+  startTime: number
+): Promise<{ ok: true; result: IPReputationCheck | IPReputationBulkResult } | { ok: false; response: NextResponse }> {
+  const reputationService = new IPReputationService();
+
+  if (singleIp) {
+    const result = await reputationService.getIpReputation(singleIp, useCache);
+    logApiAccess(request, true, {
+      action: 'single-ip-lookup',
+      ip: singleIp,
+      classification: result.details?.classification,
+      cached: result.cache_hit,
+      processingTime: Date.now() - startTime,
+    });
+    return { ok: true, result };
+  }
+
+  if (multipleIps) {
+    if (multipleIps.length > 50) {
+      logApiAccess(request, false, { reason: 'too-many-ips', count: multipleIps.length });
+      return {
+        ok: false,
+        response: NextResponse.json({ error: 'Too many IPs. Maximum 50 per request.' }, { status: 400 }),
+      };
+    }
+    const result = await reputationService.bulkCheckReputation(multipleIps);
+    logApiAccess(request, true, {
+      action: 'bulk-ip-lookup',
+      ipCount: multipleIps.length,
+      maliciousCount: result.malicious_count,
+      suspiciousCount: result.suspicious_count,
+      processingTime: result.processing_time_ms,
+    });
+    return { ok: true, result };
+  }
+
+  return { ok: false, response: NextResponse.json({ error: 'Invalid parameters' }, { status: 400 }) };
+}
+
+/**
  * GET /api/ip-reputation - Check reputation for single or multiple IPs
  *
  * Query parameters:
@@ -95,24 +175,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now();
 
   try {
-    // Layer 0: Block external access in production
-    const externalAccessResult = blockExternalAccess(request);
-    if (externalAccessResult) {
-      logApiAccess(request, false, { reason: 'external-access-blocked' });
-      return externalAccessResult;
-    }
-
-    // Layer 1: API Key authentication
-    if (!validateApiKey(request)) {
-      logApiAccess(request, false, { reason: 'invalid-api-key' });
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Layer 2: Environment validation
-    if (!validateEnvironment()) {
-      logApiAccess(request, false, { reason: 'invalid-environment' });
-      return NextResponse.json({ error: 'Not available in production' }, { status: 403 });
-    }
+    const guardResponse = await enforceSecurityGuards(request);
+    if (guardResponse) return guardResponse;
 
     // Layer 3: Rate limiting (stricter for external API calls)
     const clientIp = getClientIp(request);
@@ -128,7 +192,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         remaining: rateLimitResult.remaining,
         resetTime: rateLimitResult.reset,
       });
-
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429, headers });
     }
 
@@ -146,50 +209,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Missing required parameter: ip or ips' }, { status: 400 });
     }
 
-    // Initialize IP reputation service
-    const reputationService = new IPReputationService();
-
-    let result: IPReputationCheck | IPReputationBulkResult;
-
-    if (singleIp) {
-      // Single IP lookup
-      result = await reputationService.getIpReputation(singleIp, useCache);
-
-      logApiAccess(request, true, {
-        action: 'single-ip-lookup',
-        ip: singleIp,
-        classification: result.details?.classification,
-        cached: result.cache_hit,
-        processingTime: Date.now() - startTime,
-      });
-    } else if (multipleIps) {
-      // Bulk IP lookup
-      if (multipleIps.length > 50) {
-        logApiAccess(request, false, { reason: 'too-many-ips', count: multipleIps.length });
-        return NextResponse.json(
-          { error: 'Too many IPs. Maximum 50 per request.' },
-          { status: 400 }
-        );
-      }
-
-      result = await reputationService.bulkCheckReputation(multipleIps);
-
-      logApiAccess(request, true, {
-        action: 'bulk-ip-lookup',
-        ipCount: multipleIps.length,
-        maliciousCount: result.malicious_count,
-        suspiciousCount: result.suspicious_count,
-        processingTime: result.processing_time_ms,
-      });
-    } else {
-      return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 });
-    }
+    const lookupResult = await performIpLookup(request, singleIp, multipleIps, useCache, startTime);
+    if (!lookupResult.ok) return lookupResult.response;
 
     const headers = createRateLimitHeaders(rateLimitResult);
     return NextResponse.json(
       {
         success: true,
-        data: result,
+        data: lookupResult.result,
         timestamp: new Date().toISOString(),
         processing_time_ms: Date.now() - startTime,
       },
@@ -200,16 +227,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       reason: 'internal-error',
       error: error instanceof Error ? error.message : 'unknown',
     });
-
     const errorInfo = handleApiError(error);
-
-    // Return an appropriate HTTP response based on error handling info
     return NextResponse.json(
       {
         error: errorInfo.message,
         code: errorInfo.isConnectionError ? 'CONNECTION_CLOSED' : 'INTERNAL_ERROR',
       },
-      { status: (errorInfo as any).statusCode ?? 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }
@@ -223,22 +247,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    // Same security validations as GET
-    const externalAccessResult = blockExternalAccess(request);
-    if (externalAccessResult) {
-      logApiAccess(request, false, { reason: 'external-access-blocked' });
-      return externalAccessResult;
-    }
-
-    if (!validateApiKey(request)) {
-      logApiAccess(request, false, { reason: 'invalid-api-key' });
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    if (!validateEnvironment()) {
-      logApiAccess(request, false, { reason: 'invalid-environment' });
-      return NextResponse.json({ error: 'Not available in production' }, { status: 403 });
-    }
+    const guardResponse = await enforceSecurityGuards(request);
+    if (guardResponse) return guardResponse;
 
     // Stricter rate limiting for manual triggers
     const clientIp = getClientIp(request);
@@ -254,14 +264,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Parse request body
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
-    }
-
-    const { ips, config = {} } = body;
+    const parsed = await parseJsonBody(request);
+    if (!parsed.ok) return parsed.response;
+    const { ips, config = {} } = parsed.body as { ips: string[]; config?: Record<string, unknown> };
 
     if (!ips || !Array.isArray(ips) || ips.length === 0) {
       logApiAccess(request, false, { reason: 'invalid-ips-array' });
@@ -315,7 +320,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: errorInfo.message,
         code: errorInfo.isConnectionError ? 'CONNECTION_CLOSED' : 'INTERNAL_ERROR',
       },
-      { status: (errorInfo as any).statusCode ?? 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }
@@ -330,27 +335,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  */
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
-    // Same security validations
-    const externalAccessResult = blockExternalAccess(request);
-    if (externalAccessResult) return externalAccessResult;
-
-    if (!validateApiKey(request)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    if (!validateEnvironment()) {
-      return NextResponse.json({ error: 'Not available in production' }, { status: 403 });
-    }
+    const guardResponse = await enforceSecurityGuards(request);
+    if (guardResponse) return guardResponse;
 
     // Parse request body
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
-    }
-
-    const { ip, classification, reason } = body;
+    const parsed = await parseJsonBody(request);
+    if (!parsed.ok) return parsed.response;
+    const { ip, classification, reason } = parsed.body as {
+      ip: string;
+      classification: string;
+      reason: string;
+    };
 
     if (!ip || !classification || !reason) {
       return NextResponse.json(
@@ -393,7 +388,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         error: errorInfo.message,
         code: errorInfo.isConnectionError ? 'CONNECTION_CLOSED' : 'INTERNAL_ERROR',
       },
-      { status: (errorInfo as any).statusCode ?? 500 }
+      { status: errorInfo.statusCode }
     );
   }
 }

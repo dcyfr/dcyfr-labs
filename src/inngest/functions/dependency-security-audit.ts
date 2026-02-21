@@ -109,7 +109,8 @@ export const auditDependencies = inngest.createFunction(
       } catch (error) {
         // npm audit exits with non-zero code if vulnerabilities found
         if (error instanceof Error && "stdout" in error) {
-          return parseAuditOutput((error as any).stdout);
+          const execError = error as Error & { stdout: string };
+          return parseAuditOutput(execError.stdout);
         }
 
         console.error("[Security Audit] Failed to run npm audit:", error);

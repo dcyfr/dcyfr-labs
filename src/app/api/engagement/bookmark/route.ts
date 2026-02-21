@@ -15,19 +15,23 @@
  * - Rate limiting: 30 requests per minute per IP
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import {
   incrementBookmarks,
   decrementBookmarks,
   getBookmarks,
   type ContentType,
-} from "@/lib/engagement-analytics";
-import { rateLimit, getClientIp, createRateLimitHeaders } from "@/lib/rate-limit";
+} from '@/lib/engagement-analytics';
+import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 
 interface BookmarkRequestBody {
   slug: string;
   contentType: ContentType;
-  action: "bookmark" | "unbookmark";
+  action: 'bookmark' | 'unbookmark';
+}
+
+function isValidSlug(slug: string): boolean {
+  return /^[a-z0-9-]+$/.test(slug);
 }
 
 export async function POST(request: NextRequest) {
@@ -41,12 +45,12 @@ export async function POST(request: NextRequest) {
   if (!rateLimitResult.success) {
     const retryAfter = Math.ceil((rateLimitResult.reset - Date.now()) / 1000);
     return NextResponse.json(
-      { error: "Rate limit exceeded", retryAfter },
+      { error: 'Rate limit exceeded', retryAfter },
       {
         status: 429,
         headers: {
           ...createRateLimitHeaders(rateLimitResult),
-          "Retry-After": retryAfter.toString(),
+          'Retry-After': retryAfter.toString(),
         },
       }
     );
@@ -59,28 +63,35 @@ export async function POST(request: NextRequest) {
     // Validate input
     if (!slug || !contentType || !action) {
       return NextResponse.json(
-        { error: "Missing required fields: slug, contentType, action" },
+        { error: 'Missing required fields: slug, contentType, action' },
         { status: 400 }
       );
     }
 
-    if (!["post", "project", "activity"].includes(contentType)) {
+    if (!isValidSlug(slug)) {
       return NextResponse.json(
-        { error: "Invalid contentType. Must be post, project, or activity" },
+        { error: 'Invalid slug format. Use lowercase letters, numbers, and hyphens only' },
         { status: 400 }
       );
     }
 
-    if (!["bookmark", "unbookmark"].includes(action)) {
+    if (!['post', 'project', 'activity'].includes(contentType)) {
       return NextResponse.json(
-        { error: "Invalid action. Must be bookmark or unbookmark" },
+        { error: 'Invalid contentType. Must be post, project, or activity' },
+        { status: 400 }
+      );
+    }
+
+    if (!['bookmark', 'unbookmark'].includes(action)) {
+      return NextResponse.json(
+        { error: 'Invalid action. Must be bookmark or unbookmark' },
         { status: 400 }
       );
     }
 
     // Perform action
     let newCount: number | null;
-    if (action === "bookmark") {
+    if (action === 'bookmark') {
       newCount = await incrementBookmarks(contentType, slug);
     } else {
       newCount = await decrementBookmarks(contentType, slug);
@@ -88,10 +99,7 @@ export async function POST(request: NextRequest) {
 
     // Handle Redis unavailable
     if (newCount === null) {
-      return NextResponse.json(
-        { error: "Analytics unavailable", count: 0 },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: 'Analytics unavailable', count: 0 }, { status: 503 });
     }
 
     return NextResponse.json({
@@ -100,11 +108,8 @@ export async function POST(request: NextRequest) {
       action,
     });
   } catch (error) {
-    console.error("[API] Bookmark endpoint error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('[API] Bookmark endpoint error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -124,12 +129,12 @@ export async function GET(request: NextRequest) {
   if (!rateLimitResult.success) {
     const retryAfter = Math.ceil((rateLimitResult.reset - Date.now()) / 1000);
     return NextResponse.json(
-      { error: "Rate limit exceeded", retryAfter },
+      { error: 'Rate limit exceeded', retryAfter },
       {
         status: 429,
         headers: {
           ...createRateLimitHeaders(rateLimitResult),
-          "Retry-After": retryAfter.toString(),
+          'Retry-After': retryAfter.toString(),
         },
       }
     );
@@ -137,12 +142,19 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const slug = searchParams.get("slug");
-    const contentType = searchParams.get("contentType") as ContentType;
+    const slug = searchParams.get('slug');
+    const contentType = searchParams.get('contentType') as ContentType;
 
     if (!slug || !contentType) {
       return NextResponse.json(
-        { error: "Missing required query params: slug, contentType" },
+        { error: 'Missing required query params: slug, contentType' },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidSlug(slug)) {
+      return NextResponse.json(
+        { error: 'Invalid slug format. Use lowercase letters, numbers, and hyphens only' },
         { status: 400 }
       );
     }
@@ -150,18 +162,12 @@ export async function GET(request: NextRequest) {
     const count = await getBookmarks(contentType, slug);
 
     if (count === null) {
-      return NextResponse.json(
-        { error: "Analytics unavailable", count: 0 },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: 'Analytics unavailable', count: 0 }, { status: 503 });
     }
 
     return NextResponse.json({ count });
   } catch (error) {
-    console.error("[API] Bookmark GET endpoint error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('[API] Bookmark GET endpoint error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

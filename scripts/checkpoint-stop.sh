@@ -9,7 +9,7 @@ AGENT=$1
 CHECKPOINT_DIR=".git/agent-checkpoints"
 
 # Validate agent
-if [ -z "$AGENT" ]; then
+if [[ -z "$AGENT" ]]; then
     echo "Usage: $0 <agent>"
     echo ""
     echo "Arguments:"
@@ -34,7 +34,7 @@ esac
 PID_FILE="$CHECKPOINT_DIR/.auto-checkpoint-${AGENT}.pid"
 
 # Check if PID file exists
-if [ ! -f "$PID_FILE" ]; then
+if [[ ! -f "$PID_FILE" ]]; then
     echo "⚠️  No running auto-checkpoint process found for $AGENT"
     exit 0
 fi

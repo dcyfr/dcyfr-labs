@@ -203,12 +203,35 @@ async function syncOptionalKeys(prodRedis, previewRedis, dryRun = false) {
   return synced;
 }
 
+async function syncOnePatternKey(key, prodRedis, previewRedis, synced, dryRun) {
+  if (isExcluded(key)) return;
+
+  try {
+    const value = await prodRedis.get(key);
+    if (value === null) return;
+
+    if (dryRun) {
+      console.log(`   ✓ ${key} (would sync)`);
+      synced.push(key);
+    } else {
+      await previewRedis.set(`preview:${key}`, value);
+      synced.push(key);
+      if (synced.length <= 10) {
+        console.log(`   ✓ ${key} → preview:${key}`);
+      }
+    }
+  } catch (error) {
+    if (!error.message.includes('WRONGTYPE')) {
+      console.error(`   ✗ ${key} (error: ${error.message})`);
+    }
+  }
+}
+
 async function syncPatternKeys(prodRedis, previewRedis, pattern, label, dryRun = false) {
   console.log(`\n📊 Syncing ${label}...`);
   const synced = [];
 
   try {
-    // Scan for keys matching pattern
     const keys = await prodRedis.keys(pattern);
 
     if (!keys || keys.length === 0) {
@@ -219,38 +242,7 @@ async function syncPatternKeys(prodRedis, previewRedis, pattern, label, dryRun =
     console.log(`   Found ${keys.length} keys matching ${pattern}`);
 
     for (const key of keys) {
-      // Skip excluded keys (history keys use sorted sets, not strings)
-      if (isExcluded(key)) {
-        continue;
-      }
-
-      try {
-        const value = await prodRedis.get(key);
-
-        if (value === null) {
-          continue;
-        }
-
-        if (dryRun) {
-          console.log(`   ✓ ${key} (would sync)`);
-          synced.push(key); // Track for stats
-        } else {
-          // Add 'preview:' prefix for preview environment
-          await previewRedis.set(`preview:${key}`, value);
-          synced.push(key);
-
-          // Only log first 10 keys to avoid spam
-          if (synced.length <= 10) {
-            console.log(`   ✓ ${key} → preview:${key}`);
-          }
-        }
-      } catch (error) {
-        // Skip errors silently (likely wrong data type for history keys)
-        // Only log unexpected errors
-        if (!error.message.includes('WRONGTYPE')) {
-          console.error(`   ✗ ${key} (error: ${error.message})`);
-        }
-      }
+      await syncOnePatternKey(key, prodRedis, previewRedis, synced, dryRun);
     }
 
     if (synced.length > 10) {

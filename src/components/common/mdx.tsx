@@ -176,13 +176,13 @@ function rehypeWrapFootnotes() {
 
         // Remove the "Footnotes" heading that remark-gfm generates
         // since the Footnotes component provides its own heading
+        const isFootnoteTextNode = (textNode: any) =>
+          textNode.type === 'text' && textNode.value === 'Footnotes';
         if (node.children && Array.isArray(node.children)) {
           node.children = node.children.filter((child: any) => {
             // Remove h2 headings that contain "Footnotes" text
             if (child.type === 'element' && child.tagName === 'h2') {
-              const hasFootnotesText = child.children?.some(
-                (textNode: any) => textNode.type === 'text' && textNode.value === 'Footnotes'
-              );
+              const hasFootnotesText = child.children?.some(isFootnoteTextNode);
               return !hasFootnotesText;
             }
             return true;
@@ -240,6 +240,14 @@ function rehypeReplaceFootnoteEmoji() {
   };
 }
 
+/** Resolve the display language from a pre/code node pair from rehypePrettyCode */
+function resolveCodeLanguage(preProps: Record<string, unknown>, codeProps: Record<string, unknown>): string {
+  return (preProps?.['data-language'] as string) ||
+    (codeProps['data-language'] as string) ||
+    (Array.isArray(preProps?.['data-meta']) ? preProps['data-meta'][0] : undefined) ||
+    'plaintext';
+}
+
 /**
  * Custom rehype plugin to capture code block language from rehype-pretty-code
  *
@@ -250,50 +258,32 @@ function rehypeReplaceFootnoteEmoji() {
  * from the pre element's data-language attribute (if present) and ensures
  * the code child has it accessible to React components.
  */
+/** Process a pre/code node pair to ensure data-language attribute is set */
+function processPreCodeNode(node: any): void {
+  if (node.type !== 'element' || node.tagName !== 'pre') return;
+
+  const codeChild = node.children?.find(
+    (child: any) => child.type === 'element' && child.tagName === 'code'
+  );
+
+  if (!codeChild || !codeChild.properties) return;
+
+  const language = resolveCodeLanguage(node.properties ?? {}, codeChild.properties);
+
+  if (!codeChild.properties['data-language'] || codeChild.properties['data-language'] === '') {
+    codeChild.properties['data-language'] = language;
+  }
+
+  if (!node.properties) node.properties = {};
+  if (!node.properties['data-language']) {
+    node.properties['data-language'] = language;
+  }
+}
+
 function rehypeCaptureCodeLanguage() {
   return (tree: any) => {
     const visit = (node: any) => {
-      // Look for pre elements
-      if (node.type === 'element' && node.tagName === 'pre') {
-        const codeChild = node.children?.find(
-          (child: any) => child.type === 'element' && child.tagName === 'code'
-        );
-
-        if (codeChild && codeChild.properties) {
-          // The pre element itself should have language info from rehypePrettyCode
-          // Check various possible attributes where language might be stored
-          const language =
-            node.properties?.['data-language'] || // pre element might have it
-            codeChild.properties['data-language'] || // code element might have it
-            node.properties?.['data-meta']?.[0] || // meta might contain language
-            undefined;
-
-          // If we still don't have a language but the code was highlighted,
-          // we can infer it was processed by rehypePrettyCode
-          // Check if code child has any span children with style attributes (syntax highlighting)
-          const hasHighlight =
-            codeChild.children?.some(
-              (child: any) =>
-                child.type === 'element' && child.tagName === 'span' && child.properties?.style
-            ) || codeChild.properties?.style;
-
-          // Ensure data-language is set
-          if (
-            !codeChild.properties['data-language'] ||
-            codeChild.properties['data-language'] === ''
-          ) {
-            codeChild.properties['data-language'] = language || 'plaintext';
-          }
-
-          // Also ensure the pre element has it for reference
-          if (!node.properties) {
-            node.properties = {};
-          }
-          if (!node.properties['data-language']) {
-            node.properties['data-language'] = language || 'plaintext';
-          }
-        }
-      }
+      processPreCodeNode(node);
 
       // Recursively visit children
       if (node.children && Array.isArray(node.children)) {

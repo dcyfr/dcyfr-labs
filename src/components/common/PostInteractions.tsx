@@ -26,17 +26,17 @@
  * ```
  */
 
-"use client";
+'use client';
 
-import { useSyncExternalStore } from "react";
-import { Heart, Bookmark } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { useActivityReactions } from "@/hooks/use-activity-reactions";
-import { useBookmarks } from "@/hooks/use-bookmarks";
-import { useGlobalEngagementCounts } from "@/hooks/use-global-engagement-counts";
-import { ThreadShareButton } from "@/components/activity";
-import { ANIMATION, TYPOGRAPHY, SEMANTIC_COLORS } from "@/lib/design-tokens";
+import { useSyncExternalStore } from 'react';
+import { Heart, Bookmark } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useActivityReactions } from '@/hooks/use-activity-reactions';
+import { useBookmarks } from '@/hooks/use-bookmarks';
+import { useGlobalEngagementCounts } from '@/hooks/use-global-engagement-counts';
+import { ThreadShareButton } from '@/components/activity';
+import { ANIMATION, TYPOGRAPHY, SEMANTIC_COLORS } from '@/lib/design-tokens';
 
 // ============================================================================
 // TYPES
@@ -46,7 +46,7 @@ export interface PostInteractionsProps {
   /** Content identifier (post slug or project slug) */
   contentId: string;
   /** Content type for activity mapping */
-  contentType: "post" | "project";
+  contentType: 'post' | 'project';
   /** Content title for sharing */
   title: string;
   /** Content description for sharing */
@@ -56,9 +56,96 @@ export interface PostInteractionsProps {
   /** Optional CSS class */
   className?: string;
   /** Size variant */
-  variant?: "default" | "compact" | "detailed";
+  variant?: 'default' | 'compact' | 'detailed';
   /** Show counts */
   showCounts?: boolean;
+}
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/** Render interaction buttons helper */
+function renderInteractionButtons({
+  activityId,
+  contentType,
+  liked,
+  bookmarked,
+  toggleLike,
+  toggleBookmark,
+  globalLikes,
+  globalBookmarks,
+  showCounts,
+  variant,
+  title,
+  description,
+  href,
+  isCompact,
+}: {
+  activityId: string;
+  contentType: 'post' | 'project';
+  liked: boolean;
+  bookmarked: boolean;
+  toggleLike: (
+    activityId: string,
+    type?: 'like',
+    contentTypeOverride?: 'post' | 'project' | 'activity'
+  ) => void;
+  toggleBookmark: (
+    activityId: string,
+    options?: {
+      notes?: string;
+      tags?: string[];
+      contentType?: 'post' | 'project' | 'activity';
+    }
+  ) => void;
+  globalLikes: number;
+  globalBookmarks: number;
+  showCounts: boolean;
+  variant: 'default' | 'compact' | 'detailed';
+  title: string;
+  description: string | undefined;
+  href: string;
+  isCompact: boolean;
+}) {
+  return (
+    <>
+      <ActionButton
+        icon={Heart}
+        label={
+          showCounts && globalLikes > 0 ? `${globalLikes}${globalLikes > 1 ? '+' : ''}` : undefined
+        }
+        active={liked}
+        onClick={() => toggleLike(activityId, 'like', contentType)}
+        ariaLabel={liked ? 'Unlike' : 'Like'}
+        variant={variant}
+        activeColor={SEMANTIC_COLORS.activity.action.liked}
+      />
+      <ActionButton
+        icon={Bookmark}
+        label={
+          showCounts && globalBookmarks > 0
+            ? `${globalBookmarks}${globalBookmarks > 1 ? '+' : ''}`
+            : undefined
+        }
+        active={bookmarked}
+        onClick={() => toggleBookmark(activityId, { contentType })}
+        ariaLabel={bookmarked ? 'Remove bookmark' : 'Bookmark'}
+        variant={variant}
+        activeColor={SEMANTIC_COLORS.activity.action.bookmarked}
+      />
+      <ThreadShareButton
+        activity={{
+          id: activityId,
+          title,
+          description,
+          href,
+        }}
+        variant="ghost"
+        size={isCompact ? 'sm' : 'default'}
+      />
+    </>
+  );
 }
 
 // ============================================================================
@@ -76,7 +163,7 @@ export function PostInteractions({
   description,
   href,
   className,
-  variant = "default",
+  variant = 'default',
   showCounts = true,
 }: PostInteractionsProps) {
   // Use contentId directly (slug) for consistency with ActivityItem
@@ -84,11 +171,7 @@ export function PostInteractions({
   const activityId = contentId;
 
   const { isLiked, toggleLike, getCount } = useActivityReactions();
-  const {
-    isBookmarked,
-    toggle: toggleBookmark,
-    getBookmarkCount,
-  } = useBookmarks();
+  const { isBookmarked, toggle: toggleBookmark, getBookmarkCount } = useBookmarks();
 
   // Fetch global engagement counts
   const { globalLikes, globalBookmarks } = useGlobalEngagementCounts({
@@ -107,61 +190,29 @@ export function PostInteractions({
   const liked = isHydrated ? isLiked(activityId) : false;
   const bookmarked = isHydrated ? isBookmarked(activityId) : false;
   const likeCount = isHydrated && showCounts ? getCount(activityId) : 0;
-  const bookmarkCount =
-    isHydrated && showCounts ? getBookmarkCount(activityId) : 0;
+  const bookmarkCount = isHydrated && showCounts ? getBookmarkCount(activityId) : 0;
 
-  const isCompact = variant === "compact";
-  const isDetailed = variant === "detailed";
+  const isCompact = variant === 'compact';
+  const isDetailed = variant === 'detailed';
 
   return (
-    <div
-      className={cn(
-        "flex items-center",
-        isCompact ? "gap-3" : "gap-4",
-        className
-      )}
-    >
-      {/* Like Button */}
-      <ActionButton
-        icon={Heart}
-        label={
-          showCounts && globalLikes > 0
-            ? `${globalLikes}${globalLikes > 1 ? "+" : ""}`
-            : undefined
-        }
-        active={liked}
-        onClick={() => toggleLike(activityId, "like", contentType)}
-        ariaLabel={liked ? "Unlike" : "Like"}
-        variant={variant}
-        activeColor={SEMANTIC_COLORS.activity.action.liked}
-      />
-
-      {/* Bookmark Button */}
-      <ActionButton
-        icon={Bookmark}
-        label={
-          showCounts && globalBookmarks > 0
-            ? `${globalBookmarks}${globalBookmarks > 1 ? "+" : ""}`
-            : undefined
-        }
-        active={bookmarked}
-        onClick={() => toggleBookmark(activityId, { contentType })}
-        ariaLabel={bookmarked ? "Remove bookmark" : "Bookmark"}
-        variant={variant}
-        activeColor={SEMANTIC_COLORS.activity.action.bookmarked}
-      />
-
-      {/* Share Button */}
-      <ThreadShareButton
-        activity={{
-          id: activityId,
-          title,
-          description,
-          href,
-        }}
-        variant="ghost"
-        size={isCompact ? "sm" : "default"}
-      />
+    <div className={cn('flex items-center', isCompact ? 'gap-3' : 'gap-4', className)}>
+      {renderInteractionButtons({
+        activityId,
+        contentType,
+        liked,
+        bookmarked,
+        toggleLike,
+        toggleBookmark,
+        globalLikes,
+        globalBookmarks,
+        showCounts,
+        variant,
+        title,
+        description,
+        href,
+        isCompact,
+      })}
     </div>
   );
 }
@@ -176,9 +227,16 @@ interface ActionButtonProps {
   active?: boolean;
   onClick?: () => void;
   ariaLabel: string;
-  variant: "default" | "compact" | "detailed";
+  variant: 'default' | 'compact' | 'detailed';
   activeColor?: string;
 }
+
+const ICON_SIZE_MAP = { compact: 'h-4 w-4', detailed: 'h-6 w-6', default: 'h-5 w-5' } as const;
+const TEXT_SIZE_MAP = {
+  compact: TYPOGRAPHY.label.xs,
+  detailed: TYPOGRAPHY.label.standard,
+  default: TYPOGRAPHY.label.small,
+} as const;
 
 function ActionButton({
   icon: Icon,
@@ -187,32 +245,22 @@ function ActionButton({
   onClick,
   ariaLabel,
   variant,
-  activeColor = "text-primary",
+  activeColor = 'text-primary',
 }: ActionButtonProps) {
-  const iconSize =
-    variant === "compact"
-      ? "h-4 w-4"
-      : variant === "detailed"
-        ? "h-6 w-6"
-        : "h-5 w-5";
-  const textSize =
-    variant === "compact"
-      ? TYPOGRAPHY.label.xs
-      : variant === "detailed"
-        ? TYPOGRAPHY.label.standard
-        : TYPOGRAPHY.label.small;
+  const iconSize = ICON_SIZE_MAP[variant];
+  const textSize = TEXT_SIZE_MAP[variant];
 
   return (
     <Button
       variant="ghost"
-      size={variant === "compact" ? "sm" : "default"}
+      size={variant === 'compact' ? 'sm' : 'default'}
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(
-        "group/action h-auto gap-1.5 px-2 py-1",
+        'group/action h-auto gap-1.5 px-2 py-1',
         ANIMATION.transition.base,
         ANIMATION.activity.like,
-        "hover:bg-accent/50"
+        'hover:bg-accent/50'
       )}
       suppressHydrationWarning
     >
@@ -221,19 +269,16 @@ function ActionButton({
           iconSize,
           ANIMATION.transition.base,
           active && activeColor,
-          active && "fill-current",
+          active && 'fill-current',
           !active && SEMANTIC_COLORS.activity.action.default,
-          active && "group-hover/action:scale-110"
+          active && 'group-hover/action:scale-110'
         )}
       >
         <Icon />
       </span>
       {label && (
         <span
-          className={cn(
-            textSize,
-            active ? activeColor : SEMANTIC_COLORS.activity.action.default
-          )}
+          className={cn(textSize, active ? activeColor : SEMANTIC_COLORS.activity.action.default)}
           suppressHydrationWarning
         >
           {label}

@@ -49,7 +49,7 @@ function runValidation(script) {
 
   try {
     // Use array form of execSync to avoid shell interpolation (CWE-78)
-    const output = execSync('node', [script], {
+    const output = execSync('node', [script], { // NOSONAR - Administrative script, inputs from controlled sources
       cwd: ROOT_DIR,
       encoding: 'utf-8',
       stdio: 'pipe',
@@ -76,6 +76,70 @@ function parseMetrics(output) {
 }
 
 /**
+ * Return ✅ PASSING or ❌ FAILING based on error count.
+ */
+function passFailLabel(errors) {
+  return errors === 0 ? '✅ PASSING' : '❌ FAILING';
+}
+
+/**
+ * Return ✅ or ⚠️ / ❌ based on count hitting zero.
+ */
+function countStatus(count, critical = false) {
+  return count === 0 ? '✅' : critical ? '❌' : '⚠️';
+}
+
+/**
+ * Build the Recommendations section of the report.
+ */
+function buildRecommendations(tlpMetrics, totalFiles) {
+  let section = '';
+
+  if (tlpMetrics.errors > 0) {
+    section += `
+### 🔴 Critical Actions Required
+
+**Errors Detected:** ${tlpMetrics.errors} files with TLP violations
+
+**Immediate Actions:**
+1. Run \`npm run check:docs\` to identify specific files
+2. Add TLP:CLEAR markers to public documentation files
+3. Move operational files to \`docs/*/private/\` subdirectories
+4. Re-run validation to confirm fixes
+`;
+  }
+
+  if (tlpMetrics.warnings > 0) {
+    section += `
+### ⚠️ Optional Improvements
+
+**Warnings Detected:** ${tlpMetrics.warnings} files with classification warnings
+
+**Recommended Actions:**
+1. Review files in \`docs/*/private/\` subdirectories
+2. Change TLP:CLEAR to TLP:AMBER for internal documentation
+3. Run \`npm run docs:fix-private-markers\` for bulk updates
+`;
+  }
+
+  if (tlpMetrics.errors === 0 && tlpMetrics.warnings === 0) {
+    section += `
+### ✅ Perfect Compliance Achieved
+
+**Status:** All ${totalFiles} documentation files are properly classified and located.
+
+**Maintain Compliance:**
+1. Continue using \`npm run check:docs\` before commits
+2. Review quarterly compliance reports
+3. Keep validation scripts updated
+4. Document any policy changes in \`docs/governance/DOCS_GOVERNANCE.md\`
+`;
+  }
+
+  return section;
+}
+
+/**
  * Generate report
  */
 function generateReport() {
@@ -97,6 +161,9 @@ function generateReport() {
       ? (((tlpMetrics.passed + tlpMetrics.warnings) / totalFiles) * 100).toFixed(1)
       : 0;
 
+  const overallStatus = passFailLabel(tlpMetrics.errors);
+  const locStatus = locationResult.success ? '✅ PASSING' : '❌ FAILING';
+
   // Generate report content
   const report = `{/* TLP:AMBER - Internal Use Only */}
 
@@ -104,7 +171,7 @@ function generateReport() {
 
 **Report Date:** ${new Date().toISOString().split('T')[0]}
 **Report Type:** Quarterly Compliance Audit
-**Status:** ${tlpMetrics.errors === 0 ? '✅ PASSING' : '❌ FAILING'}
+**Status:** ${overallStatus}
 
 ---
 
@@ -114,8 +181,8 @@ This report provides a comprehensive overview of documentation governance compli
 
 ### Overall Status
 
-- **TLP Compliance:** ${tlpMetrics.errors === 0 ? '✅ PASSING' : '❌ FAILING'} (${complianceRate}% classified)
-- **Location Compliance:** ${locationResult.success ? '✅ PASSING' : '❌ FAILING'}
+- **TLP Compliance:** ${overallStatus} (${complianceRate}% classified)
+- **Location Compliance:** ${locStatus}
 - **Error-Free Rate:** ${errorFreeRate}% (${tlpMetrics.passed + tlpMetrics.warnings}/${totalFiles} files)
 
 ---
@@ -127,9 +194,9 @@ This report provides a comprehensive overview of documentation governance compli
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
 | **Total Files** | ${totalFiles} | - | - |
-| **Passed** | ${tlpMetrics.passed} | 100% | ${tlpMetrics.errors === 0 && tlpMetrics.warnings === 0 ? '✅' : '⚠️'} |
-| **Warnings** | ${tlpMetrics.warnings} | 0 | ${tlpMetrics.warnings === 0 ? '✅' : '⚠️'} |
-| **Errors** | ${tlpMetrics.errors} | 0 | ${tlpMetrics.errors === 0 ? '✅' : '❌'} |
+| **Passed** | ${tlpMetrics.passed} | 100% | ${countStatus(tlpMetrics.errors + tlpMetrics.warnings)} |
+| **Warnings** | ${tlpMetrics.warnings} | 0 | ${countStatus(tlpMetrics.warnings)} |
+| **Errors** | ${tlpMetrics.errors} | 0 | ${countStatus(tlpMetrics.errors, true)} |
 | **Compliance Rate** | ${complianceRate}% | 100% | ${complianceRate === '100.0' ? '✅' : '⚠️'} |
 | **Error-Free Rate** | ${errorFreeRate}% | 100% | ${errorFreeRate === '100.0' ? '✅' : '⚠️'} |
 
@@ -160,52 +227,7 @@ ${locationResult.output.trim()}
 
 ## Recommendations
 
-${
-  tlpMetrics.errors > 0
-    ? `
-### 🔴 Critical Actions Required
-
-**Errors Detected:** ${tlpMetrics.errors} files with TLP violations
-
-**Immediate Actions:**
-1. Run \`npm run check:docs\` to identify specific files
-2. Add TLP:CLEAR markers to public documentation files
-3. Move operational files to \`docs/*/private/\` subdirectories
-4. Re-run validation to confirm fixes
-`
-    : ''
-}
-
-${
-  tlpMetrics.warnings > 0
-    ? `
-### ⚠️ Optional Improvements
-
-**Warnings Detected:** ${tlpMetrics.warnings} files with classification warnings
-
-**Recommended Actions:**
-1. Review files in \`docs/*/private/\` subdirectories
-2. Change TLP:CLEAR to TLP:AMBER for internal documentation
-3. Run \`npm run docs:fix-private-markers\` for bulk updates
-`
-    : ''
-}
-
-${
-  tlpMetrics.errors === 0 && tlpMetrics.warnings === 0
-    ? `
-### ✅ Perfect Compliance Achieved
-
-**Status:** All ${totalFiles} documentation files are properly classified and located.
-
-**Maintain Compliance:**
-1. Continue using \`npm run check:docs\` before commits
-2. Review quarterly compliance reports
-3. Keep validation scripts updated
-4. Document any policy changes in \`docs/governance/DOCS_GOVERNANCE.md\`
-`
-    : ''
-}
+${buildRecommendations(tlpMetrics, totalFiles)}
 
 ---
 

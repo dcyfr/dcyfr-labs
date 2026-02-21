@@ -14,7 +14,7 @@ const apiKeyRegex =
   /(?:api[_-]?key|apikey|secret|token)["']?[:=\s]{1,}["']?[A-Za-z0-9_\-]{16,}/i;
 const privKeyRegex =
   /-----BEGIN (RSA |EC |OPENSSH |PRIVATE )?PRIVATE KEY-----/i;
-const allowedEmailDomains = new Set(["dcyfr.dev"]);
+const allowedEmailDomains = new Set(["dcyfr.dev", "dcyfr.ai", "example.com"]);
 
 let found = [];
 

@@ -27,6 +27,7 @@
 
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import DOMPurify from 'dompurify';
 import { createFAQSchema } from '@/lib/metadata';
 import type { FAQItem } from '@/lib/metadata';
 import { SPACING, TYPOGRAPHY } from '@/lib/design-tokens';
@@ -97,7 +98,7 @@ export function FAQSection({ items, defaultOpen = false }: FAQSectionProps) {
                   <div id={`faq-answer-${index}`} className="px-4 pb-4" role="region">
                     <div
                       className={`${TYPOGRAPHY.body} text-muted-foreground prose prose-sm max-w-none`}
-                      dangerouslySetInnerHTML={{ __html: item.answer }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.answer) }}
                     />
                   </div>
                 )}

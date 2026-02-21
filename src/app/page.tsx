@@ -6,6 +6,8 @@ import {
   AUTHOR_NAME,
   getOgImageUrl,
   SITE_TITLE_PLAIN,
+  SITE_LAUNCH_DATE,
+  SITE_LAST_UPDATED_DATE,
 } from '@/lib/site-config';
 import { headers } from 'next/headers';
 import type { Metadata } from 'next';
@@ -115,6 +117,46 @@ export default async function Home() {
         description: pageDescription,
         inLanguage: 'en-US',
         image: socialImage,
+        datePublished: SITE_LAUNCH_DATE,
+        dateModified: SITE_LAST_UPDATED_DATE,
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${SITE_URL}/#faqpage`,
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'What is DCYFR Labs?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'DCYFR Labs is a virtual partnership dedicated to building secure, innovative solutions for the modern web. We publish in-depth insights on cyber architecture, information security, artificial intelligence, and software development.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'What topics does DCYFR Labs cover?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'DCYFR Labs covers cybersecurity, artificial intelligence, cloud security, DevSecOps, web development, risk management, incident response, and practical programming techniques.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Who creates content at DCYFR Labs?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Content at DCYFR Labs is created by experienced practitioners in cybersecurity and software engineering, led by Drew — a founding architect with expertise across security architecture, AI, and modern web development.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'How can I read the latest articles on DCYFR Labs?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Browse all articles at dcyfr.ai/blog, or use the search feature on the homepage. You can filter content by topic, tag, or reading time to find exactly what you need.',
+            },
+          },
+        ],
       },
     ],
   };
@@ -154,6 +196,10 @@ export default async function Home() {
           >
             {/* Logo - Subtle presence */}
             <div className="mb-2 flex justify-center">
+              {/* Semantic H1 for AI/screen-reader citation-readiness — visually hidden */}
+              <h1 className="sr-only">
+                DCYFR Labs — Cyber Architecture, Security &amp; Development Insights
+              </h1>
               <SiteLogo size="lg" />
             </div>
 
