@@ -8,6 +8,16 @@ const TRENDING_KEY = 'blog:trending';
 const MILESTONE_KEY_PREFIX = 'blog:milestone:';
 const ANALYTICS_KEY_PREFIX = 'blog:analytics:';
 
+/** Wraps a promise with a timeout to prevent indefinite hangs. */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(message)), timeoutMs)
+    ),
+  ]);
+}
+
 /**
  * Track blog post view
  *
@@ -238,12 +248,7 @@ export const calculateTrending = inngest.createFunction(
 
           // Test Redis connectivity first with short timeout
           try {
-            await Promise.race([
-              redis.ping(),
-              new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Redis ping timeout')), 5000)
-              ),
-            ]);
+            await withTimeout(redis.ping(), 5000, 'Redis ping timeout');
           } catch (pingError) {
             console.error('Redis connectivity check failed:', pingError);
             return {
@@ -258,12 +263,11 @@ export const calculateTrending = inngest.createFunction(
             try {
               // Add timeout to individual Redis operations
               const keysTimeout = 10000; // 10 seconds
-              const keys = (await Promise.race([
+              const keys = (await withTimeout(
                 redis.keys(`${VIEW_KEY_PREFIX}*`),
-                new Promise((_, reject) =>
-                  setTimeout(() => reject(new Error('Redis keys operation timed out')), keysTimeout)
-                ),
-              ])) as string[];
+                keysTimeout,
+                'Redis keys operation timed out'
+              )) as string[];
 
               const postKeys = keys.filter((key) => !key.includes(':day:'));
 
@@ -284,12 +288,7 @@ export const calculateTrending = inngest.createFunction(
 
                     // Get total views with timeout
                     const totalViews = parseInt(
-                      ((await Promise.race([
-                        redis.get(key),
-                        new Promise((_, reject) =>
-                          setTimeout(() => reject(new Error('Redis get timeout')), 5000)
-                        ),
-                      ])) as string) || '0'
+                      ((await withTimeout(redis.get(key), 5000, 'Redis get timeout')) as string) || '0'
                     );
 
                     // Get views from last 7 days with timeout protection
@@ -302,12 +301,11 @@ export const calculateTrending = inngest.createFunction(
                         date.setDate(date.getDate() - j);
                         const dateStr = date.toISOString().split('T')[0];
 
-                        const dayViews = await Promise.race([
+                        const dayViews = await withTimeout(
                           redis.get(`${key}:day:${dateStr}`),
-                          new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error('Day views timeout')), 2000)
-                          ),
-                        ]);
+                          2000,
+                          'Day views timeout'
+                        );
 
                         recentViews += parseInt((dayViews as string) || '0');
                       } catch (dayError) {
@@ -362,16 +360,11 @@ export const calculateTrending = inngest.createFunction(
           // Step 3: Store trending list with timeout protection
           await step.run('store-trending', async () => {
             try {
-              await Promise.race([
-                redis.set(
-                  TRENDING_KEY,
-                  JSON.stringify(trending),
-                  { ex: 60 * 60 } // Cache for 1 hour
-                ),
-                new Promise((_, reject) =>
-                  setTimeout(() => reject(new Error('Redis set timeout')), 10000)
-                ),
-              ]);
+              await withTimeout(
+                redis.set(TRENDING_KEY, JSON.stringify(trending), { ex: 60 * 60 }),
+                10000,
+                'Redis set timeout'
+              );
 
               console.warn(`Updated trending posts: ${trending.length} posts`);
 
