@@ -21,7 +21,6 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
-const docsDir = path.join(projectRoot, 'docs');
 
 // Configuration
 const config = {
@@ -44,7 +43,11 @@ const config = {
  * Check whether a link URL resolves to an existing file (with optional .md/.mdx suffix).
  */
 function checkLinkExists(resolvedPath) {
-  return existsSync(resolvedPath) || existsSync(resolvedPath + '.md') || existsSync(resolvedPath + '.mdx');
+  return (
+    existsSync(resolvedPath) ||
+    existsSync(resolvedPath + '.md') ||
+    existsSync(resolvedPath + '.mdx')
+  );
 }
 
 /**
@@ -143,6 +146,33 @@ class LinkChecker {
     return { content: newContent, fixed, removed };
   }
 
+  recordBrokenLink(filePath, content, link) {
+    this.stats.brokenLinks++;
+    this.brokenLinks.push({
+      file: path.relative(this.projectRoot, filePath),
+      link: link.url,
+      text: link.text,
+      line: this.getLineNumber(content, link.match.index),
+    });
+  }
+
+  applyFixAndTrack(link, filePath, modifiedContent) {
+    const {
+      content: newContent,
+      fixed,
+      removed,
+    } = this.applyLinkFix(link, filePath, modifiedContent);
+    let changed = false;
+    if (removed) {
+      changed = true;
+      this.stats.linksRemoved++;
+    } else if (fixed) {
+      changed = true;
+      this.stats.linksFixed++;
+    }
+    return { content: newContent, changed };
+  }
+
   async checkFile(filePath) {
     this.stats.filesScanned++;
 
@@ -161,32 +191,17 @@ class LinkChecker {
     let hasChanges = false;
 
     for (const link of links) {
-      if (this.isExternalLink(link.url)) {
-        continue; // Skip external links
-      }
+      if (this.isExternalLink(link.url)) continue;
 
       const isValid = await this.validateLink(filePath, link.url);
+      if (isValid) continue;
 
-      if (!isValid) {
-        this.stats.brokenLinks++;
-        this.brokenLinks.push({
-          file: path.relative(this.projectRoot, filePath),
-          link: link.url,
-          text: link.text,
-          line: this.getLineNumber(content, link.match.index),
-        });
+      this.recordBrokenLink(filePath, content, link);
 
-        if (this.fix) {
-          const { content: newContent, fixed, removed } = this.applyLinkFix(link, filePath, modifiedContent);
-          modifiedContent = newContent;
-          if (removed) {
-            hasChanges = true;
-            this.stats.linksRemoved++;
-          } else if (fixed) {
-            hasChanges = true;
-            this.stats.linksFixed++;
-          }
-        }
+      if (this.fix) {
+        const result = this.applyFixAndTrack(link, filePath, modifiedContent);
+        modifiedContent = result.content;
+        hasChanges = hasChanges || result.changed;
       }
     }
 
@@ -245,15 +260,29 @@ class LinkChecker {
     if (!link.url.startsWith('./') && !link.url.startsWith('../') && !link.url.startsWith('/')) {
       const withDotSlash = `./${link.url}`;
       if (this.validateLinkSync(filePath, withDotSlash)) {
-        return { action: 'fix', newUrl: withDotSlash, replacement: link.match[0].replace(link.url, withDotSlash) };
+        return {
+          action: 'fix',
+          newUrl: withDotSlash,
+          replacement: link.match[0].replace(link.url, withDotSlash),
+        };
       }
     }
 
     // 2. Try adding file extensions and common suffixes
-    const variations = [`${link.url}.md`, `${link.url}.mdx`, `${link.url}/README.md`, `${link.url}/README`, `${link.url}/index.md`];
+    const variations = [
+      `${link.url}.md`,
+      `${link.url}.mdx`,
+      `${link.url}/README.md`,
+      `${link.url}/README`,
+      `${link.url}/index.md`,
+    ];
     for (const variation of variations) {
       if (this.validateLinkSync(filePath, variation)) {
-        return { action: 'fix', newUrl: variation, replacement: link.match[0].replace(link.url, variation) };
+        return {
+          action: 'fix',
+          newUrl: variation,
+          replacement: link.match[0].replace(link.url, variation),
+        };
       }
     }
 
@@ -261,7 +290,11 @@ class LinkChecker {
     if (!link.url.startsWith('./') && !link.url.startsWith('/')) {
       const docsRelativePath = `./${link.url}`;
       if (this.validateLinkSync(filePath, docsRelativePath)) {
-        return { action: 'fix', newUrl: docsRelativePath, replacement: link.match[0].replace(link.url, docsRelativePath) };
+        return {
+          action: 'fix',
+          newUrl: docsRelativePath,
+          replacement: link.match[0].replace(link.url, docsRelativePath),
+        };
       }
     }
 

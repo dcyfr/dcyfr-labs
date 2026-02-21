@@ -9,7 +9,7 @@
  * Usage: node scripts/validate-doc-location.mjs
  */
 
-import { readdirSync, statSync, existsSync } from 'fs';
+import { readdirSync, statSync } from 'fs';
 import { join, relative } from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -116,12 +116,13 @@ let violations = [];
  */
 function getDeletedFiles() {
   try {
-    const output = execSync('git diff --cached --name-only --diff-filter=D', { // NOSONAR - Administrative script, inputs from controlled sources
+    const output = execSync('git diff --cached --name-only --diff-filter=D', {
+      // NOSONAR - Administrative script, inputs from controlled sources
       cwd: ROOT_DIR,
       encoding: 'utf8',
     });
     return output.trim().split('\n').filter(Boolean);
-  } catch (error) {
+  } catch {
     // If not in a git repo or no staged changes, return empty array
     return [];
   }
@@ -173,7 +174,7 @@ function findMarkdownInSubdirs(dir, currentDepth = 0, maxDepth = 3, foundFiles =
       } else if (stat.isFile() && item.endsWith('.md')) {
         foundFiles.push(relative(ROOT_DIR, itemPath));
       }
-    } catch (error) {
+    } catch {
       // Skip files/dirs we can't read
     }
   }
@@ -182,29 +183,22 @@ function findMarkdownInSubdirs(dir, currentDepth = 0, maxDepth = 3, foundFiles =
 }
 
 /**
- * Main validation
+ * Check if a file should be skipped during validation
  */
-function main() {
-  console.log(`${colors.cyan}📁 Documentation Location Validation${colors.reset}\n`);
+function isFileExcluded(file, deletedFiles) {
+  return (
+    deletedFiles.includes(file) || ALLOWED_EXCEPTIONS.includes(file) || isAllowedByPattern(file)
+  );
+}
 
-  // Get list of deleted files to exclude from validation
-  const deletedFiles = getDeletedFiles();
-
-  if (deletedFiles.length > 0) {
-    console.log(
-      `${colors.yellow}⏭️  Skipping ${deletedFiles.length} deleted file(s)${colors.reset}\n`
-    );
-  }
-
-  // Check root-level markdown files
+/**
+ * Validate root-level markdown files
+ */
+function checkRootMarkdownFiles(deletedFiles) {
   const rootMdFiles = findRootMarkdownFiles(ROOT_DIR);
 
   for (const file of rootMdFiles) {
-    // Skip if this file is being deleted
-    if (deletedFiles.includes(file)) {
-      continue;
-    }
-
+    if (deletedFiles.includes(file)) continue;
     if (!ALLOWED_ROOT_DOCS.includes(file)) {
       violations.push({
         file,
@@ -212,8 +206,12 @@ function main() {
       });
     }
   }
+}
 
-  // Check for markdown files in non-docs directories
+/**
+ * Validate markdown files in subdirectories
+ */
+function checkSubdirMarkdownFiles(deletedFiles) {
   const subsInRoot = readdirSync(ROOT_DIR).filter((item) => {
     const itemPath = join(ROOT_DIR, item);
     const stat = statSync(itemPath);
@@ -225,50 +223,56 @@ function main() {
     const mdFiles = findMarkdownInSubdirs(subdirPath);
 
     for (const file of mdFiles) {
-      // Skip if this file is being deleted
-      if (deletedFiles.includes(file)) {
-        continue;
-      }
-
-      // Skip if this file is in the allowed exceptions list
-      if (ALLOWED_EXCEPTIONS.includes(file)) {
-        continue;
-      }
-
-      // Skip if this file matches allowed patterns (asset/config documentation)
-      if (isAllowedByPattern(file)) {
-        continue;
-      }
-
+      if (isFileExcluded(file, deletedFiles)) continue;
       violations.push({
         file,
         message: `Documentation file outside docs/ (found in ${subdir}/)`,
       });
     }
   }
+}
 
-  // Print results
+/**
+ * Print validation results and exit
+ */
+function printResultsAndExit() {
   console.log(`${colors.cyan}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
 
-  if (violations.length > 0) {
-    console.log(
-      `${colors.red}❌ Found ${violations.length} documentation file(s) in wrong location:${colors.reset}\n`
-    );
-
-    violations.forEach(({ file, message }) => {
-      console.log(`${colors.red}❌ ${file}${colors.reset}`);
-      console.log(`   ${message}\n`);
-    });
-
-    console.log(`${colors.yellow}Fix by moving files to docs/ directory:${colors.reset}`);
-    console.log(`  mv <file> docs/<category>/<file>\n`);
-    console.log(`See docs/governance/DOCS_GOVERNANCE.md for placement guidelines.\n`);
-
-    process.exit(1);
-  } else {
+  if (violations.length === 0) {
     console.log(`${colors.green}✅ All documentation files are properly located${colors.reset}\n`);
     process.exit(0);
   }
+
+  console.log(
+    `${colors.red}❌ Found ${violations.length} documentation file(s) in wrong location:${colors.reset}\n`
+  );
+  violations.forEach(({ file, message }) => {
+    console.log(`${colors.red}❌ ${file}${colors.reset}`);
+    console.log(`   ${message}\n`);
+  });
+  console.log(`${colors.yellow}Fix by moving files to docs/ directory:${colors.reset}`);
+  console.log(`  mv <file> docs/<category>/<file>\n`);
+  console.log(`See docs/governance/DOCS_GOVERNANCE.md for placement guidelines.\n`);
+  process.exit(1);
+}
+
+/**
+ * Main validation
+ */
+function main() {
+  console.log(`${colors.cyan}📁 Documentation Location Validation${colors.reset}\n`);
+
+  const deletedFiles = getDeletedFiles();
+
+  if (deletedFiles.length > 0) {
+    console.log(
+      `${colors.yellow}⏭️  Skipping ${deletedFiles.length} deleted file(s)${colors.reset}\n`
+    );
+  }
+
+  checkRootMarkdownFiles(deletedFiles);
+  checkSubdirMarkdownFiles(deletedFiles);
+  printResultsAndExit();
 }
 
 main();

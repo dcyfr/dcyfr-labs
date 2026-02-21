@@ -29,7 +29,7 @@ function parseEnvFile(filePath) {
       out[key] = val;
     }
     return out;
-  } catch (err) {
+  } catch {
     return {};
   }
 }
@@ -102,7 +102,7 @@ function isValidMCPServerURL(url) {
     }
 
     return true;
-  } catch (err) {
+  } catch {
     console.warn(`⚠️  Invalid MCP server URL format: ${url}`);
     return false;
   }
@@ -121,13 +121,13 @@ function readMcpConfig(configPath = path.join(ROOT, '.vscode', 'mcp.json')) {
       expanded[name] = expandObject(s, root);
     }
     return expanded;
-  } catch (err) {
+  } catch {
     return {};
   }
 }
 
 /**
- * Build auth headers by guessing token env var names for a server.
+ * Build auth headersby guessing token env var names for a server.
  * Returns {headers, tokenNameUsed}.
  */
 function buildAuthHeaders(name, server, env) {
@@ -208,10 +208,26 @@ async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {
       // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
       const res2 = await fetch(url, { method: 'GET', headers, signal: controller2.signal });
       clearTimeout(timer2);
-      if (opts.debug) console.log({ url, name, method: 'GET (fallback from HEAD 405)', tokenNameUsed, status: res2.status, statusText: res2.statusText });
+      if (opts.debug)
+        console.log({
+          url,
+          name,
+          method: 'GET (fallback from HEAD 405)',
+          tokenNameUsed,
+          status: res2.status,
+          statusText: res2.statusText,
+        });
       return buildFetchResult(name, res2, 'GET', tokenNameUsed, startTime);
     }
-    if (opts.debug) console.log({ url, name, method: 'HEAD', tokenNameUsed, status: res.status, statusText: res.statusText });
+    if (opts.debug)
+      console.log({
+        url,
+        name,
+        method: 'HEAD',
+        tokenNameUsed,
+        status: res.status,
+        statusText: res.statusText,
+      });
     return buildFetchResult(name, res, 'HEAD', tokenNameUsed, startTime);
   } catch (err) {
     try {
@@ -220,7 +236,15 @@ async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {
       // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
       const res3 = await fetch(url, { method: 'GET', headers, signal: controller3.signal });
       clearTimeout(timer3);
-      if (opts.debug) console.log({ url, name, method: 'GET (fallback from HEAD error)', tokenNameUsed, status: res3.status, statusText: res3.statusText });
+      if (opts.debug)
+        console.log({
+          url,
+          name,
+          method: 'GET (fallback from HEAD error)',
+          tokenNameUsed,
+          status: res3.status,
+          statusText: res3.statusText,
+        });
       return buildFetchResult(name, res3, 'GET', tokenNameUsed, startTime);
     } catch (err2) {
       if (opts.debug) console.error(`MCP check failed ${name} ${url}:`, err2 || err);
@@ -244,20 +268,22 @@ function checkCommandServer(name, server) {
   const cmdArgs = Array.from(args);
   // Try a bare `command --version` first (safe for npx and many binaries)
   try {
-    const resBare = spawnSync(command, ['--version'], { // NOSONAR - Administrative script, inputs from controlled sources
+    const resBare = spawnSync(command, ['--version'], {
+      // NOSONAR - Administrative script, inputs from controlled sources
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout: 10_000,
     });
     if (!resBare.error && resBare.status === 0)
       return { name, ok: true, stdout: resBare.stdout.trim() };
-  } catch (err) {
+  } catch {
     // ignore; fallback to the full command invocation
   }
   // Some packages want --version, some -v; try both
   cmdArgs.push('--version');
   try {
-    const res = spawnSync(command, cmdArgs, { // NOSONAR - Administrative script, inputs from controlled sources
+    const res = spawnSync(command, cmdArgs, {
+      // NOSONAR - Administrative script, inputs from controlled sources
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout: 10_000,
@@ -265,7 +291,8 @@ function checkCommandServer(name, server) {
     if (res.error) return { name, ok: false, error: String(res.error) };
     if (res.status === 0) return { name, ok: true, stdout: res.stdout.trim() };
     // Try running with --help if version failed
-    const res2 = spawnSync(command, [...args, '--help'], { // NOSONAR - Administrative script, inputs from controlled sources
+    const res2 = spawnSync(command, [...args, '--help'], {
+      // NOSONAR - Administrative script, inputs from controlled sources
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
       timeout: 10_000,
@@ -293,21 +320,35 @@ async function checkOneServer(name, server, env, opts) {
 }
 
 /**
+ * Format a single successful result line.
+ */
+function formatSuccessLine(r) {
+  const statusStr = r.status ? ` [${r.status}]` : '';
+  return `✓ ${r.name} (${r.type}) - OK${statusStr}`;
+}
+
+/**
+ * Format a single failed result line.
+ */
+function formatFailureLine(r) {
+  const detail = r.error ? `(${r.error})` : r.status ? `[${r.status}]` : '';
+  return `✖ ${r.name} (${r.type}) - FAILED ${detail}`;
+}
+
+/**
  * Print check results to stdout/stderr.
  */
 function reportResults(results, opts) {
   const failures = results.filter((r) => !r.ok);
   if (opts.json) {
     console.log(JSON.stringify({ results, failures }, null, 2));
-  } else {
-    for (const r of results) {
-      if (r.ok) {
-        const statusStr = r.status ? ` [${r.status}]` : '';
-        console.log(`✓ ${r.name} (${r.type}) - OK${statusStr}`);
-      } else {
-        const detail = r.error ? `(${r.error})` : r.status ? `[${r.status}]` : '';
-        console.error(`✖ ${r.name} (${r.type}) - FAILED ${detail}`);
-      }
+    return failures;
+  }
+  for (const r of results) {
+    if (r.ok) {
+      console.log(formatSuccessLine(r));
+    } else {
+      console.error(formatFailureLine(r));
     }
   }
   return failures;

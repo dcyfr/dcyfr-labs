@@ -33,7 +33,7 @@ const args = process.argv.slice(2);
 const thresholdArg = args.indexOf('--threshold');
 const modeArg = args.indexOf('--mode');
 const THRESHOLD = thresholdArg !== -1 ? parseInt(args[thresholdArg + 1], 10) : 90;
-const GATE_MODE = modeArg !== -1 ? args[modeArg + 1] : 'error';  // 'warn' or 'error'
+const GATE_MODE = modeArg !== -1 ? args[modeArg + 1] : 'error'; // 'warn' or 'error'
 
 /**
  * Load brand_voice anti-patterns from DCYFR_CONTEXT.json
@@ -57,7 +57,8 @@ const ANTI_PATTERN_VIOLATIONS = [
   // Never use condescending language
   {
     pattern: /\b(obviously|clearly|just|simply|easily)\b/gi,
-    message: 'Potentially condescending language detected — avoid "obviously", "just", "simply", "clearly", "easily"',
+    message:
+      'Potentially condescending language detected — avoid "obviously", "just", "simply", "clearly", "easily"',
     severity: 'warn',
   },
   // Never gatekeep
@@ -86,18 +87,17 @@ const ANTI_PATTERN_VIOLATIONS = [
  */
 function analyzeAgent(filepath, filename) {
   const content = readFileSync(filepath, 'utf8');
-  const lines = content.split('\n');
-  
-  const hasVoiceSection = /^## Voice & Identity/m.test(content) ||
-                          /^## Voice and Identity/m.test(content);
-  
+
+  const hasVoiceSection =
+    /^## Voice & Identity/m.test(content) || /^## Voice and Identity/m.test(content);
+
   const violations = [];
-  
+
   // Only check instruction body (after frontmatter)
   const bodyStart = content.indexOf('\n---\n', content.indexOf('---\n') + 4) + 4;
   const body = bodyStart > 4 ? content.slice(bodyStart) : content;
   const bodyLines = body.split('\n');
-  
+
   for (const rule of ANTI_PATTERN_VIOLATIONS) {
     bodyLines.forEach((line, idx) => {
       if (rule.pattern.test(line)) {
@@ -110,11 +110,11 @@ function analyzeAgent(filepath, filename) {
       }
     });
   }
-  
-  const hasErrors = violations.some(v => v.severity === 'error');
-  const hasWarnings = violations.some(v => v.severity === 'warn');
+
+  const hasErrors = violations.some((v) => v.severity === 'error');
+  const hasWarnings = violations.some((v) => v.severity === 'warn');
   const status = !hasVoiceSection ? 'fail' : hasErrors ? 'fail' : hasWarnings ? 'warn' : 'pass';
-  
+
   return {
     file: filename,
     hasVoiceSection,
@@ -124,62 +124,84 @@ function analyzeAgent(filepath, filename) {
 }
 
 /**
- * Run the compliance check
+ * Discover .agent.md files or exit on failure
  */
-function run() {
-  const antiPatterns = loadAntiPatterns();
-  
-  // Discover agent files
-  let agentFiles;
+function discoverAgentFiles() {
   try {
-    agentFiles = readdirSync(AGENTS_DIR)
-      .filter(f => f.endsWith('.agent.md'))
+    const files = readdirSync(AGENTS_DIR)
+      .filter((f) => f.endsWith('.agent.md'))
       .sort();
+    return files;
   } catch {
     console.error(`❌ Could not read agents directory: ${AGENTS_DIR}`);
     process.exit(1);
   }
-  
-  if (agentFiles.length === 0) {
-    console.warn('⚠️  No agent files found in .claude/agents/');
-    process.exit(0);
-  }
-  
-  console.log(`\n🔍 DCYFR Voice Compliance Check`);
-  console.log(`${'─'.repeat(60)}`);
-  console.log(`Scanning ${agentFiles.length} agents in ${AGENTS_DIR}`);
-  console.log(`Threshold: ${THRESHOLD}%  |  Mode: ${GATE_MODE}`);
-  console.log(`Brand anti-patterns loaded: ${antiPatterns.length}`);
-  console.log(`${'─'.repeat(60)}\n`);
-  
-  const results = agentFiles.map(filename => {
-    const filepath = join(AGENTS_DIR, filename);
-    return analyzeAgent(filepath, filename);
-  });
-  
-  // Print per-agent results
+}
+
+/**
+ * Print individual agent results
+ */
+function printAgentResults(results) {
   for (const result of results) {
     const icon = result.status === 'pass' ? '✅' : result.status === 'warn' ? '⚠️ ' : '❌';
     const voiceIcon = result.hasVoiceSection ? '🗣️' : '  ';
     console.log(`${icon} ${voiceIcon} ${result.file}`);
-    
+
     if (!result.hasVoiceSection) {
       console.log(`     ↳ Missing "## Voice & Identity" section`);
     }
-    
+
     for (const v of result.violations) {
       const sevIcon = v.severity === 'error' ? '🔴' : '🟡';
       console.log(`     ${sevIcon} Line ${v.line}: ${v.message}`);
       if (v.match) console.log(`        "${v.match}"`);
     }
   }
-  
-  // Calculate compliance
-  const passing = results.filter(r => r.status === 'pass' || r.status === 'warn').length;
-  const failing = results.filter(r => r.status === 'fail').length;
-  const withVoice = results.filter(r => r.hasVoiceSection).length;
+}
+
+/**
+ * List agents missing voice sections via the given log function
+ */
+function listMissingVoiceSections(results, logFn) {
+  logFn('   Agents missing voice sections:');
+  results
+    .filter((r) => !r.hasVoiceSection)
+    .forEach((r) => {
+      logFn(`   - ${r.file}`);
+    });
+}
+
+/**
+ * Run the compliance check
+ */
+function run() {
+  const antiPatterns = loadAntiPatterns();
+  const agentFiles = discoverAgentFiles();
+
+  if (agentFiles.length === 0) {
+    console.warn('⚠️  No agent files found in .claude/agents/');
+    process.exit(0);
+  }
+
+  console.log(`\n🔍 DCYFR Voice Compliance Check`);
+  console.log(`${'─'.repeat(60)}`);
+  console.log(`Scanning ${agentFiles.length} agents in ${AGENTS_DIR}`);
+  console.log(`Threshold: ${THRESHOLD}%  |  Mode: ${GATE_MODE}`);
+  console.log(`Brand anti-patterns loaded: ${antiPatterns.length}`);
+  console.log(`${'─'.repeat(60)}\n`);
+
+  const results = agentFiles.map((filename) => {
+    const filepath = join(AGENTS_DIR, filename);
+    return analyzeAgent(filepath, filename);
+  });
+
+  printAgentResults(results);
+
+  const passing = results.filter((r) => r.status === 'pass' || r.status === 'warn').length;
+  const failing = results.filter((r) => r.status === 'fail').length;
+  const withVoice = results.filter((r) => r.hasVoiceSection).length;
   const compliancePercent = Math.round((withVoice / agentFiles.length) * 100);
-  
+
   console.log(`\n${'─'.repeat(60)}`);
   console.log(`📊 Results:`);
   console.log(`   Total agents:     ${agentFiles.length}`);
@@ -187,29 +209,23 @@ function run() {
   console.log(`   Passing:          ${passing}`);
   console.log(`   Failing:          ${failing}`);
   console.log(`   Compliance:       ${compliancePercent}%  (threshold: ${THRESHOLD}%)`);
-  
+
   if (compliancePercent >= THRESHOLD) {
     console.log(`\n✅ Voice compliance gate PASSED (${compliancePercent}% ≥ ${THRESHOLD}%)\n`);
     process.exit(0);
-  } else {
-    const msg = `❌ Voice compliance gate FAILED — ${compliancePercent}% < ${THRESHOLD}% threshold`;
-    if (GATE_MODE === 'warn') {
-      console.warn(`\n⚠️  ${msg} (warning mode — not blocking)\n`);
-      console.warn('   Agents missing voice sections:');
-      results.filter(r => !r.hasVoiceSection).forEach(r => {
-        console.warn(`   - ${r.file}`);
-      });
-      process.exit(0);
-    } else {
-      console.error(`\n${msg}\n`);
-      console.error('   Agents missing voice sections:');
-      results.filter(r => !r.hasVoiceSection).forEach(r => {
-        console.error(`   - ${r.file}`);
-      });
-      console.error('\n   Add "## Voice & Identity" sections to fix compliance.\n');
-      process.exit(1);
-    }
   }
+
+  const msg = `❌ Voice compliance gate FAILED — ${compliancePercent}% < ${THRESHOLD}% threshold`;
+  if (GATE_MODE === 'warn') {
+    console.warn(`\n⚠️  ${msg} (warning mode — not blocking)\n`);
+    listMissingVoiceSections(results, console.warn);
+    process.exit(0);
+  }
+
+  console.error(`\n${msg}\n`);
+  listMissingVoiceSections(results, console.error);
+  console.error('\n   Add "## Voice & Identity" sections to fix compliance.\n');
+  process.exit(1);
 }
 
 run();
