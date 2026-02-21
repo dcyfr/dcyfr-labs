@@ -13,10 +13,7 @@
  */
 
 import { PromptIntelClient } from '@/mcp/shared/promptintel-client';
-import type {
-  PromptIntelIoPC,
-  PromptIntelTaxonomy
-} from '@/mcp/shared/promptintel-types';
+import type { PromptIntelIoPC, PromptIntelTaxonomy } from '@/mcp/shared/promptintel-types';
 
 // ============================================================================
 // Types
@@ -46,11 +43,11 @@ export interface ScanResult {
 }
 
 export interface ScanOptions {
-  checkIoPC?: boolean;           // Check against IoPC database
-  checkTaxonomy?: boolean;       // Check against threat taxonomy
-  checkPatterns?: boolean;       // Check against local patterns
-  maxRiskScore?: number;         // Maximum acceptable risk score
-  cacheResults?: boolean;        // Cache scan results
+  checkIoPC?: boolean; // Check against IoPC database
+  checkTaxonomy?: boolean; // Check against threat taxonomy
+  checkPatterns?: boolean; // Check against local patterns
+  maxRiskScore?: number; // Maximum acceptable risk score
+  cacheResults?: boolean; // Cache scan results
 }
 
 // ============================================================================
@@ -77,13 +74,15 @@ const LOCAL_PATTERNS = [
     confidence: 0.9,
   },
   {
-    pattern: /(system\s+prompt|you\s+are\s+now|forget\s+everything|new\s+instructions?|disregard|override)/i,
+    pattern:
+      /(system\s+prompt|you\s+are\s+now|forget\s+everything|new\s+instructions?|disregard|override)/i,
     category: 'prompt-override',
     severity: 'high' as const,
     confidence: 0.85,
   },
   {
-    pattern: /(tell\s+me|what\s+(is|are))\s+(the|your)\s+(system|initial|original)\s+(prompt|instructions?)/i,
+    pattern:
+      /(tell\s+me|what\s+(is|are))\s+(the|your)\s+(system|initial|original)\s+(prompt|instructions?)/i,
     category: 'prompt-leakage',
     severity: 'medium' as const,
     confidence: 0.8,
@@ -139,10 +138,7 @@ export class PromptSecurityScanner {
   /**
    * Scan a single prompt for security threats
    */
-  async scanPrompt(
-    input: string,
-    options: ScanOptions = {}
-  ): Promise<ScanResult> {
+  async scanPrompt(input: string, options: ScanOptions = {}): Promise<ScanResult> {
     const opts = { ...DEFAULT_OPTIONS, ...options };
     const startTime = Date.now();
     const inputHash = this.hashInput(input);
@@ -206,7 +202,7 @@ export class PromptSecurityScanner {
       threats,
       severity,
       riskScore,
-      blockedPatterns: threats.map(t => t.pattern),
+      blockedPatterns: threats.map((t) => t.pattern),
       metadata: {
         scannedAt: new Date().toISOString(),
         scanDuration: Date.now() - startTime,
@@ -226,14 +222,9 @@ export class PromptSecurityScanner {
   /**
    * Scan multiple prompts in batch
    */
-  async scanBatch(
-    inputs: string[],
-    options: ScanOptions = {}
-  ): Promise<ScanResult[]> {
+  async scanBatch(inputs: string[], options: ScanOptions = {}): Promise<ScanResult[]> {
     // Scan all prompts in parallel
-    const results = await Promise.all(
-      inputs.map(input => this.scanPrompt(input, options))
-    );
+    const results = await Promise.all(inputs.map((input) => this.scanPrompt(input, options)));
     return results;
   }
 
@@ -295,6 +286,43 @@ export class PromptSecurityScanner {
     }
   }
 
+  private mapIoPCSeverity(severity: PromptIntelIoPC['severity']): ThreatMatch['severity'] {
+    return severity === 'info' ? 'low' : severity;
+  }
+
+  private matchThreatByRegex(
+    inputLower: string,
+    patternSource: string,
+    threat: PromptIntelIoPC
+  ): ThreatMatch | null {
+    const pattern = new RegExp(patternSource, 'i');
+    if (!pattern.test(inputLower)) return null;
+    return {
+      pattern: patternSource,
+      category: threat.category,
+      severity: this.mapIoPCSeverity(threat.severity),
+      confidence: threat.severity === 'critical' ? 0.9 : 0.7,
+      source: 'iopc',
+      details: `IoPC match: ${threat.title}`,
+    };
+  }
+
+  private matchThreatBySubstring(
+    inputLower: string,
+    patternSource: string,
+    threat: PromptIntelIoPC
+  ): ThreatMatch | null {
+    if (!inputLower.includes(patternSource.toLowerCase())) return null;
+    return {
+      pattern: patternSource,
+      category: threat.category,
+      severity: this.mapIoPCSeverity(threat.severity),
+      confidence: 0.5,
+      source: 'iopc',
+      details: `IoPC substring match: ${threat.title}`,
+    };
+  }
+
   /**
    * Match input against cached IoPC threats and collect matching entries
    */
@@ -306,31 +334,13 @@ export class PromptSecurityScanner {
       const patternSource = threat.detection_pattern ?? threat.prompt_pattern;
       if (!patternSource) continue;
 
+      let match: ThreatMatch | null = null;
       try {
-        const pattern = new RegExp(patternSource, 'i');
-        if (pattern.test(inputLower)) {
-          matches.push({
-            pattern: patternSource,
-            category: threat.category,
-            severity: threat.severity === 'info' ? 'low' : threat.severity,
-            confidence: threat.severity === 'critical' ? 0.9 : 0.7,
-            source: 'iopc',
-            details: `IoPC match: ${threat.title}`,
-          });
-        }
+        match = this.matchThreatByRegex(inputLower, patternSource, threat);
       } catch {
-        // Pattern is not a valid regex; fall back to substring match
-        if (inputLower.includes(patternSource.toLowerCase())) {
-          matches.push({
-            pattern: patternSource,
-            category: threat.category,
-            severity: threat.severity === 'info' ? 'low' : threat.severity,
-            confidence: 0.5,
-            source: 'iopc',
-            details: `IoPC substring match: ${threat.title}`,
-          });
-        }
+        match = this.matchThreatBySubstring(inputLower, patternSource, threat);
       }
+      if (match) matches.push(match);
     }
 
     return matches;
@@ -388,16 +398,13 @@ export class PromptSecurityScanner {
   /**
    * Determine overall severity level
    */
-  private determineSeverity(
-    threats: ThreatMatch[],
-    riskScore: number
-  ): ScanResult['severity'] {
+  private determineSeverity(threats: ThreatMatch[], riskScore: number): ScanResult['severity'] {
     if (threats.length === 0) return 'safe';
 
     // Find highest severity
-    const hasCritical = threats.some(t => t.severity === 'critical');
-    const hasHigh = threats.some(t => t.severity === 'high');
-    const hasMedium = threats.some(t => t.severity === 'medium');
+    const hasCritical = threats.some((t) => t.severity === 'critical');
+    const hasHigh = threats.some((t) => t.severity === 'high');
+    const hasMedium = threats.some((t) => t.severity === 'medium');
 
     if (hasCritical || riskScore >= 90) return 'critical';
     if (hasHigh || riskScore >= 70) return 'high';
@@ -413,7 +420,7 @@ export class PromptSecurityScanner {
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
       const char = input.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return hash.toString(36);

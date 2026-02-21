@@ -21,6 +21,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars -- referenced by LinkChecker constructor */
 const docsDir = path.join(projectRoot, 'docs');
 
 // Configuration
@@ -44,7 +45,11 @@ const config = {
  * Check whether a link URL resolves to an existing file (with optional .md/.mdx suffix).
  */
 function checkLinkExists(resolvedPath) {
-  return existsSync(resolvedPath) || existsSync(resolvedPath + '.md') || existsSync(resolvedPath + '.mdx');
+  return (
+    existsSync(resolvedPath) ||
+    existsSync(resolvedPath + '.md') ||
+    existsSync(resolvedPath + '.mdx')
+  );
 }
 
 /**
@@ -144,7 +149,11 @@ class LinkChecker {
   }
 
   applyFixToContent(link, filePath, modifiedContent) {
-    const { content: newContent, fixed, removed } = this.applyLinkFix(link, filePath, modifiedContent);
+    const {
+      content: newContent,
+      fixed,
+      removed,
+    } = this.applyLinkFix(link, filePath, modifiedContent);
     let changed = false;
     if (removed) {
       changed = true;
@@ -154,6 +163,16 @@ class LinkChecker {
       this.stats.linksFixed++;
     }
     return { content: newContent, changed };
+  }
+
+  recordBrokenLink(filePath, content, link) {
+    this.stats.brokenLinks++;
+    this.brokenLinks.push({
+      file: path.relative(this.projectRoot, filePath),
+      link: link.url,
+      text: link.text,
+      line: this.getLineNumber(content, link.match.index),
+    });
   }
 
   async checkFile(filePath) {
@@ -177,21 +196,14 @@ class LinkChecker {
       if (this.isExternalLink(link.url)) continue;
 
       const isValid = await this.validateLink(filePath, link.url);
+      if (isValid) continue;
 
-      if (!isValid) {
-        this.stats.brokenLinks++;
-        this.brokenLinks.push({
-          file: path.relative(this.projectRoot, filePath),
-          link: link.url,
-          text: link.text,
-          line: this.getLineNumber(content, link.match.index),
-        });
+      this.recordBrokenLink(filePath, content, link);
 
-        if (this.fix) {
-          const { content: newContent, changed } = this.applyFixToContent(link, filePath, modifiedContent);
-          modifiedContent = newContent;
-          if (changed) hasChanges = true;
-        }
+      if (this.fix) {
+        const result = this.applyFixToContent(link, filePath, modifiedContent);
+        modifiedContent = result.content;
+        hasChanges = hasChanges || result.changed;
       }
     }
 
@@ -250,15 +262,29 @@ class LinkChecker {
     if (!link.url.startsWith('./') && !link.url.startsWith('../') && !link.url.startsWith('/')) {
       const withDotSlash = `./${link.url}`;
       if (this.validateLinkSync(filePath, withDotSlash)) {
-        return { action: 'fix', newUrl: withDotSlash, replacement: link.match[0].replace(link.url, withDotSlash) };
+        return {
+          action: 'fix',
+          newUrl: withDotSlash,
+          replacement: link.match[0].replace(link.url, withDotSlash),
+        };
       }
     }
 
     // 2. Try adding file extensions and common suffixes
-    const variations = [`${link.url}.md`, `${link.url}.mdx`, `${link.url}/README.md`, `${link.url}/README`, `${link.url}/index.md`];
+    const variations = [
+      `${link.url}.md`,
+      `${link.url}.mdx`,
+      `${link.url}/README.md`,
+      `${link.url}/README`,
+      `${link.url}/index.md`,
+    ];
     for (const variation of variations) {
       if (this.validateLinkSync(filePath, variation)) {
-        return { action: 'fix', newUrl: variation, replacement: link.match[0].replace(link.url, variation) };
+        return {
+          action: 'fix',
+          newUrl: variation,
+          replacement: link.match[0].replace(link.url, variation),
+        };
       }
     }
 
@@ -266,7 +292,11 @@ class LinkChecker {
     if (!link.url.startsWith('./') && !link.url.startsWith('/')) {
       const docsRelativePath = `./${link.url}`;
       if (this.validateLinkSync(filePath, docsRelativePath)) {
-        return { action: 'fix', newUrl: docsRelativePath, replacement: link.match[0].replace(link.url, docsRelativePath) };
+        return {
+          action: 'fix',
+          newUrl: docsRelativePath,
+          replacement: link.match[0].replace(link.url, docsRelativePath),
+        };
       }
     }
 

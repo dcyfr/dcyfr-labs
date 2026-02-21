@@ -2,10 +2,10 @@
 
 /**
  * Sitemap Validation Script
- * 
+ *
  * Validates that sitemap.xml includes all expected public pages.
  * Run this in CI/CD to catch missing pages automatically.
- * 
+ *
  * Usage:
  *   node scripts/validate-sitemap.mjs
  *   npm run sitemap:validate
@@ -45,6 +45,30 @@ function shouldSkipDirectory(item) {
 }
 
 /**
+ * Build a route path from current route and directory item
+ */
+function buildRoute(route, item) {
+  return route ? `${route}/${item}` : `/${item}`;
+}
+
+/**
+ * Try to detect a page.tsx inside a directory and register it
+ */
+function tryRegisterPage(fullPath, item, route, pages) {
+  const pagePath = join(fullPath, 'page.tsx');
+  try {
+    statSync(pagePath);
+    pages.push({
+      path: buildRoute(route, item),
+      file: pagePath.replace(rootDir + '/', ''),
+      hasDynamicSegment: item.startsWith('['),
+    });
+  } catch {
+    // No page.tsx
+  }
+}
+
+/**
  * Recursively scan app directory for page.tsx files
  */
 function scanAppDir(dir, route, pages) {
@@ -53,31 +77,11 @@ function scanAppDir(dir, route, pages) {
 
     for (const item of items) {
       const fullPath = join(dir, item);
-      const stat = statSync(fullPath);
+      if (!statSync(fullPath).isDirectory()) continue;
+      if (shouldSkipDirectory(item)) continue;
 
-      if (stat.isDirectory()) {
-        if (shouldSkipDirectory(item)) {
-          continue;
-        }
-
-        // Check for page.tsx
-        const pagePath = join(fullPath, 'page.tsx');
-        try {
-          statSync(pagePath);
-          const routePath = route ? `${route}/${item}` : `/${item}`;
-          pages.push({
-            path: routePath,
-            file: pagePath.replace(rootDir + '/', ''),
-            hasDynamicSegment: item.startsWith('['),
-          });
-        } catch {
-          // No page.tsx
-        }
-
-        // Recurse
-        const newRoute = route ? `${route}/${item}` : `/${item}`;
-        scanAppDir(fullPath, newRoute, pages);
-      }
+      tryRegisterPage(fullPath, item, route, pages);
+      scanAppDir(fullPath, buildRoute(route, item), pages);
     }
   } catch {
     // Ignore errors
@@ -107,8 +111,9 @@ function findAllPageFiles() {
  * Extract URLs from sitemap.xml
  */
 function extractSitemapUrls() {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- reserved for future sitemap route resolution */
   const sitemapPath = join(rootDir, '.next/server/app/sitemap.xml/route.js');
-  
+
   // For development, read from built sitemap
   try {
     // Try to read from .next build output
@@ -136,7 +141,7 @@ function shouldBeInSitemap(page) {
   if (page.hasDynamicSegment) {
     return false;
   }
-  
+
   // All static pages should be in sitemap
   return true;
 }
@@ -146,32 +151,32 @@ function shouldBeInSitemap(page) {
  */
 function validateSitemap() {
   log(colors.cyan, '\n🔍 Sitemap Validation\n');
-  
+
   const pages = findAllPageFiles();
   const sitemapUrls = extractSitemapUrls();
-  
+
   if (sitemapUrls.length === 0) {
     log(colors.red, '❌ No sitemap URLs found. Build the project first.');
     process.exit(1);
   }
-  
+
   log(colors.blue, `Found ${pages.length} page files`);
   log(colors.blue, `Found ${sitemapUrls.length} URLs in sitemap\n`);
-  
+
   // Check for missing pages
   const staticPages = pages.filter(shouldBeInSitemap);
   const missing = [];
-  
+
   for (const page of staticPages) {
     if (!sitemapUrls.includes(page.path)) {
       missing.push(page);
     }
   }
-  
+
   // Check for extra URLs (should be data-driven)
-  const expectedStatic = new Set(staticPages.map(p => p.path));
-  const dataUrls = sitemapUrls.filter(url => !expectedStatic.has(url));
-  
+  const expectedStatic = new Set(staticPages.map((p) => p.path));
+  const dataUrls = sitemapUrls.filter((url) => !expectedStatic.has(url));
+
   // Report results
   if (missing.length > 0) {
     log(colors.red, `\n❌ Missing ${missing.length} page(s) from sitemap:\n`);
@@ -182,20 +187,20 @@ function validateSitemap() {
   } else {
     log(colors.green, '\n✅ All static pages included in sitemap');
   }
-  
+
   log(colors.cyan, `\n📊 Data-driven URLs: ${dataUrls.length}`);
   log(colors.cyan, '   (Blog posts, work projects, series, team profiles)\n');
-  
+
   // Summary
   const total = sitemapUrls.length;
   const staticCount = staticPages.length;
   const dynamicCount = dataUrls.length;
-  
+
   console.log('Summary:');
   console.log(`  Static pages:        ${staticCount}`);
   console.log(`  Data-driven URLs:    ${dynamicCount}`);
   console.log(`  Total in sitemap:    ${total}`);
-  
+
   if (missing.length > 0) {
     log(colors.red, '\n❌ Sitemap validation failed\n');
     process.exit(1);
