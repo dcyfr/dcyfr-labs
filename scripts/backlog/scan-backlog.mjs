@@ -50,6 +50,34 @@ function estimatePriorityAndImpact(title) {
 }
 
 /**
+ * Build a structured task object from a checkbox regex match.
+ */
+function buildTaskFromMatch(checkboxMatch, currentCategory) {
+  const completed = checkboxMatch[1].toLowerCase() === "x";
+  const title = checkboxMatch[2].trim();
+  const effortStr = checkboxMatch[4] || "0h";
+  const effortHours = parseEffortHours(effortStr);
+  const { priority, impact } = estimatePriorityAndImpact(title);
+
+  return {
+    id: `todo-${Math.random().toString(36).substr(2, 9)}`,
+    title,
+    description: "",
+    category: currentCategory || "Uncategorized",
+    effort_hours: effortHours,
+    impact_score: impact,
+    priority,
+    status: completed ? "completed" : "pending",
+    blockers: [],
+    files_affected: [],
+    related_docs: [],
+    tags: [],
+    created_at: new Date().toISOString().split("T")[0],
+    last_updated: new Date().toISOString().split("T")[0],
+  };
+}
+
+/**
  * Parse todo.md and extract structured tasks
  */
 function scanTodoMarkdown() {
@@ -70,9 +98,7 @@ function scanTodoMarkdown() {
 
     // Detect category headers (## or ###)
     if (line.match(/^#{2,3}\s+(.+)$/)) {
-      if (currentTask) {
-        tasks.push(currentTask);
-      }
+      if (currentTask) tasks.push(currentTask);
       currentCategory = line.replace(/^#+\s+/, "").trim();
       currentTask = null;
       continue;
@@ -82,32 +108,8 @@ function scanTodoMarkdown() {
     const checkboxMatch = line.match(/^\s*-\s+\[([ xX])\]\s+(.+?)(\s*\((\d+(?:\.\d+)?(?:[hHwW]|hours?))\))?$/);
 
     if (checkboxMatch) {
-      if (currentTask) {
-        tasks.push(currentTask);
-      }
-
-      const completed = checkboxMatch[1].toLowerCase() === "x";
-      const title = checkboxMatch[2].trim();
-      const effortStr = checkboxMatch[4] || "0h";
-      const effortHours = parseEffortHours(effortStr);
-      const { priority, impact } = estimatePriorityAndImpact(title);
-
-      currentTask = {
-        id: `todo-${Math.random().toString(36).substr(2, 9)}`,
-        title,
-        description: "",
-        category: currentCategory || "Uncategorized",
-        effort_hours: effortHours,
-        impact_score: impact,
-        priority,
-        status: completed ? "completed" : "pending",
-        blockers: [],
-        files_affected: [],
-        related_docs: [],
-        tags: [],
-        created_at: new Date().toISOString().split("T")[0],
-        last_updated: new Date().toISOString().split("T")[0],
-      };
+      if (currentTask) tasks.push(currentTask);
+      currentTask = buildTaskFromMatch(checkboxMatch, currentCategory);
     }
   }
 

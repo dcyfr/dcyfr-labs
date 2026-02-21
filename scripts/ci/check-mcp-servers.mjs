@@ -175,6 +175,16 @@ function buildFetchResult(name, res, method, tokenNameUsed, startTime) {
   };
 }
 
+async function fetchGet(url, headers, timeoutMs, opts, name, tokenNameUsed, startTime) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
+  const res = await fetch(url, { method: 'GET', headers, signal: controller.signal });
+  clearTimeout(timer);
+  if (opts.debug) console.log({ url, name, method: 'GET (fallback)', tokenNameUsed, status: res.status, statusText: res.statusText });
+  return buildFetchResult(name, res, 'GET', tokenNameUsed, startTime);
+}
+
 async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {}) {
   const url = server.url;
   if (!url) return { name, ok: false, error: 'no-url' };
@@ -201,27 +211,14 @@ async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {
     // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
     const res = await fetch(url, { method: 'HEAD', headers, signal: controller.signal });
     clearTimeout(timer);
-    // If we get a 405 (Method Not Allowed), try GET instead with longer timeout
     if (res.status === 405) {
-      const controller2 = new AbortController();
-      const timer2 = setTimeout(() => controller2.abort(), timeoutMs * 2);
-      // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
-      const res2 = await fetch(url, { method: 'GET', headers, signal: controller2.signal });
-      clearTimeout(timer2);
-      if (opts.debug) console.log({ url, name, method: 'GET (fallback from HEAD 405)', tokenNameUsed, status: res2.status, statusText: res2.statusText });
-      return buildFetchResult(name, res2, 'GET', tokenNameUsed, startTime);
+      return fetchGet(url, headers, timeoutMs * 2, opts, name, tokenNameUsed, startTime);
     }
     if (opts.debug) console.log({ url, name, method: 'HEAD', tokenNameUsed, status: res.status, statusText: res.statusText });
     return buildFetchResult(name, res, 'HEAD', tokenNameUsed, startTime);
   } catch (err) {
     try {
-      const controller3 = new AbortController();
-      const timer3 = setTimeout(() => controller3.abort(), timeoutMs * 2);
-      // Safe: URL validated by isValidMCPServerURL() above (HTTPS or localhost only)
-      const res3 = await fetch(url, { method: 'GET', headers, signal: controller3.signal });
-      clearTimeout(timer3);
-      if (opts.debug) console.log({ url, name, method: 'GET (fallback from HEAD error)', tokenNameUsed, status: res3.status, statusText: res3.statusText });
-      return buildFetchResult(name, res3, 'GET', tokenNameUsed, startTime);
+      return await fetchGet(url, headers, timeoutMs * 2, opts, name, tokenNameUsed, startTime);
     } catch (err2) {
       if (opts.debug) console.error(`MCP check failed ${name} ${url}:`, err2 || err);
       return {
@@ -236,25 +233,8 @@ async function checkUrlServer(name, server, env = {}, timeoutMs = 5000, opts = {
   }
 }
 
-function checkCommandServer(name, server) {
-  const command = server.command;
-  const args = server.args || [];
-  if (!command) return { name, ok: false, error: 'no-command' };
-  // Append a version check flag if not already present
+function spawnCheckArgs(command, args, name) {
   const cmdArgs = Array.from(args);
-  // Try a bare `command --version` first (safe for npx and many binaries)
-  try {
-    const resBare = spawnSync(command, ['--version'], { // NOSONAR - Administrative script, inputs from controlled sources
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-      timeout: 10_000,
-    });
-    if (!resBare.error && resBare.status === 0)
-      return { name, ok: true, stdout: resBare.stdout.trim() };
-  } catch (err) {
-    // ignore; fallback to the full command invocation
-  }
-  // Some packages want --version, some -v; try both
   cmdArgs.push('--version');
   try {
     const res = spawnSync(command, cmdArgs, { // NOSONAR - Administrative script, inputs from controlled sources
@@ -277,6 +257,26 @@ function checkCommandServer(name, server) {
   }
 }
 
+function checkCommandServer(name, server) {
+  const command = server.command;
+  const args = server.args || [];
+  if (!command) return { name, ok: false, error: 'no-command' };
+  // Try a bare `command --version` first (safe for npx and many binaries)
+  try {
+    const resBare = spawnSync(command, ['--version'], { // NOSONAR - Administrative script, inputs from controlled sources
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+      timeout: 10_000,
+    });
+    if (!resBare.error && resBare.status === 0)
+      return { name, ok: true, stdout: resBare.stdout.trim() };
+  } catch (_err) {
+    // ignore; fallback to the full command invocation
+  }
+  // Some packages want --version, some -v; try both
+  return spawnCheckArgs(command, args, name);
+}
+
 /**
  * Check a single server by dispatching to url or command checker.
  */
@@ -293,6 +293,21 @@ async function checkOneServer(name, server, env, opts) {
 }
 
 /**
+ * Print a single server check result line.
+ */
+function printServerResult(r) {
+  if (r.ok) {
+    const statusStr = r.status ? ` [${r.status}]` : '';
+    console.log(`✓ ${r.name} (${r.type}) - OK${statusStr}`);
+  } else {
+    let detail = '';
+    if (r.error) detail = `(${r.error})`;
+    else if (r.status) detail = `[${r.status}]`;
+    console.error(`✖ ${r.name} (${r.type}) - FAILED ${detail}`);
+  }
+}
+
+/**
  * Print check results to stdout/stderr.
  */
 function reportResults(results, opts) {
@@ -301,13 +316,7 @@ function reportResults(results, opts) {
     console.log(JSON.stringify({ results, failures }, null, 2));
   } else {
     for (const r of results) {
-      if (r.ok) {
-        const statusStr = r.status ? ` [${r.status}]` : '';
-        console.log(`✓ ${r.name} (${r.type}) - OK${statusStr}`);
-      } else {
-        const detail = r.error ? `(${r.error})` : r.status ? `[${r.status}]` : '';
-        console.error(`✖ ${r.name} (${r.type}) - FAILED ${detail}`);
-      }
+      printServerResult(r);
     }
   }
   return failures;

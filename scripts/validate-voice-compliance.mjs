@@ -124,6 +124,51 @@ function analyzeAgent(filepath, filename) {
 }
 
 /**
+ * Print the result for a single agent.
+ */
+function printAgentResult(result) {
+  const icon = result.status === 'pass' ? '✅' : result.status === 'warn' ? '⚠️ ' : '❌';
+  const voiceIcon = result.hasVoiceSection ? '🗣️' : '  ';
+  console.log(`${icon} ${voiceIcon} ${result.file}`);
+
+  if (!result.hasVoiceSection) {
+    console.log(`     ↳ Missing "## Voice & Identity" section`);
+  }
+
+  for (const v of result.violations) {
+    const sevIcon = v.severity === 'error' ? '🔴' : '🟡';
+    console.log(`     ${sevIcon} Line ${v.line}: ${v.message}`);
+    if (v.match) console.log(`        "${v.match}"`);
+  }
+}
+
+/**
+ * Exit the process based on compliance gate result.
+ */
+function exitBasedOnCompliance(compliancePercent, results) {
+  const msg = `❌ Voice compliance gate FAILED — ${compliancePercent}% < ${THRESHOLD}% threshold`;
+  if (compliancePercent >= THRESHOLD) {
+    console.log(`\n✅ Voice compliance gate PASSED (${compliancePercent}% ≥ ${THRESHOLD}%)\n`);
+    process.exit(0);
+  } else if (GATE_MODE === 'warn') {
+    console.warn(`\n⚠️  ${msg} (warning mode — not blocking)\n`);
+    console.warn('   Agents missing voice sections:');
+    results.filter(r => !r.hasVoiceSection).forEach(r => {
+      console.warn(`   - ${r.file}`);
+    });
+    process.exit(0);
+  } else {
+    console.error(`\n${msg}\n`);
+    console.error('   Agents missing voice sections:');
+    results.filter(r => !r.hasVoiceSection).forEach(r => {
+      console.error(`   - ${r.file}`);
+    });
+    console.error('\n   Add "## Voice & Identity" sections to fix compliance.\n');
+    process.exit(1);
+  }
+}
+
+/**
  * Run the compliance check
  */
 function run() {
@@ -159,19 +204,7 @@ function run() {
   
   // Print per-agent results
   for (const result of results) {
-    const icon = result.status === 'pass' ? '✅' : result.status === 'warn' ? '⚠️ ' : '❌';
-    const voiceIcon = result.hasVoiceSection ? '🗣️' : '  ';
-    console.log(`${icon} ${voiceIcon} ${result.file}`);
-    
-    if (!result.hasVoiceSection) {
-      console.log(`     ↳ Missing "## Voice & Identity" section`);
-    }
-    
-    for (const v of result.violations) {
-      const sevIcon = v.severity === 'error' ? '🔴' : '🟡';
-      console.log(`     ${sevIcon} Line ${v.line}: ${v.message}`);
-      if (v.match) console.log(`        "${v.match}"`);
-    }
+    printAgentResult(result);
   }
   
   // Calculate compliance
@@ -188,28 +221,7 @@ function run() {
   console.log(`   Failing:          ${failing}`);
   console.log(`   Compliance:       ${compliancePercent}%  (threshold: ${THRESHOLD}%)`);
   
-  if (compliancePercent >= THRESHOLD) {
-    console.log(`\n✅ Voice compliance gate PASSED (${compliancePercent}% ≥ ${THRESHOLD}%)\n`);
-    process.exit(0);
-  } else {
-    const msg = `❌ Voice compliance gate FAILED — ${compliancePercent}% < ${THRESHOLD}% threshold`;
-    if (GATE_MODE === 'warn') {
-      console.warn(`\n⚠️  ${msg} (warning mode — not blocking)\n`);
-      console.warn('   Agents missing voice sections:');
-      results.filter(r => !r.hasVoiceSection).forEach(r => {
-        console.warn(`   - ${r.file}`);
-      });
-      process.exit(0);
-    } else {
-      console.error(`\n${msg}\n`);
-      console.error('   Agents missing voice sections:');
-      results.filter(r => !r.hasVoiceSection).forEach(r => {
-        console.error(`   - ${r.file}`);
-      });
-      console.error('\n   Add "## Voice & Identity" sections to fix compliance.\n');
-      process.exit(1);
-    }
-  }
+  exitBasedOnCompliance(compliancePercent, results);
 }
 
 run();
