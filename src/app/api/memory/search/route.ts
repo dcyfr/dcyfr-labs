@@ -39,17 +39,80 @@ type MemoryResult = {
   createdAt?: string;
 };
 
+function validateSearchMemoryBody(
+  body: unknown,
+  authenticatedUserId: string
+): { error: string; status: number } | { data: Required<SearchMemoryRequest> } {
+  if (!body || typeof body !== 'object') {
+    return { error: 'Request body must be a JSON object', status: 400 };
+  }
+  const { userId, query, limit = DEFAULT_LIMIT } = body as SearchMemoryRequest;
+  if (!userId || typeof userId !== 'string') {
+    return { error: 'userId is required and must be a string', status: 400 };
+  }
+  if (authenticatedUserId !== userId) {
+    return { error: 'Forbidden: Cannot read memory for a different user', status: 403 };
+  }
+  if (!query || typeof query !== 'string') {
+    return { error: 'query is required and must be a string', status: 400 };
+  }
+  if (query.trim().length < 1) {
+    return { error: 'query cannot be empty', status: 400 };
+  }
+  if (query.length > 1000) {
+    return { error: 'query cannot exceed 1,000 characters', status: 400 };
+  }
+  if (typeof limit !== 'number' || limit < 1) {
+    return { error: 'limit must be a positive number', status: 400 };
+  }
+  if (limit > MAX_LIMIT) {
+    return { error: `limit cannot exceed ${MAX_LIMIT}`, status: 400 };
+  }
+  return { data: { userId, query, limit } };
+}
+
+async function parseJsonBody(request: NextRequest): Promise<{ ok: true; body: unknown } | { ok: false; response: NextResponse }> {
+  try {
+    const body = await request.json();
+    return { ok: true, body };
+  } catch (error) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: 'Invalid JSON in request body', message: error instanceof Error ? error.message : 'Unknown error' },
+        { status: 400 }
+      ),
+    };
+  }
+}
+
+async function executeMemorySearch(userId: string, query: string, limit: number, rateLimitHeaders: Record<string, string>): Promise<NextResponse> {
+  try {
+    const memory = getMemory();
+    const results = await memory.searchUserMemories(userId, query, limit);
+    const memories: MemoryResult[] = results.map((result: MemorySearchResult) => ({
+      id: result.id,
+      content: result.content,
+      importance: result.importance,
+      topic: result.topic,
+      createdAt: result.createdAt.toISOString(),
+    }));
+    console.log('Memory search completed:', { userId: userId.substring(0, 8) + '...', queryLength: query.length, resultCount: memories.length, limit, timestamp: new Date().toISOString() });
+    return NextResponse.json({ memories, count: memories.length, limit }, { status: 200, headers: rateLimitHeaders });
+  } catch (memoryError) {
+    console.error('Failed to search memories:', memoryError instanceof Error ? memoryError.message : String(memoryError));
+    return NextResponse.json({ error: 'Failed to search memories. Please try again later.' }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
-  let body: SearchMemoryRequest | null = null;
+  let rawBody: unknown = null;
 
   try {
     const { user } = await getAuthenticatedUser(request);
     if (!user) {
       return NextResponse.json(
-        {
-          error: 'Unauthorized',
-          message: 'Authentication required',
-        },
+        { error: 'Unauthorized', message: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -74,123 +137,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse request body
-    try {
-      body = await request.json();
-    } catch (error) {
-      return NextResponse.json(
-        {
-          error: 'Invalid JSON in request body',
-          message: error instanceof Error ? error.message : 'Unknown error',
-        },
-        { status: 400 }
-      );
+    const parsed = await parseJsonBody(request);
+    if (!parsed.ok) return parsed.response;
+    rawBody = parsed.body;
+
+    const validation = validateSearchMemoryBody(rawBody, user.id);
+    if ('error' in validation) {
+      return NextResponse.json({ error: validation.error }, { status: validation.status });
     }
+    const { userId, query, limit } = validation.data;
 
-    // Validate the parsed data
-    if (!body || typeof body !== 'object') {
-      return NextResponse.json({ error: 'Request body must be a JSON object' }, { status: 400 });
-    }
-
-    const { userId, query, limit = DEFAULT_LIMIT } = body;
-
-    // Validate required fields
-    if (!userId || typeof userId !== 'string') {
-      return NextResponse.json(
-        { error: 'userId is required and must be a string' },
-        { status: 400 }
-      );
-    }
-
-    if (user.id !== userId) {
-      return NextResponse.json(
-        {
-          error: 'Forbidden',
-          message: 'Cannot read memory for a different user',
-        },
-        { status: 403 }
-      );
-    }
-
-    if (!query || typeof query !== 'string') {
-      return NextResponse.json(
-        { error: 'query is required and must be a string' },
-        { status: 400 }
-      );
-    }
-
-    // Validate query length
-    if (query.trim().length < 1) {
-      return NextResponse.json({ error: 'query cannot be empty' }, { status: 400 });
-    }
-
-    if (query.length > 1000) {
-      return NextResponse.json({ error: 'query cannot exceed 1,000 characters' }, { status: 400 });
-    }
-
-    // Validate limit
-    if (typeof limit !== 'number' || limit < 1) {
-      return NextResponse.json({ error: 'limit must be a positive number' }, { status: 400 });
-    }
-
-    if (limit > MAX_LIMIT) {
-      return NextResponse.json({ error: `limit cannot exceed ${MAX_LIMIT}` }, { status: 400 });
-    }
-
-    // Search memories
-    try {
-      const memory = getMemory();
-
-      // Search user memories
-      const results = await memory.searchUserMemories(userId, query, limit);
-
-      // Transform results to match API schema
-      const memories: MemoryResult[] = results.map((result: MemorySearchResult) => ({
-        id: result.id,
-        content: result.content,
-        importance: result.importance,
-        topic: result.topic,
-        createdAt: result.createdAt.toISOString(),
-      }));
-
-      // Log success (anonymized)
-      console.log('Memory search completed:', {
-        userId: userId.substring(0, 8) + '...',
-        queryLength: query.length,
-        resultCount: memories.length,
-        limit,
-        timestamp: new Date().toISOString(),
-      });
-
-      return NextResponse.json(
-        {
-          memories,
-          count: memories.length,
-          limit,
-        },
-        {
-          status: 200,
-          headers: createRateLimitHeaders(rateLimitResult),
-        }
-      );
-    } catch (memoryError) {
-      console.error(
-        'Failed to search memories:',
-        memoryError instanceof Error ? memoryError.message : String(memoryError)
-      );
-      return NextResponse.json(
-        { error: 'Failed to search memories. Please try again later.' },
-        { status: 500 }
-      );
-    }
+    return await executeMemorySearch(userId, query, limit, createRateLimitHeaders(rateLimitResult));
   } catch (error) {
+    const body =
+      rawBody && typeof rawBody === 'object' ? (rawBody as SearchMemoryRequest) : null;
     const errorInfo = handleApiError(error, {
       route: '/api/memory/search',
       method: 'POST',
       additionalData: body ? { userId: body.userId?.substring(0, 8) + '...' } : {},
     });
 
-    // For connection errors, return minimal response
     if (errorInfo.isConnectionError) {
       return new Response(null, { status: errorInfo.statusCode });
     }

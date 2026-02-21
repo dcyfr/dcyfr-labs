@@ -39,6 +39,22 @@ const violationPatterns = [
   },
 ];
 
+function collectPatternMatches(line, lineNum, pattern, name, ignore) {
+  const matches = [];
+  let match;
+  while ((match = pattern.exec(line)) !== null) {
+    if (!ignore.some(ig => match[0].includes(ig))) {
+      matches.push({
+        line: lineNum + 1,
+        column: match.index,
+        type: name,
+        match: match[0].substring(0, 80),
+      });
+    }
+  }
+  return matches;
+}
+
 function scanFile(filePath) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
@@ -48,18 +64,7 @@ function scanFile(filePath) {
     lines.forEach((line, lineNum) => {
       violationPatterns.forEach(({ name, patterns, ignore = [] }) => {
         patterns.forEach((pattern) => {
-          let match;
-          while ((match = pattern.exec(line)) !== null) {
-            // Skip ignored patterns
-            if (!ignore.some(ig => match[0].includes(ig))) {
-              violations.push({
-                line: lineNum + 1,
-                column: match.index,
-                type: name,
-                match: match[0].substring(0, 80),
-              });
-            }
-          }
+          violations.push(...collectPatternMatches(line, lineNum, pattern, name, ignore));
         });
       });
     });

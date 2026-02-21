@@ -48,7 +48,7 @@ if (githubRepositoryEnv?.includes('/')) {
   REPO = githubRepositoryEnv;
 } else {
   try {
-    const remoteUrl = execSync('git config --get remote.origin.url', {
+    const remoteUrl = execSync('git config --get remote.origin.url', { // NOSONAR - Administrative script, inputs from controlled sources
       encoding: 'utf-8',
       cwd: ROOT_DIR,
     }).trim();
@@ -121,7 +121,7 @@ async function fetchPRData(prNumber) {
  */
 function getContributors() {
   try {
-    const output = execSync('git log --format="%an <%ae>" -10', {
+    const output = execSync('git log --format="%an <%ae>" -10', { // NOSONAR - Administrative script, inputs from controlled sources
       cwd: ROOT_DIR,
       encoding: 'utf-8',
     }).trim();
@@ -136,16 +136,13 @@ function getContributors() {
 
 /**
  * Get test statistics
- * @returns {string} Test stats (e.g., "1185/1197")
+ * @returns {string} Test stats — dynamic stats require running the test suite,
+ *   so N/A is returned here and the caller fills in real data when available.
  */
 function getTestStats() {
-  try {
-    // FIX: Copilot suggestion - Return N/A instead of stale hardcoded stats
-    // Dynamic test stats require parsing test output which isn't available here
-    return 'N/A';
-  } catch (error) {
-    return 'N/A';
-  }
+  // Dynamic test stats require parsing test output which isn't available at
+  // release-notes generation time.
+  return 'N/A';
 }
 
 /**

@@ -11,7 +11,7 @@ PHASE=${3:-"in-progress"}
 TIME_REMAINING=${4:-"unknown"}
 
 # Validate arguments
-if [ -z "$AGENT" ] || [ -z "$TASK_DESCRIPTION" ]; then
+if [[ -z "$AGENT" ]] || [[ -z "$TASK_DESCRIPTION" ]]; then
     echo "Usage: $0 <agent> <task-description> [phase] [time-remaining]"
     echo ""
     echo "Arguments:"
@@ -116,9 +116,9 @@ echo "🌿 Branch: $CURRENT_BRANCH"
 echo "📊 Phase: $PHASE"
 echo "⏱️  Estimated time: $TIME_REMAINING"
 echo "📝 Uncommitted files: $UNCOMMITTED_FILES"
-[ -n "$RELATED_ISSUE" ] && echo "🔗 Issue: $RELATED_ISSUE"
-[ -n "$RELATED_PR" ] && echo "🔗 PR: $RELATED_PR"
-[ -n "$MILESTONE" ] && echo "🎯 Milestone: $MILESTONE"
+[[ -n "$RELATED_ISSUE" ]] && echo "🔗 Issue: $RELATED_ISSUE"
+[[ -n "$RELATED_PR" ]] && echo "🔗 PR: $RELATED_PR"
+[[ -n "$MILESTONE" ]] && echo "🎯 Milestone: $MILESTONE"
 echo ""
 echo "💡 Next steps:"
 echo "   - Continue work in $AGENT"

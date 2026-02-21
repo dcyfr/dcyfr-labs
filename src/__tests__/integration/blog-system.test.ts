@@ -232,7 +232,7 @@ describe('Blog System Integration', () => {
       expect(seriesNames.length).toBe(uniqueNames.length);
 
       // Check if sorted
-      const sortedNames = [...seriesNames].sort();
+      const sortedNames = [...seriesNames].sort((a, b) => a.localeCompare(b));
       expect(seriesNames).toEqual(sortedNames);
     });
 

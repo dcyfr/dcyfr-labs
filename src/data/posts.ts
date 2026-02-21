@@ -66,7 +66,7 @@ export const postTagCounts = posts.reduce<Record<string, number>>((acc, post) =>
   return acc;
 }, {});
 
-export const allPostTags = Object.freeze(Object.keys(postTagCounts).sort());
+export const allPostTags = Object.freeze(Object.keys(postTagCounts).sort((a, b) => a.localeCompare(b)));
 
 export const postCategoryCounts = posts.reduce<Record<string, number>>((acc, post) => {
   if (post.category) {
@@ -75,7 +75,7 @@ export const postCategoryCounts = posts.reduce<Record<string, number>>((acc, pos
   return acc;
 }, {});
 
-export const allPostCategories = Object.freeze(Object.keys(postCategoryCounts).sort());
+export const allPostCategories = Object.freeze(Object.keys(postCategoryCounts).sort((a, b) => a.localeCompare(b)));
 
 export const featuredPosts = Object.freeze(posts.filter((post) => post.featured));
 

@@ -394,7 +394,7 @@ export function getReactionStats(
 
   const timestamps = collection.reactions
     .map((r) => r.timestamp)
-    .sort();
+    .sort((a, b) => a.localeCompare(b));
 
   return {
     total: collection.reactions.length,

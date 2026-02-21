@@ -28,17 +28,70 @@ type AddMemoryRequest = {
   context?: Record<string, unknown>;
 };
 
+function validateAddMemoryBody(
+  body: unknown,
+  authenticatedUserId: string
+): { error: string; status: number } | { data: AddMemoryRequest } {
+  if (!body || typeof body !== 'object') {
+    return { error: 'Request body must be a JSON object', status: 400 };
+  }
+  const { userId, message, context } = body as AddMemoryRequest;
+  if (!userId || typeof userId !== 'string') {
+    return { error: 'userId is required and must be a string', status: 400 };
+  }
+  if (authenticatedUserId !== userId) {
+    return { error: 'Forbidden: Cannot write memory for a different user', status: 403 };
+  }
+  if (!message || typeof message !== 'string') {
+    return { error: 'message is required and must be a string', status: 400 };
+  }
+  if (message.trim().length < 1) {
+    return { error: 'message cannot be empty', status: 400 };
+  }
+  if (message.length > 10000) {
+    return { error: 'message cannot exceed 10,000 characters', status: 413 };
+  }
+  if (context !== undefined && (typeof context !== 'object' || context === null)) {
+    return { error: 'context must be an object if provided', status: 400 };
+  }
+  return { data: { userId, message, context } };
+}
+
+async function parseJsonBody(request: NextRequest): Promise<{ ok: true; body: unknown } | { ok: false; response: NextResponse }> {
+  try {
+    const body = await request.json();
+    return { ok: true, body };
+  } catch (error) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: 'Invalid JSON in request body', message: error instanceof Error ? error.message : 'Unknown error' },
+        { status: 400 }
+      ),
+    };
+  }
+}
+
+async function storeMemory(userId: string, message: string, context: Record<string, unknown> | undefined, rateLimitHeaders: Record<string, string>): Promise<NextResponse> {
+  try {
+    const memory = getMemory();
+    const result = await memory.addUserMemory(userId, message, context);
+    console.log('Memory added:', { userId: userId.substring(0, 8) + '...', messageLength: message.length, hasContext: !!context, timestamp: new Date().toISOString() });
+    return NextResponse.json({ memoryId: result, stored: true }, { status: 200, headers: rateLimitHeaders });
+  } catch (memoryError) {
+    console.error('Failed to add memory:', memoryError instanceof Error ? memoryError.message : String(memoryError));
+    return NextResponse.json({ error: 'Failed to store memory. Please try again later.' }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
-  let body: AddMemoryRequest | null = null;
+  let rawBody: unknown = null;
 
   try {
     const { user } = await getAuthenticatedUser(request);
     if (!user) {
       return NextResponse.json(
-        {
-          error: 'Unauthorized',
-          message: 'Authentication required',
-        },
+        { error: 'Unauthorized', message: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -63,111 +116,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse request body
-    try {
-      body = await request.json();
-    } catch (error) {
-      return NextResponse.json(
-        {
-          error: 'Invalid JSON in request body',
-          message: error instanceof Error ? error.message : 'Unknown error',
-        },
-        { status: 400 }
-      );
+    const parsed = await parseJsonBody(request);
+    if (!parsed.ok) return parsed.response;
+    rawBody = parsed.body;
+
+    const validation = validateAddMemoryBody(rawBody, user.id);
+    if ('error' in validation) {
+      return NextResponse.json({ error: validation.error }, { status: validation.status });
     }
+    const { userId, message, context } = validation.data;
 
-    // Validate the parsed data
-    if (!body || typeof body !== 'object') {
-      return NextResponse.json({ error: 'Request body must be a JSON object' }, { status: 400 });
-    }
-
-    const { userId, message, context } = body;
-
-    // Validate required fields
-    if (!userId || typeof userId !== 'string') {
-      return NextResponse.json(
-        { error: 'userId is required and must be a string' },
-        { status: 400 }
-      );
-    }
-
-    if (user.id !== userId) {
-      return NextResponse.json(
-        {
-          error: 'Forbidden',
-          message: 'Cannot write memory for a different user',
-        },
-        { status: 403 }
-      );
-    }
-
-    if (!message || typeof message !== 'string') {
-      return NextResponse.json(
-        { error: 'message is required and must be a string' },
-        { status: 400 }
-      );
-    }
-
-    // Validate message length
-    if (message.trim().length < 1) {
-      return NextResponse.json({ error: 'message cannot be empty' }, { status: 400 });
-    }
-
-    if (message.length > 10000) {
-      return NextResponse.json(
-        { error: 'message cannot exceed 10,000 characters' },
-        { status: 413 }
-      );
-    }
-
-    // Validate context if provided
-    if (context !== undefined && (typeof context !== 'object' || context === null)) {
-      return NextResponse.json({ error: 'context must be an object if provided' }, { status: 400 });
-    }
-
-    // Add memory
-    try {
-      const memory = getMemory();
-
-      // Add the message to user memory
-      const result = await memory.addUserMemory(userId, message, context);
-
-      // Log success (anonymized)
-      console.log('Memory added:', {
-        userId: userId.substring(0, 8) + '...',
-        messageLength: message.length,
-        hasContext: !!context,
-        timestamp: new Date().toISOString(),
-      });
-
-      return NextResponse.json(
-        {
-          memoryId: result,
-          stored: true,
-        },
-        {
-          status: 200,
-          headers: createRateLimitHeaders(rateLimitResult),
-        }
-      );
-    } catch (memoryError) {
-      console.error(
-        'Failed to add memory:',
-        memoryError instanceof Error ? memoryError.message : String(memoryError)
-      );
-      return NextResponse.json(
-        { error: 'Failed to store memory. Please try again later.' },
-        { status: 500 }
-      );
-    }
+    return await storeMemory(userId, message, context, createRateLimitHeaders(rateLimitResult));
   } catch (error) {
+    const body = rawBody && typeof rawBody === 'object' ? (rawBody as AddMemoryRequest) : null;
     const errorInfo = handleApiError(error, {
       route: '/api/memory/add',
       method: 'POST',
       additionalData: body ? { userId: body.userId?.substring(0, 8) + '...' } : {},
     });
 
-    // For connection errors, return minimal response
     if (errorInfo.isConnectionError) {
       return new Response(null, { status: errorInfo.statusCode });
     }

@@ -17,6 +17,15 @@ config({ path: resolve(__dirname, '../.env.local') });
 
 import { redis } from '../src/mcp/shared/redis-client.ts';
 
+function warnIfKeysAtRisk(label, keysInPlan) {
+  if (keysInPlan.length === 0) return;
+  console.log(`⚠️  WARNING: ${label} keys found in cleanup plan:`);
+  for (const key of keysInPlan) {
+    console.log(`    ${key}`);
+  }
+  console.log('');
+}
+
 async function main() {
   console.log('🛡️  Likes & Bookmarks Protection Verification\n');
 
@@ -75,21 +84,8 @@ async function main() {
       `  Bookmarks keys in cleanup plan: ${bookmarksInPlan.length} ${bookmarksInPlan.length === 0 ? '✅ SAFE' : '⚠️  AT RISK'}\n`
     );
 
-    if (likesInPlan.length > 0) {
-      console.log('⚠️  WARNING: Likes keys found in cleanup plan:');
-      for (const key of likesInPlan) {
-        console.log(`    ${key}`);
-      }
-      console.log('');
-    }
-
-    if (bookmarksInPlan.length > 0) {
-      console.log('⚠️  WARNING: Bookmarks keys found in cleanup plan:');
-      for (const key of bookmarksInPlan) {
-        console.log(`    ${key}`);
-      }
-      console.log('');
-    }
+    warnIfKeysAtRisk('Likes', likesInPlan);
+    warnIfKeysAtRisk('Bookmarks', bookmarksInPlan);
 
     if (likesInPlan.length === 0 && bookmarksInPlan.length === 0) {
       console.log('✅ VERIFICATION PASSED');

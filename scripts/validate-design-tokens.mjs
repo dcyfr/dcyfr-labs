@@ -38,9 +38,27 @@ const VALID_TOKENS = {
   },
 
   SPACING: [
-    'section', 'subsection', 'content', 'prose', 'proseHero', 'proseSection',
-    'compact', 'list', 'postList', 'image', 'blogLayout', 'contentGrid', 'subsectionAlt',
-    'xs', 'sm', 'md', 'lg', 'xl', '2xl', '1.5', '0.5',
+    'section',
+    'subsection',
+    'content',
+    'prose',
+    'proseHero',
+    'proseSection',
+    'compact',
+    'list',
+    'postList',
+    'image',
+    'blogLayout',
+    'contentGrid',
+    'subsectionAlt',
+    'xs',
+    'sm',
+    'md',
+    'lg',
+    'xl',
+    '2xl',
+    '1.5',
+    '0.5',
     { sectionDivider: ['container', 'heading', 'grid'] },
     { activity: ['threadGap', 'replyGap', 'contentGap', 'actionGap'] },
   ],
@@ -91,7 +109,20 @@ const VALID_TOKENS = {
       // Color list: cyan, blue, purple, indigo, violet, emerald, teal, lime, green, orange, amber, yellow, pink, red, rose, sky, slate, neutral
       _properties: ['badge', 'text', 'bg', 'light', 'dark'],
     },
-    syntax: ['keyword', 'string', 'function', 'comment', 'variable', 'operator', 'constant', 'class', 'number', 'punctuation', 'tag', 'attribute'],
+    syntax: [
+      'keyword',
+      'string',
+      'function',
+      'comment',
+      'variable',
+      'operator',
+      'constant',
+      'class',
+      'number',
+      'punctuation',
+      'tag',
+      'attribute',
+    ],
   },
 
   OPACITY: ['ghost', 'subtle', 'muted', 'medium', 'strong'],
@@ -113,7 +144,15 @@ const VALID_TOKENS = {
     easing: ['default', 'in', 'out', 'inOut'],
     stagger: ['fast', 'normal', 'slow'],
     transition: ['opacity', 'colors', 'transform', 'all'],
-    types: ['fadeIn', 'fadeOut', 'slideUp', 'slideDown', 'scaleUp', 'scaleDown', 'optimisticUpdate'],
+    types: [
+      'fadeIn',
+      'fadeOut',
+      'slideUp',
+      'slideDown',
+      'scaleUp',
+      'scaleDown',
+      'optimisticUpdate',
+    ],
   },
 
   ARCHIVE_ANIMATIONS: {
@@ -291,13 +330,73 @@ function findTsFiles(dir, fileList = []) {
  * Extract design token usage from file content
  */
 function extractTokenUsage(content, filePath) {
-  const tokenPattern = /\b(APP_TOKENS|ANIMATION_CONSTANTS|ARCHIVE_ANIMATIONS|CONTAINER_WIDTHS|ACTIVITY_IMAGE|SPACING|SPACING_VALUES|SPACING_SCALE|TYPOGRAPHY|SEMANTIC_COLORS|OPACITY|SERIES_COLORS|HOVER_EFFECTS|ANIMATION|ARCHIVE_CARD_VARIANTS|VIEW_MODES|BORDERS|SHADOWS|BREAKPOINTS|Z_INDEX|FOCUS_RING|TOUCH_TARGET|BUTTON_SIZES|SCROLL_OFFSET|PAGE_LAYOUT|HERO_VARIANTS|SCROLL_BEHAVIOR|CONTENT_HIERARCHY|PROGRESSIVE_TEXT|FONT_CONTRAST|CONTAINER_PADDING|NAVIGATION_HEIGHT|ARCHIVE_CONTAINER_PADDING|CONTAINER_VERTICAL_PADDING|MOBILE_SAFE_PADDING)\.([a-zA-Z0-9_.]+)/g;
+  const tokenPattern =
+    /\b(APP_TOKENS|ANIMATION_CONSTANTS|ARCHIVE_ANIMATIONS|CONTAINER_WIDTHS|ACTIVITY_IMAGE|SPACING|SPACING_VALUES|SPACING_SCALE|TYPOGRAPHY|SEMANTIC_COLORS|OPACITY|SERIES_COLORS|HOVER_EFFECTS|ANIMATION|ARCHIVE_CARD_VARIANTS|VIEW_MODES|BORDERS|SHADOWS|BREAKPOINTS|Z_INDEX|FOCUS_RING|TOUCH_TARGET|BUTTON_SIZES|SCROLL_OFFSET|PAGE_LAYOUT|HERO_VARIANTS|SCROLL_BEHAVIOR|CONTENT_HIERARCHY|PROGRESSIVE_TEXT|FONT_CONTRAST|CONTAINER_PADDING|NAVIGATION_HEIGHT|ARCHIVE_CONTAINER_PADDING|CONTAINER_VERTICAL_PADDING|MOBILE_SAFE_PADDING)\.([a-zA-Z0-9_.]+)/g;
   const matches = [...content.matchAll(tokenPattern)];
 
   matches.forEach((match) => {
     const [, tokenGroup, tokenPath] = match;
     validateToken(tokenGroup, tokenPath, filePath);
   });
+}
+
+/**
+ * Validate an array node in the token path
+ */
+function validateArrayNode(current, part, tokenGroup, tokenPath, filePath) {
+  // Check if path is an object within the array
+  const objectEntry = current.find((item) => typeof item === 'object' && item[part]);
+  if (objectEntry && objectEntry[part]) {
+    return { ok: true, next: objectEntry[part] };
+  }
+  // Check if the part is directly in the array
+  if (!current.includes(part)) {
+    const fullToken = `${tokenGroup}.${tokenPath}`;
+    const suggestion =
+      COMMON_MISTAKES[fullToken] || `Check design-tokens.ts for valid ${tokenGroup} values`;
+    errors.push({
+      file: filePath,
+      token: fullToken,
+      message: `Invalid token path. Did you mean: ${suggestion}?`,
+    });
+    return { ok: false, next: null };
+  }
+  // Arrays are terminal — valid but can't navigate further
+  return { ok: true, next: null, terminal: true };
+}
+
+/**
+ * Validate an object node in the token path
+ */
+function validateObjectNode(current, part, pathParts, i, tokenGroup, tokenPath, filePath) {
+  // Special handling for SEMANTIC_COLORS.accent.{colorName}.{property}
+  if (tokenGroup === 'SEMANTIC_COLORS' && pathParts[0] === 'accent' && i === 1) {
+    if (pathParts.length >= 3) {
+      const property = pathParts[2];
+      const validProperties = current._properties || ['badge', 'text', 'bg', 'light', 'dark'];
+      if (!validProperties.includes(property)) {
+        errors.push({
+          file: filePath,
+          token: `${tokenGroup}.${tokenPath}`,
+          message: `Invalid accent color property. Valid properties: ${validProperties.join(', ')}`,
+        });
+      }
+    }
+    return { ok: true, next: null, terminal: true };
+  }
+  const next = current[part];
+  if (!next) {
+    const fullToken = `${tokenGroup}.${tokenPath}`;
+    const suggestion =
+      COMMON_MISTAKES[fullToken] || `Check design-tokens.ts for valid ${tokenGroup} paths`;
+    errors.push({
+      file: filePath,
+      token: fullToken,
+      message: `Invalid token path. Did you mean: ${suggestion}?`,
+    });
+    return { ok: false, next: null };
+  }
+  return { ok: true, next, terminal: i === pathParts.length - 1 && next === true };
 }
 
 /**
@@ -316,74 +415,26 @@ function validateToken(tokenGroup, tokenPath, filePath) {
     return;
   }
 
-  // If it's a scalar (true), it's valid
-  if (current === true) {
-    return;
-  }
+  if (current === true) return;
 
-  // Navigate the path
   for (let i = 0; i < pathParts.length; i++) {
     const part = pathParts[i];
-
     if (Array.isArray(current)) {
-      // Check if path is an object within the array
-      const objectEntry = current.find(item => typeof item === 'object' && item[part]);
-      if (objectEntry && objectEntry[part]) {
-        current = objectEntry[part];
-        continue;
-      }
-
-      // Check if the part is directly in the array
-      if (!current.includes(part)) {
-        const fullToken = `${tokenGroup}.${tokenPath}`;
-        const suggestion = COMMON_MISTAKES[fullToken] || `Check design-tokens.ts for valid ${tokenGroup} values`;
-
-        errors.push({
-          file: filePath,
-          token: fullToken,
-          message: `Invalid token path. Did you mean: ${suggestion}?`,
-        });
-        return;
-      }
-      // Arrays are terminal - can't navigate further
-      return;
+      const result = validateArrayNode(current, part, tokenGroup, tokenPath, filePath);
+      if (!result.ok || result.terminal) return;
+      current = result.next;
     } else if (typeof current === 'object') {
-      // Special handling for SEMANTIC_COLORS.accent.{colorName}.{property}
-      if (tokenGroup === 'SEMANTIC_COLORS' && pathParts[0] === 'accent' && i === 1) {
-        // This is the color name (cyan, blue, purple, etc.)
-        // Check if there's a property after it
-        if (pathParts.length >= 3) {
-          const property = pathParts[2];
-          const validProperties = current._properties || ['badge', 'text', 'bg', 'light', 'dark'];
-          if (!validProperties.includes(property)) {
-            errors.push({
-              file: filePath,
-              token: `${tokenGroup}.${tokenPath}`,
-              message: `Invalid accent color property. Valid properties: ${validProperties.join(', ')}`,
-            });
-          }
-        }
-        return; // Valid accent color path
-      }
-
-      // Navigate into the object
-      current = current[part];
-      if (!current) {
-        const fullToken = `${tokenGroup}.${tokenPath}`;
-        const suggestion = COMMON_MISTAKES[fullToken] || `Check design-tokens.ts for valid ${tokenGroup} paths`;
-
-        errors.push({
-          file: filePath,
-          token: fullToken,
-          message: `Invalid token path. Did you mean: ${suggestion}?`,
-        });
-        return;
-      }
-
-      // If we've reached the end and current is true, it's valid
-      if (i === pathParts.length - 1 && current === true) {
-        return;
-      }
+      const result = validateObjectNode(
+        current,
+        part,
+        pathParts,
+        i,
+        tokenGroup,
+        tokenPath,
+        filePath
+      );
+      if (!result.ok || result.terminal) return;
+      current = result.next;
     }
   }
 }

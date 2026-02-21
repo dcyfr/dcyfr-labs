@@ -71,75 +71,83 @@ export function withPromptSecurity(
   const cfg = { ...DEFAULT_CONFIG, ...config };
 
   return async (request: NextRequest): Promise<NextResponse> => {
-    // Skip if disabled
-    if (!cfg.enabled) {
-      return handler(request);
-    }
+    if (!cfg.enabled) return handler(request);
 
-    // Check bypass header (for internal services)
     const bypassToken = request.headers.get(cfg.bypassHeader);
-    if (bypassToken && isValidBypassToken(bypassToken)) {
-      return handler(request);
-    }
+    if (bypassToken && isValidBypassToken(bypassToken)) return handler(request);
+    if (isTrustedSource(request, cfg)) return handler(request);
 
-    // Check trusted sources
-    if (isTrustedSource(request, cfg)) {
-      return handler(request);
-    }
-
-    try {
-      // Extract text content from request
-      const textContent = await extractTextContent(request, cfg.scanFields);
-
-      if (!textContent || textContent.length === 0) {
-        // No text to scan, proceed
-        return handler(request);
-      }
-
-      // Scan for threats
-      const scanner = getPromptScanner();
-      const scanResults = await scanner.scanBatch(textContent, {
-        maxRiskScore: cfg.maxRiskScore,
-        cacheResults: true,
-      });
-
-      // Aggregate results
-      const aggregateResult = aggregateScanResults(scanResults);
-
-      // Determine if request should be blocked
-      const shouldBlock = determineBlocking(aggregateResult, cfg);
-
-      // Log threats if enabled
-      if (cfg.logThreats && aggregateResult.threats.length > 0) {
-        await logThreat(request, aggregateResult);
-      }
-
-      // Block if necessary
-      if (shouldBlock) {
-        return createBlockedResponse(aggregateResult);
-      }
-
-      // Attach scan context and proceed
-      const context: PromptSecurityContext = {
-        scanResult: aggregateResult,
-        blocked: false,
-      };
-
-      return handler(request, context);
-    } catch (error) {
-      console.error('[PromptSecurity] Middleware error:', error);
-
-      // Fail open (allow request) but log the error
-      await logError(request, error);
-
-      return handler(request);
-    }
+    return performPromptScan(request, cfg, handler);
   };
+}
+
+/**
+ * Perform the actual prompt scan and invoke handler with context.
+ * Extracted to reduce cognitive complexity of the middleware closure.
+ */
+async function performPromptScan(
+  request: NextRequest,
+  cfg: Required<PromptSecurityConfig>,
+  handler: NextHandler
+): Promise<NextResponse> {
+  try {
+    const textContent = await extractTextContent(request, cfg.scanFields);
+    if (!textContent || textContent.length === 0) return handler(request);
+
+    const scanner = getPromptScanner();
+    const scanResults = await scanner.scanBatch(textContent, {
+      maxRiskScore: cfg.maxRiskScore,
+      cacheResults: true,
+    });
+
+    const aggregateResult = aggregateScanResults(scanResults);
+    const shouldBlock = determineBlocking(aggregateResult, cfg);
+
+    if (cfg.logThreats && aggregateResult.threats.length > 0) {
+      await logThreat(request, aggregateResult);
+    }
+
+    if (shouldBlock) return createBlockedResponse(aggregateResult);
+
+    const context: PromptSecurityContext = { scanResult: aggregateResult, blocked: false };
+    return handler(request, context);
+  } catch (error) {
+    console.error('[PromptSecurity] Middleware error:', error);
+    await logError(request, error);
+    return handler(request);
+  }
 }
 
 // ============================================================================
 // Helper Functions
 // ============================================================================
+
+/**
+ * Extract text content from request body (JSON or plain text)
+ */
+async function extractBodyContent(
+  clonedRequest: ReturnType<NextRequest['clone']>,
+  contentType: string,
+  scanFields: string[],
+  textContent: string[]
+): Promise<void> {
+  if (contentType.includes('application/json')) {
+    const body = await clonedRequest.json();
+    if (scanFields.length > 0) {
+      for (const field of scanFields) {
+        const value = getNestedValue(body, field);
+        if (typeof value === 'string' && value.trim()) {
+          textContent.push(value);
+        }
+      }
+    } else {
+      extractStringsFromObject(body, textContent);
+    }
+  } else if (contentType.includes('text/')) {
+    const text = await clonedRequest.text();
+    if (text.trim()) textContent.push(text);
+  }
+}
 
 /**
  * Extract text content from request for scanning
@@ -148,42 +156,17 @@ async function extractTextContent(request: NextRequest, scanFields: string[]): P
   const textContent: string[] = [];
 
   try {
-    // Clone request to avoid consuming the body
     const clonedRequest = request.clone();
+    const isMutableMethod = request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH';
 
-    // Check if request has body
-    if (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH') {
-      const contentType = request.headers.get('content-type') || '';
-
-      if (contentType.includes('application/json')) {
-        const body = await clonedRequest.json();
-
-        if (scanFields.length > 0) {
-          // Scan specific fields
-          for (const field of scanFields) {
-            const value = getNestedValue(body, field);
-            if (typeof value === 'string' && value.trim()) {
-              textContent.push(value);
-            }
-          }
-        } else {
-          // Scan all string fields
-          extractStringsFromObject(body, textContent);
-        }
-      } else if (contentType.includes('text/')) {
-        const text = await clonedRequest.text();
-        if (text.trim()) {
-          textContent.push(text);
-        }
-      }
+    if (isMutableMethod) {
+      const contentType = request.headers.get('content-type') ?? '';
+      await extractBodyContent(clonedRequest, contentType, scanFields, textContent);
     }
 
-    // Also check query parameters
     const { searchParams } = new URL(request.url);
     searchParams.forEach((value) => {
-      if (value.trim()) {
-        textContent.push(value);
-      }
+      if (value.trim()) textContent.push(value);
     });
   } catch (error) {
     console.error('[PromptSecurity] Failed to extract text content:', error);

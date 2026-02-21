@@ -205,7 +205,7 @@ export function TLDRSummary({
           {title}
         </h2>
 
-        <div className="flex flex-col gap-4">
+        <div className="grid gap-4 md:grid-cols-3">
           {sections.map((section, index) => (
             <TLDRSectionComponent key={index} title={section.title} items={section.items} />
           ))}

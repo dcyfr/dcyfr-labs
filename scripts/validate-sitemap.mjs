@@ -32,6 +32,58 @@ function log(color, ...args) {
   console.log(color, ...args, colors.reset);
 }
 
+/** Returns true if the given directory item should be excluded from sitemap scanning. */
+function shouldSkipDirectory(item) {
+  return (
+    item.startsWith('.') ||
+    item.startsWith('(') ||
+    item === 'api' ||
+    item === 'dev' ||
+    item === 'private' ||
+    item === '__tests__'
+  );
+}
+
+/**
+ * Recursively scan app directory for page.tsx files
+ */
+function scanAppDir(dir, route, pages) {
+  try {
+    const items = readdirSync(dir);
+
+    for (const item of items) {
+      const fullPath = join(dir, item);
+      const stat = statSync(fullPath);
+
+      if (stat.isDirectory()) {
+        if (shouldSkipDirectory(item)) {
+          continue;
+        }
+
+        // Check for page.tsx
+        const pagePath = join(fullPath, 'page.tsx');
+        try {
+          statSync(pagePath);
+          const routePath = route ? `${route}/${item}` : `/${item}`;
+          pages.push({
+            path: routePath,
+            file: pagePath.replace(rootDir + '/', ''),
+            hasDynamicSegment: item.startsWith('['),
+          });
+        } catch {
+          // No page.tsx
+        }
+
+        // Recurse
+        const newRoute = route ? `${route}/${item}` : `/${item}`;
+        scanAppDir(fullPath, newRoute, pages);
+      }
+    }
+  } catch {
+    // Ignore errors
+  }
+}
+
 /**
  * Find all page.tsx files in src/app
  * Excludes: dev/, private/, (route-groups), __tests__
@@ -40,51 +92,6 @@ function findAllPageFiles() {
   const appDir = join(rootDir, 'src/app');
   const pages = [];
 
-  function scan(dir, route = '') {
-    try {
-      const items = readdirSync(dir);
-      
-      for (const item of items) {
-        const fullPath = join(dir, item);
-        const stat = statSync(fullPath);
-        
-        if (stat.isDirectory()) {
-          // Skip excluded directories
-          if (
-            item.startsWith('.') ||
-            item.startsWith('(') ||
-            item === 'api' ||
-            item === 'dev' ||
-            item === 'private' ||
-            item === '__tests__'
-          ) {
-            continue;
-          }
-          
-          // Check for page.tsx
-          const pagePath = join(fullPath, 'page.tsx');
-          try {
-            statSync(pagePath);
-            const routePath = route ? `${route}/${item}` : `/${item}`;
-            pages.push({
-              path: routePath,
-              file: pagePath.replace(rootDir + '/', ''),
-              hasDynamicSegment: item.startsWith('['),
-            });
-          } catch {
-            // No page.tsx
-          }
-          
-          // Recurse
-          const newRoute = route ? `${route}/${item}` : `/${item}`;
-          scan(fullPath, newRoute);
-        }
-      }
-    } catch (err) {
-      // Ignore errors
-    }
-  }
-
   // Add home page
   pages.push({
     path: '/',
@@ -92,7 +99,7 @@ function findAllPageFiles() {
     hasDynamicSegment: false,
   });
 
-  scan(appDir);
+  scanAppDir(appDir, '', pages);
   return pages;
 }
 

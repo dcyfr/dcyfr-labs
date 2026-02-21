@@ -69,18 +69,16 @@ export function ScrollToAnchor({ offset = 80 }: ScrollToAnchorProps) {
     // Handle initial page load with hash
     const hash = window.location.hash.slice(1); // Remove the #
     if (hash) {
-      // Wait for page to be fully loaded and animations to complete
-      const scrollWhenReady = () => {
-        // Use requestAnimationFrame to ensure we scroll after layout is stable
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const element = document.getElementById(hash);
-            if (element) {
-              scrollToElement(hash);
-            }
-          });
-        });
+      // Use requestAnimationFrame to ensure we scroll after layout is stable
+      const scrollAfterLayout = () => {
+        const element = document.getElementById(hash);
+        if (element) {
+          scrollToElement(hash);
+        }
       };
+      // Wait for page to be fully loaded and animations to complete
+      const scrollWhenReady = () =>
+        requestAnimationFrame(() => requestAnimationFrame(scrollAfterLayout));
 
       // Wait for load event and allow time for animations to complete
       if (document.readyState === 'complete') {
