@@ -182,6 +182,44 @@ function findMarkdownInSubdirs(dir, currentDepth = 0, maxDepth = 3, foundFiles =
 }
 
 /**
+ * Check root-level markdown files for location violations.
+ */
+function checkRootMarkdownFiles(rootMdFiles, deletedFiles) {
+  const rootViolations = [];
+  for (const file of rootMdFiles) {
+    if (deletedFiles.includes(file)) continue;
+    if (!ALLOWED_ROOT_DOCS.includes(file)) {
+      rootViolations.push({
+        file,
+        message: 'Documentation file in root directory (should be in docs/)',
+      });
+    }
+  }
+  return rootViolations;
+}
+
+/**
+ * Check markdown files in non-docs subdirectories for location violations.
+ */
+function checkSubdirMarkdownFiles(subsInRoot, deletedFiles) {
+  const subdirViolations = [];
+  for (const subdir of subsInRoot) {
+    const subdirPath = join(ROOT_DIR, subdir);
+    const mdFiles = findMarkdownInSubdirs(subdirPath);
+    for (const file of mdFiles) {
+      if (deletedFiles.includes(file)) continue;
+      if (ALLOWED_EXCEPTIONS.includes(file)) continue;
+      if (isAllowedByPattern(file)) continue;
+      subdirViolations.push({
+        file,
+        message: `Documentation file outside docs/ (found in ${subdir}/)`,
+      });
+    }
+  }
+  return subdirViolations;
+}
+
+/**
  * Main validation
  */
 function main() {
@@ -198,20 +236,8 @@ function main() {
 
   // Check root-level markdown files
   const rootMdFiles = findRootMarkdownFiles(ROOT_DIR);
-
-  for (const file of rootMdFiles) {
-    // Skip if this file is being deleted
-    if (deletedFiles.includes(file)) {
-      continue;
-    }
-
-    if (!ALLOWED_ROOT_DOCS.includes(file)) {
-      violations.push({
-        file,
-        message: 'Documentation file in root directory (should be in docs/)',
-      });
-    }
-  }
+  const rootViolations = checkRootMarkdownFiles(rootMdFiles, deletedFiles);
+  violations.push(...rootViolations);
 
   // Check for markdown files in non-docs directories
   const subsInRoot = readdirSync(ROOT_DIR).filter((item) => {
@@ -219,33 +245,8 @@ function main() {
     const stat = statSync(itemPath);
     return stat.isDirectory() && !shouldSkipDir(item);
   });
-
-  for (const subdir of subsInRoot) {
-    const subdirPath = join(ROOT_DIR, subdir);
-    const mdFiles = findMarkdownInSubdirs(subdirPath);
-
-    for (const file of mdFiles) {
-      // Skip if this file is being deleted
-      if (deletedFiles.includes(file)) {
-        continue;
-      }
-
-      // Skip if this file is in the allowed exceptions list
-      if (ALLOWED_EXCEPTIONS.includes(file)) {
-        continue;
-      }
-
-      // Skip if this file matches allowed patterns (asset/config documentation)
-      if (isAllowedByPattern(file)) {
-        continue;
-      }
-
-      violations.push({
-        file,
-        message: `Documentation file outside docs/ (found in ${subdir}/)`,
-      });
-    }
-  }
+  const subdirViolations = checkSubdirMarkdownFiles(subsInRoot, deletedFiles);
+  violations.push(...subdirViolations);
 
   // Print results
   console.log(`${colors.cyan}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);

@@ -143,6 +143,19 @@ class LinkChecker {
     return { content: newContent, fixed, removed };
   }
 
+  applyFixToContent(link, filePath, modifiedContent) {
+    const { content: newContent, fixed, removed } = this.applyLinkFix(link, filePath, modifiedContent);
+    let changed = false;
+    if (removed) {
+      changed = true;
+      this.stats.linksRemoved++;
+    } else if (fixed) {
+      changed = true;
+      this.stats.linksFixed++;
+    }
+    return { content: newContent, changed };
+  }
+
   async checkFile(filePath) {
     this.stats.filesScanned++;
 
@@ -161,9 +174,7 @@ class LinkChecker {
     let hasChanges = false;
 
     for (const link of links) {
-      if (this.isExternalLink(link.url)) {
-        continue; // Skip external links
-      }
+      if (this.isExternalLink(link.url)) continue;
 
       const isValid = await this.validateLink(filePath, link.url);
 
@@ -177,15 +188,9 @@ class LinkChecker {
         });
 
         if (this.fix) {
-          const { content: newContent, fixed, removed } = this.applyLinkFix(link, filePath, modifiedContent);
+          const { content: newContent, changed } = this.applyFixToContent(link, filePath, modifiedContent);
           modifiedContent = newContent;
-          if (removed) {
-            hasChanges = true;
-            this.stats.linksRemoved++;
-          } else if (fixed) {
-            hasChanges = true;
-            this.stats.linksFixed++;
-          }
+          if (changed) hasChanges = true;
         }
       }
     }

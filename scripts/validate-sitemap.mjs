@@ -32,6 +32,18 @@ function log(color, ...args) {
   console.log(color, ...args, colors.reset);
 }
 
+/** Returns true if the given directory item should be excluded from sitemap scanning. */
+function shouldSkipDirectory(item) {
+  return (
+    item.startsWith('.') ||
+    item.startsWith('(') ||
+    item === 'api' ||
+    item === 'dev' ||
+    item === 'private' ||
+    item === '__tests__'
+  );
+}
+
 /**
  * Recursively scan app directory for page.tsx files
  */
@@ -44,15 +56,7 @@ function scanAppDir(dir, route, pages) {
       const stat = statSync(fullPath);
 
       if (stat.isDirectory()) {
-        // Skip excluded directories
-        if (
-          item.startsWith('.') ||
-          item.startsWith('(') ||
-          item === 'api' ||
-          item === 'dev' ||
-          item === 'private' ||
-          item === '__tests__'
-        ) {
+        if (shouldSkipDirectory(item)) {
           continue;
         }
 
