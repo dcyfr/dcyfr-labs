@@ -8,6 +8,26 @@
 
 <a href="https://peerlist.io/dcyfr/project/dcyfr-labs" target="_blank" rel="noreferrer"><img src="https://peerlist.io/api/v1/projects/embed/PRJHJKNGMRMELKAQQ2ANMNEA7QRLNK?showUpvote=true&theme=dark" alt="DCYFR Labs on Peerlist" style="width: auto; height: 72px;" /></a>
 
+## 🌐 Live Demo
+
+**Production:** [www.dcyfr.ai](https://www.dcyfr.ai)
+
+---
+
+## ⚡ Performance Metrics (Latest)
+
+| Metric                  | Desktop | Mobile | Target |
+| ----------------------- | ------- | ------ | ------ |
+| Lighthouse Performance  | 98      | 92     | >90    |
+| First Contentful Paint  | 0.8s    | 1.2s   | <1.5s  |
+| Time to Interactive     | 1.2s    | 2.1s   | <3.0s  |
+| Total Bundle Size       | 247KB   | 247KB  | <300KB |
+| Cumulative Layout Shift | 0.01    | 0.02   | <0.1   |
+
+**Last Updated:** February 22, 2026 | [View Full Report](./docs/testing/lighthouse/)
+
+---
+
 A modern, full-featured developer blog and portfolio built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui. Features an MDX-powered blog with advanced analytics, GitHub integration, Redis-backed view counts, background job processing, and comprehensive security features.
 
 **🤖 AI Contributors:**
@@ -56,31 +76,62 @@ A modern, full-featured developer blog and portfolio built with Next.js (App Rou
 <details>
 <summary>📑 Table of Contents</summary>
 
-- [Features](#-features)
-- [Tech Stack](#️-tech-stack)
-- [Quick Start](#-quick-start)
-  - [Installation](#installation)
-  - [HTTPS Development (Safari)](#https-development-safari)
-- [Project Structure](#-project-structure)
-- [Key Architecture](#-key-architecture)
-  - [Page Layouts](#page-layouts-reusable-patterns)
-  - [Metadata Generation](#metadata-generation)
-- [Blog System](#-blog-system)
-  - [Content Creation](#content-creation)
-  - [Blog Features](#blog-features)
-- [Background Jobs (Inngest)](#-background-jobs-inngest)
-- [SEO & IndexNow](#-seo--indexnow)
-- [Security Features](#-security-features)
-- [Deployment](#-deployment)
-  - [Vercel (Recommended)](#vercel-recommended)
-  - [Environment Variables](#environment-variables)
-- [Testing](#-testing)
-- [Troubleshooting](#-troubleshooting)
-- [FAQ](#-faq)
-- [Performance](#-performance)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Support](#-support)
+- [Next.js Developer Blog \& Portfolio](#nextjs-developer-blog--portfolio)
+  - [🌐 Live Demo](#-live-demo)
+  - [⚡ Performance Metrics (Latest)](#-performance-metrics-latest)
+  - [🎯 Why dcyfr-labs?](#-why-dcyfr-labs)
+    - [What Makes It Different](#what-makes-it-different)
+    - [vs. Next.js Starters](#vs-nextjs-starters)
+    - [vs. Astro](#vs-astro)
+  - [Table of Contents](#table-of-contents)
+  - [✨ Features](#-features)
+  - [🛠️ Tech Stack](#️-tech-stack)
+  - [🚀 Quick Start](#-quick-start)
+    - [Installation](#installation)
+    - [HTTPS Development (Safari)](#https-development-safari)
+  - [📁 Project Structure](#-project-structure)
+  - [🎯 Key Architecture](#-key-architecture)
+    - [Page Layouts (Reusable Patterns)](#page-layouts-reusable-patterns)
+    - [Metadata Generation](#metadata-generation)
+  - [📝 Blog System](#-blog-system)
+    - [Content Creation](#content-creation)
+    - [Blog Features](#blog-features)
+  - [⚡ Background Jobs (Inngest)](#-background-jobs-inngest)
+  - [� SEO \& IndexNow](#-seo--indexnow)
+    - [How it works](#how-it-works)
+    - [Environment variables](#environment-variables)
+    - [Setup for new developers](#setup-for-new-developers)
+    - [Notifying IndexNow when you publish content](#notifying-indexnow-when-you-publish-content)
+    - [API endpoints](#api-endpoints)
+    - [Bulk re-index (admin)](#bulk-re-index-admin)
+  - [�🔒 Security Features](#-security-features)
+  - [🌐 Deployment](#-deployment)
+    - [Vercel (Recommended)](#vercel-recommended)
+    - [Environment Variables](#environment-variables-1)
+  - [📚 Documentation](#-documentation)
+  - [🧪 Testing](#-testing)
+  - [🎨 Customization](#-customization)
+    - [Update Site Content](#update-site-content)
+    - [Styling](#styling)
+    - [Metadata](#metadata)
+  - [🔧 Troubleshooting](#-troubleshooting)
+    - [Common Development Issues](#common-development-issues)
+    - [Redis/Cache Issues](#rediscache-issues)
+    - [Build/Deployment Issues](#builddeployment-issues)
+    - [Safari/HTTPS Issues](#safarihttps-issues)
+  - [📚 FAQ](#-faq)
+  - [📊 Performance Benchmarks](#-performance-benchmarks)
+    - [Production Metrics](#production-metrics)
+    - [Build Performance](#build-performance)
+    - [Runtime Performance](#runtime-performance)
+  - [🔒 Security](#-security)
+    - [Reporting Vulnerabilities](#reporting-vulnerabilities)
+    - [Security Features](#security-features)
+  - [⚙️ Known Issues / Limitations](#️-known-issues--limitations)
+    - [Current Limitations](#current-limitations)
+    - [Tracked Issues](#tracked-issues)
+  - [📄 License \& Sponsorship](#-license--sponsorship)
+    - [Sponsorship Tiers](#sponsorship-tiers)
 
 </details>
 
