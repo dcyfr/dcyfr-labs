@@ -18,7 +18,11 @@ import path from 'path';
 export default defineConfig({
   test: {
     globals: true,
-    include: ['scripts/__tests__/**/*.{test,spec}.{ts,mjs}'],
+    include: [
+      'scripts/__tests__/**/*.{test,spec}.{ts,mjs}',
+      '../scripts/lib/*.test.ts', // Workspace root script tests
+      '../scripts/__tests__/**/*.{test,spec}.{ts,mjs}', // Workspace root test directory
+    ],
     environment: 'node',
     // Use thread pool for parallel execution of script tests
     pool: 'threads',
