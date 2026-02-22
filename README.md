@@ -71,6 +71,29 @@ A modern, full-featured developer blog and portfolio built with Next.js (App Rou
 
 **Perfect for:** Developers who want to learn modern Next.js patterns from a real, production-grade application.
 
+---
+
+## ⏱️ Time Saved Using dcyfr-labs
+
+**ROI Calculator: Build vs. Clone**
+
+Starting with dcyfr-labs saves you **6-8 weeks of development time** compared to building from scratch.
+
+| Feature              | Build From Scratch | With dcyfr-labs | ⏰ Time Saved     |
+| -------------------- | ------------------ | --------------- | ----------------- |
+| Auth + Security      | 2-3 weeks          | ✅ 0 hours      | 80-120 hours      |
+| Design System        | 1-2 weeks          | ✅ 0 hours      | 40-80 hours       |
+| Analytics + Tracking | 1 week             | ✅ 0 hours      | 40 hours          |
+| Background Jobs      | 3-5 days           | ✅ 0 hours      | 24-40 hours       |
+| Testing Setup        | 1 week             | ✅ 0 hours      | 40 hours          |
+| Blog + MDX System    | 1 week             | ✅ 0 hours      | 40 hours          |
+| SEO + Performance    | 3-5 days           | ✅ 0 hours      | 24-40 hours       |
+| **TOTAL**            | **6-8 weeks**      | **< 1 day**     | **288-380 hours** |
+
+**Cost Savings:** At $100/hour developer rate = **$28,800 - $38,000 saved**
+
+---
+
 ## Table of Contents
 
 <details>
