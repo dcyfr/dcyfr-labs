@@ -1,5 +1,7 @@
 # Next.js Developer Blog & Portfolio
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/dcyfr/dcyfr-labs)
+
 [![CI](https://img.shields.io/github/actions/workflow/status/dcyfr/dcyfr-labs/test.yml?branch=main&label=Tests&style=flat-square&logo=github)](https://github.com/dcyfr/dcyfr-labs/actions)
 [![Lighthouse](https://img.shields.io/badge/Lighthouse-92%2B-28a745?style=flat-square&logo=lighthouse&logoColor=white)](https://github.com/dcyfr/dcyfr-labs/actions/workflows/lighthouse-ci.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/dcyfr/dcyfr-labs/codeql.yml?branch=main&label=CodeQL&style=flat-square&logo=github)](https://github.com/dcyfr/dcyfr-labs/security/code-scanning)
