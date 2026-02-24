@@ -323,6 +323,7 @@
     ]
   },
   "dependencies": {
+    "@axiomhq/js": "^1.4.0",
     "@axiomhq/logging": "^0.2.0",
     "@axiomhq/nextjs": "^0.2.0",
     "@axiomhq/react": "^0.2.0",
