@@ -238,6 +238,7 @@ describe('Authentication & Security Integration', () => {
 
     it('blocks /dev/analytics in production', () => {
       vi.stubEnv('NODE_ENV', 'production');
+      vi.stubEnv('VERCEL_ENV', 'production');
 
       const request = new NextRequest('http://localhost:3000/dev/analytics');
       const response = proxy(request);
@@ -252,6 +253,7 @@ describe('Authentication & Security Integration', () => {
 
     it('blocks /dev/analytics subpaths in production', () => {
       vi.stubEnv('NODE_ENV', 'production');
+      vi.stubEnv('VERCEL_ENV', 'production');
 
       const request = new NextRequest('http://localhost:3000/dev/analytics/details');
       const response = proxy(request);
