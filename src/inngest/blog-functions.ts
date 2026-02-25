@@ -12,9 +12,7 @@ const ANALYTICS_KEY_PREFIX = 'blog:analytics:';
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
   return Promise.race([
     promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(message)), timeoutMs)
-    ),
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(message)), timeoutMs)),
   ]);
 }
 
@@ -227,8 +225,8 @@ export const calculateTrending = inngest.createFunction(
   async ({ step }) => {
     const startTime = Date.now();
 
-    // Add timeout protection to prevent Vercel 300s timeout
-    const FUNCTION_TIMEOUT_MS = 240000; // 4 minutes (less than Vercel's 5 minute limit)
+    // Add timeout protection - optimized with Redis pipelining (was 240s, now 45s)
+    const FUNCTION_TIMEOUT_MS = 45000; // 45 seconds - should complete in <30s with pipeline
 
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(
@@ -276,61 +274,85 @@ export const calculateTrending = inngest.createFunction(
                 return [];
               }
 
-              const postsData = [];
-              const batchSize = 10; // Process in batches to avoid overwhelming Redis
+              const postsData: Array<{ postId: string; totalViews: number; recentViews: number }> =
+                [];
+              const batchSize = 50; // Larger batches since we're using pipeline
+              const today = new Date();
+
+              // Pre-calculate date strings
+              const dateStrings = Array.from({ length: 7 }, (_, j) => {
+                const date = new Date(today);
+                date.setDate(date.getDate() - j);
+                return date.toISOString().split('T')[0];
+              });
 
               for (let i = 0; i < postKeys.length; i += batchSize) {
                 const batch = postKeys.slice(i, i + batchSize);
 
-                for (const key of batch) {
-                  try {
-                    const postId = key.replace(VIEW_KEY_PREFIX, '');
+                try {
+                  // Use Redis pipeline to batch all queries for this batch
+                  const pipeline = redis.pipeline();
 
-                    // Get total views with timeout
-                    const totalViews = parseInt(
-                      ((await withTimeout(redis.get(key), 5000, 'Redis get timeout')) as string) || '0'
-                    );
-
-                    // Get views from last 7 days with timeout protection
-                    let recentViews = 0;
-                    const today = new Date();
-
-                    for (let j = 0; j < 7; j++) {
-                      try {
-                        const date = new Date(today);
-                        date.setDate(date.getDate() - j);
-                        const dateStr = date.toISOString().split('T')[0];
-
-                        const dayViews = await withTimeout(
-                          redis.get(`${key}:day:${dateStr}`),
-                          2000,
-                          'Day views timeout'
-                        );
-
-                        recentViews += parseInt((dayViews as string) || '0');
-                      } catch (dayError) {
-                        console.warn(`Failed to get day views for ${postId}, day ${j}:`, dayError);
-                        // Continue processing other days
-                      }
-                    }
-
-                    postsData.push({
-                      postId,
-                      totalViews,
-                      recentViews,
+                  // For each post, queue all queries (1 total + 7 daily)
+                  batch.forEach((key) => {
+                    pipeline.get(key); // Total views
+                    dateStrings.forEach((dateStr) => {
+                      pipeline.get(`${key}:day:${dateStr}`); // Daily views
                     });
-                  } catch (postError) {
-                    console.warn(`Failed to process post key ${key}:`, postError);
-                    // Continue processing other posts
-                  }
-                }
+                  });
 
-                // Small delay between batches to avoid overwhelming Redis
-                await new Promise((resolve) => setTimeout(resolve, 100));
+                  // Execute all queries in parallel
+                  const results = await withTimeout(
+                    pipeline.exec(),
+                    15000,
+                    'Pipeline execution timeout'
+                  );
+
+                  if (!results) {
+                    console.warn('Pipeline returned no results for batch');
+                    continue;
+                  }
+
+                  // Process results (8 results per post: 1 total + 7 daily)
+                  batch.forEach((key, batchIdx) => {
+                    try {
+                      const postId = key.replace(VIEW_KEY_PREFIX, '');
+                      const resultOffset = batchIdx * 8;
+
+                      // First result is total views
+                      const totalViewsResult = results[resultOffset] as [
+                        Error | null,
+                        string | null,
+                      ];
+                      const totalViews = parseInt((totalViewsResult[1] as string) || '0');
+
+                      // Next 7 results are daily views
+                      let recentViews = 0;
+                      for (let j = 0; j < 7; j++) {
+                        const dayViewsResult = results[resultOffset + 1 + j] as [
+                          Error | null,
+                          string | null,
+                        ];
+                        recentViews += parseInt((dayViewsResult[1] as string) || '0');
+                      }
+
+                      postsData.push({
+                        postId,
+                        totalViews,
+                        recentViews,
+                      });
+                    } catch (postError) {
+                      console.warn(`Failed to process post ${key}:`, postError);
+                    }
+                  });
+                } catch (batchError) {
+                  console.warn(`Failed to process batch ${i / batchSize + 1}:`, batchError);
+                  // Continue with next batch
+                }
               }
 
               console.warn(
-                `Successfully processed ${postsData.length} posts for trending calculation`
+                `Successfully processed ${postsData.length} posts for trending calculation (${Math.ceil(postKeys.length / batchSize)} batches)`
               );
               return postsData;
             } catch (error) {
