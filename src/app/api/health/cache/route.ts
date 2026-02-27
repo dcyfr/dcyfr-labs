@@ -4,18 +4,24 @@
  * Verifies that all critical cache keys are populated in Redis.
  * Use for monitoring and alerting on cache state.
  *
+ * Security: Internal-only access (Vercel cron, monitoring)
+ *
  * Usage:
- *   curl https://www.dcyfr.ai/api/health/cache
+ *   curl https://www.dcyfr.ai/api/health/cache (internal only)
  *
  * Returns:
  *   200 OK - All caches populated
  *   503 Service Unavailable - One or more caches missing
  */
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '@/mcp/shared/redis-client';
+import { blockExternalAccess } from '@/lib/api/api-security';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Block external access - internal monitoring only
+  const blockResponse = blockExternalAccess(request);
+  if (blockResponse) return blockResponse;
   try {
     // Define all critical cache keys (base keys - Proxy adds prefix)
     const checks = {

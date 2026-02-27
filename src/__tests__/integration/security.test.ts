@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import proxy, { config as proxyConfig } from '@/proxy';
+import { proxy, config as proxyConfig } from '@/proxy';
 import { NextRequest } from 'next/server';
 import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 import { SITE_DOMAIN } from '@/lib/site-config';
@@ -285,23 +285,18 @@ describe('Authentication & Security Integration', () => {
       expect(proxyConfig.matcher).toBeDefined();
       expect(Array.isArray(proxyConfig.matcher)).toBe(true);
 
-      const matcher = proxyConfig.matcher[0];
-      expect(matcher).toHaveProperty('source');
-
-      // Should exclude _next/static, _next/image, favicon.ico, and file extensions
-      const source = matcher.source as string;
+      // matcher uses a plain string pattern
+      const source = proxyConfig.matcher[0] as string;
+      expect(typeof source).toBe('string');
       expect(source).toContain('_next/static');
       expect(source).toContain('_next/image');
       expect(source).toContain('favicon.ico');
     });
 
-    it('excludes prefetch requests', () => {
-      const matcher = proxyConfig.matcher[0];
-      expect(matcher).toHaveProperty('missing');
-
-      const missing = matcher.missing as Array<{ type: string; key: string; value?: string }>;
-      expect(missing.some((m) => m.key === 'next-router-prefetch')).toBe(true);
-      expect(missing.some((m) => m.key === 'purpose' && m.value === 'prefetch')).toBe(true);
+    it('excludes static file extensions from proxy', () => {
+      // The string-based matcher pattern excludes image and font extensions
+      const source = proxyConfig.matcher[0] as string;
+      expect(source).toContain('png|jpg|jpeg|gif|svg|webp|ico|woff|woff2');
     });
   });
 

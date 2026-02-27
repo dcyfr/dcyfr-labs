@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { redis, getRedisEnvironment } from '@/mcp/shared/redis-client';
+import { blockExternalAccess } from '@/lib/api/api-security';
 
 /**
  * Redis Health Check Endpoint
@@ -7,12 +8,17 @@ import { redis, getRedisEnvironment } from '@/mcp/shared/redis-client';
  * Tests Redis connectivity and environment detection
  * Returns environment info and connection status
  *
+ * Security: Internal-only access (Vercel cron, monitoring)
+ *
  * Usage:
- *   Production: https://www.dcyfr.ai/api/health/redis
- *   Preview: https://dcyfr-labs-git-feature-*.vercel.app/api/health/redis
+ *   Production: https://www.dcyfr.ai/api/health/redis (internal only)
+ *   Preview: https://dcyfr-labs-git-feature-*.vercel.app/api/health/redis (internal only)
  *   Local: http://localhost:3000/api/health/redis
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Block external access - internal monitoring only
+  const blockResponse = blockExternalAccess(request);
+  if (blockResponse) return blockResponse;
   const environment = getRedisEnvironment();
   
   // Environment diagnostics for debugging Redis issues
