@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 /**
@@ -73,7 +73,7 @@ export function ensureAbsoluteUrl(url: string): string {
 
 /**
  * Format a number with thousands separators
- * 
+ *
  * @param num - Number to format
  * @returns Formatted number string (e.g., "1,234" or "1.2K")
  */
@@ -83,4 +83,3 @@ export function formatNumber(num: number): string {
   }
   return num.toLocaleString();
 }
-

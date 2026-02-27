@@ -146,44 +146,6 @@ export const WORK_CATEGORIES: NavItem[] = [
 ] as const;
 
 /**
- * Dev tools navigation (development only)
- */
-export const DEV_TOOLS_NAV: NavItem[] = [
-  {
-    href: '/dev/docs',
-    label: 'Docs',
-  },
-  {
-    href: '/dev/analytics',
-    label: 'Analytics',
-  },
-  {
-    href: '/dev/agents',
-    label: 'AI Agents',
-  },
-  {
-    href: '/dev/maintenance',
-    label: 'Maintenance',
-  },
-  {
-    href: '/dev/mcp-health',
-    label: 'MCP Health',
-  },
-  {
-    href: '/dev/api-costs',
-    label: 'API Costs',
-  },
-  {
-    href: '/dev/unified-ai-costs',
-    label: 'AI Cost Dashboard',
-  },
-  {
-    href: '/dev/news',
-    label: 'Tech News',
-  },
-] as const;
-
-/**
  * Footer navigation items
  */
 export const FOOTER_NAV: NavItem[] = [
@@ -237,7 +199,6 @@ export const NAVIGATION = {
   mobile: MOBILE_NAV,
   blog: BLOG_CATEGORIES,
   work: WORK_CATEGORIES,
-  devTools: DEV_TOOLS_NAV,
   footer: FOOTER_NAV,
 } as const;
 
@@ -263,13 +224,7 @@ export function getKeyboardShortcuts(): Array<{
  * Find navigation item by href
  */
 export function findNavItem(href: string): NavItem | undefined {
-  const allItems = [
-    ...PRIMARY_NAV,
-    ...BLOG_CATEGORIES,
-    ...WORK_CATEGORIES,
-    ...DEV_TOOLS_NAV,
-    ...FOOTER_NAV,
-  ];
+  const allItems = [...PRIMARY_NAV, ...BLOG_CATEGORIES, ...WORK_CATEGORIES, ...FOOTER_NAV];
 
   return allItems.find((item) => item.href === href);
 }
