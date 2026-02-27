@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import {
   visibleProjects,
+  getAutomatedProjects,
   type Project,
   type ProjectCategory,
 } from "@/data/projects";
+import { mergeProjects } from "@/lib/projects/merge-projects";
 import { SITE_URL, AUTHOR_NAME } from "@/lib/site-config";
 import {
   createArchivePageMetadata,
@@ -32,18 +34,14 @@ const basePageDescription =
 const PROJECTS_PER_PAGE = 9;
 
 // Categories that are currently disabled/hidden
-const DISABLED_CATEGORIES: ProjectCategory[] = ["photography", "code"];
-
-// Filter out disabled categories from visible projects
-const enabledProjects = visibleProjects.filter(
-  (p) => !p.category || !DISABLED_CATEGORIES.includes(p.category)
-);
+// Note: "code" was previously disabled but is now enabled for the automated repo showcase
+const DISABLED_CATEGORIES: ProjectCategory[] = ["photography"];
 
 // Category display names for titles (only enabled categories)
 const CATEGORY_TITLES: Partial<Record<ProjectCategory, string>> = {
   community: "Community",
   nonprofit: "Nonprofit",
-  // code: "Code",  // disabled
+  code: "Code",
   // photography: "Photography",  // disabled
   startup: "Startup",
 };
@@ -52,7 +50,7 @@ const CATEGORY_TITLES: Partial<Record<ProjectCategory, string>> = {
 const CATEGORY_DESCRIPTIONS: Partial<Record<ProjectCategory, string>> = {
   community: "Explore our community-focused projects and initiatives.",
   nonprofit: "Discover our nonprofit work and charitable contributions.",
-  // code: "Browse our open-source code projects and development work.",  // disabled
+  code: "Browse our open-source code projects and development work.",
   // photography: "View our photography projects and visual works.",  // disabled
   startup: "See our startup ventures and entrepreneurial projects.",
 };
@@ -95,11 +93,14 @@ export async function generateMetadata({
   const title = getPageTitle(category);
   const description = getPageDescription(category);
 
-  // Count items for this category (using enabled projects only)
+  // Count items for this category (using static visible projects for metadata — approximate)
+  const metadataProjects = visibleProjects.filter(
+    (p) => !p.category || !DISABLED_CATEGORIES.includes(p.category)
+  );
   const itemCount = category
-    ? enabledProjects.filter((p) => p.category?.toLowerCase() === category)
+    ? metadataProjects.filter((p) => p.category?.toLowerCase() === category)
         .length
-    : enabledProjects.length;
+    : metadataProjects.length;
 
   return {
     ...createArchivePageMetadata({
@@ -136,6 +137,15 @@ export async function generateMetadata({
 export default async function WorkPage({ searchParams }: WorkPageProps) {
   // Get nonce from proxy for CSP
   const nonce = (await headers()).get("x-nonce") || "";
+
+  // Fetch and merge automated projects from GitHub org (gracefully degrades on error)
+  const automatedProjects = await getAutomatedProjects();
+  const allProjects = mergeProjects(visibleProjects, automatedProjects);
+
+  // Filter out disabled categories from the merged set
+  const enabledProjects = allProjects.filter(
+    (p) => !p.category || !DISABLED_CATEGORIES.includes(p.category)
+  );
 
   // Resolve search parameters
   const resolvedParams = (await searchParams) ?? {};
@@ -268,7 +278,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
   const categoryDisplayMap: Record<string, string> = {
     community: "Community",
     nonprofit: "Nonprofit",
-    // code: "Code",  // disabled
+    code: "Code",
     // photography: "Photography",  // disabled
     startup: "Startup",
   };
