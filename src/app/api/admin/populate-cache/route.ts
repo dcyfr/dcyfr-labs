@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '@/mcp/shared/redis-client';
+import { withCronAuth } from '@/lib/api/api-security';
 
 /**
  * Admin endpoint to populate production cache
@@ -256,16 +257,11 @@ async function populateCredlyCache(): Promise<PopulateResult> {
 }
 
 async function handlePopulateCache(request: NextRequest) {
-  // Authentication check - Vercel crons send Authorization: Bearer <CRON_SECRET>
-  const authHeader = request.headers.get('authorization');
-  const token = authHeader?.replace('Bearer ', '');
-
-  if (!token || token !== process.env.CRON_SECRET) {
+  // Authentication check using timing-safe comparison
+  const authError = withCronAuth(request);
+  if (authError) {
     console.warn('[Admin Cache] ⚠️ Unauthorized access attempt');
-    return NextResponse.json(
-      { error: 'Unauthorized - valid CRON_SECRET required' },
-      { status: 401 }
-    );
+    return authError;
   }
 
   console.warn('[Admin Cache] Starting cache population...');

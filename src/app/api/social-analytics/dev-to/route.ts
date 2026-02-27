@@ -9,8 +9,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { blockExternalAccess } from '@/lib/api/api-security';
 import { redis } from '@/lib/redis';
 import { fetchDevToMetrics, type DevToMetrics } from '@/lib/social-analytics';
+import { validateRequestBody, validateQueryParams } from '@/lib/validation/middleware';
+import { devToAnalyticsSchema } from '@/lib/validation/schemas';
+import { z } from 'zod';
 
 // ============================================================================
 // CONSTANTS
@@ -18,9 +22,6 @@ import { fetchDevToMetrics, type DevToMetrics } from '@/lib/social-analytics';
 
 /** Cache TTL for DEV metrics (6 hours) */
 const CACHE_TTL = 21600;
-
-/** Default DEV.to username */
-const DEFAULT_USERNAME = 'dcyfr';
 
 // ============================================================================
 // POST - Fetch and Cache Metrics
@@ -54,18 +55,15 @@ const DEFAULT_USERNAME = 'dcyfr';
  * }
  */
 export async function POST(request: NextRequest) {
+  const blockResponse = blockExternalAccess(request);
+  if (blockResponse) return blockResponse;
+
+  const validated = await validateRequestBody(request, devToAnalyticsSchema);
+  if ('error' in validated) return validated.error;
+
+  const { postId, devSlug, username, forceRefresh } = validated.data;
+
   try {
-    const body = await request.json();
-    const { postId, devSlug, username = DEFAULT_USERNAME, forceRefresh = false } = body;
-
-    // Validate required fields
-    if (!postId || !devSlug) {
-      return NextResponse.json(
-        { error: 'Missing required fields: postId, devSlug' },
-        { status: 400 }
-      );
-    }
-
     // Check cache first (unless force refresh)
     if (!forceRefresh) {
       const cacheKey = `dev-metrics:${postId}`;
@@ -138,14 +136,16 @@ export async function POST(request: NextRequest) {
  * }
  */
 export async function GET(request: NextRequest) {
+  const blockResponse = blockExternalAccess(request);
+  if (blockResponse) return blockResponse;
+
+  const getSchema = z.object({ postId: z.string().min(1, 'postId is required').max(200) });
+  const validated = validateQueryParams(request, getSchema);
+  if ('error' in validated) return validated.error;
+
+  const { postId } = validated.data;
+
   try {
-    const { searchParams } = new URL(request.url);
-    const postId = searchParams.get('postId');
-
-    if (!postId) {
-      return NextResponse.json({ error: 'Missing required parameter: postId' }, { status: 400 });
-    }
-
     // Get from cache
     const cacheKey = `dev-metrics:${postId}`;
     const cached = await redis.get(cacheKey);
@@ -188,14 +188,16 @@ export async function GET(request: NextRequest) {
  * DELETE /api/social-analytics/dev-to?postId=post-123
  */
 export async function DELETE(request: NextRequest) {
+  const blockResponse = blockExternalAccess(request);
+  if (blockResponse) return blockResponse;
+
+  const deleteSchema = z.object({ postId: z.string().min(1, 'postId is required').max(200) });
+  const validated = validateQueryParams(request, deleteSchema);
+  if ('error' in validated) return validated.error;
+
+  const { postId } = validated.data;
+
   try {
-    const { searchParams } = new URL(request.url);
-    const postId = searchParams.get('postId');
-
-    if (!postId) {
-      return NextResponse.json({ error: 'Missing required parameter: postId' }, { status: 400 });
-    }
-
     const cacheKey = `dev-metrics:${postId}`;
     await redis.del(cacheKey);
 
@@ -209,19 +211,3 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-// ============================================================================
-// OPTIONS - CORS Preflight
-// ============================================================================
-
-export async function OPTIONS() {
-  return NextResponse.json(
-    {},
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    }
-  );
-}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateAllAnalyticsMilestones } from '@/lib/analytics-integration';
 import { inngest } from '@/inngest/client';
+import { timingSafeEqual } from '@/lib/security/timing-safe';
 
 /**
  * API Route: Update Analytics Milestones
@@ -43,7 +44,8 @@ export async function POST(request: NextRequest) {
 
     const providedSecret = authHeader?.replace('Bearer ', '');
 
-    if (providedSecret !== cronSecret) {
+    // Use timing-safe comparison to prevent timing attacks
+    if (!providedSecret || !timingSafeEqual(providedSecret, cronSecret)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
   }

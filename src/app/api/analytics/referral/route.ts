@@ -6,10 +6,13 @@
  *
  * Stores referral data in Redis with 24-hour TTL for real-time tracking.
  * Data is aggregated daily by a cron job for long-term analytics.
+ *
+ * Security: Rate limited to 30 requests/minute per IP to prevent spam
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '@/lib/redis';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // ============================================================================
 // TYPES
@@ -49,6 +52,33 @@ interface ReferralCounts {
  * }
  */
 export async function POST(request: NextRequest) {
+  // Rate limit: 30 requests per minute per IP to prevent spam
+  const clientIp = getClientIp(request);
+  const rateLimitResult = await rateLimit(clientIp, {
+    limit: 30,
+    windowInSeconds: 60,
+    failClosed: true,
+  });
+
+  if (!rateLimitResult.success) {
+    return new Response(
+      JSON.stringify({
+        error: 'Rate limit exceeded',
+        limit: rateLimitResult.limit,
+        reset: new Date(rateLimitResult.reset).toISOString(),
+      }),
+      {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-RateLimit-Limit': String(rateLimitResult.limit),
+          'X-RateLimit-Remaining': String(rateLimitResult.remaining),
+          'X-RateLimit-Reset': String(rateLimitResult.reset),
+        },
+      }
+    );
+  }
+
   try {
     const body = (await request.json()) as ReferralPayload;
     const { postId, sessionId, platform, referrer, utmSource, utmMedium, utmCampaign, utmContent } =

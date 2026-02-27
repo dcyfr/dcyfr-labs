@@ -7,7 +7,33 @@ and this project uses [Calendar Versioning](https://calver.org/) with the `YYYY.
 
 **Breaking changes** are marked with ⚠️ BREAKING in the version header.
 
-## [2026.02.21]
+## [2026.02.26]
+
+### Security
+
+- **Phase 1–3 Security Hardening** — Comprehensive three-phase security engagement reducing overall risk posture by ~74–79%
+
+  **Phase 1 (P0 — Critical):**
+  - JWT `fail-hard` mode: unauthenticated callers now receive 401 immediately instead of degraded access
+  - Timing-safe comparison helper (`src/lib/security/timing-safe.ts`) used across `analytics/update-milestones`, `github/refresh`, and cron-auth routes to prevent timing oracle attacks
+  - Axiom proxy route hardened with rate limiting (60 req/min) and `blockExternalAccess()`
+
+  **Phase 2 (P1 — High):**
+  - `basic-ftp` pinned to non-vulnerable version via `overrides` in `package.json`
+  - `src/proxy.ts` updated to Next.js 16 named-export API (`export function proxy`, `export const config`) — removes dev-mode deprecation warning
+  - Cron endpoint auth tightened with `withCronAuth` wrapper
+  - API security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Cache-Control`) added to public-facing routes
+
+  **Phase 3 (P2/P3 — Medium):**
+  - Zod validation library added (`src/lib/validation/schemas.ts`, `src/lib/validation/middleware.ts`) with 16 reusable schemas and `validateRequestBody` / `validateQueryParams` helpers
+  - `social-analytics/dev-to` route hardened: `blockExternalAccess()`, Zod-validated POST body and query params, wildcard CORS `OPTIONS` handler removed
+  - SonarCloud quality gate enforcement: `sonar.qualitygate.wait=true` added to `sonar-project.properties`
+
+### Fixed
+
+- Integration test `security.test.ts` updated for Next.js 16 proxy named-export API
+
+
 
 ### Added
 

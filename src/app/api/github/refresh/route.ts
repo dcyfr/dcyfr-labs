@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { inngest } from '@/inngest/client';
 import { apiLogger } from '@/lib/logger';
+import { timingSafeEqual } from '@/lib/security/timing-safe';
 
 /**
  * Manual GitHub data refresh endpoint
@@ -42,7 +43,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
+    // Use timing-safe comparison to prevent timing attacks
+    const providedToken = authHeader?.replace('Bearer ', '');
+    if (!providedToken || !timingSafeEqual(providedToken, expectedToken)) {
       return NextResponse.json(
         { error: 'Unauthorized', message: 'Invalid or missing authorization token' },
         { status: 401 }

@@ -69,6 +69,81 @@ export function blockExternalAccess(request: NextRequest): NextResponse | null {
 }
 
 /**
+ * Authenticate cron job requests using CRON_SECRET
+ *
+ * Uses timing-safe comparison to prevent timing side-channel attacks.
+ * Returns NextResponse if authentication fails, null if successful.
+ *
+ * Example usage:
+ * ```typescript
+ * export async function POST(request: NextRequest) {
+ *   const authError = withCronAuth(request);
+ *   if (authError) return authError;
+ *   // ... route logic
+ * }
+ * ```
+ *
+ * @param request - Next.js request object
+ * @returns NextResponse with 401 error if auth fails, null if successful
+ */
+export function withCronAuth(request: NextRequest): NextResponse | null {
+  const providedSecret = request.headers.get('x-cron-secret');
+  const expectedSecret = process.env.CRON_SECRET;
+
+  // If no secret configured, fail closed in production
+  if (!expectedSecret) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('CRON_SECRET not configured in production');
+      return new NextResponse('Unauthorized', {
+        status: 401,
+        headers: {
+          'Content-Type': 'text/plain',
+          'WWW-Authenticate': 'Bearer realm="Cron Job"',
+        },
+      });
+    }
+    // In development, allow for easier testing
+    console.warn('⚠️  CRON_SECRET not configured - allowing request in development');
+    return null;
+  }
+
+  // If no secret provided, reject
+  if (!providedSecret) {
+    return new NextResponse('Unauthorized: Missing x-cron-secret header', {
+      status: 401,
+      headers: {
+        'Content-Type': 'text/plain',
+        'WWW-Authenticate': 'Bearer realm="Cron Job"',
+      },
+    });
+  }
+
+  // Use timing-safe comparison to prevent timing attacks
+  // Import here to avoid circular dependency
+  const { timingSafeEqual } = require('@/lib/security');
+  
+  if (!timingSafeEqual(providedSecret, expectedSecret)) {
+    // Log failed auth attempt for security monitoring
+    console.warn('Failed cron auth attempt:', {
+      timestamp: new Date().toISOString(),
+      userAgent: request.headers.get('user-agent'),
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
+    });
+
+    return new NextResponse('Unauthorized: Invalid secret', {
+      status: 401,
+      headers: {
+        'Content-Type': 'text/plain',
+        'WWW-Authenticate': 'Bearer realm="Cron Job"',
+      },
+    });
+  }
+
+  // Authentication successful
+  return null;
+}
+
+/**
  * External API Security - SSRF Prevention
  * Prevents Server-Side Request Forgery attacks by whitelisting allowed external domains
  */
