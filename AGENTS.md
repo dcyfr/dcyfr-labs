@@ -1732,6 +1732,55 @@ Usage notes:
 
 </skills_system>
 
+## Automated Repository Showcase
+
+The `/work` page automatically surfaces DCYFR GitHub repos at build time.
+See the full guide at [`docs/guides/AUTOMATED_REPO_SHOWCASE.md`](docs/guides/AUTOMATED_REPO_SHOWCASE.md).
+
+### Key patterns for agents
+
+**Opting a repo in** — add YAML frontmatter to the top of its `README.md`:
+
+```yaml
+---
+workShowcase: true
+title: "Human-readable name"
+description: "1-2 sentence description."
+category: code      # code | ai | ux | data | infra
+status: active      # active | in-progress | archived | idea
+featured: false
+tech:
+  - TypeScript
+---
+```
+
+**Config file** — `src/config/repos-config.ts` (single source of truth):
+- `REPO_INCLUDE_LIST` — force-include repos without frontmatter
+- `REPO_EXCLUDE_LIST` — never surface certain repos (e.g. `dcyfr-labs`)
+- `CACHE_CONFIG.ttlMs` — API cache TTL (default 4 hours)
+
+**Environment variables**:
+- `GITHUB_TOKEN` — optional PAT; raises rate limit 60 → 5000 req/hr
+- `ENABLE_AUTOMATED_REPOS` — set `"false"` to disable entirely
+
+**Cache management**:
+```bash
+npm run clear-cache:repos   # wipe .cache/github-repos/ for a fresh fetch
+```
+
+**Graceful degradation** — if the API is unreachable, `getAutomatedProjects()` returns `[]`
+and the page renders using only static project data. Never causes a build failure.
+
+**Test coverage** — all supporting modules have unit tests under `src/__tests__/lib/`:
+
+```bash
+npx vitest run src/__tests__/lib/
+```
+
+**No new UI components** — all display logic uses existing `/work` page components; 100% design token compliance expected.
+
+---
+
 ## Quality Gates
 
 - TypeScript: 0 errors (`npm run typecheck`)

@@ -176,3 +176,60 @@ export const featuredProjects = Object.freeze(visibleProjects.filter((project) =
 
 export const activeProjects = Object.freeze(visibleProjects.filter((project) => project.status === "active"));
 
+// ---------------------------------------------------------------------------
+// Automated repository showcase (server-side, async)
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch projects from the configured GitHub organisation and transform them
+ * into the standard `Project` shape.
+ *
+ * Returns an empty array when:
+ *  - `ENABLE_AUTOMATED_REPOS` is set to "false"
+ *  - No repos opt-in via `workShowcase: true` frontmatter
+ *  - Any error occurs (graceful degradation — static projects still render)
+ */
+export async function getAutomatedProjects(): Promise<Project[]> {
+  const enabled = process.env["ENABLE_AUTOMATED_REPOS"];
+  if (enabled === "false") return [];
+
+  try {
+    const { fetchOrgRepos } = await import("@/lib/github/fetch-repos");
+    const { fetchRepoReadme } = await import("@/lib/github/fetch-readme");
+    const { parseReadmeMetadata } = await import("@/lib/markdown/parse-readme-metadata");
+    const { isShowcaseRepo } = await import("@/lib/markdown/parse-frontmatter");
+    const { repoToProject } = await import("@/lib/projects/repo-to-project");
+    const { REPO_EXCLUDE_LIST, REPO_INCLUDE_LIST } = await import("@/config/repos-config");
+
+    const repos = await fetchOrgRepos();
+
+    // The slug set from static projects is used for collision detection
+    const usedSlugs = new Set(visibleProjects.map((p) => p.slug));
+
+    const automated: Project[] = [];
+
+    for (const repo of repos) {
+      // Apply exclusion list
+      if (REPO_EXCLUDE_LIST.includes(repo.name)) continue;
+      // Skip forks and private repos unless explicitly included
+      if ((repo.fork || repo.private) && !REPO_INCLUDE_LIST.includes(repo.name)) continue;
+
+      const readme = await fetchRepoReadme(repo.full_name);
+      const metadata = parseReadmeMetadata(readme);
+
+      // Only include repos that opt-in OR are in the explicit include list
+      const optsIn = isShowcaseRepo(metadata.frontmatter);
+      if (!optsIn && !REPO_INCLUDE_LIST.includes(repo.name)) continue;
+
+      const project = repoToProject(repo, metadata, usedSlugs);
+      usedSlugs.add(project.slug);
+      automated.push(project);
+    }
+
+    return automated;
+  } catch {
+    // Graceful degradation: return empty so the page still renders with static projects
+    return [];
+  }
+}
+
