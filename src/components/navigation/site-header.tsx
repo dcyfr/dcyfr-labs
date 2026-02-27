@@ -7,7 +7,7 @@ import { ChevronDown } from 'lucide-react';
 import { ThemeToggle } from '@/components/features/theme/theme-toggle';
 import { MobileNav } from '@/components/navigation';
 import { SearchButton } from '@/components/search';
-import { DevToolsDropdown, ThemeAwareLogo } from '@/components/common';
+import { ThemeAwareLogo } from '@/components/common';
 import { cn } from '@/lib/utils';
 import {
   CONTAINER_WIDTHS,
@@ -270,7 +270,6 @@ export function SiteHeader() {
         <div className="hidden md:flex items-center gap-2 shrink-0 ml-auto lg:ml-0">
           <SearchButton variant="default" />
           <ThemeToggle />
-          {process.env.NODE_ENV === 'development' && <DevToolsDropdown />}
         </div>
 
         {/* Mobile Navigation - visible on mobile, hidden md and up */}

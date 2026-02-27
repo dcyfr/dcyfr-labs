@@ -410,33 +410,6 @@ export const FOOTER_NAV_SECTIONS: NavSection[] = [
 // ============================================================================
 // DEV TOOLS NAVIGATION (Development Only)
 // ============================================================================
-
-/**
- * Developer tools navigation
- * Only visible in development environment
- */
-export const DEV_TOOLS_NAV: NavItem[] = [
-  {
-    href: '/dev/docs',
-    label: 'Documentation',
-    icon: FileText,
-    description: 'Developer documentation',
-  },
-  {
-    href: '/dev/analytics',
-    label: 'Analytics',
-    icon: ChartBar,
-    description: 'Analytics dashboard',
-  },
-  {
-    href: '/dev/maintenance',
-    label: 'Maintenance',
-    icon: Settings,
-    description: 'Site maintenance tools',
-  },
-];
-
-// ============================================================================
 // COMPLETE NAVIGATION CONFIG
 // ============================================================================
 
