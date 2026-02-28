@@ -15,8 +15,6 @@
  */
 
 import { telemetry } from './agents/compat';
-import type { AgentType } from './agents/legacy-types';
-import { getMonthlyUsage, getHistoricalUsage } from './api/api-usage-tracker';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -38,7 +36,7 @@ export interface UnifiedCostData {
 }
 
 export interface ClaudeCodeCost {
-  agent: AgentType;
+  agent: 'claude' | 'copilot' | 'groq' | 'ollama';
   sessions: number;
   successRate: number;
   totalTokens: number;
@@ -180,7 +178,6 @@ export class UnifiedCostAggregator {
       // GitHub Copilot is flat-fee, calculate estimated sessions from usage logs
 
       // Estimate monthly cost based on period
-      const monthsDivisor = this.getMonthsDivisor(period);
       const monthlyFlatFee = this.monthlyBudgetCopilot;
       const estimatedSessions = 50; // Typical monthly usage
       const estimatedTokens = 25000; // Estimated tokens per month
@@ -191,7 +188,7 @@ export class UnifiedCostAggregator {
         costPerMonth: monthlyFlatFee,
         costPerSession: monthlyFlatFee / Math.max(estimatedSessions, 1),
         averageTokensPerSession: estimatedTokens / Math.max(estimatedSessions, 1),
-        qualityRating: 4.0, // GitHub Copilot quality rating
+        qualityRating: 4, // GitHub Copilot quality rating
         violationRate: 0.05, // Estimated 5% violation rate
         period,
       };
