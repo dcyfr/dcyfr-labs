@@ -32,14 +32,11 @@ import type {
   ViolationRecord,
   HandoffRecord,
   CostEstimate,
-} from './agent-telemetry';
-
-import type {
   ProviderType,
   TaskContext,
   ExecutionResult,
   ProviderHealth,
-} from './provider-fallback-manager';
+} from './legacy-types';
 
 /**
  * Compatibility wrapper for TelemetryEngine
@@ -191,7 +188,13 @@ export class CompatibleTelemetrySession {
       }));
 
     // Adapt handoffs to old format (filter out unsupported reasons)
-    const supportedHandoffReasons = ['rate-limit', 'quality', 'manual', 'cost-optimization', 'offline'];
+    const supportedHandoffReasons = [
+      'rate-limit',
+      'quality',
+      'manual',
+      'cost-optimization',
+      'offline',
+    ];
     const adaptedHandoffs: HandoffRecord[] = (sessionData.handoffs || [])
       .filter((h: any) => supportedHandoffReasons.includes(h.reason))
       .map((h: any) => ({

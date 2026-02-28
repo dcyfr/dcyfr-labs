@@ -20,7 +20,7 @@
  */
 
 // Server actions for client components (browser-safe)
-export { getAgentComparison, getHandoffPatterns } from "./actions";
+export { getAgentComparison, getHandoffPatterns } from './actions';
 
 // ⚠️  SERVER-ONLY exports moved to index.server.ts
 // Import from '@/lib/agents/index.server' for:
@@ -31,7 +31,7 @@ export { getAgentComparison, getHandoffPatterns } from "./actions";
 // These exports use Node.js APIs and cannot be used in client components
 
 // Type exports (safe for client)
-export type { TaskContext, RoutingResult } from "@/lib/ai-compat.server";
+export type { TaskContext, RoutingResult } from '@/lib/ai-compat.server';
 
 // Re-export types from old system (for backward compatibility)
 // Types are erased at runtime, so they're browser-safe
@@ -47,7 +47,7 @@ export type {
   CostEstimate,
   AgentStats,
   ComparisonStats,
-} from "./agent-telemetry";
+} from './legacy-types';
 
 export type {
   ProviderType,
@@ -56,4 +56,4 @@ export type {
   TaskContext as LegacyTaskContext, // Renamed to avoid conflict with new ai-compat TaskContext
   ExecutionResult,
   ProviderHealth,
-} from "./provider-fallback-manager";
+} from './legacy-types';
