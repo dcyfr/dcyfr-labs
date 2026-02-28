@@ -25,6 +25,10 @@ export { ProfileListSection } from './profile-list-section';
 export { DcyfrActivityStats } from './dcyfr-activity-stats';
 export { FocusAreaCard } from './focus-area-card';
 
+// Agent profile components
+export { AgentProfileCard } from './agent-profile-card';
+export { AgentProfilesSection } from './agent-profiles-section';
+
 // Loading skeletons
 export { BadgeWalletSkeleton } from './badge-wallet-skeleton';
 export { SkillsWalletSkeleton } from './skills-wallet-skeleton';
