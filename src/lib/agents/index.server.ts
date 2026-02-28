@@ -23,7 +23,7 @@ export {
   type RoutingResult,
   type Agent,
   type AgentManifest,
-} from "@/lib/ai-compat.server";
+} from '@/lib/ai-compat.server';
 
 // Re-export from main index for convenience (already server-safe)
 export type {
@@ -38,7 +38,7 @@ export type {
   CostEstimate,
   AgentStats,
   ComparisonStats,
-} from "./agent-telemetry";
+} from './legacy-types';
 
 export type {
   ProviderType,
@@ -47,4 +47,4 @@ export type {
   TaskContext as LegacyTaskContext,
   ExecutionResult,
   ProviderHealth,
-} from "./provider-fallback-manager";
+} from './legacy-types';

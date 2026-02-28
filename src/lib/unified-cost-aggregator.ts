@@ -9,7 +9,8 @@
  * Provides unified view of spending, token usage, and cost efficiency
  */
 
-import { telemetry, type AgentType } from './agents/agent-telemetry';
+import { telemetry } from './agents/compat';
+import type { AgentType } from './agents/legacy-types';
 import { getMonthlyUsage, getHistoricalUsage } from './api/api-usage-tracker';
 
 // ============================================================================
