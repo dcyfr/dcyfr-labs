@@ -1,6 +1,11 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { getOgImageUrl, SITE_URL, SITE_LAUNCH_DATE, SITE_LAST_UPDATED_DATE } from '@/lib/site-config';
+import {
+  getOgImageUrl,
+  SITE_URL,
+  SITE_LAUNCH_DATE,
+  SITE_LAST_UPDATED_DATE,
+} from '@/lib/site-config';
 import { getAboutPageSchema, getJsonLdScriptProps } from '@/lib/json-ld';
 import { createBreadcrumbSchema } from '@/lib/metadata';
 import { headers } from 'next/headers';
@@ -14,6 +19,7 @@ import {
   AboutDcyfrLabs,
   ServerBadgeWallet,
   ServerSkillsWallet,
+  AgentProfilesSection,
 } from '@/components/about';
 
 const ScrollReveal = dynamic(
@@ -109,9 +115,16 @@ export default async function AboutPage() {
           </ScrollReveal>
         </Section>
 
+        {/* AI Agent Team */}
+        <Section id="ai-agents" className={PAGE_LAYOUT.section.container}>
+          <ScrollReveal animation="fade-up" delay={5}>
+            <AgentProfilesSection />
+          </ScrollReveal>
+        </Section>
+
         {/* Connect with Us */}
         <Section id="connect-with-us" className={PAGE_LAYOUT.section.container}>
-          <ScrollReveal animation="fade-up" delay={5}>
+          <ScrollReveal animation="fade-up" delay={6}>
             <ConnectWithUs />
           </ScrollReveal>
         </Section>
