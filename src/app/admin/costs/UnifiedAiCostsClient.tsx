@@ -6,7 +6,6 @@
  * Displays comprehensive cost and usage metrics from all AI sources:
  * - Claude Code (via telemetry)
  * - GitHub Copilot (flat $20/month)
- * - OpenCode.ai (free GitHub models)
  *
  * Features:
  * - Real-time cost visualization with charts
@@ -134,7 +133,7 @@ export default function UnifiedAiCostsClient() {
   return (
     <DashboardLayout
       title="Unified AI Cost Dashboard"
-      description="Track spending and usage across Claude Code, GitHub Copilot, and OpenCode.ai"
+      description="Track spending and usage across Claude Code and GitHub Copilot"
       actions={
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">
@@ -246,10 +245,6 @@ export default function UnifiedAiCostsClient() {
                           name: 'GitHub Copilot',
                           value: data.sources.copilotVSCode.costPerMonth,
                         },
-                        {
-                          name: 'OpenCode',
-                          value: data.sources.opencode.estimatedCost,
-                        },
                       ]}
                       cx="50%"
                       cy="50%"
@@ -289,10 +284,6 @@ export default function UnifiedAiCostsClient() {
                         name: 'Copilot',
                         sessions: data.sources.copilotVSCode.sessions,
                       },
-                      {
-                        name: 'OpenCode',
-                        sessions: data.sources.opencode.sessions,
-                      },
                     ]}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -314,7 +305,7 @@ export default function UnifiedAiCostsClient() {
             <p className="text-sm text-muted-foreground mb-4">
               In-depth statistics for each AI tool
             </p>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2">
               {/* Claude Code */}
               <DetailCard
                 title="Claude Code"
@@ -367,37 +358,6 @@ export default function UnifiedAiCostsClient() {
                   {
                     label: 'Violation Rate',
                     value: `${(data.sources.copilotVSCode.violationRate * 100).toFixed(1)}%`,
-                  },
-                ]}
-              />
-
-              {/* OpenCode */}
-              <DetailCard
-                title="OpenCode.ai"
-                metrics={[
-                  { label: 'Sessions', value: data.sources.opencode.sessions },
-                  {
-                    label: 'Total Tokens',
-                    value: data.sources.opencode.totalTokens.toLocaleString(),
-                  },
-                  {
-                    label: 'Est. Cost',
-                    value: `$${data.sources.opencode.estimatedCost.toFixed(2)}`,
-                  },
-                  {
-                    label: 'Free Models',
-                    value: `$${(
-                      data.sources.opencode.costByModel['gpt-5-mini'] +
-                      data.sources.opencode.costByModel['raptor-mini']
-                    ).toFixed(2)}`,
-                  },
-                  {
-                    label: 'Premium Models',
-                    value: `$${data.sources.opencode.costByModel['claude-sonnet'].toFixed(2)}`,
-                  },
-                  {
-                    label: 'Avg Quality',
-                    value: `${data.sources.opencode.qualityMetrics.averageQuality.toFixed(1)}/5`,
                   },
                 ]}
               />
@@ -524,7 +484,6 @@ function formatToolName(tool: string): string {
   const names: Record<string, string> = {
     'claude-code': 'Claude Code',
     'copilot-vscode': 'GitHub Copilot',
-    opencode: 'OpenCode.ai',
     all: 'All Tools',
   };
   return names[tool] || tool;

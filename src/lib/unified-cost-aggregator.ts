@@ -101,17 +101,15 @@ export interface CostRecommendation {
 export class UnifiedCostAggregator {
   private readonly monthlyBudgetClaude = 17; // $17/month for Claude Pro (billed annually)
   private readonly monthlyBudgetCopilot = 4; // $4/month for GitHub Pro
-  private readonly monthlyBudgetOpencode = 0; // $0/month (included unlimited GitHub Pro models)
   private readonly monthlyBudgetTotal = 21; // Total budget ($17 Claude Pro + $4 GitHub Pro)
 
   /**
    * Get unified cost data across all sources
    */
   async getUnifiedCostData(period: TimeRange = '30d'): Promise<UnifiedCostData> {
-    const [claudeData, copilotData, opencodeData] = await Promise.all([
-      this.getClaudeCodeCost('claude', period),
+    const [claudeData, copilotData] = await Promise.all([
+      this.getClaudeCodeCost(period),
       this.getCopilotCost(period),
-      this.getOpencodeCost(period),
     ]);
 
     const summary = this.calculateSummary(claudeData, copilotData);
@@ -136,13 +134,13 @@ export class UnifiedCostAggregator {
    */
   private async getClaudeCodeCost(period: TimeRange): Promise<ClaudeCodeCost> {
     try {
-      const stats = await telemetry.getAgentStats('claude-code', period);
+      const stats = await telemetry.getAgentStats('claude', period);
 
       // Estimate cost based on tokens (Claude Sonnet 4: $3 per 1M tokens)
       const estimatedCost = (stats.performance.totalTokensUsed / 1_000_000) * 3;
 
       return {
-        name: 'Claude Code',
+        agent: 'claude',
         sessions: stats.totalSessions,
         successRate: stats.outcomes.success / stats.totalSessions,
         totalTokens: stats.performance.totalTokensUsed,
@@ -198,114 +196,6 @@ export class UnifiedCostAggregator {
   }
 
   /**
-   * Get OpenCode cost metrics
-   */
-  private async getOpencodeCost(period: TimeRange): Promise<OpencodeCost> {
-    try {
-      const stats = await this.getOpencodeStats(period);
-
-      return {
-        sessions: stats.sessions,
-        totalTokens: stats.totalTokens,
-        estimatedCost: 0, // GitHub Copilot models are free
-        costByModel: {
-          'gpt-5-mini': 0,
-          'raptor-mini': 0,
-          'claude-sonnet':
-            stats.premiumModelTokens > 0 ? (stats.premiumModelTokens / 1_000_000) * 3 : 0,
-        },
-        qualityMetrics: {
-          averageQuality: stats.averageQuality,
-          taskBreakdown: stats.taskBreakdown,
-        },
-        period,
-      };
-    } catch (error) {
-      console.warn(`Failed to fetch OpenCode metrics: ${error}`);
-      return this.getEmptyOpencodeCost(period);
-    }
-  }
-
-  /**
-   * Read OpenCode session logs
-   */
-  private async getOpencodeStats(period: TimeRange): Promise<{
-    sessions: number;
-    totalTokens: number;
-    premiumModelTokens: number;
-    averageQuality: number;
-    violationRate: number;
-    taskBreakdown: Record<string, number>;
-  }> {
-    try {
-      const fs = await import('fs');
-      const path = await import('path');
-
-      // Read OpenCode session logs
-      const logFile = path.join(process.cwd(), '.opencode/.session-log.jsonl');
-      if (!fs.existsSync(logFile)) {
-        return {
-          sessions: 0,
-          totalTokens: 0,
-          premiumModelTokens: 0,
-          averageQuality: 3,
-          violationRate: 0,
-          taskBreakdown: {},
-        };
-      }
-
-      const lines = fs.readFileSync(logFile, 'utf-8').trim().split('\n');
-      const sessions = lines
-        .map((line) => {
-          try {
-            return JSON.parse(line);
-          } catch {
-            return null;
-          }
-        })
-        .filter(Boolean);
-
-      // Filter by date range
-      const filteredSessions = this.filterByDateRange(sessions, period);
-
-      // Calculate metrics with safe property access
-      const totalTokens = filteredSessions.reduce(
-        (sum, s: any) => sum + (s.estimatedTotalTokens || s.tokens || 0),
-        0
-      );
-      const averageQuality =
-        filteredSessions.reduce((sum, s: any) => sum + (s.quality || 3), 0) /
-        Math.max(filteredSessions.length, 1);
-
-      // Count task types
-      const taskBreakdown: Record<string, number> = {};
-      filteredSessions.forEach((s: any) => {
-        const task = s.task || 'unknown';
-        taskBreakdown[task] = (taskBreakdown[task] || 0) + 1;
-      });
-
-      return {
-        sessions: filteredSessions.length,
-        totalTokens,
-        premiumModelTokens: 0, // Assuming only GitHub Copilot used
-        averageQuality,
-        violationRate: 0, // Not tracked in OpenCode
-        taskBreakdown,
-      };
-    } catch (error) {
-      console.warn(`Failed to read OpenCode stats: ${error}`);
-      return {
-        sessions: 0,
-        totalTokens: 0,
-        premiumModelTokens: 0,
-        averageQuality: 3,
-        violationRate: 0,
-        taskBreakdown: {},
-      };
-    }
-  }
-
-  /**
    * Calculate aggregated summary
    */
   private calculateSummary(claude: ClaudeCodeCost, copilot: CopilotCost): CostSummary {
@@ -319,16 +209,10 @@ export class UnifiedCostAggregator {
       totalTokens,
       averageCostPerSession: totalCost / Math.max(totalSessions, 1),
       averageTokensPerSession: totalTokens / Math.max(totalSessions, 1),
-      mostUsedTool:
-        copilot.sessions > claude.sessions && copilot.sessions > opencode.sessions
-          ? 'copilot-vscode'
-          : opencode.sessions > claude.sessions
-            ? 'opencode'
-            : 'claude-code',
+      mostUsedTool: copilot.sessions > claude.sessions ? 'copilot-vscode' : 'claude-code',
       costBySource: {
         'claude-code': claude.estimatedCost,
         'copilot-vscode': copilot.costPerMonth,
-        opencode: opencode.estimatedCost,
         all: totalCost,
       },
       monthlyBudgetUsed: (totalCost / this.monthlyBudgetTotal) * 100,
@@ -341,15 +225,14 @@ export class UnifiedCostAggregator {
    */
   private calculateTrends(claude: ClaudeCodeCost, copilot: CopilotCost): CostTrends {
     return {
-      dailySpending: this.generateDailySpending(claude, copilot, opencode),
+      dailySpending: this.generateDailySpending(claude, copilot),
       sourceDistribution: {
         'claude-code': claude.estimatedCost,
         'copilot-vscode': copilot.costPerMonth,
-        opencode: opencode.estimatedCost,
-        all: claude.estimatedCost + copilot.costPerMonth + opencode.estimatedCost,
+        all: claude.estimatedCost + copilot.costPerMonth,
       },
-      costPerTaskType: this.aggregateTaskTypeCosts(claude, opencode),
-      efficiencyTrend: this.calculateEfficiencyTrend(claude, copilot, opencode),
+      costPerTaskType: this.aggregateTaskTypeCosts(claude),
+      efficiencyTrend: this.calculateEfficiencyTrend(claude, copilot),
     };
   }
 
@@ -412,22 +295,6 @@ export class UnifiedCostAggregator {
       });
     }
 
-    // OpenCode GitHub Copilot optimization
-    if (opencode.sessions > 0) {
-      const allFreeModels = Object.values(opencode.costByModel).every((cost) => cost === 0);
-      if (allFreeModels) {
-        recommendations.push({
-          id: 'opencode-optimized',
-          category: 'cost-optimization',
-          severity: 'info',
-          title: 'OpenCode Optimized for Cost',
-          description: `All OpenCode sessions use free GitHub Copilot models. You are saving $${((opencode.totalTokens / 1_000_000) * 3).toFixed(2)} vs Claude.`,
-          estimatedSavings: (opencode.totalTokens / 1_000_000) * 3,
-          action: 'Continue current strategy - OpenCode is cost-effective for routine work',
-        });
-      }
-    }
-
     return recommendations;
   }
 
@@ -455,8 +322,7 @@ export class UnifiedCostAggregator {
 
   private generateDailySpending(
     claude: ClaudeCodeCost,
-    copilot: CopilotCost,
-    opencode: OpencodeCost
+    copilot: CopilotCost
   ): Array<{
     date: string;
     cost: number;
@@ -467,21 +333,13 @@ export class UnifiedCostAggregator {
     return [];
   }
 
-  private aggregateTaskTypeCosts(
-    claude: ClaudeCodeCost,
-    opencode: OpencodeCost
-  ): Record<string, number> {
-    const combined: Record<string, number> = { ...claude.costBreakdown.byTaskType };
-    Object.entries(opencode.qualityMetrics.taskBreakdown).forEach(([task, count]) => {
-      combined[task] = (combined[task] || 0) + count;
-    });
-    return combined;
+  private aggregateTaskTypeCosts(claude: ClaudeCodeCost): Record<string, number> {
+    return { ...claude.costBreakdown.byTaskType };
   }
 
   private calculateEfficiencyTrend(
     claude: ClaudeCodeCost,
-    copilot: CopilotCost,
-    opencode: OpencodeCost
+    copilot: CopilotCost
   ): 'improving' | 'stable' | 'declining' {
     // Placeholder: would compare metrics over time
     return 'stable';
@@ -533,17 +391,6 @@ export class UnifiedCostAggregator {
       averageTokensPerSession: 0,
       qualityRating: 0,
       violationRate: 0,
-      period,
-    };
-  }
-
-  private getEmptyOpencodeCost(period: TimeRange): OpencodeCost {
-    return {
-      sessions: 0,
-      totalTokens: 0,
-      estimatedCost: 0,
-      costByModel: { 'gpt-5-mini': 0, 'raptor-mini': 0, 'claude-sonnet': 0 },
-      qualityMetrics: { averageQuality: 0, taskBreakdown: {} },
       period,
     };
   }
