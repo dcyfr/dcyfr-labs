@@ -12,7 +12,7 @@ import type {
 } from "@/types/team";
 
 export const teamDescription =
-  "A virtual partnership dedicated to building secure, innovative solutions for the modern web.";
+  "Author of @dcyfr/ai, a portable open-source AI agent framework on npm, and a human-AI partnership building secure software at scale.";
 
 export const teamMembers: TeamMember[] = [
   {
@@ -21,7 +21,7 @@ export const teamMembers: TeamMember[] = [
     title: "Founding Architect",
     subtitle: "Cyber Architect & Security Expert",
     description:
-      "A seasoned cybersecurity architect with a passion for building secure, scalable web solutions that empower businesses to innovate with confidence.",
+      "Founding Architect and creator of @dcyfr/ai — a portable open-source TypeScript AI agent framework with plugin marketplace, delegation system, and 20+ specialist agents published on npm. Security architect with a decade of experience leading global security programs and secure AI engineering.",
     badges: [
       { label: "Coffee Powered", icon: Sparkles },
       { label: "Secure by Design", icon: Shield },
@@ -39,9 +39,9 @@ export const teamMembers: TeamMember[] = [
     id: "dcyfr",
     name: "DCYFR",
     title: "AI Lab Assistant",
-    subtitle: "Context-Aware Coding & Security AI",
+    subtitle: "Agent Swarm & Automation",
     description:
-      "An AI assistant focused on automating code reviews, documentation, and security analysis to enhance developer productivity.",
+      "An autonomous agent swarm built on the @dcyfr/ai framework — 20+ specialist agents for security analysis, code generation, architecture review, and delegation-routed task execution. Published on npm and powering DCYFR Labs development.",
     badges: [
       { label: "Security Focused", icon: Shield },
       { label: "AI Paired-Programming", icon: Zap },
@@ -52,21 +52,21 @@ export const teamMembers: TeamMember[] = [
     highlights: [
       {
         icon: Shield,
-        title: "Security-Focused",
+        title: "Security Architecture",
         description:
-          "Specializes in identifying vulnerabilities and suggesting best practices during the development process.",
+          "Plugin marketplace trust scoring, TLP classification, HMAC identity verification, and 8 adversarial scenario mitigations built into @dcyfr/ai.",
       },
       {
         icon: Zap,
-        title: "AI Paired-Programming",
+        title: "Delegation Framework",
         description:
-          "Excels at collaborating with developers to write, review, and optimize code efficiently.",
+          "Reputation-driven task routing with SLA contracts, quality gates, and automatic agent selection based on proven track records.",
       },
       {
         icon: Code,
-        title: "Full-Stack Expertise",
+        title: "20+ Specialist Agents",
         description:
-          "Proficient across front-end and back-end technologies, enabling seamless integration and automation.",
+          "fullstack-developer, typescript-pro, security-engineer, test-engineer, and more — each with declared capabilities and performance metrics.",
       },
     ],
     avatarType: "image",

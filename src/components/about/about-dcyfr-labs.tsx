@@ -37,9 +37,10 @@ export function AboutDcyfrLabs() {
   return (
     <div className="prose prose-slate dark:prose-invert">
       <p>
-        DCYFR Labs is a virtual partnership dedicated to building secure, innovative solutions for
-        the modern web. We focus on cyber architecture and design, helping organizations navigate
-        the complex landscape of emerging technologies while maintaining robust security postures.
+        DCYFR Labs builds <strong>@dcyfr/ai</strong> — a portable open-source TypeScript AI agent
+        framework with plugin architecture, multi-provider LLM support, and a security-hardened
+        delegation system. Founded by a cybersecurity architect, we bridge enterprise security
+        practice and modern AI engineering.
       </p>
 
       <h3>Our Philosophy</h3>
@@ -80,8 +81,8 @@ export function AboutDcyfrLabs() {
           <strong>Transparent trade-offs:</strong> Every decision has costs—we discuss them openly
         </li>
         <li>
-          <strong>Open source contributions:</strong> We give back to the community that enables our
-          work
+          <strong>Open source by default:</strong> @dcyfr/ai, @dcyfr/ai-cli, @dcyfr/ai-rag, and
+          @dcyfr/ai-code-gen are all published on npm and free to use
         </li>
         <li>
           <strong>Continuous learning:</strong> Technology evolves, and so do we
@@ -97,8 +98,8 @@ export function AboutDcyfrLabs() {
         <Link href="/work" className={`underline ${HOVER_EFFECTS.link}`}>
           projects
         </Link>
-        , we share knowledge, insights, and practical guidance for building secure, scalable systems
-        in the age of AI and cloud-native infrastructure.
+        , we share knowledge and practical guidance from real production systems — from security
+        architecture to AI agent engineering and open-source framework development.
       </p>
     </div>
   );
