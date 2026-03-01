@@ -45,13 +45,13 @@ export function ProjectCardGrid({ projects }: { projects: Project[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {projects.map((project) => (
-        <Card key={project.id} className={HOVER_EFFECTS.card}>
+        <Card key={project.id} className={`h-full flex flex-col ${HOVER_EFFECTS.card}`}>
           <CardHeader>
             <CardTitle>{project.title}</CardTitle>
             <CardDescription>{project.description}</CardDescription>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="flex-1">
             <div className="flex flex-wrap gap-2">
               {project.tags.map((tag) => (
                 <Badge key={tag} variant="secondary">
@@ -92,8 +92,8 @@ export function BlogPostCardGrid({ posts }: { posts: BlogPost[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {posts.map((post) => (
-        <Link key={post.id} href={post.href} className="group">
-          <Card className={HOVER_EFFECTS.card}>
+        <Link key={post.id} href={post.href} className="group block h-full">
+          <Card className={`h-full flex flex-col ${HOVER_EFFECTS.card}`}>
             <CardHeader>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                 <Calendar className="h-4 w-4" />
@@ -147,7 +147,7 @@ export function FeatureCardGrid({ features }: { features: Feature[] }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {features.map((feature) => (
-        <Card key={feature.id} className={HOVER_EFFECTS.cardSubtle}>
+        <Card key={feature.id} className={`h-full flex flex-col ${HOVER_EFFECTS.cardSubtle}`}>
           <CardHeader>
             <div className="mb-4 text-primary">
               {feature.icon}

@@ -133,7 +133,7 @@ export function ResumeStats({ totalBadges = 0 }: ResumeStatsProps) {
           <Card
             key={stat.label}
             className={cn(
-              'p-4 transition-all duration-300',
+              'p-4 h-full transition-all duration-300',
               'hover:shadow-lg hover:border-primary/50',
               BORDERS.card
             )}

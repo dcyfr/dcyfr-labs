@@ -53,7 +53,7 @@ export function CompanyOverview() {
         <h2 className={`${TYPOGRAPHY.h2.standard} mb-6`}>What Sets Us Apart</h2>
         <div className="grid md:grid-cols-2 gap-4">
           {overview.differentiators.map((diff, idx) => (
-            <Card key={idx} className="p-5 hover:shadow-lg transition-shadow">
+            <Card key={idx} className="p-5 h-full hover:shadow-lg transition-shadow">
               <h3
                 className={`${TYPOGRAPHY.h3.standard} mb-2 flex items-center gap-2`}
               >

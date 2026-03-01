@@ -42,7 +42,7 @@ export function ImpactStats({ className }: ImpactStatsProps) {
     <div className={className}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {stats.map((stat, index) => (
-          <Card key={index} className="text-center">
+          <Card key={index} className="text-center h-full">
             <CardContent className="p-8">
               <div className={TYPOGRAPHY.display.stat}>{stat.value}</div>
               <p className="font-semibold text-foreground mt-2">{stat.label}</p>

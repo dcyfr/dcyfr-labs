@@ -65,7 +65,7 @@ function BadgeCard({ badge }: BadgeCardProps) {
   const safeUrl = ensureAbsoluteUrl(publicUrl);
 
   return (
-    <Link href={safeUrl} target="_blank" rel="noopener noreferrer" className="block group">
+    <Link href={safeUrl} target="_blank" rel="noopener noreferrer" className="block group h-full">
       <Card className={cn('p-4 h-full', HOVER_EFFECTS.card)}>
         <div className="flex flex-col items-center text-center gap-4">
           {/* Badge Image */}

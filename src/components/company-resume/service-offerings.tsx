@@ -6,7 +6,7 @@ import { Shield, Code, Globe, Brain, ChevronRight } from "lucide-react";
 
 /**
  * ServiceOfferings Component
- * 
+ *
  * Displays DCYFR Labs service categories with detailed offerings
  * and deliverables for each service.
  */
@@ -41,7 +41,7 @@ export function ServiceOfferings() {
       <div className="space-y-12">
         {services.map((category, categoryIdx) => {
           const IconComponent = getIcon(category.icon);
-          
+
           return (
             <div key={categoryIdx}>
               {/* Category Header */}
@@ -55,7 +55,7 @@ export function ServiceOfferings() {
               {/* Services Grid */}
               <div className="grid md:grid-cols-2 gap-4">
                 {category.services.map((service, serviceIdx) => (
-                  <Card key={serviceIdx} className="p-8 hover:shadow-lg transition-shadow">
+                  <Card key={serviceIdx} className="p-8 h-full hover:shadow-lg transition-shadow">
                     <div className={SPACING.content}>
                       {/* Service Header */}
                       <div>

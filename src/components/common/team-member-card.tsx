@@ -122,9 +122,9 @@ function DetailedLayout({
 
   const cardContent = (
     <Card
-      className={`p-5 space-y-4 ${isAI ? 'border-primary/20' : ''} ${linkTo ? HOVER_EFFECTS.card : HOVER_EFFECTS.cardSubtle} ${className || ''}`}
+      className={`p-5 space-y-4 h-full ${isAI ? 'border-primary/20' : ''} ${linkTo ? HOVER_EFFECTS.card : HOVER_EFFECTS.cardSubtle} ${className || ''}`}
     >
-      <div className="flex flex-col items-start gap-3">
+      <div className="flex flex-col items-start gap-3 h-full">
         <div className="flex flex-row items-center gap-4">
           <MemberAvatar member={member} size="sm" avatarUrl={avatarUrl} />
           <div className="flex-1">
@@ -132,7 +132,7 @@ function DetailedLayout({
             <p className="text-sm text-muted-foreground mb-2">{member.title}</p>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground">{member.description}</p>
+        <p className="text-sm text-muted-foreground flex-1">{member.description}</p>
       </div>
     </Card>
   );
@@ -144,6 +144,7 @@ function DetailedLayout({
         href={linkTo}
         target={isExternal ? '_blank' : undefined}
         rel={isExternal ? 'noopener noreferrer' : undefined}
+        className="block h-full"
       >
         {cardContent}
       </Link>
@@ -172,7 +173,7 @@ function CompactLayout({
   className?: string;
 }) {
   const cardContent = (
-    <div className="flex flex-col items-start gap-3">
+    <div className="flex flex-col items-start gap-3 h-full">
       <div className="flex flex-row items-center gap-4">
         <MemberAvatar member={member} size="sm" avatarUrl={avatarUrl} />
         <div className="flex-1">
@@ -180,11 +181,11 @@ function CompactLayout({
           <p className="text-sm text-muted-foreground mb-2">{member.title}</p>
         </div>
       </div>
-      <p className="text-sm text-muted-foreground">{member.description}</p>
+      <p className="text-sm text-muted-foreground flex-1">{member.description}</p>
     </div>
   );
 
-  const cardClassName = `group bg-card border border-border rounded-lg p-4 ${HOVER_EFFECTS.cardSubtle} ${className || ''}`;
+  const cardClassName = `group bg-card border border-border rounded-lg p-4 h-full ${HOVER_EFFECTS.cardSubtle} ${className || ''}`;
 
   if (linkTo) {
     const isExternal = linkTo.startsWith('http');

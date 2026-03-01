@@ -86,9 +86,9 @@ export function SkillsWalletClient({
             href={ensureAbsoluteUrl(`https://www.credly.com/skills/${item.skill.vanity_slug}`)}
             target="_blank"
             rel="noopener noreferrer"
-            className="block group"
+            className="block group h-full"
           >
-            <Card className="p-4 hover:shadow-md transition-base hover:-translate-y-0.5">
+            <Card className="p-4 h-full hover:shadow-md transition-base hover:-translate-y-0.5">
               <div className="flex items-start justify-between gap-3">
                 <span
                   className={cn(
