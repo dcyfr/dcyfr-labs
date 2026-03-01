@@ -32,18 +32,18 @@ export type Resume = {
 };
 
 export const resume: Resume = {
-  summary: "Security architect with extensive experience leading security programs, incident response, and building secure development practices for global organizations. Specializes in cyber risk management, vulnerability management, and automating operational security. Passionate about mentoring the next generation of security professionals and sharing knowledge through writing and community engagement.",
-  shortSummary: "Security architect with extensive experience leading security programs, incident response, and building secure development practices for global organizations.",
+  summary: "Security architect and AI framework author. Leads security programs, incident response, and secure development practices for global organizations. Creator of @dcyfr/ai — an open-source TypeScript AI agent framework with plugin marketplace, multi-provider LLM support, delegation system, and 20+ specialist agents published on npm. Specializes in cyber risk management, vulnerability management, autonomous AI agent architectures, and operating security at scale.",
+  shortSummary: "Security architect and AI framework author. Creator of @dcyfr/ai, an open-source TypeScript AI agent framework, and experienced leader of global security programs.",
   experience: [
     {
       title: "Founding Architect",
       company: "DCYFR Labs",
       duration: "Jan 2025 → Present",
       responsibilities: [
-        "Lead the architecture and development of secure, scalable web solutions for clients across various industries.",
-        "Design and implement security frameworks, policies, and procedures to protect organizational assets.",
-        "Conduct risk assessments, vulnerability management, and incident response planning.",
-        "Mentor junior security professionals and contribute to community knowledge through writing and speaking engagements."
+        "Authored and maintain @dcyfr/ai — a portable open-source TypeScript AI agent framework with plugin marketplace, multi-provider LLM support (OpenAI, Anthropic, Ollama, GitHub Copilot), and delegation framework. Published on npm.",
+        "Designed and shipped plugin marketplace security architecture: trust scoring engine, TLP classification, Docker sandbox isolation, automated CVE scanning, and 8 adversarial scenario mitigations.",
+        "Architected delegation framework v2 with reputation engine, HMAC identity verification, SLA contracts, and TLP clearance enforcement for secure multi-agent task routing.",
+        "Maintains 20+ specialist AI agents, a workspace automation platform (30 scheduled jobs), Axiom observability integration, and a proprietary context engineering knowledge system."
       ]
     },
     {
