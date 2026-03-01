@@ -69,6 +69,75 @@ export const changelog: ChangelogEntry[] = [
     visible: true,
   },
   {
+    id: 'delegation-security-hardening',
+    type: 'feature',
+    title: 'Delegation Security Hardening',
+    description:
+      'Eight adversarial security scenario mitigations (CS2–CS10) shipped: HMAC identity verification, TLP clearance enforcement, rate limiting, content policy scanning, chain depth guards, and reputation-gated access.',
+    date: '2026-02-25',
+    href: '/ai',
+    visible: true,
+  },
+  {
+    id: 'plugin-marketplace-core',
+    type: 'feature',
+    title: 'Plugin Marketplace (Core)',
+    description:
+      'Plugin catalog launched with trust scoring engine, audit trail, TLP classification, Docker sandbox isolation, and automated CVE scanning.',
+    date: '2026-02-10',
+    href: '/plugins',
+    visible: true,
+  },
+  {
+    id: 'axiom-observability',
+    type: 'feature',
+    title: 'Axiom Observability Integration',
+    description:
+      'Real-time monitoring via Axiom — request traces, Web Vitals, delegation events, and automation logs all stream to structured datasets.',
+    date: '2026-02-05',
+    visible: true,
+  },
+  {
+    id: 'dcyfr-ai-code-gen-npm',
+    type: 'milestone',
+    title: '@dcyfr/ai-code-gen — Published on npm',
+    description:
+      'Code generation toolkit for structured TypeScript, tests, and documentation scaffolding published to npm.',
+    date: '2026-01-20',
+    href: '/open-source',
+    visible: true,
+  },
+  {
+    id: 'dcyfr-ai-rag-npm',
+    type: 'milestone',
+    title: '@dcyfr/ai-rag — Published on npm',
+    description:
+      'RAG library for semantic search and document retrieval with vector store integrations published to npm.',
+    date: '2026-01-10',
+    href: '/open-source',
+    visible: true,
+  },
+  {
+    id: 'dcyfr-ai-cli-npm',
+    type: 'milestone',
+    title: '@dcyfr/ai-cli — Published on npm',
+    description:
+      'CLI tools for AI workflows: agent scaffolding, plugin management, delegation monitoring, and workspace automation published to npm.',
+    date: '2025-12-15',
+    href: '/open-source',
+    visible: true,
+  },
+  {
+    id: 'agent-catalog-expansion',
+    type: 'improvement',
+    title: 'AI Agent Catalog — 22 Specialist Agents',
+    description:
+      'Workspace expanded to 22 specialist agents covering full-stack development, security engineering, TypeScript, testing, DevOps, performance, documentation, architecture review, compliance, and governance.',
+    date: '2025-12-01',
+    href: '/ai',
+    visible: true,
+  },
+  {
     id: 'activity-feed-launch',
     type: 'feature',
     title: 'Launched Universal Activity Timeline',
