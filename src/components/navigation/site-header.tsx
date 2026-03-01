@@ -9,13 +9,7 @@ import { MobileNav } from '@/components/navigation';
 import { SearchButton } from '@/components/search';
 import { ThemeAwareLogo } from '@/components/common';
 import { cn } from '@/lib/utils';
-import {
-  CONTAINER_WIDTHS,
-  ANIMATION,
-  TOUCH_TARGET,
-  NAVIGATION_HEIGHT,
-  Z_INDEX,
-} from '@/lib/design-tokens';
+import { CONTAINER_WIDTHS, ANIMATION, NAVIGATION_HEIGHT, Z_INDEX } from '@/lib/design-tokens';
 import { NAVIGATION, BLOG_NAV, WORK_NAV, isNavItemActive, getAriaCurrent } from '@/lib/navigation';
 import { useDropdown } from '@/hooks/use-dropdown';
 import { useLogoClick } from '@/hooks/use-navigation';
@@ -108,13 +102,138 @@ export function SiteHeader() {
           aria-label="Main navigation"
           className="hidden md:flex items-center justify-center gap-1 sm:gap-3 md:gap-4 text-[clamp(0.875rem,1vw+0.75rem,1rem)] h-full lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2"
         >
-          {/* Direct links (About, Sponsors, Contact) */}
           {NAVIGATION.header
-            .filter((item) => !['Blog', 'Work'].includes(item.label))
-            .filter((item) => item.href !== '/') // Exclude home (handled by logo)
+            .filter((item) => item.href !== '/') // Home handled by logo
             .map((item) => {
+              if (item.label === 'Blog') {
+                return (
+                  <div key="blog-dropdown" ref={blogDropdown.ref} className="relative">
+                    <button
+                      {...blogDropdown.triggerProps}
+                      className={cn(
+                        'flex items-center justify-center h-full gap-1 px-1.5 sm:px-2 hover:underline underline-offset-4 will-change-auto touch-target',
+                        ANIMATION.transition.base,
+                        pathname.startsWith('/blog') && 'text-primary font-medium'
+                      )}
+                      aria-label="Blog menu"
+                      aria-expanded={blogDropdown.isOpen}
+                      aria-haspopup="menu"
+                    >
+                      Blog
+                      <ChevronDown
+                        className={cn(
+                          'w-[clamp(0.875rem,1vw+0.75rem,1rem)] h-[clamp(0.875rem,1vw+0.75rem,1rem)]',
+                          ANIMATION.transition.fast,
+                          blogDropdown.isOpen && 'rotate-180'
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {blogDropdown.isOpen && (
+                      <div
+                        {...blogDropdown.contentProps}
+                        className={`absolute top-full left-0 mt-2 w-52 rounded-lg border bg-card p-1.5 shadow-xl ${Z_INDEX.dropdown}`}
+                        role="menu"
+                      >
+                        {BLOG_NAV.map((blogItem, index) => {
+                          const isActive = isNavItemActive(blogItem, pathname);
+                          return (
+                            <div key={blogItem.href}>
+                              <Link
+                                href={blogItem.href}
+                                className={cn(
+                                  'block px-3 py-2.5 text-[clamp(0.875rem,1vw+0.75rem,1rem)] rounded-md',
+                                  ANIMATION.transition.base,
+                                  'hover:bg-accent hover:text-accent-foreground',
+                                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                                  isActive && 'bg-accent/50 font-medium'
+                                )}
+                                onClick={blogDropdown.close}
+                                role="menuitem"
+                                aria-label={blogItem.description}
+                                prefetch={false}
+                              >
+                                <div className="font-medium">{blogItem.label}</div>
+                                {blogItem.description && (
+                                  <div className="text-xs text-muted-foreground mt-0.5">
+                                    {blogItem.description}
+                                  </div>
+                                )}
+                              </Link>
+                              {index === 1 && <hr className="my-1.5" />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              if (item.label === 'Work') {
+                return (
+                  <div key="work-dropdown" ref={workDropdown.ref} className="relative">
+                    <button
+                      {...workDropdown.triggerProps}
+                      className={cn(
+                        'flex items-center justify-center h-full gap-1 px-1.5 sm:px-2 hover:underline underline-offset-4 will-change-auto touch-target',
+                        ANIMATION.transition.base,
+                        pathname.startsWith('/work') && 'text-primary font-medium'
+                      )}
+                      aria-label="Our Work menu"
+                      aria-expanded={workDropdown.isOpen}
+                      aria-haspopup="menu"
+                    >
+                      Work
+                      <ChevronDown
+                        className={cn(
+                          'w-[clamp(0.875rem,1vw+0.75rem,1rem)] h-[clamp(0.875rem,1vw+0.75rem,1rem)]',
+                          ANIMATION.transition.fast,
+                          workDropdown.isOpen && 'rotate-180'
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {workDropdown.isOpen && (
+                      <div
+                        {...workDropdown.contentProps}
+                        className={`absolute top-full left-0 mt-2 w-52 rounded-lg border bg-card p-1.5 shadow-xl ${Z_INDEX.dropdown}`}
+                        role="menu"
+                      >
+                        {WORK_NAV.map((workItem, index) => {
+                          const isActive = isNavItemActive(workItem, pathname);
+                          return (
+                            <div key={workItem.href}>
+                              <Link
+                                href={workItem.href}
+                                className={cn(
+                                  'block px-3 py-2.5 text-[clamp(0.875rem,1vw+0.75rem,1rem)] rounded-md',
+                                  ANIMATION.transition.base,
+                                  'hover:bg-accent hover:text-accent-foreground',
+                                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                                  isActive && 'bg-accent/50 font-medium'
+                                )}
+                                onClick={workDropdown.close}
+                                role="menuitem"
+                                aria-label={workItem.description}
+                                prefetch={false}
+                              >
+                                <div className="font-medium">{workItem.label}</div>
+                                {workItem.description && (
+                                  <div className="text-xs text-muted-foreground mt-0.5">
+                                    {workItem.description}
+                                  </div>
+                                )}
+                              </Link>
+                              {index === WORK_NAV.length - 4 && <hr className="my-1.5" />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
               const isActive = isNavItemActive(item, pathname);
-
               return (
                 <Link
                   key={item.href}
@@ -132,138 +251,6 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-
-          {/* Blog dropdown */}
-          <div ref={blogDropdown.ref} className="relative">
-            <button
-              {...blogDropdown.triggerProps}
-              className={cn(
-                'flex items-center justify-center h-full gap-1 px-1.5 sm:px-2 hover:underline underline-offset-4 will-change-auto touch-target',
-                ANIMATION.transition.base,
-                pathname.startsWith('/blog') && 'text-primary font-medium'
-              )}
-              aria-label="Blog menu"
-              aria-expanded={blogDropdown.isOpen}
-              aria-haspopup="menu"
-            >
-              Blog
-              <ChevronDown
-                className={cn(
-                  'w-[clamp(0.875rem,1vw+0.75rem,1rem)] h-[clamp(0.875rem,1vw+0.75rem,1rem)]',
-                  ANIMATION.transition.fast,
-                  blogDropdown.isOpen && 'rotate-180'
-                )}
-                aria-hidden="true"
-              />
-            </button>
-            {blogDropdown.isOpen && (
-              <div
-                {...blogDropdown.contentProps}
-                className={`absolute top-full left-0 mt-2 w-52 rounded-lg border bg-card p-1.5 shadow-xl ${Z_INDEX.dropdown}`}
-                role="menu"
-              >
-                {BLOG_NAV.map((item, index) => {
-                  const isActive = isNavItemActive(item, pathname);
-
-                  return (
-                    <div key={item.href}>
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          'block px-3 py-2.5 text-[clamp(0.875rem,1vw+0.75rem,1rem)] rounded-md',
-                          ANIMATION.transition.base,
-                          'hover:bg-accent hover:text-accent-foreground',
-                          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                          isActive && 'bg-accent/50 font-medium'
-                        )}
-                        onClick={blogDropdown.close}
-                        role="menuitem"
-                        aria-label={item.description}
-                        prefetch={false}
-                      >
-                        <div className="font-medium">{item.label}</div>
-                        {item.description && (
-                          <div className="text-xs text-muted-foreground mt-0.5">
-                            {item.description}
-                          </div>
-                        )}
-                      </Link>
-
-                      {/* Separator before blog categories */}
-                      {index === 1 && <div className="my-1.5 border-t" role="separator" />}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Work dropdown */}
-          <div ref={workDropdown.ref} className="relative">
-            <button
-              {...workDropdown.triggerProps}
-              className={cn(
-                'flex items-center justify-center h-full gap-1 px-1.5 sm:px-2 hover:underline underline-offset-4 will-change-auto touch-target',
-                ANIMATION.transition.base,
-                pathname.startsWith('/work') && 'text-primary font-medium'
-              )}
-              aria-label="Our Work menu"
-              aria-expanded={workDropdown.isOpen}
-              aria-haspopup="menu"
-            >
-              Work
-              <ChevronDown
-                className={cn(
-                  'w-[clamp(0.875rem,1vw+0.75rem,1rem)] h-[clamp(0.875rem,1vw+0.75rem,1rem)]',
-                  ANIMATION.transition.fast,
-                  workDropdown.isOpen && 'rotate-180'
-                )}
-                aria-hidden="true"
-              />
-            </button>
-            {workDropdown.isOpen && (
-              <div
-                {...workDropdown.contentProps}
-                className={`absolute top-full left-0 mt-2 w-52 rounded-lg border bg-card p-1.5 shadow-xl ${Z_INDEX.dropdown}`}
-                role="menu"
-              >
-                {WORK_NAV.map((item, index) => {
-                  const isActive = isNavItemActive(item, pathname);
-
-                  return (
-                    <div key={item.href}>
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          'block px-3 py-2.5 text-[clamp(0.875rem,1vw+0.75rem,1rem)] rounded-md',
-                          ANIMATION.transition.base,
-                          'hover:bg-accent hover:text-accent-foreground',
-                          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                          isActive && 'bg-accent/50 font-medium'
-                        )}
-                        onClick={workDropdown.close}
-                        role="menuitem"
-                        aria-label={item.description}
-                        prefetch={false}
-                      >
-                        <div className="font-medium">{item.label}</div>
-                        {item.description && (
-                          <div className="text-xs text-muted-foreground mt-0.5">
-                            {item.description}
-                          </div>
-                        )}
-                      </Link>
-
-                      {/* Separator before categories  */}
-                      {index === WORK_NAV.length - 4 && (
-                        <div className="my-1.5 border-t" role="separator" />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
         </nav>
 
         {/* Desktop Icon Links - visible md and up */}
