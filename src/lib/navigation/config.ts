@@ -65,22 +65,6 @@ export const HEADER_NAV: NavItem[] = [
     description: 'Learn about us and our team',
   },
   {
-    href: '/contact',
-    label: 'Contact',
-    shortLabel: 'Contact',
-    icon: Mail,
-    shortcut: 'g c',
-    description: 'Get in touch with us',
-  },
-  {
-    href: '/sponsors',
-    label: 'Sponsors',
-    shortLabel: 'Sponsors',
-    icon: Heart,
-    shortcut: 'g s',
-    description: 'Support open source development',
-  },
-  {
     href: '/blog',
     label: 'Blog',
     shortLabel: 'Blog',
@@ -101,8 +85,24 @@ export const HEADER_NAV: NavItem[] = [
     label: 'AI',
     shortLabel: 'AI',
     icon: Zap,
-    shortcut: 'g i',
+    shortcut: 'g l',
     description: 'AI agent framework and open source tools',
+  },
+  {
+    href: '/sponsors',
+    label: 'Sponsors',
+    shortLabel: 'Sponsors',
+    icon: Heart,
+    shortcut: 'g s',
+    description: 'Support open source development',
+  },
+  {
+    href: '/contact',
+    label: 'Contact',
+    shortLabel: 'Contact',
+    icon: Mail,
+    shortcut: 'g c',
+    description: 'Get in touch with us',
   },
 ];
 
@@ -195,18 +195,6 @@ export const MOBILE_NAV_SECTIONS: NavSection[] = [
         description: 'Learn about us',
       },
       {
-        href: '/sponsors',
-        label: 'Sponsors',
-        icon: Heart,
-        description: 'Support us',
-      },
-      {
-        href: '/contact',
-        label: 'Contact',
-        icon: Mail,
-        description: 'Get in touch',
-      },
-      {
         href: '/blog',
         label: 'Blog',
         icon: FileText,
@@ -224,6 +212,18 @@ export const MOBILE_NAV_SECTIONS: NavSection[] = [
         icon: Zap,
         description: 'AI agent framework and tools',
       },
+      {
+        href: '/sponsors',
+        label: 'Sponsors',
+        icon: Heart,
+        description: 'Support us',
+      },
+      {
+        href: '/contact',
+        label: 'Contact',
+        icon: Mail,
+        description: 'Get in touch',
+      },
     ],
   },
   {
@@ -236,18 +236,6 @@ export const MOBILE_NAV_SECTIONS: NavSection[] = [
         label: 'Activity',
         icon: Activity,
         description: 'Recent updates',
-      },
-      {
-        href: '/blog',
-        label: 'Blog',
-        icon: FileText,
-        description: 'Browse articles',
-      },
-      {
-        href: '/work',
-        label: 'Work',
-        icon: Briefcase,
-        description: 'Explore our projects',
       },
       {
         href: '/bookmarks',
@@ -270,9 +258,20 @@ export const MOBILE_NAV_SECTIONS: NavSection[] = [
  */
 export const BOTTOM_NAV: NavItem[] = [
   {
-    href: '/likes',
-    label: 'Likes',
-    icon: Heart,
+    href: '/',
+    label: 'Home',
+    icon: Home,
+    exactMatch: true,
+  },
+  {
+    href: '/blog',
+    label: 'Blog',
+    icon: FileText,
+  },
+  {
+    href: '/ai',
+    label: 'AI',
+    icon: Zap,
   },
   {
     href: '/bookmarks',
@@ -283,16 +282,6 @@ export const BOTTOM_NAV: NavItem[] = [
     href: '/activity',
     label: 'Activity',
     icon: Activity,
-  },
-  {
-    href: '/blog',
-    label: 'Blog',
-    icon: FileText,
-  },
-  {
-    href: '/work',
-    label: 'Work',
-    icon: Briefcase,
   },
 ];
 
@@ -349,8 +338,8 @@ export const FOOTER_NAV_SECTIONS: NavSection[] = [
       },
       {
         href: '/ai',
-        label: 'AI Framework',
-        description: '@dcyfr/ai agent framework and open source',
+        label: 'AI',
+        description: '@dcyfr/ai open source agent framework',
       },
       {
         href: '/activity',
