@@ -35,7 +35,7 @@ const ScrollReveal = dynamic(
 
 const pageTitle = 'About DCYFR Labs';
 const pageDescription =
-  'Learn about DCYFR Labs, our team, and our mission to build secure, innovative solutions for the modern web.';
+  'DCYFR Labs builds @dcyfr/ai — an open-source AI agent framework with plugin marketplace, delegation system, and 20+ specialist agents. Learn about our mission at the intersection of cybersecurity and modern AI engineering.';
 
 export const metadata: Metadata = createPageMetadata({
   title: pageTitle,
