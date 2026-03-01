@@ -145,9 +145,9 @@ export function SkillsWallet({
             )}
             target="_blank"
             rel="noopener noreferrer"
-            className="block group"
+            className="block group h-full"
           >
-            <Card className="p-4 hover:shadow-md transition-base hover:-translate-y-0.5">
+            <Card className="p-4 h-full hover:shadow-md transition-base hover:-translate-y-0.5">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <h4 className="font-medium text-sm group-hover:text-primary transition-colors truncate">

@@ -63,7 +63,7 @@ export function FeaturedPostsSection({ posts }: FeaturedPostsSectionProps) {
               key={post.slug}
               href={`/blog/${post.slug}`}
               className={cn(
-                'group relative flex flex-col rounded-lg border border-border/50 p-4 transition-colors',
+                'group relative flex flex-col h-full rounded-lg border border-border/50 p-4 transition-colors',
                 'hover:bg-accent hover:border-border',
                 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
               )}

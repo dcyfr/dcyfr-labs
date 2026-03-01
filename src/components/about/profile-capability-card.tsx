@@ -23,7 +23,7 @@ export function ProfileCapabilityCard({
   examples,
 }: ProfileCapabilityCardProps) {
   return (
-    <Card className={cn("p-8", SHADOWS.card.rest, BORDERS.card, SPACING.content)}>
+    <Card className={cn("p-8 h-full", SHADOWS.card.rest, BORDERS.card, SPACING.content)}>
       <div className="flex items-start gap-3">
         <div className="shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
           {icon}

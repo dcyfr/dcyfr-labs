@@ -36,7 +36,7 @@ export function TechnicalCapabilities() {
           const IconComponent = getIcon(capability.domain);
 
           return (
-            <Card key={idx} className="p-4">
+            <Card key={idx} className="p-4 h-full">
               <div className={SPACING.content}>
                 {/* Domain Header */}
                 <div className="flex items-center gap-3">

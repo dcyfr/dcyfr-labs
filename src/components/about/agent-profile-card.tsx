@@ -29,7 +29,7 @@ export function AgentProfileCard({ profile }: AgentProfileCardProps) {
 
   return (
     <Card
-      className={cn('flex flex-col gap-4 p-6', SHADOWS.card.rest, BORDERS.card)}
+      className={cn('flex flex-col gap-4 p-6 h-full', SHADOWS.card.rest, BORDERS.card)}
       data-testid={`agent-profile-card-${profile.id}`}
     >
       {/* Card header */}
