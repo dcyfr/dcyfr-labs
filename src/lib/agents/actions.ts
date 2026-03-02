@@ -8,8 +8,7 @@
  */
 
 import { telemetry } from './compat';
-import type { ComparisonStats } from './legacy-types';
-import type { HandoffPatterns } from '@dcyfr/ai';
+import type { ComparisonStats, HandoffPatterns } from '@dcyfr/ai';
 
 /**
  * Get agent comparison statistics
