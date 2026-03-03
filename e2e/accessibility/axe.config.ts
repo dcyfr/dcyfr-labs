@@ -136,19 +136,21 @@ export async function runAxeScan(
   page: any,
   tags: readonly string[] = WCAG_TAGS.LEVEL_AA
 ): Promise<AxeResults> {
-  const { injectAxe, checkA11y } = await import('axe-playwright');
+  const { injectAxe } = await import('axe-playwright');
 
   // Inject axe-core into the page
   await injectAxe(page);
 
-  // Run accessibility check with custom config
-  const results = await checkA11y(page, undefined, {
-    ...axeConfig,
-    runOnly: {
-      type: 'tag',
-      values: [...tags],
-    },
-  } as any);
+  // Run accessibility check using page.evaluate to get full results
+  const results: AxeResults = await page.evaluate(async (tagsToRun: readonly string[]) => {
+    // axe is injected globally by injectAxe
+    return (globalThis as any).axe.run(document, {
+      runOnly: {
+        type: 'tag',
+        values: tagsToRun,
+      },
+    });
+  }, tags);
 
   return results;
 }
