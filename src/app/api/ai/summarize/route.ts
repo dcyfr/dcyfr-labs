@@ -23,8 +23,8 @@
  *
  * Security:
  * - Rate limiting: 5 requests per minute per IP
- * - Slug validation (alphanumeric + hyphens only)
- * - Request size limits
+ * - Slug validation: lowercase a-z, digits, hyphens; segments separated by "/"; no leading/trailing slashes
+ * - Request body capped at 4 KB before JSON parsing
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -80,8 +80,10 @@ function isValidSlug(slug: unknown): slug is string {
   if (typeof slug !== 'string' || slug.length === 0 || slug.length > 200) {
     return false;
   }
-  // Allow only alphanumeric chars, hyphens, and forward slashes (for nested slugs)
-  return /^[a-z0-9-/]+$/.test(slug);
+  // Segments of lowercase letters, digits, and hyphens separated by single "/".
+  // Leading/trailing slashes and empty segments (e.g., "//") are disallowed,
+  // which prevents path.join() from escaping the CONTENT_DIR base directory.
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/.test(slug);
 }
 
 function extractUserContext(
@@ -169,10 +171,26 @@ export async function POST(
     );
   }
 
+  // Enforce request body size limit (4 KB) to mitigate DoS via large payloads
+  const contentLength = Number(request.headers.get('content-length') ?? 0);
+  if (contentLength > 4096) {
+    return NextResponse.json(
+      { error: 'Request body too large (max 4 KB)' },
+      { status: 413 }
+    );
+  }
+
   // Parse body
   let body: SummarizeRequest;
   try {
-    body = (await request.json()) as SummarizeRequest;
+    const raw = await request.text();
+    if (raw.length > 4096) {
+      return NextResponse.json(
+        { error: 'Request body too large (max 4 KB)' },
+        { status: 413 }
+      );
+    }
+    body = JSON.parse(raw) as SummarizeRequest;
   } catch {
     return NextResponse.json(
       { error: 'Invalid request body — expected JSON' },
@@ -211,8 +229,8 @@ export async function POST(
   const prompt = buildSummarizationPrompt(post.title, truncatedBody, wasTruncated, userContext);
 
   try {
-    // Track API usage
-    await recordApiCall('perplexity', 'summarize');
+    // Track API usage (recordApiCall is synchronous)
+    recordApiCall('perplexity', '/api/ai/summarize');
 
     const result = await research([
       { role: 'user', content: prompt }
@@ -234,8 +252,14 @@ export async function POST(
       { status: 200, headers }
     );
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[AI Summarize] Error:', message);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error('[AI Summarize] Error in POST /api/ai/summarize:', {
+      message: errorMessage,
+      stack: errorStack,
+      slug,
+      wasTruncated,
+    });
     return NextResponse.json(
       { error: 'Failed to generate summary — please try again' },
       { status: 500, headers }
