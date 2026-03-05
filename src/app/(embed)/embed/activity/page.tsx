@@ -1,14 +1,14 @@
-import type { Metadata } from 'next';
-import { redis } from '@/lib/redis-client';
-import { posts } from '@/data/posts';
-import { projects } from '@/data/projects';
-import { changelog } from '@/data/changelog';
+import type { Metadata } from "next";
+import { redis } from "@/lib/redis-client";
+import { posts } from "@/data/posts";
+import { projects } from "@/data/projects";
+import { changelog } from "@/data/changelog";
 import {
   transformPosts,
   transformProjects,
   transformChangelog,
   aggregateActivities,
-} from '@/lib/activity';
+} from "@/lib/activity";
 import {
   transformPostsWithViews,
   transformMilestones,
@@ -19,16 +19,16 @@ import {
   transformGitHubTraffic,
   transformGoogleAnalytics,
   transformSearchConsole,
-} from '@/lib/activity/server';
-import type { ActivityItem } from '@/lib/activity';
-import { ActivityEmbedClient } from './activity-embed-client';
+} from "@/lib/activity/server";
+import type { ActivityItem } from "@/lib/activity";
+import { ActivityEmbedClient } from "./activity-embed-client";
 
 // ============================================================================
 // METADATA
 // ============================================================================
 
 export const metadata: Metadata = {
-  title: 'Activity Feed Embed',
+  title: "Activity Feed Embed",
   robots: {
     index: false, // Don't index embed pages
     follow: false,
@@ -37,10 +37,9 @@ export const metadata: Metadata = {
 
 // Force dynamic rendering - don't attempt to prerender during build
 // This page requires Redis and external APIs that aren't available at build time
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-// Enable ISR for embed page - revalidate every 5 minutes (when rendered dynamically)
-export const revalidate = 300;
+// Note: revalidate is not applicable with force-dynamic
 
 // ============================================================================
 // PAGE COMPONENT
@@ -122,17 +121,17 @@ export default async function ActivityEmbedPage({
       // Cache for future requests
       try {
         await redis.setEx(
-          'activity:feed:all',
+          "activity:feed:all",
           300, // 5 minutes TTL
           JSON.stringify(allActivities)
         );
       } catch (writeError) {
-        console.error('[Activity Embed] Cache write failed:', writeError);
+        console.error("[Activity Embed] Cache write failed:", writeError);
       }
     }
   } catch (err) {
-    console.error('[Activity Embed] Failed to load activities:', err);
-    error = err instanceof Error ? err.message : 'Unknown error';
+    console.error("[Activity Embed] Failed to load activities:", err);
+    error = err instanceof Error ? err.message : "Unknown error";
     allActivities = [];
   }
 
@@ -140,7 +139,9 @@ export default async function ActivityEmbedPage({
   const serializedActivities = allActivities.map((activity) => ({
     ...activity,
     timestamp:
-      activity.timestamp instanceof Date ? activity.timestamp.toISOString() : activity.timestamp,
+      activity.timestamp instanceof Date
+        ? activity.timestamp.toISOString()
+        : activity.timestamp,
   }));
 
   // Extract URL parameters for filtering
