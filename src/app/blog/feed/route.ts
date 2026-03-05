@@ -19,7 +19,7 @@ import type { FeedFormat } from "@/lib/feeds";
 // Make this route dynamic to allow query parameter-based format selection
 export const dynamic = "force-dynamic";
 
-export const revalidate = 3600; // 1 hour
+// Note: revalidate is not applicable with force-dynamic
 
 export async function GET(request: NextRequest) {
   try {

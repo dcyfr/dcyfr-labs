@@ -41,13 +41,10 @@ export async function generateStaticParams() {
 
 // Force dynamic rendering - skip prerendering during build
 // This prevents build-time data issues with series generation
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-/**
- * Revalidate every 24 hours for series pages
- * (regenerate on-demand if new posts are added to a series)
- */
-export const revalidate = 86400;
+// Note: revalidate is not applicable with dynamic = 'force-dynamic'
+// Dynamic pages are rendered on-demand for each request
 
 /**
  * Generate metadata for series page
@@ -140,14 +137,14 @@ export default async function SeriesPage({
         variant="medium"
         title={series.name}
         description={series.description}
-        stats={`${series.postCount} ${series.postCount === 1 ? "post" : "posts"} • ${series.totalReadingTime} min read`}
+        stats={`${series.postCount} ${
+          series.postCount === 1 ? "post" : "posts"
+        } • ${series.totalReadingTime} min read`}
         align="center"
       />
 
       {/* Content section with archive-width container */}
-      <div
-        className={PAGE_LAYOUT.articleSection.container}
-      >
+      <div className={PAGE_LAYOUT.articleSection.container}>
         <div className={SPACING.section}>
           <PostList
             posts={series.posts}
