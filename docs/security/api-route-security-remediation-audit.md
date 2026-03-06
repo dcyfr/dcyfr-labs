@@ -2,11 +2,11 @@
 
 # API Route Security Remediation — Audit Report
 
-**Information Classification:** TLP:AMBER (Internal Distribution Only)  
-**Document Type:** Security Audit — Post-Implementation  
-**OpenSpec Change:** `api-route-security-remediation`  
-**Audit Date:** March 5, 2026  
-**Auditor:** Security Remediation Team  
+**Information Classification:** TLP:AMBER (Internal Distribution Only)
+**Document Type:** Security Audit — Post-Implementation
+**OpenSpec Change:** `api-route-security-remediation`
+**Audit Date:** March 5, 2026
+**Auditor:** Security Remediation Team
 **Status:** ✅ COMPLETE — Ready for Production Deployment
 
 ---
@@ -23,8 +23,8 @@ All five controls have been implemented, tested (97.8% pass rate — 132/135 tes
 
 ### 1.1 IP-Based Engagement Deduplication
 
-**Endpoint:** `POST /api/engagement/bookmark`  
-**File:** `src/app/api/engagement/bookmark/route.ts`  
+**Endpoint:** `POST /api/engagement/bookmark`
+**File:** `src/app/api/engagement/bookmark/route.ts`
 **Risk Addressed:** High-volume duplicate engagement events inflating metrics
 
 **Implementation:**
@@ -44,8 +44,8 @@ All five controls have been implemented, tested (97.8% pass rate — 132/135 tes
 
 ### 1.2 Origin Validation
 
-**Endpoint:** `POST /api/analytics/referral` (and all engagement endpoints)  
-**File:** `src/lib/security/index.ts`, `src/lib/security/origin-validation.ts`  
+**Endpoint:** `POST /api/analytics/referral` (and all engagement endpoints)
+**File:** `src/lib/security/index.ts`, `src/lib/security/origin-validation.ts`
 **Risk Addressed:** Cross-origin request forgery, analytics poisoning from third-party sites
 
 **Implementation:**
@@ -65,8 +65,8 @@ All five controls have been implemented, tested (97.8% pass rate — 132/135 tes
 
 ### 1.3 Payload Size Limits
 
-**Endpoint:** `POST /api/axiom`  
-**File:** `src/app/api/axiom/route.ts`, `src/lib/security/payload-validation.ts`  
+**Endpoint:** `POST /api/axiom`
+**File:** `src/app/api/axiom/route.ts`, `src/lib/security/payload-validation.ts`
 **Risk Addressed:** Request body floods, memory exhaustion via large JSON payloads
 
 **Implementation:**
@@ -86,8 +86,8 @@ All five controls have been implemented, tested (97.8% pass rate — 132/135 tes
 
 ### 1.4 Plugin Reviews Authentication
 
-**Endpoint:** `POST /api/plugins/[id]/reviews`  
-**File:** `src/app/api/plugins/[id]/reviews/route.ts`  
+**Endpoint:** `POST /api/plugins/[id]/reviews`
+**File:** `src/app/api/plugins/[id]/reviews/route.ts`
 **Risk Addressed:** Unauthenticated review spam, identity forgery via request body
 
 **Implementation:**
@@ -107,8 +107,8 @@ All five controls have been implemented, tested (97.8% pass rate — 132/135 tes
 
 ### 1.5 IndexNow Access Control
 
-**Endpoint:** `POST /api/indexnow/submit`  
-**Files:** `src/app/api/indexnow/submit/route.ts`, `src/lib/api/api-security.ts`  
+**Endpoint:** `POST /api/indexnow/submit`
+**Files:** `src/app/api/indexnow/submit/route.ts`, `src/lib/api/api-security.ts`
 **Risk Addressed:** Unauthorized IndexNow submissions — external actors submitting arbitrary URLs on behalf of dcyfr.ai
 
 **Implementation:**
