@@ -10,6 +10,14 @@ const { mockRateLimit, mockValidatePayloadSize, mockAxiomIngest } = vi.hoisted((
   mockAxiomIngest: vi.fn(async () => ({ status: 200 })),
 }));
 
+const mockProxyRouteHandler = vi.hoisted(
+  () => vi.fn(async () => new Response(JSON.stringify({ ok: true }), { status: 200 }))
+);
+
+vi.mock('@axiomhq/nextjs', () => ({
+  createProxyRouteHandler: vi.fn(() => mockProxyRouteHandler),
+}));
+
 vi.mock('@/lib/rate-limit', () => ({
   rateLimit: mockRateLimit,
   getClientIp: vi.fn(() => '192.0.2.123'),
@@ -70,7 +78,7 @@ describe('Request size limit security controls', () => {
       const response = await AxiomPOST(request);
 
       expect(response.status).toBe(200);
-      expect(mockAxiomIngest).toHaveBeenCalled();
+      expect(mockProxyRouteHandler).toHaveBeenCalled();
     });
 
     it('allows requests at exactly 100KB limit', async () => {
@@ -129,8 +137,8 @@ describe('Request size limit security controls', () => {
       const response = await AxiomPOST(request);
       const data = await response.json();
 
-      expect(data.maxSize).toBeDefined();
-      expect(data.receivedSize).toBeDefined();
+      expect(data.maxBytes).toBeDefined();
+      expect(data.attemptedBytes).toBeDefined();
     });
 
     it('does not invoke Axiom ingest for oversized payloads', async () => {

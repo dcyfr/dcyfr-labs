@@ -211,7 +211,7 @@ describe('SiteHeader', () => {
         name: /View complete portfolio/i,
       });
       const communityLink = screen.getByRole('menuitem', {
-        name: /Open source and community work/i,
+        name: /Open-source code and development projects/i,
       });
       const nonprofitLink = screen.getByRole('menuitem', {
         name: /Mission-driven partnerships/i,

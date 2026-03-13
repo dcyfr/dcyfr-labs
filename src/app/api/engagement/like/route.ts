@@ -98,7 +98,18 @@ export async function POST(request: NextRequest) {
     let newCount: number | null;
     if (action === 'like') {
       const dedupSlug = `${contentType}:${slug}`;
-      const alreadyActioned = await checkIpDeduplication('like', dedupSlug, clientIp, 86400);
+      let alreadyActioned = false;
+      try {
+        alreadyActioned = await checkIpDeduplication('like', dedupSlug, clientIp, 86400);
+      } catch (dedupError) {
+        logger.warn('engagement.dedup_check_failed', {
+          endpoint: '/api/engagement/like',
+          action: 'like',
+          contentType,
+          slug,
+          ip_masked: maskIp(clientIp),
+        });
+      }
 
       if (alreadyActioned) {
         const currentCount = await getLikes(contentType, slug);

@@ -12,6 +12,10 @@ vi.mock('@/inngest/client', () => ({
   },
 }));
 
+vi.mock('@/lib/api/api-security', () => ({
+  blockExternalAccessExceptInngestAndSameOrigin: vi.fn(() => null),
+}));
+
 describe('POST /api/indexnow/submit', () => {
   const originalEnv = process.env;
 
@@ -37,6 +41,7 @@ describe('POST /api/indexnow/submit', () => {
       headers: {
         'content-type': 'application/json',
         'x-forwarded-for': forwardedFor,
+        origin: 'https://www.dcyfr.ai',
       },
     });
   }

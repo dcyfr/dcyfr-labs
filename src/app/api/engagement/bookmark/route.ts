@@ -98,7 +98,18 @@ export async function POST(request: NextRequest) {
     let newCount: number | null;
     if (action === 'bookmark') {
       const dedupSlug = `${contentType}:${slug}`;
-      const alreadyActioned = await checkIpDeduplication('bookmark', dedupSlug, clientIp, 86400);
+      let alreadyActioned = false;
+      try {
+        alreadyActioned = await checkIpDeduplication('bookmark', dedupSlug, clientIp, 86400);
+      } catch (dedupError) {
+        logger.warn('engagement.dedup_check_failed', {
+          endpoint: '/api/engagement/bookmark',
+          action: 'bookmark',
+          contentType,
+          slug,
+          ip_masked: maskIp(clientIp),
+        });
+      }
 
       if (alreadyActioned) {
         const currentCount = await getBookmarks(contentType, slug);
