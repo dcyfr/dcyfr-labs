@@ -40,15 +40,19 @@ export default [
       'dcyfr-local/no-hardcoded-spacing': 'warn',
       'dcyfr-local/no-hardcoded-colors': 'warn',
       'dcyfr-local/no-hardcoded-typography': 'warn',
+      'dcyfr-local/no-hardcoded-animations': 'warn',
+      'dcyfr-local/no-hardcoded-inline-styles': 'warn',
       'dcyfr-local/no-deprecated-design-tokens': 'error',
 
       // Relax TypeScript rules for Next.js
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['warn', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 ];
-

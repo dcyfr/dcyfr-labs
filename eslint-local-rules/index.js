@@ -9,6 +9,8 @@ module.exports = {
   'no-hardcoded-spacing': require('./no-hardcoded-spacing'),
   'no-hardcoded-colors': require('./no-hardcoded-colors'),
   'no-hardcoded-typography': require('./no-hardcoded-typography'),
+  'no-hardcoded-animations': require('./no-hardcoded-animations'),
+  'no-hardcoded-inline-styles': require('./no-hardcoded-inline-styles'),
   'no-deprecated-design-tokens': require('./no-deprecated-design-tokens'),
 };
 /* eslint-enable @typescript-eslint/no-require-imports */
