@@ -27,6 +27,14 @@ Use token constants (or wrappers that map to them), not hardcoded transition cla
 - Prefer: class values sourced from `ANIMATION_CONSTANTS`
 - Avoid: `transition-all`, `duration-300`, `ease-in-out`, `animate-pulse`
 
+Example:
+
+```tsx
+import { ANIMATION_CONSTANTS } from '@/lib/design-tokens';
+
+<div className={ANIMATION_CONSTANTS.fadeIn} />;
+```
+
 ### Inline Styles
 
 Use design tokens or CSS variables:
@@ -35,6 +43,28 @@ Use design tokens or CSS variables:
 - Prefer: token-derived values passed via variables/props
 - Avoid: `style={{ color: '#ff0000' }}`
 - Avoid: `style={{ marginTop: '16px', fontSize: '24px' }}`
+
+Example:
+
+```tsx
+<div
+  style={{
+    color: 'var(--semantic-text-primary)',
+    marginTop: 'var(--spacing-md)',
+    fontSize: 'var(--font-size-body)',
+  }}
+/>
+```
+
+## Frontend Audit Cron Integration
+
+The `frontend-audit` automation job now tracks:
+
+- Lint-based frontend quality (`lintScore`)
+- Design token validation (`designTokenCompliance`)
+- Composite health score (`healthScore`)
+
+If alerts spike, use `data/frontend-health-history.jsonl` breakdown fields to prioritize high-impact rule categories first.
 
 ## Allowlist Guidance
 
