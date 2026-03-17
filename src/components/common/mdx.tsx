@@ -9,7 +9,6 @@ import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeKatex from 'rehype-katex';
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code';
 import {
-  CopyCodeButton,
   CodeBlockWithHeader,
   CodeComparison,
   EnhancedInlineCode,
@@ -21,7 +20,6 @@ import {
   MetricsCard,
   ContextClue,
   Figure,
-  FigureProvider,
   TableCaption,
   CodePlayground,
 } from '@/components/common';
@@ -51,7 +49,7 @@ import {
 } from '@/components/common';
 import { RivetPillarCard } from '@/components/blog';
 import { FAQ } from '@/components/common';
-import { ProgressiveParagraph, ContrastText } from '@/components/common';
+import { ContrastText } from '@/components/common';
 import {
   Check,
   X,
@@ -75,20 +73,9 @@ import {
   CheckCircle,
   Calendar,
 } from 'lucide-react';
-import {
-  TYPOGRAPHY,
-  SPACING,
-  PROGRESSIVE_TEXT,
-  FONT_CONTRAST,
-  ANIMATION,
-  SCROLL_OFFSET,
-} from '@/lib/design-tokens';
+import { TYPOGRAPHY, SPACING, ANIMATION, SCROLL_OFFSET } from '@/lib/design-tokens';
 import { cn } from '@/lib/utils';
-import {
-  MDXProgressionContext,
-  MDXProgressionProvider,
-  MDXParagraphComponent,
-} from './mdx-progression-context';
+import { MDXProgressionProvider, MDXParagraphComponent } from './mdx-progression-context';
 
 /**
  * MDX Paragraph Component with Progressive Styling
@@ -241,11 +228,16 @@ function rehypeReplaceFootnoteEmoji() {
 }
 
 /** Resolve the display language from a pre/code node pair from rehypePrettyCode */
-function resolveCodeLanguage(preProps: Record<string, unknown>, codeProps: Record<string, unknown>): string {
-  return (preProps?.['data-language'] as string) ||
+function resolveCodeLanguage(
+  preProps: Record<string, unknown>,
+  codeProps: Record<string, unknown>
+): string {
+  return (
+    (preProps?.['data-language'] as string) ||
     (codeProps['data-language'] as string) ||
     (Array.isArray(preProps?.['data-meta']) ? preProps['data-meta'][0] : undefined) ||
-    'plaintext';
+    'plaintext'
+  );
 }
 
 /**
@@ -293,23 +285,6 @@ function rehypeCaptureCodeLanguage() {
 
     visit(tree);
   };
-}
-
-/**
- * Helper function to extract text content from React children recursively
- */
-function extractTextFromChildren(children: React.ReactNode): string {
-  if (typeof children === 'string') {
-    return children;
-  }
-  if (Array.isArray(children)) {
-    return children.map(extractTextFromChildren).join('');
-  }
-  if (React.isValidElement(children) && children.props) {
-    const props = children.props as { children?: React.ReactNode };
-    return extractTextFromChildren(props.children);
-  }
-  return '';
 }
 
 /**

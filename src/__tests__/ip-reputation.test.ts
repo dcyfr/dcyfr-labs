@@ -6,7 +6,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IPReputationService, GreyNoiseClient } from '@/lib/ip-reputation';
-import { BlockedIPsManager, isIPBlocked, isIPSuspicious } from '@/lib/blocked-ips';
+import { BlockedIPsManager } from '@/lib/blocked-ips';
 import { rateLimitWithProtection, getClientIp } from '@/lib/rate-limit';
 
 // Mock the Upstash redis singleton with in-memory behavior for tests
@@ -15,7 +15,7 @@ const lists: Record<string, string[]> = {};
 
 vi.mock('@/lib/redis-client', () => ({
   redis: {
-    get: vi.fn(async (k: string) => null),
+    get: vi.fn(async (_k: string) => null),
     set: vi.fn(async () => null),
     setex: vi.fn(async () => null),
     hset: vi.fn(
@@ -248,8 +248,6 @@ describe('Blocked IPs Manager', () => {
   });
 
   it('should handle temporary blocks', async () => {
-    const futureTime = new Date(Date.now() + 3600000); // 1 hour from now
-
     await manager.blockIP('5.6.7.8', 'suspicious', 'manual', {
       temporary_hours: 1,
     });

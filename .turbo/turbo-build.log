@@ -1,0 +1,695 @@
+npm warn config ignoring workspace config at /home/drew/code/dcyfr-workspace/dcyfr-labs/.npmrc
+
+> dcyfr-labs@2026.02.12 build
+> npm run validate:content && npm run build:search && npm run build:populate-cache && npm run sync:metrics:quick && NEXT_TURBOPACK=0 next build
+
+npm warn config ignoring workspace config at /home/drew/code/dcyfr-workspace/dcyfr-labs/.npmrc
+
+> dcyfr-labs@2026.02.12 validate:content
+> node scripts/validate.mjs content
+
+[1m[34mRunning content validations...[0m
+[32m✓[0m Voice Compliance: Voice compliance passed
+[32m✓[0m Frontmatter: Frontmatter validation passed
+[32m✓[0m Emoji Usage: Emoji validation passed
+[90m────────────────────────────────────────────────────────────[0m
+[32m✓[0m All 3 validations passed in 0.2s
+npm warn config ignoring workspace config at /home/drew/code/dcyfr-workspace/dcyfr-labs/.npmrc
+
+> dcyfr-labs@2026.02.12 build:search
+> tsx src/lib/search/build-index.ts
+
+[SearchIndex] Generating search index...
+[SearchIndex] ✅ Generated search index:
+  - Posts: 14
+  - Projects: 6
+  - Tags: 57
+  - Series: 4
+  - Size: 20.61 KB
+  - Output: /home/drew/code/dcyfr-workspace/dcyfr-labs/public/search-index.json
+npm warn config ignoring workspace config at /home/drew/code/dcyfr-workspace/dcyfr-labs/.npmrc
+
+> dcyfr-labs@2026.02.12 build:populate-cache
+> node scripts/populate-build-cache.mjs
+
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[Build Cache] ℹ️  Redis not configured - skipping cache population
+[Build Cache]    This is expected in local builds without Redis credentials
+npm warn config ignoring workspace config at /home/drew/code/dcyfr-workspace/dcyfr-labs/.npmrc
+
+> dcyfr-labs@2026.02.12 sync:metrics:quick
+> tsx scripts/sync-production-metrics.mjs --quick
+
+[dotenv@17.3.1] injecting env (0) from .env.local -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+ℹ️  Redis credentials not configured - skipping metrics sync
+   This is expected in local builds without Redis credentials
+
+   To enable metrics sync in development, add to .env.local:
+   - UPSTASH_REDIS_REST_URL (production)
+   - UPSTASH_REDIS_REST_TOKEN (production)
+   - UPSTASH_REDIS_REST_URL_PREVIEW (preview/dev)
+   - UPSTASH_REDIS_REST_TOKEN_PREVIEW (preview/dev)
+
+✅ Build will continue without metrics sync
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/drew/code/dcyfr-workspace/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/drew/code/dcyfr-workspace/dcyfr-labs/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+- Experiments (use with caution):
+  · clientTraceMetadata
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 18.6s
+  Running next.config.js provided runAfterProductionCompile ...
+✓ Completed runAfterProductionCompile in 1081ms
+  Running TypeScript ...
+  Collecting page data using 31 workers ...
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+⚠ Using edge runtime on a page currently disables static generation for that page
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+  Generating static pages using 31 workers (0/112) ...
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+  Generating static pages using 31 workers (28/112) 
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+  Generating static pages using 31 workers (56/112) 
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Icon - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: TrendingUp - removing from feed
+[RSS Transform] Unknown custom component: TrendingUp - removing from feed
+[RSS Transform] Unknown custom component: TrendingDown - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[Redis] REDIS_URL not set - Redis operations will be stubbed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Icon - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: TrendingUp - removing from feed
+[RSS Transform] Unknown custom component: TrendingUp - removing from feed
+[RSS Transform] Unknown custom component: TrendingDown - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: ContextClue - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordionGroup - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: FAQ - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: Figure - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: FAQ - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: ContextClue - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordionGroup - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: FAQ - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: MCPArchitecture - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: LockIcon - removing from feed
+[RSS Transform] Unknown custom component: BarChartIcon - removing from feed
+[RSS Transform] Unknown custom component: ZapIcon - removing from feed
+[RSS Transform] Unknown custom component: RocketIcon - removing from feed
+[RSS Transform] Unknown custom component: ShieldIcon - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RateLimitResult - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: Link - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Button - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: Link - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: ContributionResponse - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[Comments] GitHub API error: 401
+[Comments] GitHub API error: 401
+[Comments] GitHub API error: 401
+[Comments] GitHub API error: 401
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: Figure - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: FAQ - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[Comments] GitHub API error: 401
+  Generating static pages using 31 workers (84/112) 
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: MCPArchitecture - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: LockIcon - removing from feed
+[RSS Transform] Unknown custom component: BarChartIcon - removing from feed
+[RSS Transform] Unknown custom component: ZapIcon - removing from feed
+[RSS Transform] Unknown custom component: RocketIcon - removing from feed
+[RSS Transform] Unknown custom component: ShieldIcon - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RateLimitResult - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: Link - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Button - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: Link - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: ContributionResponse - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: RivetPillarCard - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Icon - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: TrendingUp - removing from feed
+[RSS Transform] Unknown custom component: TrendingUp - removing from feed
+[RSS Transform] Unknown custom component: TrendingDown - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: ContextClue - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordionGroup - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: RiskAccordion - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: FAQ - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: Alert - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: Figure - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: FAQ - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[Comments] GitHub API error: 401
+[Comments] GitHub API error: 401
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: MCPArchitecture - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[Comments] GitHub API error: 401
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: LockIcon - removing from feed
+[RSS Transform] Unknown custom component: BarChartIcon - removing from feed
+[RSS Transform] Unknown custom component: ZapIcon - removing from feed
+[RSS Transform] Unknown custom component: RocketIcon - removing from feed
+[RSS Transform] Unknown custom component: ShieldIcon - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: RateLimitResult - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: Link - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: Button - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: Link - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: ContributionResponse - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[Comments] GitHub API error: 401
+[RSS Transform] Unknown custom component: TLDRSummary - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: CollapsibleSection - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: KeyTakeaway - removing from feed
+[RSS Transform] Unknown custom component: RoleBasedCTA - removing from feed
+✓ Generating static pages using 31 workers (112/112) in 577.9ms
+  Finalizing page optimization ...
+
+Route (app)                               Revalidate  Expire
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /.well-known/security.txt
+├ ƒ /[key].txt
+├ ƒ /about
+├ ƒ /about/[slug]
+├ ƒ /about/drew/resume
+├ ƒ /acceptable-use
+├ ƒ /accessibility
+├ ƒ /activity
+├ ƒ /activity/feed
+├ ƒ /activity/feed.json
+├ ƒ /activity/rss.xml
+├ ƒ /admin/analytics
+├ ƒ /admin/mcp-health
+├ ƒ /ai
+├ ƒ /ai.txt
+├ ƒ /api/admin/agent-health
+├ ƒ /api/admin/api-usage
+├ ƒ /api/admin/indexnow/bulk
+├ ƒ /api/admin/populate-cache
+├ ƒ /api/admin/sessions
+├ ƒ /api/analytics
+├ ƒ /api/analytics/daily
+├ ƒ /api/analytics/referral
+├ ƒ /api/analytics/update-milestones
+├ ƒ /api/auth/session
+├ ƒ /api/axiom
+├ ƒ /api/contact
+├ ƒ /api/credly/badges
+├ ƒ /api/csp-report
+├ ƒ /api/default-blog-image
+├ ƒ /api/delegation/events
+├ ƒ /api/delegation/health
+├ ƒ /api/dev/populate-cache
+├ ƒ /api/dev/refresh-credly
+├ ƒ /api/dev/refresh-github
+├ ƒ /api/dev/verify-redis-env
+├ ƒ /api/engagement/bookmark
+├ ƒ /api/engagement/like
+├ ƒ /api/github/refresh
+├ ƒ /api/github/webhook
+├ ƒ /api/health
+├ ƒ /api/health/cache
+├ ƒ /api/health/redis
+├ ƒ /api/indexnow/submit
+├ ƒ /api/inngest
+├ ƒ /api/inoreader/callback
+├ ƒ /api/ip-reputation
+├ ƒ /api/maintenance/metrics
+├ ƒ /api/maintenance/observations
+├ ƒ /api/maintenance/workflows
+├ ƒ /api/mcp/health
+├ ƒ /api/memory/add
+├ ƒ /api/memory/search
+├ ƒ /api/plugins/[id]/reviews
+├ ƒ /api/plugins/[id]/reviews/[reviewId]
+├ ƒ /api/research
+├ ƒ /api/social-analytics/dev-to
+├ ƒ /api/user/engagement/[key]
+├ ƒ /api/views
+├ ƒ /apple-icon
+├ ○ /atom.xml                                     1h      1y
+├ ƒ /blog
+├ ƒ /blog/[...slug]
+├ ƒ /blog/[slug]
+├ ƒ /blog/[slug]/assets/[...path]
+├ ƒ /blog/feed
+├ ƒ /blog/feed.json
+├ ƒ /blog/rss.xml
+├ ƒ /blog/series
+├ ƒ /blog/series/[slug]
+├ ƒ /bookmarks
+├ ƒ /contact
+├ ƒ /embed/activity
+├ ○ /feed                                         1h      1y
+├ ○ /feed.json                                    1h      1y
+├ ƒ /feeds
+├ ƒ /icon
+├ ƒ /invites
+├ ƒ /legal
+├ ƒ /likes
+├ ƒ /lolz
+├ ƒ /open-source
+├ ƒ /opengraph-image
+├ ƒ /plugins
+├ ƒ /plugins/[id]
+├ ƒ /plugins/security
+├ ƒ /privacy
+├ ƒ /private
+├ ○ /robots.txt
+├ ƒ /rss.xml
+├ ƒ /security
+├ ƒ /security.txt
+├ ○ /sitemap.xml
+├ ƒ /sponsors
+├ ƒ /sponsors/thank-you
+├ ƒ /terms
+├ ƒ /work
+├ ƒ /work/[slug]
+├ ƒ /work/feed
+├ ƒ /work/feed.json
+└ ƒ /work/rss.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -74,13 +74,13 @@ describe('SiteHeader', () => {
       expect(aboutLink).toHaveAttribute('href', '/about');
     });
 
-    it('renders Sponsors link in desktop nav', () => {
+    it('renders Open Source link in desktop nav', () => {
       renderWithProviders(<SiteHeader />);
-      const sponsorsLink = screen.getByRole('link', {
-        name: /Support open source development/i,
+      const openSourceLink = screen.getByRole('link', {
+        name: /Published npm packages and open-source projects/i,
       });
-      expect(sponsorsLink).toBeInTheDocument();
-      expect(sponsorsLink).toHaveAttribute('href', '/sponsors');
+      expect(openSourceLink).toBeInTheDocument();
+      expect(openSourceLink).toHaveAttribute('href', '/open-source');
     });
 
     it('renders theme toggle button', () => {
@@ -210,20 +210,12 @@ describe('SiteHeader', () => {
       const allProjectsLink = await screen.findByRole('menuitem', {
         name: /View complete portfolio/i,
       });
-      const communityLink = screen.getByRole('menuitem', {
-        name: /Open source and community work/i,
-      });
-      const nonprofitLink = screen.getByRole('menuitem', {
-        name: /Mission-driven partnerships/i,
-      });
-      const startupLink = screen.getByRole('menuitem', {
-        name: /Early-stage product development/i,
+      const codeLink = screen.getByRole('menuitem', {
+        name: /Open-source code and development projects/i,
       });
 
       expect(allProjectsLink).toBeInTheDocument();
-      expect(communityLink).toBeInTheDocument();
-      expect(nonprofitLink).toBeInTheDocument();
-      expect(startupLink).toBeInTheDocument();
+      expect(codeLink).toBeInTheDocument();
     });
 
     it('closes Our Work dropdown when clicking a link', async () => {
@@ -270,18 +262,8 @@ describe('SiteHeader', () => {
       const codeLink = await screen.findByRole('menuitem', {
         name: /Open-source code and development projects/i,
       });
-      // Check for "Nonprofit" category link
-      const nonprofitLink = screen.getByRole('menuitem', {
-        name: /Mission-driven partnerships/i,
-      });
-      // Check for "Startup" category link
-      const startupLink = screen.getByRole('menuitem', {
-        name: /Early-stage product development/i,
-      });
 
       expect(codeLink).toHaveAttribute('href', '/work?category=code');
-      expect(nonprofitLink).toHaveAttribute('href', '/work?category=nonprofit');
-      expect(startupLink).toHaveAttribute('href', '/work?category=startup');
     });
   });
 
