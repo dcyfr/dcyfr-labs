@@ -13,51 +13,62 @@ import { rateLimitWithProtection, getClientIp } from '@/lib/rate-limit';
 const hashes: Record<string, Record<string, string>> = {};
 const lists: Record<string, string[]> = {};
 
-vi.mock('@/lib/redis-client', () => ({
-  redis: {
-    get: vi.fn(async (_k: string) => null),
-    set: vi.fn(async () => null),
-    setex: vi.fn(async () => null),
-    hset: vi.fn(
-      async (key: string, fieldOrHash: string | Record<string, string>, value?: string) => {
-        hashes[key] ||= {};
-        if (typeof fieldOrHash === 'string' && value !== undefined) {
-          // hset(key, field, value)
-          hashes[key][fieldOrHash] = value;
-        } else if (typeof fieldOrHash === 'object') {
-          // hset(key, { field: value, ... })
-          Object.assign(hashes[key], fieldOrHash);
-        }
+vi.mock('@/lib/redis-client', () => {
+  const hashSetImpl = async (key: string, fieldOrHash: string | Record<string, string>, value?: string) => {
+    hashes[key] ||= {};
+    if (typeof fieldOrHash === 'string' && value !== undefined) {
+      hashes[key][fieldOrHash] = value;
+    } else if (typeof fieldOrHash === 'object') {
+      Object.assign(hashes[key], fieldOrHash);
+    }
+    return 1;
+  };
+
+  return {
+    redis: {
+      get: vi.fn(async (_k: string) => null),
+      set: vi.fn(async () => null),
+      // lowercase (Upstash-style)
+      setex: vi.fn(async () => null),
+      hset: vi.fn(hashSetImpl),
+      hget: vi.fn(async (key: string, field: string) => hashes[key]?.[field] ?? null),
+      hexists: vi.fn(async (key: string, field: string) => (hashes[key]?.[field] ? 1 : 0)),
+      hgetall: vi.fn(async (key: string) => hashes[key] ?? {}),
+      hdel: vi.fn(async (key: string, field: string) => {
+        if (!hashes[key]?.[field]) return 0;
+        delete hashes[key][field];
         return 1;
-      }
-    ),
-    hget: vi.fn(async (key: string, field: string) => {
-      if (!hashes[key]) return null;
-      return hashes[key][field] ?? null;
-    }),
-    hexists: vi.fn(async (key: string, field: string) => {
-      if (!hashes[key]) return 0;
-      return hashes[key][field] ? 1 : 0;
-    }),
-    hgetall: vi.fn(async (key: string) => {
-      return hashes[key] ?? {};
-    }),
-    hdel: vi.fn(async (key: string, field: string) => {
-      if (!hashes[key] || !hashes[key][field]) return 0;
-      delete hashes[key][field];
-      return 1;
-    }),
-    lpush: vi.fn(async (key: string, value: string) => {
-      lists[key] ||= [];
-      lists[key].unshift(value);
-      return lists[key].length;
-    }),
-    expire: vi.fn(async () => 1),
-    incr: vi.fn(async () => 1),
-    pexpireat: vi.fn(async () => 1),
-    pttl: vi.fn(async () => 60000),
-  },
-}));
+      }),
+      lpush: vi.fn(async (key: string, value: string) => {
+        lists[key] ||= [];
+        lists[key].unshift(value);
+        return lists[key].length;
+      }),
+      expire: vi.fn(async () => 1),
+      incr: vi.fn(async () => 1),
+      pexpireat: vi.fn(async () => 1),
+      pttl: vi.fn(async () => 60000),
+      // camelCase (node-redis-style) — used by source code
+      setEx: vi.fn(async () => 'OK'),
+      hSet: vi.fn(hashSetImpl),
+      hGet: vi.fn(async (key: string, field: string) => hashes[key]?.[field] ?? null),
+      hExists: vi.fn(async (key: string, field: string) => (hashes[key]?.[field] ? 1 : 0)),
+      hGetAll: vi.fn(async (key: string) => hashes[key] ?? {}),
+      hDel: vi.fn(async (key: string, field: string) => {
+        if (!hashes[key]?.[field]) return 0;
+        delete hashes[key][field];
+        return 1;
+      }),
+      lPush: vi.fn(async (key: string, value: string) => {
+        lists[key] ||= [];
+        lists[key].unshift(value);
+        return lists[key].length;
+      }),
+      pExpireAt: vi.fn(async () => 1),
+      pTTL: vi.fn(async () => 60000),
+    },
+  };
+});
 
 // Mock environment variables
 process.env.GREYNOISE_API_KEY = 'test-api-key';

@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 
 /**
  * INTERNAL API ROUTE HANDLERS
@@ -201,6 +201,24 @@ export const githubContributionsHandler = http.get(
 );
 
 /**
+ * Newsletter API Handler
+ * Simulates a 1-second API delay so loading states are observable in tests.
+ * The delay respects fake timers (vi.useFakeTimers), allowing tests that call
+ * vi.advanceTimersByTime(1100) to see the success state.
+ *
+ * Route: POST /api/newsletter
+ * Body: { email }
+ * Response: { success: true }
+ */
+export const newsletterApiHandler = http.post(
+  `${BASE_URL}/api/newsletter`,
+  async () => {
+    await delay(1000);
+    return HttpResponse.json({ success: true }, { status: 200 });
+  }
+);
+
+/**
  * Export all API handlers
  */
 export const apiHandlers = [
@@ -209,6 +227,7 @@ export const apiHandlers = [
   healthCheckHandler,
   contactFormHandler,
   githubContributionsHandler,
+  newsletterApiHandler,
 ];
 
 /**

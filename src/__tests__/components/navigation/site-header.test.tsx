@@ -74,13 +74,13 @@ describe('SiteHeader', () => {
       expect(aboutLink).toHaveAttribute('href', '/about');
     });
 
-    it('renders Open Source link in desktop nav', () => {
+    it('renders DCYFR AI link in desktop nav', () => {
       renderWithProviders(<SiteHeader />);
-      const openSourceLink = screen.getByRole('link', {
-        name: /Published npm packages and open-source projects/i,
+      const aiLink = screen.getByRole('link', {
+        name: /DCYFR AI — open source agent/i,
       });
-      expect(openSourceLink).toBeInTheDocument();
-      expect(openSourceLink).toHaveAttribute('href', '/open-source');
+      expect(aiLink).toBeInTheDocument();
+      expect(aiLink).toHaveAttribute('href', '/ai');
     });
 
     it('renders theme toggle button', () => {

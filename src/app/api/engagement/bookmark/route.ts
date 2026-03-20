@@ -98,7 +98,13 @@ export async function POST(request: NextRequest) {
     let newCount: number | null;
     if (action === 'bookmark') {
       const dedupSlug = `${contentType}:${slug}`;
-      const alreadyActioned = await checkIpDeduplication('bookmark', dedupSlug, clientIp, 86400);
+      let alreadyActioned = false;
+      try {
+        alreadyActioned = await checkIpDeduplication('bookmark', dedupSlug, clientIp, 86400);
+      } catch {
+        // Fail open: Redis unavailable, allow the action to proceed
+        alreadyActioned = false;
+      }
 
       if (alreadyActioned) {
         const currentCount = await getBookmarks(contentType, slug);

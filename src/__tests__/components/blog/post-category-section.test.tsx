@@ -91,7 +91,7 @@ describe("PostCategorySection", () => {
     render(<PostCategorySection category="AI" label="AI" posts={mockPosts} />);
 
     const postList = screen.getByTestId("post-list");
-    expect(postList).toHaveAttribute("data-layout", "compact");
+    expect(postList).toHaveAttribute("data-layout", "list");
   });
 
   it("should pass h3 as titleLevel to PostList", () => {

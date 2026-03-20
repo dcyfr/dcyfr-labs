@@ -34,8 +34,8 @@ describe("MobileFilterBar (sheet)", () => {
 
   it("renders the trigger and shows active badges when filters applied", () => {
     render(<MobileFilterBar {...defaultProps} selectedTags={["web"]} />);
-    // The trigger should render with aria-label
-    const triggerButton = screen.getByRole("button", { name: /open filter sheet/i });
+    // The trigger should render with aria-label (shows active count when filters applied)
+    const triggerButton = screen.getByRole("button", { name: /filters \(\d+ active\)/i });
     expect(triggerButton).toBeInTheDocument();
 
     // Active badges should be visible
@@ -44,7 +44,7 @@ describe("MobileFilterBar (sheet)", () => {
 
   it("opens sheet on trigger click and renders BlogFilters", () => {
     render(<MobileFilterBar {...defaultProps} />);
-    const triggerButton = screen.getByRole("button", { name: /open filter sheet/i });
+    const triggerButton = screen.getByRole("button", { name: /open filters/i });
     fireEvent.click(triggerButton);
     expect(screen.getByTestId("blog-filters")).toBeInTheDocument();
   });

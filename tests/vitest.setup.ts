@@ -71,6 +71,17 @@ vi.mock('@/lib/redis-client', () => ({
     incr: vi.fn(async () => 1),
     pexpireat: vi.fn(async () => 1),
     pttl: vi.fn(async () => 60000),
+    // camelCase aliases (node-redis style used in source code)
+    pExpireAt: vi.fn(async () => 1),
+    pTTL: vi.fn(async () => 60000),
+    hSet: vi.fn(async () => 1),
+    hGet: vi.fn(async () => null),
+    hExists: vi.fn(async () => 0),
+    hGetAll: vi.fn(async () => ({})),
+    hDel: vi.fn(async () => 0),
+    lPush: vi.fn(async () => 1),
+    expire: vi.fn(async () => 1),
+    setEx: vi.fn(async () => 'OK'),
   },
   getRedisClient: vi.fn(() => ({
     connect: vi.fn(),

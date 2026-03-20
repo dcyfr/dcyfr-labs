@@ -402,6 +402,7 @@ describe("Penetration: Payload size limit bypass attempts", () => {
 describe("Penetration: Plugin reviews auth bypass attempts", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubEnv('PLUGINS_ENABLED', 'true');
     mockRateLimit.mockResolvedValue({
       success: true,
       reset: Date.now() + 60000,

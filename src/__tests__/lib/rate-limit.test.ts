@@ -10,7 +10,7 @@
  * since Redis client creation is complex to mock in this environment.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   rateLimit,
   getClientIp,
@@ -37,6 +37,7 @@ vi.mock('@/lib/redis-client', () => ({
       rateLimitCounters[key] = (rateLimitCounters[key] || 0) + 1;
       return rateLimitCounters[key];
     }),
+    // lowercase (Upstash-style) - kept for compatibility
     pexpireat: vi.fn(async (key: string, timestamp: number) => {
       rateLimitExpiries[key] = timestamp;
       return 1;
@@ -46,10 +47,25 @@ vi.mock('@/lib/redis-client', () => ({
       if (!expiry) return -2; // Key doesn't exist
       const ttl = expiry - Date.now();
       if (ttl <= 0) {
-        // Key expired - clean up
         delete rateLimitCounters[key];
         delete rateLimitExpiries[key];
-        return -2; // Return -2 (key doesn't exist) instead of -1
+        return -2;
+      }
+      return ttl;
+    }),
+    // camelCase (node-redis-style) - used by source code
+    pExpireAt: vi.fn(async (key: string, timestamp: number) => {
+      rateLimitExpiries[key] = timestamp;
+      return 1;
+    }),
+    pTTL: vi.fn(async (key: string) => {
+      const expiry = rateLimitExpiries[key];
+      if (!expiry) return -2;
+      const ttl = expiry - Date.now();
+      if (ttl <= 0) {
+        delete rateLimitCounters[key];
+        delete rateLimitExpiries[key];
+        return -2;
       }
       return ttl;
     }),

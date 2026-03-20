@@ -12,6 +12,10 @@ vi.mock('@/inngest/client', () => ({
   },
 }));
 
+vi.mock('@/lib/api/api-security', () => ({
+  blockExternalAccessExceptInngestAndSameOrigin: vi.fn(() => null),
+}));
+
 describe('POST /api/indexnow/submit', () => {
   const originalEnv = process.env;
 

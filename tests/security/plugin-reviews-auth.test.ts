@@ -63,6 +63,7 @@ const mockContext = {
 describe('Plugin reviews authentication security controls', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.stubEnv('PLUGINS_ENABLED', 'true');
     mockRateLimit.mockResolvedValue({ success: true, reset: Date.now() + 60000, limit: 60, remaining: 59 });
     mockGetRequestUser.mockReturnValue({
       id: 'user-123',

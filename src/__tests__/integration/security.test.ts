@@ -14,7 +14,6 @@ vi.mock('@/lib/redis-client', () => ({
       // Check if key has expired
       const expiry = rateLimitExpiries[key];
       if (expiry && expiry <= Date.now()) {
-        // Key expired - reset counter
         delete rateLimitCounters[key];
         delete rateLimitExpiries[key];
       }
@@ -22,19 +21,35 @@ vi.mock('@/lib/redis-client', () => ({
       rateLimitCounters[key] = (rateLimitCounters[key] || 0) + 1;
       return rateLimitCounters[key];
     }),
+    // lowercase (Upstash-style)
     pexpireat: vi.fn(async (key: string, timestamp: number) => {
       rateLimitExpiries[key] = timestamp;
       return 1;
     }),
     pttl: vi.fn(async (key: string) => {
       const expiry = rateLimitExpiries[key];
-      if (!expiry) return -2; // Key doesn't exist
+      if (!expiry) return -2;
       const ttl = expiry - Date.now();
       if (ttl <= 0) {
-        // Key expired - clean up
         delete rateLimitCounters[key];
         delete rateLimitExpiries[key];
-        return -2; // Return -2 (key doesn't exist) instead of -1
+        return -2;
+      }
+      return ttl;
+    }),
+    // camelCase (node-redis-style) — used by source code
+    pExpireAt: vi.fn(async (key: string, timestamp: number) => {
+      rateLimitExpiries[key] = timestamp;
+      return 1;
+    }),
+    pTTL: vi.fn(async (key: string) => {
+      const expiry = rateLimitExpiries[key];
+      if (!expiry) return -2;
+      const ttl = expiry - Date.now();
+      if (ttl <= 0) {
+        delete rateLimitCounters[key];
+        delete rateLimitExpiries[key];
+        return -2;
       }
       return ttl;
     }),

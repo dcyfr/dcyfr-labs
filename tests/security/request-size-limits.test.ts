@@ -35,6 +35,13 @@ vi.mock('@axiomhq/js', () => ({
   })),
 }));
 
+vi.mock('@axiomhq/nextjs', () => ({
+  createProxyRouteHandler: vi.fn(() => vi.fn(async () => {
+    await mockAxiomIngest([]);
+    return new Response(null, { status: 200 });
+  })),
+}));
+
 function createRequest(payloadSize: number): NextRequest {
   const payload = 'x'.repeat(payloadSize);
   const headers: HeadersInit = {
@@ -129,8 +136,8 @@ describe('Request size limit security controls', () => {
       const response = await AxiomPOST(request);
       const data = await response.json();
 
-      expect(data.maxSize).toBeDefined();
-      expect(data.receivedSize).toBeDefined();
+      expect(data.maxBytes).toBeDefined();
+      expect(data.attemptedBytes).toBeDefined();
     });
 
     it('does not invoke Axiom ingest for oversized payloads', async () => {
