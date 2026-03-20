@@ -256,3 +256,4 @@ gitleaks-report*.json
 test-results.json
 reports/prose-*
 
+.turbo/turbo-test$colon$run.log
