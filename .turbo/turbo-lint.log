@@ -1,6 +1,0 @@
-
-[1mnpm[22m [33mwarn[39m [94mconfig[39m ignoring workspace config at /home/drew/code/dcyfr-workspace/dcyfr-labs/.npmrc
-
-> dcyfr-labs@2026.02.12 lint
-> eslint
-
