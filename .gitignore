@@ -109,8 +109,6 @@ archive/
 !**/.env.example
 !.env.template
 !**/.env.template
-!.env.ci
-!**/.env.ci
 
 # .env.local contains plaintext secrets — NEVER commit
 .env.local
