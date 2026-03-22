@@ -36,14 +36,20 @@ export type AuthenticatedRequest = NextRequest & {
   auth?: AuthEnvelope;
 };
 
-type RouteHandler = (req: AuthenticatedRequest, context?: RequestContext) => Promise<NextResponse>;
+type RouteHandler<TContext = RequestContext> = (
+  req: AuthenticatedRequest,
+  context: TContext
+) => Promise<NextResponse>;
 
 type MethodHandlers = Partial<Record<'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', RouteHandler>>;
 
 /**
  * Middleware function for protecting API routes and pages
  */
-export function withAuth(handler: RouteHandler, options: AuthMiddlewareOptions = {}) {
+export function withAuth<TContext = RequestContext>(
+  handler: RouteHandler<TContext>,
+  options: AuthMiddlewareOptions = {}
+) {
   const {
     requireAuth = true,
     requireCSRF = true,
@@ -52,7 +58,7 @@ export function withAuth(handler: RouteHandler, options: AuthMiddlewareOptions =
     allowedMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   } = options;
 
-  return async (request: NextRequest, context?: RequestContext): Promise<NextResponse> => {
+  return async (request: NextRequest, context: TContext): Promise<NextResponse> => {
     try {
       // Check if method is allowed
       if (!allowedMethods.includes(request.method)) {
@@ -120,7 +126,7 @@ export function withAuth(handler: RouteHandler, options: AuthMiddlewareOptions =
 /**
  * Middleware specifically for admin routes
  */
-export function withAdminAuth(handler: RouteHandler) {
+export function withAdminAuth<TContext = RequestContext>(handler: RouteHandler<TContext>) {
   return withAuth(handler, {
     requireAuth: true,
     requireCSRF: true,
@@ -132,7 +138,7 @@ export function withAdminAuth(handler: RouteHandler) {
 /**
  * Middleware for optional authentication (user may or may not be logged in)
  */
-export function withOptionalAuth(handler: RouteHandler) {
+export function withOptionalAuth<TContext = RequestContext>(handler: RouteHandler<TContext>) {
   return withAuth(handler, {
     requireAuth: false,
     requireCSRF: false,
@@ -144,7 +150,7 @@ export function withOptionalAuth(handler: RouteHandler) {
 /**
  * Middleware for read-only routes (no CSRF required)
  */
-export function withReadOnlyAuth(handler: RouteHandler) {
+export function withReadOnlyAuth<TContext = RequestContext>(handler: RouteHandler<TContext>) {
   return withAuth(handler, {
     requireAuth: true,
     requireCSRF: false,
