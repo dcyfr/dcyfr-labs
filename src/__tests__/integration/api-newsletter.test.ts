@@ -36,19 +36,11 @@ describe('Newsletter API Integration', () => {
       reset: Date.now() + 60_000,
     });
 
-    globalThis.fetch = vi
-      .fn()
-      .mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        text: async () => 'Not found',
-      } as Response)
-      .mockResolvedValue({
-        ok: true,
-        status: 200,
-        text: async () => '',
-        json: async () => ({}),
-      } as Response) as typeof fetch;
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: async () => '',
+    } as Response) as typeof fetch;
   });
 
   afterEach(() => {
@@ -105,16 +97,7 @@ describe('Newsletter API Integration', () => {
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
 
-    expect(globalThis.fetch).toHaveBeenCalledTimes(2);
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(1, 'https://api.resend.com/contacts/user%40example.com', {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer re_test_123',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(2, 'https://api.resend.com/contacts', {
+    expect(globalThis.fetch).toHaveBeenCalledWith('https://api.resend.com/contacts', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer re_test_123',
@@ -147,15 +130,7 @@ describe('Newsletter API Integration', () => {
     const response = await POST(request);
 
     expect(response.status).toBe(200);
-    expect(globalThis.fetch).toHaveBeenCalledTimes(3);
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(1, 'https://api.resend.com/contacts/user%40example.com', {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer re_test_123',
-        'Content-Type': 'application/json',
-      },
-    });
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(2, 'https://api.resend.com/contacts', {
+    expect(globalThis.fetch).toHaveBeenCalledWith('https://api.resend.com/contacts', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer re_test_123',
@@ -164,19 +139,9 @@ describe('Newsletter API Integration', () => {
       body: JSON.stringify({
         email: 'user@example.com',
         unsubscribed: false,
+        segments: [{ id: '8b10d4b1-4cec-41fa-b087-4029c17bf61a' }],
       }),
     });
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(
-      3,
-      'https://api.resend.com/contacts/user%40example.com/segments/8b10d4b1-4cec-41fa-b087-4029c17bf61a',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer re_test_123',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
     expect(inngest.send).toHaveBeenCalled();
   });
 
@@ -192,15 +157,7 @@ describe('Newsletter API Integration', () => {
     const response = await POST(request);
 
     expect(response.status).toBe(200);
-    expect(globalThis.fetch).toHaveBeenCalledTimes(3);
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(1, 'https://api.resend.com/contacts/user%40example.com', {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer re_test_123',
-        'Content-Type': 'application/json',
-      },
-    });
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(2, 'https://api.resend.com/contacts', {
+    expect(globalThis.fetch).toHaveBeenCalledWith('https://api.resend.com/contacts', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer re_test_123',
@@ -209,36 +166,18 @@ describe('Newsletter API Integration', () => {
       body: JSON.stringify({
         email: 'user@example.com',
         unsubscribed: false,
+        segments: [{ id: '8b10d4b1-4cec-41fa-b087-4029c17bf61a' }],
       }),
     });
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(
-      3,
-      'https://api.resend.com/contacts/user%40example.com/segments/8b10d4b1-4cec-41fa-b087-4029c17bf61a',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer re_test_123',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
     expect(inngest.send).toHaveBeenCalled();
   });
 
-  it('updates existing contact when it already exists', async () => {
-    globalThis.fetch = vi
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => ({ unsubscribed: true }),
-        text: async () => '',
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        text: async () => '',
-      } as Response) as typeof fetch;
+  it('treats 409 contact conflict as success and continues', async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 409,
+      text: async () => 'Contact already exists',
+    } as Response) as typeof fetch;
 
     const request = new NextRequest('http://localhost:3000/api/newsletter', {
       method: 'POST',
@@ -250,24 +189,6 @@ describe('Newsletter API Integration', () => {
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(globalThis.fetch).toHaveBeenCalledTimes(2);
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(1, 'https://api.resend.com/contacts/user%40example.com', {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer re_test_123',
-        'Content-Type': 'application/json',
-      },
-    });
-    expect(globalThis.fetch).toHaveBeenNthCalledWith(2, 'https://api.resend.com/contacts/user%40example.com', {
-      method: 'PATCH',
-      headers: {
-        Authorization: 'Bearer re_test_123',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        unsubscribed: false,
-      }),
-    });
     expect(inngest.send).toHaveBeenCalled();
   });
 

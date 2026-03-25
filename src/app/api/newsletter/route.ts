@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 import { RATE_LIMITS } from '@/lib/api/api-guardrails';
 import { inngest } from '@/inngest/client';
-import { syncResendContact } from '@/lib/resend-contact-sync';
+
+const RESEND_API_BASE_URL = 'https://api.resend.com';
 
 const RATE_LIMIT_CONFIG = {
   limit: RATE_LIMITS.newsletter.requestsPerMinute,
@@ -76,22 +77,39 @@ export async function POST(request: NextRequest) {
   }
 
   const resendSegmentId = process.env.RESEND_SEGMENT_ID?.trim();
+  const contactsEndpoint = `${RESEND_API_BASE_URL}/contacts`;
+
+  const contactsPayload = {
+    email: normalizedEmail,
+    unsubscribed: false,
+    ...(resendSegmentId ? { segments: [{ id: resendSegmentId }] } : {}),
+  };
+
   try {
-    const syncResult = await syncResendContact({
-      apiKey: resendApiKey,
-      email: normalizedEmail,
-      unsubscribed: false,
-      segmentId: resendSegmentId,
+    const contactsResponse = await fetch(contactsEndpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(contactsPayload),
     });
 
-    console.warn('[Newsletter API] Resend contact synced:', {
-      operation: syncResult.operation,
-      unsubscribed: syncResult.unsubscribed,
-      hasSegmentId: !!resendSegmentId,
-      segmentAssigned: syncResult.segmentAssigned,
-    });
+    if (!contactsResponse.ok && contactsResponse.status !== 409) {
+      const resendError = await contactsResponse.text();
+      console.error('[Newsletter API] Failed to create Resend contact:', {
+        status: contactsResponse.status,
+        hasSegmentId: !!resendSegmentId,
+        error: resendError,
+      });
+
+      return NextResponse.json(
+        { error: 'Failed to register your subscription. Please try again later.' },
+        { status: 502, headers: createRateLimitHeaders(rateLimitResult) }
+      );
+    }
   } catch (contactsError) {
-    console.error('[Newsletter API] Resend contact sync failed:', {
+    console.error('[Newsletter API] Contacts API request failed:', {
       error: contactsError instanceof Error ? contactsError.message : String(contactsError),
       hasSegmentId: !!resendSegmentId,
     });
