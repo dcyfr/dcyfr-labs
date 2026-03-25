@@ -1,10 +1,189 @@
 {
   "framework": "nextjs",
   "trailingSlash": false,
+  "firewall": {
+    "rules": [
+      {
+        "name": "rate-limit-critical-endpoints",
+        "description": "Strict rate limit for contact form and newsletter (10 req/5min)",
+        "conditionGroup": [
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/contact" }]
+          },
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/newsletter" }]
+          }
+        ],
+        "action": {
+          "type": "rate_limit",
+          "rateLimit": { "requests": 10, "window": "5m" }
+        }
+      },
+      {
+        "name": "rate-limit-engagement-endpoints",
+        "description": "Rate limit for engagement routes (like, bookmark) — 30 req/5min",
+        "conditionGroup": [
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/engagement" }]
+          }
+        ],
+        "action": {
+          "type": "rate_limit",
+          "rateLimit": { "requests": 30, "window": "5m" }
+        }
+      },
+      {
+        "name": "rate-limit-standard-api",
+        "description": "Standard rate limit for public API routes (60 req/5min)",
+        "conditionGroup": [
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/views" }]
+          },
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/analytics" }]
+          },
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/research" }]
+          },
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/plugins" }]
+          }
+        ],
+        "action": {
+          "type": "rate_limit",
+          "rateLimit": { "requests": 60, "window": "5m" }
+        }
+      },
+      {
+        "name": "rate-limit-admin-routes",
+        "description": "Strict rate limit for admin routes (5 req/1min)",
+        "conditionGroup": [
+          {
+            "conditions": [{ "type": "path", "op": "pre", "value": "/api/admin" }]
+          }
+        ],
+        "action": {
+          "type": "rate_limit",
+          "rateLimit": { "requests": 5, "window": "1m" }
+        }
+      },
+      {
+        "name": "block-malicious-bots",
+        "description": "Block common vulnerability scanners and exploit bots by user agent",
+        "conditionGroup": [
+          {
+            "conditions": [
+              {
+                "type": "header",
+                "key": "user-agent",
+                "op": "re",
+                "value": "(?i)(sqlmap|nikto|masscan|zgrab|python-requests/2\\.2[0-8]|nuclei|dirbuster|gobuster|wfuzz|hydra|metasploit)"
+              }
+            ]
+          }
+        ],
+        "action": { "type": "deny" }
+      },
+      {
+        "name": "block-direct-ip-access",
+        "description": "Deny requests that bypass the hostname (direct IP access attempts)",
+        "conditionGroup": [
+          {
+            "conditions": [
+              { "type": "path", "op": "pre", "value": "/api/" },
+              {
+                "type": "header",
+                "key": "host",
+                "op": "re",
+                "value": "^\\d+\\.\\d+\\.\\d+\\.\\d+$"
+              }
+            ]
+          }
+        ],
+        "action": { "type": "deny" }
+      }
+    ]
+  },
   "crons": [
     {
       "path": "/api/admin/populate-cache",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/update-analytics-milestones",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-credly-cache",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-github-data",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/verify-indexnow-key",
+      "schedule": "0 */12 * * *"
+    },
+    {
+      "path": "/api/cron/session-cleanup",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/session-monitoring",
+      "schedule": "0 0,4,8,12,16,20 * * *"
+    },
+    {
+      "path": "/api/cron/session-security-audit",
+      "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/cron/daily-security-test",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/ip-reputation-check",
+      "schedule": "0 0,4,8,12,16,20 * * *"
+    },
+    {
+      "path": "/api/cron/security-advisory-monitor",
+      "schedule": "0 0,8,16 * * *"
+    },
+    {
+      "path": "/api/cron/sync-vercel-analytics",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/sync-inoreader-feeds",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/aggregate-referrals",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/sync-devto-metrics",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-activity-feed",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/calculate-trending",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/daily-analytics-summary",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/monitor-api-costs",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/monthly-api-cost-report",
+      "schedule": "0 10 1 * *"
     }
   ],
   "github": {

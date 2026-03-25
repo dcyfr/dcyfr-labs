@@ -5,23 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { helloWorld } from '@/inngest/functions';
 import { contactFormSubmitted } from '@/inngest/contact-functions';
 import { newsletterSubscribeSubmitted } from '@/inngest/newsletter-functions';
-import {
-  refreshGitHubData,
-  manualRefreshGitHubData,
-  processGitHubCommit,
-} from '@/inngest/github-functions';
-import {
-  trackPostView,
-  handleMilestone,
-  calculateTrending,
-  generateAnalyticsSummary,
-  dailyAnalyticsSummary,
-} from '@/inngest/blog-functions';
-import {
-  securityAdvisoryMonitor,
-  securityAdvisoryHandler,
-  dailySecurityTest,
-} from '@/inngest/security-functions';
+import { manualRefreshGitHubData, processGitHubCommit } from '@/inngest/github-functions';
+import { trackPostView, handleMilestone, generateAnalyticsSummary } from '@/inngest/blog-functions';
+import { securityAdvisoryHandler } from '@/inngest/security-functions';
 import {
   submitUrlToGoogle,
   deleteUrlFromGoogle,
@@ -29,9 +15,9 @@ import {
   validateSitemapAndGetMissing,
   submitMissingPagesToGoogle,
 } from '@/inngest/google-indexing-functions';
-import { processIndexNowSubmission, verifyIndexNowKeyFile } from '@/inngest/indexnow-functions';
-import { refreshActivityFeed, invalidateActivityFeed } from '@/inngest/activity-cache-functions';
-import { refreshCredlyCache, clearCredlyCache } from '@/inngest/credly-cache-functions';
+import { processIndexNowSubmission } from '@/inngest/indexnow-functions';
+import { invalidateActivityFeed } from '@/inngest/activity-cache-functions';
+import { clearCredlyCache } from '@/inngest/credly-cache-functions';
 import { inngestErrorHandler } from '@/inngest/error-handler';
 
 /**
@@ -119,21 +105,16 @@ const {
     newsletterSubscribeSubmitted,
 
     // GitHub data refresh
-    refreshGitHubData, // Scheduled: every hour
     manualRefreshGitHubData, // Event-driven: manual refresh
     processGitHubCommit, // Event-driven: webhook → commit pushed
 
     // Blog analytics
     trackPostView, // Event-driven: on post view
     handleMilestone, // Event-driven: on milestone reached
-    calculateTrending, // Scheduled: hourly
     generateAnalyticsSummary, // Event-driven: on demand
-    dailyAnalyticsSummary, // Scheduled: daily at midnight UTC
 
-    // Security monitoring (CVE-2025-55182 response)
-    securityAdvisoryMonitor, // Scheduled: hourly GHSA polling
+    // Security monitoring
     securityAdvisoryHandler, // Event-driven: process detections
-    dailySecurityTest, // Scheduled: daily at 6PM MT (Dec 12-20)
 
     // Google Indexing API
     submitUrlToGoogle, // Event-driven: submit URL for indexing
@@ -144,14 +125,11 @@ const {
 
     // IndexNow Protocol (real-time search engine indexing)
     processIndexNowSubmission, // Event-driven: submit URLs to IndexNow API
-    verifyIndexNowKeyFile, // Scheduled: verify key file accessibility (every 12h)
 
     // Activity feed caching
-    refreshActivityFeed, // Scheduled: every 5 minutes
     invalidateActivityFeed, // Event-driven: on content changes
 
     // Credly badge caching
-    refreshCredlyCache, // Scheduled: daily at 6 AM UTC
     clearCredlyCache, // Event-driven: manual cache clear
 
     // Error handling (centralized monitoring and alerting)

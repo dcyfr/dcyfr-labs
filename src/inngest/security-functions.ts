@@ -1,16 +1,16 @@
-import { inngest } from "./client";
+import { inngest } from './client';
 import {
   parsePackageLock,
   checkAdvisoryImpact,
   type PackageLockData,
-} from "@/lib/security-version-checker";
+} from '@/lib/security-version-checker';
 
 /**
  * Security Advisory event types
  */
 export interface SecurityAdvisory {
   package: string;
-  severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   ghsaId: string;
   cveId?: string;
   cvssScore: number | string;
@@ -23,28 +23,28 @@ export interface SecurityAdvisory {
 }
 
 export interface SecurityAdvisoryDetectedEvent {
-  name: "security/advisory.detected";
+  name: 'security/advisory.detected';
   data: {
     advisories: SecurityAdvisory[];
     detectedAt: string;
-    source: "github-actions" | "inngest-scheduled" | "manual";
+    source: 'github-actions' | 'inngest-scheduled' | 'manual';
   };
 }
 
 // Packages to monitor - RSC packages get medium+ threshold
-const MONITORED_PACKAGES = [
-  "next",
-  "react",
-  "react-dom",
-  "react-server-dom-webpack",
-  "react-server-dom-turbopack",
-  "react-server-dom-parcel",
+export const MONITORED_PACKAGES = [
+  'next',
+  'react',
+  'react-dom',
+  'react-server-dom-webpack',
+  'react-server-dom-turbopack',
+  'react-server-dom-parcel',
 ];
 
 const RSC_PACKAGES = new Set([
-  "react-server-dom-webpack",
-  "react-server-dom-turbopack",
-  "react-server-dom-parcel",
+  'react-server-dom-webpack',
+  'react-server-dom-turbopack',
+  'react-server-dom-parcel',
 ]);
 
 const SEVERITY_RANK: Record<string, number> = {
@@ -57,10 +57,7 @@ const SEVERITY_RANK: Record<string, number> = {
 /**
  * Check if severity meets threshold for a package
  */
-function meetsSeverityThreshold(
-  severity: string,
-  packageName: string
-): boolean {
+export function meetsSeverityThreshold(severity: string, packageName: string): boolean {
   const severityRank = SEVERITY_RANK[severity?.toLowerCase()] || 0;
 
   // RSC packages: alert on medium+
@@ -90,14 +87,14 @@ function meetsSeverityThreshold(
  */
 export const securityAdvisoryMonitor = inngest.createFunction(
   {
-    id: "security-advisory-monitor",
+    id: 'security-advisory-monitor',
     retries: 3,
   },
   // Run 3x daily (every 8 hours: 00:00, 08:00, 16:00 UTC) - supplements GitHub Actions workflow
-  { cron: "0 0,8,16 * * *" },
+  { cron: '0 0,8,16 * * *' },
   async ({ step }) => {
     // Step 1: Fetch advisories from GHSA
-    const advisories = (await step.run("fetch-ghsa-advisories", async () => {
+    const advisories = (await step.run('fetch-ghsa-advisories', async () => {
       console.warn(
         `[security-advisory-monitor] Starting GHSA fetch for ${MONITORED_PACKAGES.length} packages`
       );
@@ -105,9 +102,7 @@ export const securityAdvisoryMonitor = inngest.createFunction(
 
       for (const packageName of MONITORED_PACKAGES) {
         try {
-          console.warn(
-            `[security-advisory-monitor] Fetching advisories for: ${packageName}`
-          );
+          console.warn(`[security-advisory-monitor] Fetching advisories for: ${packageName}`);
           // Query GHSA API for npm advisories using a helper that implements
           // exponential backoff for transient (5xx/network) failures but
           // special-cases 422/4xx (don't aggressively retry which may be
@@ -123,23 +118,16 @@ export const securityAdvisoryMonitor = inngest.createFunction(
             const sevenDaysAgo = new Date();
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-            if (
-              publishedAt >= sevenDaysAgo &&
-              meetsSeverityThreshold(adv.severity, packageName)
-            ) {
+            if (publishedAt >= sevenDaysAgo && meetsSeverityThreshold(adv.severity, packageName)) {
               results.push({
                 package: packageName,
-                severity: adv.severity?.toUpperCase() || "UNKNOWN",
+                severity: adv.severity?.toUpperCase() || 'UNKNOWN',
                 ghsaId: adv.ghsa_id,
                 cveId: adv.cve_id,
-                cvssScore: adv.cvss?.score || "N/A",
+                cvssScore: adv.cvss?.score || 'N/A',
                 summary: adv.summary,
-                patchedVersion:
-                  adv.vulnerabilities?.[0]?.first_patched_version ||
-                  "Not available",
-                vulnerableRange:
-                  adv.vulnerabilities?.[0]?.vulnerable_version_range ||
-                  "Unknown",
+                patchedVersion: adv.vulnerabilities?.[0]?.first_patched_version || 'Not available',
+                vulnerableRange: adv.vulnerabilities?.[0]?.vulnerable_version_range || 'Unknown',
                 url: adv.html_url,
                 publishedAt: adv.published_at,
               });
@@ -149,13 +137,10 @@ export const securityAdvisoryMonitor = inngest.createFunction(
             }
           }
         } catch (error) {
-          console.error(
-            `[security-advisory-monitor] Error fetching GHSA for ${packageName}:`,
-            {
-              error: error instanceof Error ? error.message : String(error),
-              stack: error instanceof Error ? error.stack : undefined,
-            }
-          );
+          console.error(`[security-advisory-monitor] Error fetching GHSA for ${packageName}:`, {
+            error: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+          });
         }
 
         // Small delay between package requests to avoid burst/spam triggers
@@ -166,22 +151,20 @@ export const securityAdvisoryMonitor = inngest.createFunction(
     })) as SecurityAdvisory[];
 
     // Step 2: Check for new advisories (not previously seen) and filter by installed version impact
-    const newAdvisories = (await step.run("filter-new-advisories", async () => {
+    const newAdvisories = (await step.run('filter-new-advisories', async () => {
       // In production, this would check against a KV store or database
       // For now, we alert on all advisories from the last 24 hours
       const oneDayAgo = new Date();
       oneDayAgo.setDate(oneDayAgo.getDate() - 1);
 
-      const recentAdvisories = advisories.filter(
-        (adv) => new Date(adv.publishedAt) >= oneDayAgo
-      );
+      const recentAdvisories = advisories.filter((adv) => new Date(adv.publishedAt) >= oneDayAgo);
 
       // Load package-lock.json to check if advisories actually affect our installed versions
       const lockData = parsePackageLock();
 
       if (!lockData) {
         console.warn(
-          "Could not parse package-lock.json - proceeding with caution, alerting on all advisories"
+          'Could not parse package-lock.json - proceeding with caution, alerting on all advisories'
         );
         return recentAdvisories.map((adv) => ({
           ...adv,
@@ -203,8 +186,7 @@ export const securityAdvisoryMonitor = inngest.createFunction(
 
         if (!versionCheck.isVulnerable) {
           console.warn(
-            `Filtered out advisory ${adv.ghsaId} for ${adv.package}: ` +
-              `${versionCheck.reason}`
+            `Filtered out advisory ${adv.ghsaId} for ${adv.package}: ` + `${versionCheck.reason}`
           );
         }
 
@@ -214,24 +196,17 @@ export const securityAdvisoryMonitor = inngest.createFunction(
 
     // Step 3: Send email alert if new advisories found
     if (newAdvisories.length > 0) {
-      await step.run("send-email-alert", async () => {
+      await step.run('send-email-alert', async () => {
         const resendApiKey = process.env.RESEND_API_KEY;
-        const alertEmail =
-          process.env.SECURITY_ALERT_EMAIL || process.env.CONTACT_EMAIL;
+        const alertEmail = process.env.SECURITY_ALERT_EMAIL || process.env.CONTACT_EMAIL;
 
         if (!resendApiKey || !alertEmail) {
-          console.warn(
-            "RESEND_API_KEY or SECURITY_ALERT_EMAIL not configured - skipping email"
-          );
+          console.warn('RESEND_API_KEY or SECURITY_ALERT_EMAIL not configured - skipping email');
           return { skipped: true };
         }
 
-        const criticalCount = newAdvisories.filter(
-          (a) => a.severity === "CRITICAL"
-        ).length;
-        const highCount = newAdvisories.filter(
-          (a) => a.severity === "HIGH"
-        ).length;
+        const criticalCount = newAdvisories.filter((a) => a.severity === 'CRITICAL').length;
+        const highCount = newAdvisories.filter((a) => a.severity === 'HIGH').length;
 
         const subject =
           criticalCount > 0
@@ -241,7 +216,7 @@ export const securityAdvisoryMonitor = inngest.createFunction(
         const advisoryList = newAdvisories
           .map(
             (adv) =>
-              `• ${adv.package} (${adv.severity}${adv.cveId ? ` - ${adv.cveId}` : ""})
+              `• ${adv.package} (${adv.severity}${adv.cveId ? ` - ${adv.cveId}` : ''})
   GHSA: ${adv.ghsaId}
   CVSS: ${adv.cvssScore}
   Vulnerable: ${adv.vulnerableRange}
@@ -249,14 +224,14 @@ export const securityAdvisoryMonitor = inngest.createFunction(
   ${adv.summary}
   ${adv.url}`
           )
-          .join("\n\n");
+          .join('\n\n');
 
         const emailBody = `
 Security Advisory Monitor - ${new Date().toISOString()}
 
-${newAdvisories.length} new security advisor${newAdvisories.length === 1 ? "y" : "ies"} detected that AFFECT YOUR INSTALLED VERSIONS:
-${criticalCount > 0 ? `\n🚨 ${criticalCount} CRITICAL` : ""}
-${highCount > 0 ? `\n⚠️ ${highCount} HIGH` : ""}
+${newAdvisories.length} new security advisor${newAdvisories.length === 1 ? 'y' : 'ies'} detected that AFFECT YOUR INSTALLED VERSIONS:
+${criticalCount > 0 ? `\n🚨 ${criticalCount} CRITICAL` : ''}
+${highCount > 0 ? `\n⚠️ ${highCount} HIGH` : ''}
 
 ${advisoryList}
 
@@ -271,14 +246,14 @@ Note: This alert was filtered to only include advisories that affect your curren
 This alert was generated by the dcyfr-labs Security Advisory Monitor.
         `.trim();
 
-        const response = await fetch("https://api.resend.com/emails", {
-          method: "POST",
+        const response = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
           headers: {
             Authorization: `Bearer ${resendApiKey}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: "security@dcyfr.ai",
+            from: 'security@dcyfr.ai',
             to: alertEmail,
             subject,
             text: emailBody,
@@ -298,12 +273,12 @@ This alert was generated by the dcyfr-labs Security Advisory Monitor.
       });
 
       // Step 4: Send event for downstream processing
-      await step.sendEvent("emit-advisory-event", {
-        name: "security/advisory.detected",
+      await step.sendEvent('emit-advisory-event', {
+        name: 'security/advisory.detected',
         data: {
           advisories: newAdvisories,
           detectedAt: new Date().toISOString(),
-          source: "inngest-scheduled",
+          source: 'inngest-scheduled',
         },
       });
     }
@@ -390,12 +365,16 @@ export async function fetchGhsaAdvisories(packageName: string) {
 
   while (attempt < maxRetries) {
     try {
-      console.warn(`[fetchGhsaAdvisories] Attempting to fetch ${packageName} (attempt ${attempt + 1}/${maxRetries})`);
+      console.warn(
+        `[fetchGhsaAdvisories] Attempting to fetch ${packageName} (attempt ${attempt + 1}/${maxRetries})`
+      );
       const response = await fetch(url, { headers });
 
       if (response.ok) {
         const data = await response.json();
-        console.warn(`[fetchGhsaAdvisories] Successfully fetched ${packageName}: ${Array.isArray(data) ? data.length : (data?.length ?? '?')} advisories`);
+        console.warn(
+          `[fetchGhsaAdvisories] Successfully fetched ${packageName}: ${Array.isArray(data) ? data.length : (data?.length ?? '?')} advisories`
+        );
         return data;
       }
 
@@ -405,13 +384,20 @@ export async function fetchGhsaAdvisories(packageName: string) {
       await sleep(backoffMs);
     } catch (error) {
       attempt++;
-      const { shouldThrow, backoffMs } = handleGhsaNetworkError(error, packageName, attempt, maxRetries);
+      const { shouldThrow, backoffMs } = handleGhsaNetworkError(
+        error,
+        packageName,
+        attempt,
+        maxRetries
+      );
       if (shouldThrow) throw error;
       await sleep(backoffMs);
     }
   }
 
-  console.warn(`fetchGhsaAdvisories(${packageName}): Max retries exhausted, returning empty result`);
+  console.warn(
+    `fetchGhsaAdvisories(${packageName}): Max retries exhausted, returning empty result`
+  );
   return [];
 }
 
@@ -428,15 +414,15 @@ export async function fetchGhsaAdvisories(packageName: string) {
  */
 export const securityAdvisoryHandler = inngest.createFunction(
   {
-    id: "security-advisory-handler",
+    id: 'security-advisory-handler',
     retries: 2,
   },
-  { event: "security/advisory.detected" },
+  { event: 'security/advisory.detected' },
   async ({ event, step }) => {
     const { advisories, source } = event.data;
 
     // Log the detection
-    await step.run("log-detection", async () => {
+    await step.run('log-detection', async () => {
       console.warn(`Security advisory detected from ${source}:`);
       console.warn(`- ${advisories.length} advisories`);
       advisories.forEach((adv: SecurityAdvisory) => {
@@ -482,12 +468,12 @@ export const securityAdvisoryHandler = inngest.createFunction(
  */
 export const dailySecurityTest = inngest.createFunction(
   {
-    id: "daily-security-test",
+    id: 'daily-security-test',
     retries: 1,
     cancelOn: [
       {
         // Auto-cancel after December 20, 2025
-        event: "inngest/function.cancelled",
+        event: 'inngest/function.cancelled',
         if: "async.data.reason == 'schedule_ended'",
       },
     ],
@@ -496,66 +482,63 @@ export const dailySecurityTest = inngest.createFunction(
   // MST (winter): 6 PM MST = 1 AM UTC next day (UTC-7)
   // MDT (summer): 6 PM MDT = 12 AM UTC next day (UTC-6)
   // Currently in MST, so 1 AM UTC
-  { cron: "0 1 * * *" },
+  { cron: '0 1 * * *' },
   async ({ step }) => {
     const now = new Date();
-    const endDate = new Date("2025-12-20T23:59:59Z");
+    const endDate = new Date('2025-12-20T23:59:59Z');
 
     // Auto-skip if past December 20, 2025
     if (now > endDate) {
       return {
         skipped: true,
-        reason: "Validation period ended (Dec 20, 2025)",
+        reason: 'Validation period ended (Dec 20, 2025)',
         timestamp: now.toISOString(),
       };
     }
 
     const baseUrl = process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000";
+      : 'http://localhost:3000';
 
     // Test 1: Invalid API key attempts
-    const invalidKeyResults = await step.run(
-      "test-invalid-api-keys",
-      async () => {
-        const results = [];
+    const invalidKeyResults = await step.run('test-invalid-api-keys', async () => {
+      const results = [];
 
-        for (let i = 1; i <= 3; i++) {
-          try {
-            const response = await fetch(`${baseUrl}/api/analytics`, {
-              headers: {
-                "x-internal-request": "true",
-                Authorization: `Bearer inngest_test_invalid_${i}_${Date.now()}`,
-              },
-            });
+      for (let i = 1; i <= 3; i++) {
+        try {
+          const response = await fetch(`${baseUrl}/api/analytics`, {
+            headers: {
+              'x-internal-request': 'true',
+              Authorization: `Bearer inngest_test_invalid_${i}_${Date.now()}`,
+            },
+          });
 
-            results.push({
-              attempt: i,
-              status: response.status,
-              success: response.status === 401,
-            });
-          } catch (error) {
-            results.push({
-              attempt: i,
-              error: error instanceof Error ? error.message : "Unknown error",
-              success: false,
-            });
-          }
+          results.push({
+            attempt: i,
+            status: response.status,
+            success: response.status === 401,
+          });
+        } catch (error) {
+          results.push({
+            attempt: i,
+            error: error instanceof Error ? error.message : 'Unknown error',
+            success: false,
+          });
         }
-
-        return results;
       }
-    );
+
+      return results;
+    });
 
     // Test 2: Brute force simulation (15 attempts to trigger alert)
-    const bruteForceResults = await step.run("test-brute-force", async () => {
+    const bruteForceResults = await step.run('test-brute-force', async () => {
       const results = [];
 
       for (let i = 1; i <= 15; i++) {
         try {
           const response = await fetch(`${baseUrl}/api/analytics`, {
             headers: {
-              "x-internal-request": "true",
+              'x-internal-request': 'true',
               Authorization: `Bearer brute_force_${i}_${Date.now()}`,
             },
           });
@@ -571,7 +554,7 @@ export const dailySecurityTest = inngest.createFunction(
         } catch (error) {
           results.push({
             attempt: i,
-            error: error instanceof Error ? error.message : "Unknown error",
+            error: error instanceof Error ? error.message : 'Unknown error',
             success: false,
           });
         }
@@ -581,14 +564,14 @@ export const dailySecurityTest = inngest.createFunction(
     });
 
     // Test 3: Rate limit validation (rapid requests)
-    const rateLimitResults = await step.run("test-rate-limits", async () => {
+    const rateLimitResults = await step.run('test-rate-limits', async () => {
       const results = [];
 
       for (let i = 1; i <= 10; i++) {
         try {
           const response = await fetch(`${baseUrl}/api/analytics`, {
             headers: {
-              "x-internal-request": "true",
+              'x-internal-request': 'true',
               Authorization: `Bearer rate_test_${i}_${Date.now()}`,
             },
           });
@@ -603,7 +586,7 @@ export const dailySecurityTest = inngest.createFunction(
         } catch (error) {
           results.push({
             attempt: i,
-            error: error instanceof Error ? error.message : "Unknown error",
+            error: error instanceof Error ? error.message : 'Unknown error',
           });
         }
       }
@@ -612,11 +595,11 @@ export const dailySecurityTest = inngest.createFunction(
     });
 
     // Test 4: Admin API Usage endpoint
-    const adminApiResults = await step.run("test-admin-api", async () => {
+    const adminApiResults = await step.run('test-admin-api', async () => {
       try {
         const response = await fetch(`${baseUrl}/api/admin/api-usage`, {
           headers: {
-            "x-internal-request": "true",
+            'x-internal-request': 'true',
             Authorization: `Bearer inngest_admin_test_${Date.now()}`,
           },
         });
@@ -627,7 +610,7 @@ export const dailySecurityTest = inngest.createFunction(
         };
       } catch (error) {
         return {
-          error: error instanceof Error ? error.message : "Unknown error",
+          error: error instanceof Error ? error.message : 'Unknown error',
           success: false,
         };
       }
@@ -636,10 +619,8 @@ export const dailySecurityTest = inngest.createFunction(
     // Calculate summary
     const summary = {
       timestamp: now.toISOString(),
-      mountainTime: now.toLocaleString("en-US", { timeZone: "America/Denver" }),
-      daysRemaining: Math.ceil(
-        (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-      ),
+      mountainTime: now.toLocaleString('en-US', { timeZone: 'America/Denver' }),
+      daysRemaining: Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
       tests: {
         invalidKeys: {
           total: invalidKeyResults.length,
@@ -648,34 +629,24 @@ export const dailySecurityTest = inngest.createFunction(
         bruteForce: {
           total: bruteForceResults.length,
           successful: bruteForceResults.filter((r) => r.success).length,
-          expectedSentryAlert:
-            bruteForceResults.filter((r) => r.success).length >= 10,
+          expectedSentryAlert: bruteForceResults.filter((r) => r.success).length >= 10,
         },
         rateLimits: {
           total: rateLimitResults.length,
-          rateLimited: rateLimitResults.filter(
-            (r) => "rateLimited" in r && r.rateLimited
-          ).length,
+          rateLimited: rateLimitResults.filter((r) => 'rateLimited' in r && r.rateLimited).length,
         },
         adminApi: adminApiResults,
       },
       expectedOutcomes: {
         sentryEvents: invalidKeyResults.length + bruteForceResults.length + 1,
-        sentryAlerts:
-          bruteForceResults.filter((r) => r.success).length >= 10 ? 1 : 0,
+        sentryAlerts: bruteForceResults.filter((r) => r.success).length >= 10 ? 1 : 0,
         axiomLogs:
-          invalidKeyResults.length +
-          bruteForceResults.length +
-          rateLimitResults.length +
-          1,
+          invalidKeyResults.length + bruteForceResults.length + rateLimitResults.length + 1,
       },
     };
 
     // Log summary for monitoring
-    console.warn(
-      "Daily Security Test Summary:",
-      JSON.stringify(summary, null, 2)
-    );
+    console.warn('Daily Security Test Summary:', JSON.stringify(summary, null, 2));
 
     return summary;
   }
