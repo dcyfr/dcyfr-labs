@@ -6,7 +6,7 @@ import {
   Linkedin,
   Link as LinkIcon,
   Check,
-  Twitter,
+  XIcon,
   Code2,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -281,7 +281,7 @@ export function ShareButtons({
           className="gap-2 h-11 md:h-10"
           aria-label="Share on Twitter/X"
         >
-          <Twitter className="h-4 w-4" aria-hidden="true" />
+          <XIcon className="h-4 w-4" aria-hidden="true" />
           <span className="hidden sm:inline">Twitter/X</span>
         </Button>
 

@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import {
   ChevronDown,
   ChevronUp,
-  Twitter,
+  XIcon,
   Code2,
   Linkedin,
   Github,
@@ -47,8 +47,8 @@ export function SocialMetrics({ posts: _posts, defaultCollapsed = false }: Socia
   const [showMetrics, setShowMetrics] = useState(!defaultCollapsed);
 
   // Platform icons mapping
-  const platformIcons: Record<string, typeof Twitter> = {
-    twitter: Twitter,
+  const platformIcons: Record<string, typeof XIcon> = {
+    twitter: XIcon,
     dev: Code2,
     linkedin: Linkedin,
     github: Github,
