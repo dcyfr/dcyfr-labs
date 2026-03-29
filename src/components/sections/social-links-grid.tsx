@@ -13,7 +13,7 @@ import {
   Award,
   GraduationCap,
   ExternalLink,
-  Twitter,
+  XIcon,
   Code2,
   Briefcase,
 } from "lucide-react";
@@ -21,7 +21,7 @@ import {
 /** Map of platform names to their icon components */
 const PLATFORM_ICONS: Record<string, React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>> = {
   calendar: Calendar,
-  twitter: Twitter,
+  twitter: XIcon,
   dev: Code2,
   linkedin: Linkedin,
   peerlist: Users,
