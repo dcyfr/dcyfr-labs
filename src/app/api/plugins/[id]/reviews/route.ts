@@ -19,7 +19,7 @@ import { z } from 'zod';
 import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
 import { getReviewStore } from '@/lib/plugins/review-store';
 import { handleApiError } from '@/lib/error-handler';
-import { withAuth, getRequestUser } from '@/lib/auth-middleware';
+import { withAuth, getRequestUser, type AuthenticatedRequest } from '@/lib/auth-middleware';
 
 export const runtime = 'nodejs';
 
@@ -53,7 +53,7 @@ export const POST = withAuth(
         return NextResponse.json({ error: 'Plugin ID is required.' }, { status: 400 });
       }
 
-      const user = getRequestUser(request as NextRequest & { auth?: unknown });
+      const user = getRequestUser(request as AuthenticatedRequest);
       if (!user?.id) {
         return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
       }

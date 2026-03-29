@@ -77,7 +77,7 @@ describe('PostCategorySection', () => {
     expect(chevron).toBeInTheDocument();
   });
 
-  it('should render PostList with compact layout', () => {
+  it('should render PostList with list layout', () => {
     render(<PostCategorySection category="AI" label="AI" posts={mockPosts} />);
 
     const postList = screen.getByTestId('post-list');

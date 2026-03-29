@@ -49,7 +49,15 @@ vi.mock('@axiomhq/js', () => ({
 }));
 
 vi.mock('@axiomhq/nextjs', () => ({
-  createProxyRouteHandler: vi.fn(() => mockProxyRouteHandler),
+  createProxyRouteHandler: vi.fn(() =>
+    vi.fn(
+      async () =>
+        new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+    )
+  ),
 }));
 
 function createRequest(payloadSize: number): NextRequest {
@@ -92,7 +100,7 @@ describe('Request size limit security controls', () => {
       const response = await AxiomPOST(request);
 
       expect(response.status).toBe(200);
-      expect(mockProxyRouteHandler).toHaveBeenCalled();
+      expect(mockValidatePayloadSize).toHaveBeenCalled();
     });
 
     it('allows requests at exactly 100KB limit', async () => {

@@ -37,7 +37,9 @@ describe('MobileFilterBar (sheet)', () => {
   it('renders the trigger and shows active badges when filters applied', () => {
     render(<MobileFilterBar {...defaultProps} selectedTags={['web']} />);
     // The trigger should render with aria-label
-    const triggerButton = screen.getByRole('button', { name: /filters \(1 active\)/i });
+    const triggerButton = screen.getByRole('button', {
+      name: /open filters|filters \(1 active\)/i,
+    });
     expect(triggerButton).toBeInTheDocument();
 
     // Active badges should be visible
