@@ -103,9 +103,10 @@ export async function POST(request: NextRequest) {
         alreadyActioned = await checkIpDeduplication('bookmark', dedupSlug, clientIp, 86400);
       } catch (error) {
         console.warn(
-          '[API] Bookmark deduplication unavailable, applying fail-open behavior',
+          '[API] Bookmark deduplication unavailable, applying fail-closed behavior',
           error
         );
+        return NextResponse.json({ error: 'Bookmark deduplication unavailable' }, { status: 500 });
       }
 
       if (alreadyActioned) {

@@ -10,9 +10,7 @@ export const metadata: Metadata = createPageMetadata({
   path: '/admin/analytics',
 });
 
-// Enable ISR (Incremental Static Regeneration) - revalidate every 5 minutes
-// This caches the analytics data and reduces load on Redis
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
   assertAdminOr404();
