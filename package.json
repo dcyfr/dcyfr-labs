@@ -281,7 +281,7 @@
     "@tanstack/react-virtual": "^3.13.23",
     "@types/dompurify": "^3.2.0",
     "@upstash/redis": "^1.37.0",
-    "@vercel/analytics": "1.6.1",
+    "@vercel/analytics": "2.0.1",
     "@vercel/speed-insights": "2.0.0",
     "@xyflow/react": "^12.10.0",
     "better-sqlite3": "^11.10.0",
