@@ -8,6 +8,8 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const CACHE_KEY = 'github:contributions:dcyfr';
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
+export { GITHUB_USERNAME, CACHE_KEY as GITHUB_CACHE_KEY, CACHE_DURATION as GITHUB_CACHE_DURATION };
+
 interface ContributionDay {
   date: string;
   count: number;
@@ -23,7 +25,7 @@ interface ContributionResponse {
 /**
  * Fetch GitHub contribution data from GraphQL API
  */
-async function fetchGitHubContributions(): Promise<ContributionResponse | null> {
+export async function fetchGitHubContributions(): Promise<ContributionResponse | null> {
   const query = `
     query($username: String!) {
       user(login: $username) {

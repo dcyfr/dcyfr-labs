@@ -156,7 +156,7 @@ jobs:
       - name: Skip when automation scripts are unavailable
         if: steps.checkout_workspace.outcome != 'success'
         run: |
-          echo "⚠️ Skipping automated PR review: dcyfr/dcyfr-workspace checkout unavailable." 
+          echo "⚠️ Skipping automated PR review: dcyfr/dcyfr-workspace checkout unavailable."
           echo "review-status=skipped" >> "$GITHUB_OUTPUT"
 
       # ── 6. Write GitHub Step Summary ─────────────────────────────────────

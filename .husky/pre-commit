@@ -205,7 +205,7 @@ fi
 echo -n "  Checking documentation placement... "
 # FIX: Copilot suggestion - Use single extended regex instead of chained grep -v calls
 # Allow README.md files anywhere (contextual documentation), exclude workspace README
-ROOT_DOCS=$(git diff --cached --name-only --diff-filter=AM 2>/dev/null | grep -E "\.md$" | grep -vE '^(docs/|.*README\.md$|CONTRIBUTING\.md$|CHANGELOG\.md$|LICENSE\.md$|SECURITY\.md$|AGENTS\.md$|CLAUDE\.md$|\.github/.*\.md$|\.opencode/.*\.md$|\.claude/.*\.md$|\.agent/.*\.md$)' || true)
+ROOT_DOCS=$(git diff --cached --name-only --diff-filter=AM 2>/dev/null | grep -E "\.md$" | grep -vE '^(docs/|content/|.*README\.md$|CONTRIBUTING\.md$|CHANGELOG\.md$|LICENSE\.md$|SECURITY\.md$|AGENTS\.md$|CLAUDE\.md$|DIAGRAMS\.md$|\.github/.*\.md$|\.opencode/.*\.md$|\.claude/.*\.md$|\.agent/.*\.md$)' || true)
 
 if [ -n "$ROOT_DOCS" ]; then
   echo -e "${RED}FAIL${NC}"
