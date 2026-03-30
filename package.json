@@ -430,7 +430,7 @@
     "@qdrant/js-client-rest": ">=1.16.0"
   },
   "optionalDependencies": {
-    "@anthropic-ai/sdk": "^0.78.0",
+    "@anthropic-ai/sdk": "^0.80.0",
     "sqlite3": "^5.1.7"
   }
 }
