@@ -54,6 +54,27 @@ npm run check
 
 ## Verified commits for protected branches
 
+**Branch Naming Convention:**
+
+All feature branches should follow the Linear convention:
+
+```bash
+# Format: <type>/DCYFR-<NUMBER>-<description>
+git checkout -b feat/DCYFR-123-add-new-feature
+git checkout -b fix/DCYFR-456-resolve-bug
+git checkout -b docs/DCYFR-789-update-guide
+```
+
+**Types:** `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
+
+**Pull Requests:**
+
+- Title format: `[DCYFR-<NUMBER>] Brief description`
+- Commit messages should include `DCYFR-<NUMBER>` reference
+- All PRs must pass quality gates: `npm run check`
+
+---
+
 The deployment branches `main` and `preview` require **GitHub-verified commits** before merge.
 
 Accepted signing methods:
