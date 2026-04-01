@@ -850,7 +850,7 @@ Support DCYFR development and gain exclusive access:
 - 💼 **Executive** ($4,800/yr) - Business license + 2hr consultation/mo
 - 🏢 **Enterprise** ($9,600/yr) - Enterprise license + 4hr consultation/mo + SLA
 
-**Learn more:** [LICENSE.md](./LICENSE.md) | [SPONSORS.md](../SPONSORS.md)
+**Learn more:** [LICENSE](./LICENSE) | [SPONSORS.md](../SPONSORS.md)
 **Join:** [GitHub Sponsors](https://github.com/sponsors/dcyfr)
 **Contact:** licensing@dcyfr.ai
 
