@@ -1,4 +1,5 @@
-<!-- TLP:AMBER - Internal Use Only -->
+<!-- TLP:CLEAR -->
+
 # Memory Setup Guide for dcyfr-labs
 
 **Information Classification:** TLP:AMBER (Limited Distribution)
@@ -76,7 +77,7 @@ services:
   qdrant:
     image: qdrant/qdrant:v1.7.0
     ports:
-      - "6333:6333"
+      - '6333:6333'
     volumes:
       - qdrant_data:/qdrant/storage
     environment:
@@ -86,7 +87,7 @@ services:
       QDRANT__STORAGE__OPTIMIZERS__VACUUM_MIN_VECTOR_NUMBER: 1000
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:6333/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -119,6 +120,7 @@ curl -X POST http://localhost:3000/api/memory/add \
 ```
 
 **Response:**
+
 ```json
 {
   "memoryId": "mem-abc123",
@@ -141,6 +143,7 @@ curl -X POST http://localhost:3000/api/memory/search \
 ```
 
 **Response:**
+
 ```json
 {
   "memories": [
@@ -203,9 +206,7 @@ export async function POST(request: NextRequest) {
   const memories = await memory.searchUserMemories(userId, message, 3);
 
   // 2. Build enhanced prompt
-  const memoryContext = memories
-    .map(m => `Previous: ${m.content}`)
-    .join('\n');
+  const memoryContext = memories.map((m) => `Previous: ${m.content}`).join('\n');
 
   const enhancedPrompt = `
 ${memoryContext ? `Context:\n${memoryContext}\n\n` : ''}
@@ -218,12 +219,12 @@ User: ${message}
   // 4. Store the interaction
   await memory.addUserMemory(userId, message, {
     topic: 'chat',
-    importance: 0.7
+    importance: 0.7,
   });
 
   return NextResponse.json({
     response,
-    memoriesUsed: memories.length
+    memoriesUsed: memories.length,
   });
 }
 ```
@@ -238,7 +239,7 @@ export function useMemoryChat(userId: string) {
     const response = await fetch('/api/ai/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, message })
+      body: JSON.stringify({ userId, message }),
     });
 
     const data = await response.json();
@@ -267,8 +268,9 @@ export async function trackMemoryUsage(userId: string) {
   analytics.track('memory_usage', {
     userId,
     memoryCount: userMemories.length,
-    topics: [...new Set(userMemories.map(m => m.topic).filter(Boolean))],
-    avgImportance: userMemories.reduce((sum, m) => sum + (m.importance || 0), 0) / userMemories.length
+    topics: [...new Set(userMemories.map((m) => m.topic).filter(Boolean))],
+    avgImportance:
+      userMemories.reduce((sum, m) => sum + (m.importance || 0), 0) / userMemories.length,
   });
 }
 ```
@@ -295,17 +297,20 @@ export async function GET() {
       memory: {
         status: 'operational',
         tested: true,
-        searchWorking: results.length > 0
-      }
+        searchWorking: results.length > 0,
+      },
     });
   } catch (error) {
-    return NextResponse.json({
-      status: 'degraded',
-      memory: {
-        status: 'error',
-        error: error.message
-      }
-    }, { status: 503 });
+    return NextResponse.json(
+      {
+        status: 'degraded',
+        memory: {
+          status: 'error',
+          error: error.message,
+        },
+      },
+      { status: 503 }
+    );
   }
 }
 ```
@@ -339,11 +344,7 @@ const optimizeSearchQuery = (userInput: string) => {
     .trim();
 };
 
-const memories = await memory.searchUserMemories(
-  userId,
-  optimizeSearchQuery(query),
-  3
-);
+const memories = await memory.searchUserMemories(userId, optimizeSearchQuery(query), 3);
 ```
 
 ### Batch Operations
@@ -351,10 +352,10 @@ const memories = await memory.searchUserMemories(
 ```typescript
 // Batch memory additions for better performance
 const addMemoriesBatch = async (userId: string, messages: string[]) => {
-  const promises = messages.map(message =>
+  const promises = messages.map((message) =>
     memory.addUserMemory(userId, message, {
       topic: 'chat',
-      importance: 0.5
+      importance: 0.5,
     })
   );
 
@@ -420,11 +421,11 @@ export let options = {
   ],
 };
 
-export default function() {
+export default function () {
   const payload = JSON.stringify({
     userId: `user-${Math.floor(Math.random() * 1000)}`,
     message: 'Test message for load testing',
-    context: { topic: 'test' }
+    context: { topic: 'test' },
   });
 
   const params = {
@@ -526,21 +527,25 @@ export async function POST(request: NextRequest) {
 ### Common Issues
 
 **Memory not persisting**
+
 - Check environment variables are set
 - Verify Qdrant connection
 - Check API endpoint responses
 
 **Search returns no results**
+
 - Verify memories were added successfully
 - Try broader search terms
 - Check user ID consistency
 
 **Rate limit errors**
+
 - Implement exponential backoff
 - Consider user-based limits vs IP-based
 - Cache frequent searches
 
 **Performance issues**
+
 - Enable memory caching
 - Optimize search queries
 - Consider batch operations

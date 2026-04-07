@@ -1,4 +1,4 @@
-<!-- TLP:AMBER - Internal Use Only -->
+<!-- TLP:CLEAR -->
 
 # Reddit Policy-Safe Workflow — Implementation Guide
 

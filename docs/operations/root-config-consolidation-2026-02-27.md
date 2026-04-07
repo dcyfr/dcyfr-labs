@@ -1,3 +1,5 @@
+<!-- TLP:CLEAR -->
+
 # Root Configuration Analysis - February 27, 2026
 
 ## Configuration Consolidation Summary

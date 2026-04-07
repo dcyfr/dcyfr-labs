@@ -1,4 +1,4 @@
-<!-- TLP:AMBER - Internal Use Only -->
+<!-- TLP:CLEAR -->
 
 # DESIGN TOKENS COMPREHENSIVE
 
@@ -1662,15 +1662,15 @@ The validation script discovered **200+ design token violations** across the cod
 
 | File                                                     | Violations | Primary Issues                                              |
 | -------------------------------------------------------- | ---------- | ----------------------------------------------------------- |
-| src/components/home/trending-technologies-panel.tsx      | 18         | SEMANTIC_COLORS.accent._.badge, ANIMATION.transition._      |
+| src/components/home/trending-technologies-panel.tsx      | 18         | SEMANTIC*COLORS.accent.*.badge, ANIMATION.transition.\_     |
 | src/components/home/combined-stats-explore.tsx           | 12         | ANIMATION.transition.\*, ANIMATION.effects.countUp          |
 | src/components/home/explore-cards.tsx                    | 12         | ANIMATION.transition.\*, ANIMATION.effects.countUp          |
 | src/lib/toast.tsx                                        | 12         | ANIMATION.duration._, SEMANTIC_COLORS.alert._.icon          |
-| src/lib/activity/types.ts                                | 11         | SEMANTIC_COLORS.accent._.text, alert._.icon                 |
+| src/lib/activity/types.ts                                | 11         | SEMANTIC*COLORS.accent.*.text, alert.\_.icon                |
 | src/components/home/explore-section.tsx                  | 7          | ANIMATION.transition.\*                                     |
 | src/components/home/trending-posts-panel.tsx             | 7          | ANIMATION.transition.\*, ANIMATION.effects.countUp          |
 | src/components/home/trending-projects-panel.tsx          | 7          | ANIMATION.transition.\*, SEMANTIC_COLORS.alert.success.text |
-| src/components/features/github/server-github-heatmap.tsx | 12         | SEMANTIC_COLORS.alert._._                                   |
+| src/components/features/github/server-github-heatmap.tsx | 12         | SEMANTIC*COLORS.alert.*.\_                                  |
 | src/components/home/featured-post-hero.tsx               | 9          | ANIMATION.\*, SPACING.subsection                            |
 
 ---

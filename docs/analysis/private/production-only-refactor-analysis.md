@@ -1,3 +1,4 @@
+<!-- TLP:CLEAR -->
 # Production-Only Refactor Analysis
 
 **Analysis Date:** February 27, 2026
