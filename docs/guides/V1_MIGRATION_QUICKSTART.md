@@ -1,4 +1,4 @@
-<!-- TLP:AMBER - Internal Use Only -->
+<!-- TLP:CLEAR -->
 
 # V1 Content Migration Tool - Quick Start Guide
 
@@ -12,6 +12,7 @@
 ## Overview
 
 The V1 Content Migration Tool automates the migration of legacy website content to DCYFR Labs (Next.js 16), including:
+
 - AI-powered content modernization (Claude Sonnet 4)
 - Automatic MDX conversion
 - SEO redirect configuration
@@ -26,6 +27,7 @@ The V1 Content Migration Tool automates the migration of legacy website content 
 ### 1. Environment Setup
 
 **Required Environment Variables** (`.env.local`):
+
 ```bash
 # Required for AI modernization
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
@@ -38,6 +40,7 @@ V1_MANIFEST_PATH=./custom-manifest.json
 ```
 
 **Get Anthropic API Key:**
+
 1. Sign up at https://console.anthropic.com
 2. Create API key
 3. Add to `.env.local`
@@ -47,6 +50,7 @@ V1_MANIFEST_PATH=./custom-manifest.json
 You need one of the following:
 
 **Option A: Local Directory**
+
 ```
 v1-export/
 ├── posts/
@@ -58,11 +62,13 @@ v1-export/
 ```
 
 **Option B: Git Repository**
+
 ```bash
 git clone https://github.com/yourusername/old-website.git v1-export
 ```
 
 **Option C: WordPress Export**
+
 ```bash
 # Export from WordPress admin panel
 # Tools → Export → Download XML file
@@ -70,6 +76,7 @@ git clone https://github.com/yourusername/old-website.git v1-export
 ```
 
 **Option D: Manual Archive**
+
 - Save HTML pages from wayback machine
 - Organize into directory structure
 - Extract content manually
@@ -81,13 +88,15 @@ git clone https://github.com/yourusername/old-website.git v1-export
 ### Step 1: Create Migration Manifest
 
 **Auto-generate template:**
-``` bash
+
+```bash
 npm run migrate:v1
 ```
 
 This creates `v1-migration-manifest.json` with an example structure.
 
 **Edit the manifest:**
+
 ```json
 {
   "version": "1.0.0",
@@ -139,6 +148,7 @@ npm run migrate:v1:dry-run
 ```
 
 **Expected Output:**
+
 ```
 ╔════════════════════════════════════════════════════════╗
 ║      DCYFR V1 Website Content Migration Tool          ║
@@ -180,6 +190,7 @@ npm run migrate:v1
 ```
 
 **Confirmation Prompt:**
+
 ```
 ? Migrate 2 posts from V1 to V2? › (y/N)
 ```
@@ -188,15 +199,16 @@ npm run migrate:v1
 
 ## Command Reference
 
-| Command | Description |
-|---------|-------------|
-| `npm run migrate:v1` | Interactive migration (with confirmation) |
-| `npm run migrate:v1:dry-run` | Preview migration without changes |
-| `npm run migrate:v1:p0` | Migrate P0 (high-priority) content only |
-| `npm run migrate:v1:verbose` | Detailed logging |
-| `npm run migrate:v1 -- --priority=P1` | Migrate specific priority |
+| Command                               | Description                               |
+| ------------------------------------- | ----------------------------------------- |
+| `npm run migrate:v1`                  | Interactive migration (with confirmation) |
+| `npm run migrate:v1:dry-run`          | Preview migration without changes         |
+| `npm run migrate:v1:p0`               | Migrate P0 (high-priority) content only   |
+| `npm run migrate:v1:verbose`          | Detailed logging                          |
+| `npm run migrate:v1 -- --priority=P1` | Migrate specific priority                 |
 
 **Custom Options:**
+
 ```bash
 # Custom source path
 V1_SOURCE_PATH=./custom-export npm run migrate:v1
@@ -230,23 +242,27 @@ npm run migrate:v1 -- --priority=P0 --verbose --dry-run
 After running the migration:
 
 - [ ] **Review Migrated Content**
+
   ```bash
   ls -la src/content/blog/
   # Check generated MDX files
   ```
 
 - [ ] **Test Build**
+
   ```bash
   npm run build
   ```
 
 - [ ] **Review Redirects**
+
   ```bash
   cat v1-redirects.json
   # Verify all V1 URLs mapped correctly
   ```
 
 - [ ] **Add Redirects to Next.js Config**
+
   ```typescript
   // next.config.ts
   import v1Redirects from './v1-redirects.json';
@@ -262,6 +278,7 @@ After running the migration:
   ```
 
 - [ ] **Test Redirects Locally**
+
   ```bash
   npm run dev
   # Visit old URLs: http://localhost:3000/2020/03/nodejs-security
@@ -269,11 +286,13 @@ After running the migration:
   ```
 
 - [ ] **Validate Frontmatter**
+
   ```bash
   npm run validate:frontmatter
   ```
 
 - [ ] **Check Design Token Compliance**
+
   ```bash
   npm run validate:design-tokens
   ```
@@ -293,6 +312,7 @@ After running the migration:
 ### Issue: "ANTHROPIC_API_KEY not set"
 
 **Solution:**
+
 ```bash
 # Add to .env.local
 echo 'ANTHROPIC_API_KEY=your_key_here' >> .env.local
@@ -305,11 +325,13 @@ npm run migrate:v1:dry-run
 ### Issue: "Content file not found"
 
 **Error:**
+
 ```
 ❌ Content file not found: ./v1-export/posts/missing-post.md
 ```
 
 **Solution:**
+
 - Verify `contentPath` in manifest matches actual file location
 - Check file exists:
   ```bash
@@ -320,11 +342,13 @@ npm run migrate:v1:dry-run
 ### Issue: AI Modernization Failed
 
 **Error:**
+
 ```
 ❌ AI modernization failed: Rate limit exceeded
 ```
 
 **Solution:**
+
 - Wait for rate limit reset (check Anthropic dashboard)
 - Or process in smaller batches:
   ```bash
@@ -337,11 +361,13 @@ npm run migrate:v1:dry-run
 ### Issue: Slug Collision
 
 **Error:**
+
 ```
 Error: EEXIST: file already exists, mkdir 'src/content/blog/docker-intro'
 ```
 
 **Solution:**
+
 - Choose different slug in manifest:
   ```json
   {

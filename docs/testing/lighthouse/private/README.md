@@ -1,3 +1,4 @@
+<!-- TLP:CLEAR -->
 # Lighthouse Performance Reports
 
 This directory contains automated Lighthouse performance test reports for dcyfr-labs.

@@ -1,4 +1,5 @@
-<!-- TLP:AMBER - Internal Use Only -->
+<!-- TLP:CLEAR -->
+
 # Cache Management Operations Guide
 
 **Information Classification:** TLP:AMBER (Limited Distribution)
@@ -30,15 +31,18 @@ The dcyfr-labs application uses Redis caching for external API data to prevent r
 ### Cache Refresh Strategy
 
 **Primary:** GitHub Actions Cron (Daily at 6:00 AM UTC)
+
 - Workflow: `.github/workflows/cache-refresh.yml`
 - Trigger: Scheduled + manual dispatch
 - Authentication: `CRON_SECRET` GitHub secret
 
 **Fallback:** Manual trigger via API endpoint
+
 - Endpoint: `POST https://www.dcyfr.ai/api/admin/populate-cache`
 - Authentication: `Authorization: Bearer $CRON_SECRET`
 
 **Build-Time:** Cache population during deployment
+
 - Script: `scripts/populate-build-cache.mjs`
 - Runs: During `npm run build`
 - Only populates if Redis credentials available
@@ -52,6 +56,7 @@ The dcyfr-labs application uses Redis caching for external API data to prevent r
 **Endpoint:** `GET https://www.dcyfr.ai/api/health/cache`
 
 **Healthy Response:**
+
 ```json
 {
   "healthy": true,
@@ -66,12 +71,13 @@ The dcyfr-labs application uses Redis caching for external API data to prevent r
 ```
 
 **Unhealthy Response:**
+
 ```json
 {
   "healthy": false,
   "summary": "1/4 cache keys populated",
   "checks": {
-    "credly_all": { "cached": false, "status": "MISSING" },
+    "credly_all": { "cached": false, "status": "MISSING" }
     // ... other keys
   }
 }
@@ -80,11 +86,13 @@ The dcyfr-labs application uses Redis caching for external API data to prevent r
 ### Automated Monitoring
 
 **GitHub Actions Workflow:**
+
 - Daily health check after cache refresh
 - Alerts on failure (configurable Slack/Discord webhook)
 - Visible in Actions tab: https://github.com/dcyfr/dcyfr-labs/actions
 
 **Sentry Integration:**
+
 - Cache miss warnings in production
 - API fetch failures tracked
 - Tagged with `cache:credly` or `cache:github`
@@ -96,12 +104,14 @@ The dcyfr-labs application uses Redis caching for external API data to prevent r
 ### Manual Cache Refresh
 
 **When to use:**
+
 - Cache health check shows unhealthy status
 - After extended downtime
 - After Redis maintenance
 - To verify new deployment
 
 **Method 1: GitHub Actions (Recommended)**
+
 ```bash
 # Via GitHub CLI
 gh workflow run cache-refresh.yml
@@ -111,6 +121,7 @@ gh workflow run cache-refresh.yml
 ```
 
 **Method 2: Direct API Call**
+
 ```bash
 # Get CRON_SECRET from Vercel
 cd dcyfr-labs
@@ -127,6 +138,7 @@ curl -s https://www.dcyfr.ai/api/health/cache | jq '.healthy'
 ```
 
 **Method 3: Local Development**
+
 ```bash
 # Populate local/preview cache
 npm run populate:cache
@@ -138,6 +150,7 @@ curl http://localhost:3000/api/dev/populate-cache
 ### Cache Invalidation
 
 **Clear specific cache:**
+
 ```bash
 # Requires Redis CLI or Upstash console
 # Production Redis: UPSTASH_REDIS_REST_URL
@@ -146,6 +159,7 @@ redis-cli DEL "github:contributions:dcyfr"
 ```
 
 **Clear all cache:**
+
 ```bash
 # Danger: This clears ALL keys in the database
 redis-cli FLUSHDB
@@ -154,6 +168,7 @@ redis-cli FLUSHDB
 ### Verify Cache Population
 
 **Check key existence:**
+
 ```bash
 # Via Upstash Console
 # https://console.upstash.com/redis/<your-db-id>
@@ -173,11 +188,13 @@ redis-cli GET "credly:badges:dcyfr:all" | jq '.badges | length'
 ### Issue: Cache Keys Missing
 
 **Symptoms:**
+
 - `/api/health/cache` shows `healthy: false`
 - Homepage shows "Cache key not found" errors
 - Badge/Skills sections show error states
 
 **Diagnosis:**
+
 ```bash
 # Check cache health
 curl -s https://www.dcyfr.ai/api/health/cache | jq '.'
@@ -191,6 +208,7 @@ vercel logs --prod --since 24h | grep "Admin Cache"
 ```
 
 **Resolution:**
+
 1. Manually trigger cache refresh (see Manual Cache Refresh above)
 2. Check GitHub Actions logs for errors
 3. Verify `CRON_SECRET` is set in GitHub Secrets
@@ -199,14 +217,17 @@ vercel logs --prod --since 24h | grep "Admin Cache"
 ### Issue: Partial Cache Population
 
 **Symptoms:**
+
 - GitHub cache works, Credly cache doesn't (or vice versa)
 
 **Possible Causes:**
+
 1. External API rate limiting
 2. Network timeout
 3. API endpoint temporary downtime
 
 **Resolution:**
+
 ```bash
 # Test Credly API directly
 curl -v https://www.credly.com/users/dcyfr/badges.json
@@ -224,11 +245,13 @@ curl -X POST https://www.dcyfr.ai/api/admin/populate-cache \
 ### Issue: Cache Refresh Failing
 
 **Symptoms:**
+
 - GitHub Actions workflow fails
 - API endpoint returns 500 error
 - Sentry shows repeated cache errors
 
 **Check Logs:**
+
 ```bash
 # GitHub Actions logs
 gh run view --log-failed
@@ -242,21 +265,23 @@ vercel logs --prod --since 1h | grep "populate-cache"
 
 **Common Errors:**
 
-| Error | Cause | Fix |
-|-------|-------|-----|
-| `401 Unauthorized` | Invalid CRON_SECRET | Regenerate and update secret |
-| `Timeout` | External API slow | Retry logic will handle (max 3 attempts) |
-| `Rate limit exceeded` | Too many API calls | Wait for rate limit reset |
-| `Redis connection failed` | Redis downtime | Check Upstash status |
+| Error                     | Cause               | Fix                                      |
+| ------------------------- | ------------------- | ---------------------------------------- |
+| `401 Unauthorized`        | Invalid CRON_SECRET | Regenerate and update secret             |
+| `Timeout`                 | External API slow   | Retry logic will handle (max 3 attempts) |
+| `Rate limit exceeded`     | Too many API calls  | Wait for rate limit reset                |
+| `Redis connection failed` | Redis downtime      | Check Upstash status                     |
 
 ### Issue: High Cache Miss Rate
 
 **Symptoms:**
+
 - Slow page loads
 - External API errors
 - Sentry warnings about cache misses
 
 **Check:**
+
 ```bash
 # View cache stats
 curl -s https://www.dcyfr.ai/api/health/cache
@@ -267,6 +292,7 @@ redis-cli TTL "credly:badges:dcyfr:all"
 ```
 
 **Resolution:**
+
 - Ensure cron job running daily
 - Consider increasing TTL if data changes infrequently
 - Add monitoring for cache miss rate
@@ -278,6 +304,7 @@ redis-cli TTL "credly:badges:dcyfr:all"
 ### Environment Variables
 
 **Production (Vercel):**
+
 ```bash
 CRON_SECRET=<secret-token>
 UPSTASH_REDIS_REST_URL=https://...
@@ -286,6 +313,7 @@ GITHUB_TOKEN=<github-pat>
 ```
 
 **Preview/Development:**
+
 ```bash
 UPSTASH_REDIS_REST_URL_PREVIEW=https://...
 UPSTASH_REDIS_REST_TOKEN_PREVIEW=<token>
@@ -307,6 +335,7 @@ gh secret list | grep CRON
 ### Cron Schedule
 
 **GitHub Actions:** `.github/workflows/cache-refresh.yml`
+
 ```yaml
 on:
   schedule:
@@ -314,6 +343,7 @@ on:
 ```
 
 **Vercel Cron:** `vercel.json` (requires Pro plan)
+
 ```json
 {
   "crons": [
@@ -331,12 +361,12 @@ on:
 
 ### Service Level Objectives
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Cache Availability | 99.5% | Monitor in Sentry |
-| Cache Refresh Success Rate | 98% | GitHub Actions history |
-| Cache Miss Rate | <5% | Application logs |
-| Health Check Response Time | <500ms | Uptime monitoring |
+| Metric                     | Target | Current                |
+| -------------------------- | ------ | ---------------------- |
+| Cache Availability         | 99.5%  | Monitor in Sentry      |
+| Cache Refresh Success Rate | 98%    | GitHub Actions history |
+| Cache Miss Rate            | <5%    | Application logs       |
+| Health Check Response Time | <500ms | Uptime monitoring      |
 
 ### Monitoring Dashboards
 
@@ -352,11 +382,13 @@ on:
 ### Authentication
 
 **API Endpoint:**
+
 - Requires `CRON_SECRET` in Authorization header
 - Secret rotation: Quarterly (recommended)
 - Never log or expose secret in responses
 
 **Rotate Secret:**
+
 ```bash
 # Generate new secret
 NEW_SECRET=$(openssl rand -base64 32)
@@ -376,10 +408,12 @@ curl -X POST https://www.dcyfr.ai/api/admin/populate-cache \
 ### Rate Limiting
 
 **External APIs:**
+
 - Credly: ~100 requests/hour (estimated)
 - GitHub: 5,000 requests/hour (with token)
 
 **Internal Endpoints:**
+
 - `/api/admin/populate-cache`: No rate limit (authenticated only)
 - `/api/health/cache`: 60 requests/minute (public)
 
@@ -403,6 +437,7 @@ curl -X POST https://www.dcyfr.ai/api/admin/populate-cache \
 3. Contact: hello@dcyfr.ai
 
 **Emergency Contacts:**
+
 - On-call DevOps: [Contact Information]
 - Upstash Support: https://upstash.com/support
 - Vercel Support: https://vercel.com/support
