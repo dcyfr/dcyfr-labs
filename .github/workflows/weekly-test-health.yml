@@ -35,7 +35,7 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          SENTRY_AUTH_TOKEN: op://Development/dcyfr-labs-sentry-auth-token/credential
+          SENTRY_AUTH_TOKEN: op://Production/Sentry/auth_token
 
 
       - name: Setup Node.js

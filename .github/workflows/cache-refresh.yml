@@ -19,7 +19,7 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          CRON_SECRET: op://Development/dcyfr-labs-cron-secret/password
+          CRON_SECRET: op://Production/Cron Secret/credential
 
       - name: Trigger Cache Population
         id: populate

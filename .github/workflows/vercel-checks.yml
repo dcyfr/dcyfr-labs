@@ -45,8 +45,8 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          VERCEL_TOKEN: op://CI-CD/dcyfr-labs-vercel-token/credential
-          VERCEL_AUTOMATION_BYPASS_SECRET: op://h3s3jppnlhtegkzzh3ghhkrugq/cu5fwwvuxecv6r3uhwa6rlp5c4/automation_bypass_secret
+          VERCEL_TOKEN: op://Production/Vercel/token
+          VERCEL_AUTOMATION_BYPASS_SECRET: op://Production/Vercel/automation_bypass_secret
 
       - name: Load optional LHCI token from 1Password
         id: load-lhci-token
@@ -56,7 +56,7 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          LHCI_GITHUB_APP_TOKEN: op://CI-CD/dcyfr-labs-lhci-github-app-token/credential
+          LHCI_GITHUB_APP_TOKEN: op://CI-CD/dcyfr-labs-lhci-github-app-token/credential  # TODO: Create this item in 1Password or remove LHCI integration
 
       - name: Warn when LHCI token is unavailable
         if: steps.load-lhci-token.outcome == 'failure'

@@ -63,7 +63,7 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          VERCEL_TOKEN: op://CI-CD/dcyfr-labs-vercel-token/credential
+          VERCEL_TOKEN: op://Production/Vercel/token
       
       - name: Extract deployment context
         id: context
@@ -233,7 +233,7 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          VERCEL_TOKEN: op://CI-CD/dcyfr-labs-vercel-token/credential
+          VERCEL_TOKEN: op://Production/Vercel/token
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
