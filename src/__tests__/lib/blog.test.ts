@@ -539,10 +539,10 @@ describe('blog utilities', () => {
         expect(isPostVisible(post)).toBe(true);
       });
 
-      it('should hide demo posts in preview', () => {
+      it('should show demo posts in preview', () => {
         const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
-        // Even in preview, demo posts should be hidden (isDevelopment defaults to false in test env)
-        expect(isPostVisible(post, false, false)).toBe(false);
+        // Demo posts are visible in preview (isProduction = false)
+        expect(isPostVisible(post, false, false)).toBe(true);
       });
     });
 
@@ -557,9 +557,10 @@ describe('blog utilities', () => {
         expect(isPostVisible(post, true, false)).toBe(false);
       });
 
-      it('should hide demo posts in preview (non-production, non-development)', () => {
+      it('should show demo posts in preview (non-production, non-development)', () => {
         const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
-        expect(isPostVisible(post, false, false)).toBe(false);
+        // Demo posts visible in dev + preview; hidden only in production
+        expect(isPostVisible(post, false, false)).toBe(true);
       });
 
       it('should not affect non-demo posts', () => {

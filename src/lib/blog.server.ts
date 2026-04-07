@@ -87,8 +87,8 @@ export function isPostVisible(
     process.env.VERCEL_ENV !== 'preview',
   isDevelopment: boolean = process.env.NODE_ENV === 'development'
 ): boolean {
-  // Demo posts are only visible in local development (never in preview or production)
-  if (post.category === 'Demo' && !isDevelopment) return false;
+  // Demo posts are hidden in production; visible in local dev and Vercel preview
+  if (post.category === 'Demo' && isProduction) return false;
 
   if (!isProduction) return true;
   if (post.draft) return false;
