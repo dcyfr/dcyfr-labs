@@ -55,20 +55,10 @@ jobs:
 
       - name: Run sync (quick mode)
         if: github.event.inputs.mode == 'quick' || github.event_name == 'schedule'
-        env:
-          UPSTASH_REDIS_REST_URL: $UPSTASH_REDIS_REST_URL
-          UPSTASH_REDIS_REST_TOKEN: $UPSTASH_REDIS_REST_TOKEN
-          UPSTASH_REDIS_REST_URL_PREVIEW: $UPSTASH_REDIS_REST_URL_PREVIEW
-          UPSTASH_REDIS_REST_TOKEN_PREVIEW: $UPSTASH_REDIS_REST_TOKEN_PREVIEW
         run: npm run sync:metrics:quick
 
       - name: Run sync (full mode)
         if: github.event.inputs.mode == 'full' && github.event_name == 'workflow_dispatch'
-        env:
-          UPSTASH_REDIS_REST_URL: $UPSTASH_REDIS_REST_URL
-          UPSTASH_REDIS_REST_TOKEN: $UPSTASH_REDIS_REST_TOKEN
-          UPSTASH_REDIS_REST_URL_PREVIEW: $UPSTASH_REDIS_REST_URL_PREVIEW
-          UPSTASH_REDIS_REST_TOKEN_PREVIEW: $UPSTASH_REDIS_REST_TOKEN_PREVIEW
         run: npm run sync:metrics
 
       - name: Report sync status

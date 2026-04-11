@@ -56,7 +56,7 @@ A modern, full-featured developer blog and portfolio built with Next.js (App Rou
 
 `dcyfr-labs` is a production application in the **DCYFR Labs** portfolio.
 
-- **DCYFR** is a registered trademark of DCYFR Labs.
+- **DCYFR** is a trademark of DCYFR Labs.
 - Primary domain: [www.dcyfr.ai](https://www.dcyfr.ai)
 - Trademark guidance: [TRADEMARK.md](../TRADEMARK.md)
 - Licensing details: [LICENSE](./LICENSE)
