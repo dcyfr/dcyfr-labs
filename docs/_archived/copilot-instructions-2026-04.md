@@ -1,3 +1,6 @@
+<!-- TLP:CLEAR -->
+<!-- Historical snapshot: pre-cleanup .github/copilot-instructions.md, preserved for reference after the topline rewrite in dcyfr-labs-cleanup. See /.github/copilot-instructions.md for the current version. -->
+
 # AI Contributor Guide
 
 Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + MDX portfolio.

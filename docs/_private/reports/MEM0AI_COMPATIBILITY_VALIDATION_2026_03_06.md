@@ -1,4 +1,4 @@
-<!-- TLP:CLEAR -->
+<!-- TLP:AMBER -->
 
 # mem0ai Compatibility Validation Report
 

@@ -1,4 +1,4 @@
-<!-- TLP:CLEAR -->
+<!-- TLP:AMBER -->
 
 # Root Configuration Analysis - February 27, 2026
 

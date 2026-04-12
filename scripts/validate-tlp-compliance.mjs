@@ -100,9 +100,14 @@ function isOperationalFile(filename) {
 
 /**
  * Check if file is in a private directory
+ *
+ * Recognizes both the nested-topic convention (docs/<topic>/private/) and
+ * the top-level underscore-prefixed convention (docs/_private/) used for
+ * dated/status/report artifacts kept for history but not part of the
+ * canonical public docs surface.
  */
 function isInPrivateDir(filePath) {
-  return filePath.includes('/private/');
+  return filePath.includes('/private/') || filePath.includes('/_private/');
 }
 
 /**
@@ -180,9 +185,11 @@ function findMarkdownFiles(dir, fileList = []) {
  * Validate a single markdown file
  */
 function isOutsideDocsDir(relativePath, filename) {
-  return !relativePath.startsWith('docs/')
-    && !relativePath.startsWith('.github/')
-    && !SKIP_FILES.includes(filename);
+  return (
+    !relativePath.startsWith('docs/') &&
+    !relativePath.startsWith('.github/') &&
+    !SKIP_FILES.includes(filename)
+  );
 }
 
 function isMissingTLPMarker(isInDocs, isPrivate, tlpMarker) {
