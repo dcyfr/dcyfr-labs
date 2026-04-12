@@ -13,10 +13,12 @@
 
 import fs from 'fs';
 import path from 'path';
+import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '../..');
+const requireFromRoot = createRequire(path.join(rootDir, 'package.json'));
 
 const checks = [];
 
@@ -31,19 +33,20 @@ checks.push({
   file: 'src/app/api/contact/route.ts',
   details: hasBotIDImport
     ? 'checkBotId is properly imported from botid/server'
-    : 'checkBotId import is missing or incorrectly commented out'
+    : 'checkBotId import is missing or incorrectly commented out',
 });
 
 // Check for BotID logic - can be either enabled via ENABLE_BOTID flag or with shouldUseBotId variable
-const hasBotIDLogic = contactRouteContent.includes('if (process.env.ENABLE_BOTID === \'1\')') ||
-                      contactRouteContent.includes('shouldUseBotId');
+const hasBotIDLogic =
+  contactRouteContent.includes("if (process.env.ENABLE_BOTID === '1')") ||
+  contactRouteContent.includes('shouldUseBotId');
 checks.push({
   name: 'BotID check logic in contact API',
   passed: hasBotIDLogic,
   file: 'src/app/api/contact/route.ts',
   details: hasBotIDLogic
     ? 'BotID check is present (may be disabled via shouldUseBotId flag)'
-    : 'BotID check logic is missing'
+    : 'BotID check logic is missing',
 });
 
 // Check 2: Client-side initialization
@@ -57,7 +60,7 @@ checks.push({
   file: 'src/instrumentation-client.ts',
   details: hasInitBotId
     ? 'initBotId is called to protect /api/contact'
-    : 'initBotId initialization is missing'
+    : 'initBotId initialization is missing',
 });
 
 const hasContactProtection = instrumentationContent.includes('"/api/contact"');
@@ -67,7 +70,7 @@ checks.push({
   file: 'src/instrumentation-client.ts',
   details: hasContactProtection
     ? '/api/contact is configured for BotID protection'
-    : '/api/contact is not in the protected routes list'
+    : '/api/contact is not in the protected routes list',
 });
 
 // Check 3: Next.js config wrapping
@@ -81,7 +84,39 @@ checks.push({
   file: 'next.config.ts',
   details: hasWithBotId
     ? 'next.config.ts is properly wrapped with withBotId'
-    : 'withBotId wrapper is missing from next.config.ts'
+    : 'withBotId wrapper is missing from next.config.ts',
+});
+
+// Check 3b: the withBotId import subpath actually resolves against botid's
+// exports map. This prevents a repeat of PR #398 → prod break (2026-04-11),
+// where `from 'botid/next'` passed the substring match above but blew up at
+// next.config.ts load time because botid's exports map only publishes
+// './next/config', not './next'. Substring matching the identifier isn't
+// enough — the subpath has to be resolvable.
+const importMatch = nextConfigContent.match(
+  /import\s*\{[^}]*withBotId[^}]*\}\s*from\s*['"]([^'"]+)['"]/
+);
+const importedSubpath = importMatch?.[1] ?? null;
+let subpathResolves = false;
+let subpathResolveError = null;
+if (importedSubpath) {
+  try {
+    requireFromRoot.resolve(importedSubpath);
+    subpathResolves = true;
+  } catch (err) {
+    subpathResolveError = err.message;
+  }
+}
+checks.push({
+  name: 'withBotId import subpath resolves against botid exports map',
+  passed: subpathResolves,
+  file: 'next.config.ts',
+  details: !importedSubpath
+    ? 'Could not find the withBotId import line in next.config.ts'
+    : subpathResolves
+      ? `${importedSubpath} resolves against node_modules/botid/package.json exports`
+      : `${importedSubpath} does not resolve: ${subpathResolveError}. ` +
+        `Check node_modules/botid/package.json 'exports' for a valid subpath (likely './next/config').`,
 });
 
 // Check 4: BotID dependency
@@ -95,7 +130,7 @@ checks.push({
   file: 'package.json',
   details: hasBotIDDep
     ? `BotID v${hasBotIDDep} is installed`
-    : 'BotID dependency is missing from package.json'
+    : 'BotID dependency is missing from package.json',
 });
 
 // Check 5: BotID tests exist
@@ -107,7 +142,7 @@ checks.push({
   file: 'src/__tests__/api/contact-botid.test.ts',
   details: testExists
     ? 'BotID tests are present and can validate enabled/disabled states'
-    : 'BotID test file is missing'
+    : 'BotID test file is missing',
 });
 
 // Print results
@@ -128,7 +163,7 @@ checks.forEach((check, index) => {
 
 console.log('\n' + '═'.repeat(70));
 
-const summary = checks.filter(c => c.passed).length;
+const summary = checks.filter((c) => c.passed).length;
 console.log(`\n📊 Results: ${summary}/${checks.length} checks passed\n`);
 
 if (allPassed) {
