@@ -542,35 +542,35 @@ describe('blog utilities', () => {
       it('should show demo posts in preview', () => {
         const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
         // Demo posts are visible in preview (isProduction = false)
-        expect(isPostVisible(post, false, false)).toBe(true);
+        expect(isPostVisible(post, false)).toBe(true);
       });
     });
 
     describe('demo posts (category = "Demo")', () => {
       it('should show demo posts in local development', () => {
         const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
-        expect(isPostVisible(post, false, true)).toBe(true);
+        expect(isPostVisible(post, false)).toBe(true);
       });
 
       it('should hide demo posts in production', () => {
         const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
-        expect(isPostVisible(post, true, false)).toBe(false);
+        expect(isPostVisible(post, true)).toBe(false);
       });
 
       it('should show demo posts in preview (non-production, non-development)', () => {
         const post = { draft: true, category: 'Demo' as const, publishedAt: pastDate };
         // Demo posts visible in dev + preview; hidden only in production
-        expect(isPostVisible(post, false, false)).toBe(true);
+        expect(isPostVisible(post, false)).toBe(true);
       });
 
       it('should not affect non-demo posts', () => {
         const post = { draft: false, category: 'Architecture' as const, publishedAt: pastDate };
-        expect(isPostVisible(post, false, false)).toBe(true);
+        expect(isPostVisible(post, false)).toBe(true);
       });
 
       it('should not affect posts without a category', () => {
         const post = { draft: false, publishedAt: pastDate };
-        expect(isPostVisible(post, false, false)).toBe(true);
+        expect(isPostVisible(post, false)).toBe(true);
       });
     });
   });
@@ -628,9 +628,11 @@ describe('blog utilities', () => {
     ];
 
     it('should include categories with non-archived posts when sortBy is not "archived"', () => {
-      const allCategories = (Array.from(
-        new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
-      ) as string[]).sort((a, b) => a.localeCompare(b));
+      const allCategories = (
+        Array.from(
+          new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
+        ) as string[]
+      ).sort((a, b) => a.localeCompare(b));
 
       const availableCategories = allCategories.filter((category) => {
         return mockPostsWithCategories.some((post) => post.category === category && !post.archived);
@@ -645,9 +647,11 @@ describe('blog utilities', () => {
     });
 
     it('should include all categories when sortBy is "archived"', () => {
-      const allCategories = (Array.from(
-        new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
-      ) as string[]).sort((a, b) => a.localeCompare(b));
+      const allCategories = (
+        Array.from(
+          new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
+        ) as string[]
+      ).sort((a, b) => a.localeCompare(b));
 
       // When viewing archived posts, show all categories
       const availableCategories = allCategories;
@@ -660,9 +664,11 @@ describe('blog utilities', () => {
     });
 
     it('should filter categories correctly for mixed archived/active posts', () => {
-      const allCategories = (Array.from(
-        new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
-      ) as string[]).sort((a, b) => a.localeCompare(b));
+      const allCategories = (
+        Array.from(
+          new Set(mockPostsWithCategories.map((p) => p.category).filter(Boolean))
+        ) as string[]
+      ).sort((a, b) => a.localeCompare(b));
 
       const availableCategories = allCategories.filter((category) => {
         return mockPostsWithCategories.some((post) => post.category === category && !post.archived);
