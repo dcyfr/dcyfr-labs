@@ -158,9 +158,7 @@ function getCircuitBreakerHealth(): CircuitBreakerHealth[] {
 
   return Object.entries(allMetrics).map(([service, metrics]) => {
     const successRate =
-      metrics.totalRequests > 0
-        ? metrics.totalSuccesses / metrics.totalRequests
-        : 1.0;
+      metrics.totalRequests > 0 ? metrics.totalSuccesses / metrics.totalRequests : 1.0;
 
     let status: 'healthy' | 'degraded' | 'failing' = 'healthy';
     if (metrics.state === 'OPEN') {
