@@ -71,12 +71,11 @@ export function isScheduledPost(publishedAt: string): boolean {
  * Check if a post should be visible based on draft status, scheduled date,
  * and demo category.
  *
- * Demo posts (category === 'Demo') are only visible in local development.
- * They are hidden in both Vercel preview and production environments.
+ * Demo posts (category === 'Demo') are visible in local development and Vercel
+ * preview environments. They are hidden in production only.
  *
  * @param post The post to check
  * @param isProduction Whether we're in production environment
- * @param isDevelopment Whether we're in local development (NODE_ENV === 'development')
  * @returns true if the post should be visible
  * @internal Exported for testing purposes only
  */
@@ -84,8 +83,7 @@ export function isPostVisible(
   post: Pick<Post, 'draft' | 'publishedAt' | 'category'>,
   // Treat Vercel preview as non-production so drafts appear for testing
   isProduction: boolean = process.env.NODE_ENV === 'production' &&
-    process.env.VERCEL_ENV !== 'preview',
-  isDevelopment: boolean = process.env.NODE_ENV === 'development'
+    process.env.VERCEL_ENV !== 'preview'
 ): boolean {
   // Demo posts are hidden in production; visible in local dev and Vercel preview
   if (post.category === 'Demo' && isProduction) return false;
