@@ -169,7 +169,6 @@ git push origin main
   ```
 
 - [ ] **Create Integration Tests** (2 hours)
-
   - Test @dcyfr/ai memory storage/retrieval
   - Verify LangChain context handling
   - Validate Redis fallback in staging
@@ -182,7 +181,6 @@ git push origin main
 ### Long-Term (Q2 2026)
 
 - [ ] **Monitor mem0ai Updates**
-
   - Watch for v3.x release
   - Plan upgrade when peer deps updated
   - Consider alternative memory stores

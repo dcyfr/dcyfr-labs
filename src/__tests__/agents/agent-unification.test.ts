@@ -1,293 +1,143 @@
 /**
- * Agent Unification Tests
+ * Topline contract tests.
  *
- * Validates pattern consistency across Claude Code and GitHub Copilot agents.
- * Ensures all agents reference the same source patterns and produce consistent outputs.
+ * After the dcyfr-labs-cleanup Phase 5 rewrite, the four topline files
+ * (README.md, AGENTS.md, CLAUDE.md, .github/copilot-instructions.md) serve
+ * four different audiences defined in docs/automation-glossary.md. Each file
+ * is expected to:
+ *
+ *  - declare its audience via an HTML comment
+ *  - stay under a per-file line budget
+ *  - link to docs/automation-glossary.md exactly once
+ *  - avoid duplicating substantive content (≥80 chars) with the other files
+ *
+ * This test used to assert the presence of specific inline patterns
+ * (PageLayout, CONTAINER_WIDTHS, "Session Checkpoint System"). That contract
+ * was retired in the cleanup — inline patterns now live in the code and in
+ * targeted docs under docs/, not in topline files.
  */
 
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
-describe('Agent Unification Tests', () => {
-  describe('Pattern Consistency', () => {
-    it('should have consistent design token enforcement across all agents', () => {
-      // Read agent documentation
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-      const copilotMd = fs.readFileSync(
-        path.join(process.cwd(), '.github/copilot-instructions.md'),
-        'utf-8'
-      );
+type ToplineFile = {
+  file: string;
+  budget: number;
+  audiencePattern: RegExp;
+};
 
-      // Check for design token references
-      const designTokenPatterns = ['SPACING', 'TYPOGRAPHY', 'CONTAINER_WIDTHS', 'design-tokens'];
+const TOPLINE_FILES: ToplineFile[] = [
+  { file: 'README.md', budget: 200, audiencePattern: /humans/i },
+  { file: 'AGENTS.md', budget: 300, audiencePattern: /agent/i },
+  { file: 'CLAUDE.md', budget: 150, audiencePattern: /claude/i },
+  {
+    file: '.github/copilot-instructions.md',
+    budget: 120,
+    audiencePattern: /copilot/i,
+  },
+];
 
-      designTokenPatterns.forEach((pattern) => {
-        expect(claudeMd).toContain(pattern);
-        expect(copilotMd).toContain(pattern);
-      });
-    });
+const GLOSSARY_PATH = 'docs/automation-glossary.md';
 
-    it('should reference barrel exports consistently', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
+function read(rel: string): string {
+  return fs.readFileSync(path.join(process.cwd(), rel), 'utf-8');
+}
 
-      // Claude should mention barrel exports and @/* imports
-      expect(claudeMd).toContain('@/*');
-      expect(claudeMd.toLowerCase()).toContain('import');
-
-      // Note: Copilot instructions may be in different file structure
-      // This test validates Claude's documentation is complete
-    });
-
-    it('should have consistent layout pattern guidance', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      const layoutPatterns = ['PageLayout', 'PageHero'];
-
-      layoutPatterns.forEach((pattern) => {
-        expect(claudeMd).toContain(pattern);
+describe('Topline file contract', () => {
+  for (const { file, budget, audiencePattern } of TOPLINE_FILES) {
+    describe(file, () => {
+      it(`exists and is under the ${budget}-line budget`, () => {
+        const content = read(file);
+        const lineCount = content.split('\n').length;
+        expect(lineCount).toBeLessThanOrEqual(budget);
       });
 
-      // Note: Copilot may use abbreviated 80/20 patterns in separate docs
-      // This test validates Claude's documentation is complete
-    });
+      it('declares its audience in an HTML comment', () => {
+        const content = read(file);
+        const match = content.match(/<!--\s*audience:\s*([^-]+?)\s*-->/i);
+        expect(match, 'missing <!-- audience: ... --> comment').not.toBeNull();
+        expect(match![1]).toMatch(audiencePattern);
+      });
 
-    it('should have consistent metadata helper guidance', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-      const copilotMd = fs.readFileSync(
-        path.join(process.cwd(), '.github/copilot-instructions.md'),
-        'utf-8'
-      );
-
-      const metadataHelpers = [
-        'createPageMetadata',
-        'createArchivePageMetadata',
-        'createArticlePageMetadata',
-      ];
-
-      metadataHelpers.forEach((helper) => {
-        expect(claudeMd).toContain(helper);
-        // Copilot may use abbreviated 80/20 patterns
-        // so we just check for "metadata" concept
-        expect(copilotMd.toLowerCase()).toContain('metadata');
+      it('links to the automation glossary at least once and at most three times', () => {
+        const content = read(file);
+        // Count distinct markdown links whose href points at the glossary.
+        // Files may cite the glossary in the intro, in a contract-surface
+        // list, and in a related-files footer — three is the ceiling.
+        const linkPattern = /\[[^\]]*?\]\([^)]*docs\/automation-glossary\.md[^)]*\)/g;
+        const links = content.match(linkPattern) ?? [];
+        expect(links.length, `expected 1-3 glossary links in ${file}`).toBeGreaterThanOrEqual(1);
+        expect(links.length).toBeLessThanOrEqual(3);
       });
     });
-  });
+  }
+});
 
-  describe('Enforcement Rule Parity', () => {
-    it('should prohibit emojis in same locations across agents', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
+describe('Topline file de-duplication', () => {
+  // Strip markdown links, code spans, and table separators before comparing.
+  // Shared link hrefs and shared command tokens are expected overlap — the
+  // contract only bans substantive PROSE duplication across the four files.
+  function normalize(text: string): string {
+    return text
+      .replace(/\[[^\]]*?\]\([^)]*\)/g, '') // markdown links
+      .replace(/`[^`\n]+`/g, '') // inline code spans
+      .replace(/^\s*[-|:]{3,}.*$/gm, '') // table separators
+      .replace(/^\s*```[\s\S]*?```\s*$/gm, '') // fenced code blocks
+      .replace(/<!--[\s\S]*?-->/g, ''); // html comments (incl. audience tag)
+  }
 
-      // Check for emoji prohibition rule
-      expect(claudeMd.toLowerCase()).toMatch(/emoji|emojis/);
-      expect(claudeMd.toLowerCase()).toMatch(/react icons|lucide/);
-    });
+  const contents = TOPLINE_FILES.map(({ file }) => ({
+    file,
+    text: normalize(read(file)),
+  }));
 
-    it('should enforce test data prevention consistently', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
+  function isSubstantive(chunk: string): boolean {
+    if (/^\s*$/.test(chunk)) return false;
+    // Require at least 40 non-whitespace characters in the 80-char window
+    // to rule out mostly-blank slices from the normalized text.
+    const nonSpace = chunk.replace(/\s+/g, '');
+    return nonSpace.length >= 40;
+  }
 
-      // Check for test data prevention rules
-      expect(claudeMd.toLowerCase()).toMatch(/test data|demo data|mock data|fabricated/);
-      expect(claudeMd.toLowerCase()).toMatch(/environment.*check|node_env|vercel_env/i);
-    });
-
-    it('should have consistent hardcoded value prohibition', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      // Should prohibit hardcoded spacing/typography/colors
-      expect(claudeMd.toLowerCase()).toMatch(/never.*hardcode|hardcoded/);
-
-      // Note: Copilot instructions may enforce via ESLint rules documented separately
-      // This test validates Claude's documentation is complete
-    });
-  });
-
-  describe('Decision Tree Consistency', () => {
-    it('should recommend same layout for standard pages', () => {
-      // Decision: Which layout to use for a standard page?
-      // Expected: PageLayout (90% of pages)
-
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-      const copilotMd = fs.readFileSync(
-        path.join(process.cwd(), '.github/copilot-instructions.md'),
-        'utf-8'
-      );
-
-      // Both should recommend PageLayout
-      expect(claudeMd).toContain('PageLayout');
-      expect(copilotMd).toContain('PageLayout');
-    });
-
-    it('should recommend same container width for standard content', () => {
-      // Decision: Which container width to use?
-      // Expected: CONTAINER_WIDTHS.standard (80% of content)
-
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-      const copilotMd = fs.readFileSync(
-        path.join(process.cwd(), '.github/copilot-instructions.md'),
-        'utf-8'
-      );
-
-      // Both should reference standard container
-      expect(claudeMd).toMatch(/CONTAINER_WIDTHS\.standard|standard.*container/);
-      expect(copilotMd).toMatch(/CONTAINER_WIDTHS\.standard|standard.*container/);
-    });
-
-    it('should have consistent approach to metadata helpers', () => {
-      // Decision: Which metadata helper to use?
-      // Expected: createPageMetadata() for standard pages
-
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      expect(claudeMd).toContain('createPageMetadata()');
-    });
-  });
-
-  describe('Documentation Sync', () => {
-    it('should reference shared source of truth (.github/agents/)', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      // Check for reference to shared agent patterns
-      expect(claudeMd.toLowerCase()).toMatch(/\.github\/agents|github\/agents/);
-    });
-
-    it('should have up-to-date agent operational systems section', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      // Check for checkpoint system
-      expect(claudeMd).toContain('Session Checkpoint System');
-    });
-
-    it('should have consistent NPM script references', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-      const packageJson = JSON.parse(
-        fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8')
-      );
-
-      // Check that documented scripts actually exist
-      const documentedScripts = ['checkpoint:start', 'checkpoint:stop'];
-
-      documentedScripts.forEach((script) => {
-        if (claudeMd.includes(script)) {
-          expect(packageJson.scripts).toHaveProperty(script);
-        }
-      });
-    });
-
-    it('should have matching file references across documentation', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      // Extract markdown links
-      const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
-      const links = [...claudeMd.matchAll(linkPattern)];
-
-      // Check that referenced files exist (sampling)
-      const criticalRefs = links.filter(
-        ([, , path]) =>
-          path.startsWith('docs/') || path.startsWith('src/') || path.startsWith('scripts/')
-      );
-
-      criticalRefs.forEach(([, , refPath]) => {
-        const cleanPath = refPath.split('#')[0]; // Remove anchors
-        const fullPath = path.join(process.cwd(), cleanPath);
-
-        // File should exist (allow some flexibility for documentation structure)
-        if (!cleanPath.includes('*') && !cleanPath.startsWith('http')) {
-          const exists = fs.existsSync(fullPath);
-          if (!exists) {
-            console.warn(`Referenced file not found: ${cleanPath}`);
-          }
-          // Don't fail test, just warn - some docs may be intentionally missing
-        }
-      });
-    });
-  });
-
-  describe('Agent Feature Parity', () => {
-    it('should document the same core capabilities across agents', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      // Core capabilities that should be documented
-      const coreCapabilities = ['design tokens', 'TypeScript', 'ESLint', 'test'];
-
-      coreCapabilities.forEach((capability) => {
-        expect(claudeMd.toLowerCase()).toContain(capability.toLowerCase());
-      });
-    });
-
-    it('should have consistent quick start commands', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-      const packageJson = JSON.parse(
-        fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8')
-      );
-
-      // Quick start commands mentioned in docs should exist
-      const quickStartCommands = ['npm run dev', 'npm run build', 'npm run test'];
-
-      quickStartCommands.forEach((cmd) => {
-        if (claudeMd.includes(cmd)) {
-          const scriptName = cmd.replace('npm run ', '');
-          if (scriptName !== 'dev' && scriptName !== 'build') {
-            // dev and build are standard, might have different names
-            expect(packageJson.scripts).toHaveProperty(scriptName);
+  for (let i = 0; i < contents.length; i++) {
+    for (let j = i + 1; j < contents.length; j++) {
+      const a = contents[i];
+      const b = contents[j];
+      it(`${a.file} and ${b.file} share no 80-char substantive prose`, () => {
+        const N = 80;
+        const dupes: string[] = [];
+        for (let k = 0; k <= a.text.length - N; k++) {
+          const sub = a.text.slice(k, k + N);
+          if (!isSubstantive(sub)) continue;
+          if (b.text.includes(sub)) {
+            dupes.push(sub);
+            k += N; // avoid counting the same run twice
           }
         }
+        expect(dupes, `found duplicated content: ${dupes.slice(0, 3).join(' | ')}`).toEqual([]);
       });
-    });
+    }
+  }
+});
+
+describe('Topline files point at the glossary that owns the taxonomy', () => {
+  it('docs/automation-glossary.md exists and declares its version', () => {
+    const glossary = read(GLOSSARY_PATH);
+    // Frontmatter must declare a semver on the first few lines so the
+    // manifest validator can cross-check glossary_version.
+    const versionMatch = glossary.match(/^version:\s*["']?([\d.]+)["']?\s*$/m);
+    expect(versionMatch, 'glossary missing version frontmatter').not.toBeNull();
+    expect(versionMatch![1]).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
-  describe('Validation Command Consistency', () => {
-    it('should reference same validation commands across agents', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      // Validation commands
-      const validationCommands = ['npm run lint', 'npm run typecheck', 'npm run test'];
-
-      validationCommands.forEach((cmd) => {
-        expect(claudeMd).toContain(cmd);
-      });
-    });
-
-    it('should document same quality gates', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      // Quality gates
-      const qualityGates = ['TypeScript', 'ESLint', 'test', 'design token'];
-
-      qualityGates.forEach((gate) => {
-        expect(claudeMd.toLowerCase()).toContain(gate.toLowerCase());
-      });
-    });
-  });
-
-  describe('Agent Operational Systems Integration', () => {
-    it('should document session checkpoint system', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      expect(claudeMd).toContain('Session Checkpoint System');
-    });
-
-    it('should reference correct documentation files if mentioned', () => {
-      const claudeMd = fs.readFileSync(path.join(process.cwd(), 'CLAUDE.md'), 'utf-8');
-
-      const docFiles = ['SESSION_RECOVERY_SYSTEM.md', 'PROVIDER_FALLBACK_SYSTEM.md'];
-
-      docFiles.forEach((file) => {
-        if (claudeMd.includes(file)) {
-          const fullPath = path.join(process.cwd(), 'docs/operations', file);
-          expect(fs.existsSync(fullPath)).toBe(true);
-        }
-      });
-    });
-
-    it('should have NPM scripts for all operational systems', () => {
-      const packageJson = JSON.parse(
-        fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8')
-      );
-
-      // Checkpoint system
-      expect(packageJson.scripts).toHaveProperty('checkpoint:start');
-      expect(packageJson.scripts).toHaveProperty('checkpoint:stop');
-    });
+  it('.well-known/automation.yaml glossary_version matches the glossary', () => {
+    const manifest = read('.well-known/automation.yaml');
+    const glossary = read(GLOSSARY_PATH);
+    const manifestVersion = manifest.match(/glossary_version:\s*["']?([\d.]+)["']?/);
+    const glossaryVersion = glossary.match(/^version:\s*["']?([\d.]+)["']?\s*$/m);
+    expect(manifestVersion).not.toBeNull();
+    expect(glossaryVersion).not.toBeNull();
+    expect(manifestVersion![1]).toBe(glossaryVersion![1]);
   });
 });

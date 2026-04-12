@@ -1,15 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
-import { timingSafeEqual } from "crypto";
-import * as Sentry from "@sentry/nextjs";
-import { blockExternalAccess } from "@/lib/api/api-security";
-import { getMultiplePostViewsInRange } from "@/lib/views.server";
-import { posts } from "@/data/posts";
-import {
-  rateLimit,
-  getClientIp,
-  createRateLimitHeaders,
-} from "@/lib/rate-limit";
-import { handleApiError } from "@/lib/error-handler";
+import { NextRequest, NextResponse } from 'next/server';
+import { timingSafeEqual } from 'crypto';
+import * as Sentry from '@sentry/nextjs';
+import { blockExternalAccess } from '@/lib/api/api-security';
+import { getMultiplePostViewsInRange } from '@/lib/views.server';
+import { posts } from '@/data/posts';
+import { rateLimit, getClientIp, createRateLimitHeaders } from '@/lib/rate-limit';
+import { handleApiError } from '@/lib/error-handler';
 
 /**
  * Analytics Daily Time-Series Endpoint
@@ -34,8 +30,7 @@ import { handleApiError } from "@/lib/error-handler";
  */
 
 const isDevelopment =
-  process.env.NODE_ENV === "development" ||
-  process.env.VERCEL_ENV === "preview";
+  process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview';
 
 const RATE_LIMIT_CONFIG = {
   limit: isDevelopment ? 60 : 10,
@@ -46,26 +41,22 @@ function validateApiKey(request: Request): boolean {
   const adminKey = process.env.ADMIN_API_KEY;
 
   if (!adminKey) {
-    console.error(
-      "[Analytics Daily API] ADMIN_API_KEY not configured - endpoint disabled"
-    );
+    console.error('[Analytics Daily API] ADMIN_API_KEY not configured - endpoint disabled');
     return false;
   }
 
-  const authHeader = request.headers.get("Authorization");
+  const authHeader = request.headers.get('Authorization');
 
   if (!authHeader) {
     return false;
   }
 
   // Support "Bearer TOKEN" format
-  const token = authHeader.startsWith("Bearer ")
-    ? authHeader.slice(7)
-    : authHeader;
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
 
   try {
-    const tokenBuf = Buffer.from(token, "utf8");
-    const keyBuf = Buffer.from(adminKey, "utf8");
+    const tokenBuf = Buffer.from(token, 'utf8');
+    const keyBuf = Buffer.from(adminKey, 'utf8');
 
     if (tokenBuf.length !== keyBuf.length) {
       return false;
@@ -74,7 +65,7 @@ function validateApiKey(request: Request): boolean {
     // Use timing-safe comparison
     return timingSafeEqual(tokenBuf, keyBuf);
   } catch (error) {
-    console.error("[Analytics Daily API] Error during key validation:", error);
+    console.error('[Analytics Daily API] Error during key validation:', error);
     return false;
   }
 }
@@ -83,15 +74,11 @@ function isAllowedEnvironment(): boolean {
   const nodeEnv = process.env.NODE_ENV;
   const vercelEnv = process.env.VERCEL_ENV;
 
-  if (vercelEnv === "production") {
+  if (vercelEnv === 'production') {
     return false;
   }
 
-  if (
-    nodeEnv === "development" ||
-    vercelEnv === "preview" ||
-    nodeEnv === "test"
-  ) {
+  if (nodeEnv === 'development' || vercelEnv === 'preview' || nodeEnv === 'test') {
     return true;
   }
 
@@ -122,7 +109,7 @@ function generateDateRange(days: number | null): Date[] {
  * Formats a date as ISO string (YYYY-MM-DD)
  */
 function formatDate(date: Date): string {
-  return date.toISOString().split("T")[0];
+  return date.toISOString().split('T')[0];
 }
 
 export async function GET(request: NextRequest) {
@@ -134,8 +121,8 @@ export async function GET(request: NextRequest) {
   if (!isAllowedEnvironment()) {
     return NextResponse.json(
       {
-        error: "Analytics not available in production",
-        message: "This endpoint is disabled in production for security reasons",
+        error: 'Analytics not available in production',
+        message: 'This endpoint is disabled in production for security reasons',
       },
       { status: 403 }
     );
@@ -145,9 +132,8 @@ export async function GET(request: NextRequest) {
   if (!validateApiKey(request)) {
     return NextResponse.json(
       {
-        error: "Unauthorized",
-        message:
-          "Valid API key required. Use Authorization header with Bearer token.",
+        error: 'Unauthorized',
+        message: 'Valid API key required. Use Authorization header with Bearer token.',
       },
       { status: 401 }
     );
@@ -160,18 +146,15 @@ export async function GET(request: NextRequest) {
   if (!rateLimitResult.success) {
     return NextResponse.json(
       {
-        error: "Rate limit exceeded",
-        message:
-          "Maximum requests per minute exceeded. Please try again later.",
+        error: 'Rate limit exceeded',
+        message: 'Maximum requests per minute exceeded. Please try again later.',
         retryAfter: Math.ceil((rateLimitResult.reset - Date.now()) / 1000),
       },
       {
         status: 429,
         headers: {
           ...createRateLimitHeaders(rateLimitResult),
-          "Retry-After": Math.ceil(
-            (rateLimitResult.reset - Date.now()) / 1000
-          ).toString(),
+          'Retry-After': Math.ceil((rateLimitResult.reset - Date.now()) / 1000).toString(),
         },
       }
     );
@@ -179,18 +162,18 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const daysParam = searchParams.get("days");
+    const daysParam = searchParams.get('days');
 
     // Validate days parameter
     let days: number | null;
-    if (daysParam === "all" || daysParam === null) {
+    if (daysParam === 'all' || daysParam === null) {
       days = null;
     } else {
       const parsedDays = parseInt(daysParam, 10);
       if (isNaN(parsedDays) || parsedDays < 1 || parsedDays > 365) {
         return NextResponse.json(
           {
-            error: "Invalid days parameter",
+            error: 'Invalid days parameter',
             message: "Days must be a number between 1 and 365, or 'all'",
           },
           { status: 400 }
@@ -224,9 +207,7 @@ export async function GET(request: NextRequest) {
       // Formula: weight = (index + 1) / total indices
       const weight = (index + 1) / dateRange.length;
       const distributedViews =
-        totalViewsInRange > 0
-          ? Math.round((totalViewsInRange * weight) / dateRange.length)
-          : 0;
+        totalViewsInRange > 0 ? Math.round((totalViewsInRange * weight) / dateRange.length) : 0;
 
       return {
         date: dateStr,
@@ -244,15 +225,15 @@ export async function GET(request: NextRequest) {
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
           ...createRateLimitHeaders(rateLimitResult),
         },
       }
     );
   } catch (error) {
     const errorInfo = handleApiError(error, {
-      route: "/api/analytics/daily",
-      method: "GET",
+      route: '/api/analytics/daily',
+      method: 'GET',
     });
 
     // For connection errors, return minimal response
@@ -262,7 +243,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       {
-        error: "Failed to fetch daily analytics",
+        error: 'Failed to fetch daily analytics',
         success: false,
       },
       { status: errorInfo.statusCode }

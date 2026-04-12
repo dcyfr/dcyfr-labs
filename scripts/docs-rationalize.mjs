@@ -56,7 +56,7 @@ const CONSOLIDATION_PATTERNS = {
   // Phase completion reports
   'phase-reports': {
     pattern: /PHASE_\d+.*(?:COMPLETE|SUMMARY).*\.md$/i,
-    consolidate: 'docs/reports/PHASE_COMPLETION_CONSOLIDATED.md',
+    consolidate: 'docs/_private/reports/PHASE_COMPLETION_CONSOLIDATED.md',
     category: 'reports',
   },
 
