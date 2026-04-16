@@ -426,6 +426,6 @@
     "@axiomhq/js": "^1.6.0"
   },
   "optionalDependencies": {
-    "@anthropic-ai/sdk": "0.82.0"
+    "@anthropic-ai/sdk": "0.89.0"
   }
 }
