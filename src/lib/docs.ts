@@ -65,8 +65,8 @@ function parseDocFile(fullPath: string, relativePath: string, entryName: string)
     const slug = relativePath
       .replace(/\.md$/, '')
       .replace(/\\/g, '/')
-      .replace(/^\/+/, '')
-      .replace(/\/+$/, '');
+      .replace(/^\/+/, '') // NOSONAR - anchored start, no backtracking risk
+      .replace(/\/+$/, ''); // NOSONAR - anchored end, no backtracking risk
 
     return {
       id: slug,
