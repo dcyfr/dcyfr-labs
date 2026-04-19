@@ -103,6 +103,25 @@ This app consumes the `@dcyfr-labs` shadcn registry hosted at [registry.dcyfr.ai
 
 **Installing a UI primitive:** prefer `npx shadcn@latest add @dcyfr-labs/<name>`. Only install from the default shadcn registry when the primitive is not yet published to `@dcyfr-labs`.
 
+**Stock primitives vs brand-variant siblings.** This repo's `src/components/ui/` intentionally holds BOTH:
+
+- **Stock shadcn primitives** — `button.tsx`, `card.tsx`, `badge.tsx`, `dialog.tsx`, `label.tsx`, `textarea.tsx`, `alert.tsx`, etc. These use the shadcn-default variant vocabulary (`default | outline | ghost | destructive | link | secondary`) and are the right tool for **generic utility usage** (admin forms, tables, modals without brand weight).
+- **Brand-variant siblings** — `dcyfr-button.tsx`, `dcyfr-card.tsx`, `dcyfr-badge.tsx`, `dcyfr-dialog.tsx`, `dcyfr-label.tsx`, `dcyfr-textarea.tsx`, `dcyfr-alert.tsx`. These use the DCYFR brand vocabulary (`brand | secure | ghostly | danger | glass | elevated | info | success | warning`) and are the right tool for **identity-forward surfaces** (marketing pages, hero CTAs, trust/security surfaces, product-store tiles).
+
+Both coexist. When composing a component, pick per-use-case:
+
+```tsx
+// Generic utility — no brand weight needed
+<Button variant="outline">Cancel</Button>
+<Card>...</Card>
+
+// Identity-forward — brand vocabulary fits
+<DcyfrButton variant="brand" size="lg">Get Started</DcyfrButton>
+<DcyfrCard variant="elevated">...</DcyfrCard>
+```
+
+If a surface needs a brand variant that doesn't exist yet, `npx shadcn@latest add @dcyfr-labs/<name>` installs it as a sibling to the stock file. Don't use `--overwrite`.
+
 **Authoring a new brand-aligned variant:** do not author it inside this repo. Contribute it upstream to `dcyfr-labs/dcyfr-labs-registry/` under the `dcyfr-labs-registry` OpenSpec change. Cross-repo work follows the scope-boundaries rule above — open a session against the registry repo.
 
 **Brand surface for agents and tools:** `docs/brand/` is the public-safe distillation of the TLP:AMBER source at `nexus/context/user/brand-voice.md`. Claude Design and Claude Code handoff bundles read from `docs/brand/`, not from the private source. Keep the two in sync when the private source changes — but never paste TLP:AMBER content into `docs/brand/`.
