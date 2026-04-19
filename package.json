@@ -178,6 +178,8 @@
     "security:autofix:status": "node scripts/ci/security-autofix-cli.mjs status",
     "security:autofix:prs": "node scripts/ci/security-autofix-cli.mjs prs",
     "security:check-alerts": "node scripts/security/check-all-alerts.mjs",
+    "security:sonar:hotspots:auto-review": "node scripts/security/auto-review-sonar-hotspots.mjs",
+    "security:sonar:hotspots:auto-review:dry-run": "node scripts/security/auto-review-sonar-hotspots.mjs --dry-run",
     "security:audit-suppressions": "bash scripts/security/audit-suppressions.sh",
     "audit:suppressions": "bash scripts/audit-suppressions.sh",
     "sbom:generate": "node scripts/security/generate-sbom.mjs",
