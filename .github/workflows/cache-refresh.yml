@@ -27,7 +27,7 @@ jobs:
           echo "🔄 Triggering cache refresh for production..."
 
           response=$(curl -X POST https://www.dcyfr.ai/api/admin/populate-cache \
-            -H "Authorization: Bearer $CRON_SECRET" \
+            -H "x-cron-secret: $CRON_SECRET" \
             -H "Content-Type: application/json" \
             --silent --show-error --max-time 60 --write-out "\nHTTP_CODE:%{http_code}")
 

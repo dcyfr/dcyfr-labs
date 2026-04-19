@@ -12,7 +12,7 @@ import { withCronAuth } from '@/lib/api/api-security';
  *
  * Usage:
  *   curl -X POST https://www.dcyfr.ai/api/admin/populate-cache \
- *     -H "Authorization: Bearer $CRON_SECRET"
+ *     -H "x-cron-secret: $CRON_SECRET"
  */
 
 const GITHUB_USERNAME = 'dcyfr';
