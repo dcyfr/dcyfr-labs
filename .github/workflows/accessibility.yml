@@ -72,27 +72,28 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const body = `## ⚠️ WCAG Color Contrast Violations Detected
-
-This PR introduces or affects elements that do not meet **WCAG 2.1 Level AA** color contrast requirements.
-
-### Requirements
-- **Normal text**: 4.5:1 contrast ratio minimum
-- **Large text** (18pt/14pt bold): 3:1 minimum
-- **UI components**: 3:1 minimum
-
-### Next Steps
-1. Review the workflow logs for specific violations
-2. Use a contrast checker tool: [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
-3. Update colors in \`src/lib/design-tokens.ts\` or component styles
-4. Re-run validation: \`npm run validate:contrast\`
-
-### Resources
-- [WCAG 2.1 Contrast Guidelines](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum)
-- [Modern UI/UX Design Standards (2025)](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/docs/ai/design-system.md)
-
-**Tip:** Consider using the OKLCH color space for perceptually uniform contrast adjustments.
-            `;
+            const body = [
+              '## ⚠️ WCAG Color Contrast Violations Detected',
+              '',
+              'This PR introduces or affects elements that do not meet **WCAG 2.1 Level AA** color contrast requirements.',
+              '',
+              '### Requirements',
+              '- **Normal text**: 4.5:1 contrast ratio minimum',
+              '- **Large text** (18pt/14pt bold): 3:1 minimum',
+              '- **UI components**: 3:1 minimum',
+              '',
+              '### Next Steps',
+              '1. Review the workflow logs for specific violations',
+              '2. Use a contrast checker tool: [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)',
+              '3. Update colors in `src/lib/design-tokens.ts` or component styles',
+              '4. Re-run validation: `npm run validate:contrast`',
+              '',
+              '### Resources',
+              '- [WCAG 2.1 Contrast Guidelines](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum)',
+              `- [Modern UI/UX Design Standards (2025)](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/docs/ai/design-system.md)`,
+              '',
+              '**Tip:** Consider using the OKLCH color space for perceptually uniform contrast adjustments.',
+            ].join('\n');
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -106,14 +107,15 @@ This PR introduces or affects elements that do not meet **WCAG 2.1 Level AA** co
         uses: actions/github-script@v8
         with:
           script: |
-            const body = `## ✅ WCAG Color Contrast Validation Passed
-
-All tested pages meet **WCAG 2.1 Level AA** contrast requirements!
-
-- Normal text: ≥4.5:1 ✓
-- Large text: ≥3:1 ✓
-- UI components: ≥3:1 ✓
-            `;
+            const body = [
+              '## ✅ WCAG Color Contrast Validation Passed',
+              '',
+              'All tested pages meet **WCAG 2.1 Level AA** contrast requirements!',
+              '',
+              '- Normal text: ≥4.5:1 ✓',
+              '- Large text: ≥3:1 ✓',
+              '- UI components: ≥3:1 ✓',
+            ].join('\n');
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,

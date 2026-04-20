@@ -203,6 +203,7 @@ jobs:
         if: steps.analyze.outputs.should_remediate == 'true'
         env:
           PR_NUMBER: ${{ steps.context.outputs.pr_number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Check how many times we've tried to remediate this PR
           RETRY_COUNT=$(gh pr view "$PR_NUMBER" --json comments --jq '[.comments[] | select(.body | contains("🔧 Auto-Remediation Attempt"))] | length' 2>/dev/null || echo "0")
@@ -215,8 +216,6 @@ jobs:
             echo "⚠️ Too many remediation attempts ($RETRY_COUNT) - escalating"
             echo "should_remediate=false" >> $GITHUB_OUTPUT
           fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   remediate:
     name: Auto-Remediate Deployment
@@ -308,15 +307,15 @@ jobs:
               elif [[ "$FAILURE_TYPE" == "out_of_memory" ]]; then
                 # Add .vercelignore optimization hints
                 echo "Adding memory optimization hints..."
-                cat >> .vercelignore << 'EOF'
-# Auto-generated memory optimization
-*.test.ts
-*.spec.ts
-__tests__
-tests/
-*.md
-docs/
-EOF
+                {
+                  echo "# Auto-generated memory optimization"
+                  echo "*.test.ts"
+                  echo "*.spec.ts"
+                  echo "__tests__"
+                  echo "tests/"
+                  echo "*.md"
+                  echo "docs/"
+                } >> .vercelignore
                 git config user.name "github-actions[bot]"
                 git config user.email "github-actions[bot]@users.noreply.github.com"
                 git add .vercelignore
@@ -344,32 +343,37 @@ EOF
           ACTION: ${{ steps.remediate.outputs.action }}
           SUCCESS: ${{ steps.remediate.outputs.success }}
           RETRY_COUNT: ${{ needs.detect-failure.outputs.retry_count }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ATTEMPT_NUM=$((RETRY_COUNT + 1))
 
           if [[ "$SUCCESS" == "true" ]]; then
-            gh pr comment "$PR_NUMBER" --body "🔧 **Auto-Remediation Attempt #$ATTEMPT_NUM**
-
-**Failure Type:** \`$FAILURE_TYPE\`
-**Strategy:** \`$STRATEGY\`
-**Action Taken:** $ACTION
-
-✅ Remediation applied successfully. Vercel will redeploy automatically.
-
-[View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            {
+              echo "🔧 **Auto-Remediation Attempt #$ATTEMPT_NUM**"
+              echo
+              echo "**Failure Type:** \`$FAILURE_TYPE\`"
+              echo "**Strategy:** \`$STRATEGY\`"
+              echo "**Action Taken:** $ACTION"
+              echo
+              echo "✅ Remediation applied successfully. Vercel will redeploy automatically."
+              echo
+              echo "[View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            } > /tmp/vercel-remediation-success.md
+            gh pr comment "$PR_NUMBER" --body-file /tmp/vercel-remediation-success.md
           else
-            gh pr comment "$PR_NUMBER" --body "⚠️ **Auto-Remediation Failed - Manual Review Required**
-
-**Failure Type:** \`$FAILURE_TYPE\`
-**Attempts:** $ATTEMPT_NUM
-
-This deployment failure requires manual intervention. Please review the logs and fix the underlying issue.
-
-[View deployment logs](${{ needs.detect-failure.outputs.deployment_url }})
-[View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            {
+              echo "⚠️ **Auto-Remediation Failed - Manual Review Required**"
+              echo
+              echo "**Failure Type:** \`$FAILURE_TYPE\`"
+              echo "**Attempts:** $ATTEMPT_NUM"
+              echo
+              echo "This deployment failure requires manual intervention. Please review the logs and fix the underlying issue."
+              echo
+              echo "[View deployment logs](${{ needs.detect-failure.outputs.deployment_url }})"
+              echo "[View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            } > /tmp/vercel-remediation-failed.md
+            gh pr comment "$PR_NUMBER" --body-file /tmp/vercel-remediation-failed.md
           fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create incident issue for escalation
         if: steps.remediate.outputs.success == 'false' || needs.detect-failure.outputs.retry_count >= 2
@@ -377,29 +381,32 @@ This deployment failure requires manual intervention. Please review the logs and
           PR_NUMBER: ${{ needs.detect-failure.outputs.pr_number }}
           FAILURE_TYPE: ${{ needs.detect-failure.outputs.failure_type }}
           DEPLOYMENT_URL: ${{ needs.detect-failure.outputs.deployment_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          {
+            echo "## Incident Report"
+            echo
+            echo "**PR:** #$PR_NUMBER"
+            echo "**Failure Type:** \`$FAILURE_TYPE\`"
+            echo "**Deployment:** $DEPLOYMENT_URL"
+            echo "**Auto-remediation:** Failed after ${{ needs.detect-failure.outputs.retry_count }} attempts"
+            echo
+            echo "### Required Actions"
+            echo "- [ ] Review deployment logs"
+            echo "- [ ] Identify root cause"
+            echo "- [ ] Apply manual fix"
+            echo "- [ ] Trigger redeployment"
+            echo "- [ ] Verify success"
+            echo "- [ ] Close this incident"
+            echo
+            echo "### Logs"
+            echo "[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          } > /tmp/vercel-incident-body.md
+
           gh issue create \
             --title "🚨 Vercel Deployment Failure: PR #$PR_NUMBER" \
             --label "incident,deployment,vercel" \
-            --body "## Incident Report
-
-**PR:** #$PR_NUMBER
-**Failure Type:** \`$FAILURE_TYPE\`
-**Deployment:** $DEPLOYMENT_URL
-**Auto-remediation:** Failed after ${{ needs.detect-failure.outputs.retry_count }} attempts
-
-### Required Actions
-- [ ] Review deployment logs
-- [ ] Identify root cause
-- [ ] Apply manual fix
-- [ ] Trigger redeployment
-- [ ] Verify success
-- [ ] Close this incident
-
-### Logs
-[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" || echo "Issue creation failed (may already exist)"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            --body-file /tmp/vercel-incident-body.md || echo "Issue creation failed (may already exist)"
 
       - name: Summary
         run: |
