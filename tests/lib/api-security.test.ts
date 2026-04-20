@@ -174,18 +174,171 @@ describe('safeFetch', () => {
   });
 });
 
+/** Create a NextRequest with headers that would normally be forbidden (origin, referer) */
+function createNextRequestWithForbiddenHeaders(
+  url: string,
+  headers: Record<string, string>
+): NextRequest {
+  const req = new NextRequest(url);
+  const headerMap = new Map(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
+  const origGet = req.headers.get.bind(req.headers);
+  vi.spyOn(req.headers, 'get').mockImplementation((name: string) => {
+    return headerMap.get(name.toLowerCase()) ?? origGet(name);
+  });
+  const origForEach = req.headers.forEach.bind(req.headers);
+  vi.spyOn(req.headers, 'forEach').mockImplementation(
+    (cb: (value: string, key: string, parent: Headers) => void) => {
+      origForEach(cb);
+      for (const [k, v] of headerMap) {
+        if (!req.headers.has(k)) cb(v, k, req.headers);
+      }
+    }
+  );
+  return req;
+}
+
+describe('blockExternalAccessExceptInngestAndSameOrigin (branch coverage)', () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('allows same-origin request in production', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://www.dcyfr.ai');
+    const req = createNextRequestWithForbiddenHeaders('https://test.com/api', {
+      origin: 'https://www.dcyfr.ai',
+    });
+    expect(blockExternalAccessExceptInngestAndSameOrigin(req)).toBeNull();
+  });
+
+  it('allows localhost origin in development', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const req = createNextRequestWithForbiddenHeaders('https://test.com/api', {
+      origin: 'http://localhost:3000',
+    });
+    expect(blockExternalAccessExceptInngestAndSameOrigin(req)).toBeNull();
+  });
+
+  it('blocks non-matching origin in production', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://www.dcyfr.ai');
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const req = createNextRequest('https://test.com/api', {
+      origin: 'https://evil.com',
+      'user-agent': 'Mozilla/5.0',
+    });
+    const res = blockExternalAccessExceptInngestAndSameOrigin(req);
+    expect(res).not.toBeNull();
+    expect(res!.status).toBe(403);
+    spy.mockRestore();
+  });
+
+  it('blocks request with no origin and no inngest headers', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const req = createNextRequest('https://test.com/api', {
+      'user-agent': 'Mozilla/5.0',
+    });
+    const res = blockExternalAccessExceptInngestAndSameOrigin(req);
+    expect(res).not.toBeNull();
+    expect(res!.status).toBe(403);
+    spy.mockRestore();
+  });
+
+  it('allows inngest request in production', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    const req = createNextRequest('https://test.com/api', {
+      'user-agent': 'inngest/1.0',
+      'x-inngest-signature': 'sig',
+      'x-inngest-timestamp': '12345',
+    });
+    expect(blockExternalAccessExceptInngestAndSameOrigin(req)).toBeNull();
+  });
+});
+
+describe('blockExternalAccess (branch coverage)', () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('allows request with referer containing localhost in development', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const req = createNextRequestWithForbiddenHeaders('https://test.com/api', {
+      referer: 'http://localhost:3000/dashboard',
+    });
+    expect(blockExternalAccess(req)).toBeNull();
+  });
+
+  it('allows request with x-vercel-deployment-url header in development', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const req = createNextRequest('https://test.com/api', {
+      'x-vercel-deployment-url': 'test.vercel.app',
+    });
+    expect(blockExternalAccess(req)).toBeNull();
+  });
+
+  it('allows request with x-internal-request header in development', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const req = createNextRequest('https://test.com/api', {
+      'x-internal-request': 'true',
+    });
+    expect(blockExternalAccess(req)).toBeNull();
+  });
+
+  it('allows request with vercel-cron user agent in development', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const req = createNextRequest('https://test.com/api', {
+      'user-agent': 'vercel-cron/1.0',
+    });
+    expect(blockExternalAccess(req)).toBeNull();
+  });
+});
+
+describe('validateExternalUrl (branch coverage)', () => {
+  it('allows subdomain of whitelisted domain', () => {
+    const result = validateExternalUrl('https://v1.api.github.com/repos');
+    expect(result.valid).toBe(true);
+  });
+
+  it('blocks IPv6 loopback', () => {
+    expect(validateExternalUrl('http://[::1]/test')).toHaveProperty('valid', false);
+  });
+
+  it('allows HTTP in development', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    expect(validateExternalUrl('http://api.github.com/repos')).toEqual({ valid: true });
+    vi.unstubAllEnvs();
+  });
+});
+
+describe('safeFetch (branch coverage)', () => {
+  it('calls fetch for valid URL', async () => {
+    const mockFetch = vi.fn().mockResolvedValue(new Response('ok'));
+    vi.stubGlobal('fetch', mockFetch);
+    const resp = await safeFetch('https://api.github.com/repos');
+    expect(resp).toBeDefined();
+    expect(mockFetch).toHaveBeenCalledWith('https://api.github.com/repos', undefined);
+    vi.unstubAllGlobals();
+  });
+});
+
 describe('whitelistExternalDomain', () => {
   afterEach(() => vi.unstubAllEnvs());
 
   it('does not add domain in production', () => {
     vi.stubEnv('NODE_ENV', 'production');
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     whitelistExternalDomain('evil.com');
     expect(validateExternalUrl('https://evil.com')).toHaveProperty('valid', false);
+    spy.mockRestore();
   });
 
   it('adds domain in development', () => {
     vi.stubEnv('NODE_ENV', 'development');
     whitelistExternalDomain('custom-api.example.com');
     expect(validateExternalUrl('https://custom-api.example.com/data')).toEqual({ valid: true });
+  });
+
+  it('does not duplicate already-whitelisted domain', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    whitelistExternalDomain('api.github.com');
+    // Should not throw or add duplicate
+    expect(validateExternalUrl('https://api.github.com/repos')).toEqual({ valid: true });
   });
 });
