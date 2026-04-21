@@ -277,8 +277,15 @@ jobs:
           echo "Expected (today): $EXPECTED"
 
           # Compare dates (version should not be in the future)
-          ACTUAL_DATE=$(echo $ACTUAL | tr '.' '-')
+          # Normalize to zero-padded CalVer to avoid lexicographic false positives
+          # such as 2026.4.20 being treated as "future" vs 2026.04.20.
+          ACTUAL_DATE=$(node -e "const v='${ACTUAL}'.split('.').map(Number); console.log(v.length>=3 ? [v[0], String(v[1]).padStart(2,'0'), String(v[2]).padStart(2,'0')].join('-') : 'invalid')")
           EXPECTED_DATE=$(echo $EXPECTED | tr '.' '-')
+
+          if [ "$ACTUAL_DATE" = "invalid" ]; then
+            echo "::error::Version $ACTUAL is not parseable as CalVer date"
+            exit 1
+          fi
 
           if [[ "$ACTUAL_DATE" > "$EXPECTED_DATE" ]]; then
             echo "::error::Version $ACTUAL is in the future (expected max: $EXPECTED)"

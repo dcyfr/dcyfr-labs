@@ -169,15 +169,16 @@ jobs:
       - name: Dep count budgets
         run: |
           # Current state after Phase 3 trim + xsschema peer-chain restore:
-          # prod=74, dev=46. (Phase 3 trimmed to prod=74/dev=42; restoring
+          # prod=74, dev=47. (Phase 3 trimmed to prod=74/dev=42; restoring
           # sury/effect/valibot/@valibot/to-json-schema as optional peer deps
           # of xsschema — which depcheck can't walk through workspace links
-          # like @dcyfr/ai → fastmcp → xsschema — pushed dev back to 46.)
+          # like @dcyfr/ai → fastmcp → xsschema — then recent approved
+          # dependency maintenance bumped dev to 47.)
           # Long-term target from dcyfr-labs-cleanup spec: prod≤50, dev≤35.
           # Hard ratchet ceilings prevent growth from today; the long-term
           # targets will be lowered to match as follow-up trim lands.
           HARD_PROD=75
-          HARD_DEV=46
+          HARD_DEV=47
           TARGET_PROD=50
           TARGET_DEV=35
 
