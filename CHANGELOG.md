@@ -1,3 +1,29 @@
+## [2026.04.28] - 2026-04-28
+
+### Changed
+
+- **release** - version 2026.04.24
+- **release** - version 2026.04.21
+- **release** - version 2026.04.21
+- **release** - version 2026.04.21
+- chore(deps)(deps): bump typescript in the typescript-stack group (#481)
+- chore(deps-dev)(deps-dev): bump the dev-tools group across 1 directory with 12 updates (#514)
+- chore(deps)(deps): bump @dcyfr/ai from 3.0.1 to 3.0.2 (#491)
+
+### Fixed
+
+- **ci** - skip Lighthouse job on dependabot PRs (#533)
+- **ci** - repair Lighthouse bc syntax error and glob test (#532)
+- **ci** - raise npm audit threshold to high
+- **ci** - restore github issue helper for weekly test health
+- **ci** - accept non-padded CalVer in validation gate
+- **ci** - stabilize remaining main workflow failures
+- **security** - override @vercel/microfrontends to 2.3.2 to clear npm audit highs
+
+---
+
+**Full Changelog**: [2026.4.24...2026.04.28](https://github.com/dcyfr-labs/dcyfr-labs/compare/v2026.4.24...v2026.04.28)
+
 ## [2026.04.24] - 2026-04-24
 
 ### Added
