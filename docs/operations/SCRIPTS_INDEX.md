@@ -87,13 +87,9 @@
 
 | Script                            | npm Command                | Description                             |
 | --------------------------------- | -------------------------- | --------------------------------------- |
-| `security-audit.mjs`              | `npm run security:audit`   | Comprehensive security audit            |
-| `api-security-audit.mjs`          | `npm run security:api`     | API route security analysis             |
-| `check-security-alert.mjs`        | `npm run security:check`   | Check for security alerts               |
+| `check-security-alert.mjs`        | (manual)                   | Check GitHub security alert status      |
 | `create-security-issue.mjs`       | `npm run security:issue`   | Create security issue from alert        |
 | `monitor-upstream-advisories.mjs` | `npm run security:monitor` | Monitor upstream security advisories    |
-| `branch-cleanup.mjs`              | `npm run security:cleanup` | Clean up stale branches                 |
-| `sentry-enricher.mjs`             | (automated)                | Enrich Sentry error reports             |
 | `check-test-data.mjs`             | `npm run check:test-data`  | Prevent test data in production         |
 | `check-comment-density.mjs`       | `npm run check:comments`   | Prevent excessive AI-generated comments |
 
@@ -171,18 +167,12 @@
 **Location:** `scripts/setup/` and `scripts/setup/sentry/`  
 **Purpose:** Project initialization and configuration
 
-| Script                           | npm Command                    | Description                    |
-| -------------------------------- | ------------------------------ | ------------------------------ |
-| `setup-branch-protection.sh`     | `npm run setup:branches`       | Configure branch protection    |
-| `refactor-globals-css.sh`        | `npm run setup:refactor-css`   | Refactor global CSS            |
-| `configure-sentry.sh`            | `npm run setup:sentry`         | Sentry configuration           |
-| `create-sentry-metric-alerts.sh` | `npm run setup:sentry:metrics` | Create Sentry metric alerts    |
-| `fix-sentry-alerts.sh`           | `npm run setup:sentry:fix`     | Fix Sentry alert configuration |
-| `list-sentry-alerts.sh`          | `npm run setup:sentry:list`    | List Sentry alerts             |
-| `setup-sentry-alerts.sh`         | `npm run setup:sentry:alerts`  | Setup Sentry alerts            |
-| `test-security-alerts.sh`        | `npm run setup:sentry:test`    | Test Sentry security alerts    |
-| `verify-sentry-events.sh`        | `npm run setup:sentry:verify`  | Verify Sentry event ingestion  |
-| `auto-checkpoint.sh`             | (manual)                       | Automated checkpoint creation  |
+| Script                       | npm Command                   | Description                   |
+| ---------------------------- | ----------------------------- | ----------------------------- |
+| `setup-branch-protection.sh` | `npm run setup:branches`      | Configure branch protection   |
+| `setup-sentry-alerts.sh`     | `npm run setup:sentry:alerts` | Setup Sentry alerts           |
+| `test-security-alerts.sh`    | `npm run setup:sentry:test`   | Test Sentry security alerts   |
+| `auto-checkpoint.sh`         | (manual)                      | Automated checkpoint creation |
 
 ---
 
