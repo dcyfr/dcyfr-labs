@@ -4,7 +4,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Force isDev = true by setting NODE_ENV before module loads
 // ---------------------------------------------------------------------------
 const { mockDevLogger } = vi.hoisted(() => {
-  process.env.NODE_ENV = 'development';
+  // NODE_ENV is readonly under @types/node ≥20; cast to writable for test setup.
+  (process.env as { NODE_ENV?: string }).NODE_ENV = 'development';
 
   const mockDevLogger = {
     api: vi.fn(),

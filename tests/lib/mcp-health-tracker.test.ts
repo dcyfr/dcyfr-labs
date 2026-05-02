@@ -46,7 +46,7 @@ const makeReport = (servers: Partial<McpServerStatus>[] = []): McpHealthReport =
 describe('storeHealthReport', () => {
   it('stores report in Redis', async () => {
     vi.mocked(redis.set).mockResolvedValueOnce('OK');
-    vi.mocked(redis.expire).mockResolvedValue(1);
+    vi.mocked(redis.expire).mockResolvedValue(true);
 
     const report = makeReport([{ name: 'Server1' }]);
     await storeHealthReport(report);
@@ -60,7 +60,7 @@ describe('storeHealthReport', () => {
 
   it('stores per-server history', async () => {
     vi.mocked(redis.set).mockResolvedValueOnce('OK');
-    vi.mocked(redis.expire).mockResolvedValue(1);
+    vi.mocked(redis.expire).mockResolvedValue(true);
 
     const report = makeReport([{ name: 'A' }, { name: 'B' }]);
     await storeHealthReport(report);

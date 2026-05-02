@@ -189,7 +189,7 @@ describe('PRICING constants', () => {
 describe('BUDGET constants', () => {
   it('total equals sum of individual budgets', () => {
     const { total, ...services } = BUDGET;
-    const sum = Object.values(services).reduce((a, b) => a + b, 0);
+    const sum = Object.values(services).reduce<number>((a, b) => a + b, 0);
     expect(sum).toBe(total);
   });
 });
@@ -254,9 +254,9 @@ describe('predictLimitDate', () => {
 
   it('predicts based on historical usage', async () => {
     vi.mocked(getHistoricalUsage).mockResolvedValue([
-      { date: '2026-04-01', count: 10, cost: 0.5 },
-      { date: '2026-04-02', count: 15, cost: 0.75 },
-      { date: '2026-04-03', count: 20, cost: 1 },
+      { service: 'perplexity', date: '2026-04-01', count: 10, estimatedCost: 0.5 },
+      { service: 'perplexity', date: '2026-04-02', count: 15, estimatedCost: 0.75 },
+      { service: 'perplexity', date: '2026-04-03', count: 20, estimatedCost: 1 },
     ]);
 
     const result = await predictLimitDate('perplexity');

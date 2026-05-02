@@ -76,7 +76,7 @@ describe('BlockedIPsManager', () => {
     it('stores entry in Redis', async () => {
       vi.mocked(redis.hSet).mockResolvedValueOnce(1);
       vi.mocked(redis.lPush).mockResolvedValueOnce(1);
-      vi.mocked(redis.expire).mockResolvedValue(1);
+      vi.mocked(redis.expire).mockResolvedValue(true);
 
       await manager.blockIP('5.6.7.8', 'malicious', 'greynoise', {
         confidence_score: 90,
@@ -93,7 +93,7 @@ describe('BlockedIPsManager', () => {
     it('stores temporary block with expiry', async () => {
       vi.mocked(redis.hSet).mockResolvedValueOnce(1);
       vi.mocked(redis.lPush).mockResolvedValueOnce(1);
-      vi.mocked(redis.expire).mockResolvedValue(1);
+      vi.mocked(redis.expire).mockResolvedValue(true);
 
       await manager.blockIP('5.6.7.8', 'suspicious', 'rate-limit', {
         temporary_hours: 24,
@@ -127,7 +127,7 @@ describe('BlockedIPsManager', () => {
   describe('markSuspicious', () => {
     it('stores suspicious entry', async () => {
       vi.mocked(redis.hSet).mockResolvedValueOnce(1);
-      vi.mocked(redis.expire).mockResolvedValue(1);
+      vi.mocked(redis.expire).mockResolvedValue(true);
 
       await manager.markSuspicious('9.8.7.6', 'rate-limit');
       expect(redis.hSet).toHaveBeenCalledWith(
