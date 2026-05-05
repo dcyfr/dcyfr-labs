@@ -37,10 +37,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run prose validation
+      - name: Load secrets from 1Password
+        uses: 1password/load-secrets-action@v1
+        with:
+          export-env: true
         env:
-          LANGUAGETOOL_API_KEY: $LANGUAGETOOL_API_KEY
-          LANGUAGETOOL_USERNAME: $LANGUAGETOOL_USERNAME
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          LANGUAGETOOL_API_KEY: op://CI-CD/dcyfr-labs-languagetool-api-key/credential
+          LANGUAGETOOL_USERNAME: op://CI-CD/dcyfr-labs-languagetool-username/credential
+
+      - name: Run prose validation
         run: npm run prose:check
 
       - name: Generate validation summary
@@ -126,12 +132,4 @@ jobs:
               repo: context.repo.repo,
               body: body
             });
-      - name: Load secrets from 1Password
-        uses: 1password/load-secrets-action@v1
-        with:
-          export-env: true
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          LANGUAGETOOL_API_KEY: op://CI-CD/dcyfr-labs-languagetool-api-key/credential
-          LANGUAGETOOL_USERNAME: op://CI-CD/dcyfr-labs-languagetool-username/credential
 
